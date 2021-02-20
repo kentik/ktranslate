@@ -2,9 +2,9 @@
  
 Listen for a feed of data to or from Kentik and pass on in a common form. Supports rollups and filtering as well. 
 
-Input format: kflow\
-Output formats: json, avro, ipfix, prometheus\
-Output destinations: stdout, file, New Relic, Splunk, Elastic, Prometheus, Kafka, Kentik
+Input format: kflow, snmp\
+Output formats: json, avro, ipfix, prometheus, netflow\
+Output destinations: stdout, file, network, New Relic, Splunk, Elastic, Prometheus, Kafka, Kentik
 
 Run with:
 
@@ -14,6 +14,14 @@ Flags:
 
 ```
 Usage of ./bin/ktranslate:
+  -api_devices string
+    	json file containing dumy devices to use for the stub Kentik API
+  -api_host string
+    	Run a stub Kentik API at this host
+  -api_port int
+    	Run a stub Kentik API at this port (default 8080)
+  -api_tls
+    	Use TLS for the stub Kentik API
   -asn4 string
     	Asn ipv6 mapping file
   -asn6 string
@@ -26,12 +34,20 @@ Usage of ./bin/ktranslate:
     	compression algo to use (none|gzip|snappy|deflate|null) (default "none")
   -dns string
     	Resolve IPs at this ip:port
+  -file_on
+    	If true, start writting to file sink right away. Otherwise, wait for a USR1 signal
   -file_out string
     	Write flows seen to log to this directory if set (default "./")
   -filters value
     	Any filters to use. Format: type dimension operator value
   -format string
-    	Format to convert kflow to: (json|avro|netflow|influx|prometheus) (default "json")
+    	Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic) (default "json")
+  -gcloud_bucket string
+    	GCloud Storage Bucket to write flows to
+  -gcloud_content_type string
+    	GCloud Storage Content Type (default "application/json")
+  -gcloud_prefix string
+    	GCloud Storage object prefix (default "/kentik")
   -geo string
     	Geo mapping file
   -healthcheck string
@@ -60,8 +76,6 @@ Usage of ./bin/ktranslate:
     	Mapping file to use for enums (default "config.json")
   -max_flows_per_message int
     	Max number of flows to put in each emitted message (default 10000)
-  -max_sql_conns int
-    	Max concurrent SQL connections (default 16)
   -measurement string
     	Measurement to use for rollups. (default "kflow")
   -metalisten string
@@ -76,6 +90,8 @@ Usage of ./bin/ktranslate:
     	Version of netflow to produce: (netflow9|ipfix) (default "ipfix")
   -nr_account_id string
     	If set, sends flow to New Relic
+  -nr_metrics_url string
+    	URL to use to send into NR Metrics API (default "https://metric-api.newrelic.com/metric/v1")
   -nr_url string
     	URL to use to send into NR (default "https://insights-collector.newrelic.com/v1/accounts/%s/events")
   -olly_dataset string
@@ -88,7 +104,7 @@ Usage of ./bin/ktranslate:
     	Region mapping file
   -rollup_and_alpha
     	Send both rollups and alpha inputs to sinks
-  -rollup_export int
+  -rollup_interval int
     	Export timer for rollups in seconds
   -rollup_key_join string
     	Token to use to join dimension keys together (default "^")
@@ -96,6 +112,10 @@ Usage of ./bin/ktranslate:
     	Export only these top values (default 10)
   -rollups value
     	Any rollups to use. Format: type, metric, dimension 1, dimension 2, ..., dimension n: sum,in_bytes,dst_addr
+  -s3_bucket string
+    	AWS S3 Bucket to write flows to
+  -s3_prefix string
+    	AWS S3 Object prefix (default "/kentik")
   -sample_rate int
     	Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on. (default 1)
   -sasl.kerberos.keytab string
@@ -113,14 +133,18 @@ Usage of ./bin/ktranslate:
   -service_name string
     	Service identifier (default "ktranslate")
   -sinks string
-    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus) (default "stdout")
+    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud) (default "stdout")
+  -snmp string
+    	json file containing snmp config to use
+  -snmp_discovery
+    	If true, try to discover snmp devices on this network as configured.
   -ssl.ca.location string
     	ssl.ca.location
   -stdout
     	Log to stdout (default true)
-  -tag_lookup string
-    	Tag service port to run lookups on
   -threads int
     	Number of threads to run for processing
+  -udrs string
+    	UDR mapping file
   -v	Show version and build information
-```
+  ```
