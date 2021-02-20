@@ -29,16 +29,16 @@ install:
 
 .PHONY: docker
 docker: all
-	docker build -t ktranslate:v1 -f Dockerfile .
+	docker build -t ktranslate:v2 -f Dockerfile .
 
 .PHONY: publish
 publish: docker
-	docker tag ktranslate:v1 gcr.io/kentik-continuous-delivery/ktranslate:v1
-	docker push gcr.io/kentik-continuous-delivery/ktranslate:v1
-	docker tag ktranslate:v1 kentik/ktranslate:v1
-	docker push kentik/ktranslate:v1
+	docker tag ktranslate:v2 gcr.io/kentik-continuous-delivery/ktranslate:v2
+	docker push gcr.io/kentik-continuous-delivery/ktranslate:v2
+	docker tag ktranslate:v2 kentik/ktranslate:v2
+	docker push kentik/ktranslate:v2
 
 .PHONY: pub_latest
 pub_latest: publish
-	docker tag ktranslate:v1 kentik/ktranslate:latest
+	docker tag ktranslate:v2 kentik/ktranslate:latest
 	docker push kentik/ktranslate:latest
