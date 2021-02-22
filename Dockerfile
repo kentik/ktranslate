@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 RUN apt-get update && apt-get install -y \
-    krb5-user libsasl2-modules-gssapi-mit liblz4-dev libzstd-dev libsasl2-dev libpcap-dev
+    krb5-user libsasl2-modules-gssapi-mit liblz4-dev libzstd-dev libsasl2-dev libpcap-dev ca-certificates
 COPY bin/ktranslate /usr/bin/ktranslate
 COPY config.json /etc/config.json
 COPY code2city.mdb /etc/code2city.mdb

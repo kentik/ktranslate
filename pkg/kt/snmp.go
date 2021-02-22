@@ -134,10 +134,10 @@ type SnmpDeviceMetric struct {
 
 func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpDeviceMetric {
 	sm := SnmpDeviceMetric{
-		DeviceMetrics:    go_metrics.GetOrRegisterMeter("device_metrics^"+deviceName, registry),
-		InterfaceMetrics: go_metrics.GetOrRegisterMeter("interface_metrics^"+deviceName, registry),
-		Metadata:         go_metrics.GetOrRegisterMeter("metadata^"+deviceName, registry),
-		Errors:           go_metrics.GetOrRegisterMeter("snmp_errors^"+deviceName, registry),
+		DeviceMetrics:    go_metrics.GetOrRegisterMeter("device_metrics^device_name="+deviceName, registry),
+		InterfaceMetrics: go_metrics.GetOrRegisterMeter("interface_metrics^device_name="+deviceName, registry),
+		Metadata:         go_metrics.GetOrRegisterMeter("metadata^device_name="+deviceName, registry),
+		Errors:           go_metrics.GetOrRegisterMeter("snmp_errors^device_name="+deviceName, registry),
 	}
 	return &sm
 }
