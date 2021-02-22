@@ -6,9 +6,15 @@ Input format: kflow, snmp\
 Output formats: json, avro, ipfix, prometheus, netflow\
 Output destinations: stdout, file, network, New Relic, Splunk, Elastic, Prometheus, Kafka, Kentik
 
-Run with:
+# Examples:
 
-`docker run -p 8082:8082 ktranslate`
+Basic, just dumping json to stdout:
+
+`docker run -p 8082:8082 kentik/ktranslate:v2`
+
+Writting into Kafka using the avro format:
+
+`docker run -p 8082:8082 kentik/ktranslate:v2 -sinks kafka --format avro -kafka_topic myTopic -bootstrap.servers example.com:9003`
 
 Flags:
 
