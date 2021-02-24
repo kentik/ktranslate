@@ -16,7 +16,11 @@ Writting into Kafka using the avro format:
 
 `docker run -p 8082:8082 kentik/ktranslate:v2 -sinks kafka --format avro -kafka_topic myTopic -bootstrap.servers example.com:9003`
 
-Flags:
+# Build:
+
+make && make test
+
+# Flags:
 
 ```
 Usage of ./bin/ktranslate:
