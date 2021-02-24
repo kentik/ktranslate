@@ -94,16 +94,17 @@ type SnmpTrapConfig struct {
 }
 
 type SnmpDiscoConfig struct {
-	Cidrs            []string      `json:"cidrs"`
-	Debug            bool          `json:"debug"`
-	TimeoutMS        int           `json:"timeout_ms"`
-	Ports            []int         `json:"ports"`
-	DefaultCommunity string        `json:"default_community"`
-	DefaultV3        *V3SNMPConfig `json:"default_v3"`
-	AddDevices       bool          `json:"add_devices"`
-	Retries          int           `json:"retries"`
-	Threads          int           `json:"threads"`
-	MibDB            string        `json:"mibs_db"`
+	Cidrs              []string      `json:"cidrs"`
+	Debug              bool          `json:"debug"`
+	TimeoutMS          int           `json:"timeout_ms"`
+	Ports              []int         `json:"ports"`
+	DefaultCommunities []string      `json:"default_communities"`
+	DefaultV3          *V3SNMPConfig `json:"default_v3"`
+	AddDevices         bool          `json:"add_devices"`
+	Retries            int           `json:"retries"`
+	Threads            int           `json:"threads"`
+	MibDB              string        `json:"mibs_db"`
+	CheckAll           bool          `json:"check_all"`
 }
 
 type SnmpConfig struct {

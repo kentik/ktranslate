@@ -241,7 +241,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 		switch m {
 		case "Error", "Timeout":
 			ms[i] = NRMetric{
-				Name:       "kentik." + m,
+				Name:       "kentik.synth." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      1,
 				Timestamp:  ts,
@@ -249,7 +249,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 			}
 		default:
 			ms[i] = NRMetric{
-				Name:       "kentik." + names[m],
+				Name:       "kentik.synth." + names[m],
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomInt[m]),
 				Timestamp:  ts,
@@ -269,7 +269,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	f.setAttr(attr, in, metrics)
 	ms := []NRMetric{
 		NRMetric{
-			Name:       "kentik.in_bytes",
+			Name:       "kentik.flow.in_bytes",
 			Type:       NR_COUNT_TYPE,
 			Value:      int64(in.InBytes),
 			Timestamp:  ts,
@@ -277,7 +277,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 			Attributes: attr,
 		},
 		NRMetric{
-			Name:       "kentik.out_bytes",
+			Name:       "kentik.flow.out_bytes",
 			Type:       NR_COUNT_TYPE,
 			Value:      int64(in.OutBytes),
 			Timestamp:  ts,
@@ -285,7 +285,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 			Attributes: attr,
 		},
 		NRMetric{
-			Name:       "kentik.in_pkts",
+			Name:       "kentik.flow.in_pkts",
 			Type:       NR_COUNT_TYPE,
 			Value:      int64(in.InPkts),
 			Timestamp:  ts,
@@ -293,7 +293,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 			Attributes: attr,
 		},
 		NRMetric{
-			Name:       "kentik.out_pkts",
+			Name:       "kentik.flow.out_pkts",
 			Type:       NR_COUNT_TYPE,
 			Value:      int64(in.OutPkts),
 			Timestamp:  ts,
@@ -312,7 +312,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	i := 0
 	for m, _ := range metrics {
 		ms[i] = NRMetric{
-			Name:       "kentik." + m,
+			Name:       "kentik.snmp." + m,
 			Type:       NR_GAUGE_TYPE,
 			Value:      in.CustomBigInt[m],
 			Timestamp:  ts,
@@ -333,7 +333,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	i := 0
 	for m, _ := range metrics {
 		ms[i] = NRMetric{
-			Name:       "kentik." + m,
+			Name:       "kentik.snmp." + m,
 			Type:       NR_GAUGE_TYPE,
 			Value:      in.CustomBigInt[m],
 			Timestamp:  ts,
@@ -366,24 +366,32 @@ func (f *NRMFormat) setAttr(attr map[string]string, in *kt.JCHF, metrics map[str
 
 	if f.lastMetadata[in.DeviceName] != nil {
 		for k, v := range f.lastMetadata[in.DeviceName].deviceInfo {
-			attr[k] = v
+			if v != "" {
+				attr[k] = v
+			}
 		}
 
 		if in.OutputPort != in.InputPort {
 			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.InputPort]; ok {
 				for k, v := range ii {
-					attr["input_if_"+k] = v
+					if v != "" {
+						attr["input_if_"+k] = v
+					}
 				}
 			}
 			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
 				for k, v := range ii {
-					attr["output_if_"+k] = v
+					if v != "" {
+						attr["output_if_"+k] = v
+					}
 				}
 			}
 		} else {
 			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
 				for k, v := range ii {
-					attr["if_"+k] = v
+					if v != "" {
+						attr["if_"+k] = v
+					}
 				}
 			}
 		}

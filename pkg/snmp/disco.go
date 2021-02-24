@@ -66,9 +66,9 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		var wg sync.WaitGroup
 		var mux sync.RWMutex
 		st := time.Now()
-		log.Infof("Starting to check %d ips in %s", len(results), ipr)
+		log.Infof("Starting to check %d ips in %s, checkall=%v", len(results), ipr, conf.Disco.CheckAll)
 		for _, result := range results {
-			if result.IsHostUp() && result.Manufacturer != "" {
+			if result.IsHostUp() && (conf.Disco.CheckAll || result.Manufacturer != "") {
 				wg.Add(1)
 				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, log)
 			}
@@ -98,25 +98,36 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	}()
 
 	log.Infof("Host found at %s, Manufacturer: %s, Name: %s -- now attepting checking snmp connectivity", result.Host.String(), result.Manufacturer, result.Name)
-	device := kt.SnmpDeviceConfig{
-		DeviceName: result.Name,
-		DeviceIP:   result.Host.String(),
-		Community:  conf.Disco.DefaultCommunity,
-		V3:         conf.Disco.DefaultV3,
-		Debug:      conf.Disco.Debug,
-		Port:       uint16(conf.Disco.Ports[0]),
-		Checked:    time.Now(),
+	var device kt.SnmpDeviceConfig
+	var md *kt.DeviceMetricsMetadata
+	var err error
+	for _, community := range conf.Disco.DefaultCommunities {
+		device = kt.SnmpDeviceConfig{
+			DeviceName: result.Name,
+			DeviceIP:   result.Host.String(),
+			Community:  community,
+			V3:         conf.Disco.DefaultV3,
+			Debug:      conf.Disco.Debug,
+			Port:       uint16(conf.Disco.Ports[0]),
+			Checked:    time.Now(),
+		}
+		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Disco.Retries, log)
+		if err != nil {
+			log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+			return
+		}
+		md, err = metadata.GetDeviceMetadata(log, serv)
+		if err != nil {
+			log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
+			continue
+		}
+		break // We're good to go here.
 	}
-	serv, err := snmp_util.InitSNMP(&device, timeout, conf.Disco.Retries, log)
-	if err != nil {
-		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+
+	if md == nil { // No way to establish comminications
 		return
 	}
-	md, err := metadata.GetDeviceMetadata(log, serv)
-	if err != nil {
-		log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
-		return
-	}
+
 	// Map in any discovered values here.
 	device.OID = md.SysObjectID
 	device.Description = md.SysDescr
@@ -142,16 +153,23 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 
 func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, log logger.ContextL) error {
 	// List the old.
+	deviceNames := map[string]bool{}
 	oldDevices := map[string]*kt.SnmpDeviceConfig{}
 	for _, d := range conf.Devices {
 		oldDevices[d.DeviceIP] = d
+		deviceNames[d.DeviceName] = true
 	}
 
 	// Now add the new.
 	added := 0
 	for ip, d := range foundDevices {
+		if deviceNames[d.DeviceName] == true {
+			// Skip because we already have this device in our system.
+			continue
+		}
 		if oldDevices[ip] == nil {
 			conf.Devices = append(conf.Devices, d)
+			deviceNames[d.DeviceName] = true
 			added++
 		} else {
 			oldDevices[ip].Checked = time.Now()

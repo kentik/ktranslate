@@ -1,6 +1,6 @@
 .PHONY: all
 all:
-	GOPRIVATE=github.com/kentik go build -tags dynamic -o bin/ktranslate ./cmd/ktranslate
+	go build -tags dynamic -o bin/ktranslate ./cmd/ktranslate
 
 .PHONY: test
 test:
@@ -20,7 +20,7 @@ clean:
 
 .PHONY: generate
 generate:
-	GOPRIVATE=github.com/kentik go generate ./...
+	go generate ./...
 
 .PHONY: install
 install:

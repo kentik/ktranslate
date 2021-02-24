@@ -31,6 +31,7 @@ require (
 	github.com/montanaflynn/stats v0.6.3
 	github.com/prometheus/client_golang v1.7.1
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
+	github.com/segmentio/kafka-go v0.4.10 // indirect
 	github.com/shirou/gopsutil v2.20.8+incompatible // indirect
 	github.com/stretchr/testify v1.6.1
 	github.com/syndtr/goleveldb v1.0.0
