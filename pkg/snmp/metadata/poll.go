@@ -2,7 +2,6 @@ package metadata
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/kentik/gosnmp"
@@ -135,7 +134,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomStr["SysDescr"] = dd.DeviceMetricsMetadata.SysDescr
 		dst.CustomStr["SysLocation"] = dd.DeviceMetricsMetadata.SysLocation
 		dst.CustomStr["SysContact"] = dd.DeviceMetricsMetadata.SysContact
-		dst.CustomStr["SysServices"] = strconv.Itoa(dd.DeviceMetricsMetadata.SysServices)
+		dst.CustomInt["SysServices"] = int32(dd.DeviceMetricsMetadata.SysServices)
 		if dst.DeviceName == "" {
 			dst.DeviceName = dd.DeviceMetricsMetadata.SysName
 		}
@@ -145,7 +144,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomStr["if."+intr+".Address"] = id.Address
 		dst.CustomStr["if."+intr+".Netmask"] = id.Netmask
 		dst.CustomStr["if."+intr+".Index"] = id.Index
-		dst.CustomStr["if."+intr+".Speed"] = strconv.Itoa(int(id.Speed))
+		dst.CustomInt["if."+intr+".Speed"] = int32(id.Speed)
 		dst.CustomStr["if."+intr+".Description"] = id.Description
 		dst.CustomStr["if."+intr+".Alias"] = id.Alias
 		dst.CustomStr["if."+intr+".VrfName"] = id.VrfName

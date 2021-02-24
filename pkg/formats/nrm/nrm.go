@@ -24,8 +24,8 @@ const (
 )
 
 type LastMetadata struct {
-	deviceInfo    map[string]string
-	interfaceInfo map[kt.IfaceID]map[string]string
+	deviceInfo    map[string]interface{}
+	interfaceInfo map[kt.IfaceID]map[string]interface{}
 }
 
 type NRMFormat struct {
@@ -42,12 +42,12 @@ type NRMetricSet struct {
 }
 
 type NRMetric struct {
-	Name       string            `json:"name"`
-	Type       string            `json:"type"`
-	Value      int64             `json:"value"`
-	Timestamp  int64             `json:"timestamp"`
-	Interval   int64             `json:"interval.ms"`
-	Attributes map[string]string `json:"attributes"`
+	Name       string                 `json:"name"`
+	Type       string                 `json:"type"`
+	Value      int64                  `json:"value"`
+	Timestamp  int64                  `json:"timestamp"`
+	Interval   int64                  `json:"interval.ms"`
+	Attributes map[string]interface{} `json:"attributes"`
 }
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, error) {
@@ -176,8 +176,8 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 		return nil
 	}
 	lm := LastMetadata{
-		deviceInfo:    map[string]string{},
-		interfaceInfo: map[kt.IfaceID]map[string]string{},
+		deviceInfo:    map[string]interface{}{},
+		interfaceInfo: map[kt.IfaceID]map[string]interface{}{},
 	}
 	for k, v := range in.CustomStr {
 		if strings.HasPrefix(k, "if.") {
@@ -185,7 +185,26 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 			if len(pts) == 3 {
 				if ifint, err := strconv.Atoi(pts[1]); err == nil {
 					if _, ok := lm.interfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.interfaceInfo[kt.IfaceID(ifint)] = map[string]string{}
+						lm.interfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					if v != "" {
+						lm.interfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+					}
+				}
+			}
+		} else {
+			if v != "" {
+				lm.deviceInfo[k] = v
+			}
+		}
+	}
+	for k, v := range in.CustomInt {
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.interfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.interfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
 					}
 					lm.interfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 				}
@@ -232,7 +251,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Lat/Long Dest": "Port"}
 	}
 
-	attr := map[string]string{}
+	attr := map[string]interface{}{}
 	f.setAttr(attr, in, metrics)
 	ms := make([]NRMetric, len(metrics))
 	i := 0
@@ -264,7 +283,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 
 func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	// Map the basic strings into here.
-	attr := map[string]string{}
+	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true}
 	f.setAttr(attr, in, metrics)
 	ms := []NRMetric{
@@ -306,7 +325,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 
 func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	metrics := map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
-	attr := map[string]string{}
+	attr := map[string]interface{}{}
 	f.setAttr(attr, in, metrics)
 	ms := make([]NRMetric, len(metrics))
 	i := 0
@@ -314,7 +333,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 		ms[i] = NRMetric{
 			Name:       "kentik.snmp." + m,
 			Type:       NR_GAUGE_TYPE,
-			Value:      in.CustomBigInt[m],
+			Value:      int64(in.CustomBigInt[m]),
 			Timestamp:  ts,
 			Attributes: attr,
 		}
@@ -327,7 +346,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	metrics := map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
 		"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
-	attr := map[string]string{}
+	attr := map[string]interface{}{}
 	f.setAttr(attr, in, metrics)
 	ms := make([]NRMetric, len(metrics))
 	i := 0
@@ -335,7 +354,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 		ms[i] = NRMetric{
 			Name:       "kentik.snmp." + m,
 			Type:       NR_GAUGE_TYPE,
-			Value:      in.CustomBigInt[m],
+			Value:      int64(in.CustomBigInt[m]),
 			Timestamp:  ts,
 			Attributes: attr,
 		}
@@ -345,7 +364,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	return ms
 }
 
-func (f *NRMFormat) setAttr(attr map[string]string, in *kt.JCHF, metrics map[string]bool) {
+func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool) {
 	mapr := in.Flatten()
 	for k, v := range mapr {
 		switch vt := v.(type) {
@@ -355,20 +374,18 @@ func (f *NRMFormat) setAttr(attr map[string]string, in *kt.JCHF, metrics map[str
 			}
 		case int64:
 			if !metrics[k] && vt > 0 {
-				attr[k] = strconv.Itoa(int(vt))
+				attr[k] = int(vt)
 			}
 		case int32:
 			if !metrics[k] && vt > 0 {
-				attr[k] = strconv.Itoa(int(vt))
+				attr[k] = int(vt)
 			}
 		}
 	}
 
 	if f.lastMetadata[in.DeviceName] != nil {
 		for k, v := range f.lastMetadata[in.DeviceName].deviceInfo {
-			if v != "" {
-				attr[k] = v
-			}
+			attr[k] = v
 		}
 
 		if in.OutputPort != in.InputPort {
