@@ -238,8 +238,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 		cust := customs.At(i)
 		val := cust.Value()
 		name, ok := kc.mapr.Customs[cust.Id()]
+		isInt := false
 		if !ok {
 			name = strconv.Itoa(int(cust.Id()))
+			isInt = true
 		}
 		switch val.Which() {
 		case model.Custom_value_Which_uint16Val:
@@ -271,7 +273,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 					}
 				}
 			default:
-				dst.CustomInt[name] = int32(v) // TODO, way to pull out tags from this?
+				if !isInt {
+					dst.CustomInt[name] = int32(v) // TODO, way to pull out tags from this?
+				}
 			}
 		case model.Custom_value_Which_uint64Val:
 			dst.CustomBigInt[name] = int64(val.Uint64Val())
