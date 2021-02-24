@@ -33,7 +33,7 @@ require (
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.10 // indirect
 	github.com/shirou/gopsutil v2.20.8+incompatible // indirect
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tehmaze/netflow v0.0.0-20170921210347-852af103667f
 	golang.org/x/sys v0.0.0-20201201145000-ef89a241ccb3 // indirect
