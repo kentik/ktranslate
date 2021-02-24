@@ -4,7 +4,7 @@ Listen for a feed of data to or from Kentik and pass on in a common form. Suppor
 
 Input format: kflow, snmp\
 Output formats: json, avro, ipfix, prometheus, netflow\
-Output destinations: stdout, file, network, New Relic, Splunk, Elastic, Prometheus, Kafka, Kentik
+Output destinations: stdout, file, network, New Relic, Splunk, Elastic, Prometheus, Kafka, Kentik, S3, Gcloud
 
 # Examples:
 
@@ -70,8 +70,6 @@ Usage of ./bin/ktranslate:
     	Also send stats about this collector
   -interfaces string
     	Interface mapping file
-  -kafka.debug string
-    	debug contexts to enable for kafka
   -kafka_topic string
     	kafka topic to produce on
   -kentik_email string
@@ -128,18 +126,6 @@ Usage of ./bin/ktranslate:
     	AWS S3 Object prefix (default "/kentik")
   -sample_rate int
     	Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on. (default 1)
-  -sasl.kerberos.keytab string
-    	sasl.kerberos.keytab
-  -sasl.kerberos.kinit.cmd string
-    	sasl.kerberos.kinit.cmd (default "kinit -R -t \"%{sasl.kerberos.keytab}\" -k %{sasl.kerberos.principal} || kinit -t \"%{sasl.kerberos.keytab}\" -k %{sasl.kerberos.principal}")
-  -sasl.kerberos.principal string
-    	sasl.kerberos.principal
-  -sasl.kerberos.service.name string
-    	sasl.kerberos.service.name (default "kafka")
-  -sasl.mechanism string
-    	sasl.mechanism
-  -security.protocol string
-    	security.protocol
   -service_name string
     	Service identifier (default "ktranslate")
   -sinks string
@@ -148,8 +134,6 @@ Usage of ./bin/ktranslate:
     	json file containing snmp config to use
   -snmp_discovery
     	If true, try to discover snmp devices on this network as configured.
-  -ssl.ca.location string
-    	ssl.ca.location
   -stdout
     	Log to stdout (default true)
   -threads int
