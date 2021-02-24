@@ -162,7 +162,7 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
 		f.mux.Lock()
 		defer f.mux.Unlock()
 		if !f.invalids[in.EventType] {
-			f.Warnf("Invalid EventType A: %s", in.EventType)
+			f.Warnf("Invalid EventType: %s", in.EventType)
 			f.invalids[in.EventType] = true
 		}
 	}
@@ -212,7 +212,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
 			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "Min RTT", "Ping Max RTT": "Max RTT", "Ping Avg RTT": "Avg RTT", "Ping Std RTT": "Std RTT", "Ping Jit RTT": "Jit RTT"}
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
 	case 3: // Fetch
 		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true, "Fetch Size | Ping Min RTT": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Status", "Fetch TTLB | Ping Lost": "TTLB", "Fetch Size | Ping Min RTT": "Size"}
@@ -223,7 +223,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
 			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "Min RTT", "Ping Max RTT": "Max RTT", "Ping Avg RTT": "Avg RTT", "Ping Std RTT": "Std RTT", "Ping Jit RTT": "Jit RTT"}
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
 	case 6: // Query
 		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Fetch TTLB | Ping Lost": "Code"}
