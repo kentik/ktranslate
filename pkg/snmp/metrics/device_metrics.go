@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/gosnmp"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"

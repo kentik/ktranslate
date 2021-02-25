@@ -104,7 +104,7 @@ func (p *Poller) Poll() ([]*kt.JCHF, error) {
 
 	deviceFlows, err := p.deviceMetrics.Poll(p.server)
 
-	flows, err := p.interfaceMetrics.Poll(p.server)
+	flows, err := p.interfaceMetrics.Poll(p.server, deviceFlows)
 	if err != nil {
 		return nil, err
 	}

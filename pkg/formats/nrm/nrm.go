@@ -44,7 +44,7 @@ type NRMetricSet struct {
 type NRMetric struct {
 	Name       string                 `json:"name"`
 	Type       string                 `json:"type"`
-	Value      int64                  `json:"value"`
+	Value      interface{}            `json:"value"`
 	Timestamp  int64                  `json:"timestamp"`
 	Interval   int64                  `json:"interval.ms"`
 	Attributes map[string]interface{} `json:"attributes"`
@@ -350,6 +350,42 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 			Attributes: attr,
 		}
 		i++
+	}
+
+	// Grap capacity utilization if possible.
+	if f.lastMetadata[in.DeviceName] != nil {
+		if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.InputPort]; ok {
+			if speed, ok := ii["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					if uptimeSpeed > 0 {
+						ms = append(ms, NRMetric{
+							Name:       "kentik.snmp.IfInUtilization",
+							Type:       NR_GAUGE_TYPE,
+							Value:      float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed),
+							Timestamp:  ts,
+							Attributes: attr,
+						})
+					}
+				}
+			}
+		}
+		if oi, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
+			if speed, ok := oi["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					if uptimeSpeed > 0 {
+						ms = append(ms, NRMetric{
+							Name:       "kentik.snmp.IfOutUtilization",
+							Type:       NR_GAUGE_TYPE,
+							Value:      float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed),
+							Timestamp:  ts,
+							Attributes: attr,
+						})
+					}
+				}
+			}
+		}
 	}
 
 	return ms
