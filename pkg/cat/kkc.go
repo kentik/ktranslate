@@ -145,12 +145,16 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 
 	if config.UDRFile != "" {
-		m, udrs, err := NewUDRMapper(config.UDRFile)
+		m, udrs, err := NewUDRMapper(config.UDRFile, config.Subtype)
 		if err != nil {
 			return nil, err
 		}
 		kc.udrMapr = m
-		kc.log.Infof("Loaded %d udr mappings with %d udrs", len(m.UDRs), udrs)
+		if m.Subtype == nil {
+			kc.log.Infof("Loaded %d udr mappings with %d udrs", len(m.UDRs), udrs)
+		} else {
+			kc.log.Infof("Loaded %d udr mappings for subtype %s", len(m.Subtype), config.Subtype)
+		}
 	}
 
 	// Load up a geo file if one is passed in.

@@ -284,41 +284,32 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true}
+	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
 	f.setAttr(attr, in, metrics)
-	ms := []NRMetric{
-		NRMetric{
-			Name:       "kentik.flow.in_bytes",
-			Type:       NR_COUNT_TYPE,
-			Value:      int64(in.InBytes),
-			Timestamp:  ts,
-			Interval:   60000, // Can we be better here?
-			Attributes: attr,
-		},
-		NRMetric{
-			Name:       "kentik.flow.out_bytes",
-			Type:       NR_COUNT_TYPE,
-			Value:      int64(in.OutBytes),
-			Timestamp:  ts,
-			Interval:   60000, // Can we be better here?
-			Attributes: attr,
-		},
-		NRMetric{
-			Name:       "kentik.flow.in_pkts",
-			Type:       NR_COUNT_TYPE,
-			Value:      int64(in.InPkts),
-			Timestamp:  ts,
-			Interval:   60000, // Can we be better here?
-			Attributes: attr,
-		},
-		NRMetric{
-			Name:       "kentik.flow.out_pkts",
-			Type:       NR_COUNT_TYPE,
-			Value:      int64(in.OutPkts),
-			Timestamp:  ts,
-			Interval:   60000, // Can we be better here?
-			Attributes: attr,
-		},
+	ms := make([]NRMetric, 0)
+	for m, _ := range metrics {
+		var value int64
+		switch m {
+		case "in_bytes":
+			value = int64(in.InBytes)
+		case "out_bytes":
+			value = int64(in.OutBytes)
+		case "in_pkts":
+			value = int64(in.InPkts)
+		case "out_pkts":
+			value = int64(in.OutPkts)
+		case "latency_ms":
+			value = int64(in.CustomInt["APPL_LATENCY_MS"])
+		}
+		if value > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.flow." + m,
+				Type:       NR_GAUGE_TYPE,
+				Value:      value,
+				Timestamp:  ts,
+				Attributes: attr,
+			})
+		}
 	}
 	return ms
 }
@@ -373,11 +364,11 @@ func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics ma
 				attr[k] = vt
 			}
 		case int64:
-			if !metrics[k] && vt > 0 {
+			if !metrics[k] {
 				attr[k] = int(vt)
 			}
 		case int32:
-			if !metrics[k] && vt > 0 {
+			if !metrics[k] {
 				attr[k] = int(vt)
 			}
 		}

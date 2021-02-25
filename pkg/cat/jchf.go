@@ -99,6 +99,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 	dst.DstAs = src.CHF.DstAs()
 	if src.CHF.DstGeo() > 0 {
 		dst.DstGeo = fmt.Sprintf("%c%c", src.CHF.DstGeo()>>8, src.CHF.DstGeo()&0xFF)
+		if dst.DstGeo[0] == '-' {
+			dst.DstGeo = "--"
+		}
 	}
 	dst.HeaderLen = src.CHF.HeaderLen()
 	dst.InBytes = src.CHF.InBytes()
@@ -113,6 +116,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 	dst.SrcAs = src.CHF.SrcAs()
 	if src.CHF.SrcGeo() > 0 {
 		dst.SrcGeo = fmt.Sprintf("%c%c", src.CHF.SrcGeo()>>8, src.CHF.SrcGeo()&0xFF)
+		if dst.SrcGeo[0] == '-' {
+			dst.SrcGeo = "--"
+		}
 	}
 	dst.TcpFlags = src.CHF.TcpFlags()
 	dst.Tos = src.CHF.Tos()
@@ -238,6 +244,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 		cust := customs.At(i)
 		val := cust.Value()
 		name, ok := kc.mapr.Customs[cust.Id()]
+
 		isInt := false
 		if !ok {
 			name = strconv.Itoa(int(cust.Id()))
@@ -296,30 +303,34 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 
 	// Finally, update any udr based columns with the correct mapping
 	if kc.udrMapr != nil {
-		if ap, ok := dst.CustomInt[APP_PROTOCOL_COL]; ok {
-			if mapr, ok := kc.udrMapr.UDRs[ap]; ok {
-				for col, udr := range mapr {
-					switch udr.Type {
-					case UDR_TYPE_INT:
-						if val, ok := dst.CustomInt[col]; ok {
-							dst.CustomInt[udr.ColumnName] = val
-							delete(dst.CustomInt, col)
-						}
-					case UDR_TYPE_STRING:
-						if val, ok := dst.CustomStr[col]; ok {
-							dst.CustomStr[udr.ColumnName] = val
-							delete(dst.CustomStr, col)
-						}
-					case UDR_TYPE_BIGINT:
-						if val, ok := dst.CustomBigInt[col]; ok {
-							dst.CustomBigInt[udr.ColumnName] = val
-							delete(dst.CustomBigInt, col)
-						}
-					}
-					if _, ok := dst.CustomStr[UDR_TYPE]; !ok {
-						dst.CustomStr[UDR_TYPE] = udr.ApplicationName
-					}
+		var mapr map[string]*UDR
+		if kc.udrMapr.Subtype != nil {
+			mapr = kc.udrMapr.Subtype
+		} else if ap, ok := dst.CustomInt[APP_PROTOCOL_COL]; ok {
+			if maprr, ok := kc.udrMapr.UDRs[ap]; ok {
+				mapr = maprr
+			}
+		}
+		for col, udr := range mapr {
+			switch udr.Type {
+			case UDR_TYPE_INT:
+				if val, ok := dst.CustomInt[col]; ok {
+					dst.CustomInt[udr.ColumnName] = val
+					delete(dst.CustomInt, col)
 				}
+			case UDR_TYPE_STRING:
+				if val, ok := dst.CustomStr[col]; ok {
+					dst.CustomStr[udr.ColumnName] = val
+					delete(dst.CustomStr, col)
+				}
+			case UDR_TYPE_BIGINT:
+				if val, ok := dst.CustomBigInt[col]; ok {
+					dst.CustomBigInt[udr.ColumnName] = val
+					delete(dst.CustomBigInt, col)
+				}
+			}
+			if _, ok := dst.CustomStr[UDR_TYPE]; !ok {
+				dst.CustomStr[UDR_TYPE] = udr.ApplicationName
 			}
 		}
 	}

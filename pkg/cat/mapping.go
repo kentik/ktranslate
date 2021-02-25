@@ -84,7 +84,7 @@ func NewDeviceMapper(file string) (*DeviceMapper, int, error) {
 	return &dm, len(ms), nil
 }
 
-func NewUDRMapper(file string) (*UDRMapper, int, error) {
+func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, 0, err
@@ -93,7 +93,13 @@ func NewUDRMapper(file string) (*UDRMapper, int, error) {
 	scanner := bufio.NewScanner(f)
 
 	um := UDRMapper{
-		UDRs: make(map[int32]map[string]*UDR),
+		UDRs:    make(map[int32]map[string]*UDR),
+		Subtype: nil,
+	}
+
+	// Only load this in if we're just looking at 1 subtype of data.
+	if subtype != "" {
+		um.Subtype = make(map[string]*UDR)
 	}
 
 	found := 0
@@ -119,10 +125,16 @@ func NewUDRMapper(file string) (*UDRMapper, int, error) {
 			continue
 		}
 		app := int32(appId)
-		if _, ok := um.UDRs[app]; !ok {
-			um.UDRs[app] = make(map[string]*UDR)
+		if app > 0 { // Core application level UDR.
+			if _, ok := um.UDRs[app]; !ok {
+				um.UDRs[app] = make(map[string]*UDR)
+			}
+			um.UDRs[app][pts[1]] = &udr
+		} else { // Support for defined subtype here.
+			if subtype != "" && subtype == pts[3] {
+				um.Subtype[pts[1]] = &udr
+			}
 		}
-		um.UDRs[app][pts[1]] = &udr
 		found++
 	}
 

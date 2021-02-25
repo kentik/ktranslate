@@ -45,6 +45,7 @@ func main() {
 		apiDevices     = flag.String("api_devices", "", "json file containing dumy devices to use for the stub Kentik API")
 		snmpFile       = flag.String("snmp", "", "json file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
+		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
@@ -76,6 +77,7 @@ func main() {
 		SampleRate:        uint32(*sample),
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
+		Subtype:           *subtype,
 	}
 
 	if *apiHost != "" {

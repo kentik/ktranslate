@@ -3,9 +3,9 @@ package cat
 import (
 	"database/sql"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
 	old_logger "github.com/kentik/golog/logger"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
@@ -57,6 +57,7 @@ type Config struct {
 	Auth              *AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool
+	Subtype           string
 }
 
 type AuthConfig struct {
@@ -126,7 +127,8 @@ type UDR struct {
 }
 
 type UDRMapper struct {
-	UDRs map[int32]map[string]*UDR
+	UDRs    map[int32]map[string]*UDR
+	Subtype map[string]*UDR
 }
 
 type hc struct {
