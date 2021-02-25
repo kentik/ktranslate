@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -32,11 +32,13 @@ type NRSink struct {
 	metrics     *NRMetric
 	format      formats.Format
 	compression kt.Compression
+	estimate    bool
 }
 
 type NRMetric struct {
-	DeliveryErr go_metrics.Meter
-	DeliveryWin go_metrics.Meter
+	DeliveryErr   go_metrics.Meter
+	DeliveryWin   go_metrics.Meter
+	DeliveryBytes go_metrics.Meter
 }
 
 type NRResponce struct {
@@ -49,6 +51,7 @@ var (
 	NrAccount    = flag.String("nr_account_id", "", "If set, sends flow to New Relic")
 	NrUrl        = flag.String("nr_url", "https://insights-collector.newrelic.com/v1/accounts/%s/events", "URL to use to send into NR")
 	NrMetricsUrl = flag.String("nr_metrics_url", "https://metric-api.newrelic.com/metric/v1", "URL to use to send into NR Metrics API")
+	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
 )
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry) (*NRSink, error) {
@@ -57,9 +60,11 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*NRSink, erro
 		NRApiKey: os.Getenv(EnvNrApiKey),
 		registry: registry,
 		metrics: &NRMetric{
-			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
-			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
+			DeliveryErr:   go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
+			DeliveryWin:   go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
+			DeliveryBytes: go_metrics.GetOrRegisterMeter("delivery_bytes_nr", registry),
 		},
+		estimate: *EstimateSize,
 	}
 
 	return &nr, nil
@@ -103,12 +108,18 @@ func (s *NRSink) Close() {}
 
 func (s *NRSink) HttpInfo() map[string]float64 {
 	return map[string]float64{
-		"DeliveryErr": s.metrics.DeliveryErr.Rate1(),
-		"DeliveryWin": s.metrics.DeliveryWin.Rate1(),
+		"DeliveryErr":     s.metrics.DeliveryErr.Rate1(),
+		"DeliveryWin":     s.metrics.DeliveryWin.Rate1(),
+		"DeliveryBytes1":  s.metrics.DeliveryBytes.Rate1(),
+		"DeliveryBytes15": s.metrics.DeliveryBytes.Rate15(),
 	}
 }
 
 func (s *NRSink) sendNR(ctx context.Context, payload []byte) {
+	s.metrics.DeliveryBytes.Mark(int64(len(payload))) // Compression will effect this, but we can do our best.
+	if s.estimate {                                   // here, just mark how much we would have sent.
+		return
+	}
 	req, err := http.NewRequestWithContext(ctx, "POST", s.NRUrl, bytes.NewBuffer(payload))
 	if err != nil {
 		s.Errorf("Cannot create NR request: %v", err)

@@ -291,13 +291,13 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 		var value int64
 		switch m {
 		case "in_bytes":
-			value = int64(in.InBytes)
+			value = int64(in.InBytes * uint64(in.SampleRate))
 		case "out_bytes":
-			value = int64(in.OutBytes)
+			value = int64(in.OutBytes * uint64(in.SampleRate))
 		case "in_pkts":
-			value = int64(in.InPkts)
+			value = int64(in.InPkts * uint64(in.SampleRate))
 		case "out_pkts":
-			value = int64(in.OutPkts)
+			value = int64(in.OutPkts * uint64(in.SampleRate))
 		case "latency_ms":
 			value = int64(in.CustomInt["APPL_LATENCY_MS"])
 		}
