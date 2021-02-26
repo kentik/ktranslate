@@ -101,11 +101,11 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	var device kt.SnmpDeviceConfig
 	var md *kt.DeviceMetricsMetadata
 	var err error
-	for _, community := range conf.Disco.DefaultCommunities {
+	if conf.Disco.DefaultV3 != nil {
 		device = kt.SnmpDeviceConfig{
 			DeviceName: result.Name,
 			DeviceIP:   result.Host.String(),
-			Community:  community,
+			Community:  "", // Run using v3 here.
 			V3:         conf.Disco.DefaultV3,
 			Debug:      conf.Disco.Debug,
 			Port:       uint16(conf.Disco.Ports[0]),
@@ -119,9 +119,31 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		md, err = metadata.GetDeviceMetadata(log, serv)
 		if err != nil {
 			log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
-			continue
+			return
 		}
-		break // We're good to go here.
+	} else { // Loop over all possibe v2c options here.
+		for _, community := range conf.Disco.DefaultCommunities {
+			device = kt.SnmpDeviceConfig{
+				DeviceName: result.Name,
+				DeviceIP:   result.Host.String(),
+				Community:  community,
+				V3:         conf.Disco.DefaultV3,
+				Debug:      conf.Disco.Debug,
+				Port:       uint16(conf.Disco.Ports[0]),
+				Checked:    time.Now(),
+			}
+			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Disco.Retries, log)
+			if err != nil {
+				log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+				return
+			}
+			md, err = metadata.GetDeviceMetadata(log, serv)
+			if err != nil {
+				log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
+				continue
+			}
+			break // We're good to go here.
+		}
 	}
 
 	if md == nil { // No way to establish comminications
@@ -137,6 +159,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	log.Infof("Success connecting to %s -- %v", result.Host.String(), md)
 
 	// Now, see what mibs this sucker can use.
+	// TODO, actually store this mibs.
 	mibs, err := mdb.GetForOidRecur(md.SysObjectID)
 	if err != nil {
 		log.Warnf("Issue loading mibs: %v", err)
