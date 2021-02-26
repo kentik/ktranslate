@@ -20,15 +20,17 @@ type Poller struct {
 	jchfChan          chan []*kt.JCHF
 	conf              *kt.SnmpDeviceConfig
 	metrics           *kt.SnmpDeviceMetric
+	gconf             *kt.SnmpGlobalConfig
 }
 
 const (
 	DEFUALT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
 )
 
-func NewPoller(server *gosnmp.GoSNMP, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
+func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
 
 	return &Poller{
+		gconf:             gconf,
 		conf:              conf,
 		log:               log,
 		server:            server,

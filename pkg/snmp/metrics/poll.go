@@ -17,9 +17,11 @@ type Poller struct {
 	deviceMetrics    *DeviceMetrics
 	jchfChan         chan []*kt.JCHF
 	metrics          *kt.SnmpDeviceMetric
+	counterTimeSec   int
+	dropIfOutside    bool
 }
 
-func NewPoller(server *gosnmp.GoSNMP, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
+func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
 
 	// Default rate multiplier to 1 if its 0.
 	if conf.RateMultiplier == 0 {
@@ -27,31 +29,42 @@ func NewPoller(server *gosnmp.GoSNMP, conf *kt.SnmpDeviceConfig, jchfChan chan [
 		log.Infof("Defaulting rate multiplier to 1")
 	}
 
+	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
+	counterTimeSec := 5 * 60
+	if gconf != nil && gconf.PollTimeSec > 0 {
+		counterTimeSec = gconf.PollTimeSec
+	}
+
+	// Default is not not drop.
+	dropIfOutside := false
+	if gconf != nil && gconf.PollTimeSec > 0 {
+		dropIfOutside = gconf.DropIfOutside
+	}
+
 	return &Poller{
 		jchfChan:         jchfChan,
 		log:              log,
 		metrics:          metrics,
 		server:           server,
-		interfaceMetrics: NewInterfaceMetrics(conf, metrics, log),
-		deviceMetrics:    NewDeviceMetrics(conf, metrics, log),
+		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, log),
+		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, log),
+		counterTimeSec:   counterTimeSec,
+		dropIfOutside:    dropIfOutside,
 	}
 }
 
 func (p *Poller) StartLoop() {
 
-	// counterChecks are a little bit tricky.  For non-snmpLow devices, we want to collect once every 5 minutes, and want to be confident that
-	// we'll actually get a set of datapoints into storage for every aligned five-minute block.  That way, for every aligned chunk-size used by
-	// the query system (5 minutes, 10 minutes, 1 hour) we'll have a consistent number of counter datapoints contained in each chunk.
 	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
 	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
 	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
 	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
-	counterAlignment := 1 * time.Minute // Once every 5 min. Changing from 10 to 5 to comply with internet billing standards (charged on p95 for 5 min intervals)
+	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
 	jitterWindow := 15 * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 
-	p.log.Infof("snmpCounterPoll: First poll will be at %v", firstCollection)
+	p.log.Infof("snmpCounterPoll: First poll will be at %v. Polling every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
 
 	go func() {
 		// Track the counters here, to convert from raw counters to differences
@@ -79,7 +92,7 @@ func (p *Poller) StartLoop() {
 			}
 
 			// Send counter data as flow
-			if !time.Now().Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
+			if p.dropIfOutside && !time.Now().Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
 				// Uggh.  calling PollSNMPCounter took us long enough that we're no longer in the five-minute block
 				// we were in when we started the poll.
 				p.log.Warnf("Missed a counter datapoint for the period %v -- poll scheduled for %v, started at %v, ended at %v",

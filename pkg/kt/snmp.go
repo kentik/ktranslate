@@ -107,10 +107,16 @@ type SnmpDiscoConfig struct {
 	CheckAll           bool          `json:"check_all"`
 }
 
+type SnmpGlobalConfig struct {
+	PollTimeSec   int  `json:"poll_time_sec"`
+	DropIfOutside bool `json:"drop_if_outside_poll"`
+}
+
 type SnmpConfig struct {
 	Devices []*SnmpDeviceConfig `json:"devices"`
 	Trap    *SnmpTrapConfig     `json:"trap"`
 	Disco   *SnmpDiscoConfig    `json:"discovery"`
+	Global  *SnmpGlobalConfig   `json:"global"`
 }
 
 type SnmpMetricSet struct {

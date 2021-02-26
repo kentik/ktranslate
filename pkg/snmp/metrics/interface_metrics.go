@@ -35,6 +35,7 @@ const (
 
 type InterfaceMetrics struct {
 	log     logger.ContextL
+	gconf   *kt.SnmpGlobalConfig
 	conf    *kt.SnmpDeviceConfig
 	metrics *kt.SnmpDeviceMetric
 
@@ -47,9 +48,10 @@ type InterfaceMetrics struct {
 	intValues map[string]*counters.CounterSet
 }
 
-func NewInterfaceMetrics(conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *InterfaceMetrics {
+func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *InterfaceMetrics {
 	return &InterfaceMetrics{
 		log:       log,
+		gconf:     gconf,
 		conf:      conf,
 		metrics:   metrics,
 		intValues: make(map[string]*counters.CounterSet),

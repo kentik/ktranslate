@@ -15,11 +15,13 @@ import (
 type DeviceMetrics struct {
 	log     logger.ContextL
 	conf    *kt.SnmpDeviceConfig
+	gconf   *kt.SnmpGlobalConfig
 	metrics *kt.SnmpDeviceMetric
 }
 
-func NewDeviceMetrics(conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetrics {
+func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetrics {
 	return &DeviceMetrics{
+		gconf:   gconf,
 		log:     log,
 		conf:    conf,
 		metrics: metrics,

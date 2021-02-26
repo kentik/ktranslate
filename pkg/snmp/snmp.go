@@ -55,7 +55,8 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
 		metrics.Devices[device.DeviceName] = nm
 		metrics.Mux.Unlock()
-		err := launchSnmp(device, jchfChan, connectTimeout, retries, nm, log)
+		cl := logger.NewSubContextL(logger.SContext{S: device.DeviceName}, log)
+		err := launchSnmp(conf.Global, device, jchfChan, connectTimeout, retries, nm, cl)
 		if err != nil {
 			return err
 		}
@@ -86,7 +87,7 @@ func launchSnmpTrap(conf *kt.SnmpTrapConfig, jchfChan chan []*kt.JCHF, metrics *
 	return nil
 }
 
-func launchSnmp(device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, log logger.ContextL) error {
+func launchSnmp(conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, log logger.ContextL) error {
 
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
@@ -102,8 +103,8 @@ func launchSnmp(device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTi
 		return err
 	}
 
-	metadataPoller := metadata.NewPoller(metadataServer, device, jchfChan, metrics, log)
-	metricPoller := snmp_metrics.NewPoller(metricsServer, device, jchfChan, metrics, log)
+	metadataPoller := metadata.NewPoller(metadataServer, conf, device, jchfChan, metrics, log)
+	metricPoller := snmp_metrics.NewPoller(metricsServer, conf, device, jchfChan, metrics, log)
 
 	// We've now done everything we can do synchronously -- return to the client initialization
 	// code, and do everything else in the background
