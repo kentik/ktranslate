@@ -46,14 +46,24 @@ type InterfaceMetrics struct {
 	mux sync.Mutex
 
 	intValues map[string]*counters.CounterSet
+	oidMap    map[string]string
 }
 
 func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *InterfaceMetrics {
+	oidMap := conf.InterfaceMetricsOidMap
+	if len(oidMap) == 0 {
+		oidMap = defaultOidMap
+		log.Infof("Using default interface metric set")
+	} else {
+		log.Infof("Using custom interface metric set")
+	}
+
 	return &InterfaceMetrics{
 		log:       log,
 		gconf:     gconf,
 		conf:      conf,
 		metrics:   metrics,
+		oidMap:    oidMap,
 		intValues: make(map[string]*counters.CounterSet),
 	}
 }
@@ -97,7 +107,7 @@ func (im *InterfaceMetrics) Poll(server *gosnmp.GoSNMP, lastDeviceMetrics []*kt.
 
 	deltas := map[string]map[string]uint64{}
 
-	for oid, varName := range defaultOidMap {
+	for oid, varName := range im.oidMap {
 		results, err := snmp_util.WalkOID(oid, server, im.log, "Counter")
 		if err != nil {
 			im.metrics.Errors.Mark(1)

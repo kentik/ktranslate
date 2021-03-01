@@ -74,16 +74,17 @@ type V3SNMPConfig struct {
 }
 
 type SnmpDeviceConfig struct {
-	DeviceName     string        `json:"device_name"`
-	DeviceIP       string        `json:"device_ip"`
-	Community      string        `json:"snmp_comm"`
-	V3             *V3SNMPConfig `json:"snmp_v3"`
-	Debug          bool          `json:"debug"`
-	RateMultiplier int64         `json:"rate_multiplier"`
-	Port           uint16        `json:"port"`
-	OID            string        `json:"oid"`
-	Description    string        `json:"description"`
-	Checked        time.Time     `json:"last_checked"`
+	DeviceName             string            `json:"device_name"`
+	DeviceIP               string            `json:"device_ip"`
+	Community              string            `json:"snmp_comm"`
+	V3                     *V3SNMPConfig     `json:"snmp_v3"`
+	Debug                  bool              `json:"debug"`
+	RateMultiplier         int64             `json:"rate_multiplier"`
+	Port                   uint16            `json:"port"`
+	OID                    string            `json:"oid"`
+	Description            string            `json:"description"`
+	Checked                time.Time         `json:"last_checked"`
+	InterfaceMetricsOidMap map[string]string `json:"interface_metrics_oids"`
 }
 
 type SnmpTrapConfig struct {
