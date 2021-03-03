@@ -1,6 +1,7 @@
 package kt
 
 import (
+	"fmt"
 	"regexp"
 	"sync"
 	"time"
@@ -85,6 +86,7 @@ type SnmpDeviceConfig struct {
 	Description            string            `json:"description"`
 	Checked                time.Time         `json:"last_checked"`
 	InterfaceMetricsOidMap map[string]string `json:"interface_metrics_oids"`
+	DeviceOids             map[string]*Mib   `json:"device_oids"`
 }
 
 type SnmpTrapConfig struct {
@@ -106,6 +108,7 @@ type SnmpDiscoConfig struct {
 	Threads            int           `json:"threads"`
 	MibDB              string        `json:"mibs_db"`
 	CheckAll           bool          `json:"check_all"`
+	ReplaceDevices     bool          `json:"replace_devices"`
 }
 
 type SnmpGlobalConfig struct {
@@ -114,10 +117,10 @@ type SnmpGlobalConfig struct {
 }
 
 type SnmpConfig struct {
-	Devices []*SnmpDeviceConfig `json:"devices"`
-	Trap    *SnmpTrapConfig     `json:"trap"`
-	Disco   *SnmpDiscoConfig    `json:"discovery"`
-	Global  *SnmpGlobalConfig   `json:"global"`
+	Devices map[string]*SnmpDeviceConfig `json:"devices"`
+	Trap    *SnmpTrapConfig              `json:"trap"`
+	Disco   *SnmpDiscoConfig             `json:"discovery"`
+	Global  *SnmpGlobalConfig            `json:"global"`
 }
 
 type SnmpMetricSet struct {
@@ -148,4 +151,32 @@ func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpD
 		Errors:           go_metrics.GetOrRegisterMeter("snmp_errors^device_name="+deviceName, registry),
 	}
 	return &sm
+}
+
+type Oidtype int
+
+const (
+	ObjID     Oidtype = 1
+	String            = 2
+	INTEGER           = 3
+	NetAddr           = 4
+	IpAddr            = 5
+	Counter           = 6
+	Gauge             = 7
+	TimeTicks         = 8
+	Counter64         = 11
+	BitString         = 12
+	Index             = 15
+	Integer32         = 16
+)
+
+type Mib struct {
+	Oid   string
+	Name  string
+	Type  Oidtype
+	Extra string
+}
+
+func (mb Mib) String() string {
+	return fmt.Sprintf("Name: %s, Oid: %s: Type: %d, Extra: %s", mb.Name, mb.Oid, mb.Type, mb.Extra)
 }

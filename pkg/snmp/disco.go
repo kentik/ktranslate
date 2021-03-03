@@ -160,13 +160,11 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 
 	// Now, see what mibs this sucker can use.
 	// TODO, actually store this mibs.
-	mibs, err := mdb.GetForOidRecur(md.SysObjectID)
+	mibs, err := mdb.GetForOid(md.SysObjectID)
 	if err != nil {
 		log.Warnf("Issue loading mibs: %v", err)
 	} else {
-		for _, mib := range mibs {
-			log.Infof("Mib: %v", mib)
-		}
+		device.DeviceOids = mibs
 	}
 
 	mux.Lock()
@@ -175,30 +173,23 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 }
 
 func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, log logger.ContextL) error {
-	// List the old.
-	deviceNames := map[string]bool{}
-	oldDevices := map[string]*kt.SnmpDeviceConfig{}
-	for _, d := range conf.Devices {
-		oldDevices[d.DeviceIP] = d
-		deviceNames[d.DeviceName] = true
-	}
-
 	// Now add the new.
 	added := 0
-	for ip, d := range foundDevices {
-		if deviceNames[d.DeviceName] == true {
-			// Skip because we already have this device in our system.
-			continue
-		}
-		if oldDevices[ip] == nil {
-			conf.Devices = append(conf.Devices, d)
-			deviceNames[d.DeviceName] = true
+	replaced := 0
+	for _, d := range foundDevices {
+		if conf.Devices[d.DeviceName] == nil {
+			conf.Devices[d.DeviceName] = d
 			added++
 		} else {
-			oldDevices[ip].Checked = time.Now()
+			if conf.Disco.ReplaceDevices {
+				conf.Devices[d.DeviceName] = d
+				replaced++
+			} else {
+				conf.Devices[d.DeviceName].Checked = time.Now()
+			}
 		}
 	}
-	log.Infof("Adding %d new snmp devices to the config", added)
+	log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
 
 	// Save out the config file.
 	t, err := json.MarshalIndent(conf, "", "\t")

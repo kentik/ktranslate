@@ -58,6 +58,11 @@ type deviceMetricRow struct {
 	//cisco nexus specific
 	cpmCPUMemoryUsed int64
 	cpmCPUMemoryFree int64
+
+	// Custom Specific
+	customStr    map[string]string
+	customInt    map[string]int32
+	customBigInt map[string]int64
 }
 
 var (
@@ -65,6 +70,11 @@ var (
 )
 
 func (dm *DeviceMetrics) Poll(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
+
+	// If there's mibs passed in, use these directly.
+	if len(dm.conf.DeviceOids) > 0 {
+		return dm.pollFromConfig(server)
+	}
 
 	// Get the manufacturer
 	deviceManufacturer := strings.ToLower(snmp_util.GetDeviceManufacturer(server, dm.log))
@@ -138,6 +148,103 @@ const (
 	jnxOperatingBuffer   = "1.3.6.1.4.1.2636.3.1.13.1.11."
 	jnxOperatingMemory   = "1.3.6.1.4.1.2636.3.1.13.1.15."
 )
+
+func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
+	var results []gosnmp.SnmpPDU
+	m := map[string]*deviceMetricRow{}
+
+	for oid, mib := range dm.conf.DeviceOids {
+		oidResults, err := snmp_util.WalkOID(oid, server, dm.log, "CustomDeviceMetrics")
+		if err != nil {
+			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", oid, err)}
+			dm.metrics.Errors.Mark(1)
+			continue
+		}
+
+		results = append(results, oidResults...)
+	}
+
+	// Get uptime manually here.
+	var uptime int64
+	uptimeResults, err := snmp_util.WalkOID(sysUpTime, server, dm.log, "CustomDeviceMetrics")
+	if err == nil {
+		// You might think that if err == nil then you definitely got back some
+		// results.  Not exactly.  The result might be "No such object", which
+		// is not an error, but also not what you're looking for.
+		if len(uptimeResults) > 0 {
+			uptime = snmp_util.ToInt64(uptimeResults[0].Value)
+		}
+	} else {
+		m["uptime"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", sysUpTime, err)}
+	}
+
+	// Map back into types we know about.
+	for _, variable := range results {
+		if variable.Value == nil { // You can get nil w/out getting an error, though.
+			continue
+		}
+
+		var mib *kt.Mib = nil
+		idx := ""
+		for oid, m := range dm.conf.DeviceOids {
+			if strings.HasPrefix(variable.Name, oid) {
+				idx = snmp_util.GetIndex(variable.Name, oid)
+				mib = m
+				break
+			}
+		}
+
+		if mib == nil {
+			dm.log.Infof("Missing Custom oid: %+v, Value: %T %+v", variable, variable.Value, variable.Value)
+			continue
+		}
+		dmr := assureDeviceMetrics(m, idx)
+		switch mib.Type {
+		case kt.String:
+			dmr.customStr[mib.Name] = string(variable.Value.([]byte))
+		case kt.INTEGER:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		case kt.NetAddr:
+			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
+		case kt.IpAddr:
+			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
+		case kt.Counter:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		case kt.Gauge:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		case kt.TimeTicks:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		case kt.Counter64:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		case kt.BitString:
+			if str, ok := snmp_util.ReadOctetString(variable, false); ok {
+				dmr.customStr[mib.Name] = str
+			}
+		case kt.Index:
+			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
+		case kt.Integer32:
+			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+		}
+	}
+
+	// Convert to JCFH and pass on.
+	flows := make([]*kt.JCHF, 0, len(m))
+	for _, dmr := range m {
+		dst := kt.NewJCHF()
+		dst.CustomStr = dmr.customStr
+		dst.CustomInt = dmr.customInt
+		dst.CustomBigInt = dmr.customBigInt
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.CustomBigInt["Uptime"] = uptime
+		dst.CustomStr["Error"] = dmr.Error
+		dst.DeviceName = dm.conf.DeviceName
+		dst.SrcAddr = dm.conf.DeviceIP
+		flows = append(flows, dst)
+	}
+
+	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))
+	return flows, nil
+}
 
 // Polling each sub-tree individually is (we hope) a lot cheaper than polling
 // their parent tree in its entirety and pulling out just the oids we actually
@@ -515,7 +622,11 @@ func (dm *deviceMetricRow) calculateAristaMemory() {
 func assureDeviceMetrics(m map[string]*deviceMetricRow, index string) *deviceMetricRow {
 	dm, ok := m[index]
 	if !ok {
-		dm = &deviceMetricRow{}
+		dm = &deviceMetricRow{
+			customStr:    map[string]string{},
+			customInt:    map[string]int32{},
+			customBigInt: map[string]int64{},
+		}
 		m[index] = dm
 	}
 	return dm

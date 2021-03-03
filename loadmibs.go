@@ -12,6 +12,15 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
+/**
+Generate input file with
+
+for file in `ls /home/pye/src/observium/observium/mibs/cisco/`; do snmptranslate -M ./mibs:/usr/share/snmp/mibs:~/tmp/mibs:~/src/observium/observium/mibs:/home/pye/src/observium/observium/mibs/cisco -m /home/pye/src/observium/observium/mibs/cisco/$file -IR -On -Totd; done > numbers
+
+for file in `ls /home/pye/src/observium/observium/mibs/cisco/`; do snmptranslate -M ./mibs:/usr/share/snmp/mibs:~/tmp/mibs:~/src/observium/observium/mibs:/home/pye/src/observium/observium/mibs/cisco -m /home/pye/src/observium/observium/mibs/cisco/$file -IR -On -Tp; done > tree
+
+*/
+
 func main() {
 	path := os.Args[1]
 	oids := os.Args[2]
