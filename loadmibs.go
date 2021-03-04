@@ -17,6 +17,7 @@ Generate input file with
 
 for file in `ls /home/pye/src/observium/observium/mibs/cisco/`; do snmptranslate -M ./mibs:/usr/share/snmp/mibs:~/tmp/mibs:~/src/observium/observium/mibs:/home/pye/src/observium/observium/mibs/cisco -m /home/pye/src/observium/observium/mibs/cisco/$file -IR -On -Totd; done > numbers
 
+Here's for dumping a full tree (not needed for this).
 for file in `ls /home/pye/src/observium/observium/mibs/cisco/`; do snmptranslate -M ./mibs:/usr/share/snmp/mibs:~/tmp/mibs:~/src/observium/observium/mibs:/home/pye/src/observium/observium/mibs/cisco -m /home/pye/src/observium/observium/mibs/cisco/$file -IR -On -Tp; done > tree
 
 */

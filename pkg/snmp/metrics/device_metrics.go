@@ -76,6 +76,7 @@ func (dm *DeviceMetrics) Poll(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 		return dm.pollFromConfig(server)
 	}
 
+	// Otherwise, do it in a hard coded way.
 	// Get the manufacturer
 	deviceManufacturer := strings.ToLower(snmp_util.GetDeviceManufacturer(server, dm.log))
 	// Query manufacturer-specific oids

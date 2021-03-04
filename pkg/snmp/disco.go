@@ -44,7 +44,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	// Use this for auto-discovering metrics to pull.
-	mdb, err := mibs.NewMibDB(conf.Disco.MibDB, log)
+	mdb, err := mibs.NewMibDB(conf.Disco.MibDB, conf.Disco.MibProfileDir, log)
 	if err != nil {
 		return fmt.Errorf("Missing the mibs db config %s -> %v", conf.Disco.MibDB, err)
 	}
@@ -165,6 +165,13 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		log.Warnf("Issue loading mibs: %v", err)
 	} else {
 		device.DeviceOids = mibs
+	}
+
+	// Stick in the profile too for future use.
+	mibProfile := mdb.FindProfile(md.SysObjectID)
+	if mibProfile != nil {
+		log.Infof("Found profile for %s: %v", md.SysObjectID, mibProfile)
+		device.MibProfile = mibProfile.From
 	}
 
 	mux.Lock()

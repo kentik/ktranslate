@@ -87,6 +87,7 @@ type SnmpDeviceConfig struct {
 	Checked                time.Time         `json:"last_checked"`
 	InterfaceMetricsOidMap map[string]string `json:"interface_metrics_oids"`
 	DeviceOids             map[string]*Mib   `json:"device_oids"`
+	MibProfile             string            `json:"mib_profile"`
 }
 
 type SnmpTrapConfig struct {
@@ -107,6 +108,7 @@ type SnmpDiscoConfig struct {
 	Retries            int           `json:"retries"`
 	Threads            int           `json:"threads"`
 	MibDB              string        `json:"mibs_db"`
+	MibProfileDir      string        `json:"mib_profile_dir"`
 	CheckAll           bool          `json:"check_all"`
 	ReplaceDevices     bool          `json:"replace_devices"`
 }

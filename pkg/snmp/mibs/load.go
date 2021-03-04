@@ -14,8 +14,9 @@ import (
 )
 
 type MibDB struct {
-	db  *leveldb.DB
-	log logger.ContextL
+	db       *leveldb.DB
+	profiles map[string]*Profile
+	log      logger.ContextL
 }
 
 var (
@@ -37,17 +38,26 @@ var (
 	}
 )
 
-func NewMibDB(path string, log logger.ContextL) (*MibDB, error) {
-	db, err := leveldb.OpenFile(path, &opt.Options{})
+func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, error) {
+	log.Infof("Loading db from %s", mibpath)
+	db, err := leveldb.OpenFile(mibpath, &opt.Options{})
 	if err != nil {
 		return nil, err
 	}
 
-	log.Infof("Loading db from %s", path)
-	return &MibDB{
-		db:  db,
-		log: log,
-	}, nil
+	mdb := &MibDB{
+		db:       db,
+		log:      log,
+		profiles: map[string]*Profile{},
+	}
+
+	num, err := mdb.LoadProfiles(profileDir)
+	if err != nil {
+		return nil, err
+	}
+	log.Infof("Loaded %d profiles from %s", num, profileDir)
+
+	return mdb, nil
 }
 
 func (db *MibDB) Close() {

@@ -22,7 +22,6 @@ require (
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/golog v0.0.0-20180824173632-e2ac67cc4105
 	github.com/kentik/gosnmp v0.0.0-20210203214255-bc7b3f5de9e9
-	github.com/kentik/libkflow v0.0.0-20200715213656-89acc675c6cc
 	github.com/kentik/netflow v0.0.0-20200715061509-b7fe990dca12
 	github.com/kentik/patricia v0.0.0-20190612020215-46e75c8fc808 // indirect
 	github.com/klauspost/compress v1.11.0 // indirect
@@ -40,5 +39,6 @@ require (
 	google.golang.org/api v0.36.0 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
+	gopkg.in/yaml.v2 v2.2.8 // indirect
 	zombiezen.com/go/capnproto2 v2.18.0+incompatible
 )
