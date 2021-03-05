@@ -151,14 +151,6 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 	return flows
 }
 
-const (
-	jnxOperatingDescr    = "1.3.6.1.4.1.2636.3.1.13.1.5."
-	jnxOperatingCPU      = "1.3.6.1.4.1.2636.3.1.13.1.8."
-	jnxOperatingDRAMSize = "1.3.6.1.4.1.2636.3.1.13.1.10."
-	jnxOperatingBuffer   = "1.3.6.1.4.1.2636.3.1.13.1.11."
-	jnxOperatingMemory   = "1.3.6.1.4.1.2636.3.1.13.1.15."
-)
-
 func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 	var results []gosnmp.SnmpPDU
 	m := map[string]*deviceMetricRow{}
@@ -255,6 +247,14 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))
 	return flows, nil
 }
+
+const (
+	jnxOperatingDescr    = "1.3.6.1.4.1.2636.3.1.13.1.5."
+	jnxOperatingCPU      = "1.3.6.1.4.1.2636.3.1.13.1.8."
+	jnxOperatingDRAMSize = "1.3.6.1.4.1.2636.3.1.13.1.10."
+	jnxOperatingBuffer   = "1.3.6.1.4.1.2636.3.1.13.1.11."
+	jnxOperatingMemory   = "1.3.6.1.4.1.2636.3.1.13.1.15."
+)
 
 // Polling each sub-tree individually is (we hope) a lot cheaper than polling
 // their parent tree in its entirety and pulling out just the oids we actually

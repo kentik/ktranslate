@@ -55,12 +55,14 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 	}
 
 	// Load a mibdb if we have one.
-	if conf.Global != nil {
+	if conf.Global != nil && (conf.Global.MibDB != "" && conf.Global.MibProfileDir != "") {
 		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 		if err != nil {
 			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
+	} else {
+		log.Infof("Skipping configurable mibs")
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.

@@ -50,6 +50,17 @@ type NRMetric struct {
 	Attributes map[string]interface{} `json:"attributes"`
 }
 
+var (
+	DroppedAttrs = map[string]bool{
+		"timestamp":           true,
+		"sampled_packet_size": true,
+		"Lat/Long Dest":       true,
+		"MEMBER_ID":           true,
+		"dst_eth_mac":         true,
+		"src_eth_mac":         true,
+	}
+)
+
 func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, error) {
 	jf := &NRMFormat{
 		compression:  compression,
@@ -394,17 +405,21 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool) {
 	mapr := in.Flatten()
 	for k, v := range mapr {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+
 		switch vt := v.(type) {
 		case string:
 			if !metrics[k] && vt != "" {
 				attr[k] = vt
 			}
 		case int64:
-			if !metrics[k] {
+			if !metrics[k] && vt > 0 {
 				attr[k] = int(vt)
 			}
 		case int32:
-			if !metrics[k] {
+			if !metrics[k] && vt > 0 {
 				attr[k] = int(vt)
 			}
 		}
