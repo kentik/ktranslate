@@ -24,8 +24,12 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		conf.DeviceOids = profileMetrics
 	} else if len(profileMetrics) > 0 {
 		for oid, m := range profileMetrics {
-			log.Infof("Adding device metric %s -> %s", oid, m.Name)
-			conf.DeviceOids[oid] = m
+			noid := oid
+			if !strings.HasPrefix(noid, ".") {
+				noid = "." + noid
+			}
+			log.Infof("Adding device metric %s -> %s", noid, m.Name)
+			conf.DeviceOids[noid] = m
 		}
 	}
 

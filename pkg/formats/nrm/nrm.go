@@ -58,6 +58,7 @@ var (
 		"MEMBER_ID":           true,
 		"dst_eth_mac":         true,
 		"src_eth_mac":         true,
+		"Manufacturer":        true,
 	}
 )
 
