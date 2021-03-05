@@ -49,8 +49,16 @@ type InterfaceMetrics struct {
 	oidMap    map[string]string
 }
 
-func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *InterfaceMetrics {
+func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *InterfaceMetrics {
 	oidMap := conf.InterfaceMetricsOidMap
+	if oidMap == nil {
+		oidMap = make(map[string]string)
+	}
+	for oid, m := range profileMetrics {
+		log.Infof("Adding interface metric %s -> %s", oid, m.Name)
+		oidMap[oid] = m.Name
+	}
+
 	if len(oidMap) == 0 {
 		oidMap = defaultOidMap
 		log.Infof("Using default interface metric set")

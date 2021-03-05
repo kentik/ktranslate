@@ -208,6 +208,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 // nolint: errcheck
 func (kc *KTranslate) cleanup() {
+	snmp.Close()
 	for _, sink := range kc.sinks {
 		sink.Close()
 	}

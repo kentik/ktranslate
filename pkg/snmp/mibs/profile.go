@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/kt"
 
 	"gopkg.in/yaml.v2"
 )
@@ -160,4 +161,88 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 
 	// Didn't match anything so return nil
 	return nil
+}
+
+func (p *Profile) DumpOids() {
+	p.Infof("Device Tags:")
+	for _, tag := range p.MetricTags {
+		if tag.Column.Oid != "" {
+			p.Infof("   -> %s -> %s", tag.Column.Oid, tag.Column.Name)
+		}
+	}
+
+	p.Infof("Device Metrics:")
+	for _, metric := range p.Metrics {
+		p.Infof("MIB -> %s | %s %s %s", metric.Mib, metric.Table.Name, metric.ForcedType, metric.Symbol)
+		for _, s := range metric.Symbols {
+			if s.Oid != "" {
+				p.Infof("   -> %s -> %s", s.Oid, s.Name)
+			}
+		}
+		if metric.Symbol.Oid != "" {
+			p.Infof("Symbol   -> %s -> %s", metric.Symbol.Oid, metric.Symbol.Name)
+		}
+
+		for _, tag := range metric.MetricTags {
+			if tag.Column.Oid != "" {
+				p.Infof("Tag   -> %s -> %s %s %s", tag.Column.Oid, tag.Column.Name, tag.Tag, tag.Symbol)
+			}
+		}
+	}
+}
+
+// Return oids for metrics (type counter) for the enabled mibs
+// IF-MIB | ifXTable monotonic_count { } This is an interface metric because it starts with a if
+// UDP-MIB |  monotonic_count {1.3.6.1.2.1.7.8.0 udpHCInDatagrams} This is a device metrics because it does't, but still is a counter.
+
+func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[string]*kt.Mib) {
+	deviceMetrics := map[string]*kt.Mib{}
+	interfaceMetrics := map[string]*kt.Mib{}
+
+	enabled := map[string]bool{}
+	for _, mib := range enabledMibs {
+		enabled[mib] = true
+	}
+
+	for _, metric := range p.Metrics {
+		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
+			continue
+		}
+
+		var otype kt.Oidtype
+		switch metric.ForcedType {
+		case "monotonic_count":
+			otype = kt.Counter
+		default: // We only are looking for metric type values here.
+			continue
+		}
+
+		// TODO -- so we want to collase Symobol and Symbols?
+		if metric.Symbol.Oid != "" {
+			mib := &kt.Mib{
+				Oid:  metric.Symbol.Oid,
+				Name: metric.Symbol.Name,
+				Type: otype,
+			}
+			if strings.HasPrefix(metric.Symbol.Name, "if") {
+				interfaceMetrics[metric.Symbol.Oid] = mib
+			} else {
+				deviceMetrics[metric.Symbol.Oid] = mib
+			}
+		}
+
+		for _, s := range metric.Symbols {
+			mib := &kt.Mib{
+				Oid:  s.Oid,
+				Name: s.Name,
+				Type: otype,
+			}
+			if strings.HasPrefix(s.Name, "if") {
+				interfaceMetrics[s.Oid] = mib
+			} else {
+				deviceMetrics[s.Oid] = mib
+			}
+		}
+	}
+	return deviceMetrics, interfaceMetrics
 }

@@ -33,6 +33,10 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		return fmt.Errorf("Missing the discovery config %+v", conf)
 	}
 
+	if conf.Global == nil || conf.Global.MibProfileDir == "" {
+		return fmt.Errorf("Add a global section and mib profile directory %+v", conf)
+	}
+
 	if len(conf.Disco.Ports) == 0 {
 		conf.Disco.Ports = []int{int(snmp_util.SNMP_PORT)}
 	}
@@ -44,9 +48,9 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	// Use this for auto-discovering metrics to pull.
-	mdb, err := mibs.NewMibDB(conf.Disco.MibDB, conf.Disco.MibProfileDir, log)
+	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 	if err != nil {
-		return fmt.Errorf("Missing the mibs db config %s -> %v", conf.Disco.MibDB, err)
+		return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 	}
 	defer mdb.Close()
 

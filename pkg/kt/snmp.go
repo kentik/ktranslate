@@ -107,15 +107,16 @@ type SnmpDiscoConfig struct {
 	AddDevices         bool          `json:"add_devices"`
 	Retries            int           `json:"retries"`
 	Threads            int           `json:"threads"`
-	MibDB              string        `json:"mibs_db"`
-	MibProfileDir      string        `json:"mib_profile_dir"`
 	CheckAll           bool          `json:"check_all"`
 	ReplaceDevices     bool          `json:"replace_devices"`
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int  `json:"poll_time_sec"`
-	DropIfOutside bool `json:"drop_if_outside_poll"`
+	PollTimeSec   int      `json:"poll_time_sec"`
+	DropIfOutside bool     `json:"drop_if_outside_poll"`
+	MibProfileDir string   `json:"mib_profile_dir"`
+	MibDB         string   `json:"mibs_db"`
+	MibsEnabled   []string `json:"mibs_enabled"`
 }
 
 type SnmpConfig struct {

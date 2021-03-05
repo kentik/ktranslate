@@ -19,7 +19,16 @@ type DeviceMetrics struct {
 	metrics *kt.SnmpDeviceMetric
 }
 
-func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetrics {
+func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *DeviceMetrics {
+	if conf.DeviceOids == nil && len(profileMetrics) > 0 {
+		conf.DeviceOids = profileMetrics
+	} else if len(profileMetrics) > 0 {
+		for oid, m := range profileMetrics {
+			log.Infof("Adding device metric %s -> %s", oid, m.Name)
+			conf.DeviceOids[oid] = m
+		}
+	}
+
 	return &DeviceMetrics{
 		gconf:   gconf,
 		log:     log,

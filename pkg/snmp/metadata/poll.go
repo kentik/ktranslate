@@ -5,10 +5,11 @@ import (
 	"time"
 
 	"github.com/kentik/gosnmp"
-	"github.com/kentik/ktranslate/pkg/util/tick"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/snmp/mibs"
+	"github.com/kentik/ktranslate/pkg/util/tick"
 )
 
 type Poller struct {
@@ -27,7 +28,7 @@ const (
 	DEFUALT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
 )
 
-func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
+func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
 
 	return &Poller{
 		gconf:             gconf,

@@ -7,6 +7,7 @@ import (
 	"github.com/kentik/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
 
@@ -21,7 +22,7 @@ type Poller struct {
 	dropIfOutside    bool
 }
 
-func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *Poller {
+func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
 
 	// Default rate multiplier to 1 if its 0.
 	if conf.RateMultiplier == 0 {
@@ -41,13 +42,20 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		dropIfOutside = gconf.DropIfOutside
 	}
 
+	// If there's a profile passed in, look at the mibs set for this.
+	var deviceMetricMibs, interfaceMetricMibs map[string]*kt.Mib
+	if profile != nil {
+		deviceMetricMibs, interfaceMetricMibs = profile.GetMetrics(gconf.MibsEnabled)
+		//profile.DumpOids()
+	}
+
 	return &Poller{
 		jchfChan:         jchfChan,
 		log:              log,
 		metrics:          metrics,
 		server:           server,
-		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, log),
-		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, log),
+		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, interfaceMetricMibs, log),
+		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, deviceMetricMibs, log),
 		counterTimeSec:   counterTimeSec,
 		dropIfOutside:    dropIfOutside,
 	}
