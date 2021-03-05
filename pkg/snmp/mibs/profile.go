@@ -163,29 +163,29 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 	return nil
 }
 
-func (p *Profile) DumpOids() {
-	p.Infof("Device Tags:")
+func (p *Profile) DumpOids(log logger.ContextL) {
+	log.Infof("Device Tags:")
 	for _, tag := range p.MetricTags {
 		if tag.Column.Oid != "" {
-			p.Infof("   -> %s -> %s", tag.Column.Oid, tag.Column.Name)
+			log.Infof("   -> %s -> %s", tag.Column.Oid, tag.Column.Name)
 		}
 	}
 
-	p.Infof("Device Metrics:")
+	log.Infof("Device Metrics:")
 	for _, metric := range p.Metrics {
-		p.Infof("MIB -> %s | %s %s %s", metric.Mib, metric.Table.Name, metric.ForcedType, metric.Symbol)
+		log.Infof("MIB -> %s | %s %s %s", metric.Mib, metric.Table.Name, metric.ForcedType, metric.Symbol)
 		for _, s := range metric.Symbols {
 			if s.Oid != "" {
-				p.Infof("   -> %s -> %s", s.Oid, s.Name)
+				log.Infof("   -> %s -> %s", s.Oid, s.Name)
 			}
 		}
 		if metric.Symbol.Oid != "" {
-			p.Infof("Symbol   -> %s -> %s", metric.Symbol.Oid, metric.Symbol.Name)
+			log.Infof("Symbol   -> %s -> %s", metric.Symbol.Oid, metric.Symbol.Name)
 		}
 
 		for _, tag := range metric.MetricTags {
 			if tag.Column.Oid != "" {
-				p.Infof("Tag   -> %s -> %s %s %s", tag.Column.Oid, tag.Column.Name, tag.Tag, tag.Symbol)
+				log.Infof("Tag   -> %s -> %s %s %s", tag.Column.Oid, tag.Column.Name, tag.Tag, tag.Symbol)
 			}
 		}
 	}
@@ -211,7 +211,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 
 		var otype kt.Oidtype
 		switch metric.ForcedType {
-		case "monotonic_count":
+		case "monotonic_count", "monotonic_count_and_rate":
 			otype = kt.Counter
 		default: // We only are looking for metric type values here.
 			continue

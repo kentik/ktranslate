@@ -2,6 +2,7 @@ package snmp
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -25,7 +26,8 @@ const (
 )
 
 var (
-	mibdb *mibs.MibDB // Global singleton instance here.
+	mibdb        *mibs.MibDB // Global singleton instance here.
+	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
 )
 
 func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, log logger.ContextL) error {
@@ -78,6 +80,9 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 			profile = mibdb.FindProfile(device.OID)
 			if profile != nil {
 				log.Infof("Found profile for %s: %v", device.OID, profile.From)
+				if *dumpMibTable {
+					profile.DumpOids(cl)
+				}
 			}
 		}
 		err := launchSnmp(conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
