@@ -111,6 +111,7 @@ type JCHF struct {
 	EventType               string            `json:"eventType"`
 	avroSet                 map[string]interface{}
 	hasSetAvro              bool
+	CustomMetrics           map[string]bool `json:"-"`
 }
 
 func NewJCHF() *JCHF {

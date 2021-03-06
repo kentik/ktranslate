@@ -128,17 +128,24 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.CustomBigInt["Uptime"] = dmr.Uptime
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
+		metrics := map[string]bool{"CPU": true, "MemoryUtilization": true, "Uptime": true, "MemoryFree": true}
 
 		if dmr.juniperOperatingDRAMSize > 0 {
 			dst.CustomBigInt["juniperOperatingDRAMSize"] = dmr.juniperOperatingDRAMSize
 			dst.CustomBigInt["juniperOperatingMemory"] = dmr.juniperOperatingMemory
 			dst.CustomBigInt["juniperOperatingBuffer"] = dmr.juniperOperatingBuffer
+			metrics["juniperOperatingDRAMSize"] = true
+			metrics["juniperOperatingMemory"] = true
+			metrics["juniperOperatingBuffer"] = true
 		}
 
 		if dmr.hrStorageAllocationUnits > 0 {
 			dst.CustomBigInt["hrStorageAllocationUnits"] = dmr.hrStorageAllocationUnits
 			dst.CustomBigInt["hrStorageSize"] = dmr.hrStorageSize
 			dst.CustomBigInt["hrStorageUsed"] = dmr.hrStorageUsed
+			metrics["hrStorageAllocationUnits"] = true
+			metrics["hrStorageSize"] = true
+			metrics["hrStorageUsed"] = true
 		}
 
 		if dmr.cpmCPUTotal5min > 0 {
@@ -147,8 +154,13 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 			dst.CustomBigInt["cpmCPUTotal5minRev"] = dmr.cpmCPUTotal5minRev
 			dst.CustomBigInt["cpmCPUTotal5min"] = dmr.cpmCPUTotal5min
 			dst.CustomBigInt["cpmCPUMemoryFree"] = dmr.cpmCPUMemoryFree
+			metrics["cpmCPUTotal5min"] = true
+			metrics["cpmCPUTotal5minRev"] = true
+			metrics["cpmCPUTotal5min"] = true
+			metrics["cpmCPUMemoryFree"] = true
 		}
 
+		dst.CustomMetrics = metrics // Add this in so that we know what metrics to pull out down the road.
 		flows = append(flows, dst)
 
 	}
@@ -185,6 +197,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 	}
 
 	// Map back into types we know about.
+	metricsFound := map[string]bool{"Uptime": true}
 	for _, variable := range results {
 		if variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
@@ -205,6 +218,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 			continue
 		}
 		dmr := assureDeviceMetrics(m, idx)
+		metricsFound[mib.Name] = true
 		switch mib.Type {
 		case kt.String:
 			dmr.customStr[mib.Name] = string(variable.Value.([]byte))
@@ -245,6 +259,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.CustomStr["Error"] = dmr.Error
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
+		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
 		flows = append(flows, dst)
 	}
 

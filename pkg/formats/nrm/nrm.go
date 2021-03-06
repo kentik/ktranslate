@@ -192,6 +192,9 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 		interfaceInfo: map[kt.IfaceID]map[string]interface{}{},
 	}
 	for k, v := range in.CustomStr {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
 		if strings.HasPrefix(k, "if.") {
 			pts := strings.SplitN(k, ".", 3)
 			if len(pts) == 3 {
@@ -211,6 +214,9 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 		}
 	}
 	for k, v := range in.CustomInt {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
 		if strings.HasPrefix(k, "if.") {
 			pts := strings.SplitN(k, ".", 3)
 			if len(pts) == 3 {
@@ -327,41 +333,51 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 }
 
 func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
-	metrics := map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
+	var metrics map[string]bool
+	if len(in.CustomMetrics) > 0 {
+		metrics = in.CustomMetrics
+	} else {
+		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
+	}
 	attr := map[string]interface{}{}
 	f.setAttr(attr, in, metrics)
-	ms := make([]NRMetric, len(metrics))
-	i := 0
+	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {
-		ms[i] = NRMetric{
-			Name:       "kentik.snmp." + m,
-			Type:       NR_GAUGE_TYPE,
-			Value:      int64(in.CustomBigInt[m]),
-			Timestamp:  ts,
-			Attributes: attr,
+		if _, ok := in.CustomBigInt[m]; ok {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.snmp." + m,
+				Type:       NR_GAUGE_TYPE,
+				Value:      int64(in.CustomBigInt[m]),
+				Timestamp:  ts,
+				Attributes: attr,
+			})
 		}
-		i++
 	}
 
 	return ms
 }
 
 func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
-	metrics := map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
-		"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
+	var metrics map[string]bool
+	if len(in.CustomMetrics) > 0 {
+		metrics = in.CustomMetrics
+	} else {
+		metrics = map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
+			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
+	}
 	attr := map[string]interface{}{}
 	f.setAttr(attr, in, metrics)
-	ms := make([]NRMetric, len(metrics))
-	i := 0
+	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {
-		ms[i] = NRMetric{
-			Name:       "kentik.snmp." + m,
-			Type:       NR_GAUGE_TYPE,
-			Value:      int64(in.CustomBigInt[m]),
-			Timestamp:  ts,
-			Attributes: attr,
+		if _, ok := in.CustomBigInt[m]; ok {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.snmp." + m,
+				Type:       NR_GAUGE_TYPE,
+				Value:      int64(in.CustomBigInt[m]),
+				Timestamp:  ts,
+				Attributes: attr,
+			})
 		}
-		i++
 	}
 
 	// Grap capacity utilization if possible.
