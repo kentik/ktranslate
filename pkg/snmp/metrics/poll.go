@@ -46,7 +46,6 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	var deviceMetricMibs, interfaceMetricMibs map[string]*kt.Mib
 	if profile != nil {
 		deviceMetricMibs, interfaceMetricMibs = profile.GetMetrics(gconf.MibsEnabled)
-		//profile.DumpOids()
 	}
 
 	return &Poller{

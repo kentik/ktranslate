@@ -246,3 +246,44 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 	}
 	return deviceMetrics, interfaceMetrics
 }
+
+func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[string]*kt.Mib) {
+	deviceMetadata := map[string]*kt.Mib{}
+	interfaceMetadata := map[string]*kt.Mib{}
+
+	enabled := map[string]bool{}
+	for _, mib := range enabledMibs {
+		enabled[mib] = true
+	}
+
+	for _, tag := range p.MetricTags {
+		if tag.Column.Oid != "" {
+			mib := &kt.Mib{
+				Oid:  tag.Column.Oid,
+				Name: tag.Column.Name,
+				Type: kt.String,
+			}
+			deviceMetadata[tag.Column.Oid] = mib
+		}
+	}
+
+	for _, metric := range p.Metrics {
+		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
+			continue
+		}
+
+		for _, t := range metric.MetricTags {
+			mib := &kt.Mib{
+				Oid:  t.Column.Oid,
+				Name: t.Column.Name,
+				Type: kt.String,
+			}
+			if strings.HasPrefix(t.Column.Name, "if") {
+				interfaceMetadata[t.Column.Oid] = mib
+			} else {
+				deviceMetadata[t.Column.Oid] = mib
+			}
+		}
+	}
+	return deviceMetadata, interfaceMetadata
+}

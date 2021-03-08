@@ -52,13 +52,26 @@ type NRMetric struct {
 
 var (
 	DroppedAttrs = map[string]bool{
-		"timestamp":           true,
-		"sampled_packet_size": true,
-		"Lat/Long Dest":       true,
-		"MEMBER_ID":           true,
-		"dst_eth_mac":         true,
-		"src_eth_mac":         true,
-		"Manufacturer":        true,
+		"timestamp":               true,
+		"sampled_packet_size":     true,
+		"Lat/Long Dest":           true,
+		"MEMBER_ID":               true,
+		"dst_eth_mac":             true,
+		"src_eth_mac":             true,
+		"Manufacturer":            true,
+		"Error Cause/Trace Route": true,
+		"Hop Data":                true,
+		"STR01":                   true,
+		"ULT_EXIT_PORT":           true,
+		"Task ID":                 true,
+		"APP_PROTOCOL":            true,
+		"Agent ID":                true,
+		"ULT_EXIT_DEVICE_ID":      true,
+		"device_id":               true,
+		"kt_functional_testing":   true,
+		"CLIENT_NW_LATENCY_MS":    true,
+		"APPL_LATENCY_MS":         true,
+		"SERVER_NW_LATENCY_MS":    true,
 	}
 )
 
@@ -90,6 +103,10 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	ct := time.Now().UnixNano() / 1e+6 // Convert to milliseconds
 	for _, m := range msgs {
 		ms.Metrics = append(ms.Metrics, f.toNRMetric(m, ct)...)
+	}
+
+	if len(ms.Metrics) == 0 {
+		return nil, nil
 	}
 
 	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.

@@ -13,15 +13,16 @@ import (
 )
 
 type Poller struct {
-	log               logger.ContextL
-	server            *gosnmp.GoSNMP
-	interval          time.Duration
-	interfaceMetadata *InterfaceMetadata
-	gotDeviceMetadata bool
-	jchfChan          chan []*kt.JCHF
-	conf              *kt.SnmpDeviceConfig
-	metrics           *kt.SnmpDeviceMetric
-	gconf             *kt.SnmpGlobalConfig
+	log                logger.ContextL
+	server             *gosnmp.GoSNMP
+	interval           time.Duration
+	interfaceMetadata  *InterfaceMetadata
+	gotDeviceMetadata  bool
+	jchfChan           chan []*kt.JCHF
+	conf               *kt.SnmpDeviceConfig
+	metrics            *kt.SnmpDeviceMetric
+	gconf              *kt.SnmpGlobalConfig
+	deviceMetadataMibs map[string]*kt.Mib
 }
 
 const (
@@ -30,16 +31,23 @@ const (
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
 
+	// If there's a profile passed in, look at the mibs set for this.
+	var deviceMetadataMibs, interfaceMetadataMibs map[string]*kt.Mib
+	if profile != nil {
+		deviceMetadataMibs, interfaceMetadataMibs = profile.GetMetadata(gconf.MibsEnabled)
+	}
+
 	return &Poller{
-		gconf:             gconf,
-		conf:              conf,
-		log:               log,
-		server:            server,
-		interval:          DEFUALT_INTERVAL,
-		interfaceMetadata: NewInterfaceMetadata(log),
-		gotDeviceMetadata: false,
-		jchfChan:          jchfChan,
-		metrics:           metrics,
+		gconf:              gconf,
+		conf:               conf,
+		log:                log,
+		server:             server,
+		interval:           DEFUALT_INTERVAL,
+		interfaceMetadata:  NewInterfaceMetadata(interfaceMetadataMibs, log),
+		gotDeviceMetadata:  false,
+		jchfChan:           jchfChan,
+		metrics:            metrics,
+		deviceMetadataMibs: deviceMetadataMibs,
 	}
 }
 

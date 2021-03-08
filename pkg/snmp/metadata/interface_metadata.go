@@ -121,7 +121,18 @@ type InterfaceMetadata struct {
 	log logger.ContextL
 }
 
-func NewInterfaceMetadata(log logger.ContextL) *InterfaceMetadata {
+func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL) *InterfaceMetadata {
+	if len(interfaceMetadataMibs) > 0 {
+		/**
+		log.Infof("Using custom interface metadata") // Use a ordered map here?
+		SNMP_Interface_OIDS = orderedmap.NewOrderedMap()
+		for oid, mib := range interfaceMetadataMibs {
+			log.Infof("Adding custom metadata oid: %s -> %s", oid, mib.Name)
+			SNMP_Interface_OIDS.Set(oid, mib.Name)
+		}
+		*/
+	}
+
 	return &InterfaceMetadata{
 		log: log,
 	}
