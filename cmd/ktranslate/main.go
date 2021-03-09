@@ -43,7 +43,7 @@ func main() {
 		apiPort        = flag.Int("api_port", 8080, "Run a stub Kentik API at this port")
 		apiTls         = flag.Bool("api_tls", false, "Use TLS for the stub Kentik API")
 		apiDevices     = flag.String("api_devices", "", "json file containing dumy devices to use for the stub Kentik API")
-		snmpFile       = flag.String("snmp", "", "json file containing snmp config to use")
+		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
 		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
 	)

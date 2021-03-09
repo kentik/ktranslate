@@ -1,7 +1,6 @@
 package snmp
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -9,15 +8,16 @@ import (
 	"strconv"
 	"time"
 
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
-
-	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/snmp/metadata"
 	snmp_metrics "github.com/kentik/ktranslate/pkg/snmp/metrics"
 	"github.com/kentik/ktranslate/pkg/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/snmp/traps"
 	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -170,7 +170,7 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(by, &ms)
+	err = yaml.Unmarshal(by, &ms)
 	if err != nil {
 		return nil, err
 	}

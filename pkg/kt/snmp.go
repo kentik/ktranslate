@@ -12,18 +12,18 @@ import (
 // DeviceData holds information about a device, sent via ST, and sent
 // to the portal in writeSNMPWrapper.
 type DeviceData struct {
-	Manufacturer          string                    `json:"manufacturer"`
-	InterfaceData         map[string]*InterfaceData `json:"interface_data"`
-	DeviceMetricsMetadata *DeviceMetricsMetadata    `json:"device_metrics_metadata,omitempty"`
+	Manufacturer          string                    `yaml:"manufacturer"`
+	InterfaceData         map[string]*InterfaceData `yaml:"interface_data"`
+	DeviceMetricsMetadata *DeviceMetricsMetadata    `yaml:"device_metrics_metadata,omitempty"`
 }
 
 type DeviceMetricsMetadata struct {
-	SysName     string `json:"sys_name,omitempty"`
-	SysObjectID string `json:"sys_object_id,omitempty"`
-	SysDescr    string `json:"sys_descr,omitempty"`
-	SysLocation string `json:"sys_location,omitempty"`
-	SysContact  string `json:"sys_contact,omitempty"`
-	SysServices int    `json:"sys_services,omitempty"`
+	SysName     string `yaml:"sys_name,omitempty"`
+	SysObjectID string `yaml:"sys_object_id,omitempty"`
+	SysDescr    string `yaml:"sys_descr,omitempty"`
+	SysLocation string `yaml:"sys_location,omitempty"`
+	SysContact  string `yaml:"sys_contact,omitempty"`
+	SysServices int    `yaml:"sys_services,omitempty"`
 }
 
 const (
@@ -40,23 +40,23 @@ var (
 // a DeviceData.
 type InterfaceData struct {
 	IPAddr                        // embedded
-	AliasAddr   []IPAddr          `json:"alias_address"`
-	Index       string            `json:"index"`
-	Speed       uint64            `json:"speed"`
-	Description string            `json:"desc"`
-	Alias       string            `json:"alias"`
-	Type        uint64            `json:"type"`
-	VrfName     string            `json:"vrf_name"`
-	VrfDescr    string            `json:"vrf_desc"`
-	VrfRD       string            `json:"vrf_rd"`
-	VrfExtRD    uint64            `json:"vrf_ext_rd"`
-	VrfRT       string            `json:"vrf_rt"`
-	ExtraInfo   map[string]string `json:"extra_info"`
+	AliasAddr   []IPAddr          `yaml:"alias_address"`
+	Index       string            `yaml:"index"`
+	Speed       uint64            `yaml:"speed"`
+	Description string            `yaml:"desc"`
+	Alias       string            `yaml:"alias"`
+	Type        uint64            `yaml:"type"`
+	VrfName     string            `yaml:"vrf_name"`
+	VrfDescr    string            `yaml:"vrf_desc"`
+	VrfRD       string            `yaml:"vrf_rd"`
+	VrfExtRD    uint64            `yaml:"vrf_ext_rd"`
+	VrfRT       string            `yaml:"vrf_rt"`
+	ExtraInfo   map[string]string `yaml:"extra_info"`
 }
 
 type IPAddr struct {
-	Address string `json:"address"`
-	Netmask string `json:"netmask"`
+	Address string `yaml:"address"`
+	Netmask string `yaml:"netmask"`
 }
 
 type TopValue struct {
@@ -65,65 +65,65 @@ type TopValue struct {
 }
 
 type V3SNMPConfig struct {
-	UserName                 string `json:"UserName"`
-	AuthenticationProtocol   string `json:"AuthenticationProtocol"`
-	AuthenticationPassphrase string `json:"AuthenticationPassphrase"`
-	PrivacyProtocol          string `json:"PrivacyProtocol"`
-	PrivacyPassphrase        string `json:"PrivacyPassphrase"`
-	ContextEngineID          string `json:"ContextEngineID"`
-	ContextName              string `json:"ContextName"`
+	UserName                 string `yaml:"UserName"`
+	AuthenticationProtocol   string `yaml:"AuthenticationProtocol"`
+	AuthenticationPassphrase string `yaml:"AuthenticationPassphrase"`
+	PrivacyProtocol          string `yaml:"PrivacyProtocol"`
+	PrivacyPassphrase        string `yaml:"PrivacyPassphrase"`
+	ContextEngineID          string `yaml:"ContextEngineID"`
+	ContextName              string `yaml:"ContextName"`
 }
 
 type SnmpDeviceConfig struct {
-	DeviceName             string            `json:"device_name"`
-	DeviceIP               string            `json:"device_ip"`
-	Community              string            `json:"snmp_comm"`
-	V3                     *V3SNMPConfig     `json:"snmp_v3"`
-	Debug                  bool              `json:"debug"`
-	RateMultiplier         int64             `json:"rate_multiplier"`
-	Port                   uint16            `json:"port"`
-	OID                    string            `json:"oid"`
-	Description            string            `json:"description"`
-	Checked                time.Time         `json:"last_checked"`
-	InterfaceMetricsOidMap map[string]string `json:"interface_metrics_oids"`
-	DeviceOids             map[string]*Mib   `json:"device_oids"`
-	MibProfile             string            `json:"mib_profile"`
+	DeviceName             string            `yaml:"device_name"`
+	DeviceIP               string            `yaml:"device_ip"`
+	Community              string            `yaml:"snmp_comm"`
+	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
+	Debug                  bool              `yaml:"debug"`
+	RateMultiplier         int64             `yaml:"rate_multiplier"`
+	Port                   uint16            `yaml:"port"`
+	OID                    string            `yaml:"oid"`
+	Description            string            `yaml:"description"`
+	Checked                time.Time         `yaml:"last_checked"`
+	InterfaceMetricsOidMap map[string]string `yaml:"interface_metrics_oids"`
+	DeviceOids             map[string]*Mib   `yaml:"device_oids"`
+	MibProfile             string            `yaml:"mib_profile"`
 }
 
 type SnmpTrapConfig struct {
-	Listen    string `json:"listen"`
-	Community string `json:"community"`
-	Version   string `json:"version"`
-	Transport string `json:"transport"`
+	Listen    string `yaml:"listen"`
+	Community string `yaml:"community"`
+	Version   string `yaml:"version"`
+	Transport string `yaml:"transport"`
 }
 
 type SnmpDiscoConfig struct {
-	Cidrs              []string      `json:"cidrs"`
-	Debug              bool          `json:"debug"`
-	TimeoutMS          int           `json:"timeout_ms"`
-	Ports              []int         `json:"ports"`
-	DefaultCommunities []string      `json:"default_communities"`
-	DefaultV3          *V3SNMPConfig `json:"default_v3"`
-	AddDevices         bool          `json:"add_devices"`
-	Retries            int           `json:"retries"`
-	Threads            int           `json:"threads"`
-	CheckAll           bool          `json:"check_all"`
-	ReplaceDevices     bool          `json:"replace_devices"`
+	Cidrs              []string      `yaml:"cidrs"`
+	Debug              bool          `yaml:"debug"`
+	TimeoutMS          int           `yaml:"timeout_ms"`
+	Ports              []int         `yaml:"ports"`
+	DefaultCommunities []string      `yaml:"default_communities"`
+	DefaultV3          *V3SNMPConfig `yaml:"default_v3"`
+	AddDevices         bool          `yaml:"add_devices"`
+	Retries            int           `yaml:"retries"`
+	Threads            int           `yaml:"threads"`
+	CheckAll           bool          `yaml:"check_all"`
+	ReplaceDevices     bool          `yaml:"replace_devices"`
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int      `json:"poll_time_sec"`
-	DropIfOutside bool     `json:"drop_if_outside_poll"`
-	MibProfileDir string   `json:"mib_profile_dir"`
-	MibDB         string   `json:"mibs_db"`
-	MibsEnabled   []string `json:"mibs_enabled"`
+	PollTimeSec   int      `yaml:"poll_time_sec"`
+	DropIfOutside bool     `yaml:"drop_if_outside_poll"`
+	MibProfileDir string   `yaml:"mib_profile_dir"`
+	MibDB         string   `yaml:"mibs_db"`
+	MibsEnabled   []string `yaml:"mibs_enabled"`
 }
 
 type SnmpConfig struct {
-	Devices map[string]*SnmpDeviceConfig `json:"devices"`
-	Trap    *SnmpTrapConfig              `json:"trap"`
-	Disco   *SnmpDiscoConfig             `json:"discovery"`
-	Global  *SnmpGlobalConfig            `json:"global"`
+	Devices map[string]*SnmpDeviceConfig `yaml:"devices"`
+	Trap    *SnmpTrapConfig              `yaml:"trap"`
+	Disco   *SnmpDiscoConfig             `yaml:"discovery"`
+	Global  *SnmpGlobalConfig            `yaml:"global"`
 }
 
 type SnmpMetricSet struct {

@@ -2,13 +2,13 @@ package snmp
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"sync"
 	"time"
 
-	"github.com/liamg/furious/scan"
+	"github.com/liamg/furious/scan" // Discovery
+	"gopkg.in/yaml.v2"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -187,6 +187,10 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	// Now add the new.
 	added := 0
 	replaced := 0
+	if conf.Devices == nil {
+		conf.Devices = map[string]*kt.SnmpDeviceConfig{}
+	}
+
 	for _, d := range foundDevices {
 		if conf.Devices[d.DeviceName] == nil {
 			conf.Devices[d.DeviceName] = d
@@ -203,7 +207,7 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
 
 	// Save out the config file.
-	t, err := json.MarshalIndent(conf, "", "\t")
+	t, err := yaml.Marshal(conf)
 	if err != nil {
 		return err
 	}

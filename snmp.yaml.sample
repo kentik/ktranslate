@@ -1,0 +1,39 @@
+## Config file for Kentik SNMP Polling.
+devices:
+
+trap: # Run an snmp trap at this IP:port
+  listen: 127.0.0.1:9162
+  community:
+  version:
+  transport:
+
+discovery: ## Look for snmp speaking devices in these subnets
+  cidrs:
+  - 10.10.0.0/24
+  debug: False
+  timeout_ms: 3000
+  ports:
+  - 161
+  default_communities:  # Will try any of these comuninity options
+  - public
+  default_v3:           # OR, will try v3 auth with just this auth set.
+  add_devices: True    # If true, add found devices to this config.
+  retries: 0
+  threads: 4
+  check_all: False      # If true, try to connect to all found hosts, if false, only connect to hosts whos manufacturer can be determained.
+  replace_devices: True  # Replace listing of devices already found.
+
+global:
+  poll_time_sec:          60            # Poll metrics every this many sec.
+  drop_if_outside_poll:   False         # Drop any metrics collected if it takes loger than the poll time.
+
+# Directory to find mib profiles in.
+  mib_profile_dir:        integrations-core/snmp/datadog_checks/snmp/data/profiles
+
+# leveldb to store oids in.
+  mibs_db:                mibs.db
+
+# Use these mib sets for any devices found.
+  mibs_enabled:
+  - IF-MIB
+  - UDP-MIB
