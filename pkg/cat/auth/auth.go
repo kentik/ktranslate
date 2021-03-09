@@ -33,7 +33,7 @@ type Server struct {
 }
 
 const (
-	API  = "/api/internal"
+	API  = "/api"
 	TSDB = "/tsdb"
 )
 

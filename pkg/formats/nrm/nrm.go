@@ -23,16 +23,11 @@ const (
 	NR_UNIQUE_TYPE  = "uniqueCount"
 )
 
-type LastMetadata struct {
-	deviceInfo    map[string]interface{}
-	interfaceInfo map[kt.IfaceID]map[string]interface{}
-}
-
 type NRMFormat struct {
 	logger.ContextL
 	compression  kt.Compression
 	doGz         bool
-	lastMetadata map[string]*LastMetadata
+	lastMetadata map[string]*kt.LastMetadata
 	invalids     map[string]bool
 	mux          sync.RWMutex
 }
@@ -81,7 +76,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "nrmFormat"}, log),
 		doGz:         false,
 		invalids:     map[string]bool{},
-		lastMetadata: map[string]*LastMetadata{},
+		lastMetadata: map[string]*kt.LastMetadata{},
 	}
 
 	switch compression {
@@ -204,9 +199,9 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
-	lm := LastMetadata{
-		deviceInfo:    map[string]interface{}{},
-		interfaceInfo: map[kt.IfaceID]map[string]interface{}{},
+	lm := kt.LastMetadata{
+		DeviceInfo:    map[string]interface{}{},
+		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
 	}
 	for k, v := range in.CustomStr {
 		if DroppedAttrs[k] {
@@ -216,17 +211,17 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 			pts := strings.SplitN(k, ".", 3)
 			if len(pts) == 3 {
 				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.interfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.interfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
 					}
 					if v != "" {
-						lm.interfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 					}
 				}
 			}
 		} else {
 			if v != "" {
-				lm.deviceInfo[k] = v
+				lm.DeviceInfo[k] = v
 			}
 		}
 	}
@@ -238,14 +233,14 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 			pts := strings.SplitN(k, ".", 3)
 			if len(pts) == 3 {
 				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.interfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.interfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
 					}
-					lm.interfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 				}
 			}
 		} else {
-			lm.deviceInfo[k] = v
+			lm.DeviceInfo[k] = v
 		}
 	}
 
@@ -399,7 +394,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 
 	// Grap capacity utilization if possible.
 	if f.lastMetadata[in.DeviceName] != nil {
-		if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.InputPort]; ok {
+		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
@@ -415,7 +410,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 				}
 			}
 		}
-		if oi, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
+		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
@@ -460,19 +455,19 @@ func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics ma
 	}
 
 	if f.lastMetadata[in.DeviceName] != nil {
-		for k, v := range f.lastMetadata[in.DeviceName].deviceInfo {
+		for k, v := range f.lastMetadata[in.DeviceName].DeviceInfo {
 			attr[k] = v
 		}
 
 		if in.OutputPort != in.InputPort {
-			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.InputPort]; ok {
+			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 				for k, v := range ii {
 					if v != "" {
 						attr["input_if_"+k] = v
 					}
 				}
 			}
-			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
+			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 				for k, v := range ii {
 					if v != "" {
 						attr["output_if_"+k] = v
@@ -480,7 +475,7 @@ func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics ma
 				}
 			}
 		} else {
-			if ii, ok := f.lastMetadata[in.DeviceName].interfaceInfo[in.OutputPort]; ok {
+			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 				for k, v := range ii {
 					if v != "" {
 						attr["if_"+k] = v

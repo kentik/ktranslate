@@ -183,3 +183,8 @@ type Mib struct {
 func (mb Mib) String() string {
 	return fmt.Sprintf("Name: %s, Oid: %s: Type: %d, Extra: %s", mb.Name, mb.Oid, mb.Type, mb.Extra)
 }
+
+type LastMetadata struct {
+	DeviceInfo    map[string]interface{}
+	InterfaceInfo map[IfaceID]map[string]interface{}
+}
