@@ -71,7 +71,17 @@ func (d *InfluxData) String() string {
 	tags := make([]string, len(d.Tags))
 	i = 0
 	for k, v := range d.Tags {
-		tags[i] = fmt.Sprintf("%s=%v", k, v)
+		switch t := v.(type) {
+		case string:
+			if strings.ContainsAny(t, " ") {
+				tags[i] = fmt.Sprintf("%s=\"%s\"", k, t)
+			} else {
+				tags[i] = fmt.Sprintf("%s=%s", k, t)
+			}
+		default:
+			tags[i] = fmt.Sprintf("%s=%v", k, v)
+		}
+
 		i++
 	}
 

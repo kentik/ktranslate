@@ -33,8 +33,9 @@ type Server struct {
 }
 
 const (
-	API  = "/api"
-	TSDB = "/tsdb"
+	API     = "/api"
+	TSDB    = "/tsdb"
+	API_INT = "/api/internal"
 )
 
 func NewServer(host string, port int, tls bool, deviceFile string, log logger.ContextL) (*Server, error) {
@@ -82,6 +83,7 @@ func (s *Server) Serve() error {
 	s.mux.HandleFunc(API+"/device/{did}/interfaces", s.wrap(s.interfaces))
 	s.mux.HandleFunc(API+"/company/{cid}/device/{did}/tags/snmp", s.wrap(s.update))
 	s.mux.HandleFunc(API+"/devices", s.wrap(s.devices))
+	s.mux.HandleFunc(API_INT+"/device/{did}", s.wrap(s.device))
 
 	return http.Serve(s.listener, s.mux)
 }
