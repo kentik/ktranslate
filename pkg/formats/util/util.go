@@ -1,6 +1,9 @@
 package util
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -83,4 +86,53 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool, 
 			}
 		}
 	}
+}
+
+func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
+	lm := kt.LastMetadata{
+		DeviceInfo:    map[string]interface{}{},
+		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
+	}
+	for k, v := range in.CustomStr {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					if v != "" {
+						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+					}
+				}
+			}
+		} else {
+			if v != "" {
+				lm.DeviceInfo[k] = v
+			}
+		}
+	}
+	for k, v := range in.CustomInt {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+				}
+			}
+		} else {
+			lm.DeviceInfo[k] = v
+		}
+	}
+
+	return &lm
 }

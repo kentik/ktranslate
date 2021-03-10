@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -175,52 +173,13 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
-	lm := kt.LastMetadata{
-		DeviceInfo:    map[string]interface{}{},
-		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
-	}
-	for k, v := range in.CustomStr {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					if v != "" {
-						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-					}
-				}
-			}
-		} else {
-			if v != "" {
-				lm.DeviceInfo[k] = v
-			}
-		}
-	}
-	for k, v := range in.CustomInt {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-				}
-			}
-		} else {
-			lm.DeviceInfo[k] = v
-		}
-	}
 
-	f.lastMetadata[in.DeviceName] = &lm
+	lm := util.SetMetadata(in)
+
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	f.lastMetadata[in.DeviceName] = lm
+
 	return nil
 }
 
@@ -230,9 +189,15 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	var names map[string]string
 	switch in.CustomInt["Result Type"] {
 	case 0: // Error
-		metrics = map[string]bool{"Error": true}
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
 	case 1: // Timeout
-		metrics = map[string]bool{"Timeout": true}
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
 	case 2: // Ping
 		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
 			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
@@ -258,28 +223,19 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	}
 
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := make([]NRMetric, len(metrics))
 	i := 0
 
 	for m, _ := range metrics {
-		switch m {
-		case "Error", "Timeout":
-			ms[i] = NRMetric{
-				Name:       "kentik.synth." + m,
-				Type:       NR_GAUGE_TYPE,
-				Value:      1,
-				Timestamp:  ts,
-				Attributes: attr,
-			}
-		default:
-			ms[i] = NRMetric{
-				Name:       "kentik.synth." + names[m],
-				Type:       NR_GAUGE_TYPE,
-				Value:      int64(in.CustomInt[m]),
-				Timestamp:  ts,
-				Attributes: attr,
-			}
+		ms[i] = NRMetric{
+			Name:       "kentik.synth." + names[m],
+			Type:       NR_GAUGE_TYPE,
+			Value:      int64(in.CustomInt[m]),
+			Timestamp:  ts,
+			Attributes: attr,
 		}
 		i++
 	}
@@ -291,7 +247,9 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := make([]NRMetric, 0)
 	for m, _ := range metrics {
 		var value int64
@@ -328,7 +286,9 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -354,6 +314,8 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
+	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {

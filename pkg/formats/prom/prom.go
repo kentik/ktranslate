@@ -3,7 +3,6 @@ package prom
 import (
 	"flag"
 	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 
@@ -23,23 +22,36 @@ var (
 type PromData struct {
 	Name      string
 	Value     float64
-	TagKeys   []string
-	TagValues []interface{}
+	Tags      map[string]interface{}
 	Timestamp int64
 }
 
-func (d *PromData) GetTagLabels() []string {
-	return d.TagKeys
+func (d *PromData) GetTagLabels(vecTags map[string]map[string]int) []string {
+	if _, ok := vecTags[d.Name]; !ok {
+		vecTags[d.Name] = map[string]int{}
+	}
+	i := 0
+	tags := make([]string, len(d.Tags))
+	for k, _ := range d.Tags {
+		vecTags[d.Name][k] = i
+		tags[i] = k
+		i++
+	}
+	return tags
 }
 
-func (d *PromData) GetTagValues() []string {
-	tags := make([]string, len(d.TagValues))
-	for i, v := range d.TagValues {
+func (d *PromData) GetTagValues(vecTags map[string]map[string]int) []string {
+	tags := make([]string, len(vecTags[d.Name]))
+	for k, v := range d.Tags {
+		posit, ok := vecTags[d.Name][k]
+		if !ok {
+			continue
+		}
 		switch t := v.(type) {
 		case string:
-			tags[i] = t
+			tags[posit] = t
 		default:
-			tags[i] = fmt.Sprintf("%v", v)
+			tags[posit] = fmt.Sprintf("%v", v)
 		}
 	}
 	return tags
@@ -50,6 +62,7 @@ type PromFormat struct {
 	vecs         map[string]*prometheus.CounterVec
 	invalids     map[string]bool
 	lastMetadata map[string]*kt.LastMetadata
+	vecTags      map[string]map[string]int
 	mux          sync.RWMutex
 }
 
@@ -59,6 +72,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, 
 		vecs:         make(map[string]*prometheus.CounterVec),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
+		vecTags:      map[string]map[string]int{},
 	}
 
 	if *doCollectorStats {
@@ -81,15 +95,19 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
+			f.mux.Lock()
 			f.vecs[m.Name] = prometheus.NewCounterVec(
 				prometheus.CounterOpts{
 					Name: m.Name,
 				},
-				m.GetTagLabels(),
+				m.GetTagLabels(f.vecTags),
 			)
+			f.mux.Unlock()
 			prometheus.MustRegister(f.vecs[m.Name])
 		}
-		f.vecs[m.Name].WithLabelValues(m.GetTagValues()...).Add(m.Value)
+		f.mux.RLock()
+		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Add(m.Value)
+		f.mux.RUnlock()
 	}
 
 	return nil, nil
@@ -176,7 +194,9 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 	}
 
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 
 	for m, _ := range metrics {
@@ -188,15 +208,13 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 		}
 	}
 
-	tagKeys, tagValues := split(attr)
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik.synth." + k,
+			Name:      "kentik:synth:" + k,
 			Value:     float64(v),
 			Timestamp: in.Timestamp * 1000000000,
-			TagKeys:   tagKeys,
-			TagValues: tagValues,
+			Tags:      attr,
 		})
 	}
 
@@ -207,7 +225,9 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		switch m {
@@ -224,15 +244,13 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 		}
 	}
 
-	tagKeys, tagValues := split(attr)
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik.flow." + k,
+			Name:      "kentik:flow:" + k,
 			Value:     float64(v),
 			Timestamp: in.Timestamp * 1000000000,
-			TagKeys:   tagKeys,
-			TagValues: tagValues,
+			Tags:      attr,
 		})
 	}
 
@@ -247,7 +265,9 @@ func (f *PromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []PromData {
 		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -255,15 +275,13 @@ func (f *PromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []PromData {
 		}
 	}
 
-	tagKeys, tagValues := split(attr)
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik.snmp." + k,
+			Name:      "kentik:snmp:" + k,
 			Value:     float64(v),
 			Timestamp: in.Timestamp * 1000000000,
-			TagKeys:   tagKeys,
-			TagValues: tagValues,
+			Tags:      attr,
 		})
 	}
 
@@ -279,6 +297,8 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
+	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 	msF := map[string]float64{}
@@ -312,24 +332,21 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 		}
 	}
 
-	tagKeys, tagValues := split(attr)
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik.snmp." + k,
+			Name:      "kentik:snmp:" + k,
 			Value:     float64(v),
 			Timestamp: in.Timestamp * 1000000000,
-			TagKeys:   tagKeys,
-			TagValues: tagValues,
+			Tags:      attr,
 		})
 	}
 	for k, v := range msF {
 		res = append(res, PromData{
-			Name:      "kentik.snmp." + k,
+			Name:      "kentik:snmp:" + k,
 			Value:     v,
 			Timestamp: in.Timestamp * 1000000000,
-			TagKeys:   tagKeys,
-			TagValues: tagValues,
+			Tags:      attr,
 		})
 	}
 
@@ -340,65 +357,12 @@ func (f *PromFormat) fromSnmpMetadata(in *kt.JCHF) []PromData {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
-	lm := kt.LastMetadata{
-		DeviceInfo:    map[string]interface{}{},
-		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
-	}
-	for k, v := range in.CustomStr {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					if v != "" {
-						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-					}
-				}
-			}
-		} else {
-			if v != "" {
-				lm.DeviceInfo[k] = v
-			}
-		}
-	}
-	for k, v := range in.CustomInt {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-				}
-			}
-		} else {
-			lm.DeviceInfo[k] = v
-		}
-	}
 
-	f.lastMetadata[in.DeviceName] = &lm
+	lm := util.SetMetadata(in)
+
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	f.lastMetadata[in.DeviceName] = lm
+
 	return nil
-}
-
-func split(attr map[string]interface{}) ([]string, []interface{}) {
-	keys := make([]string, len(attr))
-	vals := make([]interface{}, len(attr))
-
-	i := 0
-	for k, v := range attr {
-		keys[i] = k
-		vals[i] = v
-		i++
-	}
-
-	return keys, vals
 }

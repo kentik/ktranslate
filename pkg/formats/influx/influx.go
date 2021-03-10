@@ -150,52 +150,13 @@ func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
-	lm := kt.LastMetadata{
-		DeviceInfo:    map[string]interface{}{},
-		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
-	}
-	for k, v := range in.CustomStr {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					if v != "" {
-						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-					}
-				}
-			}
-		} else {
-			if v != "" {
-				lm.DeviceInfo[k] = v
-			}
-		}
-	}
-	for k, v := range in.CustomInt {
-		if util.DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-		if strings.HasPrefix(k, "if.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if ifint, err := strconv.Atoi(pts[1]); err == nil {
-					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
-						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
-					}
-					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
-				}
-			}
-		} else {
-			lm.DeviceInfo[k] = v
-		}
-	}
 
-	f.lastMetadata[in.DeviceName] = &lm
+	lm := util.SetMetadata(in)
+
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	f.lastMetadata[in.DeviceName] = lm
+
 	return nil
 }
 
@@ -232,7 +193,9 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 
 	for m, _ := range metrics {
@@ -256,7 +219,9 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		switch m {
@@ -289,7 +254,9 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -314,6 +281,8 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
 	}
 	attr := map[string]interface{}{}
+	f.mux.RLock()
+	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 	msF := map[string]float64{}
