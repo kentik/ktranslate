@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
@@ -15,30 +16,7 @@ import (
 )
 
 var (
-	Measurement  = flag.String("measurement", "kflow", "Measurement to use for rollups.")
-	DroppedAttrs = map[string]bool{
-		"timestamp":               true,
-		"sampled_packet_size":     true,
-		"Lat/Long Dest":           true,
-		"MEMBER_ID":               true,
-		"dst_eth_mac":             true,
-		"src_eth_mac":             true,
-		"Manufacturer":            true,
-		"Error Cause/Trace Route": true,
-		"Hop Data":                true,
-		"STR01":                   true,
-		"ULT_EXIT_PORT":           true,
-		"Task ID":                 true,
-		"APP_PROTOCOL":            true,
-		"Agent ID":                true,
-		"ULT_EXIT_DEVICE_ID":      true,
-		"device_id":               true,
-		"kt_functional_testing":   true,
-		"CLIENT_NW_LATENCY_MS":    true,
-		"APPL_LATENCY_MS":         true,
-		"SERVER_NW_LATENCY_MS":    true,
-		"CONNECTION_ID":           true,
-	}
+	Measurement = flag.String("measurement", "kflow", "Measurement to use for rollups.")
 )
 
 type InfluxFormat struct {
@@ -177,7 +155,7 @@ func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
 		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
 	}
 	for k, v := range in.CustomStr {
-		if DroppedAttrs[k] {
+		if util.DroppedAttrs[k] {
 			continue // Skip because we don't want this messing up cardinality.
 		}
 		if strings.HasPrefix(k, "if.") {
@@ -199,7 +177,7 @@ func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
 		}
 	}
 	for k, v := range in.CustomInt {
-		if DroppedAttrs[k] {
+		if util.DroppedAttrs[k] {
 			continue // Skip because we don't want this messing up cardinality.
 		}
 		if strings.HasPrefix(k, "if.") {
@@ -254,7 +232,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 
 	for m, _ := range metrics {
@@ -278,7 +256,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		switch m {
@@ -311,7 +289,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
 	}
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -336,7 +314,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
 	}
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := map[string]int64{}
 	msF := map[string]float64{}
 	for m, _ := range metrics {
@@ -376,59 +354,4 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		Timestamp:   in.Timestamp * 1000000000,
 		Tags:        attr,
 	}}
-}
-
-func (f *InfluxFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool) {
-	mapr := in.Flatten()
-	for k, v := range mapr {
-		if DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-
-		switch vt := v.(type) {
-		case string:
-			if !metrics[k] && vt != "" {
-				attr[k] = vt
-			}
-		case int64:
-			if !metrics[k] && vt > 0 {
-				attr[k] = int(vt)
-			}
-		case int32:
-			if !metrics[k] && vt > 0 {
-				attr[k] = int(vt)
-			}
-		}
-	}
-
-	if f.lastMetadata[in.DeviceName] != nil {
-		for k, v := range f.lastMetadata[in.DeviceName].DeviceInfo {
-			attr[k] = v
-		}
-
-		if in.OutputPort != in.InputPort {
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["input_if_"+k] = v
-					}
-				}
-			}
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["output_if_"+k] = v
-					}
-				}
-			}
-		} else {
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["if_"+k] = v
-					}
-				}
-			}
-		}
-	}
 }

@@ -2,8 +2,12 @@ package prom
 
 import (
 	"flag"
+	"fmt"
+	"strconv"
 	"strings"
+	"sync"
 
+	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
@@ -16,15 +20,45 @@ var (
 	doCollectorStats = flag.Bool("info_collector", false, "Also send stats about this collector")
 )
 
+type PromData struct {
+	Name      string
+	Value     float64
+	TagKeys   []string
+	TagValues []interface{}
+	Timestamp int64
+}
+
+func (d *PromData) GetTagLabels() []string {
+	return d.TagKeys
+}
+
+func (d *PromData) GetTagValues() []string {
+	tags := make([]string, len(d.TagValues))
+	for i, v := range d.TagValues {
+		switch t := v.(type) {
+		case string:
+			tags[i] = t
+		default:
+			tags[i] = fmt.Sprintf("%v", v)
+		}
+	}
+	return tags
+}
+
 type PromFormat struct {
 	logger.ContextL
-	vecs map[string]*prometheus.CounterVec
+	vecs         map[string]*prometheus.CounterVec
+	invalids     map[string]bool
+	lastMetadata map[string]*kt.LastMetadata
+	mux          sync.RWMutex
 }
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, error) {
 	jf := &PromFormat{
-		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
-		vecs:     make(map[string]*prometheus.CounterVec),
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
+		vecs:         make(map[string]*prometheus.CounterVec),
+		invalids:     map[string]bool{},
+		lastMetadata: map[string]*kt.LastMetadata{},
 	}
 
 	if *doCollectorStats {
@@ -36,7 +70,28 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, 
 
 // Not supported.
 func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
-	// Noop here because we only support rollups in promethius format.
+	res := make([]PromData, 0, len(msgs))
+	for _, m := range msgs {
+		res = append(res, f.toPromMetric(m)...)
+	}
+
+	if len(res) == 0 {
+		return nil, nil
+	}
+
+	for _, m := range res {
+		if _, ok := f.vecs[m.Name]; !ok {
+			f.vecs[m.Name] = prometheus.NewCounterVec(
+				prometheus.CounterOpts{
+					Name: m.Name,
+				},
+				m.GetTagLabels(),
+			)
+			prometheus.MustRegister(f.vecs[m.Name])
+		}
+		f.vecs[m.Name].WithLabelValues(m.GetTagValues()...).Add(m.Value)
+	}
+
 	return nil, nil
 }
 
@@ -62,4 +117,288 @@ func (f *PromFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	}
 
 	return nil, nil
+}
+
+func (f *PromFormat) toPromMetric(in *kt.JCHF) []PromData {
+	switch in.EventType {
+	case kt.KENTIK_EVENT_TYPE:
+		return f.fromKflow(in)
+	case kt.KENTIK_EVENT_SNMP_DEV_METRIC:
+		return f.fromSnmpDeviceMetric(in)
+	case kt.KENTIK_EVENT_SNMP_INT_METRIC:
+		return f.fromSnmpInterfaceMetric(in)
+	case kt.KENTIK_EVENT_SYNTH:
+		return f.fromKSynth(in)
+	case kt.KENTIK_EVENT_SNMP_METADATA:
+		return f.fromSnmpMetadata(in)
+	default:
+		f.mux.Lock()
+		defer f.mux.Unlock()
+		if !f.invalids[in.EventType] {
+			f.Warnf("Invalid EventType: %s", in.EventType)
+			f.invalids[in.EventType] = true
+		}
+	}
+
+	return nil
+}
+
+func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
+	var metrics map[string]bool
+	var names map[string]string
+	switch in.CustomInt["Result Type"] {
+	case 0: // Error
+		metrics = map[string]bool{"Error": true}
+	case 1: // Timeout
+		metrics = map[string]bool{"Timeout": true}
+	case 2: // Ping
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
+	case 3: // Fetch
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true, "Fetch Size | Ping Min RTT": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Status", "Fetch TTLB | Ping Lost": "TTLB", "Fetch Size | Ping Min RTT": "Size"}
+	case 4: // Trace
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time"}
+	case 5: // Knock
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
+			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
+	case 6: // Query
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Fetch TTLB | Ping Lost": "Code"}
+	case 7: // Shake
+		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Lat/Long Dest": true}
+		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Lat/Long Dest": "Port"}
+	}
+
+	attr := map[string]interface{}{}
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ms := map[string]int64{}
+
+	for m, _ := range metrics {
+		switch m {
+		case "Error", "Timeout":
+			ms[m] = 1
+		default:
+			ms[names[m]] = int64(in.CustomInt[m])
+		}
+	}
+
+	tagKeys, tagValues := split(attr)
+	res := []PromData{}
+	for k, v := range ms {
+		res = append(res, PromData{
+			Name:      "kentik.synth." + k,
+			Value:     float64(v),
+			Timestamp: in.Timestamp * 1000000000,
+			TagKeys:   tagKeys,
+			TagValues: tagValues,
+		})
+	}
+
+	return res
+}
+
+func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ms := map[string]int64{}
+	for m, _ := range metrics {
+		switch m {
+		case "in_bytes":
+			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
+		case "out_bytes":
+			ms[m] = int64(in.OutBytes * uint64(in.SampleRate))
+		case "in_pkts":
+			ms[m] = int64(in.InPkts * uint64(in.SampleRate))
+		case "out_pkts":
+			ms[m] = int64(in.OutPkts * uint64(in.SampleRate))
+		case "latency_ms":
+			ms[m] = int64(in.CustomInt["APPL_LATENCY_MS"])
+		}
+	}
+
+	tagKeys, tagValues := split(attr)
+	res := []PromData{}
+	for k, v := range ms {
+		res = append(res, PromData{
+			Name:      "kentik.flow." + k,
+			Value:     float64(v),
+			Timestamp: in.Timestamp * 1000000000,
+			TagKeys:   tagKeys,
+			TagValues: tagValues,
+		})
+	}
+
+	return res
+}
+
+func (f *PromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []PromData {
+	var metrics map[string]bool
+	if len(in.CustomMetrics) > 0 {
+		metrics = in.CustomMetrics
+	} else {
+		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
+	}
+	attr := map[string]interface{}{}
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ms := map[string]int64{}
+	for m, _ := range metrics {
+		if _, ok := in.CustomBigInt[m]; ok {
+			ms[m] = in.CustomBigInt[m]
+		}
+	}
+
+	tagKeys, tagValues := split(attr)
+	res := []PromData{}
+	for k, v := range ms {
+		res = append(res, PromData{
+			Name:      "kentik.snmp." + k,
+			Value:     float64(v),
+			Timestamp: in.Timestamp * 1000000000,
+			TagKeys:   tagKeys,
+			TagValues: tagValues,
+		})
+	}
+
+	return res
+}
+
+func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
+	var metrics map[string]bool
+	if len(in.CustomMetrics) > 0 {
+		metrics = in.CustomMetrics
+	} else {
+		metrics = map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
+			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
+	}
+	attr := map[string]interface{}{}
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ms := map[string]int64{}
+	msF := map[string]float64{}
+	for m, _ := range metrics {
+		if _, ok := in.CustomBigInt[m]; ok {
+			ms[m] = in.CustomBigInt[m]
+		}
+	}
+
+	// Grap capacity utilization if possible.
+	if f.lastMetadata[in.DeviceName] != nil {
+		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
+			if speed, ok := ii["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					if uptimeSpeed > 0 {
+						msF["IfInUtilization"] = float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed)
+					}
+				}
+			}
+		}
+		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
+			if speed, ok := oi["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					if uptimeSpeed > 0 {
+						msF["IfOutUtilization"] = float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed)
+					}
+				}
+			}
+		}
+	}
+
+	tagKeys, tagValues := split(attr)
+	res := []PromData{}
+	for k, v := range ms {
+		res = append(res, PromData{
+			Name:      "kentik.snmp." + k,
+			Value:     float64(v),
+			Timestamp: in.Timestamp * 1000000000,
+			TagKeys:   tagKeys,
+			TagValues: tagValues,
+		})
+	}
+	for k, v := range msF {
+		res = append(res, PromData{
+			Name:      "kentik.snmp." + k,
+			Value:     v,
+			Timestamp: in.Timestamp * 1000000000,
+			TagKeys:   tagKeys,
+			TagValues: tagValues,
+		})
+	}
+
+	return res
+}
+
+func (f *PromFormat) fromSnmpMetadata(in *kt.JCHF) []PromData {
+	if in.DeviceName == "" { // Only run if this is set.
+		return nil
+	}
+	lm := kt.LastMetadata{
+		DeviceInfo:    map[string]interface{}{},
+		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
+	}
+	for k, v := range in.CustomStr {
+		if util.DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					if v != "" {
+						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+					}
+				}
+			}
+		} else {
+			if v != "" {
+				lm.DeviceInfo[k] = v
+			}
+		}
+	}
+	for k, v := range in.CustomInt {
+		if util.DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+				}
+			}
+		} else {
+			lm.DeviceInfo[k] = v
+		}
+	}
+
+	f.lastMetadata[in.DeviceName] = &lm
+	return nil
+}
+
+func split(attr map[string]interface{}) ([]string, []interface{}) {
+	keys := make([]string, len(attr))
+	vals := make([]interface{}, len(attr))
+
+	i := 0
+	for k, v := range attr {
+		keys[i] = k
+		vals[i] = v
+		i++
+	}
+
+	return keys, vals
 }

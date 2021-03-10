@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
@@ -44,31 +45,6 @@ type NRMetric struct {
 	Interval   int64                  `json:"interval.ms"`
 	Attributes map[string]interface{} `json:"attributes"`
 }
-
-var (
-	DroppedAttrs = map[string]bool{
-		"timestamp":               true,
-		"sampled_packet_size":     true,
-		"Lat/Long Dest":           true,
-		"MEMBER_ID":               true,
-		"dst_eth_mac":             true,
-		"src_eth_mac":             true,
-		"Manufacturer":            true,
-		"Error Cause/Trace Route": true,
-		"Hop Data":                true,
-		"STR01":                   true,
-		"ULT_EXIT_PORT":           true,
-		"Task ID":                 true,
-		"APP_PROTOCOL":            true,
-		"Agent ID":                true,
-		"ULT_EXIT_DEVICE_ID":      true,
-		"device_id":               true,
-		"kt_functional_testing":   true,
-		"CLIENT_NW_LATENCY_MS":    true,
-		"APPL_LATENCY_MS":         true,
-		"SERVER_NW_LATENCY_MS":    true,
-	}
-)
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, error) {
 	jf := &NRMFormat{
@@ -204,7 +180,7 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
 	}
 	for k, v := range in.CustomStr {
-		if DroppedAttrs[k] {
+		if util.DroppedAttrs[k] {
 			continue // Skip because we don't want this messing up cardinality.
 		}
 		if strings.HasPrefix(k, "if.") {
@@ -226,7 +202,7 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 		}
 	}
 	for k, v := range in.CustomInt {
-		if DroppedAttrs[k] {
+		if util.DroppedAttrs[k] {
 			continue // Skip because we don't want this messing up cardinality.
 		}
 		if strings.HasPrefix(k, "if.") {
@@ -282,7 +258,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	}
 
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, len(metrics))
 	i := 0
 
@@ -315,7 +291,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, 0)
 	for m, _ := range metrics {
 		var value int64
@@ -352,7 +328,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
 	}
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -378,7 +354,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
 	}
 	attr := map[string]interface{}{}
-	f.setAttr(attr, in, metrics)
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -429,59 +405,4 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	}
 
 	return ms
-}
-
-func (f *NRMFormat) setAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool) {
-	mapr := in.Flatten()
-	for k, v := range mapr {
-		if DroppedAttrs[k] {
-			continue // Skip because we don't want this messing up cardinality.
-		}
-
-		switch vt := v.(type) {
-		case string:
-			if !metrics[k] && vt != "" {
-				attr[k] = vt
-			}
-		case int64:
-			if !metrics[k] && vt > 0 {
-				attr[k] = int(vt)
-			}
-		case int32:
-			if !metrics[k] && vt > 0 {
-				attr[k] = int(vt)
-			}
-		}
-	}
-
-	if f.lastMetadata[in.DeviceName] != nil {
-		for k, v := range f.lastMetadata[in.DeviceName].DeviceInfo {
-			attr[k] = v
-		}
-
-		if in.OutputPort != in.InputPort {
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["input_if_"+k] = v
-					}
-				}
-			}
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["output_if_"+k] = v
-					}
-				}
-			}
-		} else {
-			if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-				for k, v := range ii {
-					if v != "" {
-						attr["if_"+k] = v
-					}
-				}
-			}
-		}
-	}
 }
