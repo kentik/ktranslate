@@ -88,6 +88,7 @@ type SnmpDeviceConfig struct {
 	InterfaceMetricsOidMap map[string]string `yaml:"interface_metrics_oids"`
 	DeviceOids             map[string]*Mib   `yaml:"device_oids"`
 	MibProfile             string            `yaml:"mib_profile"`
+	Provider               string            `yaml:"provider"`
 }
 
 type SnmpTrapConfig struct {

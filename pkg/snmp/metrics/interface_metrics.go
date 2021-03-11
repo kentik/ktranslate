@@ -197,6 +197,7 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		dst.CustomInt = make(map[string]int32)
 		dst.CustomBigInt = make(map[string]int64)
 		dst.EventType = kt.KENTIK_EVENT_SNMP_INT_METRIC
+		dst.Provider = im.conf.Provider
 		dst.InputPort = kt.IfaceID(intr)
 		dst.OutputPort = kt.IfaceID(intr)
 		dst.DeviceName = im.conf.DeviceName

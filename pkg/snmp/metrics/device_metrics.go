@@ -118,6 +118,7 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.CustomInt = make(map[string]int32)
 		dst.CustomBigInt = make(map[string]int64)
 		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = dm.conf.Provider
 		dst.CustomStr["Error"] = dmr.Error
 		dst.CustomStr["Component"] = dmr.Component
 		dst.CustomBigInt["CPU"] = dmr.CPU

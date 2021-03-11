@@ -69,7 +69,12 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
 	for _, device := range conf.Devices {
-		log.Infof("Client SNMP: Running SNMP for %s on %s", device.DeviceName, device.DeviceIP)
+		if device.Provider == "" {
+			// Default provider to something we can work with.
+			device.Provider = kt.ProviderRouter
+		}
+
+		log.Infof("Client SNMP: Running SNMP for %s on %s", device.DeviceName, device.DeviceIP, device.Provider)
 		metrics.Mux.Lock()
 		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
 		metrics.Devices[device.DeviceName] = nm

@@ -135,6 +135,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
 	dst.EventType = kt.KENTIK_EVENT_SNMP_METADATA
+	dst.Provider = p.conf.Provider
 
 	dst.CustomStr["Manufacturer"] = dd.Manufacturer
 	dst.DeviceName = p.conf.DeviceName

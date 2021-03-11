@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"strconv"
+	"strings"
 
 	"github.com/bmatsuo/lmdb-go/lmdb"
 
@@ -85,6 +86,32 @@ func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 	}
 
 	return kt.KENTIK_EVENT_TYPE
+}
+
+func (kc *KTranslate) getProviderType(dst *kt.JCHF) string {
+
+	udr, ok := dst.CustomStr[UDR_TYPE]
+	if !ok { // Return this right away.
+		return kt.ProviderRouter
+	}
+
+	// Or maybe its a host.
+	if udr == "kprobe" || udr == "kappa" {
+		return kt.ProviderHost
+	}
+
+	// Else, if its synth, return this.
+	if dst.CustomInt["APP_PROTOCOL"] == 10 || dst.CustomInt["APP_PROTOCOL"] == 11 {
+		return kt.ProviderSynth
+	}
+
+	// Cloud subnet here.
+	if strings.HasSuffix(udr, "_subnet") {
+		return kt.ProviderVPC
+	}
+
+	// Default to router.
+	return kt.ProviderRouter
 }
 
 func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devices, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
@@ -337,6 +364,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 
 	// Set the type dynamically here to help out processing.
 	dst.EventType = kc.getEventType(dst)
+	dst.Provider = kc.getProviderType(dst)
 
 	return nil
 }
