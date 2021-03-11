@@ -39,9 +39,6 @@ func main() {
 		dumpRollups    = flag.Int("rollup_interval", 0, "Export timer for rollups in seconds")
 		rollupAndAlpha = flag.Bool("rollup_and_alpha", false, "Send both rollups and alpha inputs to sinks")
 		sample         = flag.Int("sample_rate", 1, "Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.")
-		apiHost        = flag.String("api_host", "", "Run a stub Kentik API at this host")
-		apiPort        = flag.Int("api_port", 8080, "Run a stub Kentik API at this port")
-		apiTls         = flag.Bool("api_tls", false, "Use TLS for the stub Kentik API")
 		apiDevices     = flag.String("api_devices", "", "json file containing dumy devices to use for the stub Kentik API")
 		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
@@ -80,11 +77,8 @@ func main() {
 		Subtype:           *subtype,
 	}
 
-	if *apiHost != "" {
+	if *apiDevices != "" {
 		conf.Auth = &cat.AuthConfig{
-			Host:        *apiHost,
-			Port:        *apiPort,
-			Tls:         *apiTls,
 			DevicesFile: *apiDevices,
 		}
 	}

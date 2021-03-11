@@ -662,6 +662,9 @@ func (kc *KTranslate) getRouter() http.Handler {
 	r.HandleFunc(HttpHealthCheckPath, func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK\n") // nolint: errcheck
 	})
+	if kc.auth != nil {
+		kc.auth.RegisterRoutes(r)
+	}
 
 	return r
 }
@@ -708,12 +711,11 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 
 	// Set up api auth system if this is set. Allows kproxy|kprobe|kappa|ksynth and others to use this without phoneing home to kentik.
 	if kc.config.Auth != nil {
-		authr, err := auth.NewServer(kc.config.Auth.Host, kc.config.Auth.Port, kc.config.Auth.Tls, kc.config.Auth.DevicesFile, kc.log)
+		authr, err := auth.NewServer(kc.config.Auth.DevicesFile, kc.log)
 		if err != nil {
 			return err
 		}
 		kc.auth = authr
-		go kc.auth.Serve()
 	}
 
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.

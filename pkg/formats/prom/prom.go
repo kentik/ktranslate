@@ -34,7 +34,7 @@ func (d *PromData) GetTagLabels(vecTags map[string]map[string]int) []string {
 	tags := make([]string, len(d.Tags))
 	for k, _ := range d.Tags {
 		vecTags[d.Name][k] = i
-		tags[i] = k
+		tags[i] = strings.ReplaceAll(k, " ", "_")
 		i++
 	}
 	return tags
@@ -93,21 +93,24 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, nil
 	}
 
+	f.mux.RLock()
+	defer f.mux.RUnlock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
-			f.mux.Lock()
-			f.vecs[m.Name] = prometheus.NewCounterVec(
+			cv := prometheus.NewCounterVec(
 				prometheus.CounterOpts{
 					Name: m.Name,
 				},
 				m.GetTagLabels(f.vecTags),
 			)
+			prometheus.MustRegister(cv)
+			f.mux.RUnlock()
+			f.mux.Lock()
+			f.vecs[m.Name] = cv
 			f.mux.Unlock()
-			prometheus.MustRegister(f.vecs[m.Name])
+			f.mux.RLock() // The defer will unlock this one.
 		}
-		f.mux.RLock()
 		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Add(m.Value)
-		f.mux.RUnlock()
 	}
 
 	return nil, nil

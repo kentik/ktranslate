@@ -61,9 +61,6 @@ type Config struct {
 }
 
 type AuthConfig struct {
-	Host        string
-	Port        int
-	Tls         bool
 	DevicesFile string
 }
 

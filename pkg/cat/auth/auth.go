@@ -2,34 +2,19 @@ package auth
 
 // Run an auth service, returning auth info needed to run a kproxy/kprobe without talking to kentik.com
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
 	"crypto/rand"
-	"crypto/tls"
-	"crypto/x509"
-	"crypto/x509/pkix"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"math/big"
-	"net"
 	"net/http"
-	"net/url"
-	"strconv"
-	"time"
 
-	"github.com/gorilla/mux"
-
+	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 )
 
 type Server struct {
-	Host     net.IP
-	Port     int
-	Devices  map[string]*Device
-	mux      *mux.Router
-	listener net.Listener
-	log      logger.ContextL
+	Devices map[string]*Device
+	log     logger.ContextL
 }
 
 const (
@@ -38,63 +23,31 @@ const (
 	API_INT = "/api/internal"
 )
 
-func NewServer(host string, port int, tls bool, deviceFile string, log logger.ContextL) (*Server, error) {
-	var listener net.Listener
-
-	addr, err := net.ResolveTCPAddr("tcp", net.JoinHostPort(host, strconv.Itoa(port)))
-	if err != nil {
-		return nil, err
-	}
-
-	listener, err = net.ListenTCP("tcp", addr)
-	if err != nil {
-		return nil, err
-	}
-
-	if tls {
-		listener, err = tlslistener(listener, host, addr)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	addr = listener.Addr().(*net.TCPAddr)
-
+func NewServer(deviceFile string, log logger.ContextL) (*Server, error) {
 	devices, err := loadDevices(deviceFile)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Infof("API server running at %s:%d with %d devices", host, port, len(devices))
+	log.Infof("API server running %d devices", len(devices))
 
 	return &Server{
-		Host:     addr.IP,
-		Port:     addr.Port,
-		mux:      mux.NewRouter(),
-		listener: listener,
-		log:      log,
-		Devices:  devices,
+		log:     log,
+		Devices: devices,
 	}, nil
 }
 
-func (s *Server) Serve() error {
-	s.mux.HandleFunc(API+"/device/{did}", s.wrap(s.device))
-	s.mux.HandleFunc(API+"/device/", s.wrap(s.create))
-	s.mux.HandleFunc(API+"/device/{did}/interfaces", s.wrap(s.interfaces))
-	s.mux.HandleFunc(API+"/company/{cid}/device/{did}/tags/snmp", s.wrap(s.update))
-	s.mux.HandleFunc(API+"/devices", s.wrap(s.devices))
-	s.mux.HandleFunc(API_INT+"/device/{did}", s.wrap(s.device))
-
-	return http.Serve(s.listener, s.mux)
-}
-
-func (s *Server) URL(path string) *url.URL {
-	url, _ := url.Parse(fmt.Sprintf("http://%s:%d%s", s.Host, s.Port, path))
-	return url
+func (s *Server) RegisterRoutes(r *kmux.Router) {
+	r.HandleFunc(API+"/device/{did}", s.wrap(s.device))
+	r.HandleFunc(API+"/device/", s.wrap(s.create))
+	r.HandleFunc(API+"/device/{did}/interfaces", s.wrap(s.interfaces))
+	r.HandleFunc(API+"/company/{cid}/device/{did}/tags/snmp", s.wrap(s.update))
+	r.HandleFunc(API+"/devices", s.wrap(s.devices))
+	r.HandleFunc(API_INT+"/device/{did}", s.wrap(s.device))
 }
 
 func (s *Server) device(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["did"]
+	id := kmux.Vars(r)["did"]
 
 	device, ok := s.Devices[id]
 	if !ok {
@@ -208,44 +161,6 @@ func (s *Server) wrap(f handler) handler {
 
 		f(w, r)
 	}
-}
-
-func tlslistener(tcp net.Listener, host string, addr *net.TCPAddr) (net.Listener, error) {
-	pri, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-	if err != nil {
-		return nil, err
-	}
-	pub := &pri.PublicKey
-
-	sn, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
-	if err != nil {
-		return nil, err
-	}
-
-	template := x509.Certificate{
-		SerialNumber:          sn,
-		Subject:               pkix.Name{Organization: []string{"Kentik"}},
-		IPAddresses:           []net.IP{addr.IP},
-		DNSNames:              []string{host},
-		NotBefore:             time.Now(),
-		NotAfter:              time.Now().AddDate(10, 0, 0),
-		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
-		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		BasicConstraintsValid: true,
-	}
-
-	der, err := x509.CreateCertificate(rand.Reader, &template, &template, pub, pri)
-	if err != nil {
-		return nil, err
-	}
-
-	cert := tls.Certificate{
-		Certificate: [][]byte{der},
-		PrivateKey:  pri,
-	}
-
-	cfg := tls.Config{Certificates: []tls.Certificate{cert}}
-	return tls.NewListener(tcp, &cfg), nil
 }
 
 type handler func(http.ResponseWriter, *http.Request)
