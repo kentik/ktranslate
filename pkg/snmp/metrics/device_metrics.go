@@ -163,7 +163,6 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 
 		dst.CustomMetrics = metrics // Add this in so that we know what metrics to pull out down the road.
 		flows = append(flows, dst)
-
 	}
 	return flows
 }
@@ -256,6 +255,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.CustomInt = dmr.customInt
 		dst.CustomBigInt = dmr.customBigInt
 		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = dm.conf.Provider
 		dst.CustomBigInt["Uptime"] = uptime
 		dst.CustomStr["Error"] = dmr.Error
 		dst.DeviceName = dm.conf.DeviceName
