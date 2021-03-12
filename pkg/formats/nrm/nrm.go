@@ -189,12 +189,12 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	var names map[string]string
 	switch in.CustomInt["Result Type"] {
 	case 0: // Error
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+		metrics = map[string]bool{"Error": true, "Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
 			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
 			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
 	case 1: // Timeout
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
+		metrics = map[string]bool{"Timeout": true, "Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
 			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
 		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
 			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
@@ -230,12 +230,23 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	i := 0
 
 	for m, _ := range metrics {
-		ms[i] = NRMetric{
-			Name:       "kentik.synth." + names[m],
-			Type:       NR_GAUGE_TYPE,
-			Value:      int64(in.CustomInt[m]),
-			Timestamp:  ts,
-			Attributes: attr,
+		switch m {
+		case "Error", "Timeout":
+			ms[i] = NRMetric{
+				Name:       "kentik.synth." + m,
+				Type:       NR_GAUGE_TYPE,
+				Value:      1,
+				Timestamp:  ts,
+				Attributes: attr,
+			}
+		default:
+			ms[i] = NRMetric{
+				Name:       "kentik.synth." + names[m],
+				Type:       NR_GAUGE_TYPE,
+				Value:      int64(in.CustomInt[m]),
+				Timestamp:  ts,
+				Attributes: attr,
+			}
 		}
 		i++
 	}
