@@ -74,7 +74,7 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 			device.Provider = kt.ProviderRouter
 		}
 
-		log.Infof("Client SNMP: Running SNMP for %s on %s", device.DeviceName, device.DeviceIP, device.Provider)
+		log.Infof("Client SNMP: Running SNMP for %s on %s (type=%s)", device.DeviceName, device.DeviceIP, device.Provider)
 		metrics.Mux.Lock()
 		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
 		metrics.Devices[device.DeviceName] = nm

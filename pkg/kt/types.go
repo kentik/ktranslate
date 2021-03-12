@@ -230,6 +230,7 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["custom_int"] = j.CustomInt
 	j.avroSet["custom_bigint"] = j.CustomBigInt
 	j.avroSet["eventType"] = j.EventType
+	j.avroSet["provider"] = j.Provider
 	j.hasSetAvro = true
 	return j.avroSet
 }
