@@ -58,7 +58,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	for _, ipr := range conf.Disco.Cidrs {
 		log.Infof("Discovering snmp speaking devices on %s", ipr)
 		targetIterator := scan.NewTargetIterator(ipr)
-		timeout := time.Millisecond * time.Duration(conf.Disco.TimeoutMS)
+		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 		scanner := scan.NewDeviceScanner(targetIterator, timeout)
 		if err := scanner.Start(); err != nil {
 			return err
@@ -115,7 +115,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			Port:       uint16(conf.Disco.Ports[0]),
 			Checked:    time.Now(),
 		}
-		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Disco.Retries, log)
+		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, log)
 		if err != nil {
 			log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 			return
@@ -136,7 +136,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				Port:       uint16(conf.Disco.Ports[0]),
 				Checked:    time.Now(),
 			}
-			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Disco.Retries, log)
+			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, log)
 			if err != nil {
 				log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 				return

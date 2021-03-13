@@ -101,12 +101,10 @@ type SnmpTrapConfig struct {
 type SnmpDiscoConfig struct {
 	Cidrs              []string      `yaml:"cidrs"`
 	Debug              bool          `yaml:"debug"`
-	TimeoutMS          int           `yaml:"timeout_ms"`
 	Ports              []int         `yaml:"ports"`
 	DefaultCommunities []string      `yaml:"default_communities"`
 	DefaultV3          *V3SNMPConfig `yaml:"default_v3"`
 	AddDevices         bool          `yaml:"add_devices"`
-	Retries            int           `yaml:"retries"`
 	Threads            int           `yaml:"threads"`
 	CheckAll           bool          `yaml:"check_all"`
 	ReplaceDevices     bool          `yaml:"replace_devices"`
@@ -118,6 +116,8 @@ type SnmpGlobalConfig struct {
 	MibProfileDir string   `yaml:"mib_profile_dir"`
 	MibDB         string   `yaml:"mibs_db"`
 	MibsEnabled   []string `yaml:"mibs_enabled"`
+	TimeoutMS     int      `yaml:"timeout_ms"`
+	Retries       int      `yaml:"retries"`
 }
 
 type SnmpConfig struct {

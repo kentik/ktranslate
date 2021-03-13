@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -22,7 +22,7 @@ import (
 )
 
 type SinkImpl interface {
-	Init(context.Context, formats.Format, kt.Compression) error
+	Init(context.Context, formats.Format, kt.Compression, formats.Formatter) error
 	Send(context.Context, []byte)
 	Close()
 	HttpInfo() map[string]float64

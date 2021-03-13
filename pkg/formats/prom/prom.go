@@ -17,6 +17,7 @@ import (
 
 var (
 	doCollectorStats = flag.Bool("info_collector", false, "Also send stats about this collector")
+	seenNeeded       = flag.Int("prom_seen", 10, "Number of flows needed inbound before we start writting to the collector")
 )
 
 type PromData struct {
@@ -26,21 +27,20 @@ type PromData struct {
 	Timestamp int64
 }
 
-func (d *PromData) GetTagLabels(vecTags map[string]map[string]int) []string {
+func (d *PromData) AddTagLabels(vecTags tagVec) {
 	if _, ok := vecTags[d.Name]; !ok {
 		vecTags[d.Name] = map[string]int{}
 	}
-	i := 0
-	tags := make([]string, len(d.Tags))
+	next := len(vecTags[d.Name])
 	for k, _ := range d.Tags {
-		vecTags[d.Name][k] = i
-		tags[i] = strings.ReplaceAll(k, " ", "_")
-		i++
+		if _, ok := vecTags[d.Name][k]; !ok {
+			vecTags[d.Name][k] = next
+			next++
+		}
 	}
-	return tags
 }
 
-func (d *PromData) GetTagValues(vecTags map[string]map[string]int) []string {
+func (d *PromData) GetTagValues(vecTags tagVec) []string {
 	tags := make([]string, len(vecTags[d.Name]))
 	for k, v := range d.Tags {
 		posit, ok := vecTags[d.Name][k]
@@ -57,18 +57,22 @@ func (d *PromData) GetTagValues(vecTags map[string]map[string]int) []string {
 	return tags
 }
 
+type tagVec map[string]map[string]int
+
 type PromFormat struct {
 	logger.ContextL
 	vecs         map[string]*prometheus.CounterVec
 	invalids     map[string]bool
 	lastMetadata map[string]*kt.LastMetadata
-	vecTags      map[string]map[string]int
-	mux          sync.RWMutex
+	vecTags      tagVec
+	seen         int
+
+	mux sync.RWMutex
 }
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, error) {
 	jf := &PromFormat{
-		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "promFormat"}, log),
 		vecs:         make(map[string]*prometheus.CounterVec),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
@@ -82,7 +86,20 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, 
 	return jf, nil
 }
 
-// Not supported.
+func (f *PromFormat) addLabels(res []PromData) {
+	for _, m := range res {
+		m.AddTagLabels(f.vecTags)
+	}
+}
+
+func (f *PromFormat) toLabels(name string) []string {
+	res := make([]string, len(f.vecTags[name]))
+	for k, v := range f.vecTags[name] {
+		res[v] = strings.ReplaceAll(k, " ", "_")
+	}
+	return res
+}
+
 func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	res := make([]PromData, 0, len(msgs))
 	for _, m := range msgs {
@@ -93,22 +110,32 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, nil
 	}
 
-	f.mux.RLock()
-	defer f.mux.RUnlock()
+	f.mux.Lock()
+	defer f.mux.Unlock()
+
+	if f.seen < *seenNeeded {
+		f.addLabels(res)
+		f.seen++
+		if f.seen == *seenNeeded {
+			f.Infof("Seen enough!")
+		} else {
+			f.Infof("Seen %d", f.seen)
+		}
+		return nil, nil
+	}
+
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
+			labels := f.toLabels(m.Name)
 			cv := prometheus.NewCounterVec(
 				prometheus.CounterOpts{
 					Name: m.Name,
 				},
-				m.GetTagLabels(f.vecTags),
+				labels,
 			)
 			prometheus.MustRegister(cv)
-			f.mux.RUnlock()
-			f.mux.Lock()
 			f.vecs[m.Name] = cv
-			f.mux.Unlock()
-			f.mux.RLock() // The defer will unlock this one.
+			f.Infof("Adding %s %v", m.Name, labels)
 		}
 		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Add(m.Value)
 	}

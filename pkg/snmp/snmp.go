@@ -4,8 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"os"
-	"strconv"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -18,11 +16,6 @@ import (
 	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
 
 	"gopkg.in/yaml.v2"
-)
-
-const (
-	CHF_SNMP_TIMEOUT = "CHF_SNMP_TIMEOUT"
-	CHF_SNMP_RETRY   = "CHF_SNMP_RETRY"
 )
 
 var (
@@ -44,17 +37,14 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 	retries := 0
 
 	// Update the timeout values, if needed.
-	localTO := os.Getenv(CHF_SNMP_TIMEOUT)
-	if lto, err := strconv.Atoi(localTO); err == nil {
-		connectTimeout = time.Duration(lto) * time.Second
-		log.Infof("Setting timeout to %v", connectTimeout)
+	if conf.Global.TimeoutMS > 0 {
+		connectTimeout = time.Duration(conf.Global.TimeoutMS) * time.Millisecond
 	}
-
-	localRt := os.Getenv(CHF_SNMP_RETRY)
-	if lto, err := strconv.Atoi(localRt); err == nil {
-		retries = lto
-		log.Infof("Setting retry to %v", retries)
+	if conf.Global.Retries > 0 {
+		retries = conf.Global.Retries
 	}
+	log.Infof("Setting timeout to %v", connectTimeout)
+	log.Infof("Setting retry to %v", retries)
 
 	// Load a mibdb if we have one.
 	if conf.Global != nil && (conf.Global.MibDB != "" && conf.Global.MibProfileDir != "") {
@@ -98,7 +88,7 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 
 	// Run a trap listener?
 	if conf.Trap != nil {
-		err := launchSnmpTrap(conf.Trap, jchfChan, metrics, log)
+		err := launchSnmpTrap(conf, jchfChan, metrics, log)
 		if err != nil {
 			return err
 		}
@@ -113,8 +103,8 @@ func Close() {
 	}
 }
 
-func launchSnmpTrap(conf *kt.SnmpTrapConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) error {
-	log.Infof("Client SNMP: Running SNMP Trap listener on %s", conf.Listen)
+func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) error {
+	log.Infof("Client SNMP: Running SNMP Trap listener on %s", conf.Trap.Listen)
 	tl, err := traps.NewSnmpTrapListener(conf, jchfChan, metrics, log)
 	if err != nil {
 		return err

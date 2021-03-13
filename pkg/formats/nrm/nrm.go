@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kentik/ktranslate/pkg/formats/nrm/events"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -29,6 +30,8 @@ type NRMFormat struct {
 	lastMetadata map[string]*kt.LastMetadata
 	invalids     map[string]bool
 	mux          sync.RWMutex
+
+	EventChan chan []byte
 }
 
 type NRMetricSet struct {
@@ -51,6 +54,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 		doGz:         false,
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
+		EventChan:    make(chan []byte, 100), // Used for sending events to the event API.
 	}
 
 	switch compression {
@@ -156,6 +160,12 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
 		return f.fromKSynth(in, ts)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in, ts)
+	case kt.KENTIK_EVENT_SNMP_TRAP:
+		// This is actually an event, send out as an event to sink directly.
+		err := events.SendEvent(in, f.doGz, f.EventChan)
+		if err != nil {
+			f.Errorf("Cannot send event on -- %v", err)
+		}
 	default:
 		f.mux.Lock()
 		defer f.mux.Unlock()

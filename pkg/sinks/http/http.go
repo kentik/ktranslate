@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -81,7 +81,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 	return &nr, nil
 }
 
-func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	s.TargetUrl = *TargetUrl
 
 	s.tr = &http.Transport{

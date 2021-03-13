@@ -11,8 +11,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -36,7 +36,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*FileSink, er
 	}, nil
 }
 
-func (s *FileSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *FileSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	s.location = *FileDir
 
 	s.Infof("File out -- Write is now: %v", s.doWrite)

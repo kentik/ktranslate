@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -49,7 +49,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCloudSink, 
 	}, nil
 }
 
-func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	rand.Seed(time.Now().UnixNano())
 	if s.Bucket == "" {
 		return fmt.Errorf("Not writing to gcloud -- no bucket set, use -gcloud_bucket flag")

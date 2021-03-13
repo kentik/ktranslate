@@ -703,7 +703,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 
 	// Connect our sinks.
 	for _, sink := range kc.sinks {
-		err := sink.Init(ctx, kc.config.Format, kc.config.Compression)
+		err := sink.Init(ctx, kc.config.Format, kc.config.Compression, kc.format)
 		if err != nil {
 			return err
 		}

@@ -11,8 +11,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -49,7 +49,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*S3Sink, erro
 	}, nil
 }
 
-func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	rand.Seed(time.Now().UnixNano())
 	if s.Bucket == "" {
 		return fmt.Errorf("Not writing to s3 -- no bucket set, use -s3_bucket flag")

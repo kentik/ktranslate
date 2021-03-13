@@ -13,6 +13,7 @@ import (
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/formats/nrm"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -22,9 +23,10 @@ const (
 
 type NRSink struct {
 	logger.ContextL
-	NRAccount string
-	NRApiKey  string
-	NRUrl     string
+	NRAccount  string
+	NRApiKey   string
+	NRUrl      string
+	NRUrlEvent string
 
 	client      *http.Client
 	tr          *http.Transport
@@ -33,6 +35,7 @@ type NRSink struct {
 	format      formats.Format
 	compression kt.Compression
 	estimate    bool
+	fmtr        *nrm.NRMFormat
 }
 
 type NRMetric struct {
@@ -70,7 +73,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*NRSink, erro
 	return &nr, nil
 }
 
-func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	s.NRAccount = *NrAccount
 	s.NRUrl = *NrUrl
 	s.format = format
@@ -91,7 +94,15 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		return fmt.Errorf("New Relic only supports gzip and none compression, not %s", s.compression)
 	}
 
+	// Try to upcast the formater here. This lets us send events also.
+	nrmf, ok := fmtr.(*nrm.NRMFormat)
+	if ok {
+		s.fmtr = nrmf
+		go s.checkForEvents(ctx)
+	}
+
 	s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
+	s.NRUrlEvent = s.NRUrl
 	if s.format == formats.FORMAT_NRM {
 		s.NRUrl = *NrMetricsUrl
 	}
@@ -101,7 +112,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 }
 
 func (s *NRSink) Send(ctx context.Context, payload []byte) {
-	go s.sendNR(ctx, payload)
+	go s.sendNR(ctx, payload, s.NRUrl)
 }
 
 func (s *NRSink) Close() {}
@@ -115,12 +126,12 @@ func (s *NRSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *NRSink) sendNR(ctx context.Context, payload []byte) {
+func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
 	s.metrics.DeliveryBytes.Mark(int64(len(payload))) // Compression will effect this, but we can do our best.
 	if s.estimate {                                   // here, just mark how much we would have sent.
 		return
 	}
-	req, err := http.NewRequestWithContext(ctx, "POST", s.NRUrl, bytes.NewBuffer(payload))
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
 		s.Errorf("Cannot create NR request: %v", err)
 		return
@@ -158,6 +169,19 @@ func (s *NRSink) sendNR(ctx context.Context, payload []byte) {
 					s.metrics.DeliveryWin.Mark(1)
 				}
 			}
+		}
+	}
+}
+
+func (s *NRSink) checkForEvents(ctx context.Context) {
+	for {
+		select {
+		case evt := <-s.fmtr.EventChan:
+			s.Debugf("Sending event")
+			go s.sendNR(ctx, evt, s.NRUrlEvent)
+		case <-ctx.Done():
+			s.Infof("checkForEvents Done")
+			return
 		}
 	}
 }

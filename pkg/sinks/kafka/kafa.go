@@ -45,7 +45,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*KafkaSink, e
 	}, nil
 }
 
-func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 
 	s.Topic = *KafkaTopic
 

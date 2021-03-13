@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -20,7 +20,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*StdoutSink, 
 	}, nil
 }
 
-func (s *StdoutSink) Init(ctx context.Context, format formats.Format, compression kt.Compression) error {
+func (s *StdoutSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	return nil
 }
 
