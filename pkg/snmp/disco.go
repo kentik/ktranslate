@@ -162,20 +162,23 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	}
 	log.Infof("Success connecting to %s -- %v", result.Host.String(), md)
 
-	// Now, see what mibs this sucker can use.
-	// TODO, actually store this mibs.
-	mibs, err := mdb.GetForOid(md.SysObjectID)
-	if err != nil {
-		log.Warnf("Issue loading mibs: %v", err)
-	} else {
-		device.DeviceOids = mibs
-	}
-
 	// Stick in the profile too for future use.
 	mibProfile := mdb.FindProfile(md.SysObjectID)
 	if mibProfile != nil {
 		log.Infof("Found profile for %s: %v", md.SysObjectID, mibProfile)
 		device.MibProfile = mibProfile.From
+	}
+
+	// Now, see what mibs this sucker can use.
+	// TODO, actually store this mibs.
+	mibs, provider, first, err := mdb.GetForOidRecur(md.SysObjectID, device.MibProfile, device.Description)
+	if err != nil {
+		log.Warnf("Issue loading mibs: %v", err)
+	} else {
+		if first {
+			device.DeviceOids = mibs
+		}
+		device.Provider = provider
 	}
 
 	mux.Lock()

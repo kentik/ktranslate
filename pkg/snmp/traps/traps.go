@@ -136,6 +136,8 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32:
 			dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
+		case gosnmp.ObjectIdentifier:
+			dst.CustomStr[v.Name] = v.Value.(string)
 		default:
 			s.log.Infof("trap variable with unknown type handling, skipping: %+v", v)
 		}

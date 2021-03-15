@@ -88,7 +88,7 @@ func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 	return kt.KENTIK_EVENT_TYPE
 }
 
-func (kc *KTranslate) getProviderType(dst *kt.JCHF) string {
+func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 
 	udr, ok := dst.CustomStr[UDR_TYPE]
 	if !ok { // Return this right away.

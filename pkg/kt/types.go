@@ -22,16 +22,20 @@ const (
 	KENTIK_EVENT_SNMP_INT_METRIC = "KSnmpInterfaceMetric"
 	KENTIK_EVENT_SNMP_METADATA   = "KSnmpInterfaceMetadata"
 	KENTIK_EVENT_SNMP_TRAP       = "KSnmpTrap"
+)
 
-	ProviderRouter   = "router"
-	ProviderVPC      = "vpc"
-	ProviderSynth    = "network-synthetic"
-	ProviderSwitch   = "switch"
-	ProviderFirewall = "firewall"
-	ProviderUPS      = "ups"
-	ProviderPDU      = "pdu"
-	ProviderIOT      = "iot"
-	ProviderHost     = "host"
+type Provider string
+
+const (
+	ProviderRouter   Provider = "router"
+	ProviderVPC               = "vpc"
+	ProviderSynth             = "network-synthetic"
+	ProviderSwitch            = "switch"
+	ProviderFirewall          = "firewall"
+	ProviderUPS               = "ups"
+	ProviderPDU               = "pdu"
+	ProviderIOT               = "iot"
+	ProviderHost              = "host"
 )
 
 type IntId uint64
@@ -119,7 +123,7 @@ type JCHF struct {
 	CustomInt               map[string]int32  `json:"custom_int,omitempty"`
 	CustomBigInt            map[string]int64  `json:"custom_bigint,omitempty"`
 	EventType               string            `json:"eventType"`
-	Provider                string            `json:"provider"` // Entity type for this data.
+	Provider                Provider          `json:"provider"` // Entity type for this data.
 	avroSet                 map[string]interface{}
 	hasSetAvro              bool
 	CustomMetrics           map[string]bool `json:"-"`

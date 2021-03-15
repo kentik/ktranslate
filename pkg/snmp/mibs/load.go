@@ -39,34 +39,45 @@ var (
 )
 
 func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, error) {
-	log.Infof("Loading db from %s", mibpath)
-	db, err := leveldb.OpenFile(mibpath, &opt.Options{})
-	if err != nil {
-		return nil, err
-	}
-
 	mdb := &MibDB{
-		db:       db,
 		log:      log,
 		profiles: map[string]*Profile{},
 	}
 
-	num, err := mdb.LoadProfiles(profileDir)
-	if err != nil {
-		return nil, err
+	if mibpath != "" {
+		log.Infof("Loading db from %s", mibpath)
+		db, err := leveldb.OpenFile(mibpath, &opt.Options{})
+		if err != nil {
+			return nil, err
+		}
+		mdb.db = db
 	}
-	log.Infof("Loaded %d profiles from %s", num, profileDir)
+
+	if profileDir != "" {
+		num, err := mdb.LoadProfiles(profileDir)
+		if err != nil {
+			return nil, err
+		}
+		log.Infof("Loaded %d profiles from %s", num, profileDir)
+	}
 
 	return mdb, nil
 }
 
 func (db *MibDB) Close() {
-	db.db.Close()
+	if db.db != nil {
+		db.db.Close()
+	}
 }
 
-func (db *MibDB) GetForOid(oid string) (map[string]*kt.Mib, error) {
+func (db *MibDB) GetForOid(oid string, profile string, description string) (map[string]*kt.Mib, kt.Provider, error) {
+	if db.db == nil { // We might not have set up a db here.
+		return nil, "", nil
+	}
 	mibs := map[string]*kt.Mib{}
 	iter := db.db.NewIterator(util.BytesPrefix([]byte(oid)), nil)
+	provider := kt.ProviderRouter
+	foundProv := false
 	for iter.Next() {
 		pts := strings.SplitN(string(iter.Value()), " ", 2)
 		if len(pts) >= 2 {
@@ -75,6 +86,13 @@ func (db *MibDB) GetForOid(oid string) (map[string]*kt.Mib, error) {
 				dt, err := strconv.Atoi(res[0][1])
 				if err == nil {
 					extra := strings.SplitN(pts[1], " ", 2)
+					if !foundProv {
+						if prov, ok := db.checkForProvider(pts[0], profile, description); ok {
+							provider = prov
+							foundProv = true
+							db.log.Infof("Provider: %s -> %s", string(iter.Key()), pts[0])
+						}
+					}
 					if validOids[kt.Oidtype(dt)] {
 						mb := kt.Mib{
 							Oid:  string(iter.Key()),
@@ -93,25 +111,57 @@ func (db *MibDB) GetForOid(oid string) (map[string]*kt.Mib, error) {
 	iter.Release()
 	err := iter.Error()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return mibs, nil
+	return mibs, provider, nil
 }
 
 // Walk up the oid tree until we get something.
-func (db *MibDB) GetForOidRecur(oid string) (map[string]*kt.Mib, error) {
+func (db *MibDB) GetForOidRecur(oid string, profile string, description string) (map[string]*kt.Mib, kt.Provider, bool, error) {
 	pts := strings.Split(oid, ".")
 	for i := len(pts); i > 1; i-- {
 		check := strings.Join(pts[0:i], ".")
-		res, err := db.GetForOid(check)
+		res, pro, err := db.GetForOid(check, profile, description)
 		if err != nil {
-			return nil, err
+			return nil, "", (i == len(pts)), err
 		}
 		if len(res) > 0 {
-			return res, nil
+			return res, pro, (i == len(pts)), nil
 		}
 	}
 
-	return nil, nil
+	return nil, kt.ProviderRouter, false, nil
+}
+
+func (db *MibDB) checkForProvider(name string, profile string, description string) (kt.Provider, bool) {
+	// Check for some common patterns, see if we can guess what provider this oid is for.
+	name = strings.ToLower(name)
+	description = strings.ToLower(description)
+	profile = strings.ToLower(profile)
+
+	combo := name + "^" + description
+	if strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") {
+		return kt.ProviderRouter, true
+	}
+	if strings.Contains(combo, "switch") || strings.Contains(profile, "cisco-catalyst") {
+		return kt.ProviderSwitch, true
+	}
+	if strings.Contains(combo, "firewall") {
+		return kt.ProviderFirewall, true
+	}
+	if strings.Contains(combo, "ups") {
+		return kt.ProviderUPS, true
+	}
+	if strings.Contains(combo, "pdu") && !strings.Contains(profile, "router") {
+		return kt.ProviderPDU, true
+	}
+	if strings.Contains(combo, "iot") {
+		return kt.ProviderIOT, true
+	}
+	if strings.Contains(combo, "printer") {
+		return kt.ProviderIOT, true
+	}
+
+	return "", false
 }
