@@ -9,8 +9,10 @@ import (
 	"time"
 
 	"github.com/kentik/gosnmp"
+
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/snmp/mibs"
 	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
 )
 
@@ -22,6 +24,7 @@ type SnmpTrap struct {
 	metrics   *kt.SnmpMetricSet
 	conf      *kt.SnmpConfig
 	mux       sync.RWMutex
+	mibdb     *mibs.MibDB
 	deviceMap map[string]*kt.SnmpDeviceConfig
 }
 
@@ -39,10 +42,11 @@ func (l logWrapper) Printf(format string, v ...interface{}) {
 	l.printf(format, v...)
 }
 
-func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) (*SnmpTrap, error) {
+func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB, log logger.ContextL) (*SnmpTrap, error) {
 	st := &SnmpTrap{
 		jchfChan:  jchfChan,
 		log:       log,
+		mibdb:     mibdb,
 		listen:    conf.Trap.Listen,
 		metrics:   metrics,
 		deviceMap: map[string]*kt.SnmpDeviceConfig{},
@@ -129,15 +133,33 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	}
 
 	for _, v := range packet.Variables {
+		// Do we know this guy?
+		res, err := s.mibdb.GetForKey(v.Name)
+		if err != nil {
+			s.log.Errorf("Cannot look up OID in trap: %v", err)
+		}
+
 		switch v.Type {
 		case gosnmp.OctetString:
 			if value, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok {
-				dst.CustomStr[v.Name] = value
+				if res != nil {
+					dst.CustomStr[res.Name] = value
+				} else {
+					dst.CustomStr[v.Name] = value
+				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32:
-			dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
+			if res != nil {
+				dst.CustomBigInt[res.Name] = gosnmp.ToBigInt(v.Value).Int64()
+			} else {
+				dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
+			}
 		case gosnmp.ObjectIdentifier:
-			dst.CustomStr[v.Name] = v.Value.(string)
+			if res != nil {
+				dst.CustomStr[res.Name] = v.Value.(string)
+			} else {
+				dst.CustomStr[v.Name] = v.Value.(string)
+			}
 		default:
 			s.log.Infof("trap variable with unknown type handling, skipping: %+v", v)
 		}

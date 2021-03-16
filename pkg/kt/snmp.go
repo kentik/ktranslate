@@ -111,13 +111,15 @@ type SnmpDiscoConfig struct {
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int      `yaml:"poll_time_sec"`
-	DropIfOutside bool     `yaml:"drop_if_outside_poll"`
-	MibProfileDir string   `yaml:"mib_profile_dir"`
-	MibDB         string   `yaml:"mibs_db"`
-	MibsEnabled   []string `yaml:"mibs_enabled"`
-	TimeoutMS     int      `yaml:"timeout_ms"`
-	Retries       int      `yaml:"retries"`
+	PollTimeSec     int      `yaml:"poll_time_sec"`
+	DropIfOutside   bool     `yaml:"drop_if_outside_poll"`
+	MibProfileDir   string   `yaml:"mib_profile_dir"`
+	PyMibProfileDir string   `yaml:"pymib_profile_dir"`
+	PyMibSys        string   `yaml:"pymib_profile_dir"`
+	MibDB           string   `yaml:"mibs_db"`
+	MibsEnabled     []string `yaml:"mibs_enabled"`
+	TimeoutMS       int      `yaml:"timeout_ms"`
+	Retries         int      `yaml:"retries"`
 }
 
 type SnmpConfig struct {

@@ -48,7 +48,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	// Use this for auto-discovering metrics to pull.
-	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
+	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, log)
 	if err != nil {
 		return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 	}

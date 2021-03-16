@@ -38,7 +38,7 @@ var (
 	}
 )
 
-func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, error) {
+func NewMibDB(mibpath string, profileDir string, pyMibDir string, log logger.ContextL) (*MibDB, error) {
 	mdb := &MibDB{
 		log:      log,
 		profiles: map[string]*Profile{},
@@ -61,6 +61,14 @@ func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, e
 		log.Infof("Loaded %d profiles from %s", num, profileDir)
 	}
 
+	if pyMibDir != "" {
+		num, err := mdb.LoadPyMibSet(pyMibDir)
+		if err != nil {
+			return nil, err
+		}
+		log.Infof("Loaded %d pyMib profiles from %s", num, pyMibDir)
+	}
+
 	return mdb, nil
 }
 
@@ -68,6 +76,36 @@ func (db *MibDB) Close() {
 	if db.db != nil {
 		db.db.Close()
 	}
+}
+
+func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
+	if db.db == nil { // We might not have set up a db here.
+		return nil, nil
+	}
+	data, err := db.db.Get([]byte(oid), nil)
+	if err != nil {
+		if err == leveldb.ErrNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	pts := strings.SplitN(string(data), " ", 2)
+	if len(pts) >= 2 {
+		res := reType.FindAllStringSubmatch(pts[1], -1)
+		if len(res) > 0 {
+			dt, err := strconv.Atoi(res[0][1])
+			if err == nil {
+				return &kt.Mib{
+					Oid:  oid,
+					Name: strings.SplitN(pts[0], "(", 2)[0],
+					Type: kt.Oidtype(dt),
+				}, nil
+			}
+		}
+	}
+
+	return nil, nil
 }
 
 func (db *MibDB) GetForOid(oid string, profile string, description string) (map[string]*kt.Mib, kt.Provider, error) {

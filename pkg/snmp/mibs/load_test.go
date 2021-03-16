@@ -33,7 +33,7 @@ func TestCheckForProvider(t *testing.T) {
 
 func TestFullProvider(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	mdb, err := NewMibDB("mibs.db", "", l)
+	mdb, err := NewMibDB("mibs.db", "", "", l)
 	assert.NoError(t, err)
 	defer mdb.Close()
 

@@ -152,7 +152,7 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 
 	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
 	pts := strings.Split(sysid, ".")
-	for i := len(pts); i > 1; i-- {
+	for i := len(pts); i > 0; i-- {
 		check := strings.Join(pts[0:i], ".") + ".*"
 		if p, ok := mdb.profiles[check]; ok {
 			return p
@@ -244,6 +244,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			}
 		}
 	}
+
 	return deviceMetrics, interfaceMetrics
 }
 

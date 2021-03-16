@@ -1,0 +1,1118 @@
+{
+  "imports": {
+    "class": "imports",
+    "SNMPv2-CONF": [
+      "NOTIFICATION-GROUP",
+      "OBJECT-GROUP",
+      "MODULE-COMPLIANCE"
+    ],
+    "SNMPv2-SMI": [
+      "Gauge32",
+      "Counter32",
+      "iso",
+      "mib-2",
+      "NOTIFICATION-TYPE",
+      "Bits",
+      "Integer32",
+      "Counter64",
+      "OBJECT-IDENTITY",
+      "snmpModules",
+      "MibIdentifier",
+      "IpAddress",
+      "Unsigned32",
+      "TimeTicks",
+      "MODULE-IDENTITY",
+      "OBJECT-TYPE"
+    ],
+    "SNMPv2-TC": [
+      "TimeStamp",
+      "TestAndIncr",
+      "TEXTUAL-CONVENTION",
+      "DisplayString"
+    ]
+  },
+  "snmpMIB": {
+    "name": "snmpMIB",
+    "oid": "1.3.6.1.6.3.1",
+    "class": "moduleidentity",
+    "revisions": [
+      {
+        "revision": "2002-10-16 00:00",
+        "description": "This revision of this MIB module was published as RFC 3418."
+      },
+      {
+        "revision": "1995-11-09 00:00",
+        "description": "This revision of this MIB module was published as RFC 1907."
+      },
+      {
+        "revision": "1993-04-01 00:00",
+        "description": "The initial revision of this MIB module was published as RFC 1450."
+      }
+    ],
+    "lastupdated": "200210160000Z",
+    "organization": "IETF SNMPv3 Working Group",
+    "contactinfo": "WG-EMail: snmpv3@lists.tislabs.com Subscribe: snmpv3-request@lists.tislabs.com Co-Chair: Russ Mundy Network Associates Laboratories postal: 15204 Omega Drive, Suite 300 Rockville, MD 20850-4601 USA EMail: mundy@tislabs.com phone: +1 301 947-7107 Co-Chair: David Harrington Enterasys Networks postal: 35 Industrial Way P. O. Box 5005 Rochester, NH 03866-5005 USA EMail: dbh@enterasys.com phone: +1 603 337-2614 Editor: Randy Presuhn BMC Software, Inc. postal: 2141 North First Street San Jose, CA 95131 USA EMail: randy_presuhn@bmc.com phone: +1 408 546-1006",
+    "description": "The MIB module for SNMP entities. Copyright (C) The Internet Society (2002). This version of this MIB module is part of RFC 3418; see the RFC itself for full legal notices. "
+  },
+  "snmpMIBObjects": {
+    "name": "snmpMIBObjects",
+    "oid": "1.3.6.1.6.3.1.1",
+    "class": "objectidentity"
+  },
+  "system": {
+    "name": "system",
+    "oid": "1.3.6.1.2.1.1",
+    "class": "objectidentity"
+  },
+  "sysDescr": {
+    "name": "sysDescr",
+    "oid": "1.3.6.1.2.1.1.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "A textual description of the entity. This value should include the full name and version identification of the system's hardware type, software operating-system, and networking software."
+  },
+  "sysObjectID": {
+    "name": "sysObjectID",
+    "oid": "1.3.6.1.2.1.1.2",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The vendor's authoritative identification of the network management subsystem contained in the entity. This value is allocated within the SMI enterprises subtree (1.3.6.1.4.1) and provides an easy and unambiguous means for determining `what kind of box' is being managed. For example, if vendor `Flintstones, Inc.' was assigned the subtree 1.3.6.1.4.1.424242, it could assign the identifier 1.3.6.1.4.1.424242.1.1 to its `Fred Router'."
+  },
+  "sysUpTime": {
+    "name": "sysUpTime",
+    "oid": "1.3.6.1.2.1.1.3",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeTicks",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The time (in hundredths of a second) since the network management portion of the system was last re-initialized."
+  },
+  "sysContact": {
+    "name": "sysContact",
+    "oid": "1.3.6.1.2.1.1.4",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current",
+    "description": "The textual identification of the contact person for this managed node, together with information on how to contact this person. If no contact information is known, the value is the zero-length string."
+  },
+  "sysName": {
+    "name": "sysName",
+    "oid": "1.3.6.1.2.1.1.5",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current",
+    "description": "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name. If the name is unknown, the value is the zero-length string."
+  },
+  "sysLocation": {
+    "name": "sysLocation",
+    "oid": "1.3.6.1.2.1.1.6",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type",
+      "constraints": {
+        "size": [
+          {
+            "min": 0,
+            "max": 255
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current",
+    "description": "The physical location of this node (e.g., 'telephone closet, 3rd floor'). If the location is unknown, the value is the zero-length string."
+  },
+  "sysServices": {
+    "name": "sysServices",
+    "oid": "1.3.6.1.2.1.1.7",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 0,
+            "max": 127
+          }
+        ]
+      }
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "A value which indicates the set of services that this entity may potentially offer. The value is a sum. This sum initially takes the value zero. Then, for each layer, L, in the range 1 through 7, that this node performs transactions for, 2 raised to (L - 1) is added to the sum. For example, a node which performs only routing functions would have a value of 4 (2^(3-1)). In contrast, a node which is a host offering application services would have a value of 72 (2^(4-1) + 2^(7-1)). Note that in the context of the Internet suite of protocols, values should be calculated accordingly: layer functionality 1 physical (e.g., repeaters) 2 datalink/subnetwork (e.g., bridges) 3 internet (e.g., supports the IP) 4 end-to-end (e.g., supports the TCP) 7 applications (e.g., supports the SMTP) For systems including OSI protocols, layers 5 and 6 may also be counted."
+  },
+  "sysORLastChange": {
+    "name": "sysORLastChange",
+    "oid": "1.3.6.1.2.1.1.8",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeStamp",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The value of sysUpTime at the time of the most recent change in state or value of any instance of sysORID."
+  },
+  "sysORTable": {
+    "name": "sysORTable",
+    "oid": "1.3.6.1.2.1.1.9",
+    "nodetype": "table",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "status": "current",
+    "description": "The (conceptual) table listing the capabilities of the local SNMP application acting as a command responder with respect to various MIB modules. SNMP entities having dynamically-configurable support of MIB modules will have a dynamically-varying number of conceptual rows."
+  },
+  "sysOREntry": {
+    "name": "sysOREntry",
+    "oid": "1.3.6.1.2.1.1.9.1",
+    "nodetype": "row",
+    "class": "objecttype",
+    "maxaccess": "not-accessible",
+    "indices": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysORIndex",
+        "implied": 0
+      }
+    ],
+    "status": "current",
+    "description": "An entry (conceptual row) in the sysORTable."
+  },
+  "sysORIndex": {
+    "name": "sysORIndex",
+    "oid": "1.3.6.1.2.1.1.9.1.1",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "range": [
+          {
+            "min": 1,
+            "max": 2147483647
+          }
+        ]
+      }
+    },
+    "maxaccess": "not-accessible",
+    "status": "current",
+    "description": "The auxiliary variable used for identifying instances of the columnar objects in the sysORTable."
+  },
+  "sysORID": {
+    "name": "sysORID",
+    "oid": "1.3.6.1.2.1.1.9.1.2",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "An authoritative identification of a capabilities statement with respect to various MIB modules supported by the local SNMP application acting as a command responder."
+  },
+  "sysORDescr": {
+    "name": "sysORDescr",
+    "oid": "1.3.6.1.2.1.1.9.1.3",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "DisplayString",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "A textual description of the capabilities identified by the corresponding instance of sysORID."
+  },
+  "sysORUpTime": {
+    "name": "sysORUpTime",
+    "oid": "1.3.6.1.2.1.1.9.1.4",
+    "nodetype": "column",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TimeStamp",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The value of sysUpTime at the time this conceptual row was last instantiated."
+  },
+  "snmp": {
+    "name": "snmp",
+    "oid": "1.3.6.1.2.1.11",
+    "class": "objectidentity"
+  },
+  "snmpInPkts": {
+    "name": "snmpInPkts",
+    "oid": "1.3.6.1.2.1.11.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of messages delivered to the SNMP entity from the transport service."
+  },
+  "snmpInBadVersions": {
+    "name": "snmpInBadVersions",
+    "oid": "1.3.6.1.2.1.11.3",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of SNMP messages which were delivered to the SNMP entity and were for an unsupported SNMP version."
+  },
+  "snmpInBadCommunityNames": {
+    "name": "snmpInBadCommunityNames",
+    "oid": "1.3.6.1.2.1.11.4",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of community-based SNMP messages (for example, SNMPv1) delivered to the SNMP entity which used an SNMP community name not known to said entity. Also, implementations which authenticate community-based SNMP messages using check(s) in addition to matching the community name (for example, by also checking whether the message originated from a transport address allowed to use a specified community name) MAY include in this value the number of messages which failed the additional check(s). It is strongly RECOMMENDED that the documentation for any security model which is used to authenticate community-based SNMP messages specify the precise conditions that contribute to this value."
+  },
+  "snmpInBadCommunityUses": {
+    "name": "snmpInBadCommunityUses",
+    "oid": "1.3.6.1.2.1.11.5",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of community-based SNMP messages (for example, SNMPv1) delivered to the SNMP entity which represented an SNMP operation that was not allowed for the SNMP community named in the message. The precise conditions under which this counter is incremented (if at all) depend on how the SNMP entity implements its access control mechanism and how its applications interact with that access control mechanism. It is strongly RECOMMENDED that the documentation for any access control mechanism which is used to control access to and visibility of MIB instrumentation specify the precise conditions that contribute to this value."
+  },
+  "snmpInASNParseErrs": {
+    "name": "snmpInASNParseErrs",
+    "oid": "1.3.6.1.2.1.11.6",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of ASN.1 or BER errors encountered by the SNMP entity when decoding received SNMP messages."
+  },
+  "snmpEnableAuthenTraps": {
+    "name": "snmpEnableAuthenTraps",
+    "oid": "1.3.6.1.2.1.11.30",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "INTEGER",
+      "class": "type",
+      "constraints": {
+        "enumeration": {
+          "enabled": 1,
+          "disabled": 2
+        }
+      }
+    },
+    "maxaccess": "read-write",
+    "status": "current",
+    "description": "Indicates whether the SNMP entity is permitted to generate authenticationFailure traps. The value of this object overrides any configuration information; as such, it provides a means whereby all authenticationFailure traps may be disabled. Note that it is strongly recommended that this object be stored in non-volatile memory so that it remains constant across re-initializations of the network management system."
+  },
+  "snmpSilentDrops": {
+    "name": "snmpSilentDrops",
+    "oid": "1.3.6.1.2.1.11.31",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of Confirmed Class PDUs (such as GetRequest-PDUs, GetNextRequest-PDUs, GetBulkRequest-PDUs, SetRequest-PDUs, and InformRequest-PDUs) delivered to the SNMP entity which were silently dropped because the size of a reply containing an alternate Response Class PDU (such as a Response-PDU) with an empty variable-bindings field was greater than either a local constraint or the maximum message size associated with the originator of the request."
+  },
+  "snmpProxyDrops": {
+    "name": "snmpProxyDrops",
+    "oid": "1.3.6.1.2.1.11.32",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "current",
+    "description": "The total number of Confirmed Class PDUs (such as GetRequest-PDUs, GetNextRequest-PDUs, GetBulkRequest-PDUs, SetRequest-PDUs, and InformRequest-PDUs) delivered to the SNMP entity which were silently dropped because the transmission of the (possibly translated) message to a proxy target failed in a manner (other than a time-out) such that no Response Class PDU (such as a Response-PDU) could be returned."
+  },
+  "snmpTrap": {
+    "name": "snmpTrap",
+    "oid": "1.3.6.1.6.3.1.1.4",
+    "class": "objectidentity"
+  },
+  "snmpTrapOID": {
+    "name": "snmpTrapOID",
+    "oid": "1.3.6.1.6.3.1.1.4.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "accessible-for-notify",
+    "status": "current",
+    "description": "The authoritative identification of the notification currently being sent. This variable occurs as the second varbind in every SNMPv2-Trap-PDU and InformRequest-PDU."
+  },
+  "snmpTrapEnterprise": {
+    "name": "snmpTrapEnterprise",
+    "oid": "1.3.6.1.6.3.1.1.4.3",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "OBJECT IDENTIFIER",
+      "class": "type"
+    },
+    "maxaccess": "accessible-for-notify",
+    "status": "current",
+    "description": "The authoritative identification of the enterprise associated with the trap currently being sent. When an SNMP proxy agent is mapping an RFC1157 Trap-PDU into a SNMPv2-Trap-PDU, this variable occurs as the last varbind."
+  },
+  "snmpTraps": {
+    "name": "snmpTraps",
+    "oid": "1.3.6.1.6.3.1.1.5",
+    "class": "objectidentity"
+  },
+  "coldStart": {
+    "name": "coldStart",
+    "oid": "1.3.6.1.6.3.1.1.5.1",
+    "class": "notificationtype",
+    "status": "current",
+    "description": "A coldStart trap signifies that the SNMP entity, supporting a notification originator application, is reinitializing itself and that its configuration may have been altered."
+  },
+  "warmStart": {
+    "name": "warmStart",
+    "oid": "1.3.6.1.6.3.1.1.5.2",
+    "class": "notificationtype",
+    "status": "current",
+    "description": "A warmStart trap signifies that the SNMP entity, supporting a notification originator application, is reinitializing itself such that its configuration is unaltered."
+  },
+  "authenticationFailure": {
+    "name": "authenticationFailure",
+    "oid": "1.3.6.1.6.3.1.1.5.5",
+    "class": "notificationtype",
+    "status": "current",
+    "description": "An authenticationFailure trap signifies that the SNMP entity has received a protocol message that is not properly authenticated. While all implementations of SNMP entities MAY be capable of generating this trap, the snmpEnableAuthenTraps object indicates whether this trap will be generated."
+  },
+  "snmpSet": {
+    "name": "snmpSet",
+    "oid": "1.3.6.1.6.3.1.1.6",
+    "class": "objectidentity"
+  },
+  "snmpSetSerialNo": {
+    "name": "snmpSetSerialNo",
+    "oid": "1.3.6.1.6.3.1.1.6.1",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "TestAndIncr",
+      "class": "type"
+    },
+    "maxaccess": "read-write",
+    "status": "current",
+    "description": "An advisory lock used to allow several cooperating command generator applications to coordinate their use of the SNMP set operation. This object is used for coarse-grain coordination. To achieve fine-grain coordination, one or more similar objects might be defined within each MIB group, as appropriate."
+  },
+  "snmpMIBConformance": {
+    "name": "snmpMIBConformance",
+    "oid": "1.3.6.1.6.3.1.2",
+    "class": "objectidentity"
+  },
+  "snmpMIBCompliances": {
+    "name": "snmpMIBCompliances",
+    "oid": "1.3.6.1.6.3.1.2.1",
+    "class": "objectidentity"
+  },
+  "snmpMIBGroups": {
+    "name": "snmpMIBGroups",
+    "oid": "1.3.6.1.6.3.1.2.2",
+    "class": "objectidentity"
+  },
+  "snmpBasicCompliance": {
+    "name": "snmpBasicCompliance",
+    "oid": "1.3.6.1.6.3.1.2.1.2",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "snmpGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpSetGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "systemGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpBasicNotificationsGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpCommunityGroup",
+        "module": "SNMPv2-MIB"
+      }
+    ],
+    "status": "deprecated",
+    "description": "The compliance statement for SNMPv2 entities which implement the SNMPv2 MIB. This compliance statement is replaced by snmpBasicComplianceRev2."
+  },
+  "snmpBasicComplianceRev2": {
+    "name": "snmpBasicComplianceRev2",
+    "oid": "1.3.6.1.6.3.1.2.1.3",
+    "class": "modulecompliance",
+    "modulecompliance": [
+      {
+        "object": "snmpGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpSetGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "systemGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpBasicNotificationsGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpCommunityGroup",
+        "module": "SNMPv2-MIB"
+      },
+      {
+        "object": "snmpWarmStartNotificationGroup",
+        "module": "SNMPv2-MIB"
+      }
+    ],
+    "status": "current",
+    "description": "The compliance statement for SNMP entities which implement this MIB module."
+  },
+  "snmpGroup": {
+    "name": "snmpGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.8",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInPkts"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInBadVersions"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInASNParseErrs"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpSilentDrops"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpProxyDrops"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpEnableAuthenTraps"
+      }
+    ],
+    "status": "current",
+    "description": "A collection of objects providing basic instrumentation and control of an SNMP entity."
+  },
+  "snmpCommunityGroup": {
+    "name": "snmpCommunityGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.9",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInBadCommunityNames"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInBadCommunityUses"
+      }
+    ],
+    "status": "current",
+    "description": "A collection of objects providing basic instrumentation of a SNMP entity which supports community-based authentication."
+  },
+  "snmpSetGroup": {
+    "name": "snmpSetGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.5",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpSetSerialNo"
+      }
+    ],
+    "status": "current",
+    "description": "A collection of objects which allow several cooperating command generator applications to coordinate their use of the set operation."
+  },
+  "systemGroup": {
+    "name": "systemGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.6",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysDescr"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysObjectID"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysUpTime"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysContact"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysName"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysLocation"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysServices"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysORLastChange"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysORID"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysORUpTime"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "sysORDescr"
+      }
+    ],
+    "status": "current",
+    "description": "The system group defines objects which are common to all managed systems."
+  },
+  "snmpBasicNotificationsGroup": {
+    "name": "snmpBasicNotificationsGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.7",
+    "class": "notificationgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "coldStart"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "authenticationFailure"
+      }
+    ],
+    "status": "current",
+    "description": "The basic notifications implemented by an SNMP entity supporting command responder applications."
+  },
+  "snmpWarmStartNotificationGroup": {
+    "name": "snmpWarmStartNotificationGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.11",
+    "class": "notificationgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "warmStart"
+      }
+    ],
+    "status": "current",
+    "description": "An additional notification for an SNMP entity supporting command responder applications, if it is able to reinitialize itself such that its configuration is unaltered."
+  },
+  "snmpNotificationGroup": {
+    "name": "snmpNotificationGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.12",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpTrapOID"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpTrapEnterprise"
+      }
+    ],
+    "status": "current",
+    "description": "These objects are required for entities which support notification originator applications."
+  },
+  "snmpOutPkts": {
+    "name": "snmpOutPkts",
+    "oid": "1.3.6.1.2.1.11.2",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Messages which were passed from the SNMP protocol entity to the transport service."
+  },
+  "snmpInTooBigs": {
+    "name": "snmpInTooBigs",
+    "oid": "1.3.6.1.2.1.11.8",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were delivered to the SNMP protocol entity and for which the value of the error-status field was `tooBig'."
+  },
+  "snmpInNoSuchNames": {
+    "name": "snmpInNoSuchNames",
+    "oid": "1.3.6.1.2.1.11.9",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were delivered to the SNMP protocol entity and for which the value of the error-status field was `noSuchName'."
+  },
+  "snmpInBadValues": {
+    "name": "snmpInBadValues",
+    "oid": "1.3.6.1.2.1.11.10",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were delivered to the SNMP protocol entity and for which the value of the error-status field was `badValue'."
+  },
+  "snmpInReadOnlys": {
+    "name": "snmpInReadOnlys",
+    "oid": "1.3.6.1.2.1.11.11",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number valid SNMP PDUs which were delivered to the SNMP protocol entity and for which the value of the error-status field was `readOnly'. It should be noted that it is a protocol error to generate an SNMP PDU which contains the value `readOnly' in the error-status field, as such this object is provided as a means of detecting incorrect implementations of the SNMP."
+  },
+  "snmpInGenErrs": {
+    "name": "snmpInGenErrs",
+    "oid": "1.3.6.1.2.1.11.12",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were delivered to the SNMP protocol entity and for which the value of the error-status field was `genErr'."
+  },
+  "snmpInTotalReqVars": {
+    "name": "snmpInTotalReqVars",
+    "oid": "1.3.6.1.2.1.11.13",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of MIB objects which have been retrieved successfully by the SNMP protocol entity as the result of receiving valid SNMP Get-Request and Get-Next PDUs."
+  },
+  "snmpInTotalSetVars": {
+    "name": "snmpInTotalSetVars",
+    "oid": "1.3.6.1.2.1.11.14",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of MIB objects which have been altered successfully by the SNMP protocol entity as the result of receiving valid SNMP Set-Request PDUs."
+  },
+  "snmpInGetRequests": {
+    "name": "snmpInGetRequests",
+    "oid": "1.3.6.1.2.1.11.15",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Request PDUs which have been accepted and processed by the SNMP protocol entity."
+  },
+  "snmpInGetNexts": {
+    "name": "snmpInGetNexts",
+    "oid": "1.3.6.1.2.1.11.16",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Next PDUs which have been accepted and processed by the SNMP protocol entity."
+  },
+  "snmpInSetRequests": {
+    "name": "snmpInSetRequests",
+    "oid": "1.3.6.1.2.1.11.17",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Set-Request PDUs which have been accepted and processed by the SNMP protocol entity."
+  },
+  "snmpInGetResponses": {
+    "name": "snmpInGetResponses",
+    "oid": "1.3.6.1.2.1.11.18",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Response PDUs which have been accepted and processed by the SNMP protocol entity."
+  },
+  "snmpInTraps": {
+    "name": "snmpInTraps",
+    "oid": "1.3.6.1.2.1.11.19",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Trap PDUs which have been accepted and processed by the SNMP protocol entity."
+  },
+  "snmpOutTooBigs": {
+    "name": "snmpOutTooBigs",
+    "oid": "1.3.6.1.2.1.11.20",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were generated by the SNMP protocol entity and for which the value of the error-status field was `tooBig.'"
+  },
+  "snmpOutNoSuchNames": {
+    "name": "snmpOutNoSuchNames",
+    "oid": "1.3.6.1.2.1.11.21",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were generated by the SNMP protocol entity and for which the value of the error-status was `noSuchName'."
+  },
+  "snmpOutBadValues": {
+    "name": "snmpOutBadValues",
+    "oid": "1.3.6.1.2.1.11.22",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were generated by the SNMP protocol entity and for which the value of the error-status field was `badValue'."
+  },
+  "snmpOutGenErrs": {
+    "name": "snmpOutGenErrs",
+    "oid": "1.3.6.1.2.1.11.24",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP PDUs which were generated by the SNMP protocol entity and for which the value of the error-status field was `genErr'."
+  },
+  "snmpOutGetRequests": {
+    "name": "snmpOutGetRequests",
+    "oid": "1.3.6.1.2.1.11.25",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Request PDUs which have been generated by the SNMP protocol entity."
+  },
+  "snmpOutGetNexts": {
+    "name": "snmpOutGetNexts",
+    "oid": "1.3.6.1.2.1.11.26",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Next PDUs which have been generated by the SNMP protocol entity."
+  },
+  "snmpOutSetRequests": {
+    "name": "snmpOutSetRequests",
+    "oid": "1.3.6.1.2.1.11.27",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Set-Request PDUs which have been generated by the SNMP protocol entity."
+  },
+  "snmpOutGetResponses": {
+    "name": "snmpOutGetResponses",
+    "oid": "1.3.6.1.2.1.11.28",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Get-Response PDUs which have been generated by the SNMP protocol entity."
+  },
+  "snmpOutTraps": {
+    "name": "snmpOutTraps",
+    "oid": "1.3.6.1.2.1.11.29",
+    "nodetype": "scalar",
+    "class": "objecttype",
+    "syntax": {
+      "type": "Counter32",
+      "class": "type"
+    },
+    "maxaccess": "read-only",
+    "status": "obsolete",
+    "description": "The total number of SNMP Trap PDUs which have been generated by the SNMP protocol entity."
+  },
+  "snmpObsoleteGroup": {
+    "name": "snmpObsoleteGroup",
+    "oid": "1.3.6.1.6.3.1.2.2.10",
+    "class": "objectgroup",
+    "objects": [
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutPkts"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInTooBigs"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInNoSuchNames"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInBadValues"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInReadOnlys"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInGenErrs"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInTotalReqVars"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInTotalSetVars"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInGetRequests"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInGetNexts"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInSetRequests"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInGetResponses"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpInTraps"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutTooBigs"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutNoSuchNames"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutBadValues"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutGenErrs"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutGetRequests"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutGetNexts"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutSetRequests"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutGetResponses"
+      },
+      {
+        "module": "SNMPv2-MIB",
+        "object": "snmpOutTraps"
+      }
+    ],
+    "status": "obsolete",
+    "description": "A collection of objects from RFC 1213 made obsolete by this MIB module."
+  },
+  "meta": {
+    "comments": [
+      "ASN.1 source file:///home/pye/src/observium/observium/mibs/rfc/SNMPv2-MIB",
+      "Produced by pysmi-0.3.4 at Mon Mar 15 12:58:15 2021",
+      "On host ribeye platform Linux version 5.4.0-66-generic by user pye",
+      "Using Python version 3.8.5 (default, Jan 27 2021, 15:41:15) "
+    ],
+    "module": "SNMPv2-MIB"
+  }
+}

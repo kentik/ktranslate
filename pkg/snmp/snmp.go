@@ -47,10 +47,10 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 	log.Infof("Setting retry to %v", retries)
 
 	// Load a mibdb if we have one.
-	if conf.Global != nil && (conf.Global.MibDB != "" && conf.Global.MibProfileDir != "") {
-		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
+	if conf.Global != nil {
+		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, log)
 		if err != nil {
-			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
+			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s, pymib: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, err)
 		}
 		mibdb = mdb
 	} else {
@@ -105,7 +105,7 @@ func Close() {
 
 func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) error {
 	log.Infof("Client SNMP: Running SNMP Trap listener on %s", conf.Trap.Listen)
-	tl, err := traps.NewSnmpTrapListener(conf, jchfChan, metrics, log)
+	tl, err := traps.NewSnmpTrapListener(conf, jchfChan, metrics, mibdb, log)
 	if err != nil {
 		return err
 	}
