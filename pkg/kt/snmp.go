@@ -115,7 +115,6 @@ type SnmpGlobalConfig struct {
 	DropIfOutside   bool     `yaml:"drop_if_outside_poll"`
 	MibProfileDir   string   `yaml:"mib_profile_dir"`
 	PyMibProfileDir string   `yaml:"pymib_profile_dir"`
-	PyMibSys        string   `yaml:"pymib_profile_dir"`
 	MibDB           string   `yaml:"mibs_db"`
 	MibsEnabled     []string `yaml:"mibs_enabled"`
 	TimeoutMS       int      `yaml:"timeout_ms"`

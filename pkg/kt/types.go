@@ -22,6 +22,9 @@ const (
 	KENTIK_EVENT_SNMP_INT_METRIC = "KSnmpInterfaceMetric"
 	KENTIK_EVENT_SNMP_METADATA   = "KSnmpInterfaceMetadata"
 	KENTIK_EVENT_SNMP_TRAP       = "KSnmpTrap"
+
+	KentikAPIToken   = "KENTIK_API_TOKEN"
+	KentikAPITimeout = "KENTIK_API_TIMEOUT"
 )
 
 type Provider string

@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kentik/ktranslate/pkg/cat/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -133,15 +134,6 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		}
 		kc.mapr = m
 		kc.log.Infof("Loaded %d custom mappings", len(m.Customs))
-	}
-
-	if config.DeviceFile != "" {
-		m, ints, err := NewDeviceMapper(config.DeviceFile)
-		if err != nil {
-			return nil, err
-		}
-		kc.devMapr = m
-		kc.log.Infof("Loaded %d device mappings with %d interfaces", len(m.Devices), ints)
 	}
 
 	if config.UDRFile != "" {
@@ -555,6 +547,14 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 
 	// Set up some data structures.
 	company := make(map[kt.Cid]kt.Devices)
+	if kc.apic != nil {
+		c, err := kc.apic.GetDevices(ctx)
+		if err != nil {
+			kc.log.Errorf("Cannot get devices: %v", err)
+		} else {
+			company = c
+		}
+	}
 	citycache := map[uint32]string{}
 	regioncache := map[uint32]string{}
 	tagcache := map[uint64]string{}
@@ -648,6 +648,14 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		case <-cacheTicker.C:
 			company = make(map[kt.Cid]kt.Devices)
 			tagcache = map[uint64]string{}
+			if kc.apic != nil {
+				c, err := kc.apic.GetDevices(ctx)
+				if err != nil {
+					kc.log.Errorf("Cannot get devices: %v", err)
+				} else {
+					company = c
+				}
+			}
 
 		case <-ctx.Done():
 			kc.log.Infof("sendToSink %d Done", i)
@@ -716,6 +724,15 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		kc.auth = authr
+	}
+
+	// Api system for talking to kentik.
+	if kc.config.Kentik.ApiEmail != "" {
+		apic, err := api.NewKentikApi(ctx, kc.config.Kentik.ApiEmail, kc.config.Kentik.ApiToken, kc.config.Kentik.ApiRoot, kc.log)
+		if err != nil {
+			return err
+		}
+		kc.apic = apic
 	}
 
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.

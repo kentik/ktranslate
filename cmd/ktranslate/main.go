@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/kentik/ktranslate/cmd/version"
 	"github.com/kentik/ktranslate/pkg/cat"
 	"github.com/kentik/ktranslate/pkg/formats"
-	ktb "github.com/kentik/ktranslate/pkg/kt"
+	kt "github.com/kentik/ktranslate/pkg/kt"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/baseserver"
@@ -25,7 +26,6 @@ func main() {
 		mappingFile    = flag.String("mapping", "config.json", "Mapping file to use for enums")
 		region         = flag.String("region", "", "Region mapping file")
 		city           = flag.String("city", "", "City mapping file")
-		interfaces     = flag.String("interfaces", "", "Interface mapping file")
 		udrs           = flag.String("udrs", "", "UDR mapping file")
 		geo            = flag.String("geo", "", "Geo mapping file")
 		asn4           = flag.String("asn4", "", "Asn ipv6 mapping file")
@@ -43,6 +43,8 @@ func main() {
 		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
 		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
+		kentikEmail    = flag.String("email", "", "Kentik email to use for API calls")
+		apiRoot        = flag.String("api_root", "https://api.kentik.com/api/v5", "API url prefix. If not set, defaults to https://api.kentik.com")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
@@ -62,10 +64,9 @@ func main() {
 		Code2City:         *city,
 		Format:            formats.Format(*format),
 		Threads:           *threads,
-		Compression:       ktb.Compression(*compression),
+		Compression:       kt.Compression(*compression),
 		MaxFlowPerMessage: *maxFlows,
 		RollupAndAlpha:    *rollupAndAlpha,
-		DeviceFile:        *interfaces,
 		UDRFile:           *udrs,
 		GeoMapping:        *geo,
 		Asn4:              *asn4,
@@ -75,6 +76,11 @@ func main() {
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
 		Subtype:           *subtype,
+		Kentik: &cat.KentikConfig{
+			ApiEmail: *kentikEmail,
+			ApiToken: os.Getenv(kt.KentikAPIToken),
+			ApiRoot:  *apiRoot,
+		},
 	}
 
 	if *apiDevices != "" {

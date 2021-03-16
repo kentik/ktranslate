@@ -57,8 +57,8 @@ func NewCustomMapper(file string) (*CustomMapper, error) {
 	return &m, nil
 }
 
-func NewDeviceMapper(file string) (*DeviceMapper, int, error) {
-	ms := []InterfaceRow{}
+func NewDeviceMapper(file string) (*kt.DeviceMapper, int, error) {
+	ms := []kt.InterfaceRow{}
 	by, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, 0, err
@@ -68,15 +68,15 @@ func NewDeviceMapper(file string) (*DeviceMapper, int, error) {
 		return nil, 0, err
 	}
 
-	dm := DeviceMapper{
-		Devices: make(map[kt.DeviceID]map[kt.IfaceID]*InterfaceRow),
+	dm := kt.DeviceMapper{
+		Devices: make(map[kt.DeviceID]map[kt.IfaceID]*kt.InterfaceRow),
 	}
 
 	for _, row := range ms {
 		did := kt.DeviceID(row.DeviceId)
 		sid, _ := strconv.Atoi(row.SnmpId)
 		if _, ok := dm.Devices[did]; !ok {
-			dm.Devices[did] = make(map[kt.IfaceID]*InterfaceRow)
+			dm.Devices[did] = make(map[kt.IfaceID]*kt.InterfaceRow)
 		}
 		dm.Devices[did][kt.IfaceID(sid)] = &row
 	}

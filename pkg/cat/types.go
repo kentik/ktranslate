@@ -7,6 +7,7 @@ import (
 	old_logger "github.com/kentik/golog/logger"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
+	"github.com/kentik/ktranslate/pkg/cat/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -48,7 +49,6 @@ type Config struct {
 	MaxFlowPerMessage int
 	RollupAndAlpha    bool
 	UDRFile           string
-	DeviceFile        string
 	GeoMapping        string
 	Asn4              string
 	Asn6              string
@@ -58,6 +58,13 @@ type Config struct {
 	SNMPFile          string
 	SNMPDisco         bool
 	Subtype           string
+	Kentik            *KentikConfig
+}
+
+type KentikConfig struct {
+	ApiEmail string
+	ApiToken string
+	ApiRoot  string
 }
 
 type AuthConfig struct {
@@ -73,7 +80,6 @@ type KTranslate struct {
 	jchfChans      []chan *kt.JCHF
 	snmpChan       chan []*kt.JCHF
 	mapr           *CustomMapper
-	devMapr        *DeviceMapper
 	udrMapr        *UDRMapper
 	pgdb           *sql.DB
 	msgsc          chan []byte
@@ -90,31 +96,11 @@ type KTranslate struct {
 	asn            *patricia.Uint32Trees
 	resolver       *Resolver
 	auth           *auth.Server
+	apic           *api.KentikApi
 }
 
 type CustomMapper struct {
 	Customs map[uint32]string `json:"customs"`
-}
-
-type InterfaceRow struct {
-	DeviceId             uint32 `json:"device_id"`
-	DeviceName           string `json:"device_name"`
-	DeviceType           string `json:"device_type"`
-	SiteId               uint32 `json:"site_id"`
-	SnmpId               string `json:"snmp_id"`
-	SnmpSpeed            int64  `json:"snmp_speed"`
-	SnmpType             uint32 `json:"snmp_type"`
-	SnmpAlias            string `json:"snmp_alias"`
-	InterfaceIp          string `json:"interface_ip"`
-	InterfaceDescription string `json:"interface_description"`
-	Provider             string `json:"provider"`
-	VrfId                uint32 `json:"vrf_id"`
-	SiteTitle            string `json:"site_title"`
-	SiteCountry          string `json:"site_country"`
-}
-
-type DeviceMapper struct {
-	Devices map[kt.DeviceID]map[kt.IfaceID]*InterfaceRow
 }
 
 type UDR struct {

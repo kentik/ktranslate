@@ -175,21 +175,20 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 	dst.CustomBigInt = make(map[string]int64)
 
 	// Do we have info about this device?
-	if kc.devMapr != nil { // Reading from a local file.
-		if d, ok := kc.devMapr.Devices[dst.DeviceId]; ok {
-			if i, ok := d[dst.InputPort]; ok {
+	if _, ok := company[dst.CompanyId]; ok {
+		if d, ok := company[dst.CompanyId][dst.DeviceId]; ok {
+			dst.DeviceName = d.Name
+			if i, ok := d.Interfaces[dst.InputPort]; ok {
 				dst.InputIntDesc = i.InterfaceDescription
 				dst.InputIntAlias = i.SnmpAlias
-				dst.DeviceName = i.DeviceName
-				dst.InputInterfaceCapacity = i.SnmpSpeed
-				dst.InputInterfaceIP = i.InterfaceIp
+				dst.InputInterfaceCapacity = i.SnmpSpeedMbps
+				dst.InputInterfaceIP = i.InterfaceIP
 			}
-			if i, ok := d[dst.OutputPort]; ok {
+			if i, ok := d.Interfaces[dst.OutputPort]; ok {
 				dst.OutputIntDesc = i.InterfaceDescription
 				dst.OutputIntAlias = i.SnmpAlias
-				dst.DeviceName = i.DeviceName
-				dst.OutputInterfaceCapacity = i.SnmpSpeed
-				dst.OutputInterfaceIP = i.InterfaceIp
+				dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
+				dst.OutputInterfaceIP = i.InterfaceIP
 			}
 		}
 	}

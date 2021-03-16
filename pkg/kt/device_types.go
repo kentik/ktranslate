@@ -6,9 +6,13 @@ type Devices map[DeviceID]Device
 // A Device represents a device, corresponding to a row in mn_device.
 // It also has all its interfaces attached.
 type Device struct {
-	ID         DeviceID
-	Name       string
-	Interfaces map[IfaceID]Interface
+	ID            DeviceID `json:"id,string"`
+	Name          string   `json:"device_name"`
+	CompanyID     Cid      `json:"company_id,string"`
+	DeviceType    string   `json:"device_type"`
+	DeviceSubtype string   `json:"device_subtype"`
+	Interfaces    map[IfaceID]Interface
+	AllInterfaces []Interface `json:"all_interfaces"`
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents
@@ -34,20 +38,45 @@ type InterfaceCapacityBPS = uint64
 type Interface struct {
 	ID int64 `json:"id"`
 
-	DeviceID   DeviceID `json:"device_id"`
+	DeviceID   DeviceID `json:"device_id,string"`
 	DeviceName string   `json:"device_name"`
 	DeviceType string   `json:"device_type"`
 	SiteID     int      `json:"site_id"`
 
-	SnmpID               string `json:"snmp_id"`
-	SnmpSpeedMbps        int64  `json:"snmp_speed"` // unit? TODO: switch to uint64, rename to SnmpSpeedMbps
-	SnmpType             int    `json:"snmp_type"`
-	SnmpAlias            string `json:"snmp_alias"`
-	InterfaceIP          string `json:"interface_ip"`
-	InterfaceDescription string `json:"interface_description"`
-	Provider             string `json:"provider"`
-	VrfID                int64  `json:"vrf_id"`
+	SnmpID               IfaceID `json:"snmp_id,string"`
+	SnmpSpeedMbps        int64   `json:"snmp_speed,string"` // unit? TODO: switch to uint64, rename to SnmpSpeedMbps
+	SnmpType             int     `json:"snmp_type"`
+	SnmpAlias            string  `json:"snmp_alias"`
+	InterfaceIP          string  `json:"interface_ip"`
+	InterfaceDescription string  `json:"interface_description"`
+	Provider             string  `json:"provider"`
+	VrfID                int64   `json:"vrf_id"`
 
 	SiteTitle   string `json:"site_title"`
 	SiteCountry string `json:"site_country"`
+}
+
+type DeviceList struct {
+	Devices []Device `json:"devices"`
+}
+
+type DeviceMapper struct {
+	Devices map[DeviceID]map[IfaceID]*InterfaceRow
+}
+
+type InterfaceRow struct {
+	DeviceId             uint32 `json:"device_id"`
+	DeviceName           string `json:"device_name"`
+	DeviceType           string `json:"device_type"`
+	SiteId               uint32 `json:"site_id"`
+	SnmpId               string `json:"snmp_id"`
+	SnmpSpeed            int64  `json:"snmp_speed"`
+	SnmpType             uint32 `json:"snmp_type"`
+	SnmpAlias            string `json:"snmp_alias"`
+	InterfaceIp          string `json:"interface_ip"`
+	InterfaceDescription string `json:"interface_description"`
+	Provider             string `json:"provider"`
+	VrfId                uint32 `json:"vrf_id"`
+	SiteTitle            string `json:"site_title"`
+	SiteCountry          string `json:"site_country"`
 }
