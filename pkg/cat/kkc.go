@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kentik/ktranslate/pkg/cat/api"
+	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -709,8 +709,8 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// Api system for talking to kentik.
-	if kc.config.Kentik.ApiEmail != "" {
-		apic, err := api.NewKentikApi(ctx, kc.config.Kentik.ApiEmail, kc.config.Kentik.ApiToken, kc.config.Kentik.ApiRoot, kc.log)
+	if kc.config.Kentik != nil && kc.config.Kentik.ApiEmail != "" {
+		apic, err := api.NewKentikApi(ctx, kc.config.Kentik, kc.log)
 		if err != nil {
 			return err
 		}
@@ -724,7 +724,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		}
 		kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
 		kc.metrics.SnmpDeviceData = kt.NewSnmpMetricSet(kc.registry)
-		err := snmp.StartSNMPPolls(kc.config.SNMPFile, kc.snmpChan, kc.metrics.SnmpDeviceData, kc.registry, kc.log)
+		err := snmp.StartSNMPPolls(ctx, kc.config.SNMPFile, kc.snmpChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log)
 		if err != nil {
 			return err
 		}

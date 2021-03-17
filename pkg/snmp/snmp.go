@@ -1,12 +1,14 @@
 package snmp
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/snmp/metadata"
@@ -23,7 +25,7 @@ var (
 	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
 )
 
-func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, log logger.ContextL) error {
+func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
 
 	// First, parse the config file and see what we're doing.
 	log.Infof("Client SNMP: Running SNMP interface polling, loading config from %s", snmpFile)
@@ -80,7 +82,14 @@ func StartSNMPPolls(snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpM
 				}
 			}
 		}
-		err := launchSnmp(conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
+
+		// Create this device in Kentik if the option is set.
+		err := apic.EnsureDevice(ctx, device)
+		if err != nil {
+			return err
+		}
+
+		err = launchSnmp(conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
 		if err != nil {
 			return err
 		}

@@ -1,14 +1,17 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	synthetics "github.com/kentik/api-schema/gen/go/kentik/synthetics/v202101beta1"
@@ -39,8 +42,8 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte,
 
 	userAgentString := USER_AGENT_BASE
 
-	req.Header.Add(API_EMAIL_HEADER, api.email)
-	req.Header.Add(API_PASSWORD_HEADER, api.token)
+	req.Header.Add(API_EMAIL_HEADER, api.conf.ApiEmail)
+	req.Header.Add(API_PASSWORD_HEADER, api.conf.ApiToken)
 	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
 
 	resp, err := api.client.Do(req)
@@ -107,14 +110,9 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	return nil
 }
 
-func (api *KentikApi) CreateDeviceIfNotPresent(name string, ip string) error {
-	//client, err = libkflow.NewSenderWithNewDevice(dconf, errors, config)
-	return nil
-}
-
 func (api *KentikApi) getDevices(ctx context.Context) error {
 	stime := time.Now()
-	res, err := api.getDeviceInfo(ctx, api.apiRoot+"/api/v5/devices")
+	res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/v5/devices")
 	if err != nil {
 		return err
 	}
@@ -146,9 +144,6 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 
 type KentikApi struct {
 	logger.ContextL
-	email      string
-	token      string
-	apiRoot    string
 	tr         *http.Transport
 	client     *http.Client
 	devices    map[kt.Cid]kt.Devices
@@ -157,9 +152,10 @@ type KentikApi struct {
 	setTime    time.Time
 	apiTimeout time.Duration
 	synClient  synthetics.SyntheticsAdminServiceClient
+	conf       *kt.KentikConfig
 }
 
-func NewKentikApi(ctx context.Context, email string, token string, apiRoot string, log logger.ContextL) (*KentikApi, error) {
+func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.ContextL) (*KentikApi, error) {
 	apiTimeoutStr := os.Getenv(kt.KentikAPITimeout)
 	apiTimeout := API_TIMEOUT
 	if apiTimeoutStr != "" {
@@ -180,20 +176,20 @@ func NewKentikApi(ctx context.Context, email string, token string, apiRoot strin
 
 	kapi := &KentikApi{
 		ContextL:   log,
-		email:      email,
-		token:      token,
-		apiRoot:    apiRoot,
+		conf:       conf,
 		tr:         tr,
 		client:     client,
 		apiTimeout: apiTimeout,
 	}
 
-	err := kapi.connectSynth(ctx) // Now, check to see if synthetics API works.
+	// Now, check to see if synthetics API works.
+	err := kapi.connectSynth(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	err = kapi.getDevices(ctx) // check api works and also pre-populate cache.
+	// check api works and also pre-populate cache.
+	err = kapi.getDevices(ctx)
 
 	// Drop cache every hour to keep up to date
 	go kapi.manageCache(ctx)
@@ -233,7 +229,7 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 		return err
 	}
 
-	address, err := getAddressFromApiRoot(api.apiRoot)
+	address, err := getAddressFromApiRoot(api.conf.ApiRoot)
 	if err != nil {
 		return err
 	}
@@ -253,8 +249,8 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 
 func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	md := metadata.New(map[string]string{
-		"X-CH-Auth-Email":     api.email,
-		"X-CH-Auth-API-Token": api.token,
+		"X-CH-Auth-Email":     api.conf.ApiEmail,
+		"X-CH-Auth-API-Token": api.conf.ApiToken,
 	})
 	ctxo := metadata.NewOutgoingContext(ctx, md)
 
@@ -285,4 +281,105 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
 
 	return nil
+}
+
+func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfig) error {
+	if api == nil {
+		return nil
+	}
+
+	// If there's no plan id to create devices on, just silently return here.
+	if api.conf.ApiPlan == 0 {
+		return nil
+	}
+
+	// If the device isn't in the list of devices we have, return it too
+	dname := strings.ToLower(strings.Replace(conf.DeviceName, ".", "_", -1)) // Normalize to make the API happy.
+	for _, c := range api.devices {
+		for _, d := range c {
+			if d.Name == dname {
+				api.Infof("Device %s already exists in Kentik.")
+			}
+		}
+	}
+
+	desc := conf.Description
+	if len(desc) > 128 {
+		desc = desc[0:127]
+	}
+	api.Infof("Creating device %s in Kentik.", dname)
+	dev := &deviceCreate{
+		Name:        dname,
+		Type:        "router",
+		Description: desc,
+		SampleRate:  1,
+		BgpType:     "none",
+		PlanID:      api.conf.ApiPlan,
+		IPs:         []net.IP{net.ParseIP(conf.DeviceIP)},
+		Subtype:     "router",
+	}
+
+	err := api.createDevice(ctx, dev, api.conf.ApiRoot+"/api/v5/device")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, url string) error {
+
+	payload, err := json.Marshal(map[string]*deviceCreate{
+		"device": create,
+	})
+	if err != nil {
+		return err
+	}
+
+	// Try to make a request, parse the result as json.
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
+	if err != nil {
+		return err
+	}
+
+	userAgentString := USER_AGENT_BASE
+	req.Header.Add(API_EMAIL_HEADER, api.conf.ApiEmail)
+	req.Header.Add(API_PASSWORD_HEADER, api.conf.ApiToken)
+	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
+
+	resp, err := api.client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	if err != nil {
+		api.Errorf("Error with device create: %v", err)
+		api.client = &http.Client{Transport: api.tr, Timeout: api.apiTimeout}
+		return err
+	}
+	if resp.StatusCode != 201 {
+		bodymap := map[string]string{}
+		json.NewDecoder(resp.Body).Decode(&bodymap)
+		return fmt.Errorf("Invalid status code %d -> %v", resp.StatusCode, bodymap["error"])
+	}
+	io.Copy(ioutil.Discard, resp.Body)
+
+	return nil
+}
+
+type deviceCreate struct {
+	Name        string   `json:"device_name"`
+	Type        string   `json:"device_type"`
+	Description string   `json:"device_description"`
+	SampleRate  int      `json:"device_sample_rate,string"`
+	BgpType     string   `json:"device_bgp_type"`
+	PlanID      int      `json:"plan_id,omitempty"`
+	SiteID      int      `json:"site_id,omitempty"`
+	IPs         []net.IP `json:"sending_ips"`
+	CdnAttr     string   `json:"-"`
+	ExportId    int      `json:"cloud_export_id,omitempty"`
+	Subtype     string   `json:"device_subtype"`
+	Region      string   `json:"cloud_region,omitempty"`
+	Zone        string   `json:"cloud_zone,omitempty"`
 }

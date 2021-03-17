@@ -259,3 +259,10 @@ func NewTestId(id string) TestId {
 	tid, _ := strconv.Atoi(id)
 	return TestId(tid)
 }
+
+type KentikConfig struct {
+	ApiEmail string
+	ApiToken string
+	ApiRoot  string
+	ApiPlan  int
+}

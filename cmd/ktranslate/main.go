@@ -45,6 +45,7 @@ func main() {
 		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
 		kentikEmail    = flag.String("email", "", "Kentik email to use for API calls")
 		apiRoot        = flag.String("api_root", "https://api.kentik.com", "API url prefix. If not set, defaults to https://api.kentik.com")
+		kentikPlan     = flag.Int("kentik_plan", 0, "Kentik plan id to use for creating devices")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
@@ -76,10 +77,11 @@ func main() {
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
 		Subtype:           *subtype,
-		Kentik: &cat.KentikConfig{
+		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
 			ApiToken: os.Getenv(kt.KentikAPIToken),
 			ApiRoot:  *apiRoot,
+			ApiPlan:  *kentikPlan,
 		},
 	}
 

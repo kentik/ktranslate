@@ -7,7 +7,7 @@ import (
 	old_logger "github.com/kentik/golog/logger"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
-	"github.com/kentik/ktranslate/pkg/cat/api"
+	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -58,13 +58,7 @@ type Config struct {
 	SNMPFile          string
 	SNMPDisco         bool
 	Subtype           string
-	Kentik            *KentikConfig
-}
-
-type KentikConfig struct {
-	ApiEmail string
-	ApiToken string
-	ApiRoot  string
+	Kentik            *kt.KentikConfig
 }
 
 type AuthConfig struct {
