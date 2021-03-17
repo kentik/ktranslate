@@ -268,14 +268,15 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0, len(metrics))
-	for m, _ := range metrics {
+	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
+			attrNew := copyAttrForSnmp(attr, name)
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomBigInt[m]),
 				Timestamp:  ts,
-				Attributes: attr,
+				Attributes: attrNew,
 			})
 		}
 	}
@@ -290,14 +291,15 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	ms := make([]NRMetric, 0, len(metrics))
-	for m, _ := range metrics {
+	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
+			attrNew := copyAttrForSnmp(attr, name)
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomBigInt[m]),
 				Timestamp:  ts,
-				Attributes: attr,
+				Attributes: attrNew,
 			})
 		}
 	}
@@ -339,4 +341,14 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	}
 
 	return ms
+}
+
+func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interface{} {
+	attrNew := map[string]interface{}{
+		"objectIdentifier": name,
+	}
+	for k, v := range attr {
+		attrNew[k] = v
+	}
+	return attrNew
 }

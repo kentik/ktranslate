@@ -37,10 +37,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string
 			continue // Skip because we don't want this messing up cardinality.
 		}
 
-		if n, ok := metrics[k]; ok {
-			if n != "" {
-				attr["metric_desc"] = n
-			}
+		if _, ok := metrics[k]; ok { // Skip because this one is a metric, not an attribute.
 			continue
 		}
 
