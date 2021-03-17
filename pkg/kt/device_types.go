@@ -1,7 +1,7 @@
 package kt
 
 // Devices is a map of device ids to devices for a company.
-type Devices map[DeviceID]Device
+type Devices map[DeviceID]*Device
 
 // A Device represents a device, corresponding to a row in mn_device.
 // It also has all its interfaces attached.

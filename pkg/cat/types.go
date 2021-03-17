@@ -30,11 +30,11 @@ const (
 	MaxProxyListenerBufferAlloc = 10 * 1024 * 1024 // 10MB
 	MSG_KEY_PREFIX              = 80
 	HttpSenderID                = "sender_id"
-	APP_PROTOCOL_COL            = "APP_PROTOCOL"
+	APP_PROTOCOL_COL            = "app_protocol"
 	UDR_TYPE_INT                = "int"
 	UDR_TYPE_BIGINT             = "bigint"
 	UDR_TYPE_STRING             = "string"
-	UDR_TYPE                    = "Application Type"
+	UDR_TYPE                    = "application_type"
 )
 
 // Config configuration parameters used by activate service

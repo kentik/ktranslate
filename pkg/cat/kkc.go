@@ -546,15 +546,6 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 	defer sendTicker.Stop()
 
 	// Set up some data structures.
-	company := make(map[kt.Cid]kt.Devices)
-	if kc.apic != nil {
-		c, err := kc.apic.GetDevices(ctx)
-		if err != nil {
-			kc.log.Errorf("Cannot get devices: %v", err)
-		} else {
-			company = c
-		}
-	}
 	citycache := map[uint32]string{}
 	regioncache := map[uint32]string{}
 	tagcache := map[uint64]string{}
@@ -610,7 +601,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		case f := <-kc.alphaChans[i]:
 			select {
 			case jflow := <-kc.jchfChans[i]: // non blocking select on this chan.
-				err := kc.flowToJCHF(ctx, company, citycache, regioncache, jflow, f, currentTime, tagcache)
+				err := kc.flowToJCHF(ctx, citycache, regioncache, jflow, f, currentTime, tagcache)
 				if err != nil {
 					kc.log.Errorf("Cannot convert to json: %v", err)
 					jflow.Reset()
@@ -646,16 +637,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 			currentTime = time.Now().Unix()
 
 		case <-cacheTicker.C:
-			company = make(map[kt.Cid]kt.Devices)
 			tagcache = map[uint64]string{}
-			if kc.apic != nil {
-				c, err := kc.apic.GetDevices(ctx)
-				if err != nil {
-					kc.log.Errorf("Cannot get devices: %v", err)
-				} else {
-					company = c
-				}
-			}
 
 		case <-ctx.Done():
 			kc.log.Infof("sendToSink %d Done", i)

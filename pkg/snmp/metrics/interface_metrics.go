@@ -45,8 +45,9 @@ type InterfaceMetrics struct {
 	// evolve, so let's be careful.
 	mux sync.Mutex
 
-	intValues map[string]*counters.CounterSet
-	oidMap    map[string]string
+	intValues  map[string]*counters.CounterSet
+	oidMap     map[string]string
+	nameOidMap map[string]string
 }
 
 func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *InterfaceMetrics {
@@ -70,13 +71,19 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		log.Infof("Using custom interface metric set")
 	}
 
+	nameOidMap := map[string]string{} // Reverse the polled oids here.
+	for k, v := range oidMap {
+		nameOidMap[v] = k
+	}
+
 	return &InterfaceMetrics{
-		log:       log,
-		gconf:     gconf,
-		conf:      conf,
-		metrics:   metrics,
-		oidMap:    oidMap,
-		intValues: make(map[string]*counters.CounterSet),
+		log:        log,
+		gconf:      gconf,
+		conf:       conf,
+		metrics:    metrics,
+		oidMap:     oidMap,
+		nameOidMap: nameOidMap,
+		intValues:  make(map[string]*counters.CounterSet),
 	}
 }
 
@@ -203,14 +210,14 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		dst.DeviceName = im.conf.DeviceName
 		dst.SrcAddr = im.conf.DeviceIP
 
-		metrics := map[string]bool{}
+		metrics := map[string]string{}
 		for k, v := range cs {
 			dst.CustomBigInt[k] = int64(v)
 			switch k {
 			case SNMP_ifHCInUcastPkts, SNMP_ifHCOutUcastPkts, SNMP_ifHCInOctets, SNMP_ifHCOutOctets:
 				dst.CustomBigInt[k] = dst.CustomBigInt[k] * im.conf.RateMultiplier
 			}
-			metrics[k] = true
+			metrics[k] = im.nameOidMap[k]
 		}
 		if uptimeDelta > 0 {
 			dst.CustomBigInt[Uptime] = int64(uptimeDelta)

@@ -44,7 +44,7 @@ func main() {
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
 		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
 		kentikEmail    = flag.String("email", "", "Kentik email to use for API calls")
-		apiRoot        = flag.String("api_root", "https://api.kentik.com/api/v5", "API url prefix. If not set, defaults to https://api.kentik.com")
+		apiRoot        = flag.String("api_root", "https://api.kentik.com", "API url prefix. If not set, defaults to https://api.kentik.com")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())

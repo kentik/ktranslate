@@ -162,49 +162,19 @@ func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
 }
 
 func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
-	var metrics map[string]bool
-	var names map[string]string
-	switch in.CustomInt["Result Type"] {
-	case 0: // Error
-		metrics = map[string]bool{"Error": true}
-	case 1: // Timeout
-		metrics = map[string]bool{"Timeout": true}
-	case 2: // Ping
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 3: // Fetch
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true, "Fetch Size | Ping Min RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Status", "Fetch TTLB | Ping Lost": "TTLB", "Fetch Size | Ping Min RTT": "Size"}
-	case 4: // Trace
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time"}
-	case 5: // Knock
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 6: // Query
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Fetch TTLB | Ping Lost": "Code"}
-	case 7: // Shake
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Lat/Long Dest": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Lat/Long Dest": "Port"}
-	}
-
+	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 
-	for m, _ := range metrics {
+	for m, name := range metrics {
 		switch m {
-		case "Error", "Timeout":
-			ms[m] = 1
+		case "error", "timeout":
+			ms[name] = 1
 		default:
-			ms[names[m]] = int64(in.CustomInt[m])
+			ms[name] = int64(in.CustomInt[m])
 		}
 	}
 
@@ -219,7 +189,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
@@ -235,7 +205,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 		case "out_pkts":
 			ms[m] = int64(in.OutPkts * uint64(in.SampleRate))
 		case "latency_ms":
-			ms[m] = int64(in.CustomInt["APPL_LATENCY_MS"])
+			ms[m] = int64(in.CustomInt["appl_latency_ms"])
 		}
 	}
 
@@ -248,12 +218,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 }
 
 func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
-	var metrics map[string]bool
-	if len(in.CustomMetrics) > 0 {
-		metrics = in.CustomMetrics
-	} else {
-		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
-	}
+	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
@@ -274,13 +239,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 }
 
 func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
-	var metrics map[string]bool
-	if len(in.CustomMetrics) > 0 {
-		metrics = in.CustomMetrics
-	} else {
-		metrics = map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
-			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
-	}
+	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()

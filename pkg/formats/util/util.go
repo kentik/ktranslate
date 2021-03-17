@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -11,48 +12,53 @@ var (
 	DroppedAttrs = map[string]bool{
 		"timestamp":               true,
 		"sampled_packet_size":     true,
-		"Lat/Long Dest":           true,
-		"MEMBER_ID":               true,
+		"lat/long_dest":           true,
+		"member_id":               true,
 		"dst_eth_mac":             true,
 		"src_eth_mac":             true,
 		"Manufacturer":            true,
-		"Error Cause/Trace Route": true,
-		"Hop Data":                true,
-		"STR01":                   true,
-		"ULT_EXIT_PORT":           true,
-		"Task ID":                 true,
-		"APP_PROTOCOL":            true,
-		"Agent ID":                true,
-		"ULT_EXIT_DEVICE_ID":      true,
-		"device_id":               true,
+		"error_cause/trace_route": true,
+		"hop_data":                true,
+		"str01":                   true,
+		"ult_exit_port":           true,
+		"app_protocol":            true,
 		"kt_functional_testing":   true,
-		"CLIENT_NW_LATENCY_MS":    true,
-		"APPL_LATENCY_MS":         true,
-		"SERVER_NW_LATENCY_MS":    true,
-		"CONNECTION_ID":           true,
+		"client_nw_latency_ms":    true,
+		"appl_latency_ms":         true,
+		"server_nw_latency_ms":    true,
+		"connection_id":           true,
 	}
 )
 
-func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]bool, lastMetadata *kt.LastMetadata) {
+func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string, lastMetadata *kt.LastMetadata) {
 	mapr := in.Flatten()
 	for k, v := range mapr {
 		if DroppedAttrs[k] {
 			continue // Skip because we don't want this messing up cardinality.
 		}
 
+		if n, ok := metrics[k]; ok {
+			if n != "" {
+				attr["metric_desc"] = n
+			}
+			continue
+		}
+
 		switch vt := v.(type) {
-		case string:
-			if !metrics[k] && vt != "" {
+		case string, kt.Provider:
+			if vt != "" {
 				attr[k] = vt
 			}
 		case int64:
-			if !metrics[k] && vt > 0 {
+			if vt > 0 {
 				attr[k] = int(vt)
 			}
 		case int32:
-			if !metrics[k] && vt > 0 {
+			if vt > 0 {
 				attr[k] = int(vt)
 			}
+		default:
+			panic(fmt.Sprintf("Unknown type: %v", v.(int32)))
 		}
 	}
 
@@ -135,4 +141,33 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 	}
 
 	return &lm
+}
+
+var (
+	synMetrics = map[int32]map[string]string{
+		0: map[string]string{"error": "error", "fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
+			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+
+		1: map[string]string{"timeout": "timeout", "fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
+			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+
+		2: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
+			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+
+		3: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "status", "fetch_ttlb_|_ping_lost": "ttlb",
+			"fetch_size_|_ping_min_rtt": "size"},
+
+		4: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time"},
+
+		5: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
+			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+
+		6: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time", "fetch_ttlb_|_ping_lost": "code"},
+
+		7: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time", "lat/long_dest": "port"},
+	}
+)
+
+func GetSynMetricNameSet(rt int32) map[string]string {
+	return synMetrics[rt]
 }

@@ -11,12 +11,16 @@ import (
 	"strconv"
 	"time"
 
+	synthetics "github.com/kentik/api-schema/gen/go/kentik/synthetics/v202101beta1"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 const (
-	CACHE_TIME_DEVICE   = -1 * 3 * time.Hour
+	CACHE_TIME_DEVICE   = 1 * time.Hour
 	API_TIMEOUT         = 60 * time.Second
 	USER_AGENT_BASE     = "KentikFirehose"
 	HTTP_USER_AGENT     = "User-Agent"
@@ -79,45 +83,65 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte,
 	return body, nil
 }
 
-func (api *KentikApi) GetDevices(ctx context.Context) (map[kt.Cid]kt.Devices, error) {
-	if api.devices != nil {
-		if api.setTime.Before(time.Now().Add(CACHE_TIME_DEVICE)) {
-			api.Infof("Re-generating cached devices")
-		} else {
-			return api.devices, nil // Cache here.
-		}
+func (api *KentikApi) GetTest(tid kt.TestId) *synthetics.Test {
+	if api == nil {
+		return nil
 	}
+	return api.synTests[tid]
+}
 
+func (api *KentikApi) GetAgent(aid kt.AgentId) *synthetics.Agent {
+	if api == nil {
+		return nil
+	}
+	return api.synAgents[aid]
+}
+
+func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
+	if api == nil {
+		return nil
+	}
+	if c, ok := api.devices[cid]; ok {
+		return c[did]
+	}
+	return nil
+}
+
+func (api *KentikApi) CreateDeviceIfNotPresent(name string, ip string) error {
+	//client, err = libkflow.NewSenderWithNewDevice(dconf, errors, config)
+	return nil
+}
+
+func (api *KentikApi) getDevices(ctx context.Context) error {
 	stime := time.Now()
-	res, err := api.getDeviceInfo(ctx, api.apiRoot+"/devices")
+	res, err := api.getDeviceInfo(ctx, api.apiRoot+"/api/v5/devices")
 	if err != nil {
-		return nil, err
+		return err
 	}
 	var devices kt.DeviceList
 	err = json.Unmarshal(res, &devices)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
 	for _, device := range devices.Devices {
 		if _, ok := resDev[device.CompanyID]; !ok {
-			resDev[device.CompanyID] = map[kt.DeviceID]kt.Device{}
+			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
 		}
 		device.Interfaces = map[kt.IfaceID]kt.Interface{}
 		for _, intf := range device.AllInterfaces {
 			device.Interfaces[intf.SnmpID] = intf
 		}
-		resDev[device.CompanyID][device.ID] = device
+		resDev[device.CompanyID][device.ID] = &device
 		num++
 	}
 
 	api.setTime = time.Now()
 	api.Infof("Loaded %d Kentik devices via API in %v", num, api.setTime.Sub(stime))
 	api.devices = resDev
-
-	return resDev, nil
+	return nil
 }
 
 type KentikApi struct {
@@ -128,12 +152,14 @@ type KentikApi struct {
 	tr         *http.Transport
 	client     *http.Client
 	devices    map[kt.Cid]kt.Devices
+	synAgents  map[kt.AgentId]*synthetics.Agent
+	synTests   map[kt.TestId]*synthetics.Test
 	setTime    time.Time
 	apiTimeout time.Duration
+	synClient  synthetics.SyntheticsAdminServiceClient
 }
 
 func NewKentikApi(ctx context.Context, email string, token string, apiRoot string, log logger.ContextL) (*KentikApi, error) {
-
 	apiTimeoutStr := os.Getenv(kt.KentikAPITimeout)
 	apiTimeout := API_TIMEOUT
 	if apiTimeoutStr != "" {
@@ -162,6 +188,101 @@ func NewKentikApi(ctx context.Context, email string, token string, apiRoot strin
 		apiTimeout: apiTimeout,
 	}
 
-	_, err := kapi.GetDevices(ctx) // check api works and also pre-populate cache.
+	err := kapi.connectSynth(ctx) // Now, check to see if synthetics API works.
+	if err != nil {
+		return nil, err
+	}
+
+	err = kapi.getDevices(ctx) // check api works and also pre-populate cache.
+
+	// Drop cache every hour to keep up to date
+	go kapi.manageCache(ctx)
+
 	return kapi, err
+}
+
+func (api *KentikApi) manageCache(ctx context.Context) {
+	checkTicker := time.NewTicker(CACHE_TIME_DEVICE)
+	defer checkTicker.Stop()
+
+	for {
+		select {
+		case _ = <-checkTicker.C:
+			err := api.getDevices(ctx)
+			if err != nil {
+				api.Errorf("Cannot get API devices: %v", err)
+			}
+			err = api.getSynthInfo(ctx)
+			if err != nil {
+				api.Errorf("Cannot get API synth: %v", err)
+			}
+
+		case <-ctx.Done():
+			api.Infof("manageApiCache Done")
+			return
+		}
+	}
+}
+
+func (api *KentikApi) connectSynth(ctxIn context.Context) error {
+	ctx, cancel := context.WithTimeout(ctxIn, api.apiTimeout)
+	defer cancel()
+
+	creds, err := clientTransportCredentials(true, "", "", "")
+	if err != nil {
+		return err
+	}
+
+	address, err := getAddressFromApiRoot(api.apiRoot)
+	if err != nil {
+		return err
+	}
+
+	api.Infof("Connecting to API server at %s", address)
+	conn, err := grpc.DialContext(ctx, address, grpc.WithBlock(), grpc.WithTransportCredentials(creds))
+	if err != nil {
+		return err
+	}
+
+	client := synthetics.NewSyntheticsAdminServiceClient(conn)
+	api.Infof("Connected to Synth API server at %s", address)
+	api.synClient = client
+
+	return api.getSynthInfo(ctx)
+}
+
+func (api *KentikApi) getSynthInfo(ctx context.Context) error {
+	md := metadata.New(map[string]string{
+		"X-CH-Auth-Email":     api.email,
+		"X-CH-Auth-API-Token": api.token,
+	})
+	ctxo := metadata.NewOutgoingContext(ctx, md)
+
+	lt := &synthetics.ListTestsRequest{}
+	r, err := api.synClient.ListTests(ctxo, lt)
+	if err != nil {
+		return err
+	}
+
+	synTests := map[kt.TestId]*synthetics.Test{}
+	for _, test := range r.GetTests() {
+		synTests[kt.NewTestId(test.GetId())] = test
+	}
+
+	la := &synthetics.ListAgentsRequest{}
+	ra, err := api.synClient.ListAgents(ctxo, la)
+	if err != nil {
+		return err
+	}
+
+	synAgents := map[kt.AgentId]*synthetics.Agent{}
+	for _, agent := range ra.GetAgents() {
+		synAgents[kt.NewAgentId(agent.GetId())] = agent
+	}
+
+	api.synAgents = synAgents
+	api.synTests = synTests
+	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
+
+	return nil
 }

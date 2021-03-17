@@ -129,36 +129,38 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.CustomBigInt["Uptime"] = dmr.Uptime
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
-		metrics := map[string]bool{"CPU": true, "MemoryUtilization": true, "Uptime": true, "MemoryFree": true}
+		metrics := map[string]string{"CPU": "", "MemoryUtilization": "", "Uptime": "sysUpTime", "MemoryFree": ""}
 
 		if dmr.juniperOperatingDRAMSize > 0 {
 			dst.CustomBigInt["juniperOperatingDRAMSize"] = dmr.juniperOperatingDRAMSize
 			dst.CustomBigInt["juniperOperatingMemory"] = dmr.juniperOperatingMemory
 			dst.CustomBigInt["juniperOperatingBuffer"] = dmr.juniperOperatingBuffer
-			metrics["juniperOperatingDRAMSize"] = true
-			metrics["juniperOperatingMemory"] = true
-			metrics["juniperOperatingBuffer"] = true
+			metrics["juniperOperatingDRAMSize"] = jnxOperatingDRAMSize
+			metrics["juniperOperatingMemory"] = jnxOperatingMemory
+			metrics["juniperOperatingBuffer"] = jnxOperatingMemory
+			metrics["CPU"] = jnxOperatingCPU
 		}
 
 		if dmr.hrStorageAllocationUnits > 0 {
 			dst.CustomBigInt["hrStorageAllocationUnits"] = dmr.hrStorageAllocationUnits
 			dst.CustomBigInt["hrStorageSize"] = dmr.hrStorageSize
 			dst.CustomBigInt["hrStorageUsed"] = dmr.hrStorageUsed
-			metrics["hrStorageAllocationUnits"] = true
-			metrics["hrStorageSize"] = true
-			metrics["hrStorageUsed"] = true
+			metrics["hrStorageAllocationUnits"] = hrStorageAllocationUnits
+			metrics["hrStorageSize"] = hrStorageSize
+			metrics["hrStorageUsed"] = hrStorageUsed
+			metrics["CPU"] = hrProcessorTree
 		}
 
 		if dmr.cpmCPUTotal5min > 0 {
 			dst.CustomStr["entPhysicalIndex"] = dmr.entPhysicalIndex
 			dst.CustomBigInt["cpmCPUTotal5min"] = dmr.cpmCPUTotal5min
 			dst.CustomBigInt["cpmCPUTotal5minRev"] = dmr.cpmCPUTotal5minRev
-			dst.CustomBigInt["cpmCPUTotal5min"] = dmr.cpmCPUTotal5min
 			dst.CustomBigInt["cpmCPUMemoryFree"] = dmr.cpmCPUMemoryFree
-			metrics["cpmCPUTotal5min"] = true
-			metrics["cpmCPUTotal5minRev"] = true
-			metrics["cpmCPUTotal5min"] = true
-			metrics["cpmCPUMemoryFree"] = true
+			metrics["cpmCPUTotal5min"] = cpmCPUTotal5min
+			metrics["cpmCPUTotal5minRev"] = cpmCPUTotal5minRev
+			metrics["cpmCPUMemoryFree"] = cpmCPUMemoryFree
+			metrics["CPU"] = cpmCPUTree
+			metrics["MemoryFree"] = ciscoMemoryPoolFree
 		}
 
 		dst.CustomMetrics = metrics // Add this in so that we know what metrics to pull out down the road.
@@ -197,7 +199,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 	}
 
 	// Map back into types we know about.
-	metricsFound := map[string]bool{"Uptime": true}
+	metricsFound := map[string]string{"Uptime": sysUpTime}
 	for _, variable := range results {
 		if variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
@@ -218,7 +220,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 			continue
 		}
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[mib.Name] = true
+		metricsFound[mib.Name] = mib.Oid
 		switch mib.Type {
 		case kt.String:
 			dmr.customStr[mib.Name] = string(variable.Value.([]byte))
@@ -381,27 +383,27 @@ func (dm *deviceMetricRow) calculateJuniperMemory() {
 	dm.MemoryUtilization = dm.juniperOperatingBuffer
 }
 
+const (
+	entPhysicalName = "1.3.6.1.2.1.47.1.1.1.1.7"
+
+	cpmCPUTree               = "1.3.6.1.4.1.9.9.109.1.1.1.1"
+	cpmCPUTotalPhysicalIndex = "1.3.6.1.4.1.9.9.109.1.1.1.1.2."
+	cpmCPUTotal5min          = "1.3.6.1.4.1.9.9.109.1.1.1.1.5." // values 1..100
+	cpmCPUTotal5minRev       = "1.3.6.1.4.1.9.9.109.1.1.1.1.8." // values 0..100; deprecates the above.
+	cpmCPUMemoryUsed         = "1.3.6.1.4.1.9.9.109.1.1.1.1.12."
+	cpmCPUMemoryFree         = "1.3.6.1.4.1.9.9.109.1.1.1.1.13."
+	cpmCPUMemoryHCUsed       = "1.3.6.1.4.1.9.9.109.1.1.1.1.17." // 64-bit version of MemoryUsed. "HC" = "high capacity"
+	cpmCPUMemoryHCFree       = "1.3.6.1.4.1.9.9.109.1.1.1.1.19." // 64-bit version of MemoryFree
+
+	ciscoMemoryTree     = "1.3.6.1.4.1.9.9.48.1.1.1"
+	ciscoMemoryPoolName = "1.3.6.1.4.1.9.9.48.1.1.1.2."
+	ciscoMemoryPoolUsed = "1.3.6.1.4.1.9.9.48.1.1.1.5."
+	ciscoMemoryPoolFree = "1.3.6.1.4.1.9.9.48.1.1.1.6."
+)
+
 // getCiscoDeviceMetrics embeds any errors encountered in the deviceMetricRow.Error
 // field and stores them as flow.
 func (dm *DeviceMetrics) getCiscoDeviceMetrics(log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
-	const (
-		entPhysicalName = "1.3.6.1.2.1.47.1.1.1.1.7"
-
-		cpmCPUTree               = "1.3.6.1.4.1.9.9.109.1.1.1.1"
-		cpmCPUTotalPhysicalIndex = "1.3.6.1.4.1.9.9.109.1.1.1.1.2."
-		cpmCPUTotal5min          = "1.3.6.1.4.1.9.9.109.1.1.1.1.5." // values 1..100
-		cpmCPUTotal5minRev       = "1.3.6.1.4.1.9.9.109.1.1.1.1.8." // values 0..100; deprecates the above.
-		cpmCPUMemoryUsed         = "1.3.6.1.4.1.9.9.109.1.1.1.1.12."
-		cpmCPUMemoryFree         = "1.3.6.1.4.1.9.9.109.1.1.1.1.13."
-		cpmCPUMemoryHCUsed       = "1.3.6.1.4.1.9.9.109.1.1.1.1.17." // 64-bit version of MemoryUsed. "HC" = "high capacity"
-		cpmCPUMemoryHCFree       = "1.3.6.1.4.1.9.9.109.1.1.1.1.19." // 64-bit version of MemoryFree
-
-		ciscoMemoryTree     = "1.3.6.1.4.1.9.9.48.1.1.1"
-		ciscoMemoryPoolName = "1.3.6.1.4.1.9.9.48.1.1.1.2."
-		ciscoMemoryPoolUsed = "1.3.6.1.4.1.9.9.48.1.1.1.5."
-		ciscoMemoryPoolFree = "1.3.6.1.4.1.9.9.48.1.1.1.6."
-	)
-
 	m := map[string]*deviceMetricRow{}
 
 	cpuResults, err := snmp_util.WalkOID(cpmCPUTree, server, log, "CiscoDeviceMetrics")
@@ -560,20 +562,20 @@ func (dm *deviceMetricRow) calculateCiscoMemory() {
 	}
 }
 
+const (
+	hrDeviceTree             = "1.3.6.1.2.1.25.2.3.1"
+	hrDeviceDescr            = "1.3.6.1.2.1.25.2.3.1.3."
+	hrStorageAllocationUnits = "1.3.6.1.2.1.25.2.3.1.4."
+	hrStorageSize            = "1.3.6.1.2.1.25.2.3.1.5."
+	hrStorageUsed            = "1.3.6.1.2.1.25.2.3.1.6."
+
+	hrProcessorTree = "1.3.6.1.2.1.25.3.3.1.2"
+	hrProcessorLoad = "1.3.6.1.2.1.25.3.3.1.2."
+)
+
 // getAristaDeviceMetrics embeds any errors encountered in the deviceMetricRow.Error
 // field and stores them as flow.
 func (dm *DeviceMetrics) getAristaDeviceMetrics(log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
-	const (
-		hrDeviceTree             = "1.3.6.1.2.1.25.2.3.1"
-		hrDeviceDescr            = "1.3.6.1.2.1.25.2.3.1.3."
-		hrStorageAllocationUnits = "1.3.6.1.2.1.25.2.3.1.4."
-		hrStorageSize            = "1.3.6.1.2.1.25.2.3.1.5."
-		hrStorageUsed            = "1.3.6.1.2.1.25.2.3.1.6."
-
-		hrProcessorTree = "1.3.6.1.2.1.25.3.3.1.2"
-		hrProcessorLoad = "1.3.6.1.2.1.25.3.3.1.2."
-	)
-
 	m := map[string]*deviceMetricRow{}
 
 	// Walk the CPU tree first

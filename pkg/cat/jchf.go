@@ -72,13 +72,13 @@ func (kc *KTranslate) setGeoAsn(src *Flow) {
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 
 	// if app_proto is 12, this is snmp and return as such.
-	if dst.CustomInt["APP_PROTOCOL"] == 12 {
+	if dst.CustomInt[APP_PROTOCOL_COL] == 12 {
 		return kt.KENTIK_EVENT_SNMP
 	}
 
 	// Else, if its synth, split out into traceroute and other.
-	if dst.CustomInt["APP_PROTOCOL"] == 10 {
-		if dst.CustomInt["Result Type"] == 4 {
+	if dst.CustomInt[APP_PROTOCOL_COL] == 10 {
+		if dst.CustomInt["result_type"] == 4 {
 			return kt.KENTIK_EVENT_TRACE
 		} else {
 			return kt.KENTIK_EVENT_SYNTH
@@ -101,7 +101,7 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 	}
 
 	// Else, if its synth, return this.
-	if dst.CustomInt["APP_PROTOCOL"] == 10 || dst.CustomInt["APP_PROTOCOL"] == 11 {
+	if dst.CustomInt[APP_PROTOCOL_COL] == 10 || dst.CustomInt[APP_PROTOCOL_COL] == 11 {
 		return kt.ProviderSynth
 	}
 
@@ -114,7 +114,7 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 	return kt.ProviderRouter
 }
 
-func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devices, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
+func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
 
 	// In the direct case, users can map their own asn/geo values into here.
 	if kc.geo != nil || kc.asn != nil {
@@ -175,21 +175,19 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 	dst.CustomBigInt = make(map[string]int64)
 
 	// Do we have info about this device?
-	if _, ok := company[dst.CompanyId]; ok {
-		if d, ok := company[dst.CompanyId][dst.DeviceId]; ok {
-			dst.DeviceName = d.Name
-			if i, ok := d.Interfaces[dst.InputPort]; ok {
-				dst.InputIntDesc = i.InterfaceDescription
-				dst.InputIntAlias = i.SnmpAlias
-				dst.InputInterfaceCapacity = i.SnmpSpeedMbps
-				dst.InputInterfaceIP = i.InterfaceIP
-			}
-			if i, ok := d.Interfaces[dst.OutputPort]; ok {
-				dst.OutputIntDesc = i.InterfaceDescription
-				dst.OutputIntAlias = i.SnmpAlias
-				dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
-				dst.OutputInterfaceIP = i.InterfaceIP
-			}
+	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
+		dst.DeviceName = d.Name
+		if i, ok := d.Interfaces[dst.InputPort]; ok {
+			dst.InputIntDesc = i.InterfaceDescription
+			dst.InputIntAlias = i.SnmpAlias
+			dst.InputInterfaceCapacity = i.SnmpSpeedMbps
+			dst.InputInterfaceIP = i.InterfaceIP
+		}
+		if i, ok := d.Interfaces[dst.OutputPort]; ok {
+			dst.OutputIntDesc = i.InterfaceDescription
+			dst.OutputIntAlias = i.SnmpAlias
+			dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
+			dst.OutputInterfaceIP = i.InterfaceIP
 		}
 	}
 
@@ -282,13 +280,13 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 		case model.Custom_value_Which_uint32Val:
 			v := val.Uint32Val()
 			switch name {
-			case "SRC_CDN_INT", "DST_CDN_INT":
+			case "src_cdn_int", "dst_cdn_int":
 				dst.CustomStr[name] = cdn.NameByCDN(v)
-			case "TRF_ORIGINATION", "TRF_TERMINATION", "host_direction":
+			case "trf_origination", "trf_termination", "host_direction":
 				dst.CustomStr[name] = ic.NETWORK_CLASS_INT_TO_NAME[v]
-			case "src_network_bndry", "dst_network_bndry", "ULT_EXIT_NETWORK_BNDRY":
+			case "src_network_bndry", "dst_network_bndry", "ult_exit_network_bndry":
 				dst.CustomStr[name] = ic.NameFromNBInt(int(v))
-			case "src_connect_type", "dst_connect_type", "ULT_EXIT_CONNECT_TYPE":
+			case "src_connect_type", "dst_connect_type", "utl_exit_connect_type":
 				dst.CustomStr[name] = ic.NameFromCTInt(int(v))
 			case "dst_rpki":
 				if v > ic.RPKI_MAX_NUM || v == ic.RPKI_INVALID {
@@ -298,12 +296,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 					dst.CustomStr["i_dst_rpki_name"] = ic.RPKI_INT_TO_NAME[v]
 					dst.CustomStr["i_dst_rpki_min_name"] = ic.RPKI_INT_TO_MIN_NAME[v]
 				}
-			case "ULT_EXIT_DEVICE_ID":
+			case "ult_exit_device_id":
 				dst.CustomInt[name] = int32(v)
-				if _, ok := company[dst.CompanyId]; ok {
-					if d, ok := company[dst.CompanyId][kt.DeviceID(v)]; ok {
-						dst.CustomStr["ULT_EXIT_DEVICE"] = d.Name
-					}
+				if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(v)); d != nil {
+					dst.CustomStr["ult_exit_device"] = d.Name
 				}
 			default:
 				if !isInt {
@@ -357,6 +353,16 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, company map[kt.Cid]kt.Devi
 			}
 			if _, ok := dst.CustomStr[UDR_TYPE]; !ok {
 				dst.CustomStr[UDR_TYPE] = udr.ApplicationName
+			}
+			switch udr.ColumnName { // Fill these in directly if they are set.
+			case "test_id":
+				if t := kc.apic.GetTest(kt.TestId(dst.CustomBigInt[udr.ColumnName])); t != nil {
+					dst.CustomStr["test_name"] = t.GetName()
+				}
+			case "agent_id":
+				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {
+					dst.CustomStr["agent_name"] = a.GetAlias()
+				}
 			}
 		}
 	}

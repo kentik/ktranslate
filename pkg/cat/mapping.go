@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 // List of ids to name mapping.
@@ -54,34 +52,11 @@ func NewCustomMapper(file string) (*CustomMapper, error) {
 		return nil, err
 	}
 
+	for id, n := range m.Customs {
+		m.Customs[id] = fixupName(n)
+	}
+
 	return &m, nil
-}
-
-func NewDeviceMapper(file string) (*kt.DeviceMapper, int, error) {
-	ms := []kt.InterfaceRow{}
-	by, err := ioutil.ReadFile(file)
-	if err != nil {
-		return nil, 0, err
-	}
-	err = json.Unmarshal(by, &ms)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	dm := kt.DeviceMapper{
-		Devices: make(map[kt.DeviceID]map[kt.IfaceID]*kt.InterfaceRow),
-	}
-
-	for _, row := range ms {
-		did := kt.DeviceID(row.DeviceId)
-		sid, _ := strconv.Atoi(row.SnmpId)
-		if _, ok := dm.Devices[did]; !ok {
-			dm.Devices[did] = make(map[kt.IfaceID]*kt.InterfaceRow)
-		}
-		dm.Devices[did][kt.IfaceID(sid)] = &row
-	}
-
-	return &dm, len(ms), nil
 }
 
 func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
@@ -109,8 +84,8 @@ func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 			continue
 		}
 		udr := UDR{
-			ColumnName:      pts[2],
-			ApplicationName: pts[3],
+			ColumnName:      fixupName(pts[2]),
+			ApplicationName: fixupName(pts[3]),
 			Type:            UDR_TYPE_INT,
 		}
 		if strings.HasPrefix(pts[1], "STR") || strings.HasPrefix(pts[1], "INET_") {
@@ -129,10 +104,10 @@ func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 			if _, ok := um.UDRs[app]; !ok {
 				um.UDRs[app] = make(map[string]*UDR)
 			}
-			um.UDRs[app][pts[1]] = &udr
+			um.UDRs[app][fixupName(pts[1])] = &udr
 		} else { // Support for defined subtype here.
 			if subtype != "" && subtype == pts[3] {
-				um.Subtype[pts[1]] = &udr
+				um.Subtype[fixupName(pts[1])] = &udr
 			}
 		}
 		found++
@@ -143,4 +118,9 @@ func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 	}
 
 	return &um, found, nil
+}
+
+func fixupName(name string) string {
+	name = strings.ToLower(strings.ReplaceAll(name, " ", "_"))
+	return name
 }

@@ -30,15 +30,15 @@ const (
 type Provider string
 
 const (
-	ProviderRouter   Provider = "router"
-	ProviderVPC               = "vpc"
-	ProviderSynth             = "network-synthetic"
-	ProviderSwitch            = "switch"
-	ProviderFirewall          = "firewall"
-	ProviderUPS               = "ups"
-	ProviderPDU               = "pdu"
-	ProviderIOT               = "iot"
-	ProviderHost              = "host"
+	ProviderRouter   Provider = "kentik-router"
+	ProviderVPC               = "kentik-vpc"
+	ProviderSynth             = "kentik-network-synthetic"
+	ProviderSwitch            = "kentik-switch"
+	ProviderFirewall          = "kentik-firewall"
+	ProviderUPS               = "kentik-ups"
+	ProviderPDU               = "kentik-pdu"
+	ProviderIOT               = "kentik-iot"
+	ProviderHost              = "kentik-host"
 )
 
 type IntId uint64
@@ -129,7 +129,7 @@ type JCHF struct {
 	Provider                Provider          `json:"provider"` // Entity type for this data.
 	avroSet                 map[string]interface{}
 	hasSetAvro              bool
-	CustomMetrics           map[string]bool `json:"-"`
+	CustomMetrics           map[string]string `json:"-"`
 }
 
 func NewJCHF() *JCHF {
@@ -244,4 +244,18 @@ func (j *JCHF) ToMap() map[string]interface{} {
 
 func (j *JCHF) SetMap() {
 	j.avroSet = map[string]interface{}{}
+}
+
+type AgentId IntId
+
+func NewAgentId(id string) AgentId {
+	aid, _ := strconv.Atoi(id)
+	return AgentId(aid)
+}
+
+type TestId IntId
+
+func NewTestId(id string) TestId {
+	tid, _ := strconv.Atoi(id)
+	return TestId(tid)
 }

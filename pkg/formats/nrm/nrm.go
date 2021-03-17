@@ -148,7 +148,6 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 }
 
 func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
-
 	switch in.EventType {
 	case kt.KENTIK_EVENT_TYPE:
 		return f.fromKflow(in, ts)
@@ -194,44 +193,7 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 }
 
 func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
-
-	var metrics map[string]bool
-	var names map[string]string
-	switch in.CustomInt["Result Type"] {
-	case 0: // Error
-		metrics = map[string]bool{"Error": true, "Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 1: // Timeout
-		metrics = map[string]bool{"Timeout": true, "Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 2: // Ping
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 3: // Fetch
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true, "Fetch Size | Ping Min RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Status", "Fetch TTLB | Ping Lost": "TTLB", "Fetch Size | Ping Min RTT": "Size"}
-	case 4: // Trace
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time"}
-	case 5: // Knock
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true,
-			"Fetch Size | Ping Min RTT": true, "Ping Max RTT": true, "Ping Avg RTT": true, "Ping Std RTT": true, "Ping Jit RTT": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Sent", "Fetch TTLB | Ping Lost": "Lost",
-			"Fetch Size | Ping Min RTT": "MinRTT", "Ping Max RTT": "MaxRTT", "Ping Avg RTT": "AvgRTT", "Ping Std RTT": "StdRTT", "Ping Jit RTT": "JitRTT"}
-	case 6: // Query
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Fetch TTLB | Ping Lost": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Fetch TTLB | Ping Lost": "Code"}
-	case 7: // Shake
-		metrics = map[string]bool{"Fetch Status | Ping Sent | Trace Time": true, "Lat/Long Dest": true}
-		names = map[string]string{"Fetch Status | Ping Sent | Trace Time": "Time", "Lat/Long Dest": "Port"}
-	}
-
+	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
@@ -239,11 +201,11 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	ms := make([]NRMetric, len(metrics))
 	i := 0
 
-	for m, _ := range metrics {
+	for m, name := range metrics {
 		switch m {
-		case "Error", "Timeout":
+		case "error", "timeout":
 			ms[i] = NRMetric{
-				Name:       "kentik.synth." + m,
+				Name:       "kentik.synth." + name,
 				Type:       NR_GAUGE_TYPE,
 				Value:      1,
 				Timestamp:  ts,
@@ -251,7 +213,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 			}
 		default:
 			ms[i] = NRMetric{
-				Name:       "kentik.synth." + names[m],
+				Name:       "kentik.synth." + name,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomInt[m]),
 				Timestamp:  ts,
@@ -267,7 +229,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]bool{"in_bytes": true, "out_bytes": true, "in_pkts": true, "out_pkts": true, "latency_ms": true}
+	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
@@ -284,7 +246,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 		case "out_pkts":
 			value = int64(in.OutPkts * uint64(in.SampleRate))
 		case "latency_ms":
-			value = int64(in.CustomInt["APPL_LATENCY_MS"])
+			value = int64(in.CustomInt["appl_latency_ms"])
 		}
 		if value > 0 {
 			ms = append(ms, NRMetric{
@@ -300,12 +262,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 }
 
 func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
-	var metrics map[string]bool
-	if len(in.CustomMetrics) > 0 {
-		metrics = in.CustomMetrics
-	} else {
-		metrics = map[string]bool{"CPU": true, "MemoryTotal": true, "MemoryUsed": true, "MemoryFree": true, "MemoryUtilization": true, "Uptime": true}
-	}
+	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
@@ -327,13 +284,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 }
 
 func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
-	var metrics map[string]bool
-	if len(in.CustomMetrics) > 0 {
-		metrics = in.CustomMetrics
-	} else {
-		metrics = map[string]bool{"ifHCInOctets": true, "ifHCInUcastPkts": true, "ifHCOutOctets": true, "ifHCOutUcastPkts": true, "ifInErrors": true, "ifOutErrors": true,
-			"ifInDiscards": true, "ifOutDiscards": true, "ifHCOutMulticastPkts": true, "ifHCOutBroadcastPkts": true, "ifHCInMulticastPkts": true, "ifHCInBroadcastPkts": true}
-	}
+	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()
