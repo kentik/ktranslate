@@ -96,16 +96,50 @@ func (p *Profile) merge(ep *Profile) {
 }
 
 func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
-	files, err := os.ReadDir(profileDir)
+	extends := map[string]*Profile{}
+
+	// Recursively get all the profiles found.
+	mdb.log.Infof("Looking at mib profiles in %s", profileDir)
+	err := mdb.loadProfileDir(profileDir, extends)
 	if err != nil {
 		return 0, err
 	}
 
+	// Merge any extended data into the referenced profiles
+	mdb.log.Infof("Now trying to extend profiles")
+	for _, pro := range mdb.profiles {
+		pro.extend(extends)
+	}
+
+	return len(mdb.profiles), nil
+}
+
+func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile) error {
+	files, err := os.ReadDir(profileDir)
+	if err != nil {
+		return err
+	}
+
 	// Load each profile into a parsed form.
-	extends := map[string]*Profile{}
 	for _, file := range files {
 		fname := profileDir + string(os.PathSeparator) + file.Name()
-		if !strings.HasSuffix(fname, ".yaml") {
+
+		// Now, recurse down if this file actually a directory
+		info, err := os.Stat(fname)
+		if err != nil {
+			mdb.log.Errorf("Cannot stat dir %s", fname)
+			continue
+		}
+		if info.IsDir() {
+			mdb.log.Infof("Recursing into %s", fname)
+			err := mdb.loadProfileDir(fname, extends)
+			if err != nil {
+				mdb.log.Errorf("Cannot recurse into directory %s", fname)
+				continue
+			}
+		}
+
+		if !strings.HasSuffix(fname, ".yaml") && !strings.HasSuffix(fname, ".yml") {
 			continue
 		}
 
@@ -118,7 +152,7 @@ func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
 
 		err = yaml.Unmarshal(data, &t)
 		if err != nil {
-			mdb.log.Errorf("Cannot unmarshal file %s", fname)
+			mdb.log.Errorf("Cannot unmarshal file %s -> %v", fname, err)
 			continue
 		}
 
@@ -132,12 +166,7 @@ func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
 		}
 	}
 
-	// Merge any extended data into the referenced profiles
-	for _, pro := range mdb.profiles {
-		pro.extend(extends)
-	}
-
-	return len(mdb.profiles), nil
+	return nil
 }
 
 func (mdb *MibDB) FindProfile(sysid string) *Profile {

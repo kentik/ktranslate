@@ -141,6 +141,30 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 	return &lm
 }
 
+/**
+jit_rtt
+
+application
+application-type
+company_id
+dst_threat_host
+end_timestamp
+result-type-str
+simple_trf_prod
+task_id
+trf-origination
+trf-term
+net-bound
+utl-exit
+dst-cloud
+dst-cloud-service
+src-cloud
+src-cloud-service
+
+add -- url for info
+
+*/
+
 var (
 	synMetrics = map[int32]map[string]string{
 		0: map[string]string{"error": "error", "fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",

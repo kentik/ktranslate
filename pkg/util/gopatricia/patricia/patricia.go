@@ -88,14 +88,44 @@ func OpenGeo(file string, force bool, log *logger.Logger) (*GeoTrees, error) {
 	return p, nil
 }
 
-func OpenASN(file4 string, file6 string, log *logger.Logger) (*Uint32Trees, error) {
+func OpenASN(file4 string, file6 string, fileName string, log *logger.Logger) (*Uint32Trees, error) {
 	p, err := NewUint32Trees(log, file4, file6)
 	if err != nil {
 		return nil, err
 	}
 
-	loadUp := func(fileName string) (int, error) {
+	loadNames := func(fileName string) (int, error) {
+		found := 0
+		file, err := os.Open(fileName)
+		if err != nil {
+			return found, err
+		}
+		defer file.Close()
 
+		mapr := map[uint32]string{}
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := strings.TrimSpace(scanner.Text())
+			pts := strings.Fields(line)
+			if len(pts) > 0 {
+				num, err := strconv.Atoi(pts[0][2:])
+				if err != nil {
+					return found, fmt.Errorf("Error adding name with line %s -> %v", line, err)
+				}
+				mapr[uint32(num)] = pts[1]
+				found++
+			}
+		}
+
+		if err := scanner.Err(); err != nil {
+			return found, err
+		}
+
+		p.mapr = mapr
+		return found, nil
+	}
+
+	loadUp := func(fileName string) (int, error) {
 		found := 0
 		file, err := os.Open(fileName)
 		if err != nil {
@@ -151,6 +181,11 @@ func OpenASN(file4 string, file6 string, log *logger.Logger) (*Uint32Trees, erro
 	}
 
 	found6, err := loadUp(file6)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = loadNames(fileName)
 	if err != nil {
 		return nil, err
 	}

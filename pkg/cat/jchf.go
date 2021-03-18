@@ -29,7 +29,7 @@ func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (*patricia.NodeGeo, er
 	return kc.geo.SearchBestFromHostGeo(net.IP(ipv6))
 }
 
-func (kc *KTranslate) setGeoAsn(src *Flow) {
+func (kc *KTranslate) setGeoAsn(src *Flow) (srcName, dstName string) {
 	// Fetch our own geo if not already set.
 	if kc.geo != nil {
 		if src.CHF.SrcGeo() == 0 || src.CHF.SrcGeo() == DEFAULT_GEO_PACKED {
@@ -57,6 +57,7 @@ func (kc *KTranslate) setGeoAsn(src *Flow) {
 			ipv6, _ := src.CHF.Ipv6SrcAddr()
 			if resultsFound, asn, err := kc.asn.FindBestMatch(src.CHF.Ipv4SrcAddr(), ipv6); resultsFound && err == nil {
 				src.CHF.SetSrcAs(asn)
+				srcName = kc.asn.GetName(asn)
 			}
 		}
 
@@ -64,9 +65,12 @@ func (kc *KTranslate) setGeoAsn(src *Flow) {
 			ipv6, _ := src.CHF.Ipv6DstAddr()
 			if resultsFound, asn, err := kc.asn.FindBestMatch(src.CHF.Ipv4DstAddr(), ipv6); resultsFound && err == nil {
 				src.CHF.SetDstAs(asn)
+				dstName = kc.asn.GetName(asn)
 			}
 		}
 	}
+
+	return
 }
 
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
@@ -116,9 +120,15 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 
 func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
 
+	dst.CustomStr = make(map[string]string)
+	dst.CustomInt = make(map[string]int32)
+	dst.CustomBigInt = make(map[string]int64)
+
 	// In the direct case, users can map their own asn/geo values into here.
 	if kc.geo != nil || kc.asn != nil {
-		kc.setGeoAsn(src)
+		srcAsnName, dstAsnName := kc.setGeoAsn(src)
+		dst.CustomStr["src_as_name"] = srcAsnName
+		dst.CustomStr["dst_as_name"] = dstAsnName
 	}
 
 	// dst.Timestamp = src.CHF.Timestamp() This is being strage, use current timestamp for now.
@@ -170,9 +180,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.DstSecondAsn = src.CHF.DstSecondAsn()
 	dst.SrcThirdAsn = src.CHF.SrcThirdAsn()
 	dst.DstThirdAsn = src.CHF.DstThirdAsn()
-	dst.CustomStr = make(map[string]string)
-	dst.CustomInt = make(map[string]int32)
-	dst.CustomBigInt = make(map[string]int64)
 
 	// Do we have info about this device?
 	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
@@ -360,7 +367,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 			case "test_id":
 				if t := kc.apic.GetTest(kt.TestId(dst.CustomBigInt[udr.ColumnName])); t != nil {
 					dst.CustomStr["test_name"] = t.GetName()
-					dst.CustomStr["test_type"] = t.GetName()
+					dst.CustomStr["test_type"] = t.GetType()
 				}
 			case "agent_id":
 				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {

@@ -30,6 +30,7 @@ func main() {
 		geo            = flag.String("geo", "", "Geo mapping file")
 		asn4           = flag.String("asn4", "", "Asn ipv6 mapping file")
 		asn6           = flag.String("asn6", "", "Asn ipv6 mapping file")
+		asnName        = flag.String("asnName", "", "Asn number to name mapping file")
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic)")
@@ -72,6 +73,7 @@ func main() {
 		GeoMapping:        *geo,
 		Asn4:              *asn4,
 		Asn6:              *asn6,
+		AsnName:           *asnName,
 		DnsResolver:       *dns,
 		SampleRate:        uint32(*sample),
 		SNMPFile:          *snmpFile,

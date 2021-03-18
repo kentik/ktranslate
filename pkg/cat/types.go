@@ -52,6 +52,7 @@ type Config struct {
 	GeoMapping        string
 	Asn4              string
 	Asn6              string
+	AsnName           string
 	DnsResolver       string
 	SampleRate        uint32
 	Auth              *AuthConfig

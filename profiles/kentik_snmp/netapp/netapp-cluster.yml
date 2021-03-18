@@ -1,0 +1,110 @@
+# http://oid-info.com/get/1.3.6.1.4.1.789.2.5
+---
+extends:
+  - system-mib.yml
+
+sysobjectid: 1.3.6.1.4.1.789.2.5
+
+metrics:
+  - MIB: NETAPP-MIB
+    OID: 1.3.6.1.4.1.789.1.2.3.8
+    name: cfInterconnectStatus
+  - MIB: NETAPP-MIB
+    OID: 1.3.6.1.4.1.789.1.2.2.23.0
+    name: miscCacheAge
+  - MIB: NETAPP-MIB
+    OID: 1.3.6.1.4.1.789.1.8.3.6.36
+    name: ncHttpActiveCliConns
+  - MIB: NETAPP-MIB
+    OID: 1.3.6.1.4.1.789.1.26.8
+    name: extcache64Hits
+  - MIB: NETAPP-MIB
+    table:
+      OID: 1.3.6.1.4.1.789.1.19.11
+      name: snapvaultStatusTable
+    symbols:
+      - OID: 1.3.6.1.4.1.789.1.19.11.1.9
+        name: svTotalFailures
+        metric_tags:
+      - tag: snapvault_index
+        column:
+          OID: 1.3.6.1.4.1.789.1.19.11.1.1
+          name: svIndex
+      - tag: snapvault_destination
+        column:
+          OID: 1.3.6.1.4.1.789.1.19.11.1.3
+          name: svDst
+      - tag: snapvault_state
+        column:
+          OID: 1.3.6.1.4.1.789.1.19.11.1.5
+          name: svState
+  - MIB: NETAPP-MIB
+    table:
+      OID: 1.3.6.1.4.1.789.1.9.20
+      name: snapmirrorStatusTable
+    symbols:
+      - OID: 1.3.6.1.4.1.789.1.9.20.1.6
+        name: snapmirrorLag
+    metric_tags:
+      - tag: snapmirror_index
+        column:
+          OID: 1.3.6.1.4.1.789.1.9.20.1.1
+          name: snapmirrorIndex
+      - tag: snapmirror_state
+        column:
+          OID: 1.3.6.1.4.1.789.1.9.20.1.5
+          name: snapmirrorState
+  - MIB: NETAPP-MIB
+    table:
+      OID: 1.3.6.1.4.1.789.1.9.20
+      name: snapmirrorStatusTable
+    symbols:
+      - OID: 1.3.6.1.4.1.789.1.9.20.1.9
+        name: snapmirrorTotalFailures
+    metric_tags:
+      - tag: snapmirror_index
+        column:
+          OID: 1.3.6.1.4.1.789.1.9.20.1.1
+          name: snapmirrorIndex
+      - tag: snapmirror_state
+        column:
+          OID: 1.3.6.1.4.1.789.1.9.20.1.5
+          name: snapmirrorState
+  - MIB: NETAPP-MIB
+    table:
+      OID: 1.3.6.1.4.1.789.1.5.4
+      name: dfTable
+    symbols:
+      - OID: 1.3.6.1.4.1.789.1.5.4.1.14
+        name: dfHighTotalKBytes
+      - OID: 1.3.6.1.4.1.789.1.5.4.1.18
+        name: dfHighAvailKBytes
+      - OID: 1.3.6.1.4.1.789.1.5.4.1.7
+        name: dfInodesUsed
+      - OID: 1.3.6.1.4.1.789.1.5.4.1.8
+        name: dfInodesFree
+    metric_tags:
+      - tag: df_index
+        column:
+          OID: 1.3.6.1.4.1.789.1.5.4.1.1
+          name: dfIndex
+      - tag: df_file_system
+        column:
+          OID: 1.3.6.1.4.1.789.1.5.4.1.2
+          name: dfFileSys
+  - MIB: NETAPP-MIB
+    table:
+      OID: 1.3.6.1.4.1.789.1.22.1.2
+      name: netifTable
+    symbols:
+      - OID: 1.3.6.1.4.1.789.1.22.1.2.1.3
+        name: ifHighInOctets
+    metric_tags:
+      - tag: network_interface_index
+        column:
+          OID: 1.3.6.1.4.1.789.1.22.1.2.1.1
+          name: netifIndex
+      - tag: network_interface_description
+        column:
+          OID: 1.3.6.1.4.1.789.1.22.1.2.1.2
+          name: netifDescr

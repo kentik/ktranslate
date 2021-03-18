@@ -161,10 +161,11 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load asn mapper if set.
 	if config.Asn4 != "" && config.Asn6 != "" {
-		asn, err := patricia.OpenASN(config.Asn4, config.Asn6, ol)
+		asn, err := patricia.OpenASN(config.Asn4, config.Asn6, config.AsnName, ol)
 		if err != nil {
 			return nil, err
 		} else {
+			kc.log.Infof("Loaded %d asn cidrs", asn.Length)
 			kc.asn = asn
 		}
 	}
