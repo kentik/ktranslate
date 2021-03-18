@@ -204,7 +204,9 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 		case "error", "timeout":
 			ms[name] = 1
 		default:
-			ms[name] = int64(in.CustomInt[m])
+			if in.CustomInt["result_type"] > 1 {
+				ms[name] = int64(in.CustomInt[m])
+			}
 		}
 	}
 

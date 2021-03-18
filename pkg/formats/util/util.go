@@ -10,6 +10,7 @@ import (
 
 var (
 	DroppedAttrs = map[string]bool{
+		"result_type":             true,
 		"timestamp":               true,
 		"sampled_packet_size":     true,
 		"lat/long_dest":           true,

@@ -125,6 +125,7 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
 	for _, device := range devices.Devices {
+		myd := device
 		if _, ok := resDev[device.CompanyID]; !ok {
 			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
 		}
@@ -132,7 +133,7 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 		for _, intf := range device.AllInterfaces {
 			device.Interfaces[intf.SnmpID] = intf
 		}
-		resDev[device.CompanyID][device.ID] = &device
+		resDev[device.CompanyID][device.ID] = &myd
 		num++
 	}
 
@@ -299,6 +300,7 @@ func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfi
 		for _, d := range c {
 			if d.Name == dname {
 				api.Infof("Device %s already exists in Kentik.")
+				return nil // No need to keep going.
 			}
 		}
 	}
@@ -317,6 +319,7 @@ func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfi
 		PlanID:      api.conf.ApiPlan,
 		IPs:         []net.IP{net.ParseIP(conf.DeviceIP)},
 		Subtype:     "router",
+		MinSnmp:     false,
 	}
 
 	err := api.createDevice(ctx, dev, api.conf.ApiRoot+"/api/v5/device")
@@ -328,7 +331,6 @@ func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfi
 }
 
 func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, url string) error {
-
 	payload, err := json.Marshal(map[string]*deviceCreate{
 		"device": create,
 	})
@@ -346,6 +348,7 @@ func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, ur
 	req.Header.Add(API_EMAIL_HEADER, api.conf.ApiEmail)
 	req.Header.Add(API_PASSWORD_HEADER, api.conf.ApiToken)
 	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
+	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := api.client.Do(req)
 	if err != nil {
@@ -382,4 +385,5 @@ type deviceCreate struct {
 	Subtype     string   `json:"device_subtype"`
 	Region      string   `json:"cloud_region,omitempty"`
 	Zone        string   `json:"cloud_zone,omitempty"`
+	MinSnmp     bool     `json:"minimize_snmp"`
 }

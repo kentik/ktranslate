@@ -198,29 +198,29 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
-	ms := make([]NRMetric, len(metrics))
-	i := 0
+	ms := make([]NRMetric, 0, len(metrics))
 
 	for m, name := range metrics {
 		switch m {
 		case "error", "timeout":
-			ms[i] = NRMetric{
+			ms = append(ms, NRMetric{
 				Name:       "kentik.synth." + name,
 				Type:       NR_GAUGE_TYPE,
 				Value:      1,
 				Timestamp:  ts,
 				Attributes: attr,
-			}
+			})
 		default:
-			ms[i] = NRMetric{
-				Name:       "kentik.synth." + name,
-				Type:       NR_GAUGE_TYPE,
-				Value:      int64(in.CustomInt[m]),
-				Timestamp:  ts,
-				Attributes: attr,
+			if in.CustomInt["result_type"] > 1 {
+				ms = append(ms, NRMetric{
+					Name:       "kentik.synth." + name,
+					Type:       NR_GAUGE_TYPE,
+					Value:      int64(in.CustomInt[m]),
+					Timestamp:  ts,
+					Attributes: attr,
+				})
 			}
 		}
-		i++
 	}
 
 	return ms

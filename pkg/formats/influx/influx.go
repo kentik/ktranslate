@@ -174,7 +174,9 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 		case "error", "timeout":
 			ms[name] = 1
 		default:
-			ms[name] = int64(in.CustomInt[m])
+			if in.CustomInt["result_type"] > 1 {
+				ms[name] = int64(in.CustomInt[m])
+			}
 		}
 	}
 

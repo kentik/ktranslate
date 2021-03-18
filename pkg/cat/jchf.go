@@ -355,9 +355,12 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 				dst.CustomStr[UDR_TYPE] = udr.ApplicationName
 			}
 			switch udr.ColumnName { // Fill these in directly if they are set.
+			case "result_type":
+				dst.CustomStr["result_type_str"] = synResultTypes[dst.CustomInt[udr.ColumnName]]
 			case "test_id":
 				if t := kc.apic.GetTest(kt.TestId(dst.CustomBigInt[udr.ColumnName])); t != nil {
 					dst.CustomStr["test_name"] = t.GetName()
+					dst.CustomStr["test_type"] = t.GetName()
 				}
 			case "agent_id":
 				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {
@@ -425,3 +428,16 @@ func lookupGeoName(code uint32, env *lmdb.Env) string {
 
 	return ""
 }
+
+var (
+	synResultTypes = map[int32]string{
+		0: "error",
+		1: "timeout",
+		2: "ping",
+		3: "fetch",
+		4: "trace",
+		5: "knock",
+		6: "query",
+		7: "shake",
+	}
+)
