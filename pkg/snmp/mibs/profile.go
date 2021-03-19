@@ -198,6 +198,31 @@ func (p *Profile) validate() {
 		if metric.Symbol.Oid == "" && len(metric.Symbols) == 0 {
 			p.Warnf("Possibly corrupted table? %s %s %v", p.From, metric.Mib, metric)
 		}
+		if metric.Symbol.Oid != "" && metric.Symbol.Name == "" {
+			p.Warnf("Possibly corrupted oid? %s %s %v", p.From, metric.Mib, metric.Symbol.Oid)
+		}
+		for _, s := range metric.Symbols {
+			if s.Oid != "" && s.Name == "" {
+				p.Warnf("Possibly corrupted oid? %s %s %v", p.From, metric.Mib, s.Oid)
+			}
+		}
+	}
+
+	for _, tag := range p.MetricTags {
+		if tag.Column.Oid == "" {
+			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+		}
+		if tag.Column.Oid != "" && tag.Column.Name == "" {
+			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+		}
+	}
+
+	for _, metric := range p.Metrics {
+		for _, tag := range metric.MetricTags {
+			if tag.Column.Oid != "" && tag.Column.Name == "" {
+				p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+			}
+		}
 	}
 }
 
@@ -310,10 +335,21 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 	interfaceMetadata := map[string]*kt.Mib{}
 
 	enabled := map[string]bool{}
+	enabledTables := map[string]map[string]bool{}
 	for _, mib := range enabledMibs {
-		enabled[mib] = true
+		pts := strings.Split(mib, ".")
+		if len(pts) == 1 {
+			enabled[mib] = true
+		} else {
+			enabled[pts[0]] = true
+			if _, ok := enabledTables[pts[0]]; !ok {
+				enabledTables[pts[0]] = map[string]bool{}
+			}
+			enabledTables[pts[0]][pts[1]] = true
+		}
 	}
 
+	// Top level tags here.
 	for _, tag := range p.MetricTags {
 		if tag.Column.Oid != "" {
 			mib := &kt.Mib{
@@ -325,21 +361,29 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 		}
 	}
 
+	// per metric tags here.
 	for _, metric := range p.Metrics {
 		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
 			continue
 		}
+		if enabledTables[metric.Mib] != nil {
+			if !enabledTables[metric.Mib][metric.Table.Name] { // And also worry about names.
+				continue
+			}
+		}
 
 		for _, t := range metric.MetricTags {
-			mib := &kt.Mib{
-				Oid:  t.Column.Oid,
-				Name: t.Column.Name,
-				Type: kt.String,
-			}
-			if strings.HasPrefix(t.Column.Name, "if") {
-				interfaceMetadata[t.Column.Oid] = mib
-			} else {
-				deviceMetadata[t.Column.Oid] = mib
+			if t.Column.Oid != "" {
+				mib := &kt.Mib{
+					Oid:  t.Column.Oid,
+					Name: t.Column.Name,
+					Type: kt.String,
+				}
+				if strings.HasPrefix(t.Column.Name, "if") {
+					interfaceMetadata[t.Column.Oid] = mib
+				} else {
+					deviceMetadata[t.Column.Oid] = mib
+				}
 			}
 		}
 	}

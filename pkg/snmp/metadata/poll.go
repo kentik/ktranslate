@@ -35,6 +35,14 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	var deviceMetadataMibs, interfaceMetadataMibs map[string]*kt.Mib
 	if profile != nil {
 		deviceMetadataMibs, interfaceMetadataMibs = profile.GetMetadata(gconf.MibsEnabled)
+		log.Infof("Custom device metadata")
+		for n, d := range deviceMetadataMibs {
+			log.Infof("   -> : %s -> %s", n, d.Name)
+		}
+		log.Infof("Custom interface metadata")
+		for n, d := range interfaceMetadataMibs {
+			log.Infof("   -> : %s -> %s", n, d.Name)
+		}
 	}
 
 	return &Poller{
