@@ -128,7 +128,7 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 			_, ok := SNMP_Interface_OIDS.Get(oid)
 			if !ok {
 				mib := interfaceMetadataMibs[oid]
-				log.Infof("Adding custom metadata oid: %s -> %s", oid, mib.Name)
+				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, mib.Name)
 				SNMP_Interface_OIDS.Set(oid, mib.Name)
 			}
 		}
