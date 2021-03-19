@@ -24,6 +24,8 @@ type DeviceMetricsMetadata struct {
 	SysLocation string `yaml:"sys_location,omitempty"`
 	SysContact  string `yaml:"sys_contact,omitempty"`
 	SysServices int    `yaml:"sys_services,omitempty"`
+	Customs     map[string]string
+	CustomInts  map[string]int64
 }
 
 const (

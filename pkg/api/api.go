@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	synthetics "github.com/kentik/api-schema/gen/go/kentik/synthetics/v202101beta1"
+	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202101beta1"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -255,7 +255,9 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	})
 	ctxo := metadata.NewOutgoingContext(ctx, md)
 
-	lt := &synthetics.ListTestsRequest{}
+	lt := &synthetics.ListTestsRequest{
+		Preset: false,
+	}
 	r, err := api.synClient.ListTests(ctxo, lt)
 	if err != nil {
 		return err
@@ -279,7 +281,7 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 
 	api.synAgents = synAgents
 	api.synTests = synTests
-	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
+	api.Infof("Loaded %d Kentik Tests (%d invalid) and %d Agents via API", len(api.synTests), r.GetInvalidTestsCount(), len(api.synAgents))
 
 	return nil
 }

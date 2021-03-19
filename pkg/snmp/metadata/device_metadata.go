@@ -1,10 +1,11 @@
 package metadata
 
 import (
+	"sort"
+
 	"github.com/elliotchance/orderedmap"
 
 	"github.com/kentik/gosnmp"
-
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
@@ -31,18 +32,27 @@ var (
 )
 
 // Poll device-level metadata, which we only need once(?).  Works for (at least) Juniper, Cisco, and Arista.
-func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.DeviceMetricsMetadata, error) {
-	var md kt.DeviceMetricsMetadata
+func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadataMibs map[string]*kt.Mib) (*kt.DeviceMetricsMetadata, error) {
+	md := kt.DeviceMetricsMetadata{
+		Customs:    map[string]string{},
+		CustomInts: map[string]int64{},
+	}
 
 	var oids []string
-	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
-		oids = append(oids, el.Key.(string))
+	if len(deviceMetadataMibs) == 0 {
+		for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
+			oids = append(oids, el.Key.(string))
+		}
+	} else {
+		oids = getFromCustomMap(deviceMetadataMibs)
 	}
+
 	result, err := server.Get(oids)
 	if err != nil {
 		return nil, err
 	}
 
+	hasData := false
 	for _, pdu := range result.Variables {
 		log.Debugf("pdu: %+v", pdu)
 
@@ -53,13 +63,20 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.DeviceMe
 			continue
 		}
 
-		thing, ok := SNMP_device_metadata_oids.Get(oidVal)
+		var oidName string
+		oid, ok := deviceMetadataMibs[oidVal[1:]]
 		if !ok {
-			log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v", oidVal)
-			continue
+			thing, ok := SNMP_device_metadata_oids.Get(oidVal)
+			if !ok {
+				log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v", oidVal)
+				continue
+			}
+			oidName = thing.(string)
+		} else {
+			oidName = oid.Name
 		}
-		oidName := thing.(string)
 
+		hasData = true
 		switch oidName {
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
@@ -73,15 +90,34 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.DeviceMe
 			md.SysLocation = string(value.([]byte))
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
+		default:
+			switch vt := value.(type) {
+			case string:
+				md.Customs[oid.Name] = vt
+			case []byte:
+				md.Customs[oid.Name] = string(vt)
+			default:
+				md.CustomInts[oid.Name] = snmp_util.ToInt64(value)
+			}
 		}
 	}
 
 	// If no fields in md were set, return nil.  (Trust me on the (). :)
-	if md == (kt.DeviceMetricsMetadata{}) {
+	if !hasData {
 		log.Infof("SNMP Device Metadata: No data received")
 		return nil, nil
 	}
 	log.Infof("SNMP Device Metadata: Data received: %+v", md)
 
 	return &md, nil
+}
+
+func getFromCustomMap(mibs map[string]*kt.Mib) []string {
+	keys := []string{}
+	for k, _ := range mibs {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+	return keys
 }

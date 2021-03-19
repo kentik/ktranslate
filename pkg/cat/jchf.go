@@ -365,10 +365,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 			case "result_type":
 				dst.CustomStr["result_type_str"] = synResultTypes[dst.CustomInt[udr.ColumnName]]
 			case "test_id":
+				dst.CustomStr["test_url"] = fmt.Sprintf("https://portal.kentik.com/v4/synthetics/tests/%d/results", dst.CustomBigInt[udr.ColumnName])
 				if t := kc.apic.GetTest(kt.TestId(dst.CustomBigInt[udr.ColumnName])); t != nil {
 					dst.CustomStr["test_name"] = t.GetName()
 					dst.CustomStr["test_type"] = t.GetType()
-					dst.CustomStr["test_url"] = fmt.Sprintf("https://portal.kentik.com/v4/synthetics/tests/%d/results", dst.CustomBigInt[udr.ColumnName])
 				}
 			case "agent_id":
 				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {

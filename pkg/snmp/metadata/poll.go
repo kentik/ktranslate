@@ -35,13 +35,17 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	var deviceMetadataMibs, interfaceMetadataMibs map[string]*kt.Mib
 	if profile != nil {
 		deviceMetadataMibs, interfaceMetadataMibs = profile.GetMetadata(gconf.MibsEnabled)
-		log.Infof("Custom device metadata")
-		for n, d := range deviceMetadataMibs {
-			log.Infof("   -> : %s -> %s", n, d.Name)
+		if len(deviceMetadataMibs) > 0 {
+			log.Infof("Custom device metadata")
+			for n, d := range deviceMetadataMibs {
+				log.Infof("   -> : %s -> %s", n, d.Name)
+			}
 		}
-		log.Infof("Custom interface metadata")
-		for n, d := range interfaceMetadataMibs {
-			log.Infof("   -> : %s -> %s", n, d.Name)
+		if len(interfaceMetadataMibs) > 0 {
+			log.Infof("Custom interface metadata")
+			for n, d := range interfaceMetadataMibs {
+				log.Infof("   -> : %s -> %s", n, d.Name)
+			}
 		}
 	}
 
@@ -124,7 +128,7 @@ func (p *Poller) PollSNMPMetadata() (*kt.DeviceData, error) {
 	// Get device-level metadata -- sysDescr and the like, but only once.
 	// (But retry on failure or blank data.)
 	if !p.gotDeviceMetadata {
-		deviceMetadata, err := GetDeviceMetadata(p.log, p.server)
+		deviceMetadata, err := GetDeviceMetadata(p.log, p.server, p.deviceMetadataMibs)
 		if err != nil {
 			return nil, err
 		}
@@ -157,6 +161,12 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomInt["SysServices"] = int32(dd.DeviceMetricsMetadata.SysServices)
 		if dst.DeviceName == "" {
 			dst.DeviceName = dd.DeviceMetricsMetadata.SysName
+		}
+		for k, v := range dd.DeviceMetricsMetadata.Customs {
+			dst.CustomStr[k] = v
+		}
+		for k, v := range dd.DeviceMetricsMetadata.CustomInts {
+			dst.CustomInt[k] = int32(v)
 		}
 	}
 
