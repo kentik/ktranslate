@@ -27,6 +27,7 @@ func TestFindProfile(t *testing.T) {
 		".1.3.6.1.4.1.2636.1.1.1.2.65":   "juniper",
 		".1.3.6.1.4.1.29671.2.65":        "meraki",
 		".1.3.6.1.4.1.2636.1.1.1.2.65.2": "generic",
+		".1.3.6.1.4.1.29671":             "meraki",
 	}
 
 	for sysid, vendor := range inputs {

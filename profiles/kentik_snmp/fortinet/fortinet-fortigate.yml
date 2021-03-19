@@ -8,20 +8,23 @@ sysobjectid: 1.3.6.1.4.1.12356.101.1.*
 
 metrics:
   - MIB: FORTINET-FORTIGATE-MIB
-    symbol:
-      OID: 1.3.6.1.4.1.12356.101.4.1.3.0
-      name: fgSysCpuUsage
+    table:
+      OID: 1.3.6.1.4.1.12356.101.4.1
+      name: fgSystemInfo
+    symbols:
+      - OID: 1.3.6.1.4.1.12356.101.4.1.3.0
+        name: fgSysCpuUsage
   - MIB: FORTINET-FORTIGATE-MIB
     table:
       OID: 1.3.6.1.4.1.12356.101.4.4.2
       name: fgProcessorTable
-      symbols:
-        - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.6
-          name: fgProcessorPktRxCount
-        - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.7
-          name: fgProcessorPktTxCount
-        - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.8
-          name: fgProcessorPktDroppedCount
+    symbols:
+      - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.6
+        name: fgProcessorPktRxCount
+      - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.7
+        name: fgProcessorPktTxCount
+      - OID: 1.3.6.1.4.1.12356.101.4.4.2.1.8
+        name: fgProcessorPktDroppedCount
     metric_tags:
       - tag: processor_index
         column:

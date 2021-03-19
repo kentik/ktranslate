@@ -192,35 +192,69 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 	return nil
 }
 
+var (
+	synthWLAttr = map[string]bool{
+		"agent_id":    true,
+		"agent_name":  true,
+		"dst_addr":    true,
+		"dst_cdn_int": true,
+		"dst_geo":     true,
+		"provider":    true,
+		"src_addr":    true,
+		"src_cdn_int": true,
+		"src_geo":     true,
+		"test_id":     true,
+		"test_name":   true,
+		"test_type":   true,
+		"test_url":    true,
+	}
+)
+
 func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
+	if in.CustomInt["result_type"] <= 1 {
+		return nil // Don't worry about timeouts and errrors for now.
+	}
+
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0, len(metrics))
+	lost := 0.0
+	sent := 0.0
+
+	for k, _ := range attr { // White list only a few attributes here.
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+	}
 
 	for m, name := range metrics {
-		switch m {
-		case "error", "timeout":
+		switch name {
+		case "avg_rtt", "jit_rtt":
 			ms = append(ms, NRMetric{
 				Name:       "kentik.synth." + name,
 				Type:       NR_GAUGE_TYPE,
-				Value:      1,
+				Value:      int64(in.CustomInt[m]),
 				Timestamp:  ts,
 				Attributes: attr,
 			})
-		default:
-			if in.CustomInt["result_type"] > 1 {
-				ms = append(ms, NRMetric{
-					Name:       "kentik.synth." + name,
-					Type:       NR_GAUGE_TYPE,
-					Value:      int64(in.CustomInt[m]),
-					Timestamp:  ts,
-					Attributes: attr,
-				})
-			}
+		case "lost":
+			lost = float64(in.CustomInt[m])
+		case "sent":
+			sent = float64(in.CustomInt[m])
 		}
+	}
+
+	if sent > 0 {
+		ms = append(ms, NRMetric{
+			Name:       "kentik.synth.lost_pct",
+			Type:       NR_GAUGE_TYPE,
+			Value:      (lost / sent) * 100.,
+			Timestamp:  ts,
+			Attributes: attr,
+		})
 	}
 
 	return ms

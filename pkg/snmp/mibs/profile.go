@@ -109,6 +109,7 @@ func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
 	mdb.log.Infof("Now trying to extend profiles")
 	for _, pro := range mdb.profiles {
 		pro.extend(extends)
+		pro.validate()
 	}
 
 	return len(mdb.profiles), nil
@@ -192,6 +193,14 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 	return nil
 }
 
+func (p *Profile) validate() {
+	for _, metric := range p.Metrics {
+		if metric.Symbol.Oid == "" && len(metric.Symbols) == 0 {
+			p.Warnf("Possibly corrupted table? %s %s %v", p.From, metric.Mib, metric)
+		}
+	}
+}
+
 func (p *Profile) DumpOids(log logger.ContextL) {
 	log.Infof("Device Tags:")
 	for _, tag := range p.MetricTags {
@@ -229,21 +238,40 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 	interfaceMetrics := map[string]*kt.Mib{}
 
 	enabled := map[string]bool{}
+	enabledTables := map[string]map[string]bool{}
 	for _, mib := range enabledMibs {
-		enabled[mib] = true
+		pts := strings.Split(mib, ".")
+		if len(pts) == 1 {
+			enabled[mib] = true
+		} else {
+			enabled[pts[0]] = true
+			if _, ok := enabledTables[pts[0]]; !ok {
+				enabledTables[pts[0]] = map[string]bool{}
+			}
+			enabledTables[pts[0]][pts[1]] = true
+		}
 	}
 
 	for _, metric := range p.Metrics {
 		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
 			continue
 		}
+		if enabledTables[metric.Mib] != nil {
+			if !enabledTables[metric.Mib][metric.Table.Name] { // And also worry about names.
+				continue
+			}
+		}
 
 		var otype kt.Oidtype
-		switch metric.ForcedType {
-		case "monotonic_count", "monotonic_count_and_rate":
+		if metric.ForcedType != "" {
+			switch metric.ForcedType {
+			case "monotonic_count", "monotonic_count_and_rate":
+				otype = kt.Counter
+			default: // We only are looking for metric type values here.
+				continue
+			}
+		} else {
 			otype = kt.Counter
-		default: // We only are looking for metric type values here.
-			continue
 		}
 
 		// TODO -- so we want to collase Symobol and Symbols?
