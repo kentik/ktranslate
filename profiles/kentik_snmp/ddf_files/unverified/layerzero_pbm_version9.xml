@@ -1,0 +1,2987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="layerzero_pbm_version9"
+	ddfname="LayerZero PBM (v.9)"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="layerzero_pbm_version9">
+		<oidMustExist ruleid="layerzero_pbm_version9" oid=".1.3.6.1.4.1.23760.3.9" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">Branch Circuit Monitor</setProductData>
+		<setProductData ruleid="vendordata" field="vendor">LayerZero</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.23760.3.9.1.0</getOid>
+		</setDefaultLabel>
+		<setProductData ruleid="systemSerial" field="serial_num">
+			<getOid>.1.3.6.1.4.1.23760.3.9.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="productName" field="model">
+			<getOid>.1.3.6.1.4.1.23760.3.9.3.0</getOid>
+		</setProductData>
+
+		<setLocationData field="LOCATION">
+			<getOid>.1.3.6.1.2.1.1.6.0</getOid>
+		</setLocationData>
+
+		<valueMap ruleid="SystemVoltageType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="SystemVoltageType-em">
+			<label>Unknown</label>
+			<label>200V L-N</label>
+			<label>208V L-N</label>
+			<label>200V L-L</label>
+			<label>208V L-L</label>
+			<label>380V L-N</label>
+			<label>400V L-N</label>
+			<label>415V L-N</label>
+			<label>480V L-N</label>
+			<label>600V L-N</label>
+			<label>380V L-L</label>
+			<label>400V L-L</label>
+			<label>415V L-L</label>
+			<label>480V L-L</label>
+			<label>600V L-L</label>
+		</enumMap>
+
+		<stateSensor ruleid="systemNominalVoltage">
+            <type>state</type>
+            <sensorId>SYSTEM_NOMINAL_VOLTAGE</sensorId>
+            <value>
+				<mapValue mapid="SystemVoltageType-vm">
+                <getOid>.1.3.6.1.4.1.23760.3.9.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Nominal Voltage</label>
+            <enum>SystemVoltageType-em</enum>
+            <sensorSet>System</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="nominalLineLineVoltage">
+            <type>voltage</type>
+            <sensorId>NOMINAL_LL_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23760.3.9.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Line-Line Voltage</label>
+            <sensorSet>System</sensorSet>
+        </numSensor>
+		<numSensor ruleid="nominalLineNeutralVoltage">
+            <type>voltage</type>
+            <sensorId>NOMINAL_LN_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23760.3.9.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Line-Neutral Voltage</label>
+            <sensorSet>System</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="secondNominalVoltage">
+            <type>state</type>
+            <sensorId>SECOND_NOMINAL_VOLTAGE</sensorId>
+            <value>
+				<mapValue mapid="SystemVoltageType-vm">
+                <getOid>.1.3.6.1.4.1.23760.3.9.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Type X ePOD Input Voltage</label>
+            <enum>SystemVoltageType-em</enum>
+            <sensorSet>System</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="demandInterval">
+            <type>timeinmin</type>
+            <sensorId>DEMAND_INTERVAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23760.3.9.19.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Line-Neutral Voltage</label>
+            <sensorSet>System</sensorSet>
+        </numSensor>
+
+		<alarmFlags ruleid="lowBatteryAlarm">
+			<value><getOid>.1.3.6.1.4.1.23760.3.9.24.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Low Battery Alarm</activeText>
+					<inactiveText>Low Battery Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The system board battery is in need of replacement.</activeText>
+					<inactiveText>The system board battery has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<valueMap ruleid="BreakerState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="BreakerState-em">
+			<label>Unknown</label>
+			<label>Breaker Open</label>
+			<label>Breaker Closed</label>
+		</enumMap>
+
+		<numSensor ruleid="breakerRating" index=".1.3.6.1.4.1.23760.3.9.25.1.2">
+            <type>amperage</type>
+            <sensorId>MAINS_BREAKER_RATING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.25.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Mains Breaker <getRowOid>.1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Rating</label>
+            <sensorSet>Mains Breakers</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="mainsBreakerState" index=".1.3.6.1.4.1.23760.3.9.25.1.3">
+            <type>state</type>
+            <sensorId>MAINS_BREAKER_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BreakerState-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.25.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Mains Breaker <getRowOid>.1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> State</label>
+            <enum>BreakerState-em</enum>
+            <sensorSet>Mains Breakers</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="mainsBreakerNotNormalAlarm" index=".1.3.6.1.4.1.23760.3.9.25.1.4">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.25.1.4</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Not Normal Alarm</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Not Normal Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Breaker not in normal state.</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Breaker has returned to normal state.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="mainsBreakerFormCPositionCircuitAlarm" index=".1.3.6.1.4.1.23760.3.9.25.1.5">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.25.1.5</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Form C Position Circuit Alarm</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Form C Position Circuit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Form C position circuit has a wiring error or malfunction.</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Form C position circuit has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="mainsBreakerFormCPositionCircuitAlarm" index=".1.3.6.1.4.1.23760.3.9.25.1.6">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.25.1.6</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Form C Tripped Circuit Alarm</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Form C Tripped Circuit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Form C tripped circuit has a wiring error or malfunction.</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Form C tripped circuit has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="mainsBreakerTrippedAlarm" index=".1.3.6.1.4.1.23760.3.9.25.1.7">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.25.1.7</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Tripped Alarm</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid> Tripped Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Breaker has tripped.</activeText>
+					<inactiveText>Mains Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.25.1.1</getRowOid>: Breaker has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="subFeedBreakerRating" index=".1.3.6.1.4.1.23760.3.9.26.1.2">
+            <type>amperage</type>
+            <sensorId>SUBFEED_BREAKER_RATING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.26.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Subfeed Breaker <getRowOid>.1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Rating</label>
+            <sensorSet>Subfeed Breakers</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="subFeedBreakerState" index=".1.3.6.1.4.1.23760.3.9.26.1.3">
+            <type>state</type>
+            <sensorId>SUBFEED_BREAKER_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BreakerState-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.26.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Subfeed Breaker <getRowOid>.1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> State</label>
+            <enum>BreakerState-em</enum>
+            <sensorSet>Subfeed Breakers</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="subFeedBreakerNotNormalAlarm" index=".1.3.6.1.4.1.23760.3.9.26.1.4">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.26.1.4</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Not Normal Alarm</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Not Normal Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Breaker not in normal state.</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Breaker has returned to normal state.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="subFeedBreakerFormCPositionCircuitAlarm" index=".1.3.6.1.4.1.23760.3.9.26.1.5">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.26.1.5</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Form C Position Circuit Alarm</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Form C Position Circuit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Form C position circuit has a wiring error or malfunction.</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Form C position circuit has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="subFeedBreakerFormCPositionCircuitAlarm" index=".1.3.6.1.4.1.23760.3.9.26.1.6">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.26.1.6</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Form C Tripped Circuit Alarm</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Form C Tripped Circuit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Form C tripped circuit has a wiring error or malfunction.</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Form C tripped circuit has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="subFeedBreakerTrippedAlarm" index=".1.3.6.1.4.1.23760.3.9.26.1.7">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.26.1.7</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Tripped Alarm</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid> Tripped Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Breaker has tripped.</activeText>
+					<inactiveText>Subfeed Breaker <getRowOid>1.3.6.1.4.1.23760.3.9.26.1.1</getRowOid>: Breaker has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="PositionConfig-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="PositionConfig-em">
+			<label>Unknown</label>
+			<label>1-Pole Breaker</label>
+			<label>2-Pole Breaker</label>
+			<label>3-Pole Breaker</label>
+			<label>Subordinate</label>
+		</enumMap>
+
+		<valueMap ruleid="BooleanDataType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="BooleanDataType-em">
+			<label>Unknown</label>
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+
+		<stateSensor ruleid="positionConfiguration" index=".1.3.6.1.4.1.23760.3.9.27.1.4">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BRANCH_POS_CONFIG_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="PositionConfig-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Configuration
+			</label>
+			<enum>PositionConfig-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="positionCurrentMaximum" index=".1.3.6.1.4.1.23760.3.9.27.1.6">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>BRANCH_CURRENT_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Maximum Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionCurrentTransformerSize" index=".1.3.6.1.4.1.23760.3.9.27.1.7">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>BRANCH_CT_SIZE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Current Transformer Size
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionCurrent" index=".1.3.6.1.4.1.23760.3.9.27.1.8">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>BRANCH_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.8</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionPercentMaximumCurrent" index=".1.3.6.1.4.1.23760.3.9.27.1.9">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>BRANCH_CURRENT_PCT_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.9</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Percent of Maximum Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionPeakCurrent" index=".1.3.6.1.4.1.23760.3.9.27.1.10">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>BRANCH_CURRENT_PEAK_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.10</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Peak Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionRealPower" index=".1.3.6.1.4.1.23760.3.9.27.1.11">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>BRANCH_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Real Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionApparentPower" index=".1.3.6.1.4.1.23760.3.9.27.1.12">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>BRANCH_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Apparent Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionReactivePower" index=".1.3.6.1.4.1.23760.3.9.27.1.13">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>BRANCH_REACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Reactive Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionPowerFactor" index=".1.3.6.1.4.1.23760.3.9.27.1.14">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>BRANCH_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.14</getRowOid>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Power Factor
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionEnergy" index=".1.3.6.1.4.1.23760.3.9.27.1.15">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>BRANCH_ENERGY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Energy
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionDemandBlock" index=".1.3.6.1.4.1.23760.3.9.27.1.16">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>BRANCH_DEMAND_BLOCK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Power Demand, Block
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionDemandBlockPeak" index=".1.3.6.1.4.1.23760.3.9.27.1.17">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>BRANCH_DEMAND_BLOCK_PEAK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Peak Power Demand, Block
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionDemandRolling" index=".1.3.6.1.4.1.23760.3.9.27.1.18">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>BRANCH_DEMAND_ROLLING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Power Demand, Rolling
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="positionDemandRollingPeak" index=".1.3.6.1.4.1.23760.3.9.27.1.19">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>BRANCH_DEMAND_ROLLING_PEAK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Peak Power Demand, Rolling
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="branchHighCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.27.1.21">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>BRANCH_HIGH_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				High Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="branchOverCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.27.1.22">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>BRANCH_OVER_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Over Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="branchNeutralConnected" index=".1.3.6.1.4.1.23760.3.9.27.1.25">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BRANCH_NEUTRAL_CONNECTED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.25</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Neutral Connected
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="positionCurrentXformerReversed" index=".1.3.6.1.4.1.23760.3.9.27.1.26">
+			<rowTest>
+				<neq><op><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.4</getRowOid></op><op>0</op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BRANCH_CT_REVERSED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.26</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel<space/><getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+				Current Transformer Reversed
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+				Branch <formatNumber printffmt="%02.0f">
+				<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+				</formatNumber>
+			</sensorSet>
+        </stateSensor>
+
+		<alarmFlags2 ruleid="positionHighCurrentAlarm" index=".1.3.6.1.4.1.23760.3.9.27.1.27">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.27</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+						High Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+						High Current Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>):<space/>
+						The current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>):<space/>
+						The current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="positionOverCurrentAlarm" index=".1.3.6.1.4.1.23760.3.9.27.1.28">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.27</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+						Over Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>)<space/>
+						Over Current Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>):<space/>
+						The current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.1</getRowOid><space/>
+						Branch <formatNumber printffmt="%02.0f">
+						<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.2</getRowOid>
+						</formatNumber><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.27.1.3</getRowOid>):<space/>
+						The current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="meterPhaseCtSize" index=".1.3.6.1.4.1.23760.3.9.28.1.4">
+            <type>amperage</type>
+            <sensorId>AMMETER_PHASE_CT_SIZE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Phase Current Transformer Capacity
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterNeutralCtSize" index=".1.3.6.1.4.1.23760.3.9.28.1.5">
+            <type>amperage</type>
+            <sensorId>AMMETER_NEUTRAL_CT_SIZE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Neutral Current Transformer Capacity
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterGroundCtSize" index=".1.3.6.1.4.1.23760.3.9.28.1.6">
+            <type>amperage</type>
+            <sensorId>AMMETER_GROUND_CT_SIZE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Ground Current Transformer Capacity
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="meterCtReversedPhaseA" index=".1.3.6.1.4.1.23760.3.9.28.1.7">
+            <type>state</type>
+            <sensorId>AMMETER_CT_REVERSED_A_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				CT Reversed, Phase A
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="meterCtReversedPhaseB" index=".1.3.6.1.4.1.23760.3.9.28.1.8">
+            <type>state</type>
+            <sensorId>AMMETER_CT_REVERSED_B_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				CT Reversed, Phase B
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="meterCtReversedPhaseC" index=".1.3.6.1.4.1.23760.3.9.28.1.9">
+            <type>state</type>
+            <sensorId>AMMETER_CT_REVERSED_C_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				CT Reversed, Phase C
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="meterCtReversedNeutral" index=".1.3.6.1.4.1.23760.3.9.28.1.10">
+            <type>state</type>
+            <sensorId>AMMETER_CT_REVERSED_N_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				CT Reversed, Neutral
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="meterCtReversedGround" index=".1.3.6.1.4.1.23760.3.9.28.1.11">
+            <type>state</type>
+            <sensorId>AMMETER_CT_REVERSED_G_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				CT Reversed, Ground
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="meterCurrentPhaseA" index=".1.3.6.1.4.1.23760.3.9.28.1.12">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_A_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Current, Phase A
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterCurrentPhaseB" index=".1.3.6.1.4.1.23760.3.9.28.1.13">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_B_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Current, Phase B
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterCurrentPhaseC" index=".1.3.6.1.4.1.23760.3.9.28.1.14">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_C_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Current, Phase C
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterCurrentPhaseN" index=".1.3.6.1.4.1.23760.3.9.28.1.15">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_N_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Current, Neutral
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterCurrentPhaseG" index=".1.3.6.1.4.1.23760.3.9.28.1.16">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_G_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Current, Ground
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPercentMaximumCurrent" index=".1.3.6.1.4.1.23760.3.9.28.1.17">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_PCT_MAX_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Percent Maximum Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakCurrentPhaseA" index=".1.3.6.1.4.1.23760.3.9.28.1.18">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_PEAK_A_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Current, Phase A
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakCurrentPhaseB" index=".1.3.6.1.4.1.23760.3.9.28.1.19">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_PEAK_B_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Current, Phase B
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakCurrentPhaseC" index=".1.3.6.1.4.1.23760.3.9.28.1.20">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_PEAK_C_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Current, Phase C
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakCurrentNeutral" index=".1.3.6.1.4.1.23760.3.9.28.1.21">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_PEAK_N_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Current, Neutral
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterZeroSequenceCurrent" index=".1.3.6.1.4.1.23760.3.9.28.1.22">
+            <type>amperage</type>
+            <sensorId>AMMETER_CURRENT_ZERO_SEQ_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.22</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Zero Sequence Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterTransformerEfficiency" index=".1.3.6.1.4.1.23760.3.9.28.1.23">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_TRANSFORMER_EFFICIENCY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.23</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Current, Neutral
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterRealPower" index=".1.3.6.1.4.1.23760.3.9.28.1.24">
+            <type>num/powerKW</type>
+            <sensorId>AMMETER_REAL_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.24</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Real Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterApparentPower" index=".1.3.6.1.4.1.23760.3.9.28.1.25">
+            <type>num/powerKVA</type>
+            <sensorId>AMMETER_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.25</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Apparent Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterReactivePower" index=".1.3.6.1.4.1.23760.3.9.28.1.26">
+            <type>num/powerKVAR</type>
+            <sensorId>AMMETER_REACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.26</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Reactive Power
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterEnergy" index=".1.3.6.1.4.1.23760.3.9.28.1.28">
+            <type>num/kwatthr</type>
+            <sensorId>AMMETER_ENERGY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.28</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Energy
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandBlock" index=".1.3.6.1.4.1.23760.3.9.28.1.29">
+            <type>num/powerKW</type>
+            <sensorId>AMMETER_DEMAND_BLOCK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.29</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Real Power Demand, Block
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandBlockPeak" index=".1.3.6.1.4.1.23760.3.9.28.1.30">
+            <type>num/powerKW</type>
+            <sensorId>AMMETER_PEAK_DEMAND_BLOCK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.30</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Real Power Demand, Block
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandRolling" index=".1.3.6.1.4.1.23760.3.9.28.1.31">
+            <type>num/powerKW</type>
+            <sensorId>AMMETER_DEMAND_ROLLING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.31</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Real Power Demand, Rolling
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandRollingPeak" index=".1.3.6.1.4.1.23760.3.9.28.1.32">
+            <type>num/powerKW</type>
+            <sensorId>AMMETER_PEAK_DEMAND_ROLLING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.32</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Peak Real Power Demand, Rolling
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPhaseCurrentNominal" index=".1.3.6.1.4.1.23760.3.9.28.1.33">
+            <type>amperage</type>
+            <sensorId>AMMETER_PHASE_CURRENT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.33</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Nominal Phase Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPhaseHighCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.34">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_PHASE_HIGH_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.34</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Phase High Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPhaseOverCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.35">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_PHASE_OVER_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.35</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Phase Over Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterNeutralCurrentNominal" index=".1.3.6.1.4.1.23760.3.9.28.1.36">
+            <type>amperage</type>
+            <sensorId>AMMETER_NEUTRAL_CURRENT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.36</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Nominal Neutral Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterNeutralHighCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.37">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_NEUTRAL_HIGH_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.37</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Neutral High Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterNeutralOverCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.38">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_NEUTRAL_OVER_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.38</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Neutral Over Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterGroundCurrentNominal" index=".1.3.6.1.4.1.23760.3.9.28.1.39">
+            <type>amperage</type>
+            <sensorId>AMMETER_GROUND_CURRENT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.39</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Nominal Ground Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterGroundHighCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.40">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_GROUND_HIGH_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.40</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Ground High Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterGroundOverCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.41">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_GROUND_OVER_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.41</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Ground Over Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterZeroSequenceCurrentNominal" index=".1.3.6.1.4.1.23760.3.9.28.1.42">
+            <type>amperage</type>
+            <sensorId>AMMETER_ZERO_SEQUENCE_CURRENT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.42</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Nominal Zero Sequence Current
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterZeroSequenceOverCurrentSetpoint" index=".1.3.6.1.4.1.23760.3.9.28.1.43">
+            <type>pctofcapacity</type>
+            <sensorId>AMMETER_ZERO_SEQUENCE_OVER_CURRENT_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.43</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+				Zero Sequence Over Current Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+				Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.28.1.52">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.52</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase A Current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase A Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.28.1.53">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.53</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase B Current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase B Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.28.1.54">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.54</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Current Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase C Current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase C Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighCurrentAlarmNeutral" index=".1.3.6.1.4.1.23760.3.9.28.1.55">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.55</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Neutral Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Neutral Current Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Neutral Current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Neutral Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighCurrentAlarmGround" index=".1.3.6.1.4.1.23760.3.9.28.1.56">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.56</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Ground Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						High Ground Current Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Ground Current reading is over the High Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Ground Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.28.1.57">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.57</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase A Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase A Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.28.1.58">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.58</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase B Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase B Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.28.1.59">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.59</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Current Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase C Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Phase C Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverCurrentAlarmNeutral" index=".1.3.6.1.4.1.23760.3.9.28.1.60">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.60</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Neutral Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Neutral Current Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Neutral Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Neutral Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverCurrentAlarmGround" index=".1.3.6.1.4.1.23760.3.9.28.1.61">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.61</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Ground Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Over Ground Current Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Ground Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Ground Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterZeroSequenceOverCurrentAlarm" index=".1.3.6.1.4.1.23760.3.9.28.1.62">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.27.1.62</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Zero Sequence Over Current
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>)<space/>
+						Zero Sequence Over Current Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Zero Sequence Current reading is over the Over Current threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.1</getRowOid><space/>
+						Ammeter <getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.2</getRowOid><space/>
+						(<getRowOid>.1.3.6.1.4.1.23760.3.9.28.1.3</getRowOid>):<space/>
+						The Zero Sequence Current reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="meterVoltageLineToLineA" index=".1.3.6.1.4.1.23760.3.9.29.1.3">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LL_A_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Line Voltage A
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterVoltageLineToLineB" index=".1.3.6.1.4.1.23760.3.9.29.1.4">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LL_B_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.4</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Line Voltage B
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterVoltageLineToLineC" index=".1.3.6.1.4.1.23760.3.9.29.1.5">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LL_C_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.5</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Line Voltage C
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterVoltageLineToNeutralA" index=".1.3.6.1.4.1.23760.3.9.29.1.6">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LN_A_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.6</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Neutral Voltage A
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterVoltageLineToNeutralB" index=".1.3.6.1.4.1.23760.3.9.29.1.7">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LN_B_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.7</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Neutral Voltage B
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterVoltageLineToNeutralC" index=".1.3.6.1.4.1.23760.3.9.29.1.8">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_LN_C_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.8</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Line-Neutral Voltage C
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterFrequency" index=".1.3.6.1.4.1.23760.3.9.29.1.9">
+            <type>frequency</type>
+            <sensorId>VOLTMETER_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.9</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Frequency
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterTotalHarmonicDistortion" index=".1.3.6.1.4.1.23760.3.9.29.1.10">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_THD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Total Harmonic Distortion
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="PhaseRotation-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="PhaseRotation-em">
+			<label>Unknown</label>
+			<label>ABC</label>
+			<label>CBA</label>
+		</enumMap>
+		<stateSensor ruleid="meterPhaseRotation" index=".1.3.6.1.4.1.23760.3.9.29.1.11">
+            <type>state</type>
+            <sensorId>VOLTMETER_PHASE_ROTATION_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="PhaseRotation-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Phase Rotation
+			</label>
+			<enum>PhaseRotation-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="meterVoltageSetpointNominal" index=".1.3.6.1.4.1.23760.3.9.29.1.12">
+            <type>voltage</type>
+            <sensorId>VOLTMETER_VOLTAGE_SETPOINT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Nominal Phase Line-Line Voltage
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterUnderVoltageSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.13">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_UNDER_VOLTAGE_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Under Voltage Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterLowVoltageSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.14">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_LOW_VOLTAGE_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Low Voltage Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterHighVoltageSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.15">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_HIGH_VOLTAGE_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				High Voltage Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterOverVoltageSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.16">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_OVER_VOLTAGE_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Over Voltage Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="meterFrequencySetpointNominal" index=".1.3.6.1.4.1.23760.3.9.29.1.17">
+            <type>frequency</type>
+            <sensorId>VOLTMETER_FREQUENCY_SETPOINT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Nominal Frequency
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterUnderFrequencySetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.18">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_UNDER_FREQUENCY_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Under Frequency Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterOverFrequencySetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.19">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_OVER_FREQUENCY_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Over Frequency Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="meterVthdSetpointNominal" index=".1.3.6.1.4.1.23760.3.9.29.1.20">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_VTHD_SETPOINT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Nominal Voltage THD
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterHighVthdSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.21">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_HIGH_VTHD_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				High Voltage THD Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterOverVthdSetpoint" index=".1.3.6.1.4.1.23760.3.9.29.1.22">
+            <type>pctofcapacity</type>
+            <sensorId>VOLTMETER_OVER_VTHD_SETPOINT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+				Over Voltage THD Setpoint
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+				Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.29.1.30">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.30</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading is below the Under Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.29.1.31">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.31</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading is below the Under Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.29.1.32">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.32</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Voltage Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading is below the Under Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.29.1.33">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.33</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading is below the Low Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.29.1.34">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.34</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading is below the Low Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.29.1.35">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.35</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Low Voltage Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading is below the Low Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.29.1.36">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.36</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading is above the High Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.29.1.37">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.37</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading is above the High Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.29.1.38">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.38</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading is above the High Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.9.29.1.39">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.39</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase A
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase A Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading is above the Over Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase A Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.9.29.1.40">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.40</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase B
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase B Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading is above the Over Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase B Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.9.29.1.41">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.41</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase C
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage Phase C Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading is above the Over Voltage threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Phase C Voltage reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<alarmFlags2 ruleid="meterUnderFrequencyAlarm" index=".1.3.6.1.4.1.23760.3.9.29.1.42">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.42</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Frequency
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Under Frequency Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Frequency reading is below the Under Frequency threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Frequency reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverFrequencyAlarm" index=".1.3.6.1.4.1.23760.3.9.29.1.43">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.43</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Frequency
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Frequency Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Frequency reading is above the Over Frequency threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Frequency reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterHighVthdAlarm" index=".1.3.6.1.4.1.23760.3.9.29.1.44">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.44</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage THD
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						High Voltage THD Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Voltage THD reading is above the High Voltage THD threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Voltage THD reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterOverVthdAlarm" index=".1.3.6.1.4.1.23760.3.9.29.1.45">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.45</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage THD
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Over Voltage THD Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Voltage THD reading is above the Over Voltage THD threshold.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						The Voltage THD reading has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="meterPhaseRotationAlarm" index=".1.3.6.1.4.1.23760.3.9.29.1.46">
+			<value><getRowOid>1.3.6.1.4.1.23760.3.9.29.1.46</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Phase Rotation Alarm
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid><space/>
+						Phase Rotation Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						Phase Rotation does not match setting.
+					</activeText>
+					<inactiveText>
+						Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.1</getRowOid><space/>
+						Voltmeter <getRowOid>.1.3.6.1.4.1.23760.3.9.29.1.2</getRowOid>:<space/>
+						Phase Rotation has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="synchThreshold" index=".1.3.6.1.4.1.23760.3.9.30.1.3">
+            <type>num</type><units>degreesAngle</units>
+            <sensorId>PANEL_SYNCH_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid><space/>
+				Synch Threshold
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<numSensor ruleid="synchPhaseDifference" index=".1.3.6.1.4.1.23760.3.9.30.1.4">
+            <type>num</type><units>degreesAngle</units>
+            <sensorId>PANEL_PHASE_DIFFERENCE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid><space/>
+				Phase Difference
+			</label>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid>
+			</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="synchSource2Detected" index=".1.3.6.1.4.1.23760.3.9.30.1.5">
+            <type>state</type>
+            <sensorId>PANEL_SOURCE_2_DETECTED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid><space/>
+				Source 2 Detected
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="synchSynchronized" index=".1.3.6.1.4.1.23760.3.9.30.1.6">
+            <type>state</type>
+            <sensorId>PANEL_SYNCHRONIZED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid><space/>
+				Synchronized
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid>
+			</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="synchVoltagesMatch" index=".1.3.6.1.4.1.23760.3.9.30.1.7">
+            <type>state</type>
+            <sensorId>PANEL_VOLTAGES_MATCH_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="BooleanDataType-vm">
+                <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid><space/>
+				Voltages Match
+			</label>
+			<enum>BooleanDataType-em</enum>
+            <sensorSet>
+				Panel <getRowOid>.1.3.6.1.4.1.23760.3.9.30.1.1</getRowOid>
+			</sensorSet>
+        </stateSensor>
+
+	</device>
+</APC_DDF>

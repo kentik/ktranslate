@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="newmar_site_power_monitor_spm_v121"
+	ddfname="Newmar Site Power Monitor SPM v121"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="newmar_site_power_monitor_spm_v1_2_1">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Newmar</setProductData>
+		<setProductData ruleid="modeldata" field="model">Site Power Monitor - SPM v1_2_1</setProductData>
+		<setProductData ruleid="typedata" field="type">Branch Circuit Monitor</setProductData>
+
+		<oidMustExist ruleid="newmar_site_power_monitor_spm_v1_2_1" oid=".1.3.6.1.4.1.17373" istree="yes"/>
+
+		<stateSensor ruleid="alarmTripType">
+			<type>state</type>
+			<sensorId>ALARM_TRIP_TYPE</sensorId>
+			<value>
+				<mapValue mapid="alarmTripType-vm">
+					<getOid>.1.3.6.1.4.1.17373.1.1.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>Alarm Trip Type</label>
+			<enum>alarmTripType-em</enum>
+			<sensorSet></sensorSet>
+		</stateSensor>
+		<numSensor ruleid="spmCount">
+			<type>num</type>
+			<units></units>
+			<sensorId>SPM_COUNT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.1.8.1.2.0</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Count</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmTemp">
+			<type>temp</type>
+			<units></units>
+			<sensorId>SPM_TEMP</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.5.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Temp</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmVoltsDcC">
+			<type>voltage</type>
+			<units></units>
+			<sensorId>SPM_VOLTS_DC_C</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.9.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Volts DC C</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmAmps">
+			<type>amperage</type>
+			<units></units>
+			<sensorId>SPM_AMPS</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.10.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Amps</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmContactA">
+			<type>num</type>
+			<units></units>
+			<sensorId>SPM_CONTACT_A</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.13.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Contact A</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmContactB">
+			<type>num</type>
+			<units></units>
+			<sensorId>SPM_CONTACT_B</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.14.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Contact B</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmContactC">
+			<type>num</type>
+			<units></units>
+			<sensorId>SPM_CONTACT_C</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.15.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Contact C</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+		<numSensor ruleid="spmAmpsX10">
+			<type>amperage</type>
+			<units></units>
+			<sensorId>SPM_AMPS_X10</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.17373.1.2.1.16.1</getOid></op>
+				<op>1</op>
+				</div>
+			</value>
+			<valueInc></valueInc>
+			<label>SPM Amps X10</label>
+			<sensorSet></sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="alarmTripType-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+		<enumMap ruleid="alarmTripType-em">
+			<label>None</label>
+			<label>Low</label>
+			<label>High</label>
+			<label>Unplugged</label>
+			<label>Unknown</label>
+		</enumMap>
+	</device>
+</APC_DDF>

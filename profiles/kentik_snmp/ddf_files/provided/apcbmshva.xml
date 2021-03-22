@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<!-- APC Battery Management System DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="apcbmshva" ddfname="APC Battery Manager" ddfversion="8">
+  <schemaVersion>1.6</schemaVersion>
+  <!-- APC Battery Management System specific functionality -->
+
+  <!-- BMSHVA_System Section -->
+
+  <device deviceid="bmshva">
+    <oidMustExist ruleid="bmshvafirmwarerevoid" oid=".1.3.6.1.4.1.318.1.1.16.1.3.0"/>
+
+  <!-- BMSHVA System Status -->
+    <!-- BMSHVA System Ambient Temperature in degrees C -->
+    <numSensor ruleid="SysAmbTemp">
+      <type>temp/sysabmtemp</type>
+      <sensorId>SYS_ABM_TEMP</sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getOid>.1.3.6.1.4.1.318.1.1.16.8.1.0</getOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>System Ambient Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- BMSHVA System Pilot Temperature in degrees C -->
+    <numSensor ruleid="SysPilotTemp">
+      <type>temp/syspilottemp</type>
+      <sensorId>SYS_PILOT_TEMP</sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getOid>.1.3.6.1.4.1.318.1.1.16.8.3.0</getOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>System Pilot Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+  <!-- BMSHVA String Status -->
+    <!-- BMSHVA String Current in amps-->
+    <numSensor ruleid="bmshvastringcurrent" index=".1.3.6.1.4.1.318.1.1.16.9.2.1.1">
+      <type>amperage/bmshvastringcurrent</type>
+      <sensorId>CURRENT_STRING_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.2</getRowOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>Current - String<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.1</getRowOid></label>
+      <sensorSet>String Status</sensorSet>
+    </numSensor>
+
+    <!-- BMSHVA String Ripple Current in amps-->
+    <numSensor ruleid="bmshvastringripplecurrent" index=".1.3.6.1.4.1.318.1.1.16.9.2.1.1">
+      <type>amperage/bmshvastringripplecurrent</type>
+      <sensorId>RIPPLE_CURRENT_STRING_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.3</getRowOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>Ripple Current - String<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.1</getRowOid></label>
+      <sensorSet>String Status</sensorSet>
+    </numSensor>
+
+    <!-- battManStringVoltage -->
+    <numSensor ruleid="battManStringVoltage" index=".1.3.6.1.4.1.318.1.1.16.9.2.1.1">
+      <type>voltage</type>
+      <sensorId>VOLTAGE_STRING_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op><getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.9</getRowOid></op>
+          <op>1000</op>
+        </div>
+      </value>
+      <label>Voltage - String<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.9.2.1.1</getRowOid></label>
+      <sensorSet>String Status</sensorSet>
+    </numSensor>
+    
+  <!-- BMSHVA String1 Battery Status -->
+    <!-- BMSHVA String1 Battery Voltage-->
+    <numSensor ruleid="bmshvastring1batteryvoltage" index=".1.3.6.1.4.1.318.1.1.16.10.2.1.1">
+      <type>voltage/bmshvastring1batteryvoltage</type>
+      <sensorId>STRING1_BATTERY_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.001">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.10.2.1.2</getRowOid>
+            </op>
+            <op>0.001</op>
+          </mult>
+        </round>
+      </value>
+      <label>Battery Voltage - String 1, Battery<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.10.2.1.1</getRowOid></label>
+      <sensorSet>Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- BMSHVA String1 Battery Lowest Voltage-->
+    <numSensor ruleid="bmshvastring1batterylowestvoltage" index=".1.3.6.1.4.1.318.1.1.16.10.2.1.1">
+      <type>voltage/bmshvastring1batterylowestvoltage</type>
+      <sensorId>STRING1_BATTERY_LOWEST_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.001">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.10.2.1.3</getRowOid>
+            </op>
+            <op>0.001</op>
+          </mult>
+        </round>
+      </value>
+      <label>Battery Lowest Voltage - String 1, Battery<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.10.2.1.1</getRowOid></label>
+      <sensorSet>Battery Status</sensorSet>
+    </numSensor>
+    
+  <!-- BMSHVA String2 Battery Status -->
+    <!-- BMSHVA String2 Battery Voltage-->
+    <numSensor ruleid="bmshvastring2batteryvoltage" index=".1.3.6.1.4.1.318.1.1.16.10.4.1.1">
+      <type>voltage/bmshvastring2batteryvoltage</type>
+      <sensorId>STRING2_BATTERY_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.001">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.10.4.1.2</getRowOid>
+            </op>
+            <op>0.001</op>
+          </mult>
+        </round>
+      </value>
+      <label>Battery Voltage - String 2, Battery<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.10.4.1.1</getRowOid></label>
+      <sensorSet>Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- BMSHVA String2 Battery Lowest Voltage-->
+    <numSensor ruleid="bmshvastring2batterylowestvoltage" index=".1.3.6.1.4.1.318.1.1.16.10.4.1.1">
+      <type>voltage/bmshvastring2batterylowestvoltage</type>
+      <sensorId>STRING2_BATTERY_LOWEST_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <round increment="0.001">
+          <mult>
+            <op>
+              <getRowOid>.1.3.6.1.4.1.318.1.1.16.10.4.1.3</getRowOid>
+            </op>
+            <op>0.001</op>
+          </mult>
+        </round>
+      </value>
+      <label>Battery Lowest Voltage - String 2, Battery<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.10.4.1.1</getRowOid></label>
+      <sensorSet>Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- BMSHVA Input Contact State -->
+    <stateSensor ruleid="inputcontactstate" index=".1.3.6.1.4.1.318.1.1.16.11.2.1.1">
+      <type>state/contactrelay</type>
+      <sensorId>BMSHVA_INPUT_CONTACT_STATE<rowNumber/></sensorId>
+      <value>
+        <mapValue mapid="openclosedmap">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.16.11.2.1.4</getRowOid>
+        </mapValue>
+      </value>
+      <label>Input Contact State -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.16.11.2.1.2</getRowOid></label>
+      <enum>openclosedstate</enum>
+      <sensorSet>Input Contact Status</sensorSet>
+    </stateSensor>
+    
+    <valueMap ruleid="openclosedmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="openclosedstate">
+      <label>Open</label>
+      <label>Closed</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+ </device>
+</APC_DDF>

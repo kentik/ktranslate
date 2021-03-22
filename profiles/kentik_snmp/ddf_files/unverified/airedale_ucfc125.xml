@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="airedale_ucfc125"
+	ddfname="Airedale UCFC125"
+	ddfversion="1"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="Airedale_UCFC125">
+    <oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.9839.2.1.2.17.0" />
+    <setProductData ruleid="vendordata" field="vendor">Airedale</setProductData>
+    <setProductData ruleid="modeldata" field="model">UCFC125</setProductData>
+    <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+    <numSensor ruleid="ambient_temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_AMBIENT_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.9839.2.1.2.17.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Ambient temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="freecooling_valve_position">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_FREECOOLING_VALVE_POSITION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.9839.2.1.2.14.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Freecooling valve position</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="setpoint">
+      <type>temp</type>
+      <units />
+      <sensorId>_SETPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.9839.2.1.2.26.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="return_temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_RETURN_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Return temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="supply_temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_SUPPLY_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Supply temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="compressor_1_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_1_STATUS</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.1.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 1 status</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="compressor_2_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_2_STATUS</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.1.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 2 status</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="compressor_3_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_3_STATUS</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.1.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 3 status</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="compressor_4_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_4_STATUS</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.1.18.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 4 status</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="unit_on/off">
+      <type>state</type>
+      <sensorId>_UNIT_ON/OFF</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>1.3.6.1.4.1.9839.2.1.1.39</getOid>
+        </mapValue>
+      </value>
+      <label>Unit on/off</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="circuit_1_alarm">
+      <type>state</type>
+      <sensorId>_CIRCUIT_1_ALARM</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>1.3.6.1.4.1.9839.2.1.1.23</getOid>
+        </mapValue>
+      </value>
+      <label>Circuit 1 alarm</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="circuit_2_alarm">
+      <type>state</type>
+      <sensorId>_CIRCUIT_2_ALARM</sensorId>
+      <value>
+        <mapValue mapid="onoff_vm">
+          <getOid>1.3.6.1.4.1.9839.2.1.1.24</getOid>
+        </mapValue>
+      </value>
+      <label>Circuit 2 alarm</label>
+      <enum>onoff_em</enum>
+      <sensorSet>State Sensors</sensorSet>
+    </stateSensor>
+	
+
+		<valueMap ruleid="onoff_vm">
+			<valueIn>0</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>1</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="onoff_em">
+			<label>OFF</label>
+			<label>ON</label>
+		</enumMap>
+	
+  </device>
+</APC_DDF>

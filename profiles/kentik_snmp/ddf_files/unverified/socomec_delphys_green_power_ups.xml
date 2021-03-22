@@ -1,0 +1,458 @@
+<?xml version="1.0"?>
+<!-- Socomec UPS DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid ="socomec_delphys_green_power_ups" ddfname="Socomec Delphys Green Power UPS" 
+         ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!-- Socomec Delphys Green Power UPS Model Info -->
+  <device deviceid="socomec_delphys_disc">
+    <oidMustExist ruleid="sys_branch" oid=".1.3.6.1.4.1.4555.1.1.5.1" istree="yes"/>
+  
+    <!-- Replace MIB2 Model with Model from socomec MIB -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.1.1.0</getOid>
+    </setProductData>  
+
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+    <!-- Set Software Version -->
+    <setProductData ruleid="appversion" field="appversion">
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.1.3.0</getOid>
+    </setProductData>
+  
+    <!-- Set Firmware Version -->
+    <setProductData ruleid="bootversion" field="bootversion">
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.1.2.0</getOid>
+    </setProductData>
+    
+    <!-- Set Serial Number -->
+    <setProductData ruleid="serialdata" field="serial_num">
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.1.2.0</getOid>
+    </setProductData>
+  </device>
+
+
+  <!-- Socomec UPS Sensors -->
+  <device deviceid="delphys_ups_sensors">
+    <oidMustExist ruleid="upsObjects" oid=".1.3.6.1.4.1.4555.1.1.5.1" istree="yes"/>
+
+    <stateSensor ruleid="upsBatteryStatus">
+        <type>state</type>
+        <sensorId>UPS_BATTSTATUS</sensorId>
+        <value>
+            <mapValue mapid="batterystatus-vm">
+                <getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.1.0</getOid>
+            </mapValue>
+        </value>
+        <label>Battery Status</label>
+        <enum>batterystatus-em</enum>
+        <sensorSet>UPS Battery Sensors</sensorSet>
+    </stateSensor>  
+    
+    <numSensor ruleid="upsSecondsOnBattery">
+      <type>timeinsec</type>
+      <sensorId>UPS_TIME_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.2.0</getOid>
+      </value>
+      <label>Seconds On Battery</label>
+      <sensorSet>UPS Battery Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsEstimatedMinutesRemaining">
+      <type>timeinmin</type>
+      <sensorId>UPS_TIME_REMAINING_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.3.0</getOid>
+      </value>
+      <label>Estimated Minutes Remaining</label>
+      <sensorSet>UPS Battery Sensors</sensorSet>
+    </numSensor>
+    
+    <numSensor ruleid="upsEstimatedChargeRemaining">
+      <type>pctofcapacity</type>
+      <sensorId>UPS_BATT_CAPACITY_LEFT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.4.0</getOid>
+      </value>
+      <label>Estimated Charge Remaining</label>
+      <sensorSet>UPS Battery Sensors</sensorSet>
+    </numSensor>
+    
+    <numSensor ruleid="upsBatteryVoltage">
+      <type>voltage</type>
+      <sensorId>UPS_BATT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+            <!-- Convert .1 volt to volt -->
+            <op><getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.5.0</getOid></op>
+            <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Voltage</label>
+      <sensorSet>UPS Battery Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsBatteryTemperature">
+      <type>temp</type>
+      <sensorId>BATT_TEMP</sensorId>
+      <value>
+        <mult>
+            <!-- Convert .1 degree to 1 degree -->
+            <op>
+              <getOid>.1.3.6.1.4.1.4555.1.1.5.1.2.6.0</getOid>
+            </op>
+            <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Temperature</label>
+      <sensorSet>UPS Battery Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsInputFrequency">
+      <type>frequency</type>
+      <sensorId>UPS_INPUT_FREQ</sensorId>
+      <value>
+        <mult>
+            <!-- Convert .1 hz to hz -->
+            <op><getOid>.1.3.6.1.4.1.4555.1.1.5.1.3.1.0</getOid></op>
+            <op>0.1</op>
+        </mult>
+      </value>
+      <label>Input Frequency</label>
+      <sensorSet>UPS Input Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsInputVoltage" index=".1.3.6.1.4.1.4555.1.1.5.1.3.3.1.2.0">
+      <type>voltageAC</type>
+      <!-- align with web services def which has expected start at 0 -->
+      <sensorId>UPS_INPUT_VOLTAGE_<rowNumber/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.5.1.3.3.1.2.0</getRowOid>
+      </value>
+      <label>Input Voltage Line <mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></label>
+      <sensorSet>UPS Input Sensors</sensorSet>
+    </numSensor>
+
+    <stateSensor ruleid="upsOutputSource">
+        <type>state</type>
+        <sensorId>UPS_OUTPUT_SOURCE</sensorId>
+        <value>
+            <mapValue mapid="outputsourcestatus-vm">
+                <getOid>.1.3.6.1.4.1.4555.1.1.5.1.4.1.0</getOid>
+            </mapValue>
+        </value>
+        <label>UPS Load Status</label>
+        <enum>outputsourcestatus-em</enum>
+        <sensorSet>UPS Output Sensors</sensorSet>
+    </stateSensor> 
+               
+    <numSensor ruleid="upsOutputFrequency">
+      <type>frequency</type>
+      <sensorId>UPS_PHASE_OUTPUT_FREQ_0</sensorId>
+      <value>
+        <mult>
+            <!-- Convert .1 hz to hz -->
+            <op><getOid>.1.3.6.1.4.1.4555.1.1.5.1.4.2.0</getOid></op>
+            <op>0.1</op>
+        </mult>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>UPS Output Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsOutputPercentLoad">
+      <type>pctofcapacity</type>
+      <sensorId>UPS_OUTPUT_PCT_VA_0</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.4555.1.1.5.1.4.3.0</getOid>
+      </value>
+      <label>Output Percent Load</label>
+      <sensorSet>UPS Output Sensors</sensorSet>
+    </numSensor>                                
+
+    <numSensor ruleid="outputPower">
+      <type>powerW/outputpower/total</type>
+      <sensorId>OUTPUT_POWER_TOTAL</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.4555.1.1.5.1.4.4.0</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Output Power Total</label>
+      <sensorSet>UPS Output Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsOutputVoltage" index=".1.3.6.1.4.1.4555.1.1.5.1.4.6.1.2.0">
+      <type>voltage</type>
+      <!-- align with web services def which has expected start at 1 -->
+      <sensorId>UPS_OUTPUT_VOLTAGE_L2N_<mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.5.1.4.6.1.2.0</getRowOid>
+      </value>
+      <label>Output Voltage Line <mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></label>
+      <sensorSet>UPS Output Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsOutputCurrent" index=".1.3.6.1.4.1.4555.1.1.5.1.4.6.1.3.0">
+      <type>amperage</type>
+      <sensorId>UPS_OUTPUT_AMPS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.5.1.4.6.1.3.0</getRowOid>
+      </value>
+      <label>Output Current Line <mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></label>
+      <sensorSet>UPS Output Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsBypassFrequency">
+      <type>frequency</type>
+      <sensorId>UPS_INPUT1_HZ_2</sensorId>
+      <value>
+        <mult>
+            <!-- Convert .1 hz to hz -->
+            <op><getOid>.1.3.6.1.4.1.4555.1.1.5.1.5.1.0</getOid></op>
+            <op>0.1</op>
+        </mult>
+      </value>
+      <label>Bypass Frequency</label>
+      <sensorSet>UPS Bypass Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="upsBypassVoltage" index=".1.3.6.1.4.1.4555.1.1.5.1.5.3.1.2.0">
+      <type>voltage</type>
+      <!-- align with web services def which has expected start at 1 -->
+      <sensorId>UPS_INPUT1_VAC_2_1_<mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.5.1.5.3.1.2.0</getRowOid>
+      </value>
+      <label>Bypass Voltage Line <mapValue mapid="row-adjust-vm"><rowNumber/></mapValue></label>
+      <sensorSet>UPS Bypass Sensors</sensorSet>
+    </numSensor>
+
+    <valueMap ruleid="row-adjust-vm">
+      <valueIn>0</valueIn><valueOut>1</valueOut>
+      <valueIn>1</valueIn><valueOut>2</valueOut>
+      <valueIn>2</valueIn><valueOut>3</valueOut>
+    </valueMap>
+
+
+    <!-- Battery Status value map -->
+    <valueMap ruleid="batterystatus-vm">
+        <valueIn>1</valueIn><valueOut>0</valueOut>
+        <valueIn>2</valueIn><valueOut>1</valueOut>
+        <valueIn>3</valueIn><valueOut>2</valueOut>
+        <valueIn>4</valueIn><valueOut>3</valueOut>
+        <valueIn>5</valueIn><valueOut>4</valueOut>
+        <valueIn>6</valueIn><valueOut>5</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <!-- Battery Status Enums -->
+    <enumMap ruleid="batterystatus-em">
+        <label>Unknown</label>
+        <label>Normal</label>
+        <label>Low</label>
+        <label>Depleted</label>
+        <label>Discharging</label>
+        <label>Failure</label>
+    </enumMap>
+
+    <!-- Output Source Status value map -->
+    <valueMap ruleid="outputsourcestatus-vm">
+        <valueIn>1</valueIn><valueOut>1</valueOut>
+        <valueIn>2</valueIn><valueOut>2</valueOut>
+        <valueIn>3</valueIn><valueOut>3</valueOut>
+        <valueIn>4</valueIn><valueOut>4</valueOut>
+        <valueIn>5</valueIn><valueOut>5</valueOut>
+        <valueIn>6</valueIn><valueOut>6</valueOut> 
+        <valueIn>7</valueIn><valueOut>7</valueOut> 
+        <valueIn>8</valueIn><valueOut>8</valueOut> 
+        <valueIn>9</valueIn><valueOut>9</valueOut> 
+        <valueIn>10</valueIn><valueOut>10</valueOut> 
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <!-- Output Source Status Enums -->
+    <!-- Note: Mib defines value 1 and 8 as standby. Could it be a typeo? -->
+    <enumMap ruleid="outputsourcestatus-em">
+        <label>Unknown</label>
+        <label>Standby</label>
+        <label>None</label>
+        <label>Normal</label>
+        <label>Bypass</label>
+        <label>Battery</label>
+        <label>Booster</label>
+        <label>Reducer</label>
+        <label>Standby</label>
+        <label>Eco-mode</label>
+        <label>E-saver</label>
+    </enumMap>
+  </device>
+
+  <device deviceid="socomec_statys_sts_disc">
+    <oidMustExist ruleid="sys_branch" oid=".1.3.6.1.4.1.4555.1.1.5.1" istree="yes"/>
+
+    <alarmFlags2 ruleid="imminentStopAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.1.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Imminent Stop condition</activeText>
+          <inactiveText>Imminent Stop condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Imminent Stop  condition exists.</activeText>
+          <inactiveText>A Battery Bad condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="overloadAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.2.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Overload condition</activeText>
+          <inactiveText>Overload condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Overload condition exists.</activeText>
+          <inactiveText>A Overload condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="transferImpossibleAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.3.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Transfer Impossible condition</activeText>
+          <inactiveText>Transfer Impossible condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Transfer Impossible condition exists.</activeText>
+          <inactiveText>A Transfer Impossible condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="insufficientResourceAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.4.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Insufficient Resource condition</activeText>
+          <inactiveText>Insufficient Resource condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Insufficient Resource condition exists.</activeText>
+          <inactiveText>A Insufficient Resource condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="redundancyLossAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.5.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Redundancy Lost condition</activeText>
+          <inactiveText>Redundancy Lost condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Redundancy Lost condition exists.</activeText>
+          <inactiveText>A Redundancy Lost condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="temperatureAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.6.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>Temperature over limit condition</activeText>
+          <inactiveText>Temperature over limit condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Temperature over limit condition exists.</activeText>
+          <inactiveText>A Temperature over limit condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="generalAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.5.1.6.1.7.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="1" log="no">
+        <name>
+          <activeText>General Alarm condition</activeText>
+          <inactiveText>General Alarm condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A General Alarm condition exists.</activeText>
+          <inactiveText>A General Alarm condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+
+  </device>
+
+
+</APC_DDF>

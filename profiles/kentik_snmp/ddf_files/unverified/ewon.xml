@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<!-- Ewon -->
+<!-- Created By DDF Creater v1.0 09/02/2009  -->
+<APC_DDF ddfid ="ewon" ddfname="Ewon" ddfversion="2" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+<!--DDF Headers -->
+	<device deviceid="ewon_header">
+		<oidMustExist ruleid="ewon_header_exist" oid=".1.3.6.1.4.1.8284.2.1.1.3.0"/>
+
+		<!-- Serial Number -->
+		<setProductData ruleid="serialdata" field="serial_num">
+			<getOid>.1.3.6.1.4.1.8284.1.2.0</getOid>
+		</setProductData>
+
+		<!-- Boot Version -->
+		<setProductData ruleid="bootversiondata" field="bootversion">
+			<getOid>.1.3.6.1.4.1.8284.2.1.1.3.0</getOid>
+		</setProductData>
+
+	</device>
+
+<!--DDF Sensors -->
+	<device deviceid="ewon_sensor">
+	<oidMustExist ruleid="ewon_sensor_exist" oid=".1.3.6.1.4.1.8284.2.1.1.3.0"/>
+
+		<!-- memFreeCfg -->
+		<numSensor ruleid="memFreeCfg">
+			<type>num</type>
+			<sensorId>MEM_FREE_CFG_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.8284.2.1.2.1.0</getOid>
+			</value>
+			<label>Mem Free Configuration </label>
+			<sensorSet>ewonSystem</sensorSet>
+		</numSensor>
+
+		<!-- memFreeProg -->
+		<numSensor ruleid="memFreeProg">
+			<type>num</type>
+			<sensorId>MEM_FREE_PROG_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.8284.2.1.2.2.0</getOid>
+			</value>
+			<label>Mem Free Program</label>
+			<sensorSet>ewonSystem</sensorSet>
+		</numSensor>
+
+		<!-- tagValue -->
+		<numSensor ruleid="tagValue" index=".1.3.6.1.4.1.8284.2.1.3.1.11.1.1">
+			<type>num</type>
+			<sensorId>TAG_VALUE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid>-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> Value</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<!-- tagIsOutput -->
+		<stateSensor ruleid="tagIsOutput" index=".1.3.6.1.4.1.8284.2.1.3.1.11.1.1">
+			<type>state</type>
+			<sensorId>TAG_IS_OUTPUT_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tagIsOutput-vm">
+					<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid>-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> Connected to</label>		
+			<enum>tagIsOutput-em</enum>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tagIsOutput-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="tagIsOutput-em">
+			<label>input</label>
+			<label>output</label>
+		</enumMap>
+
+		<!-- tagAlStatus -->
+		<stateSensor ruleid="tagAlStatus" index=".1.3.6.1.4.1.8284.2.1.3.1.11.1.1">
+			<type>state</type>
+			<sensorId>TAG_AL_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tagAlStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.9</getRowOid>
+				</mapValue>
+			</value>
+			<label>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid>-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> Alarm Status</label>		
+			<enum>tagAlStatus-em</enum>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tagAlStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="tagAlStatus-em">
+			<label>none</label>
+			<label>pretrig</label>
+			<label>alarm</label>
+			<label>ack</label>
+			<label>rtn</label>
+		</enumMap>
+		<alarmFlags2 ruleid="tagAlStatus-af" index=".1.3.6.1.4.1.8284.2.1.3.1.11.1.1">
+			<value><getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.9</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Pre-Trigger: <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid></activeText>
+					<inactiveText>Cleared: <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid></inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> is in a pre-triggered state.</activeText>
+					<inactiveText>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> has returned to normal.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId>Make sure the UPS is connected to its power source correctly, and that source is providing the proper power.</recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>	
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Alarm: <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid></activeText>
+					<inactiveText>Cleared: <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid></inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Input</category>
+				<description>
+					<activeText>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> is in an alarm state.</activeText>
+					<inactiveText>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> has returned to normal.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId>Make sure the UPS is connected to its power source correctly, and that source is providing the proper power.</recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>	
+		</alarmFlags2>
+
+		<!-- tagAlType -->
+		<stateSensor ruleid="tagAlType" index=".1.3.6.1.4.1.8284.2.1.3.1.11.1.1">
+			<type>state</type>
+			<sensorId>TAG_AL_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tagAlType-vm">
+					<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.11</getRowOid>
+				</mapValue>
+			</value>
+			<label>Tag-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid>-<getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.3</getRowOid> Alarm Type</label>		
+			<enum>tagAlType-em</enum>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.8284.2.1.3.1.11.1.1</getRowOid></sensorSet>
+		</stateSensor>			
+
+		<valueMap ruleid="tagAlType-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="tagAlType-em">
+			<label>none</label>
+			<label>high</label>
+			<label>low</label>
+			<label>boolean</label>
+		</enumMap>
+
+		<!-- uioIData -->
+		<numSensor ruleid="uioIData" index=".1.3.6.1.4.1.8284.2.1.3.2.1.1.1">
+			<type>num</type>
+			<sensorId>UIO_I_DATA_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.8284.2.1.3.2.1.1.3</getRowOid>
+			</value>
+			<label>IO Data Value-<space/><rowIndex/></label>
+			<sensorSet>uioEntry-<space/><rowIndex/></sensorSet>
+		</numSensor>
+
+		<!-- uioSData -->
+		<numSensor ruleid="uioSData" index=".1.3.6.1.4.1.8284.2.1.3.2.1.1.1">
+			<type>num</type>
+			<sensorId>UIO_S_DATA_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.8284.2.1.3.2.1.1.4</getRowOid>
+			</value>
+			<label>IO Data Value-<space/><rowIndex/></label>
+			<sensorSet>uioEntry-<space/><rowIndex/></sensorSet>
+		</numSensor>
+
+	</device>
+
+</APC_DDF>

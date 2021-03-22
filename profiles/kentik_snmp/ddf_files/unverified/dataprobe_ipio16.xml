@@ -1,0 +1,77 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="dataprobe_ipio16"
+	ddfname="DataProbe IPIO16"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="dataprobe_ipio16">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">DataProbe</setProductData>
+		<setProductData ruleid="modeldata" field="model">IPIO16</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<oidMustExist ruleid="dataprobe_ipio16_exists" oid=".1.3.6.1.4.1.1418.5" istree="yes" /> 
+
+		<stateSensor ruleid="inputStatus" index=".1.3.6.1.4.1.1418.5.6.1.1">
+            <type>state</type>
+            <sensorId>INPUTSTATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.1418.5.6.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.1418.5.6.1.1</getRowOid> Status</label>
+            <enum>open_closed-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="relayStatus" index=".1.3.6.1.4.1.1418.5.7.1.1">
+            <type>state</type>
+            <sensorId>RELAYSTATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.1418.5.7.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>Relay <getRowOid>.1.3.6.1.4.1.1418.5.7.1.1</getRowOid> Status</label>
+            <enum>open_closed-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="remoteCommunicationStatus" index=".1.3.6.1.4.1.1418.5.8.1.1">
+            <type>state</type>
+            <sensorId>REMOTECOMMUNICATIONSTATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.1418.5.8.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Remote <getRowOid>.1.3.6.1.4.1.1418.5.8.1.1</getRowOid> Communication Status</label>
+            <enum>failed_ok-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="status1-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="open_closed-em">
+			<label>Open</label>
+			<label>Closed</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<enumMap ruleid="failed_ok-em">
+			<label>Failed</label>
+			<label>OK</label>
+			<label>Unknown</label>
+		</enumMap>
+	</device>
+</APC_DDF>

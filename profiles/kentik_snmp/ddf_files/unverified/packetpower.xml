@@ -1,0 +1,4058 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="packetpower"
+	ddfname="PacketPower"
+	ddfversion="5"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="packetpower">
+		<oidMustExist ruleid="packetpower" oid=".1.3.6.1.4.1.33688" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">PacketPower</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.2.1.1.1.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="typedata" field="type">
+			<mapValue mapid="devicetype-vm">
+			<getOid>.1.3.6.1.2.1.1.2.0</getOid>
+			</mapValue>
+		</setProductData>
+		<valueMap ruleid="devicetype-vm">
+			<valueIn>.1.3.6.1.4.1.33688.3.1.1</valueIn><valueOut>Network Device</valueOut>
+			<valueIn>.1.3.6.1.4.1.33688.3.1.*</valueIn><valueOut>Network Device</valueOut>
+			<valueIn>.1.3.6.1.4.1.33688.3.2.1</valueIn><valueOut>Power Meter</valueOut>
+			<valueIn>.1.3.6.1.4.1.33688.3.2.*</valueIn><valueOut>Power Meter</valueOut>
+			<valueIn>.1.3.6.1.4.1.33688.3.3.1</valueIn><valueOut>Environmental Monitor</valueOut>
+			<valueIn>.1.3.6.1.4.1.33688.3.3.*</valueIn><valueOut>Environmental Monitor</valueOut>
+			<valueIn>*</valueIn><valueOut>Generic Device</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="reValue" index=".1.3.6.1.4.1.33688.2.1.1.13">
+			<type>num</type>
+            <units>
+				<mapValue mapid="units-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.2.1.1.14</getRowOid>
+				</mapValue>
+			</units>
+            <sensorId>RE_VALUE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.33688.2.1.1.13</getRowOid></op>
+				<op>
+					<mapValue mapid="scale-vm">
+					<getRowOid>.1.3.6.1.4.1.33688.2.1.1.14</getRowOid>
+					</mapValue>
+				</op>
+				</mult>
+            </value>
+			<valueInc>
+				<mapValue mapid="scale-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.2.1.1.14</getRowOid>
+				</mapValue>
+			</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.33688.2.1.1.8</getRowOid> - <getRowOid>.1.3.6.1.4.1.33688.2.1.1.9</getRowOid></label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.33688.2.1.1.8</getRowOid></sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="units-vm">
+			<valueIn>mDegC</valueIn><valueOut>degreeC</valueOut>
+			<valueIn>%</valueIn><valueOut>percent</valueOut>
+			<valueIn>mV</valueIn><valueOut>volts</valueOut>
+			<valueIn>mA</valueIn><valueOut>amps</valueOut>
+			<valueIn>mW</valueIn><valueOut>watts</valueOut>
+			<valueIn>mVA</valueIn><valueOut>voltamps</valueOut>
+			<valueIn>mHz</valueIn><valueOut>hertz</valueOut>
+			<valueIn>deg</valueIn><valueOut>degreesAngle</valueOut>
+			<valueIn>Wh</valueIn><valueOut>watthours</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="scale-vm">
+			<valueIn>mDegC</valueIn><valueOut>0.001</valueOut>
+			<valueIn>mV</valueIn><valueOut>0.001</valueOut>
+			<valueIn>mA</valueIn><valueOut>0.001</valueOut>
+			<valueIn>mW</valueIn><valueOut>0.001</valueOut>
+			<valueIn>mVA</valueIn><valueOut>0.001</valueOut>
+			<valueIn>mHz</valueIn><valueOut>0.001</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="em2RdgTemperature0Cx10">
+			<type>temp</type>
+            <sensorId>EM2_RDG_TEMP0</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.33688.3.3.1.2.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>EM2 Internal Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="em2RdgHumidityx10">
+			<type>humidity</type>
+            <sensorId>EM2_RDG_HUMID</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.33688.3.3.1.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>EM2 Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="em2RdgPressurex10">
+			<type>pressure</type>
+            <sensorId>EM2_RDG_PRESS</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.33688.3.3.1.2.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>EM2 Pressure</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="em2RdgChannelCount">
+			<type>num</type>
+            <sensorId>EM2_RDG_COUNT</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.33688.3.3.1.2.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>EM2 Channel Count</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="em2ChannelTemperatureCx10" index=".1.3.6.1.4.1.33688.3.3.1.2.5.1.3">
+			<rowTest>
+				<mapValue mapid="em2ChannelIsTemperature-vm">
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.2</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+            <sensorId>EM2_CHAN_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.3</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>EM2 Channel <formatNumber printffmt="%02.0f"><rowIndex/></formatNumber> - Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="em2ChannelContactClosed" index=".1.3.6.1.4.1.33688.3.3.1.2.5.1.4">
+			<rowTest>
+				<mapValue mapid="em2ChannelIsTemperature-vm">
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.2</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+            <sensorId>EM2_CONTACT_CLOSED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.4</getRowOid>
+				</mapValue>
+            </value>
+			<enum>openClose-em</enum>
+            <label>EM2 Channel <formatNumber printffmt="%02.0f"><rowIndex/></formatNumber> - Contact Position</label>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="em2ChannelContactTransitionCount" index=".1.3.6.1.4.1.33688.3.3.1.2.5.1.5">
+			<rowTest>
+				<mapValue mapid="em2ChannelIsTemperature-vm">
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.2</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+            <sensorId>EM2_CONTACT_TRANS_COUNT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.33688.3.3.1.2.5.1.5</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>EM2 Channel <formatNumber printffmt="%02.0f"><rowIndex/></formatNumber> - Contact Transition Count</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		
+		<numSensor ruleid="energy">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_a">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.2</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy A</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_b">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.3</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy B</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_c">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.4</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy C</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_export_a">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_EXPORT_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy Export A</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_export_b">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_EXPORT_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.6</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy Export B</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energy_export_c">
+      <type>num/kdisprealenergy</type>
+      <units />
+      <sensorId>_ENERGY_EXPORT_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.7</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Energy Export C</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.10</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_a">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.11</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power A</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_b">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.12</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power B</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_c">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.13</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power C</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.20</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.21</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.001</valueInc>
+      <label>Current A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.22</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.001</valueInc>
+      <label>Current B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.23</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.001</valueInc>
+      <label>Current C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.30</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.31</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.01</valueInc>
+      <label>Voltage A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.32</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.01</valueInc>
+      <label>Voltage B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.33</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.01</valueInc>
+      <label>Voltage C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="frequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>_FREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.50</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Frequency</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="phase_angle_a">
+      <type>num</type>
+      <units>degreesAngle</units>
+      <sensorId>_PHASE_ANGLE_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.51</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Phase Angle A</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="phase_angle_b">
+      <type>num</type>
+      <units>degreesAngle</units>
+      <sensorId>_PHASE_ANGLE_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.52</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Phase Angle B</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="phase_angle_c">
+      <type>num</type>
+      <units>degreesAngle</units>
+      <sensorId>_PHASE_ANGLE_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.53</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Phase Angle C</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_a">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.54</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor A</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_b">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.55</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor B</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_c">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.56</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor C</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.60</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va">
+      <type>num/kdispapppower</type>
+      <units />
+      <sensorId>_VA</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.70</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>VA</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_a">
+      <type>num/kdispapppower</type>
+      <units />
+      <sensorId>_VA_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.71</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>VA A</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_b">
+      <type>num/kdispapppower</type>
+      <units />
+      <sensorId>_VA_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.72</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>VA B</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_c">
+      <type>num/kdispapppower</type>
+      <units />
+      <sensorId>_VA_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.73</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VA C</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="up_time">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_UP_TIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.93</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Up Time</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="most_recent_report">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_MOST_RECENT_REPORT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.95</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Most Recent Report</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_0">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_0</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.100</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 0</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_1">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.101</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_2">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.102</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_3">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.103</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 3</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_4">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_4</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.104</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 4</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_5">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_5</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.105</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 5</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_6">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_6</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.106</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 6</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_7">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_7</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.107</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 7</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_8">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_8</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.108</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 8</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_9">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_9</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.109</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 9</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_10">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_10</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.110</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 10</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_11">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_11</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.111</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 11</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_12">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMPERATURE_12</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.112</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Temperature 12</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.120</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_a">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.121</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh A</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_b">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.122</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh B</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_c">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.123</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh C</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_d">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.124</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh D</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_e">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.125</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh E</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vah_f">
+      <type>num/kdispappenergy</type>
+      <units />
+      <sensorId>_VAH_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.126</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VAh F</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_d">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.127</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power D</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_e">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.128</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power E</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_f">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.129</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power F</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_d">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.130</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor D</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_e">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.131</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor E</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_factor_f">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_POWER_FACTOR_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.132</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Power Factor F</label>
+      <sensorSet>Power factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_d">
+      <type>powerW</type>
+      <units />
+      <sensorId>_VA_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.133</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VA D</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_e">
+      <type>powerW</type>
+      <units />
+      <sensorId>_VA_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.134</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VA E</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_f">
+      <type>powerW</type>
+      <units />
+      <sensorId>_VA_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.135</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>VA F</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vdd">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VDD</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.190</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>VDD</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.191</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="battery">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_BATTERY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.192</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Battery</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dew_point">
+      <type>temp</type>
+      <units />
+      <sensorId>_DEW_POINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.193</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <label>Dew Point</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="pressure">
+      <type>pressure</type>
+      <units />
+      <sensorId>_PRESSURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.201</getOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+      <label>Pressure</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_1">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.221</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 1</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_2">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.222</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 2</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_3">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.223</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 3</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_4">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_4</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.224</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 4</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_5">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_5</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.225</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 5</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_6">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_6</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.226</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 6</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_7">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_7</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.227</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 7</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_8">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_8</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.228</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 8</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_9">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_9</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.229</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 9</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_10">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_10</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.230</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 10</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_11">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_11</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.231</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 11</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="contact_count_12">
+      <type>num</type>
+      <units />
+      <sensorId>_CONTACT_COUNT_12</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.232</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Contact Count 12</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_d">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.235</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage D</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_e">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.236</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage E</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_f">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.237</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage F</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_d">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.238</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current D</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_e">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.239</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current E</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_f">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.240</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current F</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_n">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_N</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.248</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current N</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.250</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_a">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.251</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah A</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_b">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.252</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah B</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_c">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.253</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah C</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_d">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_D</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.254</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah D</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_e">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_E</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.255</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah E</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ah_f">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>_AH_F</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.256</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ah F</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_ab">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_AB</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.260</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage AB</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_ca">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_CA</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.261</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage CA</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_bc">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_BC</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.262</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage BC</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_1">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.320</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 1</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_2">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.321</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 2</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_3">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.322</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 3</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_4">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_4</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.323</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 4</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_5">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_5</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.324</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 5</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_6">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_6</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.325</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 6</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_7">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_7</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.326</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 7</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_8">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_8</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.327</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 8</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_9">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_9</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.328</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 9</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_10">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_10</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.329</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 10</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_11">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_11</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.330</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 11</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_12">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_HUMIDITY_12</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.331</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Humidity 12</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vmax">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VMAX</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.402</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>VMax</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="imax">
+      <type>amperage</type>
+      <units />
+      <sensorId>_IMAX</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.403</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+	  <valueInc>0.01</valueInc>
+      <label>IMax</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="firmware_version">
+      <type>num</type>
+      <units />
+      <sensorId>_FIRMWARE_VERSION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.404</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Firmware Version</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="firmware_image">
+      <type>num</type>
+      <units />
+      <sensorId>_FIRMWARE_IMAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.405</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Firmware Image</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="reports_per_minute">
+      <type>fanspeed</type>
+      <units />
+      <sensorId>_REPORTS_PER_MINUTE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.411</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Reports Per Minute</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="phase_label">
+      <type>num</type>
+      <units />
+      <sensorId>_PHASE_LABEL</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.412</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Phase Label</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="pue">
+      <type>num</type>
+      <units />
+      <sensorId>_PUE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.420</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>PUE</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="j6_channel_count">
+      <type>num</type>
+      <units />
+      <sensorId>_J6_CHANNEL_COUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.430</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>J6 Channel Count</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="j6_phase_mask">
+      <type>num</type>
+      <units />
+      <sensorId>_J6_PHASE_MASK</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.431</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>J6 Phase Mask</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="j6_current_range">
+      <type>num</type>
+      <units />
+      <sensorId>_J6_CURRENT_RANGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.432</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>J6 Current Range</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="j6_voltage_range">
+      <type>num</type>
+      <units />
+      <sensorId>_J6_VOLTAGE_RANGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.433</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>J6 Voltage Range</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mesh_time">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_MESH_TIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.440</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Mesh Time</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="unique_report_rate">
+      <type>fanspeed</type>
+      <units />
+      <sensorId>_UNIQUE_REPORT_RATE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.441</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Unique Report Rate</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="all_report_rate">
+      <type>fanspeed</type>
+      <units />
+      <sensorId>_ALL_REPORT_RATE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.442</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>All Report Rate</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_1_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_1_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.500</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 1 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_1_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_1_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.501</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 1 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_1_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_1_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.502</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 1 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_3_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_3_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.503</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 3 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_3_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_3_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.504</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 3 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_3_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_3_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.505</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 3 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_5_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_5_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.506</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 5 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_5_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_5_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.507</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 5 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_5_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_5_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.508</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 5 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_7_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_7_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.509</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 7 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_7_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_7_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.510</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 7 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_7_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_7_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.511</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 7 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_9_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_9_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.512</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 9 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_9_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_9_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.513</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 9 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_9_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_9_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.514</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 9 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_11_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_11_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.515</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 11 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_11_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_11_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.516</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 11 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_11_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_11_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.517</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 11 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_13_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_13_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.518</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 13 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_13_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_13_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.519</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 13 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_13_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_13_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.520</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 13 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_15_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_15_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.521</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 15 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_15_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_15_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.522</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 15 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_fundamental_15_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_FUNDAMENTAL_15_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.523</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Fundamental 15 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_1_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_1_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.524</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 1 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_1_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_1_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.525</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 1 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_1_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_1_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.526</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 1 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_3_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_3_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.527</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 3 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_3_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_3_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.528</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 3 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_3_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_3_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.529</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 3 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_5_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_5_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.530</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 5 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_5_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_5_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.531</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 5 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_5_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_5_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.532</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 5 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_7_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_7_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.533</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 7 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_7_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_7_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.534</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 7 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_7_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_7_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.535</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 7 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_9_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_9_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.536</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 9 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_9_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_9_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.537</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 9 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_9_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_9_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.538</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 9 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_11_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_11_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.539</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 11 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_11_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_11_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.540</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 11 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_11_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_11_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.541</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 11 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_13_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_13_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.542</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 13 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_13_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_13_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.543</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 13 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_13_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_13_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.544</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 13 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_15_a">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_15_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.545</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 15 A</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_15_b">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_15_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.546</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 15 B</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="current_harmonic_15_c">
+      <type>amperage</type>
+      <units />
+      <sensorId>_CURRENT_HARMONIC_15_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.547</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Current Harmonic 15 C</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_1_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_1_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.548</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 1 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_1_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_1_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.549</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 1 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_1_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_1_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.550</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 1 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_3_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_3_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.551</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 3 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_3_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_3_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.552</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 3 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_3_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_3_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.553</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 3 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_5_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_5_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.554</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 5 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_5_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_5_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.555</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 5 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_5_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_5_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.556</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 5 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_7_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_7_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.557</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 7 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_7_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_7_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.558</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 7 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_7_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_7_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.559</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 7 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_9_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_9_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.560</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 9 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_9_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_9_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.561</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 9 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_9_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_9_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.562</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 9 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_11_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_11_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.563</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 11 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_11_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_11_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.564</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 11 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_11_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_11_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.565</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 11 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_13_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_13_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.566</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 13 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_13_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_13_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.567</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 13 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_13_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_13_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.568</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 13 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_15_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_15_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.569</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 15 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_15_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_15_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.570</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 15 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_fundamental_15_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_FUNDAMENTAL_15_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.571</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Fundamental 15 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_1_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_1_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.572</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 1 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_1_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_1_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.573</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 1 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_1_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_1_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.574</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 1 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_3_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_3_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.575</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 3 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_3_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_3_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.576</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 3 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_3_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_3_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.577</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 3 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_5_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_5_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.578</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 5 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_5_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_5_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.579</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 5 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_5_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_5_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.580</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 5 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_7_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_7_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.581</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 7 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_7_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_7_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.582</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 7 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_7_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_7_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.583</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 7 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_9_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_9_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.584</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 9 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_9_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_9_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.585</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 9 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_9_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_9_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.586</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 9 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_11_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_11_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.587</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 11 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_11_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_11_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.588</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 11 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_11_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_11_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.589</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 11 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_13_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_13_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.590</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 13 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_13_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_13_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.591</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 13 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_13_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_13_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.592</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 13 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_15_a">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_15_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.593</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 15 A</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_15_b">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_15_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.594</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 15 B</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltage_harmonic_15_c">
+      <type>voltage</type>
+      <units />
+      <sensorId>_VOLTAGE_HARMONIC_15_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.595</getOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Voltage Harmonic 15 C</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdi_a">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDI_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.600</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDi A</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdi_b">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDI_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.601</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDi B</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdi_c">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDI_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.602</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDi C</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdv_a">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDV_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.603</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDv A</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdv_b">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDV_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.604</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDv B</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="thdv_c">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_THDV_C</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.605</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>THDv C</label>
+      <sensorSet>Percentage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="icast_buffer_received">
+      <type>num</type>
+      <units />
+      <sensorId>_ICAST_BUFFER_RECEIVED</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.610</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>iCast Buffer Received</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="icast_buffer_expected">
+      <type>num</type>
+      <units />
+      <sensorId>_ICAST_BUFFER_EXPECTED</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.611</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>iCast Buffer Expected</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="icast_buffer_image">
+      <type>num</type>
+      <units />
+      <sensorId>_ICAST_BUFFER_IMAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.612</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>iCast Buffer Image</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="icast_buffer_version">
+      <type>num</type>
+      <units />
+      <sensorId>_ICAST_BUFFER_VERSION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.33688.5.1.1.3.613</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>iCast Buffer Version</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="contact_1">
+      <type>state</type>
+      <sensorId>_CONTACT_1</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.211</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 1</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_2">
+      <type>state</type>
+      <sensorId>_CONTACT_2</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.212</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 2</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_3">
+      <type>state</type>
+      <sensorId>_CONTACT_3</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.213</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 3</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_4">
+      <type>state</type>
+      <sensorId>_CONTACT_4</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.214</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 4</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_5">
+      <type>state</type>
+      <sensorId>_CONTACT_5</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.215</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 5</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_6">
+      <type>state</type>
+      <sensorId>_CONTACT_6</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.216</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 6</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_7">
+      <type>state</type>
+      <sensorId>_CONTACT_7</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.217</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 7</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_8">
+      <type>state</type>
+      <sensorId>_CONTACT_8</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.218</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 8</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_9">
+      <type>state</type>
+      <sensorId>_CONTACT_9</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.219</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 9</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_10">
+      <type>state</type>
+      <sensorId>_CONTACT_10</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.220</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 10</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_11">
+      <type>state</type>
+      <sensorId>_CONTACT_11</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.233</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 11</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="contact_12">
+      <type>state</type>
+      <sensorId>_CONTACT_12</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.234</getOid>
+        </mapValue>
+      </value>
+      <label>Contact 12</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_1">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_1</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.300</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 1</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_2">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_2</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.301</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 2</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_3">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_3</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.302</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 3</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_4">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_4</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.303</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 4</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_5">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_5</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.304</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 5</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_6">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_6</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.305</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 6</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_7">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_7</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.306</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 7</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_8">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_8</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.307</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 8</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_9">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_9</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.308</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 9</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_10">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_10</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.309</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 10</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_11">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_11</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.310</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 11</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="probe_status_12">
+      <type>state</type>
+      <sensorId>_PROBE_STATUS_12</sensorId>
+      <value>
+        <mapValue mapid="truefalse_vm">
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.311</getOid>
+        </mapValue>
+      </value>
+      <label>Probe Status 12</label>
+      <enum>truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="system_description">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_DESCRIPTION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.1.0</getOid>
+        </op>
+      </value>
+      <label>System Description</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_object_id">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_OBJECT_ID</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.2.0</getOid>
+        </op>
+      </value>
+      <label>System Object ID</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_uptime">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_UPTIME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.3.0</getOid>
+        </op>
+      </value>
+      <label>System Uptime</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_contact">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_CONTACT</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.4.0</getOid>
+        </op>
+      </value>
+      <label>System Contact</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_name_(guid)">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_NAME_(GUID)</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.5.0</getOid>
+        </op>
+      </value>
+      <label>System Name (GUID)</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_location">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_LOCATION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.6.0</getOid>
+        </op>
+      </value>
+      <label>System Location</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="system_services">
+      <type>string</type>
+      <units />
+      <sensorId>_SYSTEM_SERVICES</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.2.1.1.7.0</getOid>
+        </op>
+      </value>
+      <label>System Services</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="host">
+      <type>string</type>
+      <units />
+      <sensorId>_HOST</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.92</getOid>
+        </op>
+      </value>
+      <label>Host</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="power_source">
+      <type>string</type>
+      <units />
+      <sensorId>_POWER_SOURCE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.33688.5.1.1.3.96</getOid>
+        </op>
+      </value>
+      <label>Power Source</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+		
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="em2ChannelIsTemperature-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<enumMap ruleid="openClose-em">
+			<label>Open</label>
+			<label>Closed</label>
+		</enumMap>
+		<valueMap ruleid="truefalse_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="truefalse_em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+		
+		<valueMap ruleid="openclose_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="openclose_em">
+			<label>Open</label>
+			<label>Closed</label>
+		</enumMap>
+		
+	</device>
+</APC_DDF>

@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<APC_DDF ddfid ="liebert_series600_ups" ddfname="Liebert Series 600 UPS" ddfversion="1" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="liebert_series600_ups">
+		<oidMustExist istree="yes" ruleid="liebert_series600_ups_exist" oid=".1.3.6.1.4.1.476.1.1.1.1"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Liebert</setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		<setProductData ruleid="modeldata" field="model">Series 600</setProductData>
+ 
+		<!-- Battery Capacity Remaining -->
+		<numSensor ruleid="lcUpsBatCapacity">
+			<type>pctofcapacity</type>
+			<sensorId>BATT_CAPACITY_REMAINING</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.2.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Capacity Remaining</label>
+			<sensorSet>Battery Capacity Remaining</sensorSet>
+		</numSensor>		
+
+		<!-- Battery Voltage -->
+		<numSensor ruleid="lcUpsBatVoltage">
+			<type>voltage</type>
+			<sensorId>BATT_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.2.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Voltage</label>
+			<sensorSet>Battery Voltage</sensorSet>
+		</numSensor>
+
+		<!-- Battery Temperature -->
+		<numSensor ruleid="lcUpsBatTemperature">
+			<type>temp</type>
+			<sensorId>BATT_TEMPERATURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.2.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Temperature</label>
+			<sensorSet>Battery Temperature</sensorSet>
+		</numSensor>
+
+		<!-- Battery Time Remaining -->
+		<numSensor ruleid="lcUpsBatTimeRemaining">
+			<type>timeinmin</type>
+			<sensorId>BATT_TIME_REMAINING</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.2.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Time Remaining</label>
+			<sensorSet>Battery Time Remaining</sensorSet>
+		</numSensor>
+		
+		<!-- UPS Inverter Status -->
+		<stateSensor ruleid="lcUpsInverterStatus">
+			<type>state</type>
+			<sensorId>INVERTER_STATUS</sensorId>
+			<value>
+				<mapValue mapid="lcUpsInverterStatus-vm">
+					<getOid>.1.3.6.1.4.1.476.1.1.1.1.5.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS Inverter Status</label>
+			<enum>lcUpsInverterStatus-em</enum>
+			<sensorSet>UPS Inverter Status</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="lcUpsInverterStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="lcUpsInverterStatus-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+
+		<!-- UPS on Bypass -->
+		<stateSensor ruleid="lcUpsOnBypass">
+			<type>state</type>
+			<sensorId>UPS_ON_BYPASS</sensorId>
+			<value>
+				<mapValue mapid="lcUpsOnBypass-vm">
+					<getOid>.1.3.6.1.4.1.476.1.1.1.1.13.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS on Bypass</label>
+			<enum>lcUpsOnBypass-em</enum>
+			<sensorSet>UPS on Bypass</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="lcUpsOnBypass-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="lcUpsOnBypass-em">
+			<label>Unknown</label>
+			<label>Yes</label>
+			<label>No</label>
+			<label>Maintenance</label>
+		</enumMap>
+
+		<!-- Output Power - Watts -->
+		<numSensor ruleid="lcUpsOutputWatts">
+			<type>num/powerKW</type>
+			<sensorId>OUTPUT_POWER_WATTS</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.476.1.1.1.1.4.5.0</getOid>
+					</op>
+					<op>1000</op>
+				</div>
+			</value>			
+			<valueInc>0.001</valueInc>
+			<label>Output Power</label>
+			<sensorSet>Output Power</sensorSet>
+		</numSensor>
+		
+		<!-- Output Load -->
+		<numSensor ruleid="lcUpsOutputLoad">
+			<type>pctofcapacity</type>
+			<sensorId>OUTPUT_LOAD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.4.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Load</label>
+			<sensorSet>Output Load</sensorSet>
+		</numSensor>
+		
+		<!-- Output Current - Phase <rowIndex/> -->
+		<numSensor ruleid="lcUpsOutputCurrent" index=".1.3.6.1.4.1.476.1.1.1.1.4.4.1.3">
+			<type>amperage</type>
+			<sensorId>OUTPUT_CURRENT_PHASE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.476.1.1.1.1.4.4.1.3</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Current - Phase <rowIndex/></label>
+			<sensorSet>Output Current</sensorSet>
+		</numSensor>
+		
+		<!-- Output Voltage - Phase <rowIndex/> -->
+		<numSensor ruleid="lcUpsOutputVoltage" index=".1.3.6.1.4.1.476.1.1.1.1.4.4.1.2">
+			<type>voltage</type>
+			<sensorId>OUTPUT_VOLTAGE_PHASE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.476.1.1.1.1.4.4.1.2</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Voltage - Phase <rowIndex/></label>
+			<sensorSet>Output Voltage</sensorSet>
+		</numSensor>
+		
+		<!-- Output Frequency -->
+		<numSensor ruleid="lcUpsOutputFrequency">
+			<type>frequency</type>
+			<sensorId>OUTPUT_FREQUENCY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.4.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Frequency</label>
+			<sensorSet>Output Frequency</sensorSet>
+		</numSensor>
+		
+		<!-- Input Current - Phase <rowIndex/> -->
+		<numSensor ruleid="lcUpsInputCurrent" index=".1.3.6.1.4.1.476.1.1.1.1.3.6.1.3">
+			<type>amperage</type>
+			<sensorId>INPUT_CURRENT_PHASE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.476.1.1.1.1.3.6.1.3</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Input Current - Phase <rowIndex/></label>
+			<sensorSet>Input Current</sensorSet>
+		</numSensor>
+		
+		<!-- Input Voltage - Phase <rowIndex/> -->
+		<numSensor ruleid="lcUpsInputVoltage" index=".1.3.6.1.4.1.476.1.1.1.1.3.6.1.2">
+			<type>voltage</type>
+			<sensorId>INPUT_VOLTAGE_PHASE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.476.1.1.1.1.3.6.1.2</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Input Voltage - Phase <rowIndex/></label>
+			<sensorSet>Input Voltage</sensorSet>
+		</numSensor>
+		
+		<!-- Bypass Frequency -->
+		<numSensor ruleid="lcUpsBypassFrequency">
+			<type>frequency</type>
+			<sensorId>BYPASS_FREQUENCY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.1.1.1.13.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Bypass Frequency</label>
+			<sensorSet>Bypass Frequency</sensorSet>
+		</numSensor>
+		
+		<!-- Bypass Voltage - Phase <rowIndex/> -->
+		<numSensor ruleid="lcUpsBypassVoltage" index=".1.3.6.1.4.1.476.1.1.1.1.13.4.1.2">
+			<type>voltage</type>
+			<sensorId>BYPASS_VOLTAGE_PHASE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.476.1.1.1.1.13.4.1.2</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Bypass Voltage - Phase <rowIndex/></label>
+			<sensorSet>Bypass Voltage</sensorSet>
+		</numSensor>
+	</device>
+</APC_DDF>

@@ -1,0 +1,2457 @@
+<?xml version="1.0"?>
+<!-- Geist -->
+<!--V2 added Support for Geist Em8/Gm6 device-->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="geist"  ddfname="Geist" ddfversion="7" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+<!-- deviceInfo-->
+  <!-- productTitle -->
+  <device deviceid="geistdiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.21239.1.1.1.0"/>
+      
+  	<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.21239.1.1.2.0</getOid>
+		</setProductData>
+   
+    
+    <!-- Model -->
+		<suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.21239.1.1.1.0</getOid>
+		</setProductData>
+		
+		<!-- Serial Number -->
+		<setProductData ruleid="serialdata" field="serial_num">
+			<getOid>.1.3.6.1.4.1.21239.1.1.4.0</getOid>
+		</setProductData> 
+
+		<!-- Friendly Name -->
+		<!-- <suppressRule ruleid="stomplabel" suppressid="core/mib2data/modeldata"/> -->
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.21239.1.1.3.0</getOid> (<sysHostname/>)
+		</setDefaultLabel>
+
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>   
+   	 </device>
+
+  <device deviceid="geistv3discdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.21239.2" istree="yes" />
+	  	<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.21239.2.1.2.0</getOid>
+		</setProductData>
+
+	    <!-- Model -->
+		<suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.21239.2.1.1.0</getOid>
+		</setProductData>
+		
+		<!-- mac address -->
+		<setProductData ruleid="macaddress" field="mac_addr">
+			<getOid>.1.3.6.1.4.1.21239.2.1.4.0</getOid>
+		</setProductData> 
+
+		<!-- Friendly Name -->
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.21239.2.1.3.0</getOid> (<sysHostname/>)
+		</setDefaultLabel>
+
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+   	 </device>
+
+   	
+   	<device deviceid="geisttype">
+    	<oidMustExist ruleid="geisttypeexist" oid=".1.3.6.1.4.1.21239.1.2.1.2.1"/>
+    	
+    	<suppressRule ruleid="stomptype" suppressid="core/mib2data/typedata"/>
+			<setProductData ruleid="typedata" field="type">
+				Environmental Monitor
+			</setProductData>
+    </device>
+    			 
+		<device deviceid="geist">
+    <oidMustExist ruleid="geistDetect" oid=".1.3.6.1.4.1.21239.1.1.1.0"/>
+    
+<!-- Power Only -->
+
+		<!--powerAvail-->
+		<stateSensor ruleid="powerAvail" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>state</type>
+      <sensorId>POWER_AVAIL_</sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.1.6.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>Power Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </stateSensor>
+    
+    <!--powerVolts-->   
+   <numSensor ruleid="powerVolts" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>voltage</type>
+      <sensorId>POWER_VOLTS_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.6.1.5</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Volts <rowIndex/></label>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </numSensor> 
+  
+   <!--powerAmps-->   
+   <numSensor ruleid="powerAmps" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>amperage</type>
+      <sensorId>POWER_AMPS_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.6.1.6</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Amps <rowIndex/></label>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </numSensor>
+
+    <!--powerRealPow-->   
+   <numSensor ruleid="powerRealPow" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>powerW</type>
+      <sensorId>POWER_Real_Pow_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.6.1.7</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Real Power <rowIndex/></label>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </numSensor> 
+    
+    <!--powerAppPow-->   
+   <numSensor ruleid="powerAppPow" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>powerVA</type>
+      <sensorId>POWER_APP_POW_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.6.1.8</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Apparent Power <rowIndex/></label>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </numSensor>
+    
+  <!--powerPwrFactor-->   
+   <numSensor ruleid="powerPwrFactor" index=".1.3.6.1.4.1.21239.1.6.1.2">
+      <type>powerfactor</type>
+      <sensorId>POWER_PWR_FACTOR_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.6.1.9</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Power Factor <rowIndex/></label>
+      <sensorSet>Power Only<rowIndex/></sensorSet>
+    </numSensor>
+    
+<!-- Current Monitor-->
+
+  <!-- currentMonitorAvail-->
+			<stateSensor ruleid="currentMonitorAvail" index=".1.3.6.1.4.1.21239.1.9.1.2">
+      <type>state</type>
+      <sensorId>CURRENT_MONITOR_AVAIL_</sensorId>
+      <value>
+     	 <mapValue mapid="Avail-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.1.9.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>Current Monitor Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Current Monitor<rowIndex/></sensorSet>
+    </stateSensor>
+
+    
+   <!--currentMonitorAmps-->   
+   <numSensor ruleid="currentMonitorAmps" index=".1.3.6.1.4.1.21239.1.9.1.2">
+      <type>amperage</type>
+      <sensorId>CURRENT_MONITOR_AMPS_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.9.1.5</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Current monitor Amps <rowIndex/></label>
+      <sensorSet>Current Monitor<rowIndex/></sensorSet>
+    </numSensor>
+    
+<!-- Millivolt Monitor-->
+
+  <!-- millivoltMonitorAvail-->
+     <stateSensor ruleid="millivoltMonitorAvail" index=".1.3.6.1.4.1.21239.1.10.1.2">
+      <type>state</type>
+      <sensorId>MILLIVOLT_MONITOR_AVAIL_</sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.1.10.1.4</getRowOid>
+				</mapValue>  
+      </value>
+      <label>Millivolt Monitor Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Millivolt Monitor<rowIndex/></sensorSet>
+    </stateSensor>
+
+
+   <!--millivoltMonitorMV-->   
+   <numSensor ruleid="millivoltMonitorMV" index=".1.3.6.1.4.1.21239.1.10.1.2">
+      <type>voltage</type>
+      <sensorId>MILLIVOLT_MONITOR_MV_<rowIndex/></sensorId>
+      <value> 
+            <getRowOid>.1.3.6.1.4.1.21239.1.10.1.5</getRowOid>
+      </value>
+      <label>Millivolt monitor <rowIndex/></label>
+      <sensorSet>Millivolt Monitor<rowIndex/></sensorSet>
+    </numSensor>
+      
+<!-- ctrl3Ch -->
+
+     <!-- ctrl3ChAvail-->
+     <stateSensor ruleid="ctrl3ChAvail" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>state</type>
+      <sensorId>CTRL3_CH_AVAIL_</sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					 <getRowOid>.1.3.6.1.4.1.21239.1.14.1.4</getRowOid>
+				</mapValue>  
+       
+      </value>
+      <label>CTRL 3ch Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </stateSensor>
+
+
+		<!-- ctrl3ChVoltsA -->  
+   <numSensor ruleid="ctrl3ChVoltsA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLTS_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.5</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+		<!-- ctrl3ChVoltPkA -->  
+   <numSensor ruleid="ctrl3ChVoltPkA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLT_PK_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.6</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts Peak A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChAmpsA -->  
+   <numSensor ruleid="ctrl3ChAmpsA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMPS_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.7</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>  
+    
+    <!-- ctrl3ChAmpPkA -->  
+   <numSensor ruleid="ctrl3ChAmpPkA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMP_PK_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.8</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps Peak A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChRealPowA -->  
+   <numSensor ruleid="ctrl3ChRealPowA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerW</type>
+      <sensorId>CTRL3_CH_REAL_POW_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.9</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Real Power A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+      <!-- ctrl3ChAppPowA -->  
+   <numSensor ruleid="ctrl3ChAppPowA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerVA</type>
+      <sensorId>CTRL3_CH_APP_POW_A_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.10</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Apparent Power A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+  <!-- ctrl3ChPwrFactA -->  
+   <numSensor ruleid="ctrl3ChPwrFactA" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerfactor</type>
+      <sensorId>CTRL3_CH_PWR_FACT_A_<rowIndex/></sensorId>
+      <value> 
+         <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.11</getRowOid>
+             </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Power Factor A <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+    		<!-- ctrl3ChVoltsB -->  
+   <numSensor ruleid="ctrl3ChVoltsB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLTS_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.12</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+		<!-- ctrl3ChVoltPkB -->  
+   <numSensor ruleid="ctrl3ChVoltPkB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLT_PK_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.13</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts (Peak) B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChAmpsB -->  
+   <numSensor ruleid="ctrl3ChAmpsB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMPS_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.14</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>  
+    
+    <!-- ctrl3ChAmpPkB -->  
+   <numSensor ruleid="ctrl3ChAmpPkB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMP_PK_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.15</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps Peak B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChRealPowB -->  
+   <numSensor ruleid="ctrl3ChRealPowB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerW</type>
+      <sensorId>CTRL3_CH_REAL_POW_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.16</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Real Power B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+  <!-- ctrl3ChAppPowB -->  
+   <numSensor ruleid="ctrl3ChAppPowB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerVA</type>
+      <sensorId>CTRL3_CH_APP_POW_B_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.17</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Apparent Power B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+  <!-- ctrl3ChPwrFactB -->  
+   <numSensor ruleid="ctrl3ChPwrFactB" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerfactor</type>
+      <sensorId>CTRL3_CH_PWR_FACT_B_<rowIndex/></sensorId>
+      <value> 
+         <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.18</getRowOid>
+             </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Power Factor B <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- ctrl3ChVoltsC -->  
+   <numSensor ruleid="ctrl3ChVoltsC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLTS_c_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.19</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+		<!-- ctrl3ChVoltPkC-->  
+   <numSensor ruleid="ctrl3ChVoltPkC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>voltage</type>
+      <sensorId>CTRL3_CH_VOLT_PK_C_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.20</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Volts (Peak) C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChAmpsC -->  
+   <numSensor ruleid="ctrl3ChAmpsC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMPS_C_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.21</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>  
+    
+    <!-- ctrl3ChAmpPkC -->  
+   <numSensor ruleid="ctrl3ChAmpPkC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL3_CH_AMP_PK_C_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.22</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Amps Peak C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrl3ChRealPowC -->  
+   <numSensor ruleid="ctrl3ChRealPowC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerW</type>
+      <sensorId>CTRL3_CH_REAL_POW_C_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.23</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Real Power C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+      <!-- ctrl3ChAppPowC -->  
+   <numSensor ruleid="ctrl3ChAppPowC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerVA</type>
+      <sensorId>CTRL3_CH_APP_POW_C_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.24</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Apparent Power C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+  <!-- ctrl3ChPwrFactC -->  
+   <numSensor ruleid="ctrl3ChPwrFactC" index=".1.3.6.1.4.1.21239.1.14.1.2">
+      <type>powerfactor</type>
+      <sensorId>CTRL3_CH_PWR_FACT_C_<rowIndex/></sensorId>
+      <value> 
+         <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.14.1.25</getRowOid>
+             </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>CTRL 3ch Power Factor C <rowIndex/></label>
+      <sensorSet>ctrl3ChTable<rowIndex/></sensorSet>
+    </numSensor>
+    
+<!-- powerMonitor Begin -->   
+ 	<!-- powMonAvail -->
+     <stateSensor ruleid="powMonAvail" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>state</type>
+      <sensorId>POWER_MONITOR_AVAIL_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="Avail-vm">
+					 <getRowOid>.1.3.6.1.4.1.21239.1.3.1.4</getRowOid>
+				</mapValue>  
+      </value>
+      <label>Power Monitor Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </stateSensor>
+    
+    
+  <!-- powMonKWattHrs -->
+	 <numSensor ruleid="powMonKWattHrs" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>num/kwatthr</type>
+      <sensorId>POWER_MONITOR_KWATT_HOURS_<rowIndex/></sensorId>
+      <value>
+      <getRowOid>.1.3.6.1.4.1.21239.1.3.1.5</getRowOid>
+      </value>
+      <label>Power Monitor Kilowatt Hours<rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor>  	  
+
+	<!-- powMonVolts -->
+		<numSensor ruleid="powMonVolts" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>voltage</type>
+      <sensorId>POWER_MONITOR_VOLTAGE_<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.3.1.6</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Monitor Voltage <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 	
+    
+	<!-- powMonVoltMax -->
+	 <numSensor ruleid="powMonVoltMax" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>voltage</type>
+      <sensorId>POWER_MONITOR_VOLTAGE_MAXIMUM<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.3.1.7</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Monitor Voltage Maximum <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 
+	
+	<!-- powMonVoltMin -->
+	 <numSensor ruleid="powMonVoltMin" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>voltage</type>
+      <sensorId>POWER_MONITOR_VOLTAGE_MINIMUM<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.3.1.8</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Monitor Voltage Minimum <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 
+  
+  <!-- powMonVoltPK -->
+	 <numSensor ruleid="powMonVoltPK" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>voltage</type>
+      <sensorId>POWER_MONITOR_VOLTAGE_PEAK<rowIndex/></sensorId>
+      <value> 
+      <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.3.1.9</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Power Monitor Voltage Peak <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor>
+
+	<!-- powMonAmpsX10 -->
+	 <numSensor ruleid="powMonAmpsX10" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>amperage</type>
+      <sensorId>POWER_MONITOR_AMPSX10<rowIndex/></sensorId>
+      <value>
+      <mult>
+      <op>1</op>
+      <op><getRowOid>.1.3.6.1.4.1.21239.1.3.1.10</getRowOid></op>
+      </mult>
+      </value>
+      <label>Power Monitor Amps <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 
+
+	<!-- powMonRealPow -->
+	 <numSensor ruleid="powMonRealPow" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>powerW</type>
+      <sensorId>POWER_MONITOR_REAL_POWER<rowIndex/></sensorId>
+      <value>
+      <getRowOid>.1.3.6.1.4.1.21239.1.3.1.11</getRowOid>
+      </value>
+      <label>Power Monitor Real Power <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 
+    
+	<!-- powMonAppPow -->
+	 <numSensor ruleid="powMonAppPow" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>powerVA</type>
+      <sensorId>POWER_MONITOR_APPARENT_POWER<rowIndex/></sensorId>
+      <value>
+      <getRowOid>.1.3.6.1.4.1.21239.1.3.1.12</getRowOid>
+      </value>
+      <label>Power Monitor Apparent Power <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor> 	
+	
+	<!-- powMonPwrFact -->
+	 <numSensor ruleid="powMonPwrFact" index=".1.3.6.1.4.1.21239.1.3.1.2">
+      <type>powerfactor</type>
+      <sensorId>POWER_MONITOR_POWER_FACTOR<rowIndex/></sensorId>
+      <value>
+      <getRowOid>.1.3.6.1.4.1.21239.1.3.1.13</getRowOid>
+      </value>
+      <label>Power Monitor Power Factor <rowIndex/></label>
+      <sensorSet>Power Monitor<rowIndex/></sensorSet>
+    </numSensor>
+    
+<!-- outlet Begin -->   
+ 	<!-- outletAvail -->
+    <stateSensor ruleid="outletAvail" index=".1.3.6.1.4.1.21239.1.12.1.2">
+      <type>state</type>
+      <sensorId>OUTLET_AVAIL_<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					 <getRowOid>.1.3.6.1.4.1.21239.1.12.1.4</getRowOid>
+				</mapValue>  
+      </value>
+      <label>Outlet Availability <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Outlet<rowIndex/></sensorSet>
+    </stateSensor>
+    
+  <!-- climate -->
+     <!-- climateAvail-->
+    <stateSensor ruleid="climateAvail" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>state</type>
+      <sensorId>CLIMATE_AVAIL<rowIndex/></sensorId>
+      <value>
+      		<mapValue mapid="Avail-vm">
+					  <getRowOid>.1.3.6.1.4.1.21239.1.2.1.4</getRowOid>
+				</mapValue>  
+      </value>
+      <label>Climate Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Climate Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+  
+    
+  <!-- climateTempC-->
+   <numSensor ruleid="climateTempC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>temp</type>
+      <sensorId>CLIMATE_TEMP</sensorId>
+      <value>
+       <getRowOid>.1.3.6.1.4.1.21239.1.2.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Climate Temperature <rowIndex/></label>
+      <sensorSet>Climate Sensor<rowIndex/></sensorSet>
+   </numSensor>
+   
+    <!-- climateHumidity-->
+    <numSensor ruleid="climateHumidity" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>humidity</type>
+      <sensorId>CLIMATE_HUMIDITY<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.21239.1.2.1.6</getRowOid>
+      </value>
+      <label>Climate Humidity <rowIndex/></label>
+      <sensorSet>Climate Sensor<rowIndex/></sensorSet>
+    </numSensor>
+
+   <!-- climateAirflow-->
+   <numSensor ruleid="climateAirflow" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>airflow</type>
+      <sensorId>CLIMATE_AIRFLOW</sensorId>
+      <value>
+       <getRowOid>.1.3.6.1.4.1.21239.1.2.1.7</getRowOid>
+      </value>
+      <label>Climate Airflow <rowIndex/></label>
+      <sensorSet>Climate Sensor<rowIndex/></sensorSet>
+   </numSensor>
+
+   <!-- climateSound-->
+   <numSensor ruleid="climateSound" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>audio</type>
+      <sensorId>CLIMATE_SOUND</sensorId>
+      <value>
+       <getRowOid>.1.3.6.1.4.1.21239.1.2.1.9</getRowOid>
+      </value>
+      <label>Climate Sound <rowIndex/></label>
+      <sensorSet>Climate Sensor<rowIndex/></sensorSet>
+   </numSensor>
+   
+   <!-- climateIO1 -->
+		<numSensor ruleid="climateIO1" index=".1.3.6.1.4.1.21239.1.2.1.2">
+			<type>pctofcapacity</type>
+			<sensorId>CLIMATE_I_O_1_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.21239.1.2.1.10</getRowOid>
+			</value>
+			<label>Climate Analog Input 1 - <rowIndex/></label>
+			<sensorSet>Climate Sensor<rowIndex/></sensorSet>
+		</numSensor>
+		
+		<!-- climateIO2 -->
+		<numSensor ruleid="climateIO2" index=".1.3.6.1.4.1.21239.1.2.1.2">
+			<type>pctofcapacity</type>
+			<sensorId>CLIMATE_I_O_2_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.21239.1.2.1.11</getRowOid>
+			</value>
+			<label>Climate Analog Input 2 - <rowIndex/></label>
+			<sensorSet>Climate Sensor<rowIndex/></sensorSet>
+		</numSensor>
+		
+		<!-- climateIO3 -->
+		<numSensor ruleid="climateIO3" index=".1.3.6.1.4.1.21239.1.2.1.2">
+			<type>pctofcapacity</type>
+			<sensorId>CLIMATE_I_O_3_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.21239.1.2.1.12</getRowOid>
+			</value>
+			<label>Climate Analog Input 3 - <rowIndex/></label>
+			<sensorSet>Climate Sensor<rowIndex/></sensorSet>
+		</numSensor>
+
+     <!-- ClimateVolts -->
+    <numSensor ruleid="ClimateVolts" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>voltage</type>
+      <sensorId>CLIMATE_VOLTS<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.13</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Climate Volts <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+      <!-- ClimateVoltsPeak -->
+    <numSensor ruleid="ClimateVoltsPeak" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>voltage</type>
+      <sensorId>CLIMATE_VOLTS_PEAK<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.14</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Peak Voltage <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+      <!-- ClimateAmpsPhaseA -->
+    <numSensor ruleid="ClimateAmpsPhaseA" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.15</getRowOid>
+          </op>
+          <op>10</op>
+       </div>
+       </value>	
+      <label>Climate Amps Phase A <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimateAmpsPeakPhaseA -->
+    <numSensor ruleid="ClimateAmpsPeakPhaseA" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PEAK_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.16</getRowOid>
+          </op>
+          <op>10</op>
+       </div>
+       </value>	
+      <label>Climate Amps Peak Phase A <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+  
+    <!-- ClimateRealPowerPhaseA -->
+    <numSensor ruleid="ClimateRealPowerPhaseA" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerW</type>
+     <sensorId>CLIMATE_REAL_POWER_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.17</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Real Power Phase A <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- climateApparentPowerA -->
+    <numSensor ruleid="climateApparentPowerA" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerVA</type>
+      <sensorId>CLIMATE_APPARENT_POWERA<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.2.1.18</getRowOid>
+      </value>
+      <label>Climate Apparent Power A <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimatePowerFactorPhaseA -->
+    <numSensor ruleid="ClimatePowerFactorPhaseA" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>num/powerfactor</type>
+     <sensorId>CLIMATE_POWER_FACTOR_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.19</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Power Factor Phase A <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+       <!-- ClimateAmpsPhaseB -->
+    <numSensor ruleid="ClimateAmpsPhaseB" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.20</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Amps Phase B <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimateAmpsPeakPhaseB -->
+    <numSensor ruleid="ClimateAmpsPeakPhaseB" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PEAK_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.21</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Amps Peak Phase B <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+  
+    <!-- ClimateRealPowerPhaseB -->
+    <numSensor ruleid="ClimateRealPowerPhaseB" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+     <sensorId>CLIMATE_REAL_POWER_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.22</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Real Power Phase B <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- climateApparentPowerB -->
+    <numSensor ruleid="climateApparentPowerPhaseB" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerVA</type>
+      <sensorId>CLIMATE_APPARENT_POWER_PHASEB<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.2.1.23</getRowOid>
+      </value>
+      <label>Climate Apparent Power Phase B <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimatePowerFactorPhaseB -->
+    <numSensor ruleid="ClimatePowerFactorPhaseB" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerfactor</type>
+     <sensorId>CLIMATE_POWER_FACTOR_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.24</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Power Factor Phase B <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+       <!-- ClimateAmpsPhaseC -->
+    <numSensor ruleid="ClimateAmpsPhaseC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.25</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Amps Phase C <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimateAmpsPeakPhaseC -->
+    <numSensor ruleid="ClimateAmpsPeakPhaseC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+      <sensorId>CLIMATE_AMPS_PEAK_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.26</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Amps Peak Phase C <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+  
+    <!-- ClimateRealPowerPhaseC -->
+    <numSensor ruleid="ClimateRealPowerPhaseC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>amperage</type>
+     <sensorId>CLIMATE_REAL_POWER_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.27</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Real Power Phase C <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- climateApparentPowerC -->
+    <numSensor ruleid="climateApparentPowerPhaseC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerVA</type>
+      <sensorId>CLIMATE_APPARENT_POWER_PHASEC<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.2.1.28</getRowOid>
+      </value>
+      <label>Climate Apparent Power Phase C <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- ClimatePowerFactorPhaseC -->
+    <numSensor ruleid="ClimatePowerFactorPhaseC" index=".1.3.6.1.4.1.21239.1.2.1.2">
+      <type>powerfactor</type>
+     <sensorId>CLIMATE_POWER_FACTOR_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.2.1.29</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Climate Power Factor Phase C <rowIndex/></label>
+      <sensorSet>Climate Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- Power3Ch -->
+     <!-- Power3ChAvailable-->
+    <stateSensor ruleid="Power3ChAvailable" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>state</type>
+      <sensorId>POWER3CH_AVAILABLE<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					  <getRowOid>.1.3.6.1.4.1.21239.1.11.1.4</getRowOid>
+				</mapValue> 
+      </value>
+      <label>Power3ch Available <rowIndex/></label>
+       <enum>Avail-em</enum>
+      <sensorSet>Power3Ch Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+   
+    
+     <!-- Power3ChKWattHrsA -->
+     <numSensor ruleid="Power3ChKWattHrsA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerW</type>
+      <sensorId>POWE3CH_KWATT_HRSA<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.5</getRowOid>
+      </value>
+      <label>Power3Ch KWatt Hrs A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>  
+ 
+    <!-- Power3ChVoltsA -->
+    <numSensor ruleid="Power3ChVoltsA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTSA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.6</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+    <!-- Power3ChVoltsMaxA -->
+    <numSensor ruleid="Power3ChVoltsMaxA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MAXA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.7</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts Max A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+    
+    <!-- Power3ChVoltsMinA -->
+    <numSensor ruleid="Power3ChVoltsMinA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MINA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.8</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts Min A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+    <!-- Power3ChVoltsPeakA -->
+    <numSensor ruleid="Power3ChVoltsPeakA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_PEAKA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.9</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts Peak A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ChAmpsX10A -->
+    <numSensor ruleid="Power3ChAmpsX10A" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+      <sensorId>POWER3CH_AMPS_X10A<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.10</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch AmpsX10A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+   <!-- power3ChRealPowerPhaseA -->
+    <numSensor ruleid="Power3ChRealPowerPhaseA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+     <sensorId>POWER3CH_REAL_POWER_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.11</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Real Power Phase A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ApparentPowerA -->
+    <numSensor ruleid="Power3ApparentPowerA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerVA</type>
+      <sensorId>POWER3CH_APPARENT_POWERA<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.12</getRowOid>
+      </value>
+      <label>Power3Ch Apparent Power Phase A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3PowerFactorPhaseA -->
+    <numSensor ruleid="Power3PowerFactorPhaseA" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerfactor</type>
+     <sensorId>POWER3CH_POWER_FACTOR_PHASEA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.13</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Power Factor Phase A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    <!-- Power3ChKWattHrsB -->
+     <numSensor ruleid="Power3ChKWattHrsB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerW</type>
+      <sensorId>POWE3CH_KWATT_HRSB<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.14</getRowOid>
+      </value>
+      <label>Power3Ch KWatt HrsB A <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>  
+ 
+    <!-- Power3ChVoltsB -->
+    <numSensor ruleid="Power3ChVoltsB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTSB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.15</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- Power3ChVoltsMaxB -->
+    <numSensor ruleid="Power3ChVoltsMaxB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MAXB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.16</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts Max B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- Power3ChVoltsMinB -->
+    <numSensor ruleid="Power3ChVoltsMinB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MINB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.17</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts Min B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+    <!-- Power3ChVoltsPeakB -->
+    <numSensor ruleid="Power3ChVoltsPeakB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_PEAKB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.18</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch VoltsPeakB <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ChAmpsX10B -->
+    <numSensor ruleid="Power3ChAmpsX10B" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+      <sensorId>POWER3CH_AMPS_X10B<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.19</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch AmpsX10B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+   <!-- power3ChRealPowerPhaseB -->
+    <numSensor ruleid="Power3ChRealPowerPhaseB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+     <sensorId>POWER3CH_REAL_POWER_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.20</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Real Power Phase B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ApparentPowerB -->
+    <numSensor ruleid="Power3ApparentPowerB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerVA</type>
+      <sensorId>POWER3CH_APPARENT_POWERB<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.21</getRowOid>
+      </value>
+      <label>Power3Ch Apparent Power Phase B <rowIndex/></label>
+      <sensorSet>Sensor Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3PowerFactorPhaseB -->
+    <numSensor ruleid="Power3PowerFactorPhaseB" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerfactor</type>
+     <sensorId>POWER3CH_POWER_FACTOR_PHASEB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.22</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Power Factor Phase B <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+
+    <!-- Power3ChKWattHrsC -->
+     <numSensor ruleid="Power3ChKWattHrsC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>num/kwatthr</type>
+      <sensorId>POWE3CH_KWATT_HRSC<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.23</getRowOid>
+      </value>
+      <label>Power3Ch KWatt <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>  
+ 
+    <!-- Power3ChVoltsC -->
+    <numSensor ruleid="Power3ChVoltsC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTSC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.24</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch Volts C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+    <!-- Power3ChVoltsMaxC -->
+    <numSensor ruleid="Power3ChVoltsMaxC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MAXC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.25</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch VoltsMax C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+    <!-- Power3ChVoltsMinC -->
+    <numSensor ruleid="Power3ChVoltsMinC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_MINC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.26</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch VoltsMin C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+    <!-- Power3ChVoltsPeakC -->
+    <numSensor ruleid="Power3ChVoltsPeakC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>voltage</type>
+      <sensorId>POWER3CH_VOLTS_PEAKc<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.27</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch VoltsPeakC <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ChAmpsX10C -->
+    <numSensor ruleid="Power3ChAmpsX10C" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+      <sensorId>POWER3CH_AMPS_X10C<rowIndex/></sensorId>
+      <value> 
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.28</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+      </value>
+      <label>Power3Ch AmpsX10C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+   <!-- power3ChRealPowerPhaseC -->
+    <numSensor ruleid="Power3ChRealPowerPhaseC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>amperage</type>
+     <sensorId>POWER3CH_REAL_POWER_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.29</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Real Power Phase C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3ApparentPowerC -->
+    <numSensor ruleid="Power3ApparentPowerC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerVA</type>
+      <sensorId>POWER3CH_APPARENT_POWERC<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.11.1.30</getRowOid>
+      </value>
+      <label>Power3Ch Apparent Power Phase C <rowIndex/></label>
+      <sensorSet>Sensor Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- Power3PowerFactorPhaseC -->
+    <numSensor ruleid="Power3PowerFactorPhaseC" index=".1.3.6.1.4.1.21239.1.11.1.2">
+      <type>powerfactor</type>
+     <sensorId>POWER3CH_POWER_FACTOR_PHASEC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.11.1.31</getRowOid>
+          </op>
+          <op>1</op>
+       </div>
+       </value>	
+      <label>Power3Ch Power Factor Phase C <rowIndex/></label>
+      <sensorSet>Power3Ch Sensor <rowIndex/></sensorSet>
+    </numSensor>
+ 
+    <!-- ctrlGrpAmps -->
+     <!-- ctrlGrpAmpsAvailable-->
+    <stateSensor ruleid="ctrlGrpAmpsAvailable" index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>state</type>
+      <sensorId>CTRL_GRP_AVAILABLE<rowIndex/></sensorId>
+      <value>
+          <mapValue mapid="Avail-vm">
+					   <getRowOid>.1.3.6.1.4.1.21239.1.15.1.4</getRowOid>
+				</mapValue> 
+      </value>
+      <label>Control Group Amps Available <rowIndex/></label>
+        <enum>Avail-em</enum>
+      <sensorSet>Control Group Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+    
+    <!-- ctrlGrpAmpsA -->
+    <numSensor ruleid="CtrlGrpAmpsA " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSA<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.5</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group Amps A <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- ctrlGrpAmpsB -->
+    <numSensor ruleid="CtrlGrpAmpsB " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSB<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.6</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group amps B <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- ctrlGrpAmpsC -->
+    <numSensor ruleid="CtrlGrpAmpsC " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSC<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.7</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group amps C <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- ctrlGrpAmpsD -->
+    <numSensor ruleid="CtrlGrpAmpsD " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSD<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.8</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group amps D <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- ctrlGrpAmpsE -->
+    <numSensor ruleid="CtrlGrpAmpsE " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.9</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group amps E <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- ctrlGrpAmpsF -->
+    <numSensor ruleid="CtrlGrpAmpsF " index=".1.3.6.1.4.1.21239.1.15.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_GRP_AMPSF<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.21239.1.15.1.10</getRowOid>
+          </op>
+          <op>1</op>
+        </div>
+      </value>
+      <label>Control Group amps F <rowIndex/></label>
+      <sensorSet>Control Group Sensor <rowIndex/></sensorSet>
+    </numSensor>
+
+<!-- tempSensor start -->
+	<!-- tempSensorTempC -->
+    <numSensor ruleid="tempSensorTempC" index=".1.3.6.1.4.1.21239.1.4.1.2">
+      <type>temp</type>
+      <sensorId>TEMP_SENSOR_TEMPC_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.4.1.5</getRowOid>
+      </value>
+      <label>Temp Sensor TempC <rowIndex/></label>
+      <sensorSet>Temp Sensor<rowIndex/></sensorSet>
+    </numSensor>
+
+	<!-- tempSensorAvail -->
+    <stateSensor ruleid="tempSensorAvail" index=".1.3.6.1.4.1.21239.1.4.1.2">
+      <type>state</type>
+      <sensorId>TEMP_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					    <getRowOid>.1.3.6.1.4.1.21239.1.4.1.4</getRowOid>
+				</mapValue>    
+      </value>
+      <label>Temp Sensor Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Temp Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+
+
+
+<!-- airFlowsensor start -->
+
+	<!-- airFlowSensorAvail -->
+	<stateSensor ruleid="airFlowSensorAvail" index=".1.3.6.1.4.1.21239.1.5.1.2">
+      <type>state</type>
+      <sensorId>AIR_FLOW_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					    <getRowOid>.1.3.6.1.4.1.21239.1.5.1.4</getRowOid>
+				</mapValue>   
+      </value>
+      <label>Air Flow<space/><rowIndex/><space/>Available</label>
+      <enum>Avail-em</enum>
+      <sensorSet>Air Flow Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+	
+	<!-- airFlowSensorFlow -->
+    <numSensor ruleid="airFlowSensorFlow" index=".1.3.6.1.4.1.21239.1.5.1.2">
+      <type>airflow</type>
+      <sensorId>AIR_FLOW_SENSOR_FLOW_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.5.1.5</getRowOid>
+      </value>
+      <label>Air Flow<space/><rowIndex/><space/>AirFlow</label>
+      <sensorSet>Air Flow Sensor<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- airFlowSensorTempC -->
+    <numSensor ruleid="airFlowSensorTempC" index=".1.3.6.1.4.1.21239.1.5.1.2">
+      <type>temp</type>
+      <sensorId>AIR_FLOW_SENSOR_TEMPC_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.5.1.6</getRowOid>
+      </value>
+      <label>Air Flow<space/><rowIndex/><space/>Temperature</label>
+      <sensorSet>Air Flow Sensor<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- airFlowSensorHumidity -->
+    <numSensor ruleid="airFlowSensorHumidity" index=".1.3.6.1.4.1.21239.1.5.1.2">
+      <type>humidity</type>
+      <sensorId>AIR_FLOW_SENSOR_HUMIDITY_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.5.1.7</getRowOid>
+      </value>
+      <label>Air Flow<space/><rowIndex/><space/>Humidity</label>
+      <sensorSet>Air Flow Sensor<rowIndex/></sensorSet>
+    </numSensor>
+    
+
+<!-- doorSensor start -->
+	
+	<!-- doorSensorAvail -->
+	<stateSensor ruleid="doorSensorAvail" index=".1.3.6.1.4.1.21239.1.7.1.2">
+      <type>state</type>
+      <sensorId>DOOR_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					    <getRowOid>.1.3.6.1.4.1.21239.1.7.1.4</getRowOid>
+				</mapValue>   
+      </value>
+      <label>Door Sensor Available<rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Door Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+	<!-- doorSensorStatus -->
+  
+  
+<!-- waterSensor start -->
+
+	<!-- waterSensorAvail -->
+	<stateSensor ruleid="waterSensorAvail" index=".1.3.6.1.4.1.21239.1.8.1.2">
+      <type>state</type>
+      <sensorId>WATER_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					     <getRowOid>.1.3.6.1.4.1.21239.1.8.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>Water Sensor Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Water Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+
+	<!-- waterSensorDampness -->
+    <numSensor ruleid="waterSensorDampness" index=".1.3.6.1.4.1.21239.1.8.1.2">
+      <type>Dampness</type>
+      <sensorId>WATER_SENSOR_DAMPNESS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.8.1.5</getRowOid>
+      </value>
+      <label>Water Sensor Dampness <rowIndex/></label>
+      <sensorSet>Water Sensor<rowIndex/></sensorSet>
+    </numSensor>
+ 
+    
+<!-- vsfc Start -->
+
+	<!-- vsfcAvail -->
+	<stateSensor ruleid="vsfcAvail" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>state</type>
+      <sensorId>VSFC_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					     <getRowOid>.1.3.6.1.4.1.21239.1.13.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>VSFC Available <rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>fsfc<rowIndex/></sensorSet>
+    </stateSensor>
+
+	<!-- vsfcSetPointC -->
+		<numSensor ruleid="vsfcSetPointC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_SET_POINT_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.5</getRowOid>
+      </value>
+      <label>VSFC Set point Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!-- vsfcIntTempC -->
+		<numSensor ruleid="vsfcIntTempC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_INT_TEMP_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.6</getRowOid>
+      </value>
+      <label>VSFC Int Temp Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- vsfcExt1TempC -->
+		<numSensor ruleid="vsfcExt1TempC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_EXT1_TEMP_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.7</getRowOid>
+      </value>
+      <label>VSFC Ext1 Temp Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- vsfcExt2TempC -->
+		<numSensor ruleid="vsfcExt2TempC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_EXT2_TEMP_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.8</getRowOid>
+      </value>
+      <label>VSFC Ext2 Temp Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- vsfcExt3TempC -->
+		<numSensor ruleid="vsfcExt3TempC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_EXT3_TEMP_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.9</getRowOid>
+      </value>
+      <label>VSFC Ext3 Temp Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- vsfcExt4TempC -->
+		<numSensor ruleid="vsfcExt4TempC" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>temp</type>
+      <sensorId>VSFC_EXT4_TEMP_C_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.10</getRowOid>
+      </value>
+      <label>VSFC Ext4 Temp Celsius <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- vsfcFanSpeed -->
+		<numSensor ruleid="vsfcFanSpeed" index=".1.3.6.1.4.1.21239.1.13.1.2">
+      <type>fanspeed</type>
+      <sensorId>VSFC_FAN_SPEED_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.13.1.11</getRowOid>
+      </value>
+      <label>VSFC Fan Speed <rowIndex/></label>
+      <sensorSet>vsfc<rowIndex/></sensorSet>
+    </numSensor> 
+    
+    
+<!-- digital Sensor Start -->
+ 	
+ 	<!-- digitalSensorAvail -->
+ 	<stateSensor ruleid="digitalSensorAvail" index=".1.3.6.1.4.1.21239.1.18.1.2">
+      <type>state</type>
+      <sensorId>DIGITAL_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					      <getRowOid>.1.3.6.1.4.1.21239.1.18.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>Digital Sensor Available<rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>digitalSensor<rowIndex/></sensorSet>
+    </stateSensor>
+ 
+ 	<!-- digitalSensorDigital -->
+ 		
+ 	<!-- ctrlOutletAmps-->
+		<numSensor ruleid="ctrlOutletAmps" index=".1.3.6.1.4.1.21239.1.16.1.2">
+      <type>amperage</type>
+      <sensorId>CTRL_OUTLET_AMPS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.16.1.6</getRowOid>
+      </value>
+      <label>CTRL Outlet Amps <rowIndex/></label>
+      <sensorSet>ctrl Outlet<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- ctrlOutletUpDelay-->
+		<numSensor ruleid="ctrlOutletUpDelay" index=".1.3.6.1.4.1.21239.1.16.1.2">
+      <type>timeinsec</type>
+      <sensorId>CTRL_OUTLET_UP_DELAY_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.16.1.8</getRowOid>
+      </value>
+      <label>CTRL Outlet Up Delay <rowIndex/></label>
+      <sensorSet>ctrl Outlet<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- ctrlOutletDownDelay-->
+		<numSensor ruleid="ctrlOutletDownDelay" index=".1.3.6.1.4.1.21239.1.16.1.2">
+      <type>timeinsec</type>
+      <sensorId>CTRL_OUTLET_Down_DELAY_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.16.1.9</getRowOid>
+      </value>
+      <label>CTRL Outlet Down Delay <rowIndex/></label>
+      <sensorSet>ctrl Outlet<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- ctrlOutletRbtDelay-->
+		<numSensor ruleid="ctrlOutletRbtDelay" index=".1.3.6.1.4.1.21239.1.16.1.2">
+      <type>timeinsec</type>
+      <sensorId>CTRL_OUTLET_RBT_DELAY_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.16.1.10</getRowOid>
+      </value>
+      <label>CTRL Outlet RBT Delay <rowIndex/></label>
+      <sensorSet>ctrl Outlet<rowIndex/></sensorSet>
+    </numSensor> 
+    
+    
+ <!-- Depoint Sensor Start -->
+ 		
+ 	 <!-- dewPointSensorAvail -->
+ 	  <!-- dewPointSensorAvail -->
+ 	 	<stateSensor ruleid="dewPointSensorAvail" index=".1.3.6.1.4.1.21239.1.17.1.2">
+      <type>state</type>
+      <sensorId>DEW_POINT_SENSOR_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					       <getRowOid>.1.3.6.1.4.1.21239.1.17.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>Dew Point Sensor Available<rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>Dew Point Sensor<rowIndex/></sensorSet>
+    </stateSensor>
+ 		
+ 	 <!-- dewPointSensorDewPoint -->
+ 		<numSensor ruleid="dewPointSensorDewPoint" index=".1.3.6.1.4.1.21239.1.17.1.2">
+      <type>temp</type>
+      <sensorId>DEW_POINT_SENSOR_DEW_POINT_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.17.1.5</getRowOid>
+      </value>
+      <label>DewPoint Sensor Dew Point <rowIndex/></label>
+      <sensorSet>Dew Point Sensor<rowIndex/></sensorSet>
+    </numSensor> 
+    
+   <!-- dewPointSensorTempC -->
+ 		<numSensor ruleid="dewPointSensorTempC" index=".1.3.6.1.4.1.21239.1.17.1.2">
+      <type>temp</type>
+      <sensorId>DEW_POINT_SENSOR_TEMPC_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.17.1.6</getRowOid>
+      </value>
+      <label>DewPoint Sensor Temp Celsius <rowIndex/></label>
+      <sensorSet>Dew Point Sensor<rowIndex/></sensorSet>
+    </numSensor> 
+    
+    <!-- dewPointSensorHumidity -->
+ 		<numSensor ruleid="dewPointSensorHumidity" index=".1.3.6.1.4.1.21239.1.17.1.2">
+      <type>humidity</type>
+      <sensorId>DEW_POINT_SENSOR_HUMIDITY_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.17.1.7</getRowOid>
+      </value>
+      <label>DewPoint Sensor Humidity <rowIndex/></label>
+      <sensorSet>Dew Point Sensor<rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+<!-- DSTS entry -->
+   	
+   <!-- DSTSAvail -->
+   <stateSensor ruleid="dstsAvail" index=".1.3.6.1.4.1.21239.1.19.1.1">
+      <type>state</type>
+      <sensorId>DSTS_AVAIL<rowIndex/></sensorId>
+      <value>
+      	<mapValue mapid="Avail-vm">
+					        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.4</getRowOid>
+				</mapValue>
+      </value>
+      <label>DSTS Available<rowIndex/></label>
+      <enum>Avail-em</enum>
+      <sensorSet>dsts<rowIndex/></sensorSet>
+    </stateSensor>
+   
+   <!--dstsVoltsA-->
+   	<numSensor ruleid="dstsVoltsA" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>volts</type>
+      <sensorId>DSTS_VOLTSA_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.5</getRowOid>
+      </value>
+      <label>DSTS Volts A <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!--dstsAmpsA-->
+   	<numSensor ruleid="dstsAmpsA" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>amperage</type>
+      <sensorId>DSTS_AMPSA_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.6</getRowOid>
+      </value>
+      <label>DSTS Amps A <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!--dstsVoltsB-->
+   	<numSensor ruleid="dstsVoltsb" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>volts</type>
+      <sensorId>DSTS_VOLTSB_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.7</getRowOid>
+      </value>
+      <label>DSTS Volts B <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!--dstsAmpsB-->
+   	<numSensor ruleid="dstsAmpsB" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>amperage</type>
+      <sensorId>DSTS_AMPSB_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.8</getRowOid>
+      </value>
+      <label>DSTS Amps B <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!--dstsSourceATempC-->
+   	<numSensor ruleid="dstsSourceATempC" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>temp</type>
+      <sensorId>DSTS_SOURCEA_TEMPC_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.13</getRowOid>
+      </value>
+      <label>DSTS Source A TempC <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+   <!--dstsSourceBTempC-->
+   	<numSensor ruleid="dstsSourceBTempC" index=".1.3.6.1.4.1.21239.1.19.1.2">
+      <type>temp</type>
+      <sensorId>DSTS_SOURCEB_TEMPC_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21239.1.19.1.14</getRowOid>
+      </value>
+      <label>DSTS Source B TempC <rowIndex/></label>
+      <sensorSet>Dsts<rowIndex/></sensorSet>
+    </numSensor>
+    
+    <valueMap ruleid="Avail-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+    
+    <enumMap ruleid="Avail-em">
+      <label>Unknown</label>
+      <label>True</label>
+      <label>False</label>
+    </enumMap>
+    
+    </device>  
+    
+    
+    <!-- ddf for geistmfg em40/gm22 mib-->
+    <device>
+     	<oidMustExist ruleid="em40gm22detect" oid=".1.3.6.1.4.1.21239.6.1.1.0"/>
+     
+     	<!-- Set Product Version -->
+    	<setProductData ruleid="bootversion" field="bootversion">
+      <getOid>.1.3.6.1.4.1.21239.6.1.2.0</getOid>
+    	</setProductData>
+    	
+    	<!-- App Version -->
+			<setProductData ruleid="appversiondata" field="appversion">
+				<getOid>.1.3.6.1.4.1.21239.6.1.2.0</getOid>
+			</setProductData>
+
+    	
+    	
+    </device>
+  
+  
+  <device>
+    		<oidMustExist ruleid="geistem40gm22" oid=".1.3.6.1.4.1.21239.6.2.1.0"/>
+    
+		<numSensor ruleid="totalDeciAmpsPhaseA">
+			<type>amperage</type>
+			<sensorId>TOTAL_DECI_AMPS_PHASE_A</sensorId>
+			<value>
+				<mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21239.6.2.1.0</getOid>
+          </op>
+          <op>.1</op>
+         </mult> 
+			</value>
+			<label>Total Amps Phase A</label>
+			<sensorSet>totalDeciAmps</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="totalDeciAmpsPhaseB">
+			<type>amperage</type>
+			<sensorId>TOTAL_DECI_AMPS_PHASE_B</sensorId>
+			<value>
+				<mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21239.6.2.2.0</getOid>
+          </op>
+          <op>.1</op>
+          </mult>  
+			</value>
+			<label>Total Amps Phase B</label>
+			<sensorSet>totalDeciAmps</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="totalDeciAmpsPhaseC">
+			<type>amperage</type>
+			<sensorId>TOTAL_DECI_AMPS_PHASE_C</sensorId>
+			<value>
+				<mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21239.6.2.3.0</getOid>
+          </op>
+          <op>.1</op>
+          </mult>  
+			</value>
+			<label>Total Amps Phase C</label>
+			<sensorSet>totalDeciAmps</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="totalDeciAmpsNeutral">
+			<type>amperage</type>
+			<sensorId>TOTAL_DECI_AMPS_NEUTRAL</sensorId>
+			<value>
+				<mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21239.6.2.4.0</getOid>
+          </op>
+          <op>.1</op>
+          </mult>  
+			</value>
+			<label>Total Amps Neutral</label>
+			<sensorSet>totalDeciAmps</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet1C1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_C_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.3.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	        </mult>  
+				</value>
+			<label>Outlet 1 Phase C Amps</label>
+			<sensorSet>phaseC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet2C2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_2_C_2_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.3.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 2 Phase C Amps</label>
+			<sensorSet>phaseC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet3BC1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_3_B_C_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.4.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 3 Phase BC Amps</label>
+			<sensorSet>phaseBC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet4BC2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_4_B_C_2_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.4.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 4 Phase BC Amps</label>
+			<sensorSet>phaseBC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet5BC3DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_5_B_C_3_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.4.6.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 5 Phase BC Amps</label>
+			<sensorSet>phaseBC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet6BC6DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_6_B_C_4_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.4.8.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 6 Phase BC Amps</label>
+			<sensorSet>phaseBC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet7B1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_7_B_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.5.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 7 Phase B Amps</label>
+			<sensorSet>phaseB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet8B2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_8_B_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	           <getOid>.1.3.6.1.4.1.21239.6.5.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 8 Phase B Amps</label>
+			<sensorSet>phaseB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet9AB1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_9_A_B_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	          <getOid>.1.3.6.1.4.1.21239.6.6.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 9 Phase AB Amps</label>
+			<sensorSet>phaseAB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet10AB2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_10_A_B_2_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	          <getOid>.1.3.6.1.4.1.21239.6.6.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 10 Phase AB Amps</label>
+			<sensorSet>phaseAB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet11AB3DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_11_A_B_3_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	          <getOid>.1.3.6.1.4.1.21239.6.6.6.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 11 Phase AB Amps</label>
+			<sensorSet>phaseAB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet12AB4DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_12_A_B_4_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	          <getOid>.1.3.6.1.4.1.21239.6.6.8.0</getOid>
+	          </op>
+	          <op>.1</op>
+	        </mult>   
+				</value>
+			<label>Outlet 12 Phase AB Amps</label>
+			<sensorSet>phaseAB</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet13A1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_3_A_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	         <getOid>.1.3.6.1.4.1.21239.6.7.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	        </mult>    
+				</value>
+			<label>Outlet 13 Phase A Amps</label>
+			<sensorSet>phaseA</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet14A2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_4_A_2_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	         <getOid>.1.3.6.1.4.1.21239.6.7.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	        </mult>    
+				</value>
+			<label>Outlet 14 Phase A Amps</label>
+			<sensorSet>phaseA</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet15AC1DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_5_A_C_1_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	        <getOid>.1.3.6.1.4.1.21239.6.8.2.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 15 Phase AC Amps</label>
+			<sensorSet>phaseAC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet16AC2DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_6_A_C_2_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	        <getOid>.1.3.6.1.4.1.21239.6.8.4.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 16 Phase AC Amps</label>
+			<sensorSet>phaseAC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet17AC3DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_7_A_C_3_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	        <getOid>.1.3.6.1.4.1.21239.6.8.6.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 17 Phase AC Amps</label>
+			<sensorSet>phaseAC</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="outlet18AC4DeciAmps">
+			<type>amperage</type>
+			<sensorId>OUTLET_1_8_A_C_4_DECI_AMPS</sensorId>
+				<value>
+					<mult>
+	          <op>
+	        <getOid>.1.3.6.1.4.1.21239.6.8.8.0</getOid>
+	          </op>
+	          <op>.1</op>
+	         </mult>   
+				</value>
+			<label>Outlet 18 Phase AC Amps</label>
+			<sensorSet>phaseAC</sensorSet>
+		</numSensor>
+		
+
+
+  </device>
+  
+
+	<!--Geist Em8/Gm6 Sensors-->
+	<device deviceid="geist_em8gm6">
+	<oidMustExist ruleid="geist_em8gm6_exist" oid=".1.3.6.1.4.1.21239.3.1.1.0"/>
+
+		<!-- Model -->
+		<suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.21239.3.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>   
+
+		<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.21239.3.1.2.0</getOid>
+		</setProductData>
+
+		<!-- mainChannelDeciAmps -->
+		<numSensor ruleid="mainChannelDeciAmps" index=".1.3.6.1.4.1.21239.3.2.1.1">
+			<type>amperage</type>
+			<sensorId>MAIN_CHANNEL_CURRENT_<getRowOid>.1.3.6.1.4.1.21239.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<!-- Convert .1 of units to units.-->
+				<mult><op><getRowOid>.1.3.6.1.4.1.21239.3.2.1.4</getRowOid></op><op>.1</op></mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.21239.3.2.1.2</getRowOid><space/>Amps</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.21239.3.2.1.5</getRowOid></sensorSet>
+		</numSensor>
+
+		<!-- auxChannelDeciAmps -->
+		<numSensor ruleid="auxChannelDeciAmps" index=".1.3.6.1.4.1.21239.3.3.1.1">
+			<type>amperage</type>
+			<sensorId>AUX_CHANNEL_CURRENT_<getRowOid>.1.3.6.1.4.1.21239.3.3.1.1</getRowOid></sensorId>
+			<value>
+				<!-- Convert .1 of units to units.-->
+				<mult><op><getRowOid>.1.3.6.1.4.1.21239.3.3.1.4</getRowOid></op><op>.1</op></mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.21239.3.3.1.2</getRowOid><space/>Amps</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.21239.3.3.1.5</getRowOid></sensorSet>
+		</numSensor>
+
+	</device>
+  
+  
+</APC_DDF>

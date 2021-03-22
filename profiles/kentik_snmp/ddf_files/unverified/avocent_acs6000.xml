@@ -1,0 +1,1080 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="avocent_acs6000"
+	ddfname="Avocent ACS6000"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="avocent_acs6000_discovery">
+		<oidMustExist ruleid="avocent_acs6000" oid=".1.3.6.1.4.1.10418.16" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Avocent</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.10418.16.2.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<setProductData ruleid="acsSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.10418.16.2.1.4.0</getOid>
+		</setProductData>
+		<setProductData ruleid="acsBootcodeVersion" field="bootversion">
+			<getOid>.1.3.6.1.4.1.10418.16.2.1.6.0</getOid>
+		</setProductData>
+		<setProductData ruleid="acsFirmwareVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.10418.16.2.1.7.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="psuState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>9999</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="psuState-em">
+			<label>Unknown</label>
+			<label>Power On</label>
+			<label>Power Off</label>
+			<label>Not Installed</label>
+		</enumMap>
+		<numSensor ruleid="acsPowerSupplyNumber">
+            <type>num</type>
+            <sensorId>NUM_PSUS</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10418.16.2.1.8.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Power Supplies</label>
+            <sensorSet>Device Status</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="acsPowerSupplyStatePw1">
+            <type>state</type>
+            <sensorId>PSU1_STATE</sensorId>
+            <value>
+				<mapValue mapid="psuState-vm">
+				<getOid>.1.3.6.1.4.1.10418.16.2.1.8.2.0</getOid>
+				</mapValue>
+            </value>
+			<enum>psuState-em</enum>
+            <label>Power Supply 1 State</label>
+            <sensorSet>Device Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="acsPowerSupplyStatePw2">
+            <type>state</type>
+            <sensorId>PSU2_STATE</sensorId>
+            <value>
+				<mapValue mapid="psuState-vm">
+				<getOid>.1.3.6.1.4.1.10418.16.2.1.8.3.0</getOid>
+				</mapValue>
+            </value>
+			<enum>psuState-em</enum>
+            <label>Power Supply 2 State</label>
+            <sensorSet>Device Status</sensorSet>
+        </stateSensor>
+
+	</device>
+
+	<device deviceid="avocent_acs6000_pdus">
+		<oidMustExist ruleid="avocent_acs6000_pdus" oid=".1.3.6.1.4.1.10418.16.2.5.3" istree="yes"/>
+
+		<valueMap ruleid="numPhases-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>3</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="numPhases-em">
+			<label>Single Phase</label>
+			<label>Three Phase</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<numSensor ruleid="acsPwrMgmtPDUTableNumberOfOutlets" index=".1.3.6.1.4.1.10418.16.2.5.3.1.8">
+            <type>num</type>
+            <sensorId>PDU_TABLE_NUM_OUTLETS_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.8</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Number of Outlets
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<stateSensor ruleid="acsPwrMgmtPDUTableNumberOfPhases" index=".1.3.6.1.4.1.10418.16.2.5.3.1.37">
+            <type>state</type>
+            <sensorId>PDU_TABLE_NUM_PHASES_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="numPhases-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.37</getRowOid>
+				</mapValue>
+            </value>
+			<enum>numPhases-em</enum>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Number of Phases
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </stateSensor>
+		<numSensor ruleid="acsPwrMgmtPDUTableCurrentValue" index=".1.3.6.1.4.1.10418.16.2.5.3.1.39">
+            <type>amperage</type>
+            <sensorId>PDUS_TABLE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.39</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Total Current
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPDUTableVoltageValue" index=".1.3.6.1.4.1.10418.16.2.5.3.1.45">
+            <type>voltage</type>
+            <sensorId>PDUS_TABLE_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.45</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Total Voltage
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPDUTablePowerValue" index=".1.3.6.1.4.1.10418.16.2.5.3.1.51">
+            <type>powerW</type>
+            <sensorId>PDUS_TABLE_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.51</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Total Power
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPDUTablePowerFactorValue" index=".1.3.6.1.4.1.10418.16.2.5.3.1.57">
+            <type>num/powerfactor</type>
+            <sensorId>PDUS_TABLE_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.57</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid><space/>
+				Total Power Factor
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid></sensorSet>
+        </numSensor>
+
+		<alarmFlags2 ruleid="acsPowerMgmtPDUTableAlarm" index=".1.3.6.1.4.1.10418.16.2.5.3.1.62">
+			<value><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.62</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Blown Fuse</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Blown Fuse Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A Blown Fuse condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Blown Fuse condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - HW-OCP</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - HW-OCP Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A HW-OCP condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - HW-OCP condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Critical</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A High Critical condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Warning</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A High Warning condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - High Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Warning</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A Low Warning condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Critical</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - A Low Critical condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.3.1.3</getRowOid> - Low Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+	</device>
+
+
+	<device deviceid="avocent_acs6000_phases">
+		<oidMustExist ruleid="avocent_acs6000_phases" oid=".1.3.6.1.4.1.10418.16.2.5.8" istree="yes"/> 
+
+		<numSensor ruleid="acsPwrMgmtPhasesTableCurrentValue" index=".1.3.6.1.4.1.10418.16.2.5.8.1.7">
+            <type>amperage</type>
+            <sensorId>PHASES_TABLE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.7</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Current
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtPhasesTableCurrentMax" index=".1.3.6.1.4.1.10418.16.2.5.8.1.8">
+            <type>amperage</type>
+            <sensorId>PHASES_TABLE_CURRENT_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.8</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Current Max
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTableCurrentMin" index=".1.3.6.1.4.1.10418.16.2.5.8.1.9">
+            <type>amperage</type>
+            <sensorId>PHASES_TABLE_CURRENT_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.9</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Current Min
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTableCurrentAvg" index=".1.3.6.1.4.1.10418.16.2.5.8.1.10">
+            <type>amperage</type>
+            <sensorId>PHASES_TABLE_CURRENT_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.10</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Current Average
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtPhasesTableVoltageValue" index=".1.3.6.1.4.1.10418.16.2.5.8.1.13">
+            <type>voltage</type>
+            <sensorId>PHASES_TABLE_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.13</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Voltage
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtPhasesTableVoltageMax" index=".1.3.6.1.4.1.10418.16.2.5.8.1.14">
+            <type>voltage</type>
+            <sensorId>PHASES_TABLE_VOLTAGE_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.14</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Voltage Max
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTableVoltageMin" index=".1.3.6.1.4.1.10418.16.2.5.8.1.15">
+            <type>voltage</type>
+            <sensorId>PHASES_TABLE_VOLTAGE_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.15</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Voltage Min
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTableVoltageAvg" index=".1.3.6.1.4.1.10418.16.2.5.8.1.16">
+            <type>voltage</type>
+            <sensorId>PHASES_TABLE_VOLTAGE_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.16</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Voltage Average
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerValue" index=".1.3.6.1.4.1.10418.16.2.5.8.1.25">
+            <type>powerW</type>
+            <sensorId>PHASES_TABLE_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.25</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerMax" index=".1.3.6.1.4.1.10418.16.2.5.8.1.26">
+            <type>powerW</type>
+            <sensorId>PHASES_TABLE_POWER_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.26</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Max
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerMin" index=".1.3.6.1.4.1.10418.16.2.5.8.1.27">
+            <type>powerW</type>
+            <sensorId>PHASES_TABLE_POWER_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.27</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Min
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerAvg" index=".1.3.6.1.4.1.10418.16.2.5.8.1.28">
+            <type>powerW</type>
+            <sensorId>PHASES_TABLE_POWER_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.28</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Average
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerFactorValue" index=".1.3.6.1.4.1.10418.16.2.5.8.1.19">
+            <type>num/powerfactor</type>
+            <sensorId>PHASES_TABLE_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.19</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Factor
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerFactorMax" index=".1.3.6.1.4.1.10418.16.2.5.8.1.20">
+            <type>num/powerfactor</type>
+            <sensorId>PHASES_TABLE_PF_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.20</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Factor Max
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerFactorMin" index=".1.3.6.1.4.1.10418.16.2.5.8.1.21">
+            <type>num/powerfactor</type>
+            <sensorId>PHASES_TABLE_PF_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.21</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Factor Min
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtPhasesTablePowerFactorAvg" index=".1.3.6.1.4.1.10418.16.2.5.8.1.22">
+            <type>num/powerfactor</type>
+            <sensorId>PHASES_TABLE_PF_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.22</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid><space/>
+				Phase <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.4</getRowOid><space/>
+				Power Factor Average
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.8.1.5</getRowOid></sensorSet>
+        </numSensor>
+		-->
+	</device>
+
+	<device deviceid="avocent_acs6000_outlets">
+		<oidMustExist ruleid="avocent_acs6000_elecmon" oid=".1.3.6.1.4.1.10418.16.2.5.11" istree="yes"/>
+
+		<valueMap ruleid="status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="status-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="acsPowerMgmtOutletsTableStatus" index=".1.3.6.1.4.1.10418.16.2.5.5.1.5">
+            <type>state</type>
+            <sensorId>OUTLETS_TABLE_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status-vm">
+                <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.5</getRowOid>
+				</mapValue>
+            </value>
+			<enum>status-em</enum>
+            <label><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid> Status</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableCurrentValue" index=".1.3.6.1.4.1.10418.16.2.5.11.1.4">
+            <type>amperage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.4</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Current
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableCurrentMax" index=".1.3.6.1.4.1.10418.16.2.5.11.1.5">
+            <type>amperage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_CURRENT_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.5</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Current Max
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableCurrentMin" index=".1.3.6.1.4.1.10418.16.2.5.11.1.6">
+            <type>amperage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_CURRENT_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.6</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Current Min
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableCurrentAvg" index=".1.3.6.1.4.1.10418.16.2.5.11.1.7">
+            <type>amperage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_CURRENT_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.7</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Current Average
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableVoltageValue" index=".1.3.6.1.4.1.10418.16.2.5.11.1.14">
+            <type>voltage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.14</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Voltage
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableVoltageMax" index=".1.3.6.1.4.1.10418.16.2.5.11.1.15">
+            <type>voltage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_VOLTAGE_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.15</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Voltage Max
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableVoltageMin" index=".1.3.6.1.4.1.10418.16.2.5.11.1.16">
+            <type>voltage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_VOLTAGE_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.16</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Voltage Min
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTableVoltageAvg" index=".1.3.6.1.4.1.10418.16.2.5.11.1.17">
+            <type>voltage</type>
+            <sensorId>OUTLET_ELECMON_TABLE_VOLTAGE_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.17</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Voltage Average
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerValue" index=".1.3.6.1.4.1.10418.16.2.5.11.1.9">
+            <type>powerW</type>
+            <sensorId>OUTLET_ELECMON_TABLE_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.9</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerMax" index=".1.3.6.1.4.1.10418.16.2.5.11.1.10">
+            <type>powerW</type>
+            <sensorId>OUTLET_ELECMON_TABLE_POWER_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.10</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Max
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerMin" index=".1.3.6.1.4.1.10418.16.2.5.11.1.11">
+            <type>powerW</type>
+            <sensorId>OUTLET_ELECMON_TABLE_POWER_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.11</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Min
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerAvg" index=".1.3.6.1.4.1.10418.16.2.5.11.1.12">
+            <type>powerW</type>
+            <sensorId>OUTLET_ELECMON_TABLE_POWER_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.12</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Average
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		-->
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerFactorValue" index=".1.3.6.1.4.1.10418.16.2.5.11.1.19">
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_ELECMON_TABLE_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.19</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Factor
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<!--
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerFactorMax" index=".1.3.6.1.4.1.10418.16.2.5.11.1.20">
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_ELECMON_TABLE_PF_MAX_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.20</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Factor Max
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerFactorMin" index=".1.3.6.1.4.1.10418.16.2.5.11.1.21">
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_ELECMON_TABLE_PF_MIN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.21</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Factor Min
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="acsPwrMgmtOutElecMonTablePowerFactorAvg" index=".1.3.6.1.4.1.10418.16.2.5.11.1.22">
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_ELECMON_TABLE_PF_AVG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.22</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid><space/>
+				Power Factor Average
+			</label>
+            <sensorSet>Outlet: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.4</getRowOid></sensorSet>
+        </numSensor>
+		-->
+
+		<alarmFlags2 ruleid="acsPowerMgmtOutElecMonTableAlarm" index=".1.3.6.1.4.1.10418.16.2.5.11.1.24">
+			<value><getRowOid>.1.3.6.1.4.1.10418.16.2.5.11.1.24</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Blown Fuse</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Blown Fuse Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A Blown Fuse condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Blown Fuse condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - HW-OCP</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - HW-OCP Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A HW-OCP condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - HW-OCP condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Critical</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A High Critical condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Warning</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A High Warning condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - High Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Warning</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A Low Warning condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Critical</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - A Low Critical condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.10418.16.2.5.5.1.8</getRowOid> - Low Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+
+	<device deviceid="avocent_acs6000_envmon">
+		<oidMustExist ruleid="avocent_acs6000_envmon" oid=".1.3.6.1.4.1.10418.16.2.5.10" istree="yes"/>
+
+		<valueMap ruleid="isNum-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>2</valueIn><valueOut>[true]</valueOut>
+			<valueIn>3</valueIn><valueOut>[true]</valueOut>
+			<valueIn>4</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="envMonType-vm">
+			<valueIn>1</valueIn><valueOut>temp</valueOut>
+			<valueIn>2</valueIn><valueOut>temp</valueOut>
+			<valueIn>3</valueIn><valueOut>humidity</valueOut>
+			<valueIn>4</valueIn><valueOut>num</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<valueMap ruleid="envMonScale-vm">
+			<valueIn>1</valueIn><valueOut>0.1</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<valueMap ruleid="envMonLabel-vm">
+			<valueIn>1</valueIn><valueOut>Temperature</valueOut>
+			<valueIn>2</valueIn><valueOut>Temperature</valueOut>
+			<valueIn>3</valueIn><valueOut>Humidity</valueOut>
+			<valueIn>4</valueIn><valueOut>Airflow</valueOut>
+			<valueIn>5</valueIn><valueOut>Smoke Detector</valueOut>
+			<valueIn>6</valueIn><valueOut>Dry Contact</valueOut>
+			<valueIn>7</valueIn><valueOut>Water Level</valueOut>
+			<valueIn>8</valueIn><valueOut>Motion Sensor</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown Value</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="isState-vm">
+			<valueIn>5</valueIn><valueOut>[true]</valueOut>
+			<valueIn>6</valueIn><valueOut>[true]</valueOut>
+			<valueIn>7</valueIn><valueOut>[true]</valueOut>
+			<valueIn>8</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="notApplicable-vm">
+			<valueIn>3</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="acsPwrMgmtOutEnvMonTableValue" index=".1.3.6.1.4.1.10418.16.2.5.10.1.9">
+            <type>
+				<mapValue mapid="envMonType-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.7</getRowOid>
+				</mapValue>
+			</type>
+            <sensorId>OUTLET_ENVMON_TABLE_VALUE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.9</getRowOid></op>
+				<op>
+					<mapValue mapid="envMonScale-vm">
+					<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.7</getRowOid>
+					</mapValue>
+				</op>
+				</mult>
+            </value>
+			<valueInc>
+				<mapValue mapid="envMonScale-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.7</getRowOid>
+				</mapValue>
+			</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.5</getRowOid><space/>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.4</getRowOid><space/>
+				<mapValue mapid="envMonLabel-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.7</getRowOid>
+				</mapValue>
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="acsPwrMgmtOutEnvMonTableStatus" index=".1.3.6.1.4.1.10418.16.2.5.10.1.8">
+			<rowTest>
+				<mapValue mapid="notApplicable-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>OUTLET_ENVMON_TABLE_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="envMonStatus-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.8</getRowOid>
+				</mapValue>
+            </value>
+			<enum>envMonStatus-em</enum>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.5</getRowOid><space/>
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.4</getRowOid><space/>
+				<mapValue mapid="envMonLabel-vm">
+				<getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.7</getRowOid>
+				</mapValue>
+			</label>
+            <sensorSet>PDU: <getRowOid>.1.3.6.1.4.1.10418.16.2.5.10.1.5</getRowOid></sensorSet>
+        </stateSensor>
+
+		<!--
+		<numSensor ruleid="numSensTemplate">
+            <type>num</type>
+            <sensorId>NUM_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>Number Sensor</label>
+            <sensorSet>Number Sensors</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="stSensTemplate">
+            <type>state</type>
+            <sensorId>ST_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>State Sensor</label>
+            <enum>state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="state-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<alarmFlags ruleid="alarmTemplate">
+			<value><getOid>.1.3.6.1.4.1....</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Generic Alarm</activeText>
+					<inactiveText>Generic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Generic Alarm condition exists.</activeText>
+					<inactiveText>A Generic Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		-->
+
+	</device>
+</APC_DDF>

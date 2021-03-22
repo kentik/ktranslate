@@ -1,0 +1,558 @@
+<?xml version="1.0"?>
+
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="stulz-split-air-condtioner10" ddfname="Stulz_Split_Airconditioner10" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+ <device deviceid="stulzsplitair10">
+    <oidMustExist ruleid="stulzsplitairheader" oid="1.3.6.1.4.1.39983.1.1.1.1.0"/>
+
+	<setProductData ruleid="vendordata" field="vendor">
+		Stulz
+	</setProductData>
+ 	
+	<setProductData ruleid="modeldata" field="model">
+		Split Air 10
+	</setProductData>
+	
+	<setProductData ruleid="typedata" field="type">
+		Cooling Device
+	</setProductData>
+	
+ </device>	
+ 
+ <device deviceid="stulzsplitzairsenordata">
+ <oidMustExist ruleid="stulzsplitsensors"  oid="1.3.6.1.4.1.39983.1.1.1.1.0"/>
+	
+	<numSensor ruleid="ti1_return_temperature">
+		<type>temp</type>
+		<sensorId>_TI1_RETURN_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.1.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TI1 Return Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ts1_supply_temperature_1">
+		<type>temp</type>
+		<sensorId>_TS1_SUPPLY_TEMPERATURE_1</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.4.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TS1 Supply Temperature 1</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+    
+	<numSensor ruleid="tae_external_temperature">
+		<type>temp</type>
+		<sensorId>_TAE_EXTERNAL_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.7.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TAE External Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="taf_antifreeze_temperature">
+		<type>temp</type>
+		<sensorId>_TAF_ANTIFREEZE_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.8.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TAF Antifreeze Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ti_return_temperature">
+		<type>temp</type>
+		<sensorId>_TI_RETURN_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.11.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TI Return Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ts_supply_temperature">
+		<type>temp</type>
+		<sensorId>_TS_SUPPLY_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.12.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TS Supply Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="dp_condenser_pressure">
+		<type>pressure</type>
+		<sensorId>_DP_CONDENSER_PRESSURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.17.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>DP Condenser Pressure</label>
+		<sensorSet>Pressure</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="te_evaporating_coil_temperature">
+		<type>temp</type>
+		<sensorId>_TE_EVAPORATING_COIL_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.18.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>TE Evaporating Coil Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ct_condensing_temperature">
+		<type>temp</type>
+		<sensorId>_CT_CONDENSING_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.1.24.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>CT Condensing Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="cf_condenser_fan">
+		<type>pctofcapacity</type>
+		<sensorId>_CF_CONDENSER_FAN</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.2.3.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>CF Condenser Fan</label>
+		<sensorSet>Fan</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="evf1_evaporator_fan_1">
+		<type>pctofcapacity</type>
+		<sensorId>_EVF1_EVAPORATOR_FAN_1</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.2.4.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>EVF1 Evaporator Fan 1</label>
+		<sensorSet>Fan</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="evf2_evaporator_fan_2">
+		<type>pctofcapacity</type>
+		<sensorId>_EVF2_EVAPORATOR_FAN_2</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.2.5.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>EVF2 Evaporator Fan 2</label>
+		<sensorSet>Fan</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.1.1_cooling_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.1_COOLING_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.1.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>B.1.1.1.1 Cooling Set Point</label>
+		<sensorSet>Cooling Set point</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.1.2_heating_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.2_HEATING_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.2.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label> B.1.1.1.2 Heating Set Point</label>
+		<sensorSet>Heating Set Point</sensorSet>
+	</numSensor>	
+	
+	<numSensor ruleid="b.1.1.1.5_low_temperature_alarm_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.5_LOW_TEMPERATURE_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.2.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>B.1.1.1.5 Low Temperature Alarm Set Point</label>
+		<sensorSet>Temperature Alarm Set</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.1.6_high_temperature_alarm_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.6_HIGH_TEMPERATURE_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.6.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>B.1.1.1.6 High Temperature Alarm Set Point</label>
+		<sensorSet>Temperature Alarm Set</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.1.7_min_temperature_alarm_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.7_MIN_TEMPERATURE_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.7.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>B.1.1.1.7 Min Temperature Alarm Set Point</label>
+		<sensorSet>Temperature Alarm Set</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.1.8_max _temperature_alarm_set_point">
+		<type>temp</type>
+		<sensorId>_B.1.1.1.8_MAX _TEMPERATURE_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.8.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>B.1.1.1.8 Max Temperature Alarm Set Point</label>
+		<sensorSet>Temperature Alarm Set</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.2.1_dehumidification_set_point">
+		<type>pctofcapacity</type>
+		<sensorId>_B.1.1.2.1_DEHUMIDIFICATION_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.9.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>B.1.1.2.1 Dehumidification Set Point</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.2.2_humidification_set_point">
+		<type>pctofcapacity</type>
+		<sensorId>_B.1.1.2.2_HUMIDIFICATION_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.10.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>B.1.1.2.2 Humidification Set Point</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.2.3_low_humidity_alarm_set_point">
+		<type>pctofcapacity</type>
+		<sensorId>_B.1.1.2.3_LOW_HUMIDITY_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.11.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>B.1.1.2.3 Low Humidity Alarm Set Point</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="b.1.1.2.4_high_humidity_alarm_set_point">
+		<type>pctofcapacity</type>
+		<sensorId>_B.1.1.2.4_HIGH_HUMIDITY_ALARM_SET_POINT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.5.12.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>B.1.1.2.4 High Humidity Alarm Set Point</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="System_OFF">
+		<type>num</type>
+		<sensorId>_SYSTEM_OFF</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.6.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>System OFF</label>
+		<sensorSet>System Info</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="System_ON">
+		<type>num</type>
+		<sensorId>_SYSTEM_ON</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.6.2.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>System ON</label>
+		<sensorSet>System Info</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="system_in_standby">
+		<type>num</type>
+		<sensorId>_SYSTEM_IN_STANDBY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.6.3.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>System In Standby</label>
+		<sensorSet>System Info</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="high_temperature_alarm">
+		<type>num</type>
+		<sensorId>_HIGH_TEMPERATURE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>High Temperature Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="low_temperature_alarm">
+		<type>num</type>
+		<sensorId>_LOW_TEMPERATURE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.2.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Low Temperature Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="max_temperature_alarm">
+		<type>num</type>
+		<sensorId>_MAX_TEMPERATURE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.3.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Max Temperature Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="min_temperature_alarm">
+		<type>num</type>
+		<sensorId>_MIN_TEMPERATURE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.4.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Min Temperature Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="high_delta_pressure_start_alarm">
+		<type>num</type>
+		<sensorId>_HIGH_DELTA_PRESSURE_START_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.12.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>High Delta Pressure Start Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	 
+	
+	<numSensor ruleid="wrong_phase_alarm">
+		<type>num</type>
+		<sensorId>_WRONG_PHASE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.35.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Wrong Phase Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="power_failure">
+		<type>num</type>
+		<sensorId>_POWER_FAILURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.36.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Power Failure</label>
+		<sensorSet>Power</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="voltage_out_of_range_alarm">
+		<type>num</type>
+		<sensorId>_VOLTAGE_OUT_OF_RANGE_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.7.37.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Voltage Out Of Range Alarm</label>
+		<sensorSet>Alarm</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="switch_on/off_command">
+		<type>num</type>
+		<sensorId>_SWITCH_ON/OFF_COMMAND</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.8.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Switch ON/OFF command</label>
+		<sensorSet>System</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="reset_alarm_command">
+		<type>num</type>
+		<sensorId>_RESET_ALARM_COMMAND</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.39983.1.1.8.2.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Reset Alarm Command</label>
+		<sensorSet>System Info</sensorSet>
+	</numSensor>
+	
+	</device>
+	
+</APC_DDF>

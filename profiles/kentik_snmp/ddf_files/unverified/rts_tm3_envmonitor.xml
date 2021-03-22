@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!-- raritan_pdu -->
+<APC_DDF ddfid ="rts_tm3_envmonitor" ddfname="RT Systems TM3 Environmental Monitor" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+    <!--DDF Headers -->
+    <device deviceid="rts_tm3_envmonitor">
+        <oidMustExist ruleid="rts_tm3_envmonitor_exists" istree="yes" oid=".1.3.6.1.4.1.32278.1.2"/>
+
+        <setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+		
+		<!-- Set Vendor -->
+		<setProductData ruleid="vendordata" field="vendor">RT Systems</setProductData>
+
+		<!-- Model -->
+        <setProductData ruleid="modeldata" field="model">TM3</setProductData>
+
+		<numSensor ruleid="temp1">
+			<type>temp</type>
+			<sensorId>TEMP_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32278.1.2.1.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature Sensor 1</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temp2">
+			<type>temp</type>
+			<sensorId>TEMP_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32278.1.2.1.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature Sensor 2</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temp3">
+			<type>temp</type>
+			<sensorId>TEMP_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32278.1.2.1.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature Sensor 3</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temp4">
+			<type>temp</type>
+			<sensorId>TEMP_4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32278.1.2.1.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature Sensor 4</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="current1">
+			<type>amperage</type>
+			<sensorId>CURRENT_1</sensorId>
+			<value>
+				<mult>
+					<op>0.001</op> <!-- mA to Amps -->
+					<op><getOid>.1.3.6.1.4.1.32278.1.2.1.5.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Current Sensor 1</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="current2">
+			<type>amperage</type>
+			<sensorId>CURRENT_2</sensorId>
+			<value>
+				<mult>
+					<op>0.001</op> <!-- mA to Amps -->
+					<op><getOid>.1.3.6.1.4.1.32278.1.2.1.6.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Current Sensor 2</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="current3">
+			<type>amperage</type>
+			<sensorId>CURRENT_3</sensorId>
+			<value>
+				<mult>
+					<op>0.001</op> <!-- mA to Amps -->
+					<op><getOid>.1.3.6.1.4.1.32278.1.2.1.7.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Current Sensor 3</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		
+    </device>
+
+</APC_DDF>

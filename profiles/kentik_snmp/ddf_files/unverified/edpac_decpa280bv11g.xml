@@ -1,0 +1,1436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="edpac_decpa280bv11g" ddfname="EDPAC DECPA280BV11G" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="edpac_decpa280bv11g">
+    <oidMustExist ruleid="snmpdevicetest" istree="yes" oid="1.3.6.1.4.1.9839.2.0.10" />
+    <setProductData ruleid="vendordata" field="vendor">EDPAC</setProductData>
+    <setProductData ruleid="modeldata" field="model">DECPA280BV11G</setProductData>
+    <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+    <stateSensor ruleid="status_of_pcoid">
+      <type>state</type>
+      <sensorId>_STATUS_OF_PCOID</sensorId>
+      <value>
+        <mapValue mapid="online_offline_vm">
+         <getOid>1.3.6.1.4.1.9839.2.0.10.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Status of pCOId</label>
+      <enum>online_offline_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="true_false_vm">
+        <valueIn>0</valueIn> <valueOut>0</valueOut>
+        <valueIn>1</valueIn> <valueOut>1</valueOut>
+        <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="true_false_em">
+        <label>False</label>
+        <label>True</label>
+    </enumMap>	
+
+    <valueMap ruleid="online_offline_vm">
+        <valueIn>0</valueIn> <valueOut>0</valueOut>
+        <valueIn>1</valueIn> <valueOut>1</valueOut>
+        <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="online_offline_em">
+        <label>Offline</label>
+        <label>Online</label>
+    </enumMap>		
+	
+    <numSensor ruleid="number_of_communication_errors_from_pcoid1_to_pcoweb">
+      <type>num</type>
+      <sensorId>_NUMBER_OF_COMMUNICATION_ERRORS_FROM_PCOID1_TO_PCOWEB</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.0.11.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Number of Communication Errors from pCOId1 to pCOWeb</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="unit_on_off_status">
+      <type>state</type>
+      <sensorId>_UNIT_ON_OFF_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Unit On Off Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="cooling_status">
+      <type>state</type>
+      <sensorId>_COOLING_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Cooling Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heating_status">
+      <type>state</type>
+      <sensorId>_HEATING_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Heating Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="dehumidification_status">
+      <type>state</type>
+      <sensorId>_DEHUMIDIFICATION_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>Dehumidification Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidification_status">
+      <type>state</type>
+      <sensorId>_HUMIDIFICATION_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidification Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="freecooling_status">
+      <type>state</type>
+      <sensorId>_FREECOOLING_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>Freecooling Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="supply_air_low_temperature_limit_status">
+      <type>state</type>
+      <sensorId>_SUPPLY_AIR_LOW_TEMPERATURE_LIMIT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>Supply Air Low Temperature Limit Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="control_air_low_temperature_limit_status">
+      <type>state</type>
+      <sensorId>_CONTROL_AIR_LOW_TEMPERATURE_LIMIT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.8.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Air Low Temperature Limit Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="non_serious_alarm_status">
+      <type>state</type>
+      <sensorId>_NON_SERIOUS_ALARM_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>Non Serious Alarm Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="serious_alarm_status">
+      <type>state</type>
+      <sensorId>_SERIOUS_ALARM_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>Serious Alarm Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="unit_on_off_by_bms_supervisor">
+      <type>state</type>
+      <sensorId>_UNIT_ON_OFF_BY_BMS_SUPERVISOR</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>Unit On Off by BMS Supervisor</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidifier_cylinder_full_status">
+      <type>state</type>
+      <sensorId>_HUMIDIFIER_CYLINDER_FULL_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.12.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier Cylinder Full Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidifier_power_status">
+      <type>state</type>
+      <sensorId>_HUMIDIFIER_POWER_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier Power Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidifier_fill_valve_status">
+      <type>state</type>
+      <sensorId>_HUMIDIFIER_FILL_VALVE_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier Fill Valve Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <alarmFlags ruleid="fire_smoke_alarm">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.15.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Fire Smoke Alarm Condition Present</activeText>
+          <inactiveText>Fire Smoke Alarm Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Fire Smoke Alarm Condition Present</activeText>
+          <inactiveText>Fire Smoke Alarm Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <stateSensor ruleid="compressor_1_run_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_1_RUN_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 1 Run Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="compressor_2_run_status">
+      <type>state</type>
+      <sensorId>_COMPRESSOR_2_RUN_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 2 Run Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heater_1_status">
+      <type>state</type>
+      <sensorId>_HEATER_1_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.18.0</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 1 Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heater_2_status">
+      <type>state</type>
+      <sensorId>_HEATER_2_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.19.0</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 2 Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <alarmFlags ruleid="dryer_alarm">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.20.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Dryer Alarm Condition Present</activeText>
+          <inactiveText>Dryer Alarm Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Dryer Alarm Condition Present</activeText>
+          <inactiveText>Dryer Alarm Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_high_pressure_circuit_1">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.21.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm High Pressure Circuit 1 Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Circuit 1 Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm High Pressure Circuit 1 Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Circuit 1 Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_high_pressure_circuit_2">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.22.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm High Pressure Circuit 2 Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Circuit 2 Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm High Pressure Circuit 2 Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Circuit 2 Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_low_pressure_circuit_1">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.23.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Low Pressure Circuit 1 Condition Present</activeText>
+          <inactiveText>Alarm Low Pressure Circuit 1 Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Low Pressure Circuit 1 Condition Present</activeText>
+          <inactiveText>Alarm Low Pressure Circuit 1 Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_low_pressure_circuit_2">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.24.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Low Pressure Circuit 2 Condition Present</activeText>
+          <inactiveText>Alarm Low Pressure Circuit 2 Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Low Pressure Circuit 2 Condition Present</activeText>
+          <inactiveText>Alarm Low Pressure Circuit 2 Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_loss_of_airflow">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.25.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Loss of Airflow Condition Present</activeText>
+          <inactiveText>Alarm Loss of Airflow Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Loss of Airflow Condition Present</activeText>
+          <inactiveText>Alarm Loss of Airflow Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_loss_of_airflow_slave_unit">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.26.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Loss of Airflow Slave Unit Condition Present</activeText>
+          <inactiveText>Alarm Loss of Airflow Slave Unit Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Loss of Airflow Slave Unit Condition Present</activeText>
+          <inactiveText>Alarm Loss of Airflow Slave Unit Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_heater_overtemperature_trip">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.27.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Heater Over Temperature Trip Condition Present</activeText>
+          <inactiveText>Alarm Heater Over Temperature Trip Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Heater Over Temperature Trip Condition Present</activeText>
+          <inactiveText>Alarm Heater Over Temperature Trip Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_condensate_pump">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.28.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Condensate Pump Condition Present</activeText>
+          <inactiveText>Alarm Condensate Pump Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Condensate Pump Condition Present</activeText>
+          <inactiveText>Alarm Condensate Pump Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_fire_smoke">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.29.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Fire Smoke Condition Present</activeText>
+          <inactiveText>Alarm Fire Smoke Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Fire Smoke Condition Present</activeText>
+          <inactiveText>Alarm Fire Smoke Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_dirty_filter">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.30.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Dirty Filter Condition Present</activeText>
+          <inactiveText>Alarm Dirty Filter Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Dirty Filter Condition Present</activeText>
+          <inactiveText>Alarm Dirty Filter Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_return_air_temperature_high">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.31.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Return Air Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Return Air Temperature High Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Return Air Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Return Air Temperature High Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_return_air_temperature_low">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.32.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Return Air Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Return Air Temperature Low Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Return Air Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Return Air Temperature Low Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_return_air_humidity_high">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.33.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Return Air Humidity High Condition Present</activeText>
+          <inactiveText>Alarm Return Air Humidity High Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Return Air Humidity High Condition Present</activeText>
+          <inactiveText>Alarm Return Air Humidity High Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_return_air_humidity_low">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.34.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Return Air Humidity Low Condition Present</activeText>
+          <inactiveText>Alarm Return Air Humidity Low Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Return Air Humidity Low Condition Present</activeText>
+          <inactiveText>Alarm Return Air Humidity Low Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_inlet_water_temperature_high">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.35.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Inlet Water Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Inlet Water Temperature High Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Inlet Water Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Inlet Water Temperature High Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_inlet_water_temperature_low">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.36.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Inlet Water Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Inlet Water Temperature Low Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Inlet Water Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Inlet Water Temperature Low Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_compressor1_run_hours">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.37.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Compressor 1 Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Compressor 1 Run Hours Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Compressor 1 Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Compressor 1 Run Hours Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_compressor2_run_hours">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.38.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Compressor 2 Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Compressor 2 Run Hours Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Compressor 2 Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Compressor 2 Run Hours Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_fan_run_hours">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.39.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Fan Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Fan Run Hours Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Fan Run Hours Condition Present</activeText>
+          <inactiveText>Alarm Fan Run Hours Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_return_air_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.40.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Return Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Return Air Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Return Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Return Air Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_water_inlet_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.41.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Water Inlet Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Water Inlet Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Water Inlet Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Water Inlet Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_external_air_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.42.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm External Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm External Air Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm External Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm External Air Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_supply_air_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.43.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Supply Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Supply Air Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Supply Air Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Supply Air Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_humidity_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.44.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Humidity Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Humidity Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Humidity Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Humidity Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_water_outlet_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.45.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Water Outlet Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Water Outlet Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_water_outlet_temperature_high">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.46.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Water Outlet Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Temperature High Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Water Outlet Temperature High Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Temperature High Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_water_outlet_temperature_low">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.47.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Water Outlet Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Temperature Low Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Water Outlet Temperature Low Condition Present</activeText>
+          <inactiveText>Alarm Water Outlet Temperature Low Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="humidifier_high_current">
+      <value>
+        <getOid>1.3.6.1.4.1.9839.2.1.1.48.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Humidifier High Current Condition Present</activeText>
+          <inactiveText>Humidifier High Current Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Humidifier High Current Condition Present</activeText>
+          <inactiveText>Humidifier High Current Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="lack_of_water_humidifier">
+      <value>
+        <getOid>1.3.6.1.4.1.9839.2.1.1.49.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Lack of Water Humidifier Condition Present</activeText>
+          <inactiveText>Lack of Water Humidifier Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Lack of Water Humidifier Condition Present</activeText>
+          <inactiveText>Lack of Water Humidifier Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="lack_of_current_humidifier">
+      <value>
+        <getOid>1.3.6.1.4.1.9839.2.1.1.50.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Lack of Current Humidifier Condition Present</activeText>
+          <inactiveText>Lack of Current Humidifier Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Lack of Current Humidifier Condition Present</activeText>
+          <inactiveText>Lack of Current Humidifier Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <stateSensor ruleid="alarm_clock_error">
+      <type>state</type>
+      <sensorId>_ALARM_CLOCK_ERROR</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.51.0</getOid>
+        </mapValue>
+      </value>
+      <label>Alarm Clock Error</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="dryer_status">
+      <type>state</type>
+      <sensorId>_DRYER_STATUS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.52.0</getOid>
+        </mapValue>
+      </value>
+      <label>Dryer Status</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <alarmFlags ruleid="alarm_water_warning">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.53.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Water Warning Condition Present</activeText>
+          <inactiveText>Alarm Water Warning Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Water Warning Condition Present</activeText>
+          <inactiveText>Alarm Water Warning Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_loss_of_water_flow">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.54.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Loss of Water Flow Condition Present</activeText>
+          <inactiveText>Alarm Loss of Water Flow Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Loss of Water Flow Condition Present</activeText>
+          <inactiveText>Alarm Loss of Water Flow Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_high_pressure_sensor_1_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.58.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm High Pressure Sensor 1 Fault Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Sensor 1 Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm High Pressure Sensor 1 Fault Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Sensor 1 Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_high_pressure_sensor_2_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.59.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm High Pressure Sensor 2 Fault Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Sensor 2 Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm High Pressure Sensor 2 Fault Condition Present</activeText>
+          <inactiveText>Alarm High Pressure Sensor 2 Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="alarm_air_pressure_sensor_fault">
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.1.60.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Alarm Air Pressure Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Air Pressure Sensor Fault Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Alarm Air Pressure Sensor Fault Condition Present</activeText>
+          <inactiveText>Alarm Air Pressure Sensor Fault Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <stateSensor ruleid="reset_alarms_from_bms">
+      <type>state</type>
+      <sensorId>_RESET_ALARMS_FROM_BMS</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.1.98.0</getOid>
+        </mapValue>
+      </value>
+      <label>Reset alarms from BMS</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="return_air_temperature">
+      <type>temp</type>
+      <sensorId>1_RETURN_TEMP</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Return Air Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="return_air_humidity">
+      <type>humidity</type>
+      <sensorId>1_RETURN_HUMIDITY</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Return Air Humidity</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="inlet_water_temperature">
+      <type>temp</type>
+      <sensorId>_RACK_INLET_TEMP1</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.3.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Inlet Water Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="external_air_temperature">
+      <type>temp</type>
+      <sensorId>_TEMP1_ARU_1</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>External Air Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="supply_air_temperature">
+      <type>temp</type>
+      <sensorId>1_SUPPLY_TEMP</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.5.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Supply Air Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_setpoint">
+      <type>temp</type>
+      <sensorId>_TEMPERATURE_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.6.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Temperature Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_control_band_cooling">
+      <type>temp</type>
+      <sensorId>_TEMPERATURE_CONTROL_BAND_COOLING</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Temperature Control Band Cooling</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_control_band_heating">
+      <type>temp</type>
+      <sensorId>_TEMPERATURE_CONTROL_BAND_HEATING</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.8.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Temperature Control Band Heating</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature_neutral_zone">
+      <type>num</type>
+      <sensorId>_TEMPERATURE_NEUTRAL_ZONE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.9.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Temperature Neutral Zone</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_return_air_temperature_alarm_offset">
+      <type>num</type>
+      <sensorId>_HIGH_RETURN_AIR_TEMPERATURE_ALARM_OFFSET</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.10.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Return Air Temperature Alarm Offset</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_return_air_temperature_alarm_offset">
+      <type>num</type>
+      <sensorId>_LOW_RETURN_AIR_TEMPERATURE_ALARM_OFFSET</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.11.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Low Return Air Temperature Alarm Offset</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_setpoint">
+      <type>humidity</type>
+      <sensorId>_HUMIDITY_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.12.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidity Setpoint</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidity_control_band">
+      <type>humidity</type>
+      <sensorId>_HUMIDITY_CONTROL_BAND</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.13.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidity Control Band</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_return_air_humidity_alarm_offset">
+      <type>humidity</type>
+      <sensorId>_LOW_RETURN_AIR_HUMIDITY_ALARM_OFFSET</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.14.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Low Return Air Humidity Alarm Offset</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_return_air_humidity_alarm_offset">
+      <type>humidity</type>
+      <sensorId>_HIGH_RETURN_AIR_HUMIDITY_ALARM_OFFSET</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.15.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Return Air Humidity Alarm Offset</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_inlet_water_temperature_alarm_setpoint">
+      <type>temp</type>
+      <sensorId>_LOW_INLET_WATER_TEMPERATURE_ALARM_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.16.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Low Inlet Water Temperature Alarm Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_inlet_water_temperature_alarm_setpoint">
+      <type>temp</type>
+      <sensorId>_HIGH_INLET_WATER_TEMPERATURE_ALARM_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.17.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Inlet Water Temperature Alarm Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_supply_air_temperature_limit_setpoint">
+      <type>temp</type>
+      <sensorId>_LOW_SUPPLY_AIR_TEMPERATURE_LIMIT_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.18.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Low Supply Air Temperature Limit Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="supply_air_temperature_limit_differential">
+      <type>temp</type>
+      <sensorId>_SUPPLY_AIR_TEMPERATURE_LIMIT_DIFFERENTIAL</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.19.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Supply Air Temperature Limit Differential</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="chilled_water_valve_output_voltage">
+      <type>voltage</type>
+      <sensorId>_CHILLED_WATER_VALVE_OUTPUT_VOLTAGE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.20.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Chilled Water Valve Output Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hot_water_valve_output_voltage">
+      <type>voltage</type>
+      <sensorId>_HOT_WATER_VALVE_OUTPUT_VOLTAGE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.21.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Hot Water Valve Output Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ec_fan_output_voltage">
+      <type>voltage</type>
+      <sensorId>_EC_FAN_OUTPUT_VOLTAGE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.22.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>EC Fan Output Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="freecooling_water_valve_output_voltage">
+      <type>voltage</type>
+      <sensorId>_FREECOOLING_WATER_VALVE_OUTPUT_VOLTAGE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.23.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Freecooling Water Valve Output Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="outlet_water_temperature">
+      <type>temp</type>
+      <sensorId>_OUTLET_WATER_TEMPERATURE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.24.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Outlet Water Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_outlet_water_temperature_alarm_setpoint">
+      <type>temp</type>
+      <sensorId>_LOW_OUTLET_WATER_TEMPERATURE_ALARM_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.25.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Low Outlet Water Temperature Alarm Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_outlet_water_temperature_alarm_setpoint">
+      <type>temp</type>
+      <sensorId>_HIGH_OUTLET_WATER_TEMPERATURE_ALARM_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.26.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Outlet Water Temperature Alarm Setpoint</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ec_fan_speed_from_bms">
+      <type>fanspeed</type>
+      <sensorId>_FAN_SPEED_FAN_1_1</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.27.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>EC Fan Speed from BMS</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_pressure_probe_1">
+      <type>pressure</type>
+      <sensorId>_HIGH_PRESSURE_PROBE_1</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.38.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Pressure Probe 1</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_pressure_probe_2">
+      <type>pressure</type>
+      <sensorId>_HIGH_PRESSURE_PROBE_2</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.2.39.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>High Pressure Probe 2</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="delay_main_fan_on">
+      <type>state</type>
+      <sensorId>_DELAY_MAIN_FAN_ON</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+         <getOid>1.3.6.1.4.1.9839.2.1.3.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Delay Main Fan On</label>
+      <enum>true_false_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="main_fan_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>_RUNHOURS_FAN_1_1</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Main Fan Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="main_fan_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>_RUNHOURS_FAN_1_2</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.3.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Main Fan Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_1_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>1_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Heater 1 Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_1_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>2_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.5.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Heater 1 Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_2_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>3_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.6.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Heater 2 Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_2_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>4_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Heater 2 Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidifier_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>5_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.8.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidifier Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidifier_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>6_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.9.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidifier Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dehumidification_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>7_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.10.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Dehumidification Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dehumidification_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>8_UNIT_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.11.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Dehumidification Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="compressor_1_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>1_COMPRESSOR_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.12.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 1 Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="compressor_1_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>2_COMPRESSOR_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.13.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 1 Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="compressor_2_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>3_COMPRESSOR_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.14.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 2 Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="compressor_2_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>4_COMPRESSOR_RUN_HOURS</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.15.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 2 Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="freecooling_run_hours_thousands">
+      <type>runhours</type>
+      <sensorId>_RUNHOURS_FAN_1_3</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.16.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Freecooling Run Hours Thousands</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="freecooling_run_hours_hundreds">
+      <type>runhours</type>
+      <sensorId>_RUNHOURS_FAN_1_4</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.17.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Freecooling Run Hours Hundreds</label>
+      <sensorSet>Run Hours</sensorSet>
+    </numSensor>
+    <numSensor ruleid="air_pressure">
+      <type>pressure</type>
+      <sensorId>_AIR_PRESSURE</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.18.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Air Pressure</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="air_pressure_setpoint">
+      <type>pressure</type>
+      <sensorId>_AIR_PRESSURE_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.19.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Air Pressure Setpoint</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="airflow">
+      <type>airflow</type>
+      <sensorId>1_RDT2_AIR_FLOW</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.25.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Airflow</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="airflow_setpoint">
+      <type>airflow</type>
+      <sensorId>_AIRFLOW_SETPOINT</sensorId>
+      <value>
+       <getOid>1.3.6.1.4.1.9839.2.1.3.26.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Airflow Setpoint</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+  </device>
+</APC_DDF>

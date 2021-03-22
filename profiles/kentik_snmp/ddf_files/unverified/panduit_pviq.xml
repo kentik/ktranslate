@@ -1,0 +1,697 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="panduit_pviq"
+	ddfname="Panduit - PVIQ"
+	ddfversion="4"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="panduit_pviq">
+		<oidMustExist ruleid="panduit_pviq_exists" oid=".1.3.6.1.4.1.19536" istree="yes"/>
+		<oidMustMatch ruleid="pviq_sysOid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.19536.3.3.2</value>
+			</valueList>
+		</oidMustMatch>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<!-- Vendor -->
+		<setProductData ruleid="vendordata" field="vendor">Panduit</setProductData>
+		<!-- Model -->
+		<setProductData ruleid="modeldata" field="model">
+			<mapValue mapid="identification_family-vm"><getOid>.1.3.6.1.4.1.19536.2.1.1.0</getOid></mapValue>
+		</setProductData>
+		<!-- MAC Address -->
+		<setProductData ruleid="macaddress" field="mac_addr"><getOid>.1.3.6.1.4.1.19536.2.1.3.0</getOid></setProductData>
+		<!-- Location -->
+		<setLocationData ruleid="location" field="LOCATION"><getOid>.1.3.6.1.4.1.19536.2.1.6.0</getOid></setLocationData>
+		<!-- Type -->
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		
+		<valueMap ruleid="identification_family-vm">
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+			<valueIn>1</valueIn><valueOut>Powered Patch Panel</valueOut>
+			<valueIn>2</valueIn><valueOut>aJack</valueOut>
+			<valueIn>3</valueIn><valueOut>iPanel</valueOut>
+			<valueIn>4</valueIn><valueOut>PPP12</valueOut>
+			<valueIn>5</valueIn><valueOut>PPP08</valueOut>
+			<valueIn>6</valueIn><valueOut>PPP24g</valueOut>
+			<valueIn>7</valueIn><valueOut>PPP12g</valueOut>
+			<valueIn>8</valueIn><valueOut>PVIQ</valueOut>
+			<valueIn>9</valueIn><valueOut>POU</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="status1-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="status7-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+		</valueMap>
+
+		<stateSensor ruleid="panduitProductsOffsetPanelOffsetMetalShape" index=".1.3.6.1.4.1.19536.3.3.1.2.1.6">
+            <type>state</type>
+            <sensorId>OFFSET_PANEL_METAL_SHAPE_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.3.3.1.2.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.19536.3.3.1.2.1.4</getRowOid> Offset Panel Shape</label>
+            <enum>panel_shape-em</enum>
+            <sensorSet>Offset Panel Rack</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="panel_shape-em">
+			<label>Unknown</label>
+			<label>Flat</label>
+			<label>Angled</label>
+		</enumMap>
+		
+		<stateSensor ruleid="panduitProductsOffsetPanelOffsetShieldingType" index=".1.3.6.1.4.1.19536.3.3.1.2.1.7">
+            <type>state</type>
+            <sensorId>OFFSET_PANEL_SHIELDING_TYPE_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.3.3.1.2.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.19536.3.3.1.2.1.4</getRowOid> Offset Panel Shielding</label>
+            <enum>panel_shielding-em</enum>
+            <sensorSet>Offset Panel Rack</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="panel_shielding-em">
+			<label>Unknown</label>
+			<label>Unshielded</label>
+			<label>Shielded</label>
+		</enumMap>
+		
+		<stateSensor ruleid="panduitProductsOffsetPanelApplicationType" index=".1.3.6.1.4.1.19536.3.3.1.3.1.3">
+            <type>state</type>
+            <sensorId>OFFSET_PANEL_APP_TYPE_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="panel_app_type-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.3.3.1.3.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Offset Panel <getRowOid>.1.3.6.1.4.1.19536.3.3.1.3.1.3</getRowOid> Application Type</label>
+            <enum>panel_app_type-em</enum>
+            <sensorSet>Offset Panel Application</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="panel_app_type-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>4</valueIn><valueOut>2</valueOut>
+			<valueIn>5</valueIn><valueOut>3</valueOut>
+			<valueIn>6</valueIn><valueOut>4</valueOut>
+			<valueIn>7</valueIn><valueOut>5</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="panel_app_type-em">
+			<label>Unknown</label>
+			<label>PVIQ Patch Panel</label>
+			<label>PVIQ Fiber Tray Type-1</label>
+			<label>PVIQ Fiber Tray Type-2</label>
+			<label>PVIQ Fiber Tray Type-3</label>
+			<label>PVIQ Fiber Tray Type-4</label>
+		</enumMap>
+		
+		<stateSensor ruleid="panFWUpdateStatus">
+            <type>state</type>
+            <sensorId>FIRMWARE_UPDATE_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status7-vm">
+					<getOid>.1.3.6.1.4.1.19536.7.8.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Firmware Update Status</label>
+            <enum>fw_update_sts-em</enum>
+            <sensorSet>Panduit Apps</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="fw_update_sts-em">
+			<label>Unknown</label>
+			<label>Inactive</label>
+			<label>Done</label>
+			<label>Verify</label>
+			<label>Download</label>
+			<label>Error</label>
+			<label>Pump</label>
+			<label>Erase</label>
+		</enumMap>
+		
+		
+		<stateSensor ruleid="panFWUpdatErrCode_sts">
+            <type>state</type>
+            <sensorId>FIRMWARE_UPDATE_ERROR_CODE</sensorId>
+            <value>
+                <mapValue mapid="error_code-vm">
+					<getOid>.1.3.6.1.4.1.19536.7.8.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Firmware Update Error Code</label>
+            <enum>error_code-em</enum>
+            <sensorSet>Panduit Apps</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="error_code-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>20</valueIn><valueOut>20</valueOut>
+			<valueIn>21</valueIn><valueOut>21</valueOut>
+			<valueIn>22</valueIn><valueOut>22</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="error_code-em">
+			<label>Unknown</label>
+			<label>None</label>
+			<label>DHCP Init Fail</label>
+			<label>Bad Server IP</label>
+			<label>TFTP Client Init</label>
+			<label>Bad File Name</label>
+			<label>Bad Product Code</label>
+			<label>Bad Checksum</label>
+			<label>Invalid File Format</label>
+			<label>Server Timeout</label>
+			<label>No Application</label>
+			<label>CRC Error</label>
+			<label>Last Line Write</label>
+			<label>Static IP Init Fail</label>
+			<label>Server Ping Fail</label>
+			<label>Max Retry Exceeded</label>
+			<label>Flash Sector Protected</label>
+			<label>Flash Write Error</label>
+			<label>Flash Erase Failure</label>
+			<label>Cancelled by User</label>
+			<label>Internal Error</label>
+			<label>Offset Pump Failure</label>
+			<label>Firmware Downgrade Rejected</label>
+		</enumMap>
+		
+		<alarmFlags ruleid="panFWUpdatErrCode_alarm">
+			<value><getOid>.1.3.6.1.4.1.19536.7.8.5.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>DHCP Init Fail Alarm</activeText>
+					<inactiveText>DHCP Init Fail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A DHCP init fail alarm condition exists.</activeText>
+					<inactiveText>A DHCP init fail alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Bad Server IP Alarm</activeText>
+					<inactiveText>Bad Server IP Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A bad server IP alarm condition exists.</activeText>
+					<inactiveText>A bad server IP alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>TFTP Client Init Alarm</activeText>
+					<inactiveText>TFTP Client Init Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A TFTP client init alarm condition exists.</activeText>
+					<inactiveText>A TFTP client init alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Bad File Name Alarm</activeText>
+					<inactiveText>Bad File Name Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A bad file name alarm condition exists.</activeText>
+					<inactiveText>A bad file name alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>Bad Product Code Alarm</activeText>
+					<inactiveText>Bad Product Code Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A bad product code alarm condition exists.</activeText>
+					<inactiveText>A bad product code alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>Bad Checksum Alarm</activeText>
+					<inactiveText>Bad Checksum Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A bad checksum alarm condition exists.</activeText>
+					<inactiveText>A bad checksum alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="8">
+				<name>
+					<activeText>Invalid File Format Alarm</activeText>
+					<inactiveText>Invalid File Format Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>An invalid file format alarm condition exists.</activeText>
+					<inactiveText>An invalid file format alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="9">
+				<name>
+					<activeText>Server Timeout Alarm</activeText>
+					<inactiveText>Server Timeout Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A server timeout alarm condition exists.</activeText>
+					<inactiveText>A server timeout alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="A">
+				<name>
+					<activeText>No Application Alarm</activeText>
+					<inactiveText>No Application Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A no application alarm condition exists.</activeText>
+					<inactiveText>A no application alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B">
+				<name>
+					<activeText>CRC Error Alarm</activeText>
+					<inactiveText>CRC Error Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A CRC error alarm condition exists.</activeText>
+					<inactiveText>A CRC error alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="C">
+				<name>
+					<activeText>Last Line Write Alarm</activeText>
+					<inactiveText>Last Line Write Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A last line write alarm condition exists.</activeText>
+					<inactiveText>A last line write alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="D">
+				<name>
+					<activeText>Static IP Init Fail Alarm</activeText>
+					<inactiveText>Static IP Init Fail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A static IP init fail alarm condition exists.</activeText>
+					<inactiveText>A static IP init fail alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="E">
+				<name>
+					<activeText>Server Ping Fail Alarm</activeText>
+					<inactiveText>Server Ping Fail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A server ping fail alarm condition exists.</activeText>
+					<inactiveText>A server ping fail alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="F">
+				<name>
+					<activeText>Maximum Retry Exceeded Alarm</activeText>
+					<inactiveText>Maximum Retry Exceeded Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A maximum retry exceeded alarm condition exists.</activeText>
+					<inactiveText>A maximum retry exceeded alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="10">
+				<name>
+					<activeText>Flash Sector Protected Alarm</activeText>
+					<inactiveText>Flash Sector Protected Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A flash sector protected alarm condition exists.</activeText>
+					<inactiveText>A flash sector protected alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="11">
+				<name>
+					<activeText>Flash Write Error Alarm</activeText>
+					<inactiveText>Flash Write Error Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A flash write error alarm condition exists.</activeText>
+					<inactiveText>A flash write error alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="12">
+				<name>
+					<activeText>Flash Erase Failure Alarm</activeText>
+					<inactiveText>Flash Erase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A flash erase failure alarm condition exists.</activeText>
+					<inactiveText>A flash erase failure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="13">
+				<name>
+					<activeText>Cancelled by User Alarm</activeText>
+					<inactiveText>Cancelled by User Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A cancelled by user alarm condition exists.</activeText>
+					<inactiveText>A cancelled by user alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="14">
+				<name>
+					<activeText>Internal Error Alarm</activeText>
+					<inactiveText>Internal Error Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>An internal error alarm condition exists.</activeText>
+					<inactiveText>An internal error alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="15">
+				<name>
+					<activeText>Offset Pump Failure Alarm</activeText>
+					<inactiveText>Offset Pump Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>An offset pump failure alarm condition exists.</activeText>
+					<inactiveText>An offset pump failure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="16">
+				<name>
+					<activeText>Firmware Downgrade Rejected Alarm</activeText>
+					<inactiveText>Firmware Downgrade Rejected Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A firmware downgrade rejected alarm condition exists.</activeText>
+					<inactiveText>A firmware downgrade rejected alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	</device>
+	<device deviceid="panduitOffsetApps">
+		<oidMustExist ruleid="panduit_pviq_exists" oid=".1.3.6.1.4.1.19536.8" istree="yes"/>
+		<oidMustMatch ruleid="pviq_sysOid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.19536.3.3.2</value>
+			</valueList>
+		</oidMustMatch>
+		
+		<numSensor ruleid="panduitOffsetPLMPortStatusOffsetCount">
+            <type>num</type>
+            <sensorId>OFFSET_COUNT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.19536.8.5.4.1.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Controller Offset Count</label>
+            <sensorSet>Offset</sensorSet>
+        </numSensor>
+	
+	</device>
+	
+	<device deviceid="panduitOffsetPLMPortStatus">
+		<oidMustExist ruleid="panduitOffsetPLMPortStatus_exists" oid=".1.3.6.1.4.1.19536.8.5.4" istree="yes"/>
+		
+		<valueMap ruleid="unauth_PLMPortStatus_stat-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="auth_PLMPortStatus_stat-vm">
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+			<valueIn>2</valueIn><valueOut>4</valueOut>
+			<valueIn>3</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="PLMPortStatus_stat-em">
+			<label>Unauthorized Disconnect</label>
+			<label>Unauthorized Single-End</label>
+			<label>Unauthorized Double-End</label>
+			<label>Authorized Disconnect</label>
+			<label>Authorized Single-End</label>
+			<label>Authorized Double-End</label>
+		</enumMap>
+		
+		<!-- 
+
+			panduitOffsetPLMPortStatusSlate
+
+			This encoded string summarizes the entire
+			Physical Layer Management state of a port.
+			It consists of ASCII digits and separators in this format:
+			neo-nep-nem:mode-stat-cord-fmt-feo-fep-fem-fe4-fe5-fe6;
+
+			stat =Connection Status =
+			NO-CONNECT (1)
+			SINGLE-ENDED (2)
+			DOUBLE-ENDED (3)
+			cord =Cord Type =
+			ADVANCED (TIER-3) I-CORD (1)
+			ENHANCED (TIER-2) I-CORD (2)
+			9-WIRE CROSS-CONNECT (3)
+			8-WIRE (4)
+			BASIC (TIER-1) I-CORD (5)
+			NO-CORD (99)
+			
+			panduitOffsetPLMPortStatusViolation
+			
+			This encoded string summarizes the current cross-connection
+			state and secure violation state of a port.
+			It consists of ASCII digits and separators in this format:
+			vio-neo-nep-nem:mode-stat-cord-fmt-feo-fep-fem-fe4-fe5-fe6;
+			where:
+			vio =Whether this port is in secure violation =
+			NO SECURE VIOLATION (0)
+			SECURE VIOLATION (1)
+			all other digit fields are as defined for
+			panduitOffsetPLMPortStatusSlate.
+
+
+		-->
+		
+		<stateSensor ruleid="panduitOffsetPLMPortStatus" index=".1.3.6.1.4.1.19536.8.5.4.2.1.5">
+            <type>state</type>
+            <sensorId>PLM_PORT_STATUS_VALUE_<rowNumber/></sensorId>
+            <value>
+				<if>
+					<op>
+						<eq>
+							<op>
+								<regex>
+									<op>(\d)</op>
+									<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+									<op>%1$s</op>
+								</regex>
+							</op>
+							<op>1</op>
+						</eq>
+					</op>
+					<op>
+						<mapValue mapid="unauth_PLMPortStatus_stat-vm">
+							<regex>
+								<op>\d\-\d+\-[A-Z0-9a-z]+\:\d\-(\d)\-.</op>
+								<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+								<op>%1$s</op>
+							</regex>
+						</mapValue>
+					</op>
+					<op>
+						<mapValue mapid="auth_PLMPortStatus_stat-vm">
+							<regex>
+								<op>\d\-\d+\-[A-Z0-9a-z]+\:\d\-(\d)\-.</op>
+								<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+								<op>%1$s</op>
+							</regex>
+						</mapValue>
+					</op>
+				</if>
+            </value>
+            <label>
+				PLM Port<space/>
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex><space/>
+				Offset<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Status
+			</label>
+            <enum>PLMPortStatus_stat-em</enum>
+            <sensorSet>
+				PLM Port<space/>
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Status
+			</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="PLMPortStatus_stat_alarm-vm">
+			<valueIn>*</valueIn><valueOut>Disconnect</valueOut>
+			<valueIn>2</valueIn><valueOut>Single-End</valueOut>
+			<valueIn>3</valueIn><valueOut>Double-End</valueOut>
+		</valueMap>
+		
+		<alarmFlags2 ruleid="panduitOffsetPLMPortStatusViolation" index=".1.3.6.1.4.1.19536.8.5.4.2.1.5">
+			<value>
+				<!-- panduitOffsetPLMPortStatusViolation -->
+				<regex>
+					<op>(\d)</op>
+					<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PLM Port Connection Status Alarm</activeText>
+					<inactiveText>PLM Port Connection Status Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						PLM Port<space/>
+						<regex>
+							<op>\d\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex><space/>
+						Offset<space/>
+						<regex>
+							<op>(\d)\.\d+</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex><space/>
+						- Unauthorized<space/>
+						<mapValue mapid="PLMPortStatus_stat_alarm-vm">
+							<regex>
+								<op>\d\-\d+\-[A-Z0-9a-z]+\:\d\-(\d)\-.</op>
+								<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+								<op>%1$s</op>
+							</regex>
+						</mapValue>
+					</activeText>
+					<inactiveText>
+						PLM Port<space/>
+						<regex>
+							<op>\d\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex><space/>
+						Offset<space/>
+						<regex>
+							<op>(\d)\.\d+</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex><space/>
+						- Unauthorized<space/>
+						<mapValue mapid="PLMPortStatus_stat_alarm-vm">
+							<regex>
+								<op>\d\-\d+\-[A-Z0-9a-z]+\:\d\-(\d)\-.</op>
+								<op><getRowOid>.1.3.6.1.4.1.19536.8.5.4.2.1.5</getRowOid></op>
+								<op>%1$s</op>
+							</regex>
+						</mapValue><space/>
+						condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+	</device>
+</APC_DDF>

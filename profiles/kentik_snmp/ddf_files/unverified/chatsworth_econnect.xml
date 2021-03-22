@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="chatsworth_econnect"
+	ddfname="Chatsworth eConnect"
+	ddfversion="7"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\chatsworth\Version 2.1.0\UnityMib.txt
+		
+		CPI-UNITY-MIB | 5 August 2020
+	-->
+	<device deviceid="systeminfo">
+		<oidMustExist ruleid="econnect_exists" oid=".1.3.6.1.4.1.30932.1.10.1" istree="yes" />
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="stompmib2label" suppressid="core/mib2datalabel/labeldata"/>
+		<suppressRule ruleid="stompmib2location" suppressid="core/mib2data/locationdata"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Chatsworth</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.30932.1.1.1.2</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		
+		<valueMap ruleid="phaseCount-vm">
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><mapValue mapid="phaseCount-vm"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></mapValue></setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><mapValue mapid="phaseCount-vm"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></mapValue></setProductData>
+		<setProductData ruleid="bankcount" field="bankcount"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></setProductData>
+		
+		<stringSensor ruleid="cpiPduSerialNum" index=".1.3.6.1.4.1.30932.1.10.1.2.10.1.18">
+			<type>string</type>
+			<sensorId>PDU_SERIAL_NUMBER_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.30932.1.10.1.2.10.1.18</getRowOid>
+			</value>
+			<label>PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.2.10.1.1</getRowOid>) Serial Number</label>
+			<sensorSet>System Information</sensorSet>
+		</stringSensor>
+		
+		<numSensor ruleid="cpiPduTotalPower" index=".1.3.6.1.4.1.30932.1.10.1.2.10.1.16">
+			<type>powerVA</type>
+			<sensorId>TOTAL_APPARENT_POWER_PDU<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.30932.1.10.1.2.10.1.16</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.2.10.1.1</getRowOid>) Total Power</label>
+			<sensorSet>System Information</sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="branch">
+		<oidMustExist ruleid="branch_exists" oid=".1.3.6.1.4.1.30932.1.10.1.3" istree="yes" />
+		
+		<numSensor ruleid="input_line_current" index=".1.3.6.1.4.1.30932.1.10.1.3.10.1.2">
+			<type>amperage</type>
+			<sensorId>_INPUT_CURRENT_RPDU<formatNumber printffmt="%1.0f">
+					<add>
+						<op>
+							<rowNumber/>
+						</op>
+						<op>1</op>
+					</add>
+				</formatNumber>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.10.1.3</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.10.1.1</getRowOid>)<space/>
+				Current L<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.10.1.2</getRowOid>
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="branchId-vm">
+			<valueIn>*</valueIn><valueOut>X-Y</valueOut>
+			<valueIn>2</valueIn><valueOut>Y-Z</valueOut>
+			<valueIn>3</valueIn><valueOut>Z-X</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="branch_current" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.3">
+			<type>amperage</type>
+			<sensorId>_BRANCH_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.3</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Current
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="branch_max_current" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.4">
+			<type>amperage</type>
+			<sensorId>_BRANCH_MAX_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.4</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Maximum Current
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="branch_voltage" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.5">
+			<type>voltage</type>
+			<sensorId>_BRANCH_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.5</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Voltage
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="branch_power" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.6">
+			<type>powerVA</type>
+			<sensorId>_BRANCH_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.6</getRowOid>
+			</value>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Power
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="branch_power_factor" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.7">
+			<type>num/powerfactor</type>
+			<sensorId>_BRANCH_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.7</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Power Factor
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+		<alarmFlags2 ruleid="cpiPduBranchStatus" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.8</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PDU Branch Warning</activeText>
+					<inactiveText>PDU Branch Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+						Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue><space/>
+						warning condition exists.</activeText>
+					<inactiveText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+						Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue><space/>
+						warning condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>PDU Branch Alarm</activeText>
+					<inactiveText>PDU Branch Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+						Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue><space/>
+						alarm condition exists.</activeText>
+					<inactiveText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+						Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue><space/>
+						alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+		<numSensor ruleid="branch_energy" index=".1.3.6.1.4.1.30932.1.10.1.3.110.1.9">
+			<type>num/kdispappenergy</type>
+			<sensorId>_BRANCH_ENERGY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.9</getRowOid>
+					</op>
+					<op>0.0027778</op>
+				</mult>
+			</value>
+			<valueInc>0.0000001</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid>)<space/>
+				Branch <mapValue mapid="branchId-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.2</getRowOid></mapValue> Energy
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.3.110.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+	</device>
+		
+	<device deviceid="outlet">
+		<oidMustExist ruleid="outlet_exists" oid=".1.3.6.1.4.1.30932.1.10.1.4" istree="yes" />
+		
+		<valueMap ruleid="index-vm">
+			<valueIn>1</valueIn><valueOut>01</valueOut>
+			<valueIn>2</valueIn><valueOut>02</valueOut>
+			<valueIn>3</valueIn><valueOut>03</valueOut>
+			<valueIn>4</valueIn><valueOut>04</valueOut>
+			<valueIn>5</valueIn><valueOut>05</valueOut>
+			<valueIn>6</valueIn><valueOut>06</valueOut>
+			<valueIn>7</valueIn><valueOut>07</valueOut>
+			<valueIn>8</valueIn><valueOut>08</valueOut>
+			<valueIn>9</valueIn><valueOut>09</valueOut>
+			<valueIn>*</valueIn><valueOut>*</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="branchId-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="branchId-em">
+			<label>X-Y</label>
+			<label>Y-Z</label>
+			<label>Z-X</label>
+		</enumMap>
+
+		<stateSensor ruleid="cpiPduOutletBranchId" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.2">
+			<type>state</type>
+			<sensorId>_OUTLET_BRANCH_ID_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="branchId-vm">
+					<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+				Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue> Associated Branch
+			</label>
+			<enum>branchId-em</enum>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid></sensorSet>
+		</stateSensor>
+		
+		<suppressRule ruleid="suppresspduoutletcurrent" suppressid="chatsworth_pdu/chatsworth_pdu_sensors/outletCurrent"/>
+		<numSensor ruleid="outlet_current" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.6">
+			<type>amperage</type>
+			<sensorId>_OUTLET_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.6</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+				Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue> Current
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_voltage" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.7">
+			<type>voltage</type>
+			<sensorId>_OUTLET_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.7</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+				Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue> Voltage
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_power" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.8">
+			<type>powerVA</type>
+			<sensorId>_OUTLET_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.8</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+				Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue> Power
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+		<alarmFlags2 ruleid="cpiPduOutletStatus" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.9</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PDU Outlet Warning</activeText>
+					<inactiveText>PDU Outlet Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+						Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue><space/>
+						warning condition exists.</activeText>
+					<inactiveText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+						Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue><space/>
+						warning condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>PDU Branch Alarm</activeText>
+					<inactiveText>PDU Branch Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+						Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue><space/>
+						alarm condition exists.</activeText>
+					<inactiveText>
+						A PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+						Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue><space/>
+						alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+		<numSensor ruleid="outlet_energy" index=".1.3.6.1.4.1.30932.1.10.1.4.10.1.10">
+			<type>num/kdispappenergy</type>
+			<sensorId>_OUTLET_ENERGY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.10</getRowOid>
+					</op>
+					<op>0.0027778</op>
+				</mult>
+			</value>
+			<valueInc>0.0000001</valueInc>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid>)<space/>
+				Outlet <mapValue mapid="index-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.2</getRowOid></mapValue> Energy
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.4.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="sensors">
+		<oidMustExist ruleid="sensors_exists" oid=".1.3.6.1.4.1.30932.1.10.1.5" istree="yes" />
+		
+		<numSensor ruleid="cpiPduSensorValue" index=".1.3.6.1.4.1.30932.1.10.1.5.10.1.2">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>
+				<mapValue mapid="sensorType-vm-vm">
+					<getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.4</getRowOid>
+				</mapValue>
+			</type>
+			<sensorId>
+				<mapValue mapid="sensorId-vm">
+					<getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.4</getRowOid>
+				</mapValue><rowIndex/>
+			</sensorId>
+			<value>
+				<if>
+					<op><eq><op><getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.4</getRowOid></op><op>1</op></eq></op>
+					<op>
+						<mult>
+							<op>
+								<sub>
+									<op><getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.5</getRowOid></op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>
+								<div>
+									<op>5</op>
+									<op>9</op>
+								</div>
+							</op>
+						</mult>
+					</op>
+					<op><getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.5</getRowOid></op>
+				</if>
+			</value>
+			<label>
+				PDU (<getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.1</getRowOid>)<space/>
+				Sensor <getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.2</getRowOid><space/>
+				<mapValue mapid="sensorLabel-vm"><getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.4</getRowOid></mapValue>
+			</label>
+			<sensorSet>Device <getRowOid>.1.3.6.1.4.1.30932.1.10.1.5.10.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="sensorType-vm">
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+			<valueIn>1</valueIn><valueOut>temp</valueOut>
+			<valueIn>2</valueIn><valueOut>humidity</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="sensorId-vm">
+			<valueIn>*</valueIn><valueOut>_PDU_SENSOR_VALUE_</valueOut>
+			<valueIn>1</valueIn><valueOut>_EM_TEMP_</valueOut>
+			<valueIn>2</valueIn><valueOut>_EM_HUMIDITY_</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="sensorLabel-vm">
+			<valueIn>*</valueIn><valueOut>Value</valueOut>
+			<valueIn>1</valueIn><valueOut>Temperature</valueOut>
+			<valueIn>2</valueIn><valueOut>Humidity</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="notPresent-vm">
+			<valueIn>65535</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+	</device>
+</APC_DDF>

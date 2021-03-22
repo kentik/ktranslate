@@ -1,0 +1,1065 @@
+<?xml version="1.0"?>
+<!-- Carel_UG10_UG20 -->
+
+<APC_DDF ddfid ="carel_ug10_ug20" ddfname="Carel UG10 and UG20" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+<!--DDF Sensors -->
+    <device deviceid="carel_ug10_ug20_sensor">
+        <oidMustExist ruleid="carel_ug10_ug20_Detect" oid=".1.3.6.1.4.1.9839.1.2.0"/> 
+
+        <!-- Suppress All of multistack ddf (can possibly go away post-6.2 as multistack no longer bundled) -->
+        <suppressRule ruleid="supporesschillerStatus" suppressid="multistack/multistack/chillerStatus"/>
+        <suppressRule ruleid="supporessonOffem" suppressid="multistack/multistack/onOff-em"/>
+        <suppressRule ruleid="supporesslowChwFlow" suppressid="multistack/multistack/lowChwFlow"/>
+        <suppressRule ruleid="supporessnormalFaultem" suppressid="multistack/multistack/normalFault-em"/>
+        <suppressRule ruleid="supporesspowerPhaseMonitor" suppressid="multistack/multistack/powerPhaseMonitor"/>
+        <suppressRule ruleid="supporessremoteStartStop" suppressid="multistack/multistack/remoteStartStop"/>
+        <suppressRule ruleid="supporessremoteStartStopem" suppressid="multistack/multistack/remoteStartStop-em"/>
+        <suppressRule ruleid="supporessex1Fault" suppressid="multistack/multistack/ex1Fault"/>
+        <suppressRule ruleid="supporesslowLchwTempSystem" suppressid="multistack/multistack/lowLchwTempSystem"/>
+        <suppressRule ruleid="supporesslchwSysSensorFail" suppressid="multistack/multistack/lchwSysSensorFail"/>
+        <suppressRule ruleid="supporessechwSysSensorFail" suppressid="multistack/multistack/echwSysSensorFail"/>
+        <suppressRule ruleid="supporessglobalAlarm" suppressid="multistack/multistack/globalAlarm"/>
+        <suppressRule ruleid="supporessfahrenheitCelcius" suppressid="multistack/multistack/fahrenheitCelcius"/>
+        <suppressRule ruleid="supporessfahrenheitCelciusem" suppressid="multistack/multistack/fahrenheitCelcius-em"/>
+        <suppressRule ruleid="supporesscustomerResetActive" suppressid="multistack/multistack/customerResetActive"/>
+        <suppressRule ruleid="supporessactiveInactiveem" suppressid="multistack/multistack/activeInactive-em"/>
+        <suppressRule ruleid="supporesslLResetActive" suppressid="multistack/multistack/lLResetActive"/>
+        <suppressRule ruleid="supporesscHWResetActive" suppressid="multistack/multistack/cHWResetActive"/>
+        <suppressRule ruleid="supporessm11RunStatus" suppressid="multistack/multistack/m1-1RunStatus"/>
+        <suppressRule ruleid="supporessm12RunStatus" suppressid="multistack/multistack/m1-2RunStatus"/>
+        <suppressRule ruleid="supporessm1CommError" suppressid="multistack/multistack/m1CommError"/>
+        <suppressRule ruleid="supporessm1Fan1Status" suppressid="multistack/multistack/m1Fan1Status"/>
+        <suppressRule ruleid="supporessm1Fan2Status" suppressid="multistack/multistack/m1Fan2Status"/>
+        <suppressRule ruleid="supporessm21RunStatus" suppressid="multistack/multistack/m2-1RunStatus"/>
+        <suppressRule ruleid="supporessm22RunStatus" suppressid="multistack/multistack/m2-2RunStatus"/>
+        <suppressRule ruleid="supporessm2CommError" suppressid="multistack/multistack/m2CommError"/>
+        <suppressRule ruleid="supporessm2Fan1Status" suppressid="multistack/multistack/m2Fan1Status"/>
+        <suppressRule ruleid="supporessm2Fan2Status" suppressid="multistack/multistack/m2Fan2Status"/>
+        <suppressRule ruleid="supporessm31RunStatus" suppressid="multistack/multistack/m3-1RunStatus"/>
+        <suppressRule ruleid="supporessm32RunStatus" suppressid="multistack/multistack/m3-2RunStatus"/>
+        <suppressRule ruleid="supporessm3CommError" suppressid="multistack/multistack/m3CommError"/>
+        <suppressRule ruleid="supporessm3Fan1Status" suppressid="multistack/multistack/m3Fan1Status"/>
+        <suppressRule ruleid="supporessm3Fan2Status" suppressid="multistack/multistack/m3Fan2Status"/>
+        <suppressRule ruleid="supporessm41RunStatus" suppressid="multistack/multistack/m4-1RunStatus"/>
+        <suppressRule ruleid="supporessm42RunStatus" suppressid="multistack/multistack/m4-2RunStatus"/>
+        <suppressRule ruleid="supporessm4CommError" suppressid="multistack/multistack/m4CommError"/>
+        <suppressRule ruleid="supporessm4Fan1Status" suppressid="multistack/multistack/m4Fan1Status"/>
+        <suppressRule ruleid="supporessm4Fan2Status" suppressid="multistack/multistack/m4Fan2Status"/>
+        <suppressRule ruleid="supporessm51RunStatus" suppressid="multistack/multistack/m5-1RunStatus"/>
+        <suppressRule ruleid="supporessm52RunStatus" suppressid="multistack/multistack/m5-2RunStatus"/>
+        <suppressRule ruleid="supporessm5CommError" suppressid="multistack/multistack/m5CommError"/>
+        <suppressRule ruleid="supporessm5Fan1Status" suppressid="multistack/multistack/m5Fan1Status"/>
+        <suppressRule ruleid="supporessm5Fan2Status" suppressid="multistack/multistack/m5Fan2Status"/>
+        <suppressRule ruleid="supporessm61RunStatus" suppressid="multistack/multistack/m6-1RunStatus"/>
+        <suppressRule ruleid="supporessm62RunStatus" suppressid="multistack/multistack/m6-2RunStatus"/>
+        <suppressRule ruleid="supporessm6CommError" suppressid="multistack/multistack/m6CommError"/>
+        <suppressRule ruleid="supporessm6Fan1Status" suppressid="multistack/multistack/m6Fan1Status"/>
+        <suppressRule ruleid="supporessm6Fan2Status" suppressid="multistack/multistack/m6Fan2Status"/>
+        <suppressRule ruleid="supporessm71RunStatus" suppressid="multistack/multistack/m7-1RunStatus"/>
+        <suppressRule ruleid="supporessm72RunStatus" suppressid="multistack/multistack/m7-2RunStatus"/>
+        <suppressRule ruleid="supporessm7CommError" suppressid="multistack/multistack/m7CommError"/>
+        <suppressRule ruleid="supporessm7Fan1Status" suppressid="multistack/multistack/m7Fan1Status"/>
+        <suppressRule ruleid="supporessm7Fan2Status" suppressid="multistack/multistack/m7Fan2Status"/>
+        <suppressRule ruleid="supporessm81RunStatus" suppressid="multistack/multistack/m8-1RunStatus"/>
+        <suppressRule ruleid="supporessm82RunStatus" suppressid="multistack/multistack/m8-2RunStatus"/>
+        <suppressRule ruleid="supporessm8CommError" suppressid="multistack/multistack/m8CommError"/>
+        <suppressRule ruleid="supporessm8Fan1Status" suppressid="multistack/multistack/m8Fan1Status"/>
+        <suppressRule ruleid="supporessm8Fan2Status" suppressid="multistack/multistack/m8Fan2Status"/>
+        <suppressRule ruleid="supporesssystemEchw" suppressid="multistack/multistack/systemEchw"/>
+        <suppressRule ruleid="supporesssystemLchw" suppressid="multistack/multistack/systemLchw"/>
+        <suppressRule ruleid="supporessm1LchwTemp" suppressid="multistack/multistack/m1LchwTemp"/>
+        <suppressRule ruleid="supporessm1SuctTempCir1" suppressid="multistack/multistack/m1SuctTempCir1"/>
+        <suppressRule ruleid="supporessm1SuctTempCir2" suppressid="multistack/multistack/m1SuctTempCir2"/>
+        <suppressRule ruleid="supporessm2LchwTemp" suppressid="multistack/multistack/m2LchwTemp"/>
+        <suppressRule ruleid="supporessm2SuctTempCir1" suppressid="multistack/multistack/m2SuctTempCir1"/>
+        <suppressRule ruleid="supporessm2SuctTempCir2" suppressid="multistack/multistack/m2SuctTempCir2"/>
+        <suppressRule ruleid="supporessm3LchwTemp" suppressid="multistack/multistack/m3LchwTemp"/>
+        <suppressRule ruleid="supporessm3SuctTempCir1" suppressid="multistack/multistack/m3SuctTempCir1"/>
+        <suppressRule ruleid="supporessm3SuctTempCir2" suppressid="multistack/multistack/m3SuctTempCir2"/>
+        <suppressRule ruleid="supporessm4LchwTemp" suppressid="multistack/multistack/m4LchwTemp"/>
+        <suppressRule ruleid="supporessm4SuctTempCir1" suppressid="multistack/multistack/m4SuctTempCir1"/>
+        <suppressRule ruleid="supporessm4SuctTempCir2" suppressid="multistack/multistack/m4SuctTempCir2"/>
+        <suppressRule ruleid="supporessm5LchwTemp" suppressid="multistack/multistack/m5LchwTemp"/>
+        <suppressRule ruleid="supporessm5SuctTempCir1" suppressid="multistack/multistack/m5SuctTempCir1"/>
+        <suppressRule ruleid="supporessm5SuctTempCir2" suppressid="multistack/multistack/m5SuctTempCir2"/>
+        <suppressRule ruleid="supporessm6LchwTemp" suppressid="multistack/multistack/m6LchwTemp"/>
+        <suppressRule ruleid="supporessm6SuctTempCir1" suppressid="multistack/multistack/m6SuctTempCir1"/>
+        <suppressRule ruleid="supporessm6SuctTempCir2" suppressid="multistack/multistack/m6SuctTempCir2"/>
+        <suppressRule ruleid="supporessm7LchwTemp" suppressid="multistack/multistack/m7LchwTemp"/>
+        <suppressRule ruleid="supporessm7SuctTempCir1" suppressid="multistack/multistack/m7SuctTempCir1"/>
+        <suppressRule ruleid="supporessm7SuctTempCir2" suppressid="multistack/multistack/m7SuctTempCir2"/>
+        <suppressRule ruleid="supporessm8LchwTemp" suppressid="multistack/multistack/m8LchwTemp"/>
+        <suppressRule ruleid="supporessm8SuctTempCir1" suppressid="multistack/multistack/m8SuctTempCir1"/>
+        <suppressRule ruleid="supporessm8SuctTempCir2" suppressid="multistack/multistack/m8SuctTempCir2"/>
+        <suppressRule ruleid="supporesscapacity" suppressid="multistack/multistack/capacity"/>
+        <suppressRule ruleid="supporessdemand" suppressid="multistack/multistack/demand"/>
+        <suppressRule ruleid="supporesstdiffCountdown" suppressid="multistack/multistack/tdiffCountdown"/>
+        <suppressRule ruleid="supporesssystemCountdown" suppressid="multistack/multistack/systemCountdown"/>
+        <suppressRule ruleid="supporessnumOfFaults" suppressid="multistack/multistack/numOfFaults"/>
+        <suppressRule ruleid="supporessleadCompressor" suppressid="multistack/multistack/leadCompressor"/>
+        <suppressRule ruleid="supporessloadLimit" suppressid="multistack/multistack/loadLimit"/>
+        <suppressRule ruleid="supporesschwOffset" suppressid="multistack/multistack/chwOffset"/>
+        <suppressRule ruleid="supporesstotalLoadProfile" suppressid="multistack/multistack/totalLoadProfile"/>
+        <suppressRule ruleid="supporessm1Fault" suppressid="multistack/multistack/m1Fault"/>
+        <suppressRule ruleid="supporessfaultCodeem" suppressid="multistack/multistack/faultCode-em"/>
+        <suppressRule ruleid="supporessm11RunHours" suppressid="multistack/multistack/m1-1RunHours"/>
+        <suppressRule ruleid="supporessm12RunHours" suppressid="multistack/multistack/m1-2RunHours"/>
+        <suppressRule ruleid="supporessm11HighPressure" suppressid="multistack/multistack/m1-1HighPressure"/>
+        <suppressRule ruleid="supporessm11LowPressure" suppressid="multistack/multistack/m1-1LowPressure"/>
+        <suppressRule ruleid="supporessm12HighPressure" suppressid="multistack/multistack/m1-2HighPressure"/>
+        <suppressRule ruleid="supporessm12LowPressure" suppressid="multistack/multistack/m1-2LowPressure"/>
+        <suppressRule ruleid="supporessm1ControlMode" suppressid="multistack/multistack/m1ControlMode"/>
+        <suppressRule ruleid="supporesscontrolModevm" suppressid="multistack/multistack/controlMode-vm"/>
+        <suppressRule ruleid="supporesscontrolModeem" suppressid="multistack/multistack/controlMode-em"/>
+        <suppressRule ruleid="supporessm2Fault" suppressid="multistack/multistack/m2Fault"/>
+        <suppressRule ruleid="supporessm21RunHours" suppressid="multistack/multistack/m2-1RunHours"/>
+        <suppressRule ruleid="supporessm22RunHours" suppressid="multistack/multistack/m2-2RunHours"/>
+        <suppressRule ruleid="supporessm21HighPressure" suppressid="multistack/multistack/m2-1HighPressure"/>
+        <suppressRule ruleid="supporessm21LowPressure" suppressid="multistack/multistack/m2-1LowPressure"/>
+        <suppressRule ruleid="supporessm22HighPressure" suppressid="multistack/multistack/m2-2HighPressure"/>
+        <suppressRule ruleid="supporessm22LowPressure" suppressid="multistack/multistack/m2-2LowPressure"/>
+        <suppressRule ruleid="supporessm2ControlMode" suppressid="multistack/multistack/m2ControlMode"/>
+        <suppressRule ruleid="supporessm3Fault" suppressid="multistack/multistack/m3Fault"/>
+        <suppressRule ruleid="supporessm31RunHours" suppressid="multistack/multistack/m3-1RunHours"/>
+        <suppressRule ruleid="supporessm32RunHours" suppressid="multistack/multistack/m3-2RunHours"/>
+        <suppressRule ruleid="supporessm31HighPressure" suppressid="multistack/multistack/m3-1HighPressure"/>
+        <suppressRule ruleid="supporessm31LowPressure" suppressid="multistack/multistack/m3-1LowPressure"/>
+        <suppressRule ruleid="supporessm32HighPressure" suppressid="multistack/multistack/m3-2HighPressure"/>
+        <suppressRule ruleid="supporessm32LowPressure" suppressid="multistack/multistack/m3-2LowPressure"/>
+        <suppressRule ruleid="supporessm3ControlMode" suppressid="multistack/multistack/m3ControlMode"/>
+        <suppressRule ruleid="supporessm4Fault" suppressid="multistack/multistack/m4Fault"/>
+        <suppressRule ruleid="supporessm41RunHours" suppressid="multistack/multistack/m4-1RunHours"/>
+        <suppressRule ruleid="supporessm42RunHours" suppressid="multistack/multistack/m4-2RunHours"/>
+        <suppressRule ruleid="supporessm41HighPressure" suppressid="multistack/multistack/m4-1HighPressure"/>
+        <suppressRule ruleid="supporessm41LowPressure" suppressid="multistack/multistack/m4-1LowPressure"/>
+        <suppressRule ruleid="supporessm42HighPressure" suppressid="multistack/multistack/m4-2HighPressure"/>
+        <suppressRule ruleid="supporessm42LowPressure" suppressid="multistack/multistack/m4-2LowPressure"/>
+        <suppressRule ruleid="supporessm4ControlMode" suppressid="multistack/multistack/m4ControlMode"/>
+        <suppressRule ruleid="supporessm5Fault" suppressid="multistack/multistack/m5Fault"/>
+        <suppressRule ruleid="supporessm51RunHours" suppressid="multistack/multistack/m5-1RunHours"/>
+        <suppressRule ruleid="supporessm52RunHours" suppressid="multistack/multistack/m5-2RunHours"/>
+        <suppressRule ruleid="supporessm51HighPressure" suppressid="multistack/multistack/m5-1HighPressure"/>
+        <suppressRule ruleid="supporessm51LowPressure" suppressid="multistack/multistack/m5-1LowPressure"/>
+        <suppressRule ruleid="supporessm52HighPressure" suppressid="multistack/multistack/m5-2HighPressure"/>
+        <suppressRule ruleid="supporessm52LowPressure" suppressid="multistack/multistack/m5-2LowPressure"/>
+        <suppressRule ruleid="supporessm5ControlMode" suppressid="multistack/multistack/m5ControlMode"/>
+        <suppressRule ruleid="supporessm6Fault" suppressid="multistack/multistack/m6Fault"/>
+        <suppressRule ruleid="supporessm61RunHours" suppressid="multistack/multistack/m6-1RunHours"/>
+        <suppressRule ruleid="supporessm62RunHours" suppressid="multistack/multistack/m6-2RunHours"/>
+        <suppressRule ruleid="supporessm61HighPressure" suppressid="multistack/multistack/m6-1HighPressure"/>
+        <suppressRule ruleid="supporessm61LowPressure" suppressid="multistack/multistack/m6-1LowPressure"/>
+        <suppressRule ruleid="supporessm62HighPressure" suppressid="multistack/multistack/m6-2HighPressure"/>
+        <suppressRule ruleid="supporessm62LowPressure" suppressid="multistack/multistack/m6-2LowPressure"/>
+        <suppressRule ruleid="supporessm6ControlMode" suppressid="multistack/multistack/m6ControlMode"/>
+        <suppressRule ruleid="supporessm7Fault" suppressid="multistack/multistack/m7Fault"/>
+        <suppressRule ruleid="supporessm71RunHours" suppressid="multistack/multistack/m7-1RunHours"/>
+        <suppressRule ruleid="supporessm72RunHours" suppressid="multistack/multistack/m7-2RunHours"/>
+        <suppressRule ruleid="supporessm71HighPressure" suppressid="multistack/multistack/m7-1HighPressure"/>
+        <suppressRule ruleid="supporessm71LowPressure" suppressid="multistack/multistack/m7-1LowPressure"/>
+        <suppressRule ruleid="supporessm72HighPressure" suppressid="multistack/multistack/m7-2HighPressure"/>
+        <suppressRule ruleid="supporessm72LowPressure" suppressid="multistack/multistack/m7-2LowPressure"/>
+        <suppressRule ruleid="supporessm7ControlMode" suppressid="multistack/multistack/m7ControlMode"/>
+        <suppressRule ruleid="supporessm8Fault" suppressid="multistack/multistack/m8Fault"/>
+        <suppressRule ruleid="supporessm81RunHours" suppressid="multistack/multistack/m8-1RunHours"/>
+        <suppressRule ruleid="supporessm82RunHours" suppressid="multistack/multistack/m8-2RunHours"/>
+        <suppressRule ruleid="supporessm81HighPressure" suppressid="multistack/multistack/m8-1HighPressure"/>
+        <suppressRule ruleid="supporessm81LowPressure" suppressid="multistack/multistack/m8-1LowPressure"/>
+        <suppressRule ruleid="supporessm82HighPressure" suppressid="multistack/multistack/m8-2HighPressure"/>
+        <suppressRule ruleid="supporessm82LowPressure" suppressid="multistack/multistack/m8-2LowPressure"/>
+        <suppressRule ruleid="supporessm8ControlMode" suppressid="multistack/multistack/m8ControlMode"/>
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+        <setProductData ruleid="vendordata" field="vendor">Carel</setProductData> 
+        <setProductData ruleid="modeldata" field="model">Uniflair CRAC</setProductData> 
+        <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+        <!-- System Status -->
+        <stateSensor ruleid="systemStatus">
+            <type>state</type>
+            <sensorId>SYSTEM_STATUS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+            </value>
+            <label>System On (Fan) Status</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Compressor 1 Status -->
+        <stateSensor ruleid="compressor1Status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_STATUS_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+            </value>
+            <label>Compressor 1</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Compressor 2 Status -->
+        <stateSensor ruleid="compressor2Status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_STATUS_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+            </value>
+            <label>Compressor 2</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Net Compressor 1 (Compressor 3) -->
+        <stateSensor ruleid="compressor3Status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_STATUS_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+            </value>
+            <label>Net Compressor 1 (Compressor 3)</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Net Compressor 2 (Compressor 4) -->
+        <stateSensor ruleid="compressor4Status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_STATUS_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.5.0</getOid>
+            </value>
+            <label>Net Compressor 2 (Compressor 4)</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Heating Stage 1 -->
+        <stateSensor ruleid="heatingStage1Status">
+            <type>state</type>
+            <sensorId>HEATING_STATUS_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.6.0</getOid>
+            </value>
+            <label>Heating Stage 1</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Heating Stage 2 -->
+        <stateSensor ruleid="heatingStage2Status">
+            <type>state</type>
+            <sensorId>HEATING_STATUS_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.7.0</getOid>
+            </value>
+            <label>Heating Stage 2</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Heating Stage 3 -->
+        <stateSensor ruleid="heatingStage3Status">
+            <type>state</type>
+            <sensorId>HEATING_STATUS_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.8.0</getOid>
+            </value>
+            <label>Heating Stage 3</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Hot Gas On -->
+        <stateSensor ruleid="hotGasStatus">
+            <type>state</type>
+            <sensorId>HOT_GAS_STATUS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.9.0</getOid>
+            </value>
+            <label>Hot Gas</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Dehumidification -->
+        <stateSensor ruleid="dehumidificationStatus">
+            <type>state</type>
+            <sensorId>DEHUMIDIFICATION_STATUS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.10.0</getOid>
+            </value>
+            <label>Dehumidification</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <!-- Humidification -->
+        <stateSensor ruleid="humidificationStatus">
+            <type>state</type>
+            <sensorId>HUMIDIFICATION_STATUS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.11.0</getOid>
+            </value>
+            <label>Humidification</label>
+            <enum>onOff-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+   
+        <enumMap ruleid="onOff-em">
+            <label>Off</label>
+            <label>On</label>
+        </enumMap>
+
+        <!-- roomTemp -->
+        <numSensor ruleid="roomTemp">
+            <type>temp</type>
+            <sensorId>ROOM_TEMP</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Room Temperature</label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- outdoorTemp -->
+        <numSensor ruleid="outdoorTemp">
+            <type>temp</type>
+            <sensorId>OUTDOOR_TEMP</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Outdoor Temperature</label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- deliveryAirTemp -->
+        <numSensor ruleid="deliveryAirTemp">
+            <type>temp</type>
+            <sensorId>DELIVERY_AIR_TEMP</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.3.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Delivery Air Temperature</label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- closedCircuitWaterTemp -->
+        <numSensor ruleid="closedCircuitWaterTemp">
+            <type>temp</type>
+            <sensorId>CLOSED_CIRCUIT_WATER_TEMP</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Closed Circuit (or Chilled) Water Temperature</label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- hotWaterTemp -->
+        <numSensor ruleid="hotWaterTemp">
+            <type>temp</type>
+            <sensorId>HOT_WATER_TEMP</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Hot Water Temperature</label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- roomRH -->
+        <numSensor ruleid="roomRH">
+            <type>humidity</type>
+            <sensorId>ROOM_HUMIDITY</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.9839.2.1.2.6.0</getOid></op><op>0.1</op></mult>
+            </value>
+            <label>Room Relative Humidity </label>
+            <sensorSet>analogObjects</sensorSet>
+        </numSensor>
+
+        <!-- airFilterWorkHours -->
+        <numSensor ruleid="airFilterWorkHours">
+            <type>runHours</type>
+            <sensorId>AIR_FILTER_WORK_HOURS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.1.0</getOid>
+            </value>
+            <label>Air Filter Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- unitWorkHours -->
+        <numSensor ruleid="unitWorkHours">
+            <type>runhours</type>
+            <sensorId>UNIT_WORK_HOURS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.2.0</getOid>
+            </value>
+            <label>Unit Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- compressor1WorkHours -->
+        <numSensor ruleid="compressor1WorkHours">
+            <type>runHours</type>
+            <sensorId>COMPRESSOR_WORK_HOURS_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.3.0</getOid>
+            </value>
+            <label>Compressor 1 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- compressor2WorkHours -->
+        <numSensor ruleid="compressor2WorkHours">
+            <type>runhours</type>
+            <sensorId>COMPRESSOR_WORK_HOURS_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.4.0</getOid>
+            </value>
+            <label>Compressor 2 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- compressor3WorkHours -->
+        <numSensor ruleid="compressor3WorkHours">
+            <type>runhours</type>
+            <sensorId>COMPRESSOR_WORK_HOURS_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.5.0</getOid>
+            </value>
+            <label>Compressor 3 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- compressor4WorkHours -->
+        <numSensor ruleid="compressor4WorkHours">
+            <type>runhours</type>
+            <sensorId>COMPRESSOR_WORK_HOURS_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.6.0</getOid>
+            </value>
+            <label>Compressor 4 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- heater1WorkHours -->
+        <numSensor ruleid="heater1WorkHours">
+            <type>runhours</type>
+            <sensorId>HEATER_WORK_HOURS_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.7.0</getOid>
+            </value>
+            <label>Heater 1 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- heater2WorkHours -->
+        <numSensor ruleid="heater2WorkHours">
+            <type>runhours</type>
+            <sensorId>HEATER_WORK_HOURS_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.8.0</getOid>
+            </value>
+            <label>Heater 2 Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- humidifierWorkHours -->
+        <numSensor ruleid="humidifierWorkHours">
+            <type>runhours</type>
+            <sensorId>HUMIDIFIER_WORK_HOURS_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.9.0</getOid>
+            </value>
+            <label>Humidifier Work Hours</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- dehumidificationProportionalBand -->
+        <numSensor ruleid="dehumidificationProportionalBand">
+            <type>humidity</type>
+            <sensorId>DEHUMIDIFICATION_PROPORTIONAL_BAND</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.12.0</getOid>
+            </value>
+            <label>Dehumidification Proportional Band</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <!-- humidificationProportionalBand -->
+        <numSensor ruleid="humidificationProportionalBand">
+            <type>humidity</type>
+            <sensorId>HUMIDIFICATION_PROPORTIONAL_BAND</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.3.13.0</getOid>
+            </value>
+            <label>Humidification Proportional Band</label>
+            <sensorSet>integerObjects</sensorSet>
+        </numSensor>
+
+        <alarmFlags ruleid="roomHighTempAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room High Temperature Alarm</activeText>
+                    <inactiveText>Room High Temperature Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room High Temperature Alarm condition exists.</activeText>
+                    <inactiveText>A Room High Temperature Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="roomLowTempAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.14.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room Low Temperature Alarm</activeText>
+                    <inactiveText>Room Low Temperature Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room Low Temperature Alarm condition exists.</activeText>
+                    <inactiveText>A Room Low Temperature Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="roomHighHumidityAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.15.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room High Humidity Alarm</activeText>
+                    <inactiveText>Room High Humidity Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room High Humidity Alarm condition exists.</activeText>
+                    <inactiveText>A Room High Humidity Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="roomLowHumidityAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.16.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room Low Humidity Alarm</activeText>
+                    <inactiveText>Room Low Humidity Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room Low Humidity Alarm condition exists.</activeText>
+                    <inactiveText>A Room Low Humidity Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="roomHighLowTempHumidExternalAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.17.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room High/Low Temp./Humid. Alarm (Ext. Devices)</activeText>
+                    <inactiveText>Room High/Low Temp./Humid. Alarm (Ext. Devices) Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room High/Low Temp./Humid. Alarm (Ext. Devices) condition exists.</activeText>
+                    <inactiveText>A Room High/Low Temp./Humid. Alarm (Ext. Devices) condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="cloggedFilterAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.18.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Clogged Filter Alarm</activeText>
+                    <inactiveText>Clogged Filter Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Clogged Filter Alarm condition exists.</activeText>
+                    <inactiveText>A Clogged Filter Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="floodingAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.19.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Flooding Alarm</activeText>
+                    <inactiveText>Flooding Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Flooding Alarm condition exists.</activeText>
+                    <inactiveText>A Flooding Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="lossOfAirFlowAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.20.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Loss Of Air Flow Alarm</activeText>
+                    <inactiveText>Loss Of Air Flow Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Loss Of Air Flow Alarm condition exists.</activeText>
+                    <inactiveText>A Loss Of Air Flow Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="heaterOverheatingAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.21.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Heater Overheating Alarm</activeText>
+                    <inactiveText>Heater Overheating Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Heater Overheating Alarm condition exists.</activeText>
+                    <inactiveText>A Heater Overheating Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="highPressure1Alarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.22.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>High Pressure 1 Alarm</activeText>
+                    <inactiveText>High Pressure 1 Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A High Pressure 1 Alarm condition exists.</activeText>
+                    <inactiveText>A High Pressure 1 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="highPressure2Alarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>High Pressure 2 Alarm</activeText>
+                    <inactiveText>High Pressure 2 Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A High Pressure 2 Alarm condition exists.</activeText>
+                    <inactiveText>A High Pressure 2 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="lowPressure1Alarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.24.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Low Pressure 1 Alarm</activeText>
+                    <inactiveText>Low Pressure 1 Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Low Pressure 1 Alarm condition exists.</activeText>
+                    <inactiveText>A Low Pressure 1 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="lowPressure2Alarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.25.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Low Pressure 2 Alarm</activeText>
+                    <inactiveText>Low Pressure 2 Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Low Pressure 2 Alarm condition exists.</activeText>
+                    <inactiveText>A Low Pressure 2 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="wrongPhaseSequenceAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.26.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Wrong Phase Sequence Alarm</activeText>
+                    <inactiveText>Wrong Phase Sequence Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Wrong Phase Sequence Alarm condition exists.</activeText>
+                    <inactiveText>A Wrong Phase Sequence Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="smokeFireAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.27.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Smoke-Fire Alarm</activeText>
+                    <inactiveText>Smoke-Fire Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Smoke-Fire Alarm condition exists.</activeText>
+                    <inactiveText>A Smoke-Fire Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="interruptedLanAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.28.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Interrupted LAN Alarm</activeText>
+                    <inactiveText>Interrupted LAN Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Interrupted LAN Alarm condition exists.</activeText>
+                    <inactiveText>A Interrupted LAN Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="humidifierHighCurrentAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.29.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Humidifier Alarm: High Current</activeText>
+                    <inactiveText>Humidifier Alarm: High Current Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Humidifier Alarm: High Current condition exists.</activeText>
+                    <inactiveText>A Humidifier Alarm: High Current condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="humidifierPowerLossAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Humidifier Alarm: Power Loss</activeText>
+                    <inactiveText>Humidifier Alarm: Power Loss Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Humidifier Alarm: Power Loss condition exists.</activeText>
+                    <inactiveText>A Humidifier Alarm: Power Loss condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="humidifierWaterLossAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Humidifier Alarm: Water Loss</activeText>
+                    <inactiveText>Humidifier Alarm: Water Loss Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Humidifier Alarm: Water Loss condition exists.</activeText>
+                    <inactiveText>A Humidifier Alarm: Water Loss condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="chilledWaterTempTooHighAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Chilled Water Temp. too High for Dehumidification Alarm</activeText>
+                    <inactiveText>Chilled Water Temp. too High for Dehumidification Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Chilled Water Temp. too High for Dehumidification Alarm condition exists.</activeText>
+                    <inactiveText>A Chilled Water Temp. too High for Dehumidification Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="cwValveFailureOrWaterFlowTooLowAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>CW Valve Failure or Water Flow too Low Alarm</activeText>
+                    <inactiveText>CW Valve Failure or Water Flow too Low Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A CW Valve Failure or Water Flow too Low Alarm condition exists.</activeText>
+                    <inactiveText>A CW Valve Failure or Water Flow too Low Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="lossOfWaterFlowAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Loss of Water flow Alarm</activeText>
+                    <inactiveText>Loss of Water flow Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Loss of Water flow Alarm condition exists.</activeText>
+                    <inactiveText>A Loss of Water flow Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="highChilledWaterTempAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>High chilled water temp. Alarm</activeText>
+                    <inactiveText>High chilled water temp. Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A High chilled water temp. Alarm condition exists.</activeText>
+                    <inactiveText>A High chilled water temp. Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="roomAirSensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Room air Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Room air Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Room air Sensor Failure/Disconnected Alarm condition exists.</activeText>
+                    <inactiveText>A Room air Sensor Failure/Disconnected Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="hotWaterSensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hot water Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Hot water Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Chilled Water Temp. too High for Dehumidification Alarm condition exists.</activeText>
+                    <inactiveText>A Chilled Water Temp. too High for Dehumidification Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="condensingWaterSensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Condensing water Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Condensing water Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Condensing water Sensor Failure/Disconnected Alarm condition exists.</activeText>
+                    <inactiveText>A Condensing water Sensor Failure/Disconnected Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="outdoorTempSensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.39.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Outdoor temp. Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Outdoor temp. Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Outdoor temp. Sensor Failure/Disconnected Alarm condition exists.</activeText>
+                    <inactiveText>A Outdoor temp. Sensor Failure/Disconnected Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="deliveryTempSensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.40.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Delivery temp. Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Delivery temp. Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Delivery temp. Sensor Failure/Disconnected Alarm condition exists.</activeText>
+                    <inactiveText>A Delivery temp. Sensor Failure/Disconnected Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="relHumiditySensorFailureAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.41.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Rel. Humidity Sensor Failure/Disconnected Alarm</activeText>
+                    <inactiveText>Rel. Humidity Sensor Failure/Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Rel. Humidity Sensor Failure/Disconnected Alarm condition exists.</activeText>
+                    <inactiveText>A Rel. Humidity Sensor Failure/Disconnected Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="generalAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.51.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>General Alarm</activeText>
+                    <inactiveText>General Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A General Alarm condition exists.</activeText>
+                    <inactiveText>A General Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+        <alarmFlags ruleid="humidifierGeneralAlarm">
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.57.0</getOid>
+            </value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Humidifier General Alarm</activeText>
+                    <inactiveText>Humidifier General Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>System</category>
+                <description>
+                    <activeText>A Humidifier General Alarm condition exists.</activeText>
+                    <inactiveText>A Humidifier General Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+
+    </device>
+</APC_DDF>

@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<!-- Power One Aspiro DC Rectifier -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="powerone_apsiro_dcrectifier" ddfname="PowerOne Aspiro DC Rectifier" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!--  -->
+  <device deviceid="poweronediscdata">
+    <oidMustExist ruleid="poweroneDetect" oid=".1.3.6.1.4.1.5961.3.1" istree="yes"/>
+
+    <setProductData ruleid="data" field="vendor">Power-One Inc</setProductData>
+    <setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+    <setProductData ruleid="serialNumdata" field="serial_num"><getOid>.1.3.6.1.4.1.5961.3.1.4.0</getOid></setProductData>
+    <setProductData ruleid="appVerdata" field="appversion"><getOid>.1.3.6.1.4.1.5961.3.1.3.0</getOid></setProductData>
+    <setProductData ruleid="modeldata" field="model">Aspiro</setProductData>
+
+    <suppressRule ruleid="suppressDefaultLabel" suppressid="core/mib2datalabel/labeldata"/>
+    <setDefaultLabel ruleid="newLabeldata"><getOid>.1.3.6.1.4.1.5961.3.1.1.0</getOid>(<sysHostname/>)</setDefaultLabel>
+
+  </device>
+
+  <device deviceid="powerOneData">
+    <oidMustExist ruleid="poweroneDetect" oid=".1.3.6.1.4.1.5961.3" istree="yes"/>
+
+    <numSensor ruleid="BatteryCapacity-Sensor">
+      <type>num</type>
+      <units>amphours</units>
+      <sensorId>BATTERY_CAPACITY</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.5961.3.1.7.0</getOid>
+      </value>
+      <label>Battery Capacity</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="SystemVoltage-Sensor">
+      <type>voltage/rectsysvoltage</type>
+      <sensorId>SYSTEM_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.5961.3.2.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>System Voltage</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="LoadCurrent-Sensor">
+      <type>amperage</type>
+      <sensorId>LOAD_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.5961.3.2.2.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Load Current</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="BatteryCurrent-Sensor">
+      <type>amperage/batterycurrent</type>
+      <sensorId>BATTERY_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.5961.3.2.3.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Current</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="RectifierCurrent-Sensor">
+      <type>amperage/rectcurrent</type>
+      <sensorId>RECTIFIER_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.5961.3.2.4.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Rectifier Current</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="BattTemperature-Sensor">
+      <type>temp/batterytempc</type>
+      <sensorId>BATT_TEMPERATURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.5961.3.2.5.0</getOid>
+      </value>
+      <label>Batt Temperature</label>
+      <sensorSet></sensorSet>
+    </numSensor>
+  </device>
+
+
+  <device deviceid="powerOneAlarms">
+    <oidMustExist ruleid="poweroneDetect" oid=".1.3.6.1.4.1.5961.3.3" istree="yes"/>
+
+    <alarmFlags2>
+      <value>
+        <getOid>.1.3.6.1.4.1.5961.3.3.7.0</getOid>
+      </value>
+
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Low Voltage Alarm</activeText>
+          <inactiveText>Voltage Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Low Voltage condition has been detected.</activeText>
+          <inactiveText>The Low Voltage condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="2" match="2">
+        <name>
+          <activeText>High Voltage Alarm</activeText>
+          <inactiveText>Voltage Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A High Voltage condition has been detected.</activeText>
+          <inactiveText>The High Voltage condition has been cleared.</inactiveText>
+        </description>
+        <alarmRecommendedActions></alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="4" match="4">
+        <name>
+          <activeText>Low Voltage Disconnect</activeText>
+          <inactiveText>Voltage Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>error</category>
+        <description>
+          <activeText>A Low Voltage Disconnect condition has been detected.</activeText>
+          <inactiveText>The Low Voltage Disconnect condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="8" match="8">
+        <name>
+          <activeText>Mains Failure</activeText>
+          <inactiveText>Mains Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Mains Failure condition has been detected.</activeText>
+          <inactiveText>The Mains Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="10" match="10">
+        <name>
+          <activeText>Distribution Fuse Failure</activeText>
+          <inactiveText>Distribution Fuse Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Distribution Fuse Failure condition has been detected.</activeText>
+          <inactiveText>The Distribution Fuse Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="20" match="20">
+        <name>
+          <activeText>Earth Failure</activeText>
+          <inactiveText>Earth Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>An Earth Failure condition has been detected.</activeText>
+          <inactiveText>The Earth Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="40" match="40">
+        <name>
+          <activeText>Battery Failure</activeText>
+          <inactiveText>Battery Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Battery Failure condition has been detected.</activeText>
+          <inactiveText>The Battery Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="80" match="80">
+        <name>
+          <activeText>Rectifier Module Alarm</activeText>
+          <inactiveText>Rectifier Module Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Rectifier Module Alarm condition has been detected.</activeText>
+          <inactiveText>The Rectifier Module Alarm condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2>
+      <value>
+        <getOid>.1.3.6.1.4.1.5961.3.3.8.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>High Temperature Alarm</activeText>
+          <inactiveText>Temperature Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A High Temperature condition has been detected.</activeText>
+          <inactiveText>The High Temperature condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="2" match="2">
+        <name>
+          <activeText>Symmetry Failure</activeText>
+          <inactiveText>Symmetry Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Symmetry Failure condition has been detected.</activeText>
+          <inactiveText>The Symmetry Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="4" match="4">
+        <name>
+          <activeText>Battery Fuse Failure</activeText>
+          <inactiveText>Battery Fuse Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Battery Fuse Failure condition has been detected.</activeText>
+          <inactiveText>The Battery Fuse Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="8" match="8">
+        <name>
+          <activeText>High Load Alarm</activeText>
+          <inactiveText>Load Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A High Load Alarm condition has been detected.</activeText>
+          <inactiveText>The High Load Alarm condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="10" match="10">
+        <name>
+          <activeText>Battery Fuse Disconnected</activeText>
+          <inactiveText>Battery Fuse Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Battery Fuse Disconnected condition has been detected.</activeText>
+          <inactiveText>The Battery Fuse Disconnected condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="20" match="20">
+        <name>
+          <activeText>Urgent Module Alarm</activeText>
+          <inactiveText>Module Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Urgent Module Alarm condition has been detected.</activeText>
+          <inactiveText>The Urgent Module Alarm condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="40" match="40">
+        <name>
+          <activeText>Communication Fault</activeText>
+          <inactiveText>Communication Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Communication Fault condition has been detected.</activeText>
+          <inactiveText>The Communication Fault condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="80" match="80">
+        <name>
+          <activeText>Partial Load Disconnect</activeText>
+          <inactiveText>Load Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Partial Load Disconnect condition has been detected.</activeText>
+          <inactiveText>The Partial Load Disconnect condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+    </alarmFlags2>
+
+    <alarmFlags2>
+      <value>
+        <getOid>.1.3.6.1.4.1.5961.3.3.9.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Temperature Probe Failure</activeText>
+          <inactiveText>Temperature Probe Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Temperature Probe Failure condition has been detected.</activeText>
+          <inactiveText>The Temperature Probe Failure condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="2" match="2">
+        <name>
+          <activeText>Distribution Load High</activeText>
+          <inactiveText>Distribution Load Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A High Distribution Load condition has been detected.</activeText>
+          <inactiveText>The High Distribution Load condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="4" match="4">
+        <name>
+          <activeText>Batteries On Discharge</activeText>
+          <inactiveText>Batteries Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Batteries On Discharge condition has been detected.</activeText>
+          <inactiveText>The Batteries On Discharge condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="8" match="8">
+        <name>
+          <activeText>Output Overvoltage Shutdown Alarm</activeText>
+          <inactiveText>Output Voltage Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>An Output Overvoltage Shutdown condition has been detected.</activeText>
+          <inactiveText>The Output Overvoltage Shutdown condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="10" match="10">
+        <name>
+          <activeText>Low Battery Temperature Alarm</activeText>
+          <inactiveText>Battery Temperature Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>A Low Battery Temperature condition has been detected.</activeText>
+          <inactiveText>The Low Battery Temperature condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest mask="80" match="80">
+        <name>
+          <activeText>Alarms Blocked</activeText>
+          <inactiveText>Alarms Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>An Alarms Blocked condition has been detected.</activeText>
+          <inactiveText>The Alarms Blocked condition has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+    </alarmFlags2>
+
+
+  </device>
+
+
+</APC_DDF>

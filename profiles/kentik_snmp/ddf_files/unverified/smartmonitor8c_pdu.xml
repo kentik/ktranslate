@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<APC_DDF ddfid ="smartmonitor8c_pdu" ddfname="Bellwin SmartMonitor8c PDU" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+    <device deviceid="smartmonitor8c_pdu">
+        <oidMustExist istree="yes" ruleid="smartmonitor8c_pdu_exist" oid=".1.3.6.1.4.1.26104.1.1.2"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Bellwin</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+		<setProductData ruleid="modeldata" field="model">SmartMonitor8c</setProductData>		
+		
+ 		<!-- PDU Monitor -->
+		<stateSensor ruleid="smPduMonitor" index=".1.3.6.1.4.1.26104.1.1.2.2.1.2">
+			<type>state</type>
+			<sensorId>PDU_MONITOR_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="no_yes-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>PDU <getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.1</getRowOid> Monitor</label>
+			<enum>no_yes-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+		
+ 		<!-- PDU Link -->
+		<stateSensor ruleid="smPduLink" index=".1.3.6.1.4.1.26104.1.1.2.2.1.3">
+			<type>state</type>
+			<sensorId>PDU_LINK_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="pduLink-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>PDU <getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.1</getRowOid> Link</label>
+			<enum>pduLink-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+
+		<!-- PDU Current -->
+		<numSensor ruleid="smPduCurrent" index=".1.3.6.1.4.1.26104.1.1.2.2.1.4">
+			<type>amperage</type>
+			<sensorId>PDU_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.4</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.1</getRowOid> Total Current</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+
+		<!-- PDU Warning -->
+		<numSensor ruleid="smPduCurrent" index=".1.3.6.1.4.1.26104.1.1.2.2.1.5">
+			<type>num</type>
+			<sensorId>PDU_WARNING_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.5</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <getRowOid>.1.3.6.1.4.1.26104.1.1.2.2.1.1</getRowOid> Warning</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		
+ 		<!-- Environment Monitor -->
+		<stateSensor ruleid="smEnvironmentMonitor" index=".1.3.6.1.4.1.26104.1.1.2.3.1.3">
+			<type>state</type>
+			<sensorId>ENVIRONMENT_MONITOR_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="no_yes-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>Environment Sensor <getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.1</getRowOid> - Monitor</label>
+			<enum>no_yes-em</enum>
+			<sensorSet>Environment</sensorSet>
+		</stateSensor>
+		
+ 		<!-- Environment Link -->
+		<stateSensor ruleid="smEnvironmentLink" index=".1.3.6.1.4.1.26104.1.1.2.3.1.4">
+			<type>state</type>
+			<sensorId>ENVIRONMENT_LINK_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="no_yes-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Environment Sensor <getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.1</getRowOid> - Link</label>
+			<enum>no_yes-em</enum>
+			<sensorSet>Environment</sensorSet>
+		</stateSensor>
+
+		<!-- Environment Temperature -->
+		<numSensor ruleid="smEnvironmentTemp" index=".1.3.6.1.4.1.26104.1.1.2.3.1.5">
+			<type>temp</type>
+			<sensorId>ENVIRONMENT_TEMP_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.5</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Environment Sensor <getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.1</getRowOid> - Temperature</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<!-- Environment Relative Humidity -->
+		<numSensor ruleid="smEnvironmentRH" index=".1.3.6.1.4.1.26104.1.1.2.3.1.6">
+		    <rowTest>
+				<mapValue mapid="temp_RH_sensor">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>ENVIRONMENT_RH_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.6</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Environment Sensor <getRowOid>.1.3.6.1.4.1.26104.1.1.2.3.1.1</getRowOid> - Relative Humidity</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+       	<valueMap ruleid="temp_RH_sensor">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+
+ 		<!-- Input Status -->
+		<stateSensor ruleid="smInputStatus" index=".1.3.6.1.4.1.26104.1.1.2.4.1.3">
+			<type>state</type>
+			<sensorId>INPUT_STATUS_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="input_status-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.4.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>Input Status <getRowOid>.1.3.6.1.4.1.26104.1.1.2.4.1.1</getRowOid></label>
+			<enum>input_status-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+ 		<!-- Output Status -->
+		<stateSensor ruleid="smOutputStatus" index=".1.3.6.1.4.1.26104.1.1.2.5.1.2">
+			<type>state</type>
+			<sensorId>OUTPUT_STATUS_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="output_status-vm">
+					<getRowOid>.1.3.6.1.4.1.26104.1.1.2.5.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Output Status <getRowOid>.1.3.6.1.4.1.26104.1.1.2.5.1.1</getRowOid></label>
+			<enum>output_status-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="no_yes-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_yes-em">
+			<label>No</label>
+			<label>Yes</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="pduLink-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pduLink-em">
+			<label>No</label>
+			<label>Yes</label>
+			<label>Warning</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="input_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="input_status-em">
+			<label>Normal</label>
+			<label>Warning</label>
+			<label>Timeout</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="output_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="output_status-em">
+			<label>Outlet Open</label>
+			<label>Outlet Short</label>
+			<label>Outlet in Open Acting</label>
+			<label>Outlet in Short Acting</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+	</device>
+</APC_DDF>

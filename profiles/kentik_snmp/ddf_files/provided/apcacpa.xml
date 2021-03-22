@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<!-- APC NetworkAir PA Series AC Cooling product DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="apcacpa" ddfname="APC NetworkAIR PA" ddfversion="4">
+  <schemaVersion>1.6</schemaVersion>
+  <!-- APC NetworkAir PA Series AC Cooling products specific functionality -->
+
+  <!-- APC Network Air PA Unit Section -->
+  
+  <device deviceid="nairpaunit">
+    <oidMustExist ruleid="detectpowersystem" oid=".1.3.6.1.4.1.318.1.1.13.2.2.1.0"/>
+
+    <!-- Power System -->
+    <stateSensor ruleid="powersystem">
+      <type>state/powersystem</type>
+      <sensorId>PA_POWER_SYSTEM</sensorId>
+      <value>
+        <mapValue mapid="powersystemmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Power System</label>
+      <enum>powersystem-enum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Operating Mode -->
+    <stateSensor ruleid="operatingmode">
+      <type>state/operatingmode</type>
+      <enumid>acopmode</enumid>
+      <sensorId>OPERATING_MODE</sensorId>
+      <value>
+        <mapValue mapid="operatingmodemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Operating Mode</label>
+      <!-- the enumMap will implicitly define enuminc -->
+      <enum>operatingmode-enum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Blower Speed -->
+    <stateSensor ruleid="blowerspeed">
+      <type>state/blowerspeed</type>
+      <sensorId>BLOWER_SPEED</sensorId>
+      <value>
+        <mapValue mapid="blowerspeedmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Blower Speed</label>
+      <enum>blowerspeed-enum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Compressor Status -->
+    <stateSensor ruleid="compressor-onoff">
+      <type>state/offonstate</type>
+      <sensorId>COMPRESSOR_STAT</sensorId>
+      <value>
+        <mapValue mapid="offonmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor Status</label>
+      <enum>offonenum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Condensor Fan Status -->
+    <stateSensor ruleid="condensorfan-onoff">
+      <type>state/onoff</type>
+      <sensorId>CONDENSOR_FAN_STAT</sensorId>
+      <value>
+        <mapValue mapid="onoffmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>Condensor Fan Status</label>
+      <enum>onoff-enum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Condensate Pump Status -->
+    <stateSensor ruleid="condensatepump-onoff">
+      <type>state/onoff</type>
+      <sensorId>CONDENSATE_PUMP_STAT</sensorId>
+      <value>
+        <mapValue mapid="onoffmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.8.0</getOid>
+        </mapValue>
+      </value>
+      <label>Condensate Pump Status</label>
+      <enum>onoff-enum</enum>
+      <sensorSet>Unit Status</sensorSet>
+    </stateSensor>
+
+    <!-- Supply Temperature in degrees C -->
+    <numSensor ruleid="tempofsupply">
+      <type>temp/tempofsupply</type>
+      <sensorId>SUPPLY_TEMP</sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.10.0</getOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>Supply Temperature</label>
+      <sensorSet>Unit Status</sensorSet>
+    </numSensor>
+
+    <!-- Return Temperature in degrees C -->
+    <numSensor ruleid="tempofreturn">
+      <type>temp/tempofreturn</type>
+      <sensorId>RETURN_TEMP</sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.12.0</getOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>Return Temperature</label>
+      <sensorSet>Unit Status</sensorSet>
+    </numSensor>
+
+    <!-- Remote Temperature in degrees C -->
+    <numSensor ruleid="tempofremote">
+      <type>temp/tempofremote</type>
+      <sensorId>REMOTE_TEMP</sensorId>
+      <value>
+        <round increment="0.1">
+          <mult>
+            <op>
+              <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.14.0</getOid>
+            </op>
+            <op>0.1</op>
+          </mult>
+        </round>
+      </value>
+      <label>Remote Temperature</label>
+      <sensorSet>Unit Status</sensorSet>
+    </numSensor>
+
+    <!-- Remote Humidity in % -->
+    <numSensor ruleid="remotehumidity">
+      <type>humidity/remotehumidity</type>
+      <sensorId>REMOTE_HUMIDITY</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.2.2.15.0</getOid>
+      </value>
+      <label>Remote Humidity</label>
+      <sensorSet>Unit Status</sensorSet>
+    </numSensor>
+    
+    <valueMap ruleid="powersystemmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="powersystem-enum">
+      <label>PowerOn</label>
+      <label>PowerOff</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+    <valueMap ruleid="operatingmodemap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>*</valueIn><valueOut>3</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="operatingmode-enum">
+	  <!-- correction attributes indicate which state they match up with in the acopmode stateenum -->
+      <label correction="1">Off</label>
+      <label correction="3">Venting</label>
+      <label correction="4">Cooling</label>
+      <label correction="0">Unknown</label>
+    </enumMap>
+    
+    <valueMap ruleid="blowerspeedmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="blowerspeed-enum">
+      <label>Low</label>
+      <label>High</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+    <valueMap ruleid="onoffmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="onoff-enum">
+      <label>On</label>
+      <label>Off</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <valueMap ruleid="offonmap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>0</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="offonenum">
+      <label>Off</label>
+      <label>On</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+  </device> 
+</APC_DDF>

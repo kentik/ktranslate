@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!-- iPammn DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid ="ipamm" ddfname="iPAMM" ddfversion="2" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+   <device deviceid="iPammdiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.32938.1.1.0"/> 
+    
+    
+		<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.32938.1.2</getOid>
+		</setProductData>
+		
+		 <!-- upsIdentModel -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.32938.1.1.0</getOid>
+    </setProductData>
+    
+		<!-- slaveATemperature -->
+		<numSensor ruleid="slaveATemperature">
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP1</sensorId>
+			<value>
+				<!-- Convert .01 of units to units.-->
+				<mult><op><getOid>.1.3.6.1.4.1.32938.4.1.0</getOid></op><op>.01</op></mult>
+			</value>
+			<label>Slave A Temperature</label>
+			<sensorSet>controlSlaveA</sensorSet>
+		</numSensor>
+
+
+		<!-- slaveAFanSpeed -->
+		<numSensor ruleid="slaveAFanSpeed">
+			<type>fanspeed</type>
+			<sensorId>SLAVE_A_FAN_SPEED</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32938.4.2.0</getOid>
+			</value>
+			<label>Slave A Fan Speed</label>
+			<sensorSet>controlSlaveA</sensorSet>
+		</numSensor>
+
+
+		<!-- slaveAPower -->
+		<numSensor ruleid="slaveAPower">
+			<type>powerW</type>
+			<sensorId>SLAVE_A_POWER</sensorId>
+			<value>
+				<!-- Convert 1 of units to units.-->
+				<mult><op><getOid>.1.3.6.1.4.1.32938.4.3.0</getOid></op><op>1</op></mult>
+			</value>
+			<label>Slave A Power</label>
+			<sensorSet>controlSlaveA</sensorSet>
+		</numSensor>
+
+
+		<!-- slaveBTemperature -->
+		<numSensor ruleid="slaveBTemperature">
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP2</sensorId>
+			<value>
+				<!-- Convert .01 of units to units.-->
+				<mult><op><getOid>.1.3.6.1.4.1.32938.5.1.0</getOid></op><op>.01</op></mult>
+			</value>
+			<label>Slave B Temperature</label>
+			<sensorSet>controlSlaveB</sensorSet>
+		</numSensor>
+
+
+		<!-- slaveBFanSpeed -->
+		<numSensor ruleid="slaveBFanSpeed">
+			<type>fanspeed</type>
+			<sensorId>SLAVE_B_FAN_SPEED</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32938.5.2.0</getOid>
+			</value>
+			<label>Slave B Fan Speed</label>
+			<sensorSet>controlSlaveB</sensorSet>
+		</numSensor>
+
+
+		<!-- slaveBPower -->
+		<numSensor ruleid="slaveBPower">
+			<type>powerW</type>
+			<sensorId>SLAVE_B_POWER</sensorId>
+			<value>
+				<!-- Convert 1 of units to units.-->
+				<mult><op><getOid>.1.3.6.1.4.1.32938.5.3.0</getOid></op><op>1</op></mult>
+			</value>
+			<label>Slave B Power</label>
+			<sensorSet>controlSlaveB</sensorSet>
+		</numSensor>
+
+
+		<!-- inletTemperature -->
+		<numSensor ruleid="inletTemperature">
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP3</sensorId>
+			<value>
+				<!-- Convert .01 of units to units.-->
+				<mult><op><getOid>.1.3.6.1.4.1.32938.6.1.0</getOid></op><op>.01</op></mult>
+			</value>
+			<label>Inlet Temperature</label>
+			<sensorSet>controlCentrol</sensorSet>
+		</numSensor>
+
+
+		<!-- turnOnTemperature -->
+		<numSensor ruleid="turnOnTemperature">
+			<type>num</type>
+			<sensorId>TURN_ON_TEMPERATURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32938.6.2.0</getOid>
+			</value>
+			<label>Turn On Temperature</label>
+			<sensorSet>controlCentrol</sensorSet>
+		</numSensor>
+
+
+		<!-- fullSpeedTemperature -->
+		<numSensor ruleid="fullSpeedTemperature">
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.32938.6.3.0</getOid>
+			</value>
+			<label>Full Speed Temperature</label>
+			<sensorSet>controlCentrol</sensorSet>
+		</numSensor>
+
+
+		<!-- doorStatus -->
+		<stateSensor ruleid="doorStatus">
+			<type>state</type>
+			<sensorId>DOOR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="doorStatus-vm">
+					<getOid>.1.3.6.1.4.1.32938.6.5.0</getOid>
+				</mapValue>
+			</value>	
+			<label>Door Status</label>
+			<enum>doorStatus-em</enum>
+			<sensorSet>controlCentrol</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="doorStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="doorStatus-em">
+			<label>close</label>
+			<label>open</label>
+		</enumMap>
+
+
+   </device>  
+</APC_DDF>
+
+

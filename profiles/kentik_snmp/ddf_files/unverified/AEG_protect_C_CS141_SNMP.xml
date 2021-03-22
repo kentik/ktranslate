@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid="AEG_protect_C_CS141_SNMP"
+         ddfname="AEG protect C CS141-SNMP"
+         ddfversion="3"
+         canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="aeg_protect_c_cs141">
+		<oidMustExist ruleid="modbusdevicetest"
+		              oid="MODBUS_OID_MUST_EXIST" />
+		<setProductData ruleid="vendordata"
+		                field="vendor">Protect C CS141</setProductData>
+		<setProductData ruleid="modeldata"
+		                field="model">AEG</setProductData>
+		<setProductData ruleid="typedata"
+		                field="type">UPS</setProductData>
+		<setDefaultLabel ruleid="labeldata">
+			<sysHostname />- Slave<commSetting field="slaveaddress" />
+		</setDefaultLabel>
+		<numSensor ruleid="output_voltage_phase_1">
+			<type>voltage</type>
+			<sensorId>_OUTPUT_VOLTAGE_L2L_1</sensorId>
+			<value>
+				<getOid>OUTPUT_VOLTAGE_PHASE_1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Voltage Phase 1</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outpower_phase_1">
+			<type>pctofcapacity</type>
+			<sensorId>_OUTPUT_PCT_W_PHASE1</sensorId>
+			<value>
+				<getOid>OUTPOWER_PHASE_1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Outpower Phase 1</label>
+			<sensorSet>Percentage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="battery_capacity">
+			<type>pctofcapacity</type>
+			<sensorId>_BATT_CAPACITY_LEFT</sensorId>
+			<value>
+				<getOid>BATTERY_CAPACITY</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Capacity</label>
+			<sensorSet>Percentage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_voltage_phase_1">
+			<type>voltage</type>
+			<sensorId>_MAIN_INPUT_VOLTAGE_L2L_1</sensorId>
+			<value>
+				<getOid>INPUT_VOLTAGE_PHASE_1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Input Voltage Phase 1</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature">
+			<type>temp</type>
+			<sensorId>_EM_TEMP_1</sensorId>
+			<value>
+				<getOid>TEMPERATURE</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="autonomy_time_minutes">
+			<type>timeinmin</type>
+			<sensorId>_AUTONOMY_TIME_MINUTES</sensorId>
+			<value>
+				<getOid>AUTONOMY_TIME_MINUTES</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Autonomy Time Minutes</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="battery_voltage">
+			<type>voltage</type>
+			<sensorId>_BATT_VOLTAGE</sensorId>
+			<value>
+				<getOid>BATTERY_VOLTAGE</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_frequency_phase_1">
+			<type>frequency</type>
+			<sensorId>_INPUT_FREQ_1</sensorId>
+			<value>
+				<getOid>INPUT_FREQUENCY_PHASE_1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Input Frequency Phase 1</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="powerfail_counter">
+			<type>num</type>
+			<sensorId>_POWERFAIL_COUNTER</sensorId>
+			<value>
+				<getOid>POWERFAIL_COUNTER</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Powerfail Counter</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="alarm_battery_bad">
+			<value>
+				<getOid>ALARM_BATTERY_BAD</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Battery Bad Condition Present</activeText>
+					<inactiveText>Alarm Battery Bad Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Battery Bad Condition Present</activeText>
+					<inactiveText>Alarm Battery Bad Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_on_battery">
+			<value>
+				<getOid>ALARM_ON_BATTERY</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm on Battery Condition Present</activeText>
+					<inactiveText>Alarm on Battery Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm on Battery Condition Present</activeText>
+					<inactiveText>Alarm on Battery Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_battery_low">
+			<value>
+				<getOid>ALARM_BATTERY_LOW</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Battery Low Condition Present</activeText>
+					<inactiveText>Alarm Battery Low Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Battery Low Condition Present</activeText>
+					<inactiveText>Alarm Battery Low Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_battery_depleted">
+			<value>
+				<getOid>ALARM_BATTERY_DEPLETED</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Battery Depleted Condition Present</activeText>
+					<inactiveText>Alarm Battery Depleted Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Battery Depleted Condition Present</activeText>
+					<inactiveText>Alarm Battery Depleted Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_over_temperature">
+			<value>
+				<getOid>ALARM_OVER_TEMPERATURE</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Over Temperature Condition Present</activeText>
+					<inactiveText>Alarm Over Temperature Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Over Temperature Condition Present</activeText>
+					<inactiveText>Alarm Over Temperature Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_input_bad">
+			<value>
+				<getOid>ALARM_INPUT_BAD</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Input Bad Condition Present</activeText>
+					<inactiveText>Alarm Input Bad Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Input Bad Condition Present</activeText>
+					<inactiveText>Alarm Input Bad Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_output_bad">
+			<value>
+				<getOid>ALARM_OUTPUT_BAD</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Output Bad Condition Present</activeText>
+					<inactiveText>Alarm Output Bad Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Output Bad Condition Present</activeText>
+					<inactiveText>Alarm Output Bad Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_output_overload">
+			<value>
+				<getOid>ALARM_OUTPUT_OVERLOAD</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Output Overload Condition Present</activeText>
+					<inactiveText>Alarm Output Overload Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Output Overload Condition Present</activeText>
+					<inactiveText>Alarm Output Overload Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_on_bypass">
+			<value>
+				<getOid>ALARM_ON_BYPASS</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm on Bypass Condition Present</activeText>
+					<inactiveText>Alarm on Bypass Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm on Bypass Condition Present</activeText>
+					<inactiveText>Alarm on Bypass Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_bypass_bad">
+			<value>
+				<getOid>ALARM_BYPASS_BAD</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Bypass Bad Condition Present</activeText>
+					<inactiveText>Alarm Bypass Bad Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Bypass Bad Condition Present</activeText>
+					<inactiveText>Alarm Bypass Bad Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_output_off_as_requested">
+			<value>
+				<getOid>ALARM_OUTPUT_OFF_AS_REQUESTED</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Output Off as Requested Condition Present</activeText>
+					<inactiveText>Alarm Output Off as Requested Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Output Off as Requested Condition Present</activeText>
+					<inactiveText>Alarm Output Off as Requested Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_ups_off_as_requested">
+			<value>
+				<getOid>ALARM_UPS_OFF_AS_REQUESTED</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Ups Off as Requested Condition Present</activeText>
+					<inactiveText>Alarm Ups Off as Requested Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Ups Off as Requested Condition Present</activeText>
+					<inactiveText>Alarm Ups Off as Requested Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_charger_failed">
+			<value>
+				<getOid>ALARM_CHARGER_FAILED</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Charger Failed Condition Present</activeText>
+					<inactiveText>Alarm Charger Failed Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Charger Failed Condition Present</activeText>
+					<inactiveText>Alarm Charger Failed Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_ups_output_off">
+			<value>
+				<getOid>ALARM_UPS_OUTPUT_OFF</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Ups Output Off Condition Present</activeText>
+					<inactiveText>Alarm Ups Output Off Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Ups Output Off Condition Present</activeText>
+					<inactiveText>Alarm Ups Output Off Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_ups_system_off">
+			<value>
+				<getOid>ALARM_UPS_SYSTEM_OFF</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Ups System Off Condition Present</activeText>
+					<inactiveText>Alarm Ups System Off Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Ups System Off Condition Present</activeText>
+					<inactiveText>Alarm Ups System Off Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_fan_failure">
+			<value>
+				<getOid>ALARM_FAN_FAILURE</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Fan Failure Condition Present</activeText>
+					<inactiveText>Alarm Fan Failure Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Fan Failure Condition Present</activeText>
+					<inactiveText>Alarm Fan Failure Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_fuse_failure">
+			<value>
+				<getOid>ALARM_FUSE_FAILURE</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Fuse Failure Condition Present</activeText>
+					<inactiveText>Alarm Fuse Failure Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Fuse Failure Condition Present</activeText>
+					<inactiveText>Alarm Fuse Failure Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_general_fault">
+			<value>
+				<getOid>ALARM_GENERAL_FAULT</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm General Fault Condition Present</activeText>
+					<inactiveText>Alarm General Fault Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm General Fault Condition Present</activeText>
+					<inactiveText>Alarm General Fault Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_diagnose_test_failed">
+			<value>
+				<getOid>ALARM_DIAGNOSE_TEST_FAILED</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Diagnose Test Failed Condition Present</activeText>
+					<inactiveText>Alarm Diagnose Test Failed Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Diagnose Test Failed Condition Present</activeText>
+					<inactiveText>Alarm Diagnose Test Failed Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_communication_lost">
+			<value>
+				<getOid>ALARM_COMMUNICATION_LOST</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Communication Lost Condition Present</activeText>
+					<inactiveText>Alarm Communication Lost Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Communication Lost Condition Present</activeText>
+					<inactiveText>Alarm Communication Lost Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_awaiting_power">
+			<value>
+				<getOid>ALARM_AWAITING_POWER</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Awaiting Power Condition Present</activeText>
+					<inactiveText>Alarm Awaiting Power Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Awaiting Power Condition Present</activeText>
+					<inactiveText>Alarm Awaiting Power Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_shutdown_pending">
+			<value>
+				<getOid>ALARM_SHUTDOWN_PENDING</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Shutdown Pending Condition Present</activeText>
+					<inactiveText>Alarm Shutdown Pending Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Shutdown Pending Condition Present</activeText>
+					<inactiveText>Alarm Shutdown Pending Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_shutdown_imminent">
+			<value>
+				<getOid>ALARM_SHUTDOWN_IMMINENT</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Shutdown Imminent Condition Present</activeText>
+					<inactiveText>Alarm Shutdown Imminent Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Shutdown Imminent Condition Present</activeText>
+					<inactiveText>Alarm Shutdown Imminent Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_test_in_progress">
+			<value>
+				<getOid>ALARM_TEST_IN_PROGRESS</getOid>
+			</value>
+			<alarmFlagsTest mask="1"
+			                match="1">
+				<name>
+					<activeText>Alarm Test in Progress Condition Present</activeText>
+					<inactiveText>Alarm Test in Progress Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Test in Progress Condition Present</activeText>
+					<inactiveText>Alarm Test in Progress Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="aux_port_1">
+			<type>state</type>
+			<sensorId>_AUX_PORT_1</sensorId>
+			<value>
+				<mapValue mapid="activeinactive_vm">
+					<getOid>AUX_PORT_1</getOid>
+				</mapValue>
+			</value>
+			<label>Aux Port 1</label>
+			<enum>activeinactive_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="aux_port_2">
+			<type>state</type>
+			<sensorId>_AUX_PORT_2</sensorId>
+			<value>
+				<mapValue mapid="activeinactive_vm">
+					<getOid>AUX_PORT_2</getOid>
+				</mapValue>
+			</value>
+			<label>Aux Port 2</label>
+			<enum>activeinactive_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="aux_port_3">
+			<type>state</type>
+			<sensorId>_AUX_PORT_3</sensorId>
+			<value>
+				<mapValue mapid="activeinactive_vm">
+					<getOid>AUX_PORT_3</getOid>
+				</mapValue>
+			</value>
+			<label>Aux Port 3</label>
+			<enum>activeinactive_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="aux_port_4">
+			<type>state</type>
+			<sensorId>_AUX_PORT_4</sensorId>
+			<value>
+				<mapValue mapid="activeinactive_vm">
+					<getOid>AUX_PORT_4</getOid>
+				</mapValue>
+			</value>
+			<label>Aux Port 4</label>
+			<enum>activeinactive_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="sensor_manager_smtcom_sensor_1">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SMTCOM_SENSOR_1</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SMTCOM_SENSOR_1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - SMTCOM Sensor 1</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_smthcom_sensor_2">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SMTHCOM_SENSOR_2</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SMTHCOM_SENSOR_2</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - SMTHCOM Sensor 2</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_3">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_3</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_3</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 3</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_4">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_4</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_4</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 4</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_5">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_5</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_5</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 5</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_6">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_6</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_6</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 6</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_7">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_7</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_7</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 7</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor_manager_sensor_8">
+			<type>num</type>
+			<sensorId>_SENSOR_MANAGER_SENSOR_8</sensorId>
+			<value>
+				<getOid>SENSOR_MANAGER_SENSOR_8</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sensor Manager - Sensor 8</label>
+			<sensorSet>Sensor Manager</sensorSet>
+		</numSensor>
+		<valueMap ruleid="activeinactive_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="activeinactive_em">
+			<label>Not Active (Low)</label>
+			<label>Active (High)</label>
+		</enumMap>
+	</device>
+	<protocol>
+		<modbus>
+			<value_ref_id valid="OUTPUT_VOLTAGE_PHASE_1">
+				<function>3</function>
+				<start_addr>97</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="OUTPOWER_PHASE_1">
+				<function>3</function>
+				<start_addr>100</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="BATTERY_CAPACITY">
+				<function>3</function>
+				<start_addr>103</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="INPUT_VOLTAGE_PHASE_1">
+				<function>3</function>
+				<start_addr>104</start_addr>
+				<quantity>1</quantity>
+				<type>int_16</type>
+			</value_ref_id>
+			<value_ref_id valid="TEMPERATURE">
+				<function>3</function>
+				<start_addr>107</start_addr>
+				<quantity>1</quantity>
+				<type>int_16</type>
+			</value_ref_id>
+			<value_ref_id valid="AUTONOMY_TIME_MINUTES">
+				<function>3</function>
+				<start_addr>108</start_addr>
+				<quantity>1</quantity>
+				<type>int_16</type>
+			</value_ref_id>
+			<value_ref_id valid="BATTERY_VOLTAGE">
+				<function>3</function>
+				<start_addr>110</start_addr>
+				<quantity>1</quantity>
+				<type>int_16</type>
+			</value_ref_id>
+			<value_ref_id valid="INPUT_FREQUENCY_PHASE_1">
+				<function>3</function>
+				<start_addr>111</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="POWERFAIL_COUNTER">
+				<function>3</function>
+				<start_addr>114</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_BATTERY_BAD">
+				<function>3</function>
+				<start_addr>115</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_ON_BATTERY">
+				<function>3</function>
+				<start_addr>116</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_BATTERY_LOW">
+				<function>3</function>
+				<start_addr>117</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_BATTERY_DEPLETED">
+				<function>3</function>
+				<start_addr>118</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_OVER_TEMPERATURE">
+				<function>3</function>
+				<start_addr>119</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_INPUT_BAD">
+				<function>3</function>
+				<start_addr>120</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_OUTPUT_BAD">
+				<function>3</function>
+				<start_addr>121</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_OUTPUT_OVERLOAD">
+				<function>3</function>
+				<start_addr>122</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_ON_BYPASS">
+				<function>3</function>
+				<start_addr>123</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_BYPASS_BAD">
+				<function>3</function>
+				<start_addr>124</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_OUTPUT_OFF_AS_REQUESTED">
+				<function>3</function>
+				<start_addr>125</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_UPS_OFF_AS_REQUESTED">
+				<function>3</function>
+				<start_addr>126</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_CHARGER_FAILED">
+				<function>3</function>
+				<start_addr>127</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_UPS_OUTPUT_OFF">
+				<function>3</function>
+				<start_addr>128</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_UPS_SYSTEM_OFF">
+				<function>3</function>
+				<start_addr>129</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_FAN_FAILURE">
+				<function>3</function>
+				<start_addr>130</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_FUSE_FAILURE">
+				<function>3</function>
+				<start_addr>131</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_GENERAL_FAULT">
+				<function>3</function>
+				<start_addr>132</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_DIAGNOSE_TEST_FAILED">
+				<function>3</function>
+				<start_addr>133</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_COMMUNICATION_LOST">
+				<function>3</function>
+				<start_addr>134</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_AWAITING_POWER">
+				<function>3</function>
+				<start_addr>135</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_SHUTDOWN_PENDING">
+				<function>3</function>
+				<start_addr>136</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_SHUTDOWN_IMMINENT">
+				<function>3</function>
+				<start_addr>137</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="ALARM_TEST_IN_PROGRESS">
+				<function>3</function>
+				<start_addr>138</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="AUX_PORT_1">
+				<function>3</function>
+				<start_addr>139</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="AUX_PORT_2">
+				<function>3</function>
+				<start_addr>140</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="AUX_PORT_3">
+				<function>3</function>
+				<start_addr>141</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="AUX_PORT_4">
+				<function>3</function>
+				<start_addr>142</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SMTCOM_SENSOR_1">
+				<function>3</function>
+				<start_addr>143</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SMTHCOM_SENSOR_2">
+				<function>3</function>
+				<start_addr>144</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_3">
+				<function>3</function>
+				<start_addr>145</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_4">
+				<function>3</function>
+				<start_addr>146</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_5">
+				<function>3</function>
+				<start_addr>147</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_6">
+				<function>3</function>
+				<start_addr>148</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_7">
+				<function>3</function>
+				<start_addr>149</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+			<value_ref_id valid="SENSOR_MANAGER_SENSOR_8">
+				<function>3</function>
+				<start_addr>150</start_addr>
+				<quantity>1</quantity>
+				<type>uint_16</type>
+			</value_ref_id>
+		</modbus>
+	</protocol>
+</APC_DDF>

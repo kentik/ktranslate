@@ -1,0 +1,845 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="geist_gbb15"
+	ddfname="Geist Blackbird-series Monitor"
+	ddfversion="4"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!-- 
+		SOURCE
+		\snmp\resources\mibs\geist\geist_bb_mib.mib
+		GEIST-V4-MIB | 22 April 2020
+	-->
+	<device deviceid="geist_gbb_15">
+		<oidMustExist ruleid="geist_bb" oid=".1.3.6.1.4.1.21239.5" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Geist</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.21239.5.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<valueMap ruleid="isAvailable-vm">
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="internalTemp" index=".1.3.6.1.4.1.21239.5.1.2.1.5">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>INTERNAL_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>.1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.5</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.5</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Internal Temperature</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalHumidity" index=".1.3.6.1.4.1.21239.5.1.2.1.6">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>INTERNAL_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Internal Humidity</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalDewPoint" index=".1.3.6.1.4.1.21239.5.1.2.1.7">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>INTERNAL_DEW_POINT_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.2.1.7</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.2.1.7</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Internal Dew Point</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalIO1" index=".1.3.6.1.4.1.21239.5.1.2.1.8">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>INTERNAL_IO1_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Analog Input 1</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalIO2" index=".1.3.6.1.4.1.21239.5.1.2.1.9">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>INTERNAL_IO2_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.9</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Analog Input 2</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalIO3" index=".1.3.6.1.4.1.21239.5.1.2.1.10">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>INTERNAL_IO3_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Analog Input 3</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="internalIO4" index=".1.3.6.1.4.1.21239.5.1.2.1.1">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>INTERNAL_IO4_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Analog Input 4</label>
+            <sensorSet>Internal</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="tempSensorTemp" index=".1.3.6.1.4.1.21239.5.1.4.1.5">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.4.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>TEMP_SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.4.1.5</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.4.1.5</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.4.1.3</getRowOid> Temperature</label>
+            <sensorSet>Remote Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="airFlowSensorTemp" index=".1.3.6.1.4.1.21239.5.1.5.1.5">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>AIRFLOW_SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.5.1.5</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.5.1.5</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.3</getRowOid> Temperature</label>
+            <sensorSet>Remote Airflow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="airFlowSensorFlow" index=".1.3.6.1.4.1.21239.5.1.2.1.6">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>volairflow</type>
+            <sensorId>AIRFLOW_SENSOR_FLOW_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Airflow</label>
+            <sensorSet>Remote Airflow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="airFlowSensorHumidity" index=".1.3.6.1.4.1.21239.5.1.2.1.7">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>AIRFLOW_SENSOR_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.2.1.3</getRowOid> Humidity</label>
+            <sensorSet>Remote Airflow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="airFlowSensorDewpoint" index=".1.3.6.1.4.1.21239.5.1.5.1.8">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>AIRFLOW_SENSOR_DEWPOINT_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.5.1.8</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.5.1.8</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.5.1.3</getRowOid> Dewpoint</label>
+            <sensorSet>Remote Airflow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dewPointSensorTemp" index=".1.3.6.1.4.1.21239.5.1.6.1.5">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>DEWPOINT_SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.6.1.5</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.6.1.5</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.3</getRowOid> Temperature</label>
+            <sensorSet>Remote Dewpoint</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dewPointSensorHumidity" index=".1.3.6.1.4.1.21239.5.1.6.1.6">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>DEWPOINT_SENSOR_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.3</getRowOid> Humidity</label>
+            <sensorSet>Remote Dewpoint</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dewPointSensorDewpoint" index=".1.3.6.1.4.1.21239.5.1.6.1.7">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>DEWPOINT_SENSOR_DEWPOINT_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.6.1.7</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.6.1.7</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.6.1.3</getRowOid> Dewpoint</label>
+            <sensorSet>Remote Dewpoint</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="digitalSensor-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>99</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<valueMap ruleid="digitalSensor-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</valueMap>
+		<valueMap ruleid="ccatAnalogTypes-vm">
+			<valueIn>waterSensor</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+
+		<stateSensor ruleid="ccatSensorValue-digital" index=".1.3.6.1.4.1.21239.5.1.7.1.5">
+			<rowTest>
+				<and>
+				<op>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.4</getRowOid>
+				</mapValue>
+				</op>
+				<op>
+					<not>
+					<mapValue mapid="ccatAnalogTypes-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.6</getRowOid>
+					</mapValue>					
+					</not>
+				</op>
+				</and>
+			</rowTest>
+            <type>state</type>
+            <sensorId>CCAT_SENSOR_VALUE_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="digitalSensor-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.5</getRowOid>
+				</mapValue>
+            </value>
+			<enum>digitalSensor-em</enum>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.3</getRowOid> Reading</label>
+            <sensorSet>CCAT Sensor</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="ccatSensorValue-analog" index=".1.3.6.1.4.1.21239.5.1.7.1.5">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="isAvailable-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.4</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="ccatAnalogTypes-vm">
+					<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.6</getRowOid>
+					</mapValue>					
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>CCAT_SENSOR_VALUE_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.7.1.3</getRowOid> Reading</label>
+            <sensorSet>CCAT Sensor</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="t3hdSensorIntTemp" index=".1.3.6.1.4.1.21239.5.1.8.1.6">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>T3HD_SENSOR_INT_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.6</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.6</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.5</getRowOid> Internal Temperature</label>
+            <sensorSet>Remote T3HD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="th3dSensorIntHumidity" index=".1.3.6.1.4.1.21239.5.1.8.1.7">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>T3HD_SENSOR_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.5</getRowOid> Internal Humidity</label>
+            <sensorSet>Remote T3HD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="t3hdSensorIntDewPoint" index=".1.3.6.1.4.1.21239.5.1.8.1.8">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>T3HD_SENSOR_INT_DEWPOINT_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.8</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.8</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.5</getRowOid> Internal Dewpoint</label>
+            <sensorSet>Remote T3HD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="t3hdSensorExtATemp" index=".1.3.6.1.4.1.21239.5.1.8.1.11">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>T3HD_SENSOR_EXT_A_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.11</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.11</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.10</getRowOid> External Temperature A</label>
+            <sensorSet>Remote T3HD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="t3hdSensorExtBTemp" index=".1.3.6.1.4.1.21239.5.1.8.1.14">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>T3HD_SENSOR_EXT_B_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.14</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.8.1.14</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.21239.5.1.8.1.13</getRowOid> External Temperature B</label>
+            <sensorSet>Remote T3HD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="thdSensorTemp" index=".1.3.6.1.4.1.21239.5.1.9.1.5">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>THD_SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.9.1.5</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.9.1.5</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.3</getRowOid> Temperature</label>
+            <sensorSet>Remote THD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="thdSensorHumidity" index=".1.3.6.1.4.1.21239.5.1.9.1.6">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>T3D_SENSOR_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.3</getRowOid> Humidity</label>
+            <sensorSet>Remote THD</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="thdSensorDewPoint" index=".1.3.6.1.4.1.21239.5.1.9.1.7">
+			<rowTest>
+				<mapValue mapid="isAvailable-vm">
+				<getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>THD_SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eq>
+					<op><getOid>1.3.6.1.4.1.21239.5.1.1.7.0</getOid></op>
+					<op>0</op>
+					</eq>
+				</op>
+				<op>
+					<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>1.3.6.1.4.1.21239.5.1.9.1.7</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+					</div>
+				</op>
+				<op>
+					<mult>
+					<op><getRowOid>1.3.6.1.4.1.21239.5.1.9.1.7</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.21239.5.1.9.1.3</getRowOid> Dewpoint</label>
+            <sensorSet>Remote THD</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

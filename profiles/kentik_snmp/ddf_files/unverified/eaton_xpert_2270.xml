@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="eaton_xpert_2270"
+	ddfname="Eaton XPert 2270"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="eaton_xpert_2270">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Eaton</setProductData>
+		<setProductData ruleid="modeldata" field="model">XPert 2270</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+
+		<oidMustExist ruleid="eaton_xpert_2270" oid=".1.3.6.1.4.1.534.8.3.1" istree="yes"/>
+
+		<numSensor ruleid="voltageTHD">
+            <type>num</type>
+            <units>percent</units>
+            <sensorId>VOLTAGE_THD</sensorId>
+            <value>
+            <div>
+                <op><getOid>.1.3.6.1.4.1.534.8.3.1.1.1.1.4.2</getOid></op>
+                <op>100</op>
+            </div>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Voltage THD</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentTHD">
+            <type>num</type>
+            <units>percent</units>
+            <sensorId>CURRENT_THD</sensorId>
+            <value>
+            <div>
+                <op><getOid>.1.3.6.1.4.1.534.8.3.1.1.1.1.5.2</getOid></op>
+                <op>100</op>
+            </div>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Current THD</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="neutralCurrent">
+            <type>amperage</type>
+            <sensorId>NEUTRAL_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.2.2</getOid>
+            </value>
+            <label>Neutral Current</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="totalWatts">
+            <type>powerW</type>
+            <sensorId>TOTAL_WATTS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.4.2</getOid>
+            </value>
+            <label>Total Watts</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="totalVA">
+            <type>powerVA</type>
+            <sensorId>TOTAL_VA</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.5.2</getOid>
+            </value>
+            <label>Total VA</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="totalVAR">
+            <type>powerVAR</type>
+            <sensorId>TOTAL_VAR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.6.2</getOid>
+            </value>
+            <label>Total VAR</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="powerFactor">
+            <type>num</type>
+            <sensorId>POWER_FACTOR</sensorId>
+            <value>
+            <div>
+                <op><getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.7.2</getOid></op>
+                <op>100</op>
+            </div>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Power Factor</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="frequency">
+            <type>frequency</type>
+            <sensorId>FREQUENCY</sensorId>
+            <value>
+            <div>
+                <op><getOid>.1.3.6.1.4.1.534.8.3.1.2.1.1.8.2</getOid></op>
+                <op>1000</op>
+            </div>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Frequency</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="voltageL1L2">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_L1L2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.2.2.1</getOid>
+            </value>
+            <label>Voltage L1-L2</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="voltageL2L3">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_L2L3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.2.2.2</getOid>
+            </value>
+            <label>Voltage L2-L3</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="voltageL3L1">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_L3L1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.2.2.3</getOid>
+            </value>
+            <label>Voltage L3-L1</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="voltageL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.3.2" >
+            <type>voltage</type>
+            <sensorId>VOLTAGE_L<rowNumber/></sensorId>
+            <value>
+                <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.3.2</getRowOid></op>
+            </value>
+            <label>Voltage L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="currentL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.4.2" >
+            <type>amperage</type>
+            <sensorId>CURRENT_L<rowNumber/></sensorId>
+            <value>
+                <div>
+                    <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.4.2</getRowOid></op>
+                    <op>10</op>
+                </div>
+            </value>
+            <label>Current L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="realPowerL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.5.2" >
+            <type>powerW</type>
+            <sensorId>REAL_POWER_L<rowNumber/></sensorId>
+            <value>
+                <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.5.2</getRowOid></op>
+            </value>
+            <label>Real Power L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="apparentPowerL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.6.2" >
+            <type>powerVA</type>
+            <sensorId>APPARENT_POWER_L<rowNumber/></sensorId>
+            <value>
+                <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.6.2</getRowOid></op>
+            </value>
+            <label>Apparent Power L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="reactivePowerL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.7.2" >
+            <type>powerVA/powerVAR</type>
+            <sensorId>REACTIVE_POWER_L<rowNumber/></sensorId>
+            <value>
+                <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.7.2</getRowOid></op>
+            </value>
+            <label>Reactive Power L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+        <numSensor ruleid="powerFactorL" index=".1.3.6.1.4.1.534.8.3.1.2.2.1.8.2" >
+            <type>num</type>
+            <sensorId>POWER_FACOTR_L<rowNumber/></sensorId>
+            <value>
+                <div>
+                    <op><getRowOid>.1.3.6.1.4.1.534.8.3.1.2.2.1.8.2</getRowOid></op>
+                    <op>100</op>
+                </div>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Power Factor L<formatNumber printffmt="%01.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandKW">
+            <type>num/powerKW</type>
+            <sensorId>METER_DEMAND_KW</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.4.2</getOid>
+            </value>
+            <label>Meter Demand KW</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakDemandKW">
+            <type>num/powerKW</type>
+            <sensorId>METER_PEAK_DEMAND_KW</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.5.2</getOid>
+            </value>
+            <label>Meter Peak Demand KW</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandKVA">
+            <type>num/powerKVA</type>
+            <sensorId>METER_DEMAND_KVA</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.6.2</getOid>
+            </value>
+            <label>Meter Demand KVA</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakDemandKVA">
+            <type>num/powerKVA</type>
+            <sensorId>METER_PEAK_DEMAND_KVA</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.7.2</getOid>
+            </value>
+            <label>Meter Peak Demand KVA</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterDemandKVAR">
+            <type>num/powerKVAR</type>
+            <sensorId>METER_DEMAND_KVAR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.8.2</getOid>
+            </value>
+            <label>Meter Demand KVAR</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterPeakDemandKVAR">
+            <type>num/powerKVAR</type>
+            <sensorId>METER_PEAK_DEMAND_KVAR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.5.1.1.9.2</getOid>
+            </value>
+            <label>Meter Peak Demand KVAR</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterEnergyKWHours">
+            <type>timeinhrs</type>
+            <sensorId>METER_ENERGY_KW_HOURS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.4.1.1.1.2</getOid>
+            </value>
+            <label>Meter Energy KW Hours</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterEnergyKVAHours">
+            <type>timeinhrs</type>
+            <sensorId>METER_ENERGY_KVA_HOURS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.4.1.1.2.2</getOid>
+            </value>
+            <label>Meter Energy KVA Hours</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+		<numSensor ruleid="meterEnergyKVARHours">
+            <type>timeinhrs</type>
+            <sensorId>METER_ENERGY_KVAR_HOURS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.8.3.1.4.1.1.3.2</getOid>
+            </value>
+            <label>Meter Energy KVAR Hours</label>
+            <sensorSet></sensorSet>
+        </numSensor>
+	</device>
+</APC_DDF>

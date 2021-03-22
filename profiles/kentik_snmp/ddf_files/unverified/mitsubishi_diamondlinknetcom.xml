@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="mitsubishi_diamondlinknetcom" ddfname="Mitsubishi DiamondLinkNetCom" ddfversion="2" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="mitsubishi_diamondlinknetcom">
+    <oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.13891.101.2.2.0" />
+    <setProductData ruleid="vendordata" field="vendor">Mitsubishi</setProductData>
+    <setProductData ruleid="modeldata" field="model">DiamondLinkNetCom</setProductData>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+    <numSensor ruleid="upssecondsonbattery">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_UPSSECONDSONBATTERY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsSecondsOnBattery</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsestimatedminutesremaining">
+      <type>timeinmin</type>
+      <units />
+      <sensorId>_UPSESTIMATEDMINUTESREMAINING</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsEstimatedMinutesRemaining</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsestimatedchargeremaining">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSESTIMATEDCHARGEREMAINING</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.4.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsEstimatedChargeRemaining</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+	<numSensor ruleid="upsoutputpercentload">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSOUTPUTPERCENTLOAD</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.4.4.1.5.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsOutputPercentLoad</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsbatteryvoltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSBATTERYVOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.5.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>upsBatteryVoltage</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsbatterycurrent">
+      <type>amperage</type>
+      <units />
+      <sensorId>_UPSBATTERYCURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.6.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>upsBatteryCurrent</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsbatterytemperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_UPSBATTERYTEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.7.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsBatteryTemperature</label>
+      <sensorSet>upsBattery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsinputlinebads">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSINPUTLINEBADS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.3.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsInputLineBads</label>
+      <sensorSet>upsInput</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsinputnumlines">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSINPUTNUMLINES</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.3.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsInputNumLines</label>
+      <sensorSet>upsInput</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsoutputfrequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>_UPSOUTPUTFREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.4.2.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>upsOutputFrequency</label>
+      <sensorSet>upsOutput</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsoutputnumlines">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSOUTPUTNUMLINES</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.4.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsOutputNumLines</label>
+      <sensorSet>upsOutput</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsbypassfrequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>_UPSBYPASSFREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.5.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsBypassFrequency</label>
+      <sensorSet>upsBypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsbypassnumlines">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSBYPASSNUMLINES</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.5.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsBypassNumLines</label>
+      <sensorSet>upsBypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsalarmspresent">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSALARMSPRESENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.6.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsAlarmsPresent</label>
+      <sensorSet>upsAlarm</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsteststarttime">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSTESTSTARTTIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.7.5.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>upsTestStartTime</label>
+      <sensorSet>upsTest</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upstestelapsedtime">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSTESTELAPSEDTIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.7.6.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>upsTestElapsedTime</label>
+      <sensorSet>upsTest</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsshutdownafterdelay">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSSHUTDOWNAFTERDELAY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.8.2.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>upsShutdownAfterDelay</label>
+      <sensorSet>upsControl</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsstartupafterdelay">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSSTARTUPAFTERDELAY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.8.3.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>upsStartupAfterDelay</label>
+      <sensorSet>upsControl</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsrebootwithduration">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSREBOOTWITHDURATION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.8.4.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>upsRebootWithDuration</label>
+      <sensorSet>upsControl</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfiginputvoltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSCONFIGINPUTVOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigInputVoltage</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfiginputfreq">
+      <type>frequency</type>
+      <units />
+      <sensorId>_UPSCONFIGINPUTFREQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.2.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>upsConfigInputFreq</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfigoutputvoltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSCONFIGOUTPUTVOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigOutputVoltage</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfigoutputfreq">
+      <type>frequency</type>
+      <units />
+      <sensorId>_UPSCONFIGOUTPUTFREQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.4.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>upsConfigOutputFreq</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfigoutputva">
+      <type>powerVA</type>
+      <units />
+      <sensorId>_UPSCONFIGOUTPUTVA</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.5.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigOutputVA</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfigoutputpower">
+      <type>powerW</type>
+      <units />
+      <sensorId>_UPSCONFIGOUTPUTPOWER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.6.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigOutputPower</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfiglowbatttime">
+      <type>timeinmin</type>
+      <units />
+      <sensorId>_UPSCONFIGLOWBATTTIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.7.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigLowBattTime</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfiglowvoltagetransferpoint">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSCONFIGLOWVOLTAGETRANSFERPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.9.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigLowVoltageTransferPoint</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsconfighighvoltagetransferpoint">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSCONFIGHIGHVOLTAGETRANSFERPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.9.10.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>upsConfigHighVoltageTransferPoint</label>
+      <sensorSet>upsConfig</sensorSet>
+    </numSensor>
+    <numSensor ruleid="trapcode">
+      <type>num</type>
+      <units />
+      <sensorId>_TRAPCODE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.10.1.0</getOid>
+          </op>
+          <op>N/A</op>
+        </mult>
+      </value>
+      <label>trapCode</label>
+      <sensorSet>upsTrapInfo</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="upsbatterystatus">
+      <type>state</type>
+      <sensorId>_UPSBATTERYSTATUS</sensorId>
+      <value>
+        <mapValue mapid="unk_dep_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsBatteryStatus</label>
+      <enum>unk_dep_em</enum>
+      <sensorSet>upsBattery</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsoutputsource">
+      <type>state</type>
+      <sensorId>_UPSOUTPUTSOURCE</sensorId>
+      <value>
+        <mapValue mapid="other_none_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.4.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsOutputSource</label>
+      <enum>other_none_em</enum>
+      <sensorSet>upsOutput</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upstestresultssummary">
+      <type>state</type>
+      <sensorId>_UPSTESTRESULTSSUMMARY</sensorId>
+      <value>
+        <mapValue mapid="done_pass_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.7.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsTestResultsSummary</label>
+      <enum>done_pass_em</enum>
+      <sensorSet>upsTest</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsshutdowntype">
+      <type>state</type>
+      <sensorId>_UPSSHUTDOWNTYPE</sensorId>
+      <value>
+        <mapValue mapid="op_sys_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.8.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsShutdownType</label>
+      <enum>op_sys_em</enum>
+      <sensorSet>upsControl</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsautorestart">
+      <type>state</type>
+      <sensorId>_UPSAUTORESTART</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.8.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsAutoRestart</label>
+      <enum>on_off_em</enum>
+      <sensorSet>upsControl</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsconfigaudiblestatus">
+      <type>state</type>
+      <sensorId>_UPSCONFIGAUDIBLESTATUS</sensorId>
+      <value>
+        <mapValue mapid="ena_disa_vm">
+          <getOid>.1.3.6.1.4.1.13891.101.9.8.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsConfigAudibleStatus</label>
+      <enum>ena_disa_em</enum>
+      <sensorSet>upsConfig</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="upsidentmanufacturer">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTMANUFACTURER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.1.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentManufacturer</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsidentmodel">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTMODEL</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.2.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentModel</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsidentupssoftwareversion">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTUPSSOFTWAREVERSION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.3.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentUPSSoftwareVersion</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsidentagentsoftwareversion">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTAGENTSOFTWAREVERSION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.4.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentAgentSoftwareVersion</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsidentname">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.5.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentName</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsidentattacheddevices">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSIDENTATTACHEDDEVICES</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.1.6.0</getOid>
+        </op>
+      </value>
+      <label>upsIdentAttachedDevices</label>
+      <sensorSet>upsIdent</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upstestid">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSTESTID</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.7.1.0</getOid>
+        </op>
+      </value>
+      <label>upsTestId</label>
+      <sensorSet>upsTest</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upstestresultsdetail">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSTESTRESULTSDETAIL</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.7.4.0</getOid>
+        </op>
+      </value>
+      <label>upsTestResultsDetail</label>
+      <sensorSet>upsTest</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="trapdescription">
+      <type>string</type>
+      <units />
+      <sensorId>_TRAPDESCRIPTION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.13891.101.10.2.0</getOid>
+        </op>
+      </value>
+      <label>trapDescription</label>
+      <sensorSet>upsTrapInfo</sensorSet>
+    </stringSensor>
+    <alarmFlags ruleid="upsalarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.6</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>upsAlarm Alarm Present</activeText>
+          <inactiveText>upsAlarm Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>upsAlarm Alarm Present</activeText>
+          <inactiveText>upsAlarm Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+  
+  <valueMap ruleid="unk_dep_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="unk_dep_em">
+			<label>unknown</label>
+			<label>batteryNormal</label>
+			<label>batteryLow</label>
+			<label>batteryDepleted</label>
+		</enumMap>
+		
+  <valueMap ruleid="other_none_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>7</valueIn>
+			<valueOut>6</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="other_none_em">
+			<label>other</label>
+			<label>none</label>
+			<label>normal</label>
+			<label>bypass</label>
+			<label>battery</label>
+			<label>booster</label>
+			<label>reducer</label>
+		</enumMap>
+		
+	<valueMap ruleid="done_pass_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="done_pass_em">
+			<label>donePass</label>
+			<label>doneWarning</label>
+			<label>doneError</label>
+			<label>aborted</label>
+			<label>inProgress</label>
+			<label>noTestsInitiated</label>
+		</enumMap>	
+	
+	<valueMap ruleid="op_sys_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="op_sys_em">
+			<label>output</label>
+			<label>system</label>
+		</enumMap>	
+  
+	<valueMap ruleid="on_off_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="on_off_em">
+			<label>on</label>
+			<label>off</label>
+		</enumMap>
+	
+	<valueMap ruleid="ena_disa_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ena_disa_em">
+			<label>disabled</label>
+			<label>enabled</label>
+			<label>muted</label>
+		</enumMap>
+	
+  </device>
+</APC_DDF>

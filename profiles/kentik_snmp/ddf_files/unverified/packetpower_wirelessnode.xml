@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="packetpower_wirelessnode" ddfname="PacketPower WirelessNode" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="packetpower_wirelessnode">
+    <oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.33688.5" />
+    <setProductData ruleid="vendordata" field="vendor">PacketPower</setProductData>
+    <setProductData ruleid="modeldata" field="model">WirelessNode</setProductData>
+    <setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+	<setDefaultLabel ruleid="labeldata">
+		<getOid>1.3.6.1.2.1.1.1.0</getOid>
+	</setDefaultLabel>
+	<!-- set input and output phase counts for UPS -->
+	<setProductData ruleid="inputphasecount" field="inputphasecount">1</setProductData>
+	<setProductData ruleid="outputphasecount" field="outputphasecount">1</setProductData>	
+
+	
+    <numSensor ruleid="energy">
+      <type>num/kwatthr</type>
+      <units />
+      <sensorId>ACTIVE_ENERGY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.1</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Energy</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="energya">
+      <type>num/kwatthr</type>
+      <units />
+      <sensorId>ACTIVE_ENERGY_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.2</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>EnergyA</label>
+      <sensorSet>Energy</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power">
+      <type>powerW</type>
+      <units />
+      <sensorId>REAL_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.10</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Power</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="powera">
+      <type>powerW</type>
+      <units />
+      <sensorId>_POWER_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.11</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>PowerA</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="currenta">
+      <type>amperage</type>
+      <units />
+      <sensorId>_INPUT_CURRENT_PM_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.21</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>CurrentA</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="voltagea">
+      <type>voltage</type>
+      <units />
+      <sensorId>_SYSCTRL_TEMP_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.31</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>VoltageA</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="frequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>_FREQUENCY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.50</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Frequency</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_SYSCTRL_TEMP_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.33688.5.1.1.3.60</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+  </device>
+</APC_DDF>

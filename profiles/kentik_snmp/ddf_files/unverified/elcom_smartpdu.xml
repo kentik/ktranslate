@@ -1,0 +1,521 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="elcom_smartpdu"
+	ddfname="Elcom SmartPDU"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="elcom_smartpdu">
+		<oidMustExist ruleid="elcom_ed" oid=".1.3.6.1.4.1.40367.12" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Elcom International</setProductData>
+		<setProductData ruleid="edProductModel" field="model">
+			<getOid>.1.3.6.1.4.1.40367.12.2.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+		<setProductData ruleid="edSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.40367.12.2.1.4.0</getOid>
+		</setProductData>
+		<setProductData ruleid="edBootcodeVersion" field="bootversion">
+			<getOid>.1.3.6.1.4.1.40367.12.2.1.5.0</getOid>
+		</setProductData>
+		<setProductData ruleid="edFirmwareVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.40367.12.2.1.6.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="edPowerMgmtPDUTableNumberOfPhases-In" field="inputphasecount">
+			<getOid>.1.3.6.1.4.1.40367.12.2.2.1.1.4.0</getOid>
+		</setProductData>
+		<setProductData ruleid="edPowerMgmtPDUTableNumberOfPhases-Out" field="outputphasecount">
+			<getOid>.1.3.6.1.4.1.40367.12.2.2.1.1.4.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="notSupported-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="edPowerMgmtAggrInfoTableVoltageValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>AGGR_VOLTAGE</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.2.0</getOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Aggregate Phase Voltage</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTableCurrentValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.3.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>AGGR_CURRENT</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.3.0</getOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Total Outlet Current</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTableApparentEnergyValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.4.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>AGGR_APPARENT_ENERGY</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.4.0</getOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Total Outlet Apparent Energy</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTableReactiveEnergyValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>AGGR_REACTIVE_ENERGY</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.5.0</getOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Total Outlet Apparent Energy</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTableActiveEnergyValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.6.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>AGGR_ACTIVE_ENERGY</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.6.0</getOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Total Outlet Active Energy</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTableInstantaneousPowerValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>AGGR_ACTIVE_POWER</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.7.0</getOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Total Outlet Active Energy</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtAggrInfoTablePowerFactorValue">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>AGGR_PF</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.40367.12.2.2.2.1.8.0</getOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Average Power Factor</label>
+            <sensorSet>Aggregate Info</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="edPowerMgmtOutletsTableVoltageValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.2.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.2.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>OUTLET_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.2.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Voltage</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableCurrentValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.3.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.3.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.3.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Current</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableApparentEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.4.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.4.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>OUTLET_APPARENT_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.4.1</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Apparent Energy</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableReactiveEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.5.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.5.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>OUTLET_REACTIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.5.1</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Reactive Energy</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableActiveEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.6.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.6.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>OUTLET_ACTIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.6.1</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Active Energy</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableInstantaneousPowerValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.7.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.7.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>OUTLET_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.7.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Active Power</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTablePowerFactorValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.8.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.8.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.8.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Power Factor</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtOutletsTableFreqValue" index=".1.3.6.1.4.1.40367.12.2.2.4.1.9.1">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.9.1</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>OUTLET_FREQ_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.9.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Frequency</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<valueMap ruleid="outletControl-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="outletControl-em">
+			<label>Outlet Off</label>
+			<label>Outlet On</label>
+			<label>Switching Disabled</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="edPowerMgmtOutletsTableOutletControl" index=".1.3.6.1.4.1.40367.12.2.2.4.1.10.1">
+            <type>state</type>
+            <sensorId>OUTLET_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="outletControl-vm">
+                <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.10.1</getRowOid>
+				</mapValue>
+            </value>
+            <label>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid> Status</label>
+            <enum>outletControl-em</enum>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.40367.12.2.2.4.1.1.1</getRowOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="edPowerMgmtPhasesTableVoltageValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.2">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>PHASE_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.2</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Voltage</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTableCurrentValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.3">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>PHASE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.3</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Current</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTableApparentEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.4">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>PHASE_APPARENT_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.4</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Apparent Energy</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTableReactiveEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.5">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>PHASE_REACTIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.5</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Reactive Energy</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTableActiveEnergyValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.6">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PHASE_ACTIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.6</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Active Energy</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTableInstantaneousPowerValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.7">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>PHASE_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.7</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Active Power</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtPhasesTablePowerFactorValue" index=".1.3.6.1.4.1.40367.12.2.2.6.1.8">
+			<rowTest>
+				<mapValue mapid="notSupported-vm">
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PHASE_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.8</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Power Factor</label>
+            <sensorSet>Phase <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="edPowerMgmtSensorsTableSensorValue-Temp" index=".1.3.6.1.4.1.40367.12.2.2.8.1.3">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="notSupported-vm">
+					<getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<eq>
+					<op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.2</getRowOid></op>
+					<op>1</op>
+					</eq>
+				</op>
+				</and>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SENSOR_TEMP_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Sensor <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Temperature</label>
+            <sensorSet>Temp/Humidity Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="edPowerMgmtSensorsTableSensorValue-Humidity" index=".1.3.6.1.4.1.40367.12.2.2.8.1.3">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="notSupported-vm">
+					<getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<eq>
+					<op><getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.2</getRowOid></op>
+					<op>2</op>
+					</eq>
+				</op>
+				</and>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>SENSOR_HUMIDITY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.40367.12.2.2.8.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Sensor <getRowOid>.1.3.6.1.4.1.40367.12.2.2.6.1.1</getRowOid> Humidity</label>
+            <sensorSet>Temp/Humidity Sensors</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

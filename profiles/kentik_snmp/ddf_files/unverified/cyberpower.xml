@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APC_DDF
+	canremove="yes"
+	ddfversion="3"
+	ddfname="CyberPower"
+	ddfid="cyberpower"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="defaultDevice">
+    <oidMustExist istree="no" oid=".1.3.6.1.4.1.3808.1.1.1.1.1.1.0" ruleid="OIDMustExist"/>
+
+    <setProductData field="type" ruleid="typedata">UPS</setProductData>
+    <setProductData field="vendor" ruleid="vendordata">Cyber Power</setProductData>
+    <setDefaultLabel ruleid="labeldata">
+		Cyber Power UPS (<sysHostname/>)
+	</setDefaultLabel>
+    <setProductData field="appversion" ruleid="firmwaredata">
+        <getOid>.1.3.6.1.4.1.3808.1.1.1.1.2.1.0</getOid>
+    </setProductData>
+    <setProductData field="model" ruleid="modeldata">
+        <getOid>.1.3.6.1.4.1.3808.1.1.1.1.1.1.0</getOid>
+    </setProductData>
+	<stateSensor ruleid="battStatusSensor">
+      <type>state</type>
+      <sensorId>BATT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="batt-status-vm">
+          <getOid>.1.3.6.1.4.1.3808.1.1.1.2.1.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Battery Status</label>
+      <enum>batt-status-en</enum>
+      <sensorSet>Battery Sensors</sensorSet>
+    </stateSensor>
+        
+    <valueMap ruleid="batt-status-vm">
+      <valueIn>2</valueIn> <valueOut>1</valueOut>
+      <valueIn>3</valueIn> <valueOut>2</valueOut>
+      <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="batt-status-en">
+      <label>Unknown</label>
+      <label>Battery Normal</label>
+      <label>Battery Low</label>
+    </enumMap>
+	<numSensor ruleid="ups_base_battery_time_on_battery">
+      <type>timeinmin</type>
+      <sensorId>_TIME_ON_BATT</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.2.1.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>UPS Base Battery Time On Battery</label>
+      <sensorSet>UPS Battery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceBatteryCapacity-Sensor">
+        <type>pctofcapacity</type>
+        <units>percent</units>
+        <sensorId>UPS_ADVANCE_BATTERY_CAPACITY</sensorId>
+        <value>
+            <getOid>.1.3.6.1.4.1.3808.1.1.1.2.2.1.0</getOid>
+        </value>
+        <label>UPS Battery Capacity</label>
+        <sensorSet>Battery Sensors</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceBatteryRunTimeRemaining-Sensor">
+        <type>timeinmin</type>
+        <units>min</units>
+        <sensorId>UPS_ADVANCE_BATTERY_RUN_TIME_REMAINING</sensorId>
+        <value>
+          <div>
+            <op>
+              <getOid>.1.3.6.1.4.1.3808.1.1.1.2.2.4.0</getOid>
+            </op>
+            <op>6000</op>
+          </div>
+        </value>
+        <label>UPS Battery Run Time Remaining</label>
+        <sensorSet>Battery Sensors</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceBatteryTemperature-Sensor">
+        <type>temp</type>
+        <units>degreeC</units>
+        <sensorId>UPS_ADVANCE_BATTERY_TEMPERATURE</sensorId>
+        <value>
+            <getOid>.1.3.6.1.4.1.3808.1.1.1.2.2.3.0</getOid>
+        </value>
+        <label>UPS Battery Temperature</label>
+        <sensorSet>Battery Sensors</sensorSet>
+    </numSensor>
+	<numSensor ruleid="ups_base_input_phase">
+      <type>num</type>
+      <sensorId>_UPS_BASE_INPUT_PHASE</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.3.1.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>UPS Base Input Phase</label>
+      <sensorSet>UPS Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceInputLineVoltage-Sensor">
+        <type>voltage</type>
+        <units>volts</units>
+        <sensorId>UPS_ADVANCE_INPUT_LINE_VOLTAGE</sensorId>
+        <value>
+            <div>
+                <op>
+                    <getOid>.1.3.6.1.4.1.3808.1.1.1.3.2.1.0</getOid>
+                </op>
+                <op>10</op>
+            </div>
+        </value>
+        <label>UPS Input Line Voltage</label>
+        <sensorSet>UPS Input</sensorSet>
+    </numSensor>
+	<numSensor ruleid="ups_advance_input_max_line_voltage">
+      <type>voltage</type>
+      <sensorId>1_1_MAX_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.3808.1.1.1.3.2.2.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>UPS Advance Input Max Line Voltage</label>
+      <sensorSet>UPS Input</sensorSet>
+    </numSensor>
+	<numSensor ruleid="ups_advance_input_min_line_voltage">
+      <type>voltage</type>
+      <sensorId>1_2_MIN_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.3808.1.1.1.3.2.3.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>UPS Advance Input Min Line Voltage</label>
+      <sensorSet>UPS Input</sensorSet>
+    </numSensor>
+	<numSensor ruleid="ups_advance_input_frequency">
+      <type>frequency</type>
+      <sensorId>_INPUT1_HZ_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.3808.1.1.1.3.2.4.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>UPS Advance Input Frequency</label>
+      <sensorSet>UPS Input</sensorSet>
+    </numSensor>
+	<stateSensor ruleid="ups_advance_input_line_fail_cause">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_INPUT_LINE_FAIL_CAUSE</sensorId>
+      <value>
+        <mapValue mapid="failcause_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.3.2.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Input Line Fail Cause</label>
+      <enum>failcause_em</enum>
+      <sensorSet>UPS Input</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="failcause_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>3</valueIn>
+		<valueOut>2</valueOut>
+		<valueIn>4</valueIn>
+		<valueOut>3</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="failcause_em">
+		<label>No Transfer</label>
+		<label>High Line Voltage</label>
+		<label>Brownout</label>
+		<label>Self Test</label>
+	</enumMap>
+	<stateSensor ruleid="output-status-Sensor">
+      <type>state</type>
+      <sensorId>OUTPUT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="output-status-vm">
+          <getOid>.1.3.6.1.4.1.3808.1.1.1.4.1.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Output Status</label>
+      <enum>output-status-en</enum>
+      <sensorSet>UPS Output</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="output-status-vm">
+      <valueIn>1</valueIn> <valueOut>0</valueOut>
+      <valueIn>2</valueIn> <valueOut>1</valueOut>
+      <valueIn>3</valueIn> <valueOut>2</valueOut>
+      <valueIn>4</valueIn> <valueOut>3</valueOut>
+      <valueIn>5</valueIn> <valueOut>4</valueOut>
+      <valueIn>6</valueIn> <valueOut>5</valueOut>
+      <valueIn>7</valueIn> <valueOut>6</valueOut>
+      <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="output-status-en">
+      <label>Unknown</label>
+      <label>On Line</label>
+      <label>On Battery</label>
+      <label>On Boost</label>
+      <label>On Sleep</label>
+      <label>Off</label>
+      <label>Rebooting</label>
+    </enumMap>
+	<numSensor ruleid="ups_base_output_phase">
+      <type>num</type>
+      <sensorId>_UPS_BASE_OUTPUT_PHASE</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.4.1.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>UPS Base Output Phase</label>
+      <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceOutputVoltage-Sensor">
+        <type>voltage</type>
+        <units>volts</units>
+        <sensorId>UPS_ADVANCE_OUTPUT_VOLTAGE</sensorId>
+        <value>
+            <div>
+                <op>
+                    <getOid>.1.3.6.1.4.1.3808.1.1.1.4.2.1.0</getOid>
+                </op>
+                <op>10</op>
+            </div>
+        </value>
+        <label>UPS Output Voltage</label>
+        <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+	<numSensor ruleid="UpsAdvanceOutputFrequency-Sensor">
+        <type>frequency</type>
+        <sensorId>UPS_ADVANCE_OUTPUT_FREQUENCY</sensorId>
+        <value>
+            <div>
+                <op>
+                    <getOid>.1.3.6.1.4.1.3808.1.1.1.4.2.2.0</getOid>
+                </op>
+                <op>10</op>
+            </div>
+        </value>
+        <label>UPS Output Frequency</label>
+        <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="UpsAdvanceOutputLoad-Sensor">
+        <type>pctofcapacity</type>
+        <units>percent</units>
+        <sensorId>UPS_ADVANCE_OUTPUT_LOAD</sensorId>
+        <value>
+            <getOid>.1.3.6.1.4.1.3808.1.1.1.4.2.3.0</getOid>
+        </value>
+        <label>UPS Output Load</label>
+        <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ups_base_config_num_devices">
+      <type>num</type>
+      <sensorId>_UPS_BASE_CONFIG_NUM_DEVICES</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.5.1.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>UPS Base Config Num Devices</label>
+      <sensorSet>UPS Config</sensorSet>
+    </numSensor>
+	<numSensor ruleid="device_index">
+      <type>num</type>
+      <sensorId>_DEVICE_INDEX</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.5.1.2.1.1.1</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Device Index</label>
+      <sensorSet>UPS Config</sensorSet>
+    </numSensor>
+    <numSensor ruleid="va_rating">
+      <type>num</type>
+      <sensorId>_VA_RATING</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.5.1.2.1.3.1</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>VA Rating</label>
+      <sensorSet>UPS Config</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="accept_this_device">
+      <type>state</type>
+      <sensorId>_ACCEPT_THIS_DEVICE</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.5.1.2.1.4.1</getOid>
+        </mapValue>
+      </value>
+      <label>Accept This Device</label>
+      <enum>yesno_em</enum>
+      <sensorSet>UPS Config</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="yesno_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="yesno_em">
+		<label>Yes</label>
+		<label>No</label>
+	</enumMap>
+    <numSensor ruleid="ups_advance_config_rated_output_voltage">
+      <type>voltage</type>
+      <sensorId>_OUTPUT_VOLTAGE</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.3808.1.1.1.5.2.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>UPS Advance Config Rated Output Voltage</label>
+      <sensorSet>UPS Advance Config</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="ups_advance_config_alarm">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_CONFIG_ALARM</sensorId>
+      <value>
+        <mapValue mapid="configalarm_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.5.2.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Config Alarm</label>
+      <enum>configalarm_em</enum>
+      <sensorSet>UPS Advance Config</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="configalarm_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>3</valueIn>
+		<valueOut>2</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="configalarm_em">
+		<label>Timed</label>
+		<label>At Low Battery</label>
+		<label>Never</label>
+	</enumMap>
+    <stateSensor ruleid="ups_advance_control_ups_off">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_CONTROL_UPS_OFF</sensorId>
+      <value>
+        <mapValue mapid="controlups_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.6.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Control UPS Off</label>
+      <enum>controlups_em</enum>
+      <sensorSet>UPS Advance Control</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="controlups_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="controlups_em">
+		<label>No Turn UPS Off</label>
+		<label>Turn UPS Off</label>
+	</enumMap>
+    <stateSensor ruleid="ups_advance_control_reboot_ups">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_CONTROL_REBOOT_UPS</sensorId>
+      <value>
+        <mapValue mapid="rebootups_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.6.2.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Control Reboot UPS</label>
+      <enum>rebootups_em</enum>
+      <sensorSet>UPS Advance Control</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="rebootups_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="rebootups_em">
+		<label>No Reboot UPS</label>
+		<label>Reboot UPS</label>
+	</enumMap>
+    <stateSensor ruleid="ups_advance_control_turn_on_ups">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_CONTROL_TURN_ON_UPS</sensorId>
+      <value>
+        <mapValue mapid="turnonups_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.6.2.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Control Turn On UPS</label>
+      <enum>turnonups_em</enum>
+      <sensorSet>UPS Advance Control</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="turnonups_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="turnonups_em">
+		<label>No Turn On UPS</label>
+		<label>Turn UPS On</label>
+	</enumMap>
+	<stateSensor ruleid="ups_advance_test_diagnostics">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_TEST_DIAGNOSTICS</sensorId>
+      <value>
+        <mapValue mapid="diagnostics_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.7.2.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Test Diagnostics</label>
+      <enum>diagnostics_em</enum>
+      <sensorSet>UPS Advance Test</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="diagnostics_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>3</valueIn>
+		<valueOut>2</valueOut>
+		<valueIn>4</valueIn>
+		<valueOut>3</valueOut>
+		<valueIn>5</valueIn>
+		<valueOut>4</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="diagnostics_em">
+		<label>Unknown</label>
+		<label>Biweekly</label>
+		<label>Weekly</label>
+		<label>At Turn On</label>
+		<label>Never</label>
+	</enumMap>
+	<stateSensor ruleid="last-test-status-Sensor">
+      <type>state</type>
+      <sensorId>LAST_TEST_STATUS</sensorId>
+      <value>
+        <mapValue mapid="last-test-status-vm">
+          <getOid>.1.3.6.1.4.1.3808.1.1.1.7.2.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Last Test Status</label>
+      <enum>last-test-status-en</enum>
+      <sensorSet>Diagnostics</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="last-test-status-vm">
+      <valueIn>1</valueIn> <valueOut>1</valueOut>
+      <valueIn>2</valueIn> <valueOut>2</valueOut>
+      <valueIn>3</valueIn> <valueOut>3</valueOut>
+      <valueIn>4</valueIn> <valueOut>4</valueOut>
+      <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="last-test-status-en">
+      <label>Unknown</label>
+      <label>Test OK</label>
+      <label>Test Failed</label>
+      <label>Test Invalid</label>
+      <label>Test In Progress</label>
+    </enumMap>
+	<numSensor ruleid="days_since_last_test">
+      <type>timeindays</type>
+      <sensorId>DAYS_SINCE_LAST_TEST</sensorId>
+      <value>
+          <!--    
+          The date is in form MM-DD-YYYY.
+          Parse that value as a date.  Subtract current time,
+          and divide by 86400 - the number of seconds in a day.
+          -->
+        <div>
+          <op>
+            <sub>
+              <op>
+                <curUTCTime/>
+              </op>
+              <op>
+                <parseDate>
+                  <getOid>.1.3.6.1.4.1.3808.1.1.1.7.2.4.0</getOid>
+                </parseDate>
+              </op>
+            </sub>
+          </op>
+          <op>86400</op>
+        </div>
+      </value>
+      <valueInc>1.0</valueInc>
+      <label>Days Since Last Test</label>
+      <sensorSet>Diagnostics</sensorSet>
+    </numSensor>
+	<stateSensor ruleid="ups_advance_test_runtime_calibration">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_TEST_RUNTIME_CALIBRATION</sensorId>
+      <value>
+        <mapValue mapid="runcalibration_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.7.2.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Test Runtime Calibration</label>
+      <enum>runcalibration_em</enum>
+      <sensorSet>UPS Advance Test</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="runcalibration_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>3</valueIn>
+		<valueOut>2</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="runcalibration_em">
+		<label>No Perform Calibration</label>
+		<label>Perform Calibration</label>
+		<label>Cancel Current Calibration</label>
+	</enumMap>
+    <stateSensor ruleid="ups_advance_test_calibration_results">
+      <type>state</type>
+      <sensorId>_UPS_ADVANCE_TEST_CALIBRATION_RESULTS</sensorId>
+      <value>
+        <mapValue mapid="calibrationresults_vm">
+          <getOid>1.3.6.1.4.1.3808.1.1.1.7.2.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>UPS Advance Test Calibration Results</label>
+      <enum>calibrationresults_em</enum>
+      <sensorSet>UPS Advance Test</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="calibrationresults_vm">
+		<valueIn>1</valueIn>
+		<valueOut>0</valueOut>
+		<valueIn>2</valueIn>
+		<valueOut>1</valueOut>
+		<valueIn>3</valueIn>
+		<valueOut>2</valueOut>
+		<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="calibrationresults_em">
+		<label>Ok</label>
+		<label>Invalid Calibration</label>
+		<label>Calibration in Progress</label>
+	</enumMap>
+    <stateSensor ruleid="outlet-status-Sensor" index=".1.3.6.1.4.1.3808.1.1.1.8.1.1.1.1">
+      <type>state</type>
+      <sensorId>OUTLET_STATUS_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="outlet-status-vm">
+          <getRowOid>.1.3.6.1.4.1.3808.1.1.1.8.1.1.1.2</getRowOid>
+        </mapValue>
+      </value>
+      <label>UPS Outlet Status <rowIndex/></label>
+      <enum>outlet-status-en</enum>
+      <sensorSet>UPS Outlet</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="outlet-status-vm">
+      <valueIn>1</valueIn> <valueOut>1</valueOut>
+      <valueIn>2</valueIn> <valueOut>2</valueOut>
+      <valueIn>4</valueIn> <valueOut>3</valueOut>
+      <valueIn>*</valueIn> <valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="outlet-status-en">
+      <label>Unknown</label>
+      <label>On</label>
+      <label>Off</label>
+      <label>Critical/Uncontrollable</label>
+    </enumMap>
+    </device>
+</APC_DDF>

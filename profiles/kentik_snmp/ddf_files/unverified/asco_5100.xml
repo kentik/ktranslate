@@ -1,0 +1,395 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="asco_5100"
+	ddfname="ASCO 5100"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="asco_5100">
+		<oidMustExist ruleid="asco" oid=".1.3.6.1.4.1.7777" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<setProductData ruleid="vendordata" field="vendor">Asco</setProductData>
+
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<setProductData ruleid="modeldata" field="model">5100</setProductData>
+
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+		<numSensor ruleid="POWER_READING_SENSOR">
+            <type>powerW</type>
+            <sensorId>power_reading</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.7777.1.2.1.3.0</getOid>
+            </value>
+            <label>Total Real Power</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="VOLTAGE_READING_SENSOR">
+            <type>voltage</type>
+            <sensorId>voltage_reading</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.7777.1.2.1.4.0</getOid>
+            </value>
+            <label>Average Line to Line Voltage</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="CURRENT_READING_SENSOR">
+            <type>amperage</type>
+            <sensorId>current_reading</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.7777.1.2.1.5.0</getOid>
+            </value>
+            <label>Average Phase Current</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="FREQUENCY_READING_SENSOR">
+            <type>frequency</type>
+            <sensorId>frequency_reading</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.1.6.0</getOid>
+                    </op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Frequency Reading</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="POWER_FACTOR_SENSOR">
+            <type>num/powerfactor</type>
+            <sensorId>power_factor</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.1.7.0</getOid>
+                    </op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Power Factor</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="NORMAL_SOURCE_VOLTAGE_SENSOR">
+            <type>voltage</type>
+            <sensorId>normal_source_voltage</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.1.8.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Normal Source Voltage</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="EMERGENCY_SOURCE_VOLTAGE_SENSOR">
+            <type>voltage</type>
+            <sensorId>emergency_source_voltage</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.1.9.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Emergency Source Voltage</label>
+            <sensorSet>Readings</sensorSet>
+        </numSensor>
+
+		<!--
+        <numSensor ruleid="TCP/IP_PORT_SENSOR">
+            <type>num</type>
+            <sensorId>tcp/ip_port</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.2.2.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>TCP/IP Port</label>
+            <sensorSet>Settings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="SERIAL_BAUDRATE_SENSOR">
+            <type>num</type>
+			<units>bitspersec</units>
+            <sensorId>serial_baudrate</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.2.3.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Serial Baudrate</label>
+            <sensorSet>Settings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="SERIAL_REPLY_SENSOR">
+            <type>num</type>
+			<units>millisec</units>
+            <sensorId>serial_reply</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.2.4.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Serial Reply</label>
+            <sensorSet>Settings</sensorSet>
+        </numSensor>
+        <numSensor ruleid="SERIAL_RETRY_SENSOR">
+            <type>num</type>
+            <sensorId>serial_retry</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.7777.1.2.2.5.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Serial Retry</label>
+            <sensorSet>Settings</sensorSet>
+        </numSensor>
+		-->
+
+        <stateSensor ruleid="load-connected-normal">
+            <type>state</type>
+            <sensorId>LOAD_CONNECTED_NORMAL</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Load Connected to Normal</label>
+			<enum>connected-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="load-connected-emergency">
+            <type>state</type>
+            <sensorId>LOAD_CONNECTED_EMERGENCY</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Load Connected to Emergency</label>
+			<enum>connected-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="available-normal">
+            <type>state</type>
+            <sensorId>AVAILABLE_NORMAL</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Normal Available</label>
+			<enum>available-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="available-emergency">
+            <type>state</type>
+            <sensorId>AVAILABLE_EMERGENCY</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Emergency Available</label>
+			<enum>available-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="engine-running">
+            <type>state</type>
+            <sensorId>ENGINE_RUNNING</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Engine Running</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="digital-input-01">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_01</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 01</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-02">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_02</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 02</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-03">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_03</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.9.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 03</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-04">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_04</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 04</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-05">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_05</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.11.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 05</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-06">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_06</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.12.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 06</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-07">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_07</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.13.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 07</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-input-08">
+            <type>state</type>
+            <sensorId>DIGITAL_INPUT_08</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.14.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Input 08</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-output-01">
+            <type>state</type>
+            <sensorId>DIGITAL_OUTPUT_01</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.15.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Output 01</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-output-02">
+            <type>state</type>
+            <sensorId>DIGITAL_OUTPUT_02</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.16.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Output 02</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-output-03">
+            <type>state</type>
+            <sensorId>DIGITAL_OUTPUT_03</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.17.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Output 03</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="digital-output-04">
+            <type>state</type>
+            <sensorId>DIGITAL_OUTPUT_04</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.7777.1.2.3.18.0</getOid>
+				</mapValue>
+            </value>
+            <label>Digital Output 04</label>
+			<enum>onOff-em</enum>
+            <sensorSet>Traps</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>			
+		</enumMap>
+		<enumMap ruleid="available-em">
+			<label>Not Available</label>
+			<label>Available</label>			
+		</enumMap>
+		<enumMap ruleid="connected-em">
+			<label>Not Connected</label>
+			<label>Connected</label>			
+		</enumMap>
+
+		</device>
+</APC_DDF>

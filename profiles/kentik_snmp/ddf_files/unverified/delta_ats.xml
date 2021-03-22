@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="delta_ats"
+	ddfname="Delta ATS"
+	ddfversion="2"
+	canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="delta_ats">
+		<oidMustExist ruleid="delta_ats" oid=".1.3.6.1.4.1.2254.2.80" istree="yes"/>
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+		<setProductData ruleid="atsAgentManufacturer" field="vendor">
+			<getOid>.1.3.6.1.4.1.2254.2.80.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="atsAgentVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.2254.2.80.1.2.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="atsIdentModel" field="model">
+			<getOid>.1.3.6.1.4.1.2254.2.80.2.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="atsIdentSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.2254.2.80.2.4.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="source-vm">
+			<valueIn>1</valueIn><valueOut>Source 1</valueOut>
+			<valueIn>2</valueIn><valueOut>Source 2</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown Source</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="atsInputVoltage" index=".1.3.6.1.4.1.2254.2.80.3.1.1.2">
+            <type>voltage</type>
+            <sensorId>ATS_INPUT_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2254.2.80.3.1.1.2</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.3.1.1.1</getRowOid>
+				</mapValue> Voltage
+			</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsInputFrequency" index=".1.3.6.1.4.1.2254.2.80.3.1.1.3">
+            <type>frequency</type>
+            <sensorId>ATS_INPUT_FREQUENCY"_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2254.2.80.3.1.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.3.1.1.1</getRowOid>
+				</mapValue> Frequency
+			</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="atsOutputVoltage">
+            <type>voltage</type>
+            <sensorId>ATS_OUTPUT_VOLTAGE</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.2254.2.80.3.2.1.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsOutputCurrent">
+            <type>amperage</type>
+            <sensorId>ATS_OUTPUT_CURRENT</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.2254.2.80.3.2.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Current</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="atsMeasureTemperatureC">
+            <type>temp</type>
+            <sensorId>ATS_MEASURE_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.80.3.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Internal Temperature</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsMeasureRunTime">
+            <type>timeinsec</type>
+            <sensorId>ATS_MEASURE_RUNTIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.80.3.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Runtime</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsMeasureTransferedTimes">
+            <type>num</type>
+            <sensorId>ATS_MEASURE_TRANSFERED_TIMES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.80.3.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Times Transferred</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="atsMeasureOperationMode-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="atsMeasureOperationMode-em">
+			<label>Unknown</label>
+			<label>Initialization</label>
+			<label>Diagnosis</label>
+			<label>Off</label>
+			<label>Source 1</label>
+			<label>Source 2</label>
+			<label>Safe</label>
+			<label>Fault</label>
+		</enumMap>
+		<stateSensor ruleid="atsMeasureOperationMode">
+            <type>state</type>
+            <sensorId>MEASURE_OPERATION_MODE</sensorId>
+            <value>
+				<mapValue mapid="atsMeasureOperationMode-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.80.3.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Operation Mode</label>
+            <enum>atsMeasureOperationMode-em</enum>
+            <sensorSet>Measure</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+		<stateSensor ruleid="atsInputFlowRelay" index=".1.3.6.1.4.1.2254.2.80.4.2.1.1">
+            <type>state</type>
+            <sensorId>INPUT_FLOW_RELAY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.1</getRowOid>
+				</mapValue> Flow Relay
+			</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="atsInputFlowSCR" index=".1.3.6.1.4.1.2254.2.80.4.2.1.1">
+            <type>state</type>
+            <sensorId>INPUT_FLOW_SCR_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.1</getRowOid>
+				</mapValue> Flow SCR
+			</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="atsInputFlowParallelRelay" index=".1.3.6.1.4.1.2254.2.80.4.2.1.1">
+            <type>state</type>
+            <sensorId>INPUT_FLOW_PARALLEL_RELAY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.4.2.1.1</getRowOid>
+				</mapValue> Flow Parallel Relay
+			</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<alarmFlags2 ruleid="atsInputFailureRelayOpen" index=".1.3.6.1.4.1.2254.2.80.4.4.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.2</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Relay Open
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Relay Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						Input Relay for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is open.
+					</activeText>
+					<inactiveText>
+						Input Relay for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is no longer open.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureRelayShort" index=".1.3.6.1.4.1.2254.2.80.4.4.1.3">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Relay Short
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Relay Short Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						A short has been detected on the Input Relay for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</activeText>
+					<inactiveText>
+						The short has been cleared from the Input Relay for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureSCROpen" index=".1.3.6.1.4.1.2254.2.80.4.4.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.4</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Open
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is open.
+					</activeText>
+					<inactiveText>
+						Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is no longer open.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureSCRShort" index=".1.3.6.1.4.1.2254.2.80.4.4.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.5</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Short
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Short Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						A short has been detected on the Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</activeText>
+					<inactiveText>
+						The short has been cleared from the Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureSCRThermal" index=".1.3.6.1.4.1.2254.2.80.4.4.1.6">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.6</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Thermal
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> SCR Thermal Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is over temperature.
+					</activeText>
+					<inactiveText>
+						Input SCR for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> is no longer over temperature.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureAuxPower" index=".1.3.6.1.4.1.2254.2.80.4.4.1.7">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.7</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Aux Power Failure
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Aux Power Failure Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						Internal auxiliary power for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> has failed.
+					</activeText>
+					<inactiveText>
+						Internal auxiliary power for <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureDrop" index=".1.3.6.1.4.1.2254.2.80.4.4.1.8">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.8</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Voltage Drop
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Voltage Drop Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						A voltage drop has been detected on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</activeText>
+					<inactiveText>
+						Voltage on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureBrownout" index=".1.3.6.1.4.1.2254.2.80.4.4.1.9">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.9</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Brownout
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Brownout Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						A voltage brownout has been detected on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue>.
+					</activeText>
+					<inactiveText>
+						Voltage on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureFrequency" index=".1.3.6.1.4.1.2254.2.80.4.4.1.10">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.10</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Frequency
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Frequency Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						Input frequency on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue> is out of range.
+					</activeText>
+					<inactiveText>
+						Input frequency on <mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue> has returned to normal.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsInputFailureNotOperable" index=".1.3.6.1.4.1.2254.2.80.4.4.1.11">
+			<value><getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.11</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Not Operable
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid>
+						</mapValue> Not Operable Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Input</category>
+				<description>
+					<activeText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue> is not operable.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="source-vm">
+						<getRowOid>.1.3.6.1.4.1.2254.2.80.4.4.1.1</getRowOid></mapValue> has returned to an operable state.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<alarmFlags2 ruleid="atsFailureSwitchFault">
+			<value><getOid>.1.3.6.1.4.1.2254.2.80.4.6.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Switch Fault</activeText>
+					<inactiveText>Switch Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Fault</category>
+				<description>
+					<activeText>The relay, SCR and thermal switch fail.</activeText>
+					<inactiveText>The relay, SCR and thermal switch have returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="atsFailureNoOutput">
+			<value><getOid>.1.3.6.1.4.1.2254.2.80.4.6.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>No Output</activeText>
+					<inactiveText>No Output Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Output</category>
+				<description>
+					<activeText>No output has been detected.</activeText>
+					<inactiveText>Output has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="atsConfigInputTrip" index=".1.3.6.1.4.1.2254.2.80.6.2.1.2">
+            <type>voltage</type>
+            <sensorId>ATS_CONFIG_INPUT_TRIP_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.2</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.1</getRowOid>
+				</mapValue> Trip Voltage
+			</label>
+            <sensorSet>Input Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsConfigInputBrownoutLow" index=".1.3.6.1.4.1.2254.2.80.6.2.1.3">
+            <type>voltage</type>
+            <sensorId>ATS_CONFIG_BROWNOUT_LOW_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.1</getRowOid>
+				</mapValue> Brownout Low Voltage
+			</label>
+            <sensorSet>Input Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsConfigInputBrownoutHigh" index=".1.3.6.1.4.1.2254.2.80.6.2.1.4">
+            <type>voltage</type>
+            <sensorId>ATS_CONFIG_BROWNOUT_HIGH_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.4</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.1</getRowOid>
+				</mapValue> Brownout High Voltage
+			</label>
+            <sensorSet>Input Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsConfigInputRecover" index=".1.3.6.1.4.1.2254.2.80.6.2.1.5">
+            <type>timeinsec</type>
+            <sensorId>ATS_CONFIG_RECOVER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="source-vm">
+				<getRowOid>.1.3.6.1.4.1.2254.2.80.6.2.1.1</getRowOid>
+				</mapValue> Recovery Time
+			</label>
+            <sensorSet>Input Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="atsConfigInputVoltageRating">
+            <type>voltage</type>
+            <sensorId>ATS_CONFIG_VOLTAGE_RATING_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.2254.2.80.6.3.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Voltage Rating</label>
+            <sensorSet>Input Config</sensorSet>
+        </numSensor>
+
+	</device>
+
+	<device deviceid="delta_sensor">
+		<oidMustExist ruleid="delta_sensor" oid=".1.3.6.1.4.1.2254.2.500" istree="yes"/>
+
+		<numSensor ruleid="dsensorTemperature">
+            <type>temp</type>
+            <sensorId>DSENSOR_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Ambient Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dsensorHumidity">
+            <type>humidity</type>
+            <sensorId>DSENSOR_HUMIDITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<alarmFlags2 ruleid="dsensorWarnOverTemperature">
+			<value><getOid>.1.3.6.1.4.1.2254.2.500.1.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Warning: Over Temperature</activeText>
+					<inactiveText>Over Temperature Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>Ambient temperature is over the warning limit.</activeText>
+					<inactiveText>Ambient temperature has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="dsensorWarnOverHumidity">
+			<value><getOid>.1.3.6.1.4.1.2254.2.500.1.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Warning: Over Humidity</activeText>
+					<inactiveText>Over Humidity Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Humidity</category>
+				<description>
+					<activeText>Humidity is over the warning limit.</activeText>
+					<inactiveText>Humidity has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="dsensorAlarmOverTemperature">
+			<value><getOid>.1.3.6.1.4.1.2254.2.500.1.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Alarm: Over Temperature</activeText>
+					<inactiveText>Over Temperature Cleared</inactiveText>
+				</name>
+				<severity>alarm</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>Ambient temperature is over the alarm limit.</activeText>
+					<inactiveText>Ambient temperature has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="dsensorAlarmOverHumidity">
+			<value><getOid>.1.3.6.1.4.1.2254.2.500.1.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Alarm: Over Humidity</activeText>
+					<inactiveText>Over Humidity Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Humidity</category>
+				<description>
+					<activeText>Humidity is over the alarm limit.</activeText>
+					<inactiveText>Humidity has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<stateSensor ruleid="dsensorAlarmRelay1">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.1.7.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>ALARM_RELAY_1</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 1 State</label>
+            <enum>delta_ats/delta_ats/onOff-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorAlarmRelay2">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.1.8.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>ALARM_RELAY_2</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 2 State</label>
+            <enum>delta_ats/delta_ats/onOff-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorAlarmRelay3">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.1.9.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>ALARM_RELAY_3</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.9.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 3 State</label>
+            <enum>delta_ats/delta_ats/onOff-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorAlarmRelay4">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.1.10.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>ALARM_RELAY_4</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.1.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 4 State</label>
+            <enum>delta_ats/delta_ats/onOff-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="dsensorSetTemperatureWarnLimit">
+            <type>temp</type>
+            <sensorId>DSENSOR_TEMPERATURE_WARN_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Ambient Temperature Warning Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dsensorSetHumidityWarnLimit">
+            <type>humidity</type>
+            <sensorId>DSENSOR_HUMIDITY_WARN_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Humidity Warning Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dsensorSetTemperatureAlarmLimit">
+            <type>temp</type>
+            <sensorId>DSENSOR_TEMPERATURE_ALARM_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Ambient Temperature Alarm Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dsensorSetHumidityAlarmLimit">
+            <type>humidity</type>
+            <sensorId>DSENSOR_HUMIDITY_ALARM_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Humidity Alarm Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<enumMap ruleid="relay-em">
+			<label>Unknown</label>
+			<label>Normally Closed</label>
+			<label>Normally Open</label>
+		</enumMap>
+		<stateSensor ruleid="dsensorSetRelay1">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.2.5.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SET_RELAY_1</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 1 Setting</label>
+            <enum>relay-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorSetRelay2">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.2.6.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SET_RELAY_2</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 2 Setting</label>
+            <enum>relay-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorSetRelay3">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.2.7.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SET_RELAY_3</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 3 Setting</label>
+            <enum>relay-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dsensorSetRelay4">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.2254.2.500.2.8.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SET_RELAY_4</sensorId>
+            <value>
+				<mapValue mapid="delta_ats/delta_ats/2state-vm">
+                <getOid>.1.3.6.1.4.1.2254.2.500.2.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Alarm Relay 4 Setting</label>
+            <enum>relay-em</enum>
+            <sensorSet>Relay</sensorSet>
+        </stateSensor>
+
+	</device>
+</APC_DDF>

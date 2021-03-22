@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="comap_gnomemodbussnmp" ddfname="Comap GNOMEModbusSNMP" ddfversion="2" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="comap_gnomemodbussnmp">
+    <oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.28634.50.1.1.1.2.1" />
+    <setProductData ruleid="vendordata" field="vendor">Comap</setProductData>
+    <setProductData ruleid="modeldata" field="model">GNOMEModbusSNMP</setProductData>
+    <setProductData ruleid="typedata" field="type">Generator</setProductData>
+    <numSensor ruleid="generator_battery_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.3.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Generator Battery Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	<numSensor ruleid="oil_pressure">
+      <type>pressure</type>
+      <units />
+      <sensorId>_RDT2_DISCHARGE_PRESSURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.28634.50.1.1.1.4.1</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Oil Pressure</label>
+      <sensorSet>Pressure</sensorSet>
+    </numSensor>
+	<numSensor ruleid="water_temp">
+      <type>temp</type>
+      <units />
+      <sensorId>_TEMP_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.28634.50.1.1.1.5.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Water Temp</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	<numSensor ruleid="fuel_level">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_NAIRFM_SYSMODSTATUS_COILFLUVLVPOS_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.28634.50.1.1.1.6.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Fuel Level</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	<stateSensor ruleid="controller_mode">
+      <type>state</type>
+      <sensorId>_IN_ROOM_UNIT_STATE_1</sensorId>
+      <value>
+        <mapValue mapid="modemap_vm">
+          <getOid>1.3.6.1.4.1.28634.50.1.1.1.7.1</getOid>
+        </mapValue>
+      </value>
+      <label>Controller Mode</label>
+      <enum>modemap_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="generator_output_voltage_l1">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.8.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Generator Output Voltage L1</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_output_voltage_l2">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.9.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Generator Output Voltage L2</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_output_voltage_l3">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_4</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.10.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Generator Output Voltage L3</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_output_frequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>FREQUENCY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.11.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Generator Output Frequency</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_power_factor">
+      <type>num/powerfactor</type>
+      <units />
+      <sensorId>_OUTPUT_POWER_FACTOR_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.12.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Generator Power Factor</label>
+      <sensorSet>Power Factor</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_power_output_in_watts">
+      <type>powerW</type>
+      <units />
+      <sensorId>_OUTPUT_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.14.1</getOid>
+          </op>
+          <op>1.01</op>
+        </mult>
+      </value>
+      <label>Generator Power Output in Watts</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mains_input_voltage_l1">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_5</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.15.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Mains Input Voltage L1</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mains_input_voltage_l2">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_6</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.16.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Mains Input Voltage L2</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mains_input_voltage_l3">
+      <type>voltage</type>
+      <units />
+      <sensorId>OUTPUT_VOLTAGE_7</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.17.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Mains Input Voltage L3</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mains_input_frequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>FREQUENCY_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.18.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Mains Input Frequency</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_number_of_starts">
+      <type>num</type>
+      <units />
+      <sensorId>_GENERATOR_ANALOG_INPUT_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.19.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Generator Number of Starts</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="generator_run_hours">
+      <type>timeinhrs</type>
+      <units />
+      <sensorId>_RUNTIME_SYSTEM_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.28634.50.1.1.1.20.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Generator Run Hours</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <alarmFlags ruleid="active_alarms">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.21.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarms Alarm Present</activeText>
+          <inactiveText>Active Alarms Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarms Alarm Present</activeText>
+          <inactiveText>Active Alarms Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_1">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.22.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 1 Alarm Present</activeText>
+          <inactiveText>Active Alarm 1 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 1 Alarm Present</activeText>
+          <inactiveText>Active Alarm 1 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_2">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.23.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 2 Alarm Present</activeText>
+          <inactiveText>Active Alarm 2 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 2 Alarm Present</activeText>
+          <inactiveText>Active Alarm 2 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_3">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.24.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 3 Alarm Present</activeText>
+          <inactiveText>Active Alarm 3 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 3 Alarm Present</activeText>
+          <inactiveText>Active Alarm 3 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_4">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.25.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 4 Alarm Present</activeText>
+          <inactiveText>Active Alarm 4 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 4 Alarm Present</activeText>
+          <inactiveText>Active Alarm 4 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_5">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.26.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 5 Alarm Present</activeText>
+          <inactiveText>Active Alarm 5 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 5 Alarm Present</activeText>
+          <inactiveText>Active Alarm 5 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_6">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.27.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 6 Alarm Present</activeText>
+          <inactiveText>Active Alarm 6 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 6 Alarm Present</activeText>
+          <inactiveText>Active Alarm 6 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_7">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.28.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 7 Alarm Present</activeText>
+          <inactiveText>Active Alarm 7 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 7 Alarm Present</activeText>
+          <inactiveText>Active Alarm 7 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_8">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.29.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 8 Alarm Present</activeText>
+          <inactiveText>Active Alarm 8 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 8 Alarm Present</activeText>
+          <inactiveText>Active Alarm 8 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_9">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.30.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 9 Alarm Present</activeText>
+          <inactiveText>Active Alarm 9 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 9 Alarm Present</activeText>
+          <inactiveText>Active Alarm 9 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_10">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.31.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 10 Alarm Present</activeText>
+          <inactiveText>Active Alarm 10 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 10 Alarm Present</activeText>
+          <inactiveText>Active Alarm 10 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_11">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.32.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 11 Alarm Present</activeText>
+          <inactiveText>Active Alarm 11 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 11 Alarm Present</activeText>
+          <inactiveText>Active Alarm 11 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_12">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.33.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 12 Alarm Present</activeText>
+          <inactiveText>Active Alarm 12 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 12 Alarm Present</activeText>
+          <inactiveText>Active Alarm 12 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_13">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.34.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 13 Alarm Present</activeText>
+          <inactiveText>Active Alarm 13 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 13 Alarm Present</activeText>
+          <inactiveText>Active Alarm 13 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_14">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.35.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 14 Alarm Present</activeText>
+          <inactiveText>Active Alarm 14 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 14 Alarm Present</activeText>
+          <inactiveText>Active Alarm 14 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_15">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.36.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 15 Alarm Present</activeText>
+          <inactiveText>Active Alarm 15 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 15 Alarm Present</activeText>
+          <inactiveText>Active Alarm 15 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="active_alarm_16">
+      <value>
+        <getOid>.1.3.6.1.4.1.28634.50.1.1.1.37.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>Active Alarm 16 Alarm Present</activeText>
+          <inactiveText>Active Alarm 16 Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>Active Alarm 16 Alarm Present</activeText>
+          <inactiveText>Active Alarm 16 Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+	<valueMap ruleid="modemap_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+	</valueMap>
+	<enumMap ruleid="modemap_em">
+		<label>Off</label>
+		<label>Manual</label>
+		<label>Auto</label>
+		<label>Test</label>
+	</enumMap>
+  </device>
+</APC_DDF>

@@ -1,0 +1,33 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="servercheck_sc_ts01"
+	ddfname="ServerCheck SC-TS01"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="servercheck_sc_ts01">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">ServerCheck</setProductData>
+		<setProductData ruleid="modeldata" field="model">SC-TS01</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<oidMustExist ruleid="temperature_sensor_1_must_exist" oid=".1.3.6.1.4.1.17095.3.2.0"/> 
+
+		<numSensor ruleid="TEMPERATURE_SENSOR_1">
+			<type>temp</type>	
+            		<sensorId>temperature_sensor_1</sensorId>
+			<value>
+				<getOid></getOid>
+			</value>
+			<label>Temperature Sensor</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>

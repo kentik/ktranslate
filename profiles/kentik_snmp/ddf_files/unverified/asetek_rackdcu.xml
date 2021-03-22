@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="asetek_rackdcu"
+	ddfname="Asetek RackDCU"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="Asetek_RackDCU">
+		<oidMustExist ruleid="snmpdevicetest" oid="1.3.6.1.4.1.39829.1.3.100.0" />
+		<setProductData ruleid="vendordata" field="vendor">Asetek</setProductData>
+		<setProductData ruleid="modeldata" field="model">Rack DCU</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		<numSensor ruleid="facility_water_temperature_supply">
+			<type>temp</type>
+			<units />
+			<sensorId>_FACILITY_WATER_TEMPERATURE_SUPPLY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.100.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Facility water temperature supply</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="facility_water_temperature_return">
+			<type>temp</type>
+			<units />
+			<sensorId>_FACILITY_WATER_TEMPERATURE_RETURN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.101.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Facility water temperature return</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="server_liquid_temperature_supply">
+			<type>temp</type>
+			<units />
+			<sensorId>_SERVER_LIQUID_TEMPERATURE_SUPPLY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.102.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Server liquid temperature supply</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="server_liquid_temperature_return">
+			<type>temp</type>
+			<units />
+			<sensorId>_SERVER_LIQUID_TEMPERATURE_RETURN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.103.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Server liquid temperature return</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rack_cdu_pressure">
+			<type>num</type>
+			<units />
+			<sensorId>_RACK_CDU_PRESSURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.105.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Rack cdu pressure</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="facility_pressure">
+			<type>num</type>
+			<units />
+			<sensorId>_FACILITY_PRESSURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.106.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Facility pressure</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="facility_water_flow">
+			<type>num</type>
+			<units />
+			<sensorId>_FACILITY_WATER_FLOW</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.109.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Facility water flow</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="heat_load_(60s)">
+			<type>powerW</type>
+			<units />
+			<sensorId>_HEAT_LOAD_(60S)</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.39829.1.3.110.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Heat load (60s)</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rackcdu_leak_detection">
+			<type>state</type>
+			<sensorId>_RACKCDU_LEAK_DETECTION</sensorId>
+			<value>
+				<mapValue mapid="ok_leak_vm">
+					<getOid>1.3.6.1.4.1.39829.1.3.107.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rackcdu leak detection</label>
+			<enum>ok_leak_em</enum>
+			<sensorSet>Generic</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rackcdu_liquid_level">
+			<type>state</type>
+			<sensorId>_RACKCDU_LIQUID_LEVEL</sensorId>
+			<value>
+				<mapValue mapid="ok_low_vm">
+					<getOid>1.3.6.1.4.1.39829.1.3.108.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rackcdu liquid level</label>
+			<enum>ok_low_em</enum>
+			<sensorSet>Generic</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="ok_leak_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="ok_leak_em">
+			<label>Ok</label>
+			<label>Leak</label>
+		</enumMap>
+		
+		<valueMap ruleid="ok_low_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="ok_low_em">
+			<label>Ok</label>
+			<label>Low</label>
+		</enumMap>
+		
+		
+		
+	</device>
+</APC_DDF>

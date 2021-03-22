@@ -1,0 +1,631 @@
+<?xml version="1.0"?>
+
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="schneiderops"
+	ddfname="Schneider Electric StruxureWare Data Center Operation"
+	ddfversion="4"
+	canremove="no">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!-- StrxureWare DC Operation server -->
+
+  <device deviceid="ops_server_no_contact">
+
+    <!-- detection rule to check for operations mib subtree support -->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.2.2" istree="yes"/>
+
+    <!-- suppress sysContact usage on Ops server if its value is "root" -->
+    <oidMustMatch ruleid="mib2name" oid=".1.3.6.1.2.1.1.4.0">
+      <valueList>
+        <value>root</value>
+      </valueList>
+    </oidMustMatch>
+
+    <suppressRule ruleid="suppresscontactdata" suppressid="core/mib2data/contactdata"/>
+
+  </device>
+
+  <device deviceid="ops_server">
+
+    <!-- detection rule to check for operations mib subtree support -->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.2.2" istree="yes"/>
+
+    <!-- basic status indicating whether the Operations service is running or not -->
+    <stateSensor ruleid="ops_service_status">
+      <type>state</type>
+      <sensorId>OPS_OPS_SERVICE_STATUS</sensorId>
+      <value><mapValue mapid="op_status_valuemap"><getOid>.1.3.6.1.4.1.318.1.2.2.1.1.0</getOid></mapValue></value>
+      <label>StruxureWare DC Operation Application Status</label>
+      <enum>op_status_enummap</enum>
+      <sensorSet>default</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="op_status_valuemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>5</valueIn><valueOut>5</valueOut>
+      <valueIn>6</valueIn><valueOut>6</valueOut>
+      <valueIn>7</valueIn><valueOut>7</valueOut>
+      <valueIn>8</valueIn><valueOut>8</valueOut>
+      <valueIn>9</valueIn><valueOut>9</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="op_status_enummap">
+      <label>Unknown status code</label> <!-- 0 -->
+      <label>Unknown</label> <!-- 1 -->
+      <label>Stopped</label> <!-- 2 -->
+      <label>Running</label> <!-- 3 -->
+      <label>Running but missing nodes</label> <!-- 4 -->
+      <label>Initializing</label> <!-- 5 -->
+      <label>Starting or non responding</label> <!-- 6 -->
+      <label>Disaster Recovery</label> <!-- 7 -->
+      <label>Running but postoffice is inconsistent</label> <!-- 8 -->
+      <label>Running but missing jgroups</label> <!-- 9-->
+    </enumMap>
+
+    <!-- basic status indicating whether the Database service is running or not -->
+    <stateSensor ruleid="ops_database_status">
+      <type>state</type>
+      <sensorId>OPS_DB_SERVICE_STATUS</sensorId>
+      <value><mapValue mapid="db_status_valuemap"><getOid>.1.3.6.1.4.1.318.1.2.2.1.2.0</getOid></mapValue></value>
+      <label>StruxureWare DC Operation Database Status</label>
+      <enum>db_status_enummap</enum>
+      <sensorSet>default</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="db_status_valuemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>5</valueIn><valueOut>5</valueOut>
+      <valueIn>6</valueIn><valueOut>6</valueOut>
+      <valueIn>7</valueIn><valueOut>7</valueOut>
+      <valueIn>8</valueIn><valueOut>8</valueOut>
+      <valueIn>9</valueIn><valueOut>9</valueOut>
+      <valueIn>10</valueIn><valueOut>10</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="db_status_enummap">
+      <label>Unknown status code</label> <!-- 0 -->
+      <label>Unknown</label> <!-- 1 -->
+      <label>Stopped</label> <!-- 2 -->
+      <label>Running</label> <!-- 3 -->
+      <label>Detached</label> <!-- 4 -->
+      <label>Catching up</label> <!-- 5 -->
+      <label>Attaching</label> <!-- 6 -->
+      <label>Running as master</label> <!-- 7 -->
+      <label>Running as primary slave</label> <!-- 8 -->
+      <label>Running as slave</label> <!-- 9 -->
+      <label>Running alone</label> <!-- 10 -->
+    </enumMap>
+
+    <!-- basic status indicating whether the load balancer is running or not -->
+    <stateSensor ruleid="ops_load_balancer_status">
+      <type>state</type>
+      <sensorId>OPS_LOAD_BALANCER_STATUS</sensorId>
+      <value><mapValue mapid="lb_status_valuemap"><getOid>.1.3.6.1.4.1.318.1.2.2.1.3.0</getOid></mapValue></value>
+      <label>StruxureWare DC Operation Load Balancer Status</label>
+      <enum>lb_status_enummap</enum>
+      <sensorSet>default</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="lb_status_valuemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="lb_status_enummap">
+      <label>Unknown status code</label> <!-- 0 -->
+      <label>Unknown</label> <!-- 1 -->
+      <label>Stopped</label> <!-- 2 -->
+      <label>Running</label> <!-- 3 -->
+      <label>Running but missing nodes</label> <!-- 4 -->
+    </enumMap>
+
+    <valueMap ruleid="general_status_valuemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>5</valueIn><valueOut>5</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="etl_status_valuemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>5</valueIn><valueOut>5</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <alarmFlags ruleid="ops_service_alarms">
+      <value>
+        <mapValue mapid="op_status_valuemap">
+          <getOid>.1.3.6.1.4.1.318.1.2.2.1.1.0</getOid>
+        </mapValue>
+      </value>
+
+      <alarmFlagsTest match="0">
+        <name>
+          <activeText>Unknown status code for application server</activeText>
+          <inactiveText>Known status code for application server</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status code for application server</activeText>
+          <inactiveText>Known status code for application server</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check that the latest version of the StruxureWare DC Operation device definition file is loaded. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server status is unknown.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server status is known.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server is out of reach.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server can be reached.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check the network configuration and the server network settings. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="2">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server was stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Restart the StruxureWare DC Operation server. If the server was part of a cluster, see the StruxureWare DC Operation User Assistance about rejoining the cluster. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="4">
+        <name>
+          <activeText>High availability is lost. The StruxureWare DC Operation Application server is running but one or more nodes are not available.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running with high availability again.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>High availability is lost. The StruxureWare DC Operation Application server is running but one or more nodes are not available.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running with high availability again.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>If the StruxureWare DC Operation server is part of a cluster, ensure all nodes are running and there is a network connection between the nodes. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="5">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server is initializing.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server has initialized.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server is initializing.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server has initialized.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Wait for the StruxureWare DC Operation Application server to initialize. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="6">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server is starting or not responding.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server has started and responded.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server is starting or not responding.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server has started and responded.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Wait for the StruxureWare DC Operation Application server to finish starting. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="8">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server postoffice is inconsistent.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server postoffice is consistent.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server postoffice is inconsistent. This might be due to a temporary situation.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server postoffice is consistent.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>If the problem persists for more than 10 minutes, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="9">
+        <name>
+          <activeText>The StruxureWare DC Operation Application server is running but missing jgroups.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running with all jgroups.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Application server is running but missing jgroups. This might be due to a temporary situation.</activeText>
+          <inactiveText>The StruxureWare DC Operation Application server is running with all jgroups.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>If the problem persists for more than 10 minutes, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags>
+
+    <alarmFlags ruleid="ops_database_alarms">
+      <value>
+        <mapValue mapid="db_status_valuemap">
+          <getOid>.1.3.6.1.4.1.318.1.2.2.1.2.0</getOid>
+        </mapValue>
+      </value>
+
+      <alarmFlagsTest match="0">
+        <name>
+          <activeText>Unknown status code for database</activeText>
+          <inactiveText>Known status code for database</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status code for database</activeText>
+          <inactiveText>Known status code for database</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check that the latest version of the StruxureWare DC Operation device definition file is loaded. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>The StruxureWare DC Operation database status is unknown.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is running.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation database status is unknown.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is running.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Restart the StruxureWare DC Operation server. If the server was part of a cluster, see the StruxureWare DC Operation User Assistance about rejoining the cluster. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="2">
+        <name>
+          <activeText>The StruxureWare DC Operation database stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is running.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation database was stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is running.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Restart the StruxureWare DC Operation server. If the server was part of a cluster, see the StruxureWare DC Operation User Assistance about rejoining the cluster. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="4">
+        <name>
+          <activeText>The StruxureWare DC Operation database was detached from the cluster.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is no longer detached from the cluster.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation database is detached from the cluster.</activeText>
+          <inactiveText>The StruxureWare DC Operation database has been reattached to the cluster.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>See the StruxureWare DC Operation User Assistance about reattaching the database node to the StruxureWare DC Operation cluster. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="5">
+        <name>
+          <activeText>The StruxureWare DC Operation database is catching up with the cluster.</activeText>
+          <inactiveText>The StruxureWare DC Operation database is up to date with the cluster.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation database is catching up with the cluster.</activeText>
+          <inactiveText>The StruxureWare Operations database is up-to-date with the cluster.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Wait for the StruxureWare DC Operation database to retrieve all updates from the master node. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="6">
+        <name>
+          <activeText>The StruxureWare DC Operation database is attaching to the cluster.</activeText>
+          <inactiveText>The StruxureWare DC Operation database was attached to the cluster.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation database is attaching to the cluster.</activeText>
+          <inactiveText>The StruxureWare DC Operation database was attached to the cluster.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Wait for the StruxureWare Operation database to attach to the cluster. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags>
+
+    <alarmFlags ruleid="ops_loadbalancer_alarms">
+      <value>
+        <mapValue mapid="lb_status_valuemap">
+          <getOid>.1.3.6.1.4.1.318.1.2.2.1.3.0</getOid>
+        </mapValue>
+      </value>
+
+      <alarmFlagsTest match="0">
+        <name>
+          <activeText>Unknown status code for load balancer</activeText>
+          <inactiveText>Known status code for load balancer</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status code for load balancer</activeText>
+          <inactiveText>Known status code for load balancer</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check that the latest version of the StruxureWare DC Operation device definition file is loaded. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>The StruxureWare DC Operation Load Balancer status is unknown.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer status is known.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Load Balancer status is unknown.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer status is known.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check the network configuration and the server network settings. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="2">
+        <name>
+          <activeText>The StruxureWare DC Operation Load Balancer stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer is running.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The StruxureWare DC Operation Load Balancer was stopped.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer is running.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Restart the StruxureWare DC Operation server. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="4">
+        <name>
+          <activeText>High availability is lost. The StruxureWare DC Operation Load Balancer is running but one or more nodes are not available.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer is running.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>High availability is lost. The StruxureWare DC Operation Load Balancer is running but one or more nodes are not available.</activeText>
+          <inactiveText>The StruxureWare DC Operation Load Balancer is running.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>If the StruxureWare DC Operation server is part of a cluster, ensure all nodes are running and there is a network connection between the nodes. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags>
+
+    <alarmFlags ruleid="ops_general_alarms">
+      <value>
+        <mapValue mapid="general_status_valuemap">
+          <getOid>.1.3.6.1.4.1.318.1.2.2.1.4.0</getOid>
+        </mapValue>
+      </value>
+
+      <alarmFlagsTest match="0">
+        <name>
+          <activeText>Unknown status code for essential services</activeText>
+          <inactiveText>Known status code for essential services</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status code for essential services</activeText>
+          <inactiveText>Known status code for essential services</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check that the latest version of the StruxureWare DC Operation device definition file is loaded. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>Unknown status for essential services</activeText>
+          <inactiveText>Known status for essential services</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status for essential services</activeText>
+          <inactiveText>Known status for essential services</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check the network configuration and the server network settings. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="2">
+        <name>
+          <activeText>Essential services are not running on the StruxureWare DC Operation server.</activeText>
+          <inactiveText>Essential services are running on the StruxureWare DC Operation server.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>Essential services are not running on the StruxureWare DC Operation server.</activeText>
+          <inactiveText>Essential services are running on the StruxureWare DC Operation server.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Reboot the node and monitor the status page in Webmin. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="4">
+        <name>
+          <activeText>The time difference between the StruxureWare DC Operation slave and the master node is too high.</activeText>
+          <inactiveText>The time difference between the StruxureWare DC Operation slave and the master node is within accepted thresholds.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The time difference between the StruxureWare DC Operation slave and the master node is too high.</activeText>
+          <inactiveText>The time difference between the StruxureWare DC Operation slave and the master node is within accepted thresholds.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Correct the time on the slave to match the master. Consider using an NTP server. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="5">
+        <name>
+          <activeText>The last backup that was attempted on the StruxureWare DC Operation server has failed.</activeText>
+          <inactiveText>The last backup that was attempted on the StruxureWare DC Operation server completed successfully.</inactiveText>
+        </name>
+        <severity>critical</severity>
+        <category>General</category>
+        <description>
+          <activeText>The last backup that was attempted on the StruxureWare DC Operation server has failed.</activeText>
+          <inactiveText>The last backup that was attempted on the StruxureWare DC Operation server completed successfully.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Make certain that the system can write to the location specified as backup location. This is particularly relevant for network attached storage. If the problem persists, contact Technical Support. (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+    </alarmFlags>
+
+    <alarmFlags ruleid="ops_etl_alarms">
+      <value>
+        <mapValue mapid="etl_status_valuemap">
+          <getOid>.1.3.6.1.4.1.318.1.2.2.1.5.0</getOid>
+        </mapValue>
+      </value>
+
+      <alarmFlagsTest match="0">
+        <name>
+          <activeText>Unknown status code for ETL services</activeText>
+          <inactiveText>Known status code for ETL services</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status code for ETL services.</activeText>
+          <inactiveText>Known status code for ETL services</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check that the latest version of the StruxureWare DC Operation device definition file is loaded. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>Unknown Status</activeText>
+          <inactiveText>Known Status</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>Unknown status.</activeText>
+          <inactiveText>Known status.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Check the network configuration and the server network settings. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+      <alarmFlagsTest match="3">
+        <name>
+          <activeText>ETL Transformations Failed</activeText>
+          <inactiveText>ETL Transformations Normal</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category>General</category>
+        <description>
+          <activeText>ETL Transformations have failed and are subsequently stopped.</activeText>
+          <inactiveText>ETL Transformations have returned to normal.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+          <recommendedActionId>Investigate the cause of the failure. If the problem persists, contact Technical Support (http://www.apc.com/go/direct/index.cfm?tag=support).</recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+
+	  <alarmFlagsTest match="4">
+        <name>
+          <activeText>ETL Transformations Paused</activeText>
+          <inactiveText>ETL Transformations Normal</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>ETL Transformations are currently paused.</activeText>
+          <inactiveText>ETL Transformations have returned to normal.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+	  <alarmFlagsTest match="5">
+        <name>
+          <activeText>ETL Transformations Stopped</activeText>
+          <inactiveText>ETL Transformations Normal</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>General</category>
+        <description>
+          <activeText>ETL Transformations are currently stopped.</activeText>
+          <inactiveText>ETL Transformations have returned to normal.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+
+    </alarmFlags>
+  </device>
+</APC_DDF>

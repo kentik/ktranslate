@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" 
+	ddfid="avtech_ra32e" 
+	ddfname="AVTech Room Alert 32E" 
+	ddfversion="2" 
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="avtech_ra32e">
+    <setProductData ruleid="vendordata" field="vendor">AVTech</setProductData>
+    <setProductData ruleid="modeldata" field="model">Room Alert 32E</setProductData>
+    <setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+	
+	<oidMustExist ruleid="snmpdevicetest" istree="yes" oid="1.3.6.1.4.1.20916.1.8" />
+	
+    <numSensor ruleid="internaltempc">
+      <type>temp</type>
+      <sensorId>_MUPS_TEMP2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.1.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Internal Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalhumdity">
+      <type>humidity</type>
+      <units />
+      <sensorId>_MUPS_HUMIDITY1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.2.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Internal Humidity</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalpower">
+      <type>num</type>
+      <units />
+      <sensorId>_INTERNALPOWER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.3.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Internal Power</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalheatindex">
+      <type>num</type>
+      <units>degreeF</units>
+      <sensorId>_MUPS_TEMP3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.4.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Internal Heat Index</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalheatindexc">
+      <type>num</type>
+      <units>degreeC</units>
+      <sensorId>_MUPS_TEMP4</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.4.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Internal Heat Index</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalanalog1">
+      <type>num</type>
+      <units>voltageDC</units>
+      <sensorId>_INTERNALANALOG1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.5.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Internal Analog 1</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="internalanalog2">
+      <type>num</type>
+      <units>voltageDC</units>
+      <sensorId>_INTERNALANALOG2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.1.5.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Internal Analog 2</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="internalrelay1">
+      <type>state</type>
+      <sensorId>_INTERNALRELAY1</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.1.6.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Internal Relay 1</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="internalrelay2">
+      <type>state</type>
+      <sensorId>_INTERNALRELAY2</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.1.6.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Internal Relay 2</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="digitalsen11">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN11</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.1.1.0</getOid>
+          </op> 
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 11</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen12">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN12</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.1.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 12</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen13">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN13</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.1.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 13</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen14">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN14</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.1.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 14</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen15">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN15</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.1.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 15</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen21">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN21</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.2.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 21</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen22">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN22</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.2.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 22</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen23">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN23</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.2.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 23</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen24">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN24</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.2.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 24</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen25">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN25</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.2.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 25</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen31">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN31</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.3.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 31</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen32">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN32</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.3.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 32</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen33">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN33</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.3.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 33</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen34">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN34</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.3.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 34</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen35">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN35</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.3.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 35</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen41">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN41</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.4.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 41</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen42">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN42</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.4.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 42</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen43">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN43</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.4.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 43</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen44">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN44</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.4.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 44</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen45">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN45</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.4.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 45</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen51">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN51</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.5.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 51</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen52">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN52</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.5.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 52</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen53">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN53</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.5.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 53</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen54">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN54</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.5.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 54</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen55">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN55</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.5.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 55</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen61">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN61</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.6.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 61</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen62">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN62</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.6.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 62</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen63">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN63</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.6.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 63</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen64">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN64</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.6.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 64</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen65">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN65</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.6.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 65</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen71">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN71</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.7.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 71</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen72">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN72</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.7.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 72</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen73">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN73</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.7.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 73</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen74">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN74</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.7.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 74</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen75">
+      <type>temp</type>
+      <units />
+      <sensorId>_DIGITALSEN75</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.7.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 75</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen81">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN81</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.8.1.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 81</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen82">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN82</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.8.2.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 82</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen83">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN83</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.8.3.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 83</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen84">
+      <type>num</type>
+      <units />
+      <sensorId>_DIGITALSEN84</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.8.4.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 84</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="digitalsen85">
+      <type>temp</type>
+      <units />
+      <sensorId>_MUPS_TEMP5</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.20916.1.8.1.2.8.5.0</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Digital Sen 85</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+    <stateSensor ruleid="switchsen1">
+      <type>state</type>
+      <sensorId>_SWITCHSEN1</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 1</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen2">
+      <type>state</type>
+      <sensorId>_SWITCHSEN2</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 2</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen3">
+      <type>state</type>
+      <sensorId>_SWITCHSEN3</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 3</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen4">
+      <type>state</type> 
+      <sensorId>_SWITCHSEN4</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 4</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen5">
+      <type>state</type>
+      <sensorId>_SWITCHSEN5</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 5</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen6">
+      <type>state</type>
+      <sensorId>_SWITCHSEN6</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 6</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen7">
+      <type>state</type>
+      <sensorId>_SWITCHSEN7</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 7</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen8">
+      <type>state</type>
+      <sensorId>_SWITCHSEN8</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.8.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 8</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen9">
+      <type>state</type>
+      <sensorId>_SWITCHSEN9</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 9</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen10">
+      <type>state</type>
+      <sensorId>_SWITCHSEN10</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 10</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen11">
+      <type>state</type>
+      <sensorId>_SWITCHSEN11</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 11</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen12">
+      <type>state</type>
+      <sensorId>_SWITCHSEN12</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.12.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 12</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen13">
+      <type>state</type>
+      <sensorId>_SWITCHSEN13</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 13</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen14">
+      <type>state</type>
+      <sensorId>_SWITCHSEN14</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 14</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen15">
+      <type>state</type>
+      <sensorId>_SWITCHSEN15</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 15</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="switchsen16">
+      <type>state</type>
+      <sensorId>_SWITCHSEN16</sensorId>
+      <value>
+        <mapValue mapid="on_off_vm">
+          <getOid>1.3.6.1.4.1.20916.1.8.1.3.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>Switch Sensor 16</label>
+      <enum>on_off_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor> 
+	
+	<valueMap ruleid="on_off_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	
+	<enumMap ruleid="on_off_em">
+		<label>OFF</label>
+		<label>ON</label>
+	</enumMap>	
+	
+  </device>
+</APC_DDF>

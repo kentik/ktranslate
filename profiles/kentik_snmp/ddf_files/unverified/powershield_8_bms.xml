@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid ="powershield_8_bms"
+	ddfname="PowerShield 8 Battery Manager"
+	ddfversion="3"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="powershield_8_bms">
+	
+	  <oidMustExist ruleid="powershield_8_bms_exists" istree="yes" oid=".1.3.6.1.4.1.35154.1002"/>
+	  
+	  <setProductData ruleid="vendordata" field="vendor">PowerShield</setProductData>
+	  <setProductData ruleid="modeldata" field="model">PowerShield 8 BMS</setProductData>
+	  <setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+	  
+	  <valueMap ruleid="delete_null_sensor">
+	    <valueIn>-2147483648</valueIn><valueOut>[false]</valueOut>
+	    <valueIn>*</valueIn><valueOut>[true]</valueOut>
+	  </valueMap>
+		
+	  <numSensor ruleid="battManMonoblockDCVoltage" index=".1.3.6.1.4.1.35154.1002.1.1.1.1.1">
+		<rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.4</getRowOid>
+		  </mapValue>
+		</rowTest>
+		<type>voltage</type>
+		<sensorId>DC_VOTALGE_MONOBLOCK_<rowIndex/></sensorId>
+		<value>
+		  <mult>
+			<op>
+			  <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.4</getRowOid>
+			</op>
+			<op>0.001</op>
+		  </mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			DC Voltage - 
+			String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.2</getRowOid><space/>
+			Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.3</getRowOid>
+		</label>
+		<sensorSet>Voltage</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="battManMonoblockRippleVoltage" index=".1.3.6.1.4.1.35154.1002.1.1.1.1.1">
+		<rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.5</getRowOid>
+		  </mapValue>
+		</rowTest>
+		<type>voltage</type>
+		<sensorId>RIPPLE_VOTALGE_MONOBLOCK_<rowIndex/></sensorId>
+		<value>
+		  <mult>
+			<op>
+			  <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.5</getRowOid>
+			</op>
+			<op>0.001</op>
+		  </mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			Ripple Voltage - 
+			String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.2</getRowOid><space/>
+			Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.3</getRowOid>
+		</label>
+		<sensorSet>Voltage</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="battManMonoblockPostTemperature" index=".1.3.6.1.4.1.35154.1002.1.1.1.1.1">
+		<rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.6</getRowOid>
+		  </mapValue>
+		</rowTest>
+		<type>temp</type>
+		<sensorId>POST_TEMPERATURE_MONOBLOCK_<rowIndex/></sensorId>
+		<value>
+		  <mult>
+			<op>
+			  <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.6</getRowOid>
+			</op>
+			<op>0.1</op>
+		  </mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			Post Temperature - 
+			String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.2</getRowOid><space/>
+			Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.3</getRowOid>
+		</label>
+		<sensorSet>Temperature</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="battManMonoblockImpedance" index=".1.3.6.1.4.1.35154.1002.1.1.1.1.1">
+		<rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.7</getRowOid>
+		  </mapValue>
+		</rowTest>
+		<type>num</type>
+		<sensorId>IMPEDANCE_MONOBLOCK_<rowIndex/></sensorId>
+		<value>
+		  <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.7</getRowOid>
+		</value>
+		<label>
+			Impedance - 
+			String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.2</getRowOid><space/>
+			Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.1.1.3</getRowOid>
+			<space/>(uOhms)
+		</label>
+		<sensorSet>Impedance</sensorSet>
+	  </numSensor>
+	  
+	  <numSensor ruleid="battManStringDCVoltage" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.2</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>voltage</type>
+        <sensorId>DC_VOLTAGE_STRING_<rowIndex/></sensorId>
+        <value>
+          <mult>
+            <op><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.2</getRowOid></op>
+            <op>0.1</op>
+          </mult>
+        </value>
+	    <valueInc>0.1</valueInc>
+        <label>DC Voltage - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Voltage</sensorSet>
+      </numSensor>
+	  <numSensor ruleid="battManStringCurrent" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.3</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>amperage</type>
+        <sensorId>CURRENT_STRING_<rowIndex/></sensorId>
+        <value>
+          <mult>
+            <op><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.3</getRowOid></op>
+            <op>0.1</op>
+          </mult>
+        </value>
+	    <valueInc>0.1</valueInc>
+        <label>Current - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Current</sensorSet>
+      </numSensor>
+	  <numSensor ruleid="battManStringRippleCurrent" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.4</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>amperage</type>
+        <sensorId>RIPPLE_CURRENT_STRING_<rowIndex/></sensorId>
+        <value>
+          <mult>
+            <op><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.4</getRowOid></op>
+            <op>0.1</op>
+          </mult>
+        </value>
+	    <valueInc>0.1</valueInc>
+        <label>Ripple Current - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Voltage</sensorSet>
+      </numSensor>
+	  <numSensor ruleid="battManStringTemperature1" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.5</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>temp</type>
+        <sensorId>TEMPERATURE_1_STRING_<rowIndex/></sensorId>
+        <value>
+          <mult>
+            <op><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.5</getRowOid></op>
+            <op>0.1</op>
+          </mult>
+        </value>
+	    <valueInc>0.1</valueInc>
+        <label>Temperature 1 - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Temperature</sensorSet>
+      </numSensor>
+	  <numSensor ruleid="battManStringTemperature2" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.6</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>temp</type>
+        <sensorId>TEMPERATURE_2_STRING_<rowIndex/></sensorId>
+        <value>
+          <mult>
+            <op><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.6</getRowOid></op>
+            <op>0.1</op>
+          </mult>
+        </value>
+	    <valueInc>0.1</valueInc>
+        <label>Temperature 2 - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Temperature</sensorSet>
+      </numSensor>
+	  <numSensor ruleid="battManStringHumidity" index=".1.3.6.1.4.1.35154.1002.1.1.2.1.1">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+		    <getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.7</getRowOid>
+		  </mapValue>
+	    </rowTest>
+        <type>humidity</type>
+        <sensorId>HUMIDITY_STRING_<rowIndex/></sensorId>
+        <value>
+			<getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.7</getRowOid>
+        </value>
+        <label>Humidity - String<space/><getRowOid>.1.3.6.1.4.1.35154.1002.1.1.2.1.1</getRowOid></label>
+        <sensorSet>Humidity</sensorSet>
+      </numSensor>
+	
+	</device>
+	
+</APC_DDF>

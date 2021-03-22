@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="schneider_electric_cp_mre"
+	ddfname="Schneider Electric/CP Eletronica MRE"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="schneider_electric_cp_mre">
+		<oidMustExist ruleid="cpMreMIB" oid=".1.3.6.1.4.1.3778.3" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+		<setProductData ruleid="cpMreIdentManufacturer" field="vendor">
+			<getOid>.1.3.6.1.4.1.3778.3.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="cpMreIdentModel" field="model">
+			<getOid>.1.3.6.1.4.1.3778.3.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="cpMreIdentSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.3778.3.1.3.0</getOid>
+		</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.3778.3.1.7.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="cpMreNominalFrequency">
+            <type>frequency</type>
+            <sensorId>MRE_NOMINAL_FREQUENCY</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.2.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Nominal Frequency</label>
+            <sensorSet>Status</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreTemperature">
+            <type>temp</type>
+            <sensorId>MRE_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.2.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Temperature</label>
+            <sensorSet>Status</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreMaxTemperature">
+            <type>temp</type>
+            <sensorId>MRE_MAX_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.2.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Max Temperature</label>
+            <sensorSet>Status</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="cpMreInputNominalVoltage">
+            <type>voltage</type>
+            <sensorId>MRE_INPUT_NOMINAL_VOLTAGE</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.1.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Nominal Voltage</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputVoltagePhaseR">
+            <type>voltage</type>
+            <sensorId>MRE_INPUT_VOLTAGE_1</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Voltage Phase R</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputVoltagePhaseS">
+            <type>voltage</type>
+            <sensorId>MRE_INPUT_VOLTAGE_2</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.3.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Voltage Phase S</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputVoltagePhaseT">
+            <type>voltage</type>
+            <sensorId>MRE_INPUT_VOLTAGE_3</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.4.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Voltage Phase T</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputCurrentPhaseR">
+            <type>amperage</type>
+            <sensorId>MRE_INPUT_CURRENT_1</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.5.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Current Phase R</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputCurrentPhaseS">
+            <type>amperage</type>
+            <sensorId>MRE_INPUT_CURRENT_2</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.6.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Current Phase S</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreInputCurrentPhaseT">
+            <type>amperage</type>
+            <sensorId>MRE_INPUT_CURRENT_3</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.3.7.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Current Phase T</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="cpMreOutputNominalVoltage">
+            <type>voltage</type>
+            <sensorId>MRE_OUTPUT_NOMINAL_VOLTAGE</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.1.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Nominal Voltage</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputVoltagePhaseR">
+            <type>voltage</type>
+            <sensorId>MRE_OUTPUT_VOLTAGE_1</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage Phase R</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputVoltagePhaseS">
+            <type>voltage</type>
+            <sensorId>MRE_OUTPUT_VOLTAGE_2</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.3.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage Phase S</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputVoltagePhaseT">
+            <type>voltage</type>
+            <sensorId>MRE_OUTPUT_VOLTAGE_3</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.4.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage Phase T</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputCurrentPhaseR">
+            <type>amperage</type>
+            <sensorId>MRE_OUTPUT_CURRENT_1</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.5.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Current Phase R</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputCurrentPhaseS">
+            <type>amperage</type>
+            <sensorId>MRE_OUTPUT_CURRENT_2</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.6.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Current Phase S</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputCurrentPhaseT">
+            <type>amperage</type>
+            <sensorId>MRE_OUTPUT_CURRENT_3</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.3778.3.4.7.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Current Phase T</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputNominalPower">
+            <type>powerW</type>
+            <sensorId>MRE_OUTPUT_NOMINAL_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Nominal Power</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputPowerPhaseR">
+            <type>powerW</type>
+            <sensorId>MRE_OUTPUT_POWER_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.9.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Power Phase R</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputPowerPhaseS">
+            <type>powerW</type>
+            <sensorId>MRE_OUTPUT_POWER_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Power Phase S</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputPowerPhaseT">
+            <type>powerW</type>
+            <sensorId>MRE_OUTPUT_POWER_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.11.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Power Phase T</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputTotalPower">
+            <type>powerW</type>
+            <sensorId>MRE_OUTPUT_POWER_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.12.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Power Total</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputLoadPhaseR">
+            <type>pctofcapacity</type>
+            <sensorId>MRE_OUTPUT_LOAD_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.13.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Load Phase R</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputLoadPhaseS">
+            <type>pctofcapacity</type>
+            <sensorId>MRE_OUTPUT_LOAD_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.14.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Load Phase S</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpMreOutputLoadPhaseT">
+            <type>pctofcapacity</type>
+            <sensorId>MRE_OUTPUT_LOAD_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3778.3.4.15.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Load Phase T</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="cpMreGeneralStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>5</valueIn><valueOut>1</valueOut>
+			<valueIn>21</valueIn><valueOut>2</valueOut>
+			<valueIn>30</valueIn><valueOut>3</valueOut>
+			<valueIn>31</valueIn><valueOut>4</valueOut>
+			<valueIn>32</valueIn><valueOut>5</valueOut>
+			<valueIn>33</valueIn><valueOut>6</valueOut>
+			<valueIn>34</valueIn><valueOut>7</valueOut>
+			<valueIn>35</valueIn><valueOut>8</valueOut>
+			<valueIn>36</valueIn><valueOut>9</valueOut>
+			<valueIn>37</valueIn><valueOut>10</valueOut>
+			<valueIn>38</valueIn><valueOut>11</valueOut>
+			<valueIn>39</valueIn><valueOut>12</valueOut>
+			<valueIn>40</valueIn><valueOut>13</valueOut>
+			<valueIn>42</valueIn><valueOut>14</valueOut>
+			<valueIn>43</valueIn><valueOut>15</valueOut>
+			<valueIn>44</valueIn><valueOut>15</valueOut>
+			<valueIn>*</valueIn><valueOut>16</valueOut>
+		</valueMap>
+		<enumMap ruleid="cpMreGeneralStatus-em">
+			<label>Device Off</label>
+			<label>Bypass On</label>
+			<label>Internal Fault</label>
+			<label>Under Voltage Ve</label>
+			<label>Over Voltage Ve</label>
+			<label>Under Voltage Vs</label>
+			<label>Over Voltage Vs</label>
+			<label>Disarm Under Voltage Vs</label>
+			<label>Disarm Over Voltage VS</label>
+			<label>Overload - 0-25%</label>
+			<label>Overload - 25-50%</label>
+			<label>Overload - 50-75%</label>
+			<label>Overload - 75-100%</label>
+			<label>Disarm Overload</label>
+			<label>Over Temperature</label>
+			<label>Normal</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="cpMreGeneralStatus">
+            <type>state</type>
+            <sensorId>MRE_GENERAL_STATUS</sensorId>
+            <value>
+				<mapValue>
+                <getOid>.1.3.6.1.4.1.3778.3.5.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>General Status</label>
+            <enum>cpMreGeneralStatus-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+	</device>
+</APC_DDF>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="nti_enviromux_microt"
+	ddfname="NTI ENVIROMUX MICRO T"
+	ddfversion="3"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="NTINetworkTechnologiesINC_ENVIROMUXMICROT">
+		<oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.3699.1.1.12.1" istree="yes"/>
+		<setProductData ruleid="vendordata" field="vendor">NTI</setProductData>
+		<setProductData ruleid="modeldata" field="model">ENVIROMUX MICRO T</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		<numSensor ruleid="temperature_1">
+			<type>temp</type>
+			<sensorId>_TEMPERATURE_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<sub>
+							<op>
+								<mult>
+									<op>
+										<getOid>.1.3.6.1.4.1.3699.1.1.12.1.1.1.1.4.1</getOid>
+									</op>
+									<op>0.1</op>
+								</mult>
+							</op>
+							<op>32</op>
+						</sub>
+					</op>
+					<op>
+						<div>
+							<op>5</op>
+							<op>9</op>
+						</div>
+					</op>
+				</mult>
+			</value>
+			<label>Temperature 1 (1.3.6.1.4.1.3699.1.1.12.1.1.1.1.4.1)</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature_2">
+			<type>temp</type>
+			<sensorId>_TEMPERATURE_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<sub>
+							<op>
+								<mult>
+									<op>
+										<getOid>.1.3.6.1.2.1.1.7.0</getOid>
+									</op>
+									<op>0.1</op>
+								</mult>
+							</op>
+							<op>32</op>
+						</sub>
+					</op>
+					<op>
+						<div>
+							<op>5</op>
+							<op>9</op>
+						</div>
+					</op>
+				</mult>
+			</value>
+			<label>Temperature 2 (1.3.6.1.2.1.1.7.0)</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="afs_fire_suppression_panel_status">
+			<type>state</type>
+			<sensorId>_AFS_FIRE_SUPPRESSION_PANEL_STATUS</sensorId>
+			<value>
+				<mapValue mapid="closeopen_vm">
+					<getOid>.1.3.6.1.4.1.3699.1.1.12.1.3.1.1.3.1</getOid>
+				</mapValue>
+			</value>
+			<label>AFS Fire Suppression Panel Status</label>
+			<enum>closeopen_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="afs_ads_panel_status">
+			<type>state</type>
+			<sensorId>_AFS_ADS_PANEL_STATUS</sensorId>
+			<value>
+				<mapValue mapid="closeopen_vm">
+					<getOid>.1.3.6.1.4.1.3699.1.1.12.1.3.1.1.3.2</getOid>
+				</mapValue>
+			</value>
+			<label>AFS ADS Panel Status</label>
+			<enum>closeopen_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<valueMap ruleid="closeopen_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="closeopen_em">
+			<label>Close</label>
+			<label>Open</label>
+		</enumMap>
+	</device>
+</APC_DDF>

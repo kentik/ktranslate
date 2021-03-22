@@ -1,0 +1,1923 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="Tait_TN8200"
+	ddfname="Tait TN8200"
+	ddfversion="4"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="Tait_TN8200">
+		<oidMustExist ruleid="taitTB8200MIB" oid="1.3.6.1.4.1.3570.3.9" istree="yes" />
+
+		<setProductData ruleid="vendordata" field="vendor">Tait</setProductData>
+		<setProductData ruleid="modeldata" field="model">TN8200</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.8.16.0</getOid>
+		</setDefaultLabel>
+
+		<valueMap ruleid="trueFalse-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>Unknown</label>
+			<label>True</label>
+			<label>False</label>
+		</enumMap>
+
+		<numSensor ruleid="taittb8200reciterrssi">
+			<type>num</type>
+			<sensorId>_TAITTB8200RECITERRSSI</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.0.1.0</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Reciter RSSI (dBm)</label>
+			<sensorSet>Variable Settings - Reciter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200recitersinad">
+			<type>num</type>
+			<sensorId>_TAITTB8200RECITERSINAD</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.0.2.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Reciter Signal-to-Noise Ratio (dB)</label>
+			<sensorSet>Variable Settings - Reciter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200recitertemperature">
+			<type>temp</type>
+			<sensorId>_TAITTB8200RECITERTEMPERATURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.0.3.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Reciter Temperature</label>
+			<sensorSet>Variable Settings - Reciter</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="taittb8200PowerAmplifierTXForwardPower">
+			<type>powerW</type>
+			<sensorId>_PA_FWD_PWR</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier TX Forward Power</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200PowerAmplifierTXForwardPower">
+			<type>powerW</type>
+			<sensorId>_PA_REV_PWR</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier TX Reverse Power</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200PowerAmplifierPADuty5">
+			<type>pctofcapacity</type>
+			<sensorId>_PA_DUTY5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier Transmit Duty Cycle (last 5 min.)</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200PowerAmplifierPADuty24">
+			<type>pctofcapacity</type>
+			<sensorId>_PA_DUTY24</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier Transmit Duty Cycle (last 24 hr.)</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200PowerAmplifierAirTemperature">
+			<type>temp</type>
+			<sensorId>_PA_AIR_TEMP</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier Air Temperature</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200PowerAmplifierDriverTemperature">
+			<type>temp</type>
+			<sensorId>_PA_DRIVER_TEMP</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.1.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Power Amplifier Driver Temperature</label>
+			<sensorSet>Variable Settings - Power Amplifier</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="taittb8200currentrfchannelselectedTransmitPower">
+			<type>powerW</type>
+			<sensorId>_CUR_RF_TX_PWR</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.4.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current RF Channel (<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.1.0</getOid>) Transmit Power</label>
+			<sensorSet>Variable Settings - Current RF Channel</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200currentrfchannelselectedtxfreq">
+			<type>frequency</type>
+			<sensorId>_TAITTB8200CURRENTRFCHANNELSELECTEDTXFREQ</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.5.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current RF Channel (<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.1.0</getOid>) Selected TX Frequency</label>
+			<sensorSet>Variable Settings - Current RF Channel</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200currentrfchannelselectedrxfreq">
+			<type>frequency</type>
+			<units />
+			<sensorId>_TAITTB8200CURRENTRFCHANNELSELECTEDRXFREQ</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.6.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current RF Channel (<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.1.0</getOid>) Selected RX Frequency</label>
+			<sensorSet>Variable Settings - Current RF Channel</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200currentRFChannelSelectedTxSubAudible">
+			<type>num</type>
+			<sensorId>_CUR_RF_TX_SUBAUDIBLE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.13.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current RF Channel (<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.1.0</getOid>) TX Sub-Audible</label>
+			<sensorSet>Variable Settings - Current RF Channel</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200currentRFChannelSelectedRxSubAudible">
+			<type>num</type>
+			<sensorId>_CUR_RF_RX_SUBAUDIBLE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.14.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current RF Channel (<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.4.1.0</getOid>) RX Sub-Audible</label>
+			<sensorSet>Variable Settings - Current RF Channel</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="asifMode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="asifMode-em">
+			<label>Run</label>
+			<label>Standby</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="taittb8200ASIFMode">
+			<type>state</type>
+			<sensorId>_ASIF_MODE</sensorId>
+			<value>
+				<mapValue mapid="asifMode-vm">
+				<getOid>.1.3.6.1.4.1.3570.3.9.2.3.0.8.1.0</getOid>
+				</mapValue>
+			</value>
+			<enum>asifMode-em</enum>
+			<label>Base Station Mode</label>
+			<sensorSet>Variable Settings - ASIF</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="taittb8200channelstatusstatus_valuemap">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		<enumMap ruleid="taittb8200channelstatusstatus_enum">
+			<label>Idle</label>
+			<label>Operating as Control Channel</label>
+			<label>Operating as Traffic Channel</label>
+			<label>Standby</label>
+			<label>No License</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="taittb8200channelstatusstatus">
+			<type>state</type>
+			<sensorId>_TAITTB8200CHANNELSTATUSSTATUS</sensorId>
+			<value>
+				<mapValue mapid="taittb8200channelstatusstatus_valuemap">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Base Station Status</label>
+			<enum>taittb8200channelstatusstatus_enum</enum>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="taittb8200channelstatusmccid">
+			<type>num</type>
+			<sensorId>_TAITTB8200CHANNELSTATUSMCCID</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.2.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MCC ID</label>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="taittb8200channelStatusJammed">
+			<type>state</type>
+			<sensorId>_CHANNEL_STATUS_JAMMED</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Base Station Jammed</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="taittb8200channelStatusFallback">
+			<type>state</type>
+			<sensorId>_CHANNEL_STATUS_FALLBACK</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Base Station in Fallback Mode</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="taittb8200channelstatusmptchannelnumber">
+			<type>num</type>
+			<sensorId>_TAITTB8200CHANNELSTATUSMPTCHANNELNUMBER</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.5.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT Channel Number</label>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="taittb8200channelStatusMajorAlarm">
+			<type>state</type>
+			<sensorId>_CHANNEL_STATUS_MAJOR_ALARM</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>Base Station Major Alarm</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="taittb8200channelStatusMinorAlarm">
+			<type>state</type>
+			<sensorId>_CHANNEL_STATUS_MINOR_ALARM</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.21.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>Base Station Minor Alarm</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Channel Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="taittb8200SiteBusEnabled">
+			<type>state</type>
+			<sensorId>_SITE_BUS_ENABLED</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.23.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Site Bus Enabled</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Site Bus</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="taittb8200SiteBusConnected">
+			<type>state</type>
+			<sensorId>_SITE_BUS_CONNECTED</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.23.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Site Bus Connected</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - Site Bus</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="taittb8200sitebuspacketssent">
+			<type>num</type>
+			<sensorId>_TAITTB8200SITEBUSPACKETSSENT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.23.3.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Site Bus Packets Sent</label>
+			<sensorSet>Variable Settings - Site Bus</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200sitebuspacketsreceived">
+			<type>num</type>
+			<sensorId>_TAITTB8200SITEBUSPACKETSRECEIVED</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.23.4.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Site Bus Packets Received</label>
+			<sensorSet>Variable Settings - Site Bus</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200sitebuspacketerrors">
+			<type>num</type>
+			<sensorId>_TAITTB8200SITEBUSPACKETERRORS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.23.5.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Site Bus Packet Errors</label>
+			<sensorSet>Variable Settings - Site Bus</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="taittb8200mptipenabled">
+			<type>state</type>
+			<sensorId>_TAITTB8200MPTIPENABLED</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>MPT IP Enabled</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="taittb8200MPTIPConnected">
+			<type>state</type>
+			<sensorId>_MPTIP_CONNECTED</sensorId>
+			<value>
+				<mapValue mapid="trueFalse-vm">
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>MPT IP Connected</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="taittb8200mptipnodeport">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPNODEPORT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Node Port</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipnodepriority">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPNODEPRIORITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.5.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Node Priority</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipvdpport">
+			<type>num</type>
+			<units />
+			<sensorId>_TAITTB8200MPTIPVDPPORT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.6.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP VDP Port</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipmccpport">
+			<type>num</type>
+			<units />
+			<sensorId>_TAITTB8200MPTIPMCCPPORT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.7.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP MCCP Port</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptippacketssent">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPPACKETSSENT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.8.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Packets Sent</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptippacketsreceived">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPPACKETSRECEIVED</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.9.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Packets Received</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipjitter">
+			<type>timeinsec</type>
+			<sensorId>_TAITTB8200MPTIPJITTER</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.10.0</getOid>
+					</op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>MPT IP Jitter</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipaverageloss">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPAVERAGELOSS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.12.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Average Loss</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipunderflowcount">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPUNDERFLOWCOUNT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.17.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Underflow Count</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptippacketerrors">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPPACKETERRORS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.18.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Packet Errors</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipvdppacketssent">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPVDPPACKETSSENT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.19.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP VDP Packets Sent</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipvdppacketsreceived">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPVDPPACKETSRECEIVED</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.20.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP VDP Packets Received</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipvdppacketerrors">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPVDPPACKETERRORS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.21.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP VDP Packet Errors</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipmaximumlateness">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPMAXIMUMLATENESS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.22.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Maximum Lateness</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+		<numSensor ruleid="taittb8200mptipaveragelateness">
+			<type>num</type>
+			<sensorId>_TAITTB8200MPTIPAVERAGELATENESS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.23.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPT IP Average Lateness</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</numSensor>
+
+		<stringSensor ruleid="taittb8200mptipnodeipaddress">
+			<type>string</type>
+			<sensorId>_TAITTB8200MPTIPNODEIPADDRESS</sensorId>
+			<value>
+				<op>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.0.24.3.0</getOid>
+				</op>
+			</value>
+			<label>tait TB8200 MPT IPNode Ip Address</label>
+			<sensorSet>Variable Settings - MPT IP</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200reciterproductcode">
+			<type>string</type>
+			<sensorId>_TAITTB8200RECITERPRODUCTCODE</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.0.2.0</getOid>
+			</value>
+			<label>Reciter Product Code</label>
+			<sensorSet>Fixed Settings - Reciter</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200reciterserialnumber">
+			<type>string</type>
+			<sensorId>_TAITTB8200RECITERSERIALNUMBER</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.0.9.0</getOid>
+			</value>
+			<label>Reciter Serial Number</label>
+			<sensorSet>Fixed Settings - Reciter</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200reciterhardwareversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200RECITERHARDWAREVERSION</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.0.10.0</getOid>
+			</value>
+			<label>Reciter Hardware Version</label>
+			<sensorSet>Fixed Settings - Reciter</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200reciterfirmwareversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200RECITERFIRMWAREVERSION</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.0.11.0</getOid>
+			</value>
+			<label>Reciter Firmware Version</label>
+			<sensorSet>Fixed Settings - Reciter</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200reciterdatabaseversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200RECITERDATABASEVERSION</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.0.13.0</getOid>
+			</value>
+			<label>Reciter Database Version</label>
+			<sensorSet>Fixed Settings - Reciter</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifproductcode">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFPRODUCTCODE</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.1.0</getOid>
+			</value>
+			<label>ASIF Product Code</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifserialnumber">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFSERIALNUMBER</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.2.0</getOid>
+			</value>
+			<label>ASIF Serial Number</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifhardwareversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFHARDWAREVERSION</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.3.0</getOid>
+			</value>
+			<label>ASIF Hardware Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asiffirmwareversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFFIRMWAREVERSION</sensorId>
+			<value>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.4.0</getOid>
+			</value>
+			<label>ASIF Firmware Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifdatabaseversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFDATABASEVERSION</sensorId>
+			<value>
+				<op>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.7.0</getOid>
+				</op>
+			</value>
+			<label>ASIF Database Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifkernelversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFKERNELVERSION</sensorId>
+			<value>
+				<op>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.9.0</getOid>
+				</op>
+			</value>
+			<label>ASIF Kernel Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifdspversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFDSPVERSION</sensorId>
+			<value>
+				<op>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.15.0</getOid>
+				</op>
+			</value>
+			<label>ASIF DSP Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="taittb8200asifmccversion">
+			<type>string</type>
+			<sensorId>_TAITTB8200ASIFMCCVERSION</sensorId>
+			<value>
+				<op>
+					<getOid>1.3.6.1.4.1.3570.3.9.2.3.1.3.16.0</getOid>
+				</op>
+			</value>
+			<label>ASIF MCC Version</label>
+			<sensorSet>Fixed Settings - ASIF</sensorSet>
+		</stringSensor>
+
+		<alarmFlags ruleid="reciterPowerUpFail">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Reciter Power-Up Fail</activeText>
+					<inactiveText>Reciter Power-Up Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter has failed one or more of its initialization self-tests.</activeText>
+					<inactiveText>Reciter Power-Up Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="exciterSynthOutOfLock">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Exciter Synth Out of Lock</activeText>
+					<inactiveText>Exciter Synth Out of Lock Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The exciter synthesizer is unable to lock on to the frequency it is configured to operate at.</activeText>
+					<inactiveText>Exciter Synth Out of Lock condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="clockSynthOutOfLock">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Clock Synth Out of Lock</activeText>
+					<inactiveText>Clock Synth Out of Lock Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>One or more of the DSP and sampling clocks are out of lock.</activeText>
+					<inactiveText>Clock Synth Out of Lock condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rxSynthOutOfLock">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>RX Synth Out of Lock</activeText>
+					<inactiveText>RX Synth Out of Lock Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The receiver synthesizer is unable to lock on to the frequency it is configured to operate at.</activeText>
+					<inactiveText>RX Synth Out of Lock condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="invalidChannelSelected">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Channel Selected</activeText>
+					<inactiveText>Invalid Channel Selected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An invalid channel number was selected.</activeText>
+					<inactiveText>The channel selected is now valid.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="overTemperature">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Reciter Over Temperature</activeText>
+					<inactiveText>Reciter Over Temperature Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The temperature of the reciter has exceeded the built-in threshold of 162.5 deg F (72.5 deg C).</activeText>
+					<inactiveText>The temperature of the reciter has returned to a normal level.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="invalidCalibration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.7.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Calibration</activeText>
+					<inactiveText>Invalid Calibration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter cannot operate properly because the digital board does not have valid calibration settings.</activeText>
+					<inactiveText>Calibration settings are now valid.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="invalidConfiguration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.8.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Configuration</activeText>
+					<inactiveText>Invalid Configuration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter configuration data has become corrupted.</activeText>
+					<inactiveText>Configuration settings are now valid.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="txNotReady">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.0.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>TX Not Ready</activeText>
+					<inactiveText>TX Not Ready Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The base station is not ready to transmit because the exciter training sequence is in progress.</activeText>
+					<inactiveText>The base station is now ready to transmit.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="vswrFault">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>VSWR Fault</activeText>
+					<inactiveText>VSWR Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA's Voltage Standing Wave Ratio (VSWR) is above the configured threshold.</activeText>
+					<inactiveText>The PA's Voltage Standing Wave Ratio (VSWR) has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="forwardPowerLow">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Forward Power Low</activeText>
+					<inactiveText>Forward Power Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA forward power output is below the configured minimum limit.</activeText>
+					<inactiveText>The PA forward power output has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="reversePowerHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Forward Power Low</activeText>
+					<inactiveText>Forward Power Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA reverse power output is above the configured maximum limit.</activeText>
+					<inactiveText>The PA reverse power output has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="final1TemperatureHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Final 1 Temperature High</activeText>
+					<inactiveText>Final 1 Temperature High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The temperature in the PA's final 1 output stage has exceeded the configured threshold.</activeText>
+					<inactiveText>The temperature in the PA's final 1 output stage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="final2TemperatureHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Final 2 Temperature High</activeText>
+					<inactiveText>Final 2 Temperature High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The temperature in the PA's final 2 output stage has exceeded the configured threshold.</activeText>
+					<inactiveText>The temperature in the PA's final 2 output stage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="driverTemperatureHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Driver Temperature High</activeText>
+					<inactiveText>Driver Temperature High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The temperature in the PA's driver output stage has exceeded the configured threshold.</activeText>
+					<inactiveText>The temperature in the PA's driver output stage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="shutdownImminent">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Shutdown Imminent</activeText>
+					<inactiveText>Shutdown Imminent Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA has detected a fault condition and disabled the transmitter to prevent damage.</activeText>
+					<inactiveText>The PA has returned to normal operation.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paDriverCurrentHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PA Driver Current High</activeText>
+					<inactiveText>PA Driver Current High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The driver is drawing excessive current.</activeText>
+					<inactiveText>The driver's current draw has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paFinal1CurrentHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PA Final 1 Current High</activeText>
+					<inactiveText>PA Final 1 Current High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The current in the PA's final 1 output stage has exceeded a fixed limit.</activeText>
+					<inactiveText>The current in the PA's final 1 output stage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paFinal2CurrentHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PA Final 2 Current High</activeText>
+					<inactiveText>PA Final 2 Current High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The current in the PA's final 2 output stage has exceeded a fixed limit.</activeText>
+					<inactiveText>The current in the PA's final 2 output stage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="supplyVoltageHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.13.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Supply Voltage High</activeText>
+					<inactiveText>Supply Voltage High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The supply voltage has exceeded a fixed limit.</activeText>
+					<inactiveText>The supply voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="supplyVoltageLow">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Supply Voltage Low</activeText>
+					<inactiveText>Supply Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The supply voltage has fallen below a fixed limit.</activeText>
+					<inactiveText>The supply voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paInvalidCalibration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.15.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Calibration</activeText>
+					<inactiveText>Invalid Calibration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>PA self-test indicates that settings stored in firmware have values outside acceptable limits.</activeText>
+					<inactiveText>Calibration has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paInvalidConfiguration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.16.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Configuration</activeText>
+					<inactiveText>Invalid Configuration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Hardware configuration is invalid.</activeText>
+					<inactiveText>Configuration has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="foldback">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.17.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Foldback</activeText>
+					<inactiveText>Foldback Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA has detected a fault condition and has reduced its power output to a low level to prevent damage.</activeText>
+					<inactiveText>Foldback condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="imbalance">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.18.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Imbalance</activeText>
+					<inactiveText>Imbalance Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>One of the PA's final stages is drawing significantly more current than the other.</activeText>
+					<inactiveText>PA's final stages' current draw has equalized.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paFanFailure">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.19.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PA Fan Failure</activeText>
+					<inactiveText>PA Fan Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PA turned its fan on, but the reciter did not detect any fan motion.</activeText>
+					<inactiveText>PA fan has returned to normal function.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="paInvalidFirmware">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.1.20.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PA Invalid Firmware</activeText>
+					<inactiveText>PA Invalid Firmware Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The firmware in the PA is invalid.</activeText>
+					<inactiveText>The firmware in the PA is valid.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="pmuMainsFailure">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Mains Failure</activeText>
+					<inactiveText>Mains Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The mains power supply to the PMU is absent or its voltage is outside acceptable limits.</activeText>
+					<inactiveText>The mains power supply to the PMU has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuBatteryVoltageHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Voltage High</activeText>
+					<inactiveText>Battery Voltage High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The voltage of the DC power supply to the PMU is higher than the configured maximum.</activeText>
+					<inactiveText>The voltage of the DC power supply to the PMU has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuBatteryVoltageLow">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Voltage Low</activeText>
+					<inactiveText>Battery Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The voltage of the DC power supply to the PMU is lower than the configured minimum.</activeText>
+					<inactiveText>The voltage of the DC power supply to the PMU has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuBatteryProtect">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Protect</activeText>
+					<inactiveText>Battery Protect Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Battery Protection Mode is on.</activeText>
+					<inactiveText>Battery Protection Mode is off.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuShutdownImminent">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Shutdown Imminent</activeText>
+					<inactiveText>Shutdown Imminent Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Battery voltage has fallen below the configured power shutdown voltage.</activeText>
+					<inactiveText>Battery voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuTemperatureHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Temperature High</activeText>
+					<inactiveText>Temperature High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>One of the PMU temperature sensors has detected a temperature that is above the fixed limit.</activeText>
+					<inactiveText>PMU Temperature has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuVoltageOutHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.7.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Voltage Out High</activeText>
+					<inactiveText>Voltage Out High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PMU's DC output voltage is higher than the fixed maximum.</activeText>
+					<inactiveText>The PMU's DC output voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuVoltageOutLow">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.8.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Voltage Out Low</activeText>
+					<inactiveText>Voltage Out Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PMU's DC output voltage is lower than the fixed minimum.</activeText>
+					<inactiveText>The PMU's DC output voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuCurrentOutHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Current Out High</activeText>
+					<inactiveText>Current Out High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PMU's DC output current is abnormally high and is automatically lowering its output voltage.</activeText>
+					<inactiveText>The PMU's DC output current has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuSelfTestFailure">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Self-Test Failure</activeText>
+					<inactiveText>Self-Test Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>During startup, the PMU detected an internal error and will reset itself.</activeText>
+					<inactiveText>PMU self-test has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuFanFailure">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Fan Failure</activeText>
+					<inactiveText>Fan Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The PMU turned its fan on, but the reciter did not detect any fan motion.</activeText>
+					<inactiveText>PMU fan has returned to normal function.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuInvalidFirmware">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.2.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Firmware</activeText>
+					<inactiveText>Invalid Firmware Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The firmware in the PMU is invalid.</activeText>
+					<inactiveText>The firmware in the PMU is valid.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="baseStationSummary">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Base Station Summary Alarm</activeText>
+					<inactiveText>Base Station Summary Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Base Station alarm condition exists.</activeText>
+					<inactiveText>Base Station alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="reciterSummary">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Reciter Summary Alarm</activeText>
+					<inactiveText>Reciter Summary Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Reciter alarm condition exists.</activeText>
+					<inactiveText>Reciter alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="powerAmplifierSummary">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Power Amplifier Summary Alarm</activeText>
+					<inactiveText>Power Amplifier Summary Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Power Amplifier alarm condition exists.</activeText>
+					<inactiveText>Power Amplifier alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pmuSummary">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Power Management Unit Summary Alarm</activeText>
+					<inactiveText>Power Management Unit Summary Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Power Management Unit alarm condition exists.</activeText>
+					<inactiveText>Power Management Unit alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="ASIFSummary">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>ASIF Summary Alarm</activeText>
+					<inactiveText>ASIF Summary Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An ASIF alarm condition exists.</activeText>
+					<inactiveText>ASIF alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="noPMUDetected">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>No PMU Detected</activeText>
+					<inactiveText>No PMU Detected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter has not received a response from the PMU over the control bus.</activeText>
+					<inactiveText>PMU is responding normally.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="noPADetected">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.7.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>No PA Detected</activeText>
+					<inactiveText>No PA Detected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter has not received a response from the PA over the control bus.</activeText>
+					<inactiveText>PA is responding normally.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="airTemperatureHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Air Temperature High</activeText>
+					<inactiveText>Air Temperature High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The intake air temperature has exceeded the configured maximum.</activeText>
+					<inactiveText>The intake air temperature has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="airTemperatureLow">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Air Temperature Low</activeText>
+					<inactiveText>Air Temperature Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The intake air temperature has fallen below the configured minimum.</activeText>
+					<inactiveText>The intake air temperature has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="externalFrequencyReferenceRemoved">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.13.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Frequency Reference Removed</activeText>
+					<inactiveText>External Frequency Reference Removed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The base station did not detect an external reference frequency source.</activeText>
+					<inactiveText>External reference frequency source has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="externalFrequencyReferenceInvalid">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Frequency Reference Invalid</activeText>
+					<inactiveText>External Frequency Reference Invalid Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An external reference frequency is connected, but the base station cannot lock on to its channel frequency using that reference.</activeText>
+					<inactiveText>External reference frequency source has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifCommsFailure">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.15.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>ASIF Comms Failure</activeText>
+					<inactiveText>ASIF Comms Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An ASIF Comms Failure condition exists.</activeText>
+					<inactiveText>ASIF Comms Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="onePPSAbsent">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.16.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>1PPS Absent</activeText>
+					<inactiveText>1PPS Absent Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The base station is not receiving a 1PPS pulse.</activeText>
+					<inactiveText>1PPS pulse has been re-established.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="txUnsynch">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.3.17.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>TX Unsynch</activeText>
+					<inactiveText>TX Unsynch Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The transmitter is unsynchronized.</activeText>
+					<inactiveText>The transmitter has been re-synchronized.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="asifBERHigh">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>BER High</activeText>
+					<inactiveText>BER High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The Bit Error Rate of the incoming signal exceeded the alarm threshold of 1%.</activeText>
+					<inactiveText>The Bit Error Rate of the incoming signal has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifLatePackets">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Late Packets</activeText>
+					<inactiveText>Late Packets Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Late Packets condition exists.</activeText>
+					<inactiveText>Late Packets condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifQOSLostPackets">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>QOS: Lost Packets</activeText>
+					<inactiveText>QOS: Lost Packets Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The number of lost packets in the incoming voice stream has exceeded one or more of the configured thresholds.</activeText>
+					<inactiveText>The number of lost packets has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifQOSJitter">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>QOS: Jitter</activeText>
+					<inactiveText>QOS: Jitter Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The incoming voice stream has a delay variation greater than the configured threshold.</activeText>
+					<inactiveText>The incoming voice stream delay variation has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifInvalidConfiguration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Configuration</activeText>
+					<inactiveText>Invalid Configuration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The network board configuration data has become corrupted.</activeText>
+					<inactiveText>The network board configuration data has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="asifInvalidCalibration">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.4.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Invalid Calibration</activeText>
+					<inactiveText>Invalid Calibration Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>The reciter cannot operate properly because the network board does not have valid calibration settings.</activeText>
+					<inactiveText>The network board calibration settings have returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="customAlarm1">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 1</activeText>
+					<inactiveText>Custom Alarm 1 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 1 condition exists.</activeText>
+					<inactiveText>Custom Alarm 1 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm2">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 2</activeText>
+					<inactiveText>Custom Alarm 2 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 2 condition exists.</activeText>
+					<inactiveText>Custom Alarm 2 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm3">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 3</activeText>
+					<inactiveText>Custom Alarm 3 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 3 condition exists.</activeText>
+					<inactiveText>Custom Alarm 3 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm4">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 4</activeText>
+					<inactiveText>Custom Alarm 4 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 4 condition exists.</activeText>
+					<inactiveText>Custom Alarm 4 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm5">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 5</activeText>
+					<inactiveText>Custom Alarm 5 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 5 condition exists.</activeText>
+					<inactiveText>Custom Alarm 5 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm6">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 6</activeText>
+					<inactiveText>Custom Alarm 6 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 6 condition exists.</activeText>
+					<inactiveText>Custom Alarm 6 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm7">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.7.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 7</activeText>
+					<inactiveText>Custom Alarm 7 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 7 condition exists.</activeText>
+					<inactiveText>Custom Alarm 7 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm8">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.8.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 8</activeText>
+					<inactiveText>Custom Alarm 8 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 8 condition exists.</activeText>
+					<inactiveText>Custom Alarm 8 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm9">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 9</activeText>
+					<inactiveText>Custom Alarm 9 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 9 condition exists.</activeText>
+					<inactiveText>Custom Alarm 9 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm10">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 10</activeText>
+					<inactiveText>Custom Alarm 10 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 10 condition exists.</activeText>
+					<inactiveText>Custom Alarm 10 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm11">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 11</activeText>
+					<inactiveText>Custom Alarm 11 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 11 condition exists.</activeText>
+					<inactiveText>Custom Alarm 11 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm12">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 12</activeText>
+					<inactiveText>Custom Alarm 12 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 12 condition exists.</activeText>
+					<inactiveText>Custom Alarm 12 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm13">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.13.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 13</activeText>
+					<inactiveText>Custom Alarm 13 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 13 condition exists.</activeText>
+					<inactiveText>Custom Alarm 13 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="customAlarm14">
+			<value><getOid>.1.3.6.1.4.1.3570.3.9.2.5.0.5.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Custom Alarm 14</activeText>
+					<inactiveText>Custom Alarm 14 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Custom Alarm 14 condition exists.</activeText>
+					<inactiveText>Custom Alarm 14 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+	</device>
+</APC_DDF>

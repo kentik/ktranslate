@@ -1,0 +1,620 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ceragon_fibeair_1500p"
+	ddfname="Ceragon FibeAir 1500P"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="ceragon_fibeair_1500p">
+		<oidMustExist ruleid="ceragon" oid=".1.3.6.1.4.1.2281" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Ceragon</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.2.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Network Device</setProductData>
+
+		<valueMap ruleid="2bitLED-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="2bitLED-em">
+			<label>Gray</label>
+			<label>Green</label>
+			<label>Orange</label>
+			<label>Red</label>
+		</enumMap>
+		<stateSensor ruleid="gnGenIdcStatLed1">
+            <type>state</type>
+            <sensorId>STAT_LED1</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getOid>.1.3.6.1.4.1.2281.2.1.22.1.3.1</getOid>
+						</baseNToInt>
+					</op>
+					<op>18</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label>Stat LED #1</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet>LED</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenIdcStatLed2">
+            <type>state</type>
+            <sensorId>STAT_LED2</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getOid>.1.3.6.1.4.1.2281.2.1.22.1.3.1</getOid>
+						</baseNToInt>
+					</op>
+					<op>16</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label>Stat LED #2</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet>LED</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenIdcStatLed3">
+            <type>state</type>
+            <sensorId>STAT_LED3</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getOid>.1.3.6.1.4.1.2281.2.1.22.1.3.1</getOid>
+						</baseNToInt>
+					</op>
+					<op>14</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label>Stat LED #3</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet>LED</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenIdcStatLed4">
+            <type>state</type>
+            <sensorId>STAT_LED4</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getOid>.1.3.6.1.4.1.2281.2.1.22.1.3.1</getOid>
+						</baseNToInt>
+					</op>
+					<op>12</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label>Stat LED #4</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet>LED</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenIdcStatLed5">
+            <type>state</type>
+            <sensorId>STAT_LED5</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getOid>.1.3.6.1.4.1.2281.2.1.22.1.3.1</getOid>
+						</baseNToInt>
+					</op>
+					<op>10</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label>Stat LED #5</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet>LED</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="deviceLabel-vm">
+			<valueIn>1</valueIn><valueOut>Local</valueOut>
+			<valueIn>2</valueIn><valueOut>Remote</valueOut>
+			<valueIn>3</valueIn><valueOut>Drawer 1</valueOut>
+			<valueIn>4</valueIn><valueOut>Drawer 2</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown Device</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="gnGenStatDeviceCelsiusTemp" index=".1.3.6.1.4.1.2281.2.1.9.1.2">
+			<type>temp</type>
+			<sensorId>DEV_TEMP_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.2</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> Temperature</label>
+			<sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnOduStatusXCelsiusTemp" index=".1.3.6.1.4.1.2281.3.1.5.1.2">
+			<type>temp</type>
+			<sensorId>DEV_TEMP_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.1.5.1.2</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>ODU <mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.3.1.5.1.1</getRowOid></mapValue> Temperature</label>
+			<sensorSet>ODU <mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.3.1.5.1.1</getRowOid></mapValue></sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="gnGenStatDeviceLed1" index=".1.3.6.1.4.1.2281.2.1.9.1.7">
+            <type>state</type>
+            <sensorId>DEVICE_<rowNumber/>_LED1</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.7</getRowOid>
+						</baseNToInt>
+					</op>
+					<op>10</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> LED #1</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenStatDeviceLed2" index=".1.3.6.1.4.1.2281.2.1.9.1.7">
+            <type>state</type>
+            <sensorId>DEVICE_<rowNumber/>_LED2</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.7</getRowOid>
+						</baseNToInt>
+					</op>
+					<op>8</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> LED #2</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenStatDeviceLed1" index=".1.3.6.1.4.1.2281.2.1.9.1.7">
+            <type>state</type>
+            <sensorId>DEVICE_<rowNumber/>_LED1</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.7</getRowOid>
+						</baseNToInt>
+					</op>
+					<op>6</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> LED #3</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenStatDeviceLed1" index=".1.3.6.1.4.1.2281.2.1.9.1.7">
+            <type>state</type>
+            <sensorId>DEVICE_<rowNumber/>_LED1</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.7</getRowOid>
+						</baseNToInt>
+					</op>
+					<op>4</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> LED #4</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gnGenStatDeviceLed1" index=".1.3.6.1.4.1.2281.2.1.9.1.7">
+            <type>state</type>
+            <sensorId>DEVICE_<rowNumber/>_LED1</sensorId>
+            <value>
+				<mapValue mapid="2bitLED-vm">
+				<formatNumber printffmt="%1.0f">
+				<bitwise_and>
+				<op>
+					<right_shift>
+					<op>
+						<baseNToInt base="16">
+    	    	        <getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.7</getRowOid>
+						</baseNToInt>
+					</op>
+					<op>2</op>
+					</right_shift>
+				</op>
+				<op>3</op>
+				</bitwise_and>
+				</formatNumber>
+				</mapValue>
+            </value>
+            <label><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue> LED #5</label>
+			<enum>2bitLED-em</enum>
+            <sensorSet><mapValue mapid="deviceLabel-vm"><getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.1</getRowOid></mapValue></sensorSet>
+        </stateSensor>
+
+		<alarmFlags2 ruleid="gnGenStatInternalCommuncation" index=".1.3.6.1.4.1.2281.2.1.9.1.8">
+			<value>
+				<baseNToInt base="16">
+				<getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.8</getRowOid>
+				</baseNToInt>
+			</value>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Communication Problem: Main/ODU</activeText>
+					<inactiveText>Communication Problem Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Communication Problem exists between the Main CPU and the ODU CPU.</activeText>
+					<inactiveText>Communication Problem no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Communication Problem: Main/MUX</activeText>
+					<inactiveText>Communication Problem Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Communication Problem exists between the Main CPU and the MUX CPU.</activeText>
+					<inactiveText>Communication Problem no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="20" match="20">
+				<name>
+					<activeText>Communication Problem: Master/Slave</activeText>
+					<inactiveText>Communication Problem Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Communication Problem exists between the Master Main CPU and the Slave Main CPU.</activeText>
+					<inactiveText>Communication Problem no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<alarmFlags2 ruleid="gnGenStatDeviceFanStatus" index=".1.3.6.1.4.1.2281.2.1.9.1.9">
+			<value>
+				<baseNToInt base="16">
+				<getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.9</getRowOid>
+				</baseNToInt>
+			</value>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>IDU Fan 1 Fault</activeText>
+					<inactiveText>IDU Fan 1 Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A IDU Fan 1 Fault condition exists.</activeText>
+					<inactiveText>IDU Fan 1 Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>IDU Fan 2 Fault</activeText>
+					<inactiveText>IDU Fan 2 Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A IDU Fan 2 Fault condition exists.</activeText>
+					<inactiveText>IDU Fan 2 Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="20" match="20">
+				<name>
+					<activeText>IDU Fan 3 Fault</activeText>
+					<inactiveText>IDU Fan 3 Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A IDU Fan 3 Fault condition exists.</activeText>
+					<inactiveText>IDU Fan 3 Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="10" match="10">
+				<name>
+					<activeText>IDU Fan 4 Fault</activeText>
+					<inactiveText>IDU Fan 4 Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A IDU Fan 4 Fault condition exists between the Main CPU and the ODU CPU.</activeText>
+					<inactiveText>IDU Fan 4 Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<alarmFlags2 ruleid="gnGenStatDeviceODUStatus" index=".1.3.6.1.4.1.2281.2.1.9.1.10">
+			<value>
+				<baseNToInt base="16">
+				<getRowOid>.1.3.6.1.4.1.2281.2.1.9.1.10</getRowOid>
+				</baseNToInt>
+			</value>
+			<alarmFlagsTest mask="8000" match="8000">
+				<name>
+					<activeText>IDU Power Supply Fault</activeText>
+					<inactiveText>IDU Power Supply Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU Power Supply Fault condition exists.</activeText>
+					<inactiveText>IDU Power Supply Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4000" match="4000">
+				<name>
+					<activeText>IDU Synthesizer Lock Fault</activeText>
+					<inactiveText>IDU Synthesizer Lock Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU Synthesizer Lock Fault condition exists.</activeText>
+					<inactiveText>IDU Synthesizer Lock Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2000" match="2000">
+				<name>
+					<activeText>IDU TX Level Fault</activeText>
+					<inactiveText>IDU TX Level Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU TX Level Fault condition exists.</activeText>
+					<inactiveText>IDU TX Level Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="1000" match="1000">
+				<name>
+					<activeText>IDU ATPC Fault</activeText>
+					<inactiveText>IDU ATPC Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU ATPC Fault condition exists.</activeText>
+					<inactiveText>IDU ATPC Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="800" match="800">
+				<name>
+					<activeText>RX Level Fault</activeText>
+					<inactiveText>RX Level Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU RX Level Fault condition exists.</activeText>
+					<inactiveText>IDU RX Level Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="200" match="200">
+				<name>
+					<activeText>IDU Temperature Fault</activeText>
+					<inactiveText>IDU Temperature Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU Temperature Fault condition exists.</activeText>
+					<inactiveText>IDU Temperature Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>IDU ODU Loopback Fault</activeText>
+					<inactiveText>IDU ODU Loopback Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU ODU Loopback Fault condition exists.</activeText>
+					<inactiveText>IDU ODU Loopback Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="20" match="20">
+				<name>
+					<activeText>IDU TX in Mute</activeText>
+					<inactiveText>IDU TX in Mute Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An IDU TX in Mute condition exists.</activeText>
+					<inactiveText>IDU TX in Mute condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="gnRstMonCurrBBE" index=".1.3.6.1.4.1.2281.3.2.3.3.1.1.1">
+			<type>num</type>
+			<sensorId>GN_RST_MON_CURR_BBE_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.1.1.1</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator <formatNumber printffmt="%1.0f"><rowIndex/></formatNumber> Background Block Errors (last 15 min.)</label>
+			<sensorSet>MUX Regenerator <rowIndex/></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnRstMonCurrUAS" index=".1.3.6.1.4.1.2281.3.2.3.3.1.1.2">
+			<type>num</type>
+			<sensorId>GN_RST_MON_CURR_UAS_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.1.1.2</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator <formatNumber printffmt="%1.0f"><rowIndex/></formatNumber> Unavailable Seconds (last 15 min.)</label>
+			<sensorSet>MUX Regenerator <rowIndex/></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnRstMonIntervalBBE1" index=".1.3.6.1.4.1.2281.3.2.3.3.2.1.2.1">
+			<type>num</type>
+			<sensorId>GN_RST_MON_INTERVAL_BBE1_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.2.1</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator 1 Background Block Errors (Interval <getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.1.1</getRowOid>)</label>
+			<sensorSet>MUX Regenerator 1</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnRstMonIntervalUAS1" index=".1.3.6.1.4.1.2281.3.2.3.3.2.1.3.1">
+			<type>num</type>
+			<sensorId>GN_RST_MON_INTERVAL_UAS1_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.3.1</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator 1 Unavailable Seconds (Interval <getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.1.1</getRowOid>)</label>
+			<sensorSet>MUX Regenerator 1</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnRstMonIntervalBBE2001" index=".1.3.6.1.4.1.2281.3.2.3.3.2.1.2.2001">
+			<type>num</type>
+			<sensorId>GN_RST_MON_INTERVAL_BBE2001_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.2.2001</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator 2001 Background Block Errors (Interval <getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.1.2001</getRowOid>)</label>
+			<sensorSet>MUX Regenerator 2001</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="gnRstMonIntervalUAS2001" index=".1.3.6.1.4.1.2281.3.2.3.3.2.1.3.2001">
+			<type>num</type>
+			<sensorId>GN_RST_MON_INTERVAL_UAS2001_<rowIndex/></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.3.2001</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>MUX Regenerator 2001 Unavailable Seconds (Interval <getRowOid>.1.3.6.1.4.1.2281.3.2.3.3.2.1.1.2001</getRowOid>)</label>
+			<sensorSet>MUX Regenerator 2001</sensorSet>
+		</numSensor>
+
+
+		<!--
+		<stateSensor ruleid="stSensTemplate">
+            <type>state</type>
+            <sensorId>ST_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>State Sensor</label>
+            <enum>state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="state-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<alarmFlags ruleid="alarmTemplate">
+			<value><getOid>.1.3.6.1.4.1....</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Generic Alarm</activeText>
+					<inactiveText>Generic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Generic Alarm condition exists.</activeText>
+					<inactiveText>A Generic Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		-->
+	</device>
+</APC_DDF>

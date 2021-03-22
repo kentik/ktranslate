@@ -1,0 +1,626 @@
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" 
+	ddfid="dell_rac" 
+	ddfname="Dell RAC" 
+	ddfversion="1" 
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="dell_rac">
+		<oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.674.10892.2" />
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.4.1.674.10892.2.1.1.4.0</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.674.10892.2.1.1.19.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+		<numSensor ruleid="drs_product_type">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_TYPE</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.14.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Type</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_product_chassis_rack">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_CHASSIS_RACK</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.17.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Chassis Rack</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_product_chassis_rack_slot">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_CHASSIS_RACK_SLOT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.18.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Chassis Rack Slot</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_product_chassis_express_service_code">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_CHASSIS_EXPRESS_SERVICE_CODE</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.20.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Chassis Express Service Code</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_product_chassis_system_id">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_CHASSIS_SYSTEM_ID</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.21.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Chassis System ID</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_product_chassis_size">
+			<type>num</type>
+			<sensorId>_DRS_PRODUCT_CHASSIS_SIZE</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.674.10892.2.1.1.22.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Product Chassis Size in Rack Units (U)</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="drs_global_system_status">
+			<type>state</type>
+			<sensorId>_DRS_GLOBAL_SYSTEM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Global System Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_global_current_status">
+			<type>state</type>
+			<sensorId>_DRS_GLOBAL_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Global Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_iom_current_status">
+			<type>state</type>
+			<sensorId>_DRS_IOM_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS IOM Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_kvm_current_status">
+			<type>state</type>
+			<sensorId>_DRS_KVM_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS KVM Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_redundancy_current_status">
+			<type>state</type>
+			<sensorId>_DRS_REDUNDANCY_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Redundancy Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_power_current_status">
+			<type>state</type>
+			<sensorId>_DRS_POWER_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Power Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_fan_current_status">
+			<type>state</type>
+			<sensorId>_DRS_FAN_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Fan Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_blade_current_status">
+			<type>state</type>
+			<sensorId>_DRS_BLADE_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Blade Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_temp_current_status">
+			<type>state</type>
+			<sensorId>_DRS_TEMP_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Temp Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_cmc_current_status">
+			<type>state</type>
+			<sensorId>_DRS_CMC_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.1.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS CMC Current Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_global_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_GLOBAL_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Global Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_iom_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_IOM_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS IOM Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_kvm_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_KVM_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS KVM Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_redundancy_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_REDUNDANCY_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Redundancy Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_power_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_POWER_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Power Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_fan_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_FAN_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Fan Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_blade_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_BLADE_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Blade Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_temperature_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_TEMPERATURE_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS Temperature Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_cmc_previous_status">
+			<type>state</type>
+			<sensorId>_DRS_CMC_PREVIOUS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>1.3.6.1.4.1.674.10892.2.3.2.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>DRS CMC Previous Status</label>
+			<enum>status1_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="drs_chassis_index" index="1.3.6.1.4.1.674.10892.2.4.1.1.1">
+			<type>num</type>
+			<sensorId>_DRS_CHASSIS_INDEX<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Chassis Index <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_potential_power" index="1.3.6.1.4.1.674.10892.2.4.1.1.2">
+			<type>powerW</type>
+			<sensorId>_DRS_POTENTIAL_POWER<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.2</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Potential Power <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_idle_power" index="1.3.6.1.4.1.674.10892.2.4.1.1.3">
+			<type>powerW</type>
+			<sensorId>_DRS_IDLE_POWER<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.3</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Idle Power <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_max_power_specification" index="1.3.6.1.4.1.674.10892.2.4.1.1.4">
+			<type>powerW</type>
+			<sensorId>_DRS_MAX_POWER_SPECIFICATION<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Max Power Specification <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_power_surplus" index="1.3.6.1.4.1.674.10892.2.4.1.1.5">
+			<type>powerW</type>
+			<sensorId>_DRS_POWER_SURPLUS<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.5</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Power Surplus <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_kwh_cumulative" index="1.3.6.1.4.1.674.10892.2.4.1.1.6">
+			<type>num/kwatthr</type>
+			<sensorId>_DRS_KWH_CUMULATIVE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.6</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS KWh Cumulative <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_kwh_cumulative_time" index="1.3.6.1.4.1.674.10892.2.4.1.1.7">
+			<type>num/kwatthr</type>
+			<sensorId>_DRS_KWH_CUMULATIVE_TIME<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.7</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS KWh Cumulative Time <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_peak_usage" index="1.3.6.1.4.1.674.10892.2.4.1.1.8">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_PEAK_USAGE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.8</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Peak Usage <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_peak_time" index="1.3.6.1.4.1.674.10892.2.4.1.1.9">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_PEAK_TIME<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.9</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Peak Time <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_minimum_usage" index="1.3.6.1.4.1.674.10892.2.4.1.1.10">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_MINIMUM_USAGE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.10</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Minimum Usage <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_minimum_time" index="1.3.6.1.4.1.674.10892.2.4.1.1.11">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_MINIMUM_TIME<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.11</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Minimum Time <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_reset_time" index="1.3.6.1.4.1.674.10892.2.4.1.1.12">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_RESET_TIME<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.12</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Reset Time <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_watts_reading" index="1.3.6.1.4.1.674.10892.2.4.1.1.13">
+			<type>powerW</type>
+			<sensorId>_DRS_WATTS_READING<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.13</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Watts Reading <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_amps_reading" index="1.3.6.1.4.1.674.10892.2.4.1.1.14">
+			<type>amperage</type>
+			<sensorId>_DRS_AMPS_READING<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.14</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Amps Reading <getRowOid>1.3.6.1.4.1.674.10892.2.4.1.1.1</getRowOid></label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>		
+		<numSensor ruleid="drs_psu_chassis_index" index="1.3.6.1.4.1.674.10892.2.4.2.1.1.1">
+			<type>num</type>
+			<sensorId>_DRS_PSU_CHASSIS_INDEX<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS PSU Chassis <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.1.1</getRowOid> Index</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_psu_index" index="1.3.6.1.4.1.674.10892.2.4.2.1.2.1">
+			<type>num</type>
+			<sensorId>_DRS_PSU_INDEX<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.2.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS PSU Index <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.2.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_psu_monitoring_capable" index="1.3.6.1.4.1.674.10892.2.4.2.1.4.1">
+			<type>num</type>
+			<sensorId>_DRS_PSU_MONITORING_CAPABLE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.4.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS PSU Monitoring Capable Chassis <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.1.1</getRowOid> Index <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.2.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_psu_amps_reading" index="1.3.6.1.4.1.674.10892.2.4.2.1.6.1">
+			<type>amperage</type>
+			<sensorId>_DRS_PSU_AMPS_READING<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.6.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS PSU Amps Reading Chassis <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.1.1</getRowOid> Index <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.2.1</getRowOid></label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_psu_watts_reading" index="1.3.6.1.4.1.674.10892.2.4.2.1.7.1">
+			<type>powerW</type>
+			<sensorId>_DRS_PSU_WATTS_READING<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.7.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS PSU Watts Reading Chassis <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.1.1</getRowOid> Index <getRowOid>1.3.6.1.4.1.674.10892.2.4.2.1.2.1</getRowOid></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>		
+		<numSensor ruleid="drs_server_index" index="1.3.6.1.4.1.674.10892.2.5.1.1.1">
+			<type>num</type>
+			<sensorId>_DRS_SERVER_INDEX<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Server Index <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="drs_server_monitoring_capable" index="1.3.6.1.4.1.674.10892.2.5.1.1.2">
+			<type>state</type>
+			<sensorId>_DRS_SERVER_MONITORING_CAPABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="status2_vm">
+					<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>DRS Server Monitoring Capable <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<enum>status2_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="drs_server_slot_number" index="1.3.6.1.4.1.674.10892.2.5.1.1.5">
+			<type>num</type>
+			<sensorId>_DRS_SERVER_SLOT_NUMBER<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.5</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Server Slot Number <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="drs_server_number_storage_controllers" index="1.3.6.1.4.1.674.10892.2.5.1.1.9">
+			<type>num</type>
+			<sensorId>_DRS_SERVER_NUMBER_STORAGE_CONTROLLERS<rowIndex/></sensorId>
+			<value>
+				<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.9</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DRS Server Number Storage Controllers <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="drs_server_storage_mode" index="1.3.6.1.4.1.674.10892.2.5.1.1.10">
+			<type>state</type>
+			<sensorId>_DRS_SERVER_STORAGE_MODE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="status3_vm">
+					<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.10</getRowOid>
+				</mapValue>
+			</value>
+			<label>DRS Server Storage Mode <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<enum>status3_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="drs_server_intrusion_state" index="1.3.6.1.4.1.674.10892.2.5.1.1.11">
+			<type>state</type>
+			<sensorId>_DRS_SERVER_INTRUSION_STATE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="status4_vm">
+					<getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.11</getRowOid>
+				</mapValue>
+			</value>
+			<label>DRS Server Intrusion State <getRowOid>1.3.6.1.4.1.674.10892.2.5.1.1.1</getRowOid></label>
+			<enum>status4_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<valueMap ruleid="status1_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status1_em">
+			<label>Other</label>
+			<label>Unknown</label>
+			<label>Ok</label>
+			<label>Non Critical</label>
+			<label>Critical</label>
+			<label>Non Recoverable</label>
+		</enumMap>
+
+		<valueMap ruleid="status2_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status2_em">
+			<label>Absent</label>
+			<label>None</label>
+			<label>Basic</label>
+		</enumMap>
+
+		<valueMap ruleid="status3_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>99</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status3_em">
+			<label>Not Applicable</label>
+			<label>Joined</label>
+			<label>Split Dual Host</label>
+			<label>Split Single Host</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="status4_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>99</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status4_em">
+			<label>Not Applicable</label>
+			<label>Closed</label>
+			<label>Open</label>
+			<label>Unknown</label>
+		</enumMap>
+	</device>
+</APC_DDF>

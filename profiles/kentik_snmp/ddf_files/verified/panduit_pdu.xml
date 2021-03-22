@@ -1,0 +1,1853 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="panduit_pdu"
+	ddfname="Panduit PDU"
+	ddfversion="4"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="panduit_pdu">
+		<oidMustExist ruleid="panduit_pdu" oid=".1.3.6.1.4.1.19536.9.4.2.2" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Panduit</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.19536.9.4.2.2.1.1.0</getOid></setProductData>
+		<setProductData ruleid="productVersion" field="appversion"><getOid>.1.3.6.1.4.1.19536.9.4.2.2.1.2.0</getOid></setProductData>
+		<setDefaultLabel><getOid>.1.3.6.1.4.1.19536.9.4.2.2.1.3.0</getOid></setDefaultLabel>
+		<setProductData ruleid="productMacAddress" field="mac_addr"><getOid>.1.3.6.1.4.1.19536.9.4.2.2.1.4.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+		<setProductData ruleid="inputs" field="inputphasecount">3</setProductData>
+		<setProductData ruleid="outputs" field="outputphasecount">3</setProductData>
+
+		<numSensor ruleid="airFlowSensorTempC" index=".1.3.6.1.4.1.19536.9.4.2.2.5.1.5" >
+            <type>temp</type>
+            <sensorId>_RPDU_TEMP_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.3</getRowOid> - Temperature</label>
+            <sensorSet>Air Flow Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="airFlowSensorFlow" index=".1.3.6.1.4.1.19536.9.4.2.2.5.1.7" >
+            <type>num</type>
+            <sensorId>AIR_FLOW_FLOW_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.3</getRowOid> - Flow</label>
+            <sensorSet>Air Flow Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="airFlowSensorHumidity" index=".1.3.6.1.4.1.19536.9.4.2.2.5.1.8" >
+            <type>humidity</type>
+            <sensorId>_RPDU_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.3</getRowOid> - Humidity</label>
+            <sensorSet>Air Flow Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="airFlowSensorDewPointC" index=".1.3.6.1.4.1.19536.9.4.2.2.5.1.9" >
+            <type>temp</type>
+            <sensorId>AIR_FLOW_DEWPOINTC_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.9</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.5.1.3</getRowOid> - Dewpoint</label>
+            <sensorSet>Air Flow Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ctrl3ChIECkWattHrsA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.5" >
+            <type>num/kwatthr</type>
+            <sensorId>CTRL3_CH_IEC_KWATTHRS_A_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Energy</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltsA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.6" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_PHASE_OUTPUT_VOLTAGE_1</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Voltage</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltPeakA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.7" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_VOLTPEAK_A_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Voltage Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.8" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_CURRENT_1</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.8</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Current</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsPeakA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.9" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_DECIAMPS_PEAK_A_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.9</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Current Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECRealPowerA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.10" >
+            <type>powerW</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_POWER_1</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Real Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECApparentPowerA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.11" >
+            <type>powerVA</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_APPARENT_POWER_1</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Apparent Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECPowerFactorA" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.12" >
+            <type>num/powerfactor</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_POWER_FACTOR_1</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.12</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase A Power Factor</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECkWattHrsB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.13" >
+            <type>num/kwatthr</type>
+            <sensorId>CTRL3_CH_IEC_KWATTHRS_B_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Energy</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltsB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.14" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_PHASE_OUTPUT_VOLTAGE_2</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Voltage</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltPeakB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.15" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_VOLTPEAK_B_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Voltage Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.16" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_CURRENT_2</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.16</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Current</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsPeakB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.17" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_DECIAMPS_PEAK_B_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.17</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Current Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECRealPowerB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.18" >
+            <type>powerW</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_POWER_2</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Real Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECApparentPowerB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.19" >
+            <type>powerVA</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_APPARENT_POWER_2</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Apparent Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECPowerFactorB" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.20" >
+            <type>num/powerfactor</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_POWER_FACTOR_2</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.20</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase B Power Factor</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECkWattHrsC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.21" >
+            <type>num/kwatthr</type>
+            <sensorId>CTRL3_CH_IEC_KWATTHRS_C_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Energy</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltsC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.22" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_PHASE_OUTPUT_VOLTAGE_3</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Voltage</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECVoltPeakC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.23" >
+            <type>voltageAC</type>
+            <sensorId>CTRL3_CH_IEC_VOLTPEAK_C_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.23</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Voltage Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.24" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_CURRENT_3</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.24</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Current</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECDeciAmpsPeakC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.25" >
+            <type>amperage</type>
+            <sensorId>CTRL3_CH_IEC_DECIAMPS_PEAK_C_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.25</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Current Peak</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECRealPowerC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.26" >
+            <type>powerW</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_POWER_3</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.26</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Real Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECApparentPowerC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.27" >
+            <type>powerVA</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_RPDU_OUTPUT_APPARENT_POWER_3</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.27</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Apparent Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECPowerFactorC" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.28" >
+            <type>num/powerfactor</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_POWER_FACTOR_3</sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.28</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Phase C Power Factor</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECkWattHrsTotal" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.29" >
+            <type>num/kwatthr</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_ENERGY_TOTAL_1</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.29</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Total Energy</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ctrl3ChIECRealPowerTotal" index=".1.3.6.1.4.1.19536.9.4.2.2.25.1.30" >
+            <type>powerW</type>
+            <sensorId>CTRL3_CH_IEC_<rowIndex/>_OUTPUT_POWER_TOTAL</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.30</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.19536.9.4.2.2.25.1.3</getRowOid> - Total Real Power</label>
+            <sensorSet>3-Phase Outlets</sensorSet>
+        </numSensor>
+	</device>
+
+	<device deviceid="panduit_pdu_g5">
+		<oidMustExist ruleid="panduit_pdu_g5" oid=".1.3.6.1.4.1.19536.10.1" istree="yes" /> 
+
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Panduit</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.3.1</getOid></setProductData>
+		<setProductData ruleid="serialnum" field="serial_num"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.8.1</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<setProductData ruleid="productVersion" field="appversion"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.5.1</getOid></setProductData>
+		<setDefaultLabel><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.1</getOid></setDefaultLabel>
+		<setProductData ruleid="productMacAddress" field="mac_addr"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.14.1</getOid></setProductData>
+		
+		<setProductData ruleid="inputs" field="inputphasecount"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.11.1</getOid></setProductData>
+		<setProductData ruleid="banks" field="bankcount"><getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.12.1</getOid></setProductData>
+
+		<!-- pdug5 Input Table -->
+
+		<numSensor ruleid="input_frequency" index=".1.3.6.1.4.1.19536.10.1.2.1.1.2" >
+			<type>frequency</type>
+			<sensorId>INPUT_FREQUENCY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Frequency</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_apparent_power" index=".1.3.6.1.4.1.19536.10.1.2.1.1.4" >
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.4</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>INPUT_APPARENT_POWER_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Apparent Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_power_watts" index=".1.3.6.1.4.1.19536.10.1.2.1.1.5">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.5</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>INPUT_POWER_WATTS_<rowIndex/></sensorId>
+			<value>
+			 <getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.5</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Input Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_total_energy" index=".1.3.6.1.4.1.19536.10.1.2.1.1.6">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.6</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>INPUT_TOTAL_ENERGY_<rowIndex/></sensorId>
+			<value>
+			 <getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.6</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid>Input Total Energy</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_power_factor" index=".1.3.6.1.4.1.19536.10.1.2.1.1.9">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.9</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>INPUT_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.9</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Power Factor</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_power_var" index=".1.3.6.1.4.1.19536.10.1.2.1.1.10">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.10</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA/powerVAR</type>
+			<sensorId>INPUT_POWER_VAR_<rowIndex/></sensorId>
+			<value>
+			   <getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.10</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Reactive Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_total_current" index=".1.3.6.1.4.1.19536.10.1.2.1.1.11" >
+			<type>amperage</type>
+			<sensorId>INPUT_TOTAL_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Total Current</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="input_frequency_status" index=".1.3.6.1.4.1.19536.10.1.2.1.1.3">
+			<type>frequency</type>
+			<sensorId>INPUT_FREQUENCY_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="frequency_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.1.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid> Input Frequency Status</label>
+			<enum>frequency_status-em</enum>
+			<sensorSet>PDU Input</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="frequency_status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="frequency_status-em">
+			<label>Good</label>
+			<label>Out of Range</label>
+		</enumMap>
+
+		<!-- pdug5 Input Phase Table -->
+
+		 <numSensor ruleid="input_phase_voltage" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1" >
+			<type>voltage</type>
+			<sensorId>INPUT_PHASE_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid><space/>
+				Input Voltage<space/>
+				<mapValue mapid="voltage_meas_type-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.2</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input Phase</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="voltage_meas_type-vm">
+			<valueIn>1</valueIn><valueOut>Single Phase</valueOut>
+			<valueIn>2</valueIn><valueOut>1-N</valueOut>
+			<valueIn>3</valueIn><valueOut>2-N</valueOut>
+			<valueIn>4</valueIn><valueOut>3-N</valueOut>
+			<valueIn>5</valueIn><valueOut>1-2</valueOut>
+			<valueIn>6</valueIn><valueOut>2-3</valueOut>
+			<valueIn>7</valueIn><valueOut>3-1</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="input_phase_current_rating" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.1.1.10</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>INPUT_PHASE_CURRENT_RATING_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Current Rating<space/>
+				<mapValue mapid="amps_meas_type-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.9</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="input_phase_current" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<type>amperage</type>
+			<sensorId>INPUT_PHASE_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				   <op><getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.11</getRowOid></op>
+				   <op>0.01</op>
+				</mult>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Current<space/>
+				<mapValue mapid="amps_meas_type-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.9</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="amps_meas_type-vm">
+			<valueIn>1</valueIn><valueOut>Single Phase</valueOut>
+			<valueIn>2</valueIn><valueOut>Neutral</valueOut>
+			<valueIn>3</valueIn><valueOut>Phase 1</valueOut>
+			<valueIn>4</valueIn><valueOut>Phase 2</valueOut>
+			<valueIn>5</valueIn><valueOut>Phase 3</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="input_phase_powerVA" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.2.1.19</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>INPUT_PHASE_POWERVA_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid><space/>
+				Apparent Power<space/>
+				<mapValue mapid="input_power_meas_type_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.18</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_phase_power_watts" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.2.1.20</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>INPUT_PHASE_POWER_WATTS_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Watts<space/>
+				<mapValue mapid="input_power_meas_type_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.18</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_phase_power_wattHour" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.2.1.21</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>watthours</type>
+			<sensorId>INPUT_PHASE_POWER_WATTHOUR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Watt Hour<space/>
+				<mapValue mapid="input_power_meas_type_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.18</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_phase_power_factor" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.2.1.23</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>INPUT_PHASE_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Power Factor<space/>
+				<mapValue mapid="input_power_meas_type_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.18</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input_phase_powerVAR" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.2.2.1.24</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA/powerVAR</type>
+			<sensorId>INPUT_PHASE_POWERVAR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2</getRowOid>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.19536.10.1.1.2.1.2.
+					<regex>
+					<op>([0-9]*)\.([0-9]*)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					</regex>
+				</getOid> Reactive Power VAR<space/>
+				<mapValue mapid="input_power_meas_type_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.2.2.1.18</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="input_power_meas_type_status-vm">
+			<valueIn>1</valueIn><valueOut>Single Phase</valueOut>
+			<valueIn>2</valueIn><valueOut>Neutral</valueOut>
+			<valueIn>3</valueIn><valueOut>Phase 1</valueOut>
+			<valueIn>4</valueIn><valueOut>Phase 2</valueOut>
+			<valueIn>5</valueIn><valueOut>Phase 3</valueOut>
+		</valueMap>
+
+		<!-- pdug5 Group Table -->
+
+		<numSensor ruleid="group_type" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1" >
+			<type>num</type>
+			<sensorId>GROUP_TYPE_<rowIndex/></sensorId>
+			<value>
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.3</getRowOid>
+			</value>
+			<label>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Group Type<space/>
+				<mapValue mapid="group_type-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid>
+				</mapValue>
+			</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="group_type-vm">
+			<valueIn>2</valueIn><valueOut>Breaker 1 Pole</valueOut>
+			<valueIn>3</valueIn><valueOut>Breaker 2 Pole</valueOut>
+			<valueIn>4</valueIn><valueOut>Breaker 3 Pole</valueOut>
+			<valueIn>5</valueIn><valueOut>Outlet Section/ No Breaker</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="group_voltage" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1" >
+			<type>voltage</type>
+			<sensorId>GROUP_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Group Voltage</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_current_rating" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.11</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>GROUP_CURRENT_RATING_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Current Rating</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_current" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<type>amperage</type>
+			<sensorId>GROUP_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Current</label>
+			<sensorSet>Group </sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_current_percent_load" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.18</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>GROUP_CURRENT_PERCENT_LOAD_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.18</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Percent Load</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_powerVA" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.19</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>GROUP_POWERVA_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.19</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Apparent Power</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_power_watts" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.20</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>GROUP_POWER_WATTS_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.20</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Watts</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_power_wattHour" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.21</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>watthours</type>
+			<sensorId>GROUP_POWER_WATT_HOUR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.21</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Watt Hours</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_power_factor" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.23</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>GROUP_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.23</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Power Factor</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_powerVAR" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.3.1.1.24</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA/powerVAR</type>
+			<sensorId>GROUP_POWERVAR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.24</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Reactive Power</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+		<numSensor ruleid="group_outlet_count" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<type>num</type>
+			<sensorId>GROUP_OUTLET_COUNT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.25</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Outlet Count</label>
+			<sensorSet>Group</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="group_breaker_status" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<rowTest>
+				<mapValue mapid="null_breaker_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.26</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>GROUP_BREAKER_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="breaker_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.26</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.3.1.1.2</getRowOid> Breaker Status</label>
+			<enum>breaker_status-em</enum>
+			<sensorSet>Group</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="null_breaker_status-vm">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="breaker_status-vm">
+			<valueIn>2</valueIn><valueOut>0</valueOut>
+			<valueIn>3</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="breaker_status-em">
+			<label>On</label>
+			<label>Off</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<!-- pdug5 Environment -->
+
+		<stateSensor ruleid="temperature_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.2.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>TEMPERATURE_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.2</getRowOid> Temperature Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="temperature_value" index=".1.3.6.1.4.1.19536.10.1.4.2.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>TEMPERATURE_VALUE_<rowIndex/></sensorId>
+			<value>
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.19536.10.1.4.1.1.1</getRowOid></op>
+							<op>2</op>
+						</eq>
+					</op>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<!-- scale by .1 -->
+										<mult>
+											<op><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.4</getRowOid></op>
+											<op>0.1</op>
+										</mult>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>
+						<mult>
+							<op><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.4</getRowOid></op>
+							<op>0.1</op>
+						</mult>
+					</op>
+				</if>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.2</getRowOid> Temperature Value</label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="humidity_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.3.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>HUMIDITY_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.3.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.2</getRowOid> Humidity Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="humidity_value" index=".1.3.6.1.4.1.19536.10.1.4.3.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.3.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>HUMIDITY_VALUE_<rowIndex/></sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.4.3.1.4</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.2.1.2</getRowOid> Humidity Value</label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		 <stateSensor ruleid="door_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.4.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DOOR_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.2</getRowOid> Door Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		 <stateSensor ruleid="door_state" index=".1.3.6.1.4.1.19536.10.1.4.4.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DOOR_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.4.1.2</getRowOid> Door State</label>
+			<enum>door_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dry_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.5.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DRY_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.2</getRowOid> Dry Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dry_state" index=".1.3.6.1.4.1.19536.10.1.4.5.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DRY_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="2_state-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.5.1.2</getRowOid> Dry State</label>
+			<enum>dry_state-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>  
+		<stateSensor ruleid="spot_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.6.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>SPOT_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.2</getRowOid> Spot Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="spot_state" index=".1.3.6.1.4.1.19536.10.1.4.6.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>SPOT_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="2_state--vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.6.1.2</getRowOid> Spot State</label>
+			<enum>leak_status--em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rope_probe_status" index=".1.3.6.1.4.1.19536.10.1.4.7.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid> .1.3.6.1.4.1.19536.10.1.4.7.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ROPE_PROBE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="probe_connection_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.7.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.7.1.2</getRowOid> Rope Probe Status</label>
+			<enum>probe_connection_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rope_state" index=".1.3.6.1.4.1.19536.10.1.4.7.1.1">
+			<rowTest>
+				<mapValue mapid="probe_status-vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.7.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ROPE_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="2_state--vm">
+					<getRowOid>.1.3.6.1.4.1.19536.10.1.4.7.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.4.7.1.2</getRowOid> Rope State</label>
+			<enum>leak_status-em</enum>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="2_state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="dry_state-em">
+			<label>Good</label>
+			<label>Alarmed</label>
+			<label>Unknown</label>
+		</enumMap>    
+
+		<valueMap ruleid="probe_status-vm">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="probe_connection_status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="probe_connection_status-em">
+			<label>Disconnected</label>
+			<label>Connected</label>
+			<label>Bad</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<enumMap ruleid="door_status-em">
+			<label>Door Open</label>
+			<label>Door Closed</label>
+			<label>Bad Door Sensor</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<enumMap ruleid="leak_status--em">
+			<label>No Leak</label>
+			<label>Leak</label>
+			<label>Unknown</label>
+		</enumMap>    
+
+		<!-- pdug5 Outlets -->
+
+		<numSensor ruleid="outlet_current_rating" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.4</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>OUTLET_CURRENT_RATING_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.4</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Outlet Current Rating</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_current" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<type>amperage</type>
+			<sensorId>OUTLET_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.5</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Outlet Current</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_current_percent_load" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.11</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>OUTLET_CURRENT_PERCENT_LOAD_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.11</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Outlet Current Percent Load</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_VA" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.12</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>OUTLET_VA_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.12</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Apparent Power</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_watts" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.13</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>OUTLET_WATTS_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.13</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Watts</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_wattHour" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.14</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>watthours</type>
+			<sensorId>OUTLET_WATTHOUR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.14</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Watt Hours</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_power_factor" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.16</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>OUTLET_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.16</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Power Factor</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_VAR" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<rowTest>
+				<if>
+					<op>
+						<lt>
+							<op><getRowOid default="-1">.1.3.6.1.4.1.19536.10.1.5.1.1.17</getRowOid></op>
+							<op>0</op>
+						</lt>
+					</op>
+					<op>[false]</op>
+					<op>[true]</op>
+				</if>
+			</rowTest>
+			<type>powerVA/powerVAR</type>
+			<sensorId>OUTLET_VAR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.17</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Reactive Power</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outlet_branch" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<type>Outlet</type>
+			<sensorId>OUTLET_BRANCH_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.18</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.19536.10.1.5.1.1.2</getRowOid> Branch Number</label>
+			<sensorSet>Outlet</sensorSet>
+		</numSensor>
+
+		<!-- pdug5 Alarms -->
+
+		<alarmFlags2 ruleid="input_phase_voltage_threshold_status" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.2.2.1.4</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Input Voltage Threshold Low Warning</activeText>
+					<inactiveText>Input Voltage Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>An input phase voltage threshold low warning exists.</activeText>
+					<inactiveText>An input phase voltage threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Input Voltage Threshold Low Critical Warning</activeText>
+					<inactiveText>Input Voltage Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>An input phase voltage threshold low critical warning exists.</activeText>
+					<inactiveText>An input phase voltage threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Input Voltage Threshold High Warning</activeText>
+					<inactiveText>Input Voltage Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>An input phase voltage threshold high warning exists.</activeText>
+					<inactiveText>An input phase voltage threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Input Voltage Threshold High Critical Warning</activeText>
+					<inactiveText>Input Voltage Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>An input phase voltage threshold high critical warning exists.</activeText>
+					<inactiveText>An input phase voltage threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="input_phase_current_threshold_status" index=".1.3.6.1.4.1.19536.10.1.2.2.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.2.2.1.12</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Input Current Threshold Low Warning</activeText>
+					<inactiveText>Input Current Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Current</category>
+				<description>
+					<activeText>An input phase current threshold low warning exists.</activeText>
+					<inactiveText>An input phase current threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Input Current Threshold Low Critical Warning</activeText>
+					<inactiveText>Input Current Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Current</category>
+				<description>
+					<activeText>An input phase current threshold low critical warning exists.</activeText>
+					<inactiveText>An input phase current threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Input Current Threshold High Warning</activeText>
+					<inactiveText>Input Current Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Current</category>
+				<description>
+					<activeText>An input phase current threshold high warning exists.</activeText>
+					<inactiveText>An input phase current threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Input Current Threshold High Critical Warning</activeText>
+					<inactiveText>Input Current Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Current</category>
+				<description>
+					<activeText>An input phase current threshold high critical warning exists.</activeText>
+					<inactiveText>An input phase current threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="group_voltage_threshold_status" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.3.1.1.6</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Group Voltage Threshold Low Warning</activeText>
+					<inactiveText>Group Voltage Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A group phase voltage threshold low warning exists.</activeText>
+					<inactiveText>A group phase voltage threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Group Voltage Threshold Low Critical Warning</activeText>
+					<inactiveText>Group Voltage Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A group phase voltage threshold low critical warning exists.</activeText>
+					<inactiveText>A group phase voltage threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Group Voltage Threshold High Warning</activeText>
+					<inactiveText>Group Voltage Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>An group phase voltage threshold high warning exists.</activeText>
+					<inactiveText>An group phase voltage threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Group Voltage Threshold High Critical Warning</activeText>
+					<inactiveText>Group Voltage Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A group phase voltage threshold high critical warning exists.</activeText>
+					<inactiveText>A group phase voltage threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="group_current_threshold_status" index=".1.3.6.1.4.1.19536.10.1.3.1.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.3.1.1.13</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Group Current Threshold Low Warning</activeText>
+					<inactiveText>Group Current Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Current</category>
+				<description>
+					<activeText>A group current threshold low warning exists.</activeText>
+					<inactiveText>A  group current threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Group Current Threshold Low Critical Warning</activeText>
+					<inactiveText>Group Current Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Current</category>
+				<description>
+					<activeText>A group phase current threshold low critical warning exists.</activeText>
+					<inactiveText>A group phase current threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Group Current Threshold High Warning</activeText>
+					<inactiveText>Group Current Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Current</category>
+				<description>
+					<activeText>A group phase current threshold high warning exists.</activeText>
+					<inactiveText>A group phase current threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Group Current Threshold High Critical Warning</activeText>
+					<inactiveText>Group Current Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Current</category>
+				<description>
+					<activeText>A group phase current threshold high critical warning exists.</activeText>
+					<inactiveText>A group phase current threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		 <alarmFlags2 ruleid="temperature_threshold_status" index=".1.3.6.1.4.1.19536.10.1.4.2.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.4.2.1.5</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Temperature Threshold Low Warning</activeText>
+					<inactiveText>Temperature Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A temperature threshold low warning exists.</activeText>
+					<inactiveText>A temperature threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Temperature Threshold Low Critical Warning</activeText>
+					<inactiveText>Temperature Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A temperature threshold low critical warning exists.</activeText>
+					<inactiveText>A temperature threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Temperature Threshold High Warning</activeText>
+					<inactiveText>Temperature Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A temperature threshold high warning exists.</activeText>
+					<inactiveText>A temperature threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Temperature Threshold High Critical Warning</activeText>
+					<inactiveText>Temperature Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A temperature threshold high critical warning exists.</activeText>
+					<inactiveText>A temperature threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="humidity_threshold_status" index=".1.3.6.1.4.1.19536.10.1.4.3.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.4.3.1.5</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Humidity Threshold Low Warning</activeText>
+					<inactiveText>Humidity Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A humidity threshold low warning exists.</activeText>
+					<inactiveText>A humidity threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Humidity Threshold Low Critical Warning</activeText>
+					<inactiveText>Humidity Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A humidity threshold low critical warning exists.</activeText>
+					<inactiveText>A humidity threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Humidity Threshold High Warning</activeText>
+					<inactiveText>Humidity Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A humidity threshold high warning exists.</activeText>
+					<inactiveText>A humidity threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Humidity Threshold High Critical Warning</activeText>
+					<inactiveText>Humidity Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Voltage</category>
+				<description>
+					<activeText>A humidity threshold high critical warning exists.</activeText>
+					<inactiveText>A humidity threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="outlet_active_power_threshold_status" index=".1.3.6.1.4.1.19536.10.1.5.1.1.1">
+			<value><getOid>.1.3.6.1.4.1.19536.10.1.5.1.1.6</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Outlet Active Power Threshold Low Warning</activeText>
+					<inactiveText>Outlet Active Power Threshold Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Outlet</category>
+				<description>
+					<activeText>An outlet active power threshold low warning exists.</activeText>
+					<inactiveText>An outlet active power threshold low warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Outlet Active Power Threshold Low Critical Warning</activeText>
+					<inactiveText>Outlet Active Power Threshold Low Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Outlet</category>
+				<description>
+					<activeText>An outlet active power current threshold low critical warning exists.</activeText>
+					<inactiveText>An outlet active power current threshold low critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Outlet Active Power Threshold High Warning</activeText>
+					<inactiveText>Outlet Active Power Threshold High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Outlet</category>
+				<description>
+					<activeText>An outlet active power threshold high warning exists.</activeText>
+					<inactiveText>An outlet active power threshold high warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Outlet Active Power Threshold High Critical Warning</activeText>
+					<inactiveText>Outlet Active Power Threshold High Critical Warning Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Outlet</category>
+				<description>
+					<activeText>An outlet active power threshold high critical warning exists.</activeText>
+					<inactiveText>An outlet active power threshold high critical warning no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+</APC_DDF>

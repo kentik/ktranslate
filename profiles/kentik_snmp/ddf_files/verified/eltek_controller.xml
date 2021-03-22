@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APC_DDF 
+	canremove="yes" 
+	ddfversion="2" 
+	ddfname="Eltek Controller" 
+	ddfid="eltek_controller" 
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<schemaVersion>1.6</schemaVersion>
+
+	<!-- Originally created for DDF-161 -->
+	
+	<device deviceid="eltek_control_system">
+	
+		<oidMustExist rule-id="rectifierInstalledRectifiers-OidMustExist" istree="yes" oid=".1.3.6.1.4.1.12148.9"/>
+	
+		<setProductData ruleid="manufacturerdata" field="manufacturer">Eltek</setProductData>
+		
+		<setProductData ruleid="serialnum" field="serial_num"><getOid usegetnext="no">.1.3.6.1.4.1.12148.9.2.1.3.8.0</getOid></setProductData>
+		
+		<suppressRule ruleid="stompmib2type" suppressid="core/mib2data/typedata" />
+		<setProductData ruleId="typedata" field="type">DC Rectifier</setProductData>
+		
+		<suppressRule ruleid="stompmib2location" suppressid="core/mib2data/locationdata" />
+		<setLocationData ruleid="locationdata" field="LOCATION"><getOid usegetnext="no">.1.3.6.1.4.1.12148.9.2.1.3.2.0</getOid></setLocationData>
+		
+		<suppressRule ruleid="stompmib2label" suppressid="core/mib2datalabel/labeldata" />
+		<setDefaultLabel ruleId="labeldata"><getOid usegetnext="no">.1.3.6.1.4.1.12148.9.2.1.3.1.0</getOid></setDefaultLabel>
+
+		<suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata" />
+		<setProductData ruleid="modeldata" field="model">
+			<mapValue mapid="modelData-productData">
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.2.1.3.6.0</getOid>
+			</mapValue>
+		</setProductData>
+		
+		<valueMap ruleid="modelData-productData">
+			<valueIn>0</valueIn>
+			<valueOut>AL175 Controller</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>AL4000 Controller</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>AL6000 Controller</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>AL175OEM Controller</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>MCU Controller</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>SmartPack Controller</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>ComPack Controller</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>Controller</valueOut>
+		</valueMap>
+	
+	</device>
+	
+	<device deviceid="eltek_battery">
+	
+		<oidMustExist rule-id="rectifierBatteryVoltage-OidMustExist" istree="yes"  oid=".1.3.6.1.4.1.12148.9.3"/>
+		
+		<!-- Battery Sensors -->
+		<numSensor ruleid="rectifierBatteryVoltage-Sensor">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE</sensorId>
+			<value>
+				<mult>
+					<op><getOid usegetnext="no">.1.3.6.1.4.1.12148.9.3.2.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label>Battery Voltage</label>
+			<sensorSet>Battery Status</sensorSet>
+		</numSensor>
+
+		<!-- the mib says that this can be C or F; assuming C -->
+		<numSensor ruleid="rectifierBatteryTemp-Sensor">
+			<type>temp/batterytempc</type>
+			<sensorId>BATTERY_TEMP_C</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.3.4.0</getOid>
+			</value>
+			<label>Battery Temperature</label>
+			<sensorSet>Battery Status</sensorSet>
+		</numSensor>
+		
+		<!-- the mib says that this can be amps or deciamps; assuming amps -->
+		<numSensor ruleid="rectifierBatteryCurrent-Sensor">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.3.3.0</getOid>
+			</value>
+			<label>Battery Current</label>
+			<sensorSet>Battery Status</sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="eltek_acdistribution">
+		
+		<oidMustExist rule-id="rectifierInstalledRectifiers-OidMustExist" istree="yes"  oid=".1.3.6.1.4.1.12148.9.6"/>
+
+		<!-- AC Distribution Sensors -->
+		<numSensor ruleid="rectifierACVoltage1-Sensor">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_1</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.6.1.0</getOid>
+			</value>
+			<label>AC Voltage Phase 1</label>
+			<sensorSet>AC Voltage</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="rectifierACVoltage2-Sensor">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_2</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.6.2.0</getOid>
+			</value>
+			<label>AC Voltage Phase 2</label>
+			<sensorSet>AC Voltage</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="rectifierACVoltage3-Sensor">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_3</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.6.3.0</getOid>
+			</value>
+			<label>AC Voltage Phase 3</label>
+			<sensorSet>AC Voltage</sensorSet>
+		</numSensor>
+
+	</device>
+	
+	<device deviceid="eltek_rectifier">
+	
+		<oidMustExist rule-id="rectifierInstalledRectifiers-OidMustExist" istree="yes"  oid=".1.3.6.1.4.1.12148.9.5"/>
+		
+		<!-- Rectifier Totals/Overview Sensors -->
+		<numSensor ruleid="rectifierInstalledRectifiers-Sensor">
+			<type>num</type>
+			<sensorId>RECT_COUNT_INSTALLED</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.5.1.0</getOid>
+			</value>
+			<label>Rectifier Count Installed</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="rectifierInstalledRectifiers-Sensor">
+			<type>num</type>
+			<sensorId>RECT_COUNT_ACTIVE</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.5.2.0</getOid>
+			</value>
+			<label>Rectifier Count Active</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="rectifierTotalCurrent-Sensor">
+			<type>amperage</type>
+			<sensorId>RECT_TOTAL_CURRENT</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.5.3.0</getOid>
+			</value>
+			<label>Rectifier Total Current</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="rectifierUtilization-Sensor">
+			<type>pctofcapacity</type>
+			<sensorId>RECT_UTILIZATION</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.5.4.0</getOid>
+			</value>
+			<label>Rectifier Utilization</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		
+		
+		<!-- Rectifier Status Sensor, map, and enum -->
+		<stateSensor ruleid="rectifierStatusStatus-Sensor" index=".1.3.6.1.4.1.12148.9.5.5.2.1.2">
+			<rowTest>
+				<mapValue mapid="delete-null-rectifier">
+					<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>RECT_STATUS<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.2</getRowOid>
+			</value>
+			<enum>rectifierStatusStatus-Sensor-enum</enum>
+			<label>Rectifier<space/><formatNumber printffmt="%.0f"><add><op><rowIndex/></op><op>1</op></add></formatNumber><space/>Status</label>
+			<sensorSet>Rectifier Status</sensorSet>
+		</stateSensor>
+		
+		<enumMap ruleid="rectifierStatusStatus-Sensor-enum">
+			<label>Not Present</label>
+			<label>Normal</label>
+			<label>Alarm</label>
+			<label>Not Used</label>
+			<label>Disabled</label>
+		</enumMap>
+		
+		<!-- Rectifier Sensors -->
+		<numSensor ruleid="rectifierStatusOutputCurrent-Sensor" index=".1.3.6.1.4.1.12148.9.5.5.2.1.3">
+			<rowTest>
+				<mapValue mapid="delete-null-rectifier">
+					<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>RECT_CURRENT<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+            <valueInc>0.1</valueInc>
+			<label>Rectifier<space/><formatNumber printffmt="%.0f"><add><op><rowIndex/></op><op>1</op></add></formatNumber><space/>Output Current</label>
+			<sensorSet>Rectifier Status</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="rectifierStatusOutputVoltage-Sensor" index=".1.3.6.1.4.1.12148.9.5.5.2.1.4">
+			<rowTest>
+				<mapValue mapid="delete-null-rectifier">
+					<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>RECT_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.4</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+            <valueInc>0.01</valueInc>
+			<label>Rectifier<space/><formatNumber printffmt="%.0f"><add><op><rowIndex/></op><op>1</op></add></formatNumber><space/>Output Voltage</label>
+			<sensorSet>Rectifier Status</sensorSet>
+		</numSensor>
+		
+		<numSensor ruleid="rectifierStatusTemp-Sensor" index=".1.3.6.1.4.1.12148.9.5.5.2.1.5">
+			<rowTest>
+				<mapValue mapid="delete-null-rectifier">
+					<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>RECT_TEMP<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.12148.9.5.5.2.1.5</getRowOid>
+			</value>
+			<!-- the mib says that this can be C or F; assuming C -->
+			<label>Rectifier<space/><formatNumber printffmt="%.0f"><add><op><rowIndex/></op><op>1</op></add></formatNumber><space/>Temperature</label>
+			<sensorSet>Rectifier Status</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="delete-null-rectifier">
+			<valueIn>0</valueIn>
+			<valueOut>[false]</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>[true]</valueOut>
+		</valueMap>
+		
+	</device>
+	
+	<device deviceid="eltek_alarms">
+	
+		<oidMustExist rule-id="alarmACMains-OidMustExist" istree="yes"  oid=".1.3.6.1.4.1.12148.9.7"/>
+		
+		<!-- Alarms -->
+		<stateSensor ruleid="alarmACMains-Sensor">
+			<type>state</type>
+			<sensorId>AC_MAINS_STATUS</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.7.1.11.0</getOid>
+			</value>
+			<enum>eltekAlarm-Sensor-enum</enum>
+			<label>AC Mains Status</label>
+			<sensorSet>Alarm Group</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="alarmBatteryBreakerOpen-Sensor">
+			<type>state</type>
+			<sensorId>BATTERY_BREAKER_STATUS</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.7.1.12.0</getOid>
+			</value>
+			<enum>eltekAlarm-Sensor-enum</enum>
+			<label>Battery Breaker Status</label>
+			<sensorSet>Alarm Group</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="alarmDistributionBreakerOpen-Sensor">
+			<type>state</type>
+			<sensorId>DISTRIBUTION_BREAKER_STATUS</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.7.1.13.0</getOid>
+			</value>
+			<enum>eltekAlarm-Sensor-enum</enum>
+			<label>Distribution Breaker Status</label>
+			<sensorSet>Alarm Group</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="alarmMajorRectifier-Sensor">
+			<type>state</type>
+			<sensorId>MAJOR_RECTIFIER_STATUS</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.7.1.14.0</getOid>
+			</value>
+			<enum>eltekAlarm-Sensor-enum</enum>
+			<label>Major Rectifier Status</label>
+			<sensorSet>Alarm Group</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="alarmMinorRectifier-Sensor">
+			<type>state</type>
+			<sensorId>MINOR_RECTIFIER_STATUS</sensorId>
+			<value>
+				<getOid usegetnext="no">.1.3.6.1.4.1.12148.9.7.1.15.0</getOid>
+			</value>
+			<enum>eltekAlarm-Sensor-enum</enum>
+			<label>Minor Rectifier Status</label>
+			<sensorSet>Alarm Group</sensorSet>
+		</stateSensor>
+
+		<enumMap ruleid="eltekAlarm-Sensor-enum">
+			<label>Normal</label>
+			<label>Alarm</label>
+		</enumMap>
+		
+	</device>
+	
+</APC_DDF>

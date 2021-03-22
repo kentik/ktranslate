@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="iboard_ampu01" ddfname="IBoard AMPU01" ddfversion="1" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="iboard_ampu01">
+		<oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.15" />
+		<setProductData ruleid="vendordata" field="vendor">IBoard</setProductData>
+		<setProductData ruleid="modeldata" field="model">AMPU01</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		<stateSensor ruleid="mode_in">
+			<type>state</type>
+			<sensorId>_MODE_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Mode In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rot_hou_in">
+			<type>timeinhrs</type>
+			<sensorId>_ROT_HOU_IN</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.4.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>ROT HOU In</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rot_in">
+			<type>state</type>
+			<sensorId>_ROT_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>ROT In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="temperature_sp">
+			<type>temp</type>
+			<sensorId>_TEMPERATURE_SP</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.6.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temperature SP</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="reset_in">
+			<type>state</type>
+			<sensorId>_RESET_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>Reset In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dis_k1_in">
+			<type>state</type>
+			<sensorId>_DIS_K1_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>DIS K1 In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dis_k2_in">
+			<type>state</type>
+			<sensorId>_DIS_K2_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>DIS K2 In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="overheat_sp_in">
+			<type>temp</type>
+			<sensorId>_OVERHEAT_SP_IN</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Overheat SP In</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="run_k1_out">
+			<type>state</type>
+			<sensorId>_RUN_K1_OUT</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.11.0</getOid>
+				</mapValue>
+			</value>
+			<label>Run K1 Out</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="run_k2_out">
+			<type>state</type>
+			<sensorId>_RUN_K2_OUT</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.12.0</getOid>
+				</mapValue>
+			</value>
+			<label>Run K2 Out</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="alarm_k1_out">
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.13.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Alarm K1 Out Condition Present</activeText>
+					<inactiveText>Alarm K1 Out Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm K1 Out Condition Present</activeText>
+					<inactiveText>Alarm K1 Out Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_k2_out">
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.14.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Alarm K2 Out Condition Present</activeText>
+					<inactiveText>Alarm K2 Out Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm K2 Out Condition Present</activeText>
+					<inactiveText>Alarm K2 Out Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_out">
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.15.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Alarm Out Condition Present</activeText>
+					<inactiveText>Alarm Out Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm Out Condition Present</activeText>
+					<inactiveText>Alarm Out Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm_overh_out">
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.16.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Alarm OVERH Out Condition Present</activeText>
+					<inactiveText>Alarm OVERH Out Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Alarm OVERH Out Condition Present</activeText>
+					<inactiveText>Alarm OVERH Out Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="control_man_out">
+			<type>state</type>
+			<sensorId>_CONTROL_MAN_OUT</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.17.0</getOid>
+				</mapValue>
+			</value>
+			<label>Control MAN Out</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="thermo_out">
+			<type>temp</type>
+			<sensorId>_THERMO_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>THERMO Out</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="run_time_k1_out">
+			<type>timeinhrs</type>
+			<sensorId>_RUN_TIME_K1_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Run Time K1 Out</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="run_time_k2_out">
+			<type>timeinhrs</type>
+			<sensorId>_RUN_TIME_K2_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Run Time K2 Out</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="alarm_number_k1_out">
+			<type>num</type>
+			<sensorId>_ALARM_NUMBER_K1_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Alarm Number K1 Out</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="alarm_number_k2_out">
+			<type>num</type>
+			<sensorId>_ALARM_NUMBER_K2_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Alarm Number K2 Out</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="overh_number_out">
+			<type>num</type>
+			<sensorId>_OVERH_NUMBER_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>OVERH Number Out</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="last_overh_time_out">
+			<type>timeinmin</type>
+			<sensorId>_LAST_OVERH_TIME_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Last OVERH Time Out</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="power_up_number_out">
+			<type>num</type>
+			<sensorId>_POWER_UP_NUMBER_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Power Up Number Out</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="power_up_time_out">
+			<type>timeinhrs</type>
+			<sensorId>_POWER_UP_TIME_OUT</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.15.0.0.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Power Up Time Out</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="local_ip_in">
+			<type>state</type>
+			<sensorId>_LOCAL_IP_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.27.0</getOid>
+				</mapValue>
+			</value>
+			<label>Local IP In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="remote_ip_in">
+			<type>state</type>
+			<sensorId>_REMOTE_IP_IN</sensorId>
+			<value>
+				<mapValue mapid="truefalse_vm">
+					<getOid>1.3.6.1.4.1.15.0.0.28.0</getOid>
+				</mapValue>
+			</value>
+			<label>Remote IP In</label>
+			<enum>truefalse_em</enum>
+			<sensorSet>General</sensorSet>
+		</stateSensor>
+		<valueMap ruleid="truefalse_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="truefalse_em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+	</device>
+</APC_DDF>

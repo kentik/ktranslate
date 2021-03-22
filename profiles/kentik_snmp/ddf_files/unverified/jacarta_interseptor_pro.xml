@@ -1,0 +1,1245 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="jacarta_interseptor_pro"
+	ddfname="Jacarta InterSeptor Pro"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="jacarta_interseptor_pro">
+		<oidMustExist ruleid="ispro" oid=".1.3.6.1.4.1.19011.1.3.2" istree="yes" />
+
+		<setProductData ruleid="vendordata" field="vendor">Jacarta</setProductData>
+		<setProductData ruleid="modeldata" field="model">InterSeptor Pro</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<valueMap ruleid="invalid-vm">
+			<valueIn>32768</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<numSensor ruleid="isDeviceMonitorTemperature" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3">
+			<rowTest>
+			<mapValue mapid="invalid-vm"><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3</getRowOid></mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>TEMPERATURE_<getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.1</getRowOid></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid></label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<alarmFlags2 ruleid="isDeviceMonitorTemperatureAlarm" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.4</getRowOid></value>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Warning</activeText>
+					<inactiveText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Warning condition exists.</activeText>
+					<inactiveText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Critical</activeText>
+					<inactiveText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Critical condition exists.</activeText>
+					<inactiveText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - Low Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Warning</activeText>
+					<inactiveText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Warning condition exists.</activeText>
+					<inactiveText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Critical</activeText>
+					<inactiveText>Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Critical condition exists.</activeText>
+					<inactiveText>A Temperature Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.2</getRowOid> - High Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<!--
+		<numSensor ruleid="temperature-1-1">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-1</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-2">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-2</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-3">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-3</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-4">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-4</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-5">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-5</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-6">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-6</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-7">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-7</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-1-8">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_1-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.1.1.3.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 1-8</label>
+			<sensorSet>Temperature 1</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temperature-2-1">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-1</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-2">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-2</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-3">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-3</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-4">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-4</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-5">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-5</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-6">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-6</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-7">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-7</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-2-8">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_2-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.3.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 2-8</label>
+			<sensorSet>Temperature 2</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temperature-3-1">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-1</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-2">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-2</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-3">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-3</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-4">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-4</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-5">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-5</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-6">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-6</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-7">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-7</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-3-8">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_3-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.4.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 3-8</label>
+			<sensorSet>Temperature 3</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temperature-4-1">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-1</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-2">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-2</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-3">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-3</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-4">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-4</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-5">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-5</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-6">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-6</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-7">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-7</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-4-8">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_4-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.5.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 4-8</label>
+			<sensorSet>Temperature 4</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temperature-5-1">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-1</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-2">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-2</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-3">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-3</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-4">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-4</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-5">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-5</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-6">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-6</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-7">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-7</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature-5-8">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_5-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.2.1.6.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Temperature 5-8</label>
+			<sensorSet>Temperature 5</sensorSet>
+		</numSensor>
+		-->
+
+
+		<numSensor ruleid="isDeviceMonitorHumidity" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3">
+			<rowTest>
+			<mapValue mapid="invalid-vm"><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3</getRowOid></mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>HUMIDITY_<getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid></label>
+			<sensorSet>Humidity</sensorSet>
+		</numSensor>
+		<alarmFlags2 ruleid="isDeviceMonitorHumidityAlarm" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.4</getRowOid></value>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Warning</activeText>
+					<inactiveText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Warning condition exists.</activeText>
+					<inactiveText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Critical</activeText>
+					<inactiveText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Critical condition exists.</activeText>
+					<inactiveText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - Low Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Warning</activeText>
+					<inactiveText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Warning condition exists.</activeText>
+					<inactiveText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Critical</activeText>
+					<inactiveText>Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Critical condition exists.</activeText>
+					<inactiveText>A Humidity Sensor <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.2</getRowOid> - High Critical condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!--
+		<numSensor ruleid="humidity-1-1">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-1</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-2">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-2</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-3">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-3</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-4">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-4</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-5">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-5</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-6">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-6</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-7">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-7</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-1-8">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_1-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.2.1.3.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 1-8</label>
+			<sensorSet>Humidity 1</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="humidity-2-1">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-1</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-2">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-2</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-3">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-3</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-4">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-4</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-5">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-5</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-6">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-6</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-7">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-7</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-2-8">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_2-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.3.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 2-8</label>
+			<sensorSet>Humidity 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-1">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-1</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-2">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-2</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-3">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-3</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-4">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-4</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-5">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-5</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-6">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-6</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-7">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-7</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-3-8">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_3-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.4.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 3-8</label>
+			<sensorSet>Humidity 3</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-1">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-1</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-2">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-2</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-3">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-3</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-4">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-4</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-5">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-5</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-6">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-6</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-7">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-7</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-4-8">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_4-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.5.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 4-8</label>
+			<sensorSet>Humidity 4</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-1">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-1</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-2">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-2</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-3">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.3</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-3</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-4">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.4</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-4</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-5">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.5</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-5</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-6">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.6</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-6</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-7">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.7</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-7</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity-5-8">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_5-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.19011.1.3.2.1.3.2.3.1.6.8</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Humidity 5-8</label>
+			<sensorSet>Humidity 5</sensorSet>
+		</numSensor>
+		-->
+		<valueMap ruleid="digitalIn-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="digitalIn-em">
+			<label>Inactive</label>
+			<label>Active</label>
+		</enumMap>
+		<stateSensor ruleid="isDeviceMonitorDigitalIn" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.3">
+			<rowTest>
+			<mapValue mapid="invalid-vm"><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.3</getRowOid></mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DI_<getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.1</getRowOid></sensorId>
+			<value>
+				<mapValue mapid="digitalIn-vm">
+				<getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<enum>digitalIn-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.2</getRowOid></label>
+			<sensorSet>Digital In</sensorSet>
+		</stateSensor>
+		<alarmFlags2 ruleid="isDeviceMonitorDigitalInAlarm" index=".1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.3">
+			<value><getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Digital In <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.2</getRowOid> - Active</activeText>
+					<inactiveText>Digital In <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.2</getRowOid> - Active Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Digital In <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.2</getRowOid> - Active condition exists.</activeText>
+					<inactiveText>A Digital In <getRowOid>.1.3.6.1.4.1.19011.1.3.2.1.3.1.3.1.2</getRowOid> - Active condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+</APC_DDF>

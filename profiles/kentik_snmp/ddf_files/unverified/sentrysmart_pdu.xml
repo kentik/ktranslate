@@ -1,0 +1,373 @@
+<?xml version="1.0"?>
+<APC_DDF ddfid ="sentrysmart_pdu" ddfname="Sentry Smart PDU" ddfversion="1" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<!--DDF Sensors -->
+	<device deviceid="sentrysmart_pdu">
+		<oidMustExist istree="yes" ruleid="sentrysmart_pdu_exist" oid=".1.3.6.1.4.1.1718.3.2"/>
+	
+		<setProductData ruleid="vendordata" field="vendor">Sentry Smart</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<setProductData ruleid="modeldata" field="model">CDU</setProductData>
+		<setProductData ruleid="serialnum" field="serial_num"><getOid>.1.3.6.1.4.1.1718.3.1.2.0</getOid></setProductData>
+
+		<!-- systemTotalPower -->
+		<numSensor ruleid="systemTotalPower">
+			<type>powerW</type>
+			<sensorId>TOTAL_POWER</sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getOid>.1.3.6.1.4.1.1718.3.1.6.0</getOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<getOid>.1.3.6.1.4.1.1718.3.1.6.0</getOid>
+			</value>
+			<label>Total Power</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+		<!-- towerStatus -->
+		<stateSensor ruleid="towerStatus" index=".1.3.6.1.4.1.1718.3.2.1.1.4">
+			<type>state</type>
+			<sensorId>TOWER_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="towerStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>towerStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.1.1.3</getRowOid><space/>Status</label>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="towerStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="towerStatus-em">
+			<label>Normal</label>
+			<label>No Communication</label>
+			<label>Fan Fail</label>
+			<label>Over Temperature</label>
+			<label>Unknown</label>
+		</enumMap>
+
+
+		<!-- infeedStatus -->
+		<stateSensor ruleid="infeedStatus" index=".1.3.6.1.4.1.1718.3.2.2.1.5">
+			<type>state</type>
+			<sensorId>INFEED_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="infeedStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>infeedStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.3</getRowOid><space/>Status</label>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="infeedStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>7</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="infeedStatus-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Off Wait</label>
+			<label>On Wait</label>
+			<label>Off Error</label>
+			<label>On Error</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+
+
+		<!-- infeedLoadStatus -->
+		<stateSensor ruleid="infeedLoadStatus" index=".1.3.6.1.4.1.1718.3.2.2.1.6">
+			<type>state</type>
+			<sensorId>INFEED_LOAD_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="infeedLoadStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>infeedLoadStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.3</getRowOid><space/>Load Status</label>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="infeedLoadStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>8</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="infeedLoadStatus-em">
+			<label>Normal</label>
+			<label>Not On</label>
+			<label>Reading</label>
+			<label>Low Load</label>
+			<label>High Load</label>
+			<label>Over Load</label>
+			<label>Read Error</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		
+		<!-- infeedLoadValue -->
+		<numSensor ruleid="infeedLoadValue" index=".1.3.6.1.4.1.1718.3.2.2.1.7">
+			<type>amperage</type>
+			<sensorId>INFEED_LOAD_VALUE_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.7</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.7</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.3</getRowOid><space/>Load Value</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+
+		<!-- infeedVoltage -->
+		<numSensor ruleid="infeedVoltage" index=".1.3.6.1.4.1.1718.3.2.2.1.11">
+			<type>voltage</type>
+			<sensorId>INFEED_VOLTAGE_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.11</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.11</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.3</getRowOid><space/>Voltage</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+
+		<!-- infeedPower -->
+		<numSensor ruleid="infeedPower" index=".1.3.6.1.4.1.1718.3.2.2.1.12">
+			<type>powerW</type>
+			<sensorId>INFEED_POWER_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.12</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.12</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.2.1.3</getRowOid><space/>Power</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+		
+
+		<!-- tempHumidSensorTempValue -->
+		<numSensor ruleid="tempHumidSensorTempValue" index=".1.3.6.1.4.1.1718.3.2.5.1.6">
+			<type>temp</type>
+			<sensorId>TEMP_HUMID_SENSOR_TEMP_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="tempHumidSensorExists-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<if>
+					<!-- if tempHumidSensorScaleTemp has a fahrenheit value -->
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.13</getRowOid></op>
+							<op>1</op>
+						</eq>
+					</op>
+					<!-- convert from fahrenheit to celsius -->
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.6</getRowOid></op>
+											<op>0.1</op>
+										</mult>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<!-- value is in celsius, just return it -->
+					<op>
+						<mult>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.6</getRowOid></op>
+							<op>0.1</op>
+						</mult>
+					</op>
+				</if>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.3</getRowOid><space/>Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="tempHumidSensorExists-vm">
+			<valueIn>0</valueIn><valueOut>[true]</valueOut>
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>2</valueIn><valueOut>[false]</valueOut>
+			<valueIn>3</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		
+		<!-- tempHumidSensorHumidValue -->
+		<numSensor ruleid="tempHumidSensorHumidValue" index=".1.3.6.1.4.1.1718.3.2.5.1.10">
+			<type>humidity</type>
+			<sensorId>TEMP_HUMID_SENSOR_HUMID_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.10</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.10</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.3</getRowOid><space/>Humidity</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+		
+		<!-- tempHumidSensorTempStatus -->
+		<stateSensor ruleid="tempHumidSensorTempStatus" index=".1.3.6.1.4.1.1718.3.2.5.1.5">
+			<type>state</type>
+			<sensorId>TEMP_HUMID_SENSOR_TEMP_STATUS_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="tempHumidSensorExists-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value> 
+				<mapValue mapid="tempHumidSensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>tempHumidSensorStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.3</getRowOid><space/>Temperature Status</label>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		
+		
+		<!-- tempHumidSensorHumidStatus -->
+		<stateSensor ruleid="tempHumidSensorHumidStatus" index=".1.3.6.1.4.1.1718.3.2.5.1.9">
+			<type>state</type>
+			<sensorId>TEMP_HUMID_SENSOR_HUMID_STATUS_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="tempHumidSensorExists-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value> 
+				<mapValue mapid="tempHumidSensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.9</getRowOid>
+				</mapValue>
+			</value>
+			<enum>tempHumidSensorStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.1718.3.2.5.1.3</getRowOid><space/>Humidity Status</label>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tempHumidSensorStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>8</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="tempHumidSensorStatus-em">
+			<label>Normal</label>
+			<label>Not Found</label>
+			<label>Reading</label>
+			<label>Low Value</label>
+			<label>High Value</label>
+			<label>Read Error</label>
+			<label>Lost</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+	</device>
+
+</APC_DDF>

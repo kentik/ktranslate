@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid="powerone_acc"
+	ddfname="PowerOne ACC"
+	ddfversion="1"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+ <device deviceid="PowerOneACC">
+    <oidMustExist ruleid="poweroneacc_header" oid="1.3.6.1.4.1.5961.4.2.1.0"/>
+
+ 	<setProductData ruleid="modeldata" field="model">
+		PowerOne ACC
+	</setProductData>
+	
+	<setProductData ruleid="typedata" field="type">
+		<getOid>1.3.6.1.4.1.5961.4.1.2.0</getOid>
+	</setProductData>
+		
+	<setProductData ruleid="serial_numdata" field="serial_num">
+		<getOid>1.3.6.1.4.1.5961.4.1.4.0</getOid>
+	</setProductData>	
+	
+	<stringSensor ruleid="system_name">
+		<type>string</type>
+		<sensorId>_SYSTEM_NAME</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.1.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>System Name</label>
+		<sensorSet>System Information</sensorSet>
+	</stringSensor>
+	
+	<numSensor ruleid="system_softversion">
+		<type>num</type>
+		<sensorId>_SYSTEM_SOFTVERSION</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.1.3.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>System Software Version</label>
+		<sensorSet>System Information</sensorSet>
+	</numSensor>
+		
+	<numSensor ruleid="system_voltage">
+		<type>voltage</type>
+		<sensorId>_SYSTEM_voltage</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.1.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>System voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="acphase1_voltage">
+		<type>voltage</type>
+		<sensorId>_ACPHASE1_voltage</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.6.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>ACPhase1 voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="acphase2_voltage">
+		<type>voltage</type>
+		<sensorId>_ACPHASE2_voltage</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.7.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>ACPhase2 voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="acphase3_voltage">
+		<type>voltage</type>
+		<sensorId>_ACPHASE3_voltage</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.8.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>ACPhase3 voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+    
+	<numSensor ruleid="battery_capacity">
+		<type>pctofcapacity</type>
+		<sensorId>_BATTERY_CAPACITY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.1.7.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Capacity</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_current">
+		<type>amperage</type>
+		<sensorId>_BATTERY_CURRENT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.3.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Current</label>
+		<sensorSet>Current</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_temperature">
+		<type>temp</type>
+		<sensorId>_BATTERY_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.5.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>Battery Temperature</label>
+		<sensorSet>Current</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="load_current">
+		<type>amperage</type>
+		<sensorId>_LOAD_CURRENT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.2.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>Load Current</label>
+		<sensorSet>Current</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="lowvoltage_alarm">
+		<type>voltage</type>
+		<sensorId>_LOW_voltage_ALARM</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.99.1.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>Low voltage Alarm</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="tempprobe_fault">
+		<type>temp</type>
+		<sensorId>_TEMPPROBE_FAULT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.99.17.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>TempProbe Fault</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="remainbatterytime">
+		<type>timeinmin</type>
+		<sensorId>_REMAINBATTERYTIME</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.5961.4.2.9.0</getOid>
+				</op>
+				<op>0.01</op>
+			</mult>
+		</value>
+		<label>RemainBatteryTime</label>
+		<sensorSet>Time</sensorSet>
+	</numSensor>
+	
+		<alarmFlags ruleid="battfail_alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.7.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Battfail Alarm</activeText>
+					<inactiveText>Battfail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>BattFail Alarm condition exists</activeText>
+					<inactiveText>BattFail Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	
+		<alarmFlags ruleid="battfuse_alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.11.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>BattFuse Alarm</activeText>
+					<inactiveText>BattFuse Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>BattFuse Alarm condition exists</activeText>
+					<inactiveText>BattFuse Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+		<alarmFlags ruleid="batttemp_alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.9.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>BattTemp Alarm</activeText>
+					<inactiveText>BattTemp Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>BattTemp Alarm condition exists</activeText>
+					<inactiveText>BattTemp Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+		<alarmFlags ruleid="comsfail_alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.15.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>ComsFail Alarm</activeText>
+					<inactiveText>ComsFail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>ComsFail Alarm condition exists</activeText>
+					<inactiveText>ComsFail Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+		<alarmFlags ruleid="Mains Fail Alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.4.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Mains Fail Alarm</activeText>
+					<inactiveText>Mains Fail Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Mains Fail Alarm condition exists</activeText>
+					<inactiveText>Mains Fail Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+		<alarmFlags ruleid="ovshutdown_alarm">
+			<value><getOid>1.3.6.1.4.1.5961.4.99.19.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>OVShutDown Alarm</activeText>
+					<inactiveText>OVShutDown Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>OVShutDown Alarm condition exists</activeText>
+					<inactiveText>OVShutDown Alarm condition no longer exists</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	
+	</device>
+	
+</APC_DDF>

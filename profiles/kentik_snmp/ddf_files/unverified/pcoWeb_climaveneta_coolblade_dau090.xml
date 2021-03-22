@@ -1,0 +1,960 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="pcoWeb_climaveneta_coolblade_dau090"
+	ddfname="(pcoWeb) Climaveneta Coolblade DAU090"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="climaveneta_coolblade_dau090">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Climaveneta</setProductData>
+		<setProductData ruleid="modeldata" field="model">Coolblade DAU090</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="climaveneta_coolblade_dau090_exists" oid=".1.3.6.1.4.1.9839.2.1" istree="yes"/> 
+
+        <valueMap ruleid="isTrue-vm">
+			<valueIn>-888</valueIn><valueOut>[false]</valueOut>
+			<valueIn>-9999</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+        <numSensor ruleid="room_temperature">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>ROOM_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Temperature</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="room_humidity">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>humidity</type>
+            <sensorId>ROOM_HUMIDITY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Humidity</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="supply_temperature">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.3.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>SUPPLY_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Supply temperature</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cold_water_temp">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>COLD_WATER_TEMP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Cold Water Temp</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="hot_water_temp">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>HOT_WATER_TEMP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Hot Water Temp</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outdoor_temp">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.6.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>OUTDOOR_TEMP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.6.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Outdoor Temp</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="position_cold_water_valve">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.7.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>POSITION_COLD_WATER_VALVE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Position Cold Water Valve</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="position_hot_water_valve">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.8.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>POSITION_HOT_WATER_VALVE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.8.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Position Hot Water Valve</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="fan_speed">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.9.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>FAN_SPEED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.9.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Fan Speed</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="position_cold_water_valve2">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.10.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>POSITION_COLD_WATER_VALVE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Position Cold Water Valve2</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cold_water_temp2">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.11.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>COLD_WATER_TEMP2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.9839.2.1.2.11.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Cold Water Temp2</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="position_freecooling_damper">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.12.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>POSITION_FREECOOLING_DAMPER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Position freecooling damper</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+        <numSensor ruleid="out_inverter">
+            <rowTest>
+                <mapValue mapid="isTrue-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.2.14.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num</type>
+            <sensorId>OUT_INVERTER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.2.14.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Out inverter</label>
+            <sensorSet>Analog</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="unit_status">
+            <type>state</type>
+            <sensorId>UNIT_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+                </mapValue>
+            </value>
+            <label>Unit status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="compressor_1_status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_1_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+                </mapValue>
+            </value>
+            <label>Compressor 1 status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="compressor_2_status">
+            <type>state</type>
+            <sensorId>COMPRESSOR_2_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+                </mapValue>
+            </value>
+            <label>Compressor 2 status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="step_1_heater_status">
+            <type>state</type>
+            <sensorId>STEP_1_HEATER_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+                </mapValue>
+            </value>
+            <label>Step 1 Heater status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="step_2_heater_status">
+            <type>state</type>
+            <sensorId>STEP_2_HEATER_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.5.0</getOid>
+                </mapValue>
+            </value>
+            <label>Step 2 Heater status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="dehumidification_active">
+            <type>state</type>
+            <sensorId>DEHUMIDIFICATION_ACTIVE</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.6.0</getOid>
+                </mapValue>
+            </value>
+            <label>Dehumidification active</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="hot_gas_active">
+            <type>state</type>
+            <sensorId>HOT_GAS_ACTIVE</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.7.0</getOid>
+                </mapValue>
+            </value>
+            <label>Hot gas active</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="humidifier_status">
+            <type>state</type>
+            <sensorId>HUMIDIFIER_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.8.0</getOid>
+                </mapValue>
+            </value>
+            <label>Humidifier status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="emergency_mode_status">
+            <type>state</type>
+            <sensorId>EMERGENCY_MODE_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.9.0</getOid>
+                </mapValue>
+            </value>
+            <label>Emergency mode status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="direct_freecooling_enabled">
+            <type>state</type>
+            <sensorId>DIRECT_FREECOOLING_ENABLED</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.10.0</getOid>
+                </mapValue>
+            </value>
+            <label>Direct Freecooling enabled</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="maintenance_status">
+            <type>state</type>
+            <sensorId>MAINTENANCE_STATUS</sensorId>
+            <value>
+                <mapValue mapid="status1-vm">
+                    <getOid>.1.3.6.1.4.1.9839.2.1.1.52.0</getOid>
+                </mapValue>
+            </value>
+            <label>Maintenance Status</label>
+            <enum>status1-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="status1-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status1-em">
+			<label>OK</label>
+			<label>Fault</label>
+			<label>Unknown</label>
+		</enumMap>
+
+        <alarmFlags ruleid="phase_sequence_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.20.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Phase Sequence Alarm</activeText>
+                    <inactiveText>Phase Sequence Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Phase Sequence Alarm condition exists.</activeText>
+                    <inactiveText>Phase Sequence Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="fire_or_flood_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.21.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Fire or Flood Alarm</activeText>
+                    <inactiveText>Fire or Flood Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Fire or Flood Alarm condition exists.</activeText>
+                    <inactiveText>Fire or Flood Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="fire_smoke_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.22.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Fire Smoke Alarm</activeText>
+                    <inactiveText>Fire Smoke Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Fire Smoke Alarm condition exists.</activeText>
+                    <inactiveText>Fire Smoke Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="flooding_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Flooding Alarm</activeText>
+                    <inactiveText>Flooding Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Flooding Alarm condition exists.</activeText>
+                    <inactiveText>Flooding Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="air_flow_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.24.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Air flow Alarm</activeText>
+                    <inactiveText>Air flow Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Air flow Alarm condition exists.</activeText>
+                    <inactiveText>Air flow Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_press_compr1_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.25.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Press Compr1 Alarm</activeText>
+                    <inactiveText>High Press Compr1 Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Press Compr1 Alarm condition exists.</activeText>
+                    <inactiveText>High Press Compr1 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_press_compr2_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.26.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Press Compr2 Alarm</activeText>
+                    <inactiveText>High Press Compr2 Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Press Compr2 Alarm condition exists.</activeText>
+                    <inactiveText>High Press Compr2 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="low_press_compr1">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.27.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Low Press Compr1</activeText>
+                    <inactiveText>Low Press Compr1 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Low Press Compr1 condition exists.</activeText>
+                    <inactiveText>Low Press Compr1 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="low_press_compr2">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.28.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Low Press Compr2</activeText>
+                    <inactiveText>Low Press Compr2 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Low Press Compr2 condition exists.</activeText>
+                    <inactiveText>Low Press Compr2 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="eev_1_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.29.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>EEV 1 Alarm</activeText>
+                    <inactiveText>EEV 1 Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>EEV 1 Alarm condition exists.</activeText>
+                    <inactiveText>EEV 1 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="eev_2_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>EEV 2 Alarm</activeText>
+                    <inactiveText>EEV 2 Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>EEV 2 Alarm condition exists.</activeText>
+                    <inactiveText>EEV 2 Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="electric_heater_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Electric heater Alarm</activeText>
+                    <inactiveText>Electric heater Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Electric heater Alarm condition exists.</activeText>
+                    <inactiveText>Electric heater Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dirty_filter_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Dirty Filter Alarm</activeText>
+                    <inactiveText>Dirty Filter Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Dirty Filter Alarm condition exists.</activeText>
+                    <inactiveText>Dirty Filter Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_current_humidif_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Current Humidif Alarm</activeText>
+                    <inactiveText>High Current Humidif Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Current Humidif Alarm condition exists.</activeText>
+                    <inactiveText>High Current Humidif Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="no_water_humidif_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>No Water Humidif Alarm</activeText>
+                    <inactiveText>No Water Humidif Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>No Water Humidif Alarm condition exists.</activeText>
+                    <inactiveText>No Water Humidif Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="low_current_humidif_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Low Current Humidif Alarm</activeText>
+                    <inactiveText>Low Current Humidif Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Low Current Humidif Alarm condition exists.</activeText>
+                    <inactiveText>Low Current Humidif Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="eeprom_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>EEPROM Alarm</activeText>
+                    <inactiveText>EEPROM Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>EEPROM Alarm condition exists.</activeText>
+                    <inactiveText>EEPROM Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="water_flow_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Water flow Alarm</activeText>
+                    <inactiveText>Water flow Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Water flow Alarm condition exists.</activeText>
+                    <inactiveText>Water flow Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="room_temp_probe_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Room Temp Probe Alarm</activeText>
+                    <inactiveText>Room Temp Probe Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Room Temp Probe Alarm condition exists.</activeText>
+                    <inactiveText>Room Temp Probe Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="room_humid_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.39.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Room Humid Alarm</activeText>
+                    <inactiveText>Room Humid Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Room Humid Alarm condition exists.</activeText>
+                    <inactiveText>Room Humid Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="tsupply_probe_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.40.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>TSupply Probe Alarm</activeText>
+                    <inactiveText>TSupply Probe Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>TSupply Probe Alarm condition exists.</activeText>
+                    <inactiveText>TSupply Probe Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="cold_water_probe_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.41.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Cold Water Probe Alarm</activeText>
+                    <inactiveText>Cold Water Probe Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Cold Water Probe Alarm condition exists.</activeText>
+                    <inactiveText>Cold Water Probe Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="hot_water_probe_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.42.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Hot Water Probe Alarm</activeText>
+                    <inactiveText>Hot Water Probe Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Hot Water Probe Alarm condition exists.</activeText>
+                    <inactiveText>Hot Water Probe Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="text_probe_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.43.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>TExt Probe Alarm</activeText>
+                    <inactiveText>TExt Probe Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>TExt Probe Alarm condition exists.</activeText>
+                    <inactiveText>TExt Probe Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="lan_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.44.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>LAN Alarm</activeText>
+                    <inactiveText>LAN Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>LAN Alarm condition exists.</activeText>
+                    <inactiveText>LAN Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_room_temperature">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.45.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Room Temperature</activeText>
+                    <inactiveText>High Room Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Room Temperature condition exists.</activeText>
+                    <inactiveText>High Room Temperature condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="low_room_temperature">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.46.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Low Room Temperature</activeText>
+                    <inactiveText>Low Room Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Low Room Temperature condition exists.</activeText>
+                    <inactiveText>Low Room Temperature condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_room_humidity">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.47.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Room Humidity</activeText>
+                    <inactiveText>High Room Humidity Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Room Humidity condition exists.</activeText>
+                    <inactiveText>High Room Humidity condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="low_room_humidity">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.48.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Low Room Humidity</activeText>
+                    <inactiveText>Low Room Humidity Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Low Room Humidity condition exists.</activeText>
+                    <inactiveText>Low Room Humidity condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="high_water_temperature">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.49.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>High Water Temperature</activeText>
+                    <inactiveText>High Water Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>High Water Temperature condition exists.</activeText>
+                    <inactiveText>High Water Temperature condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="password_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.50.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Password Alarm</activeText>
+                    <inactiveText>Password Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Password Alarm condition exists.</activeText>
+                    <inactiveText>Password Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="global_general_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.51.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Global (general) Alarm</activeText>
+                    <inactiveText>Global (general) Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Global (general) Alarm condition exists.</activeText>
+                    <inactiveText>Global (general) Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="differential_pressure_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.53.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Differential Pressure Alarm</activeText>
+                    <inactiveText>Differential Pressure Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Differential Pressure Alarm condition exists.</activeText>
+                    <inactiveText>Differential Pressure Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="expansion_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.54.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Expansion Alarm</activeText>
+                    <inactiveText>Expansion Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Expansion Alarm condition exists.</activeText>
+                    <inactiveText>Expansion Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="inverter_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.55.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Inverter Alarm</activeText>
+                    <inactiveText>Inverter Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Inverter Alarm condition exists.</activeText>
+                    <inactiveText>Inverter Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="envelop_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.56.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Envelop Alarm</activeText>
+                    <inactiveText>Envelop Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Envelop Alarm condition exists.</activeText>
+                    <inactiveText>Envelop Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="delta_pressure_alarm_for_inverter_compressor">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.1.58.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>Delta Pressure Alarm for Inverter Compressor</activeText>
+                    <inactiveText>Delta Pressure Alarm for Inverter Compressor Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>Delta Pressure Alarm for Inverter Compressor condition exists.</activeText>
+                    <inactiveText>Delta Pressure Alarm for Inverter Compressor condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="spv_type_alarm">
+            <value><getOid>.1.3.6.1.4.1.9839.2.1.3.32.0</getOid></value>
+            <alarmFlagsTest mask="1" match="1">
+                <name>
+                    <activeText>SPV Type Alarm</activeText>
+                    <inactiveText>SPV Type Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>System</category>
+                <description>
+                    <activeText>SPV Type Alarm condition exists.</activeText>
+                    <inactiveText>SPV Type Alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+	</device>
+</APC_DDF>

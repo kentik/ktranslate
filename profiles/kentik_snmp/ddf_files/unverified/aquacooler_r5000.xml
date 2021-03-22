@@ -1,0 +1,880 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="aquacooler_r5000"
+	ddfname="Aquacooler R5000"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="aquacooler_r5000">
+   		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+    	<setProductData ruleid="vendordata" field="vendor">Aquacooler</setProductData>
+		<setProductData ruleid="modeldata" field="model">R5000</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="aquacooler_r5000_OidMustExist" oid=".1.3.6.1.4.1.33888.1.3.1.1.1.0"/>
+
+		<numSensor ruleid="water_temperature_1_sensor">
+            <type>temp</type>
+            <sensorId>WATER_TEMPERATURE_1</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Water Temperature #1</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+
+		<numSensor ruleid="water_temperature_2_sensor">
+            <type>temp</type>
+            <sensorId>WATER_TEMPERATURE_2</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Water Temperature #2</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="water_temperature_3_sensor">
+            <type>temp</type>
+            <sensorId>WATER_TEMPERATURE_3</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.3.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Water Temperature #3</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="water_temperature_4_sensor">
+            <type>temp</type>
+            <sensorId>WATER_TEMPERATURE_4</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Water Temperature #4</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="return_water_temperature_1_sensor">
+            <type>temp</type>
+            <sensorId>RETURN_WATER_TEMPERATURE_1</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.5.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Return Water Temperature #1</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="return_water_temperature_2_sensor">
+            <type>temp</type>
+            <sensorId>RETURN_WATER_TEMPERATURE_2</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.6.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Return Water Temperature #2</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="return_water_temperature_3_sensor">
+            <type>temp</type>
+            <sensorId>RETURN_WATER_TEMPERATURE_3</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.7.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Return Water Temperature #3</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="return_water_temperature_4_sensor">
+            <type>temp</type>
+            <sensorId>RETURN_WATER_TEMPERATURE_4</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.8.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Return Water Temperature #4</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ambient_temperature_sensor">
+            <type>temp</type>
+            <sensorId>AMBIENT_TEMPERATURE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.1.9.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Ambient Temperature</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="flow_rate_1_sensor">
+            <type>fluidflow</type>
+            <sensorId>FLOW_RATE_1</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.2.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Secondary Water Flow Rate #1</label>
+            <sensorSet>Flow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="flow_rate_2_sensor">
+            <type>fluidflow</type>
+            <sensorId>FLOW_RATE_2</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.2.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Secondary Water Flow Rate #2</label>
+            <sensorSet>Flow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="flow_rate_3_sensor">
+            <type>fluidflow</type>
+            <sensorId>FLOW_RATE_3</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.2.3.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Secondary Water Flow Rate #3</label>
+            <sensorSet>Flow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="flow_rate_4_sensor">
+            <type>fluidflow</type>
+            <sensorId>FLOW_RATE_4</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.2.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Secondary Water Flow Rate #4</label>
+            <sensorSet>Flow</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pressure_1_sensor">
+            <type>pressure</type>
+            <sensorId>PRESSURE_1</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.3.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Cct 1 Suction Pressure</label>
+            <sensorSet>Pressure</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pressure_2_sensor">
+            <type>pressure</type>
+            <sensorId>PRESSURE_2</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.3.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Cct 2 Suction Pressure</label>
+            <sensorSet>Pressure</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pressure_3_sensor">
+            <type>pressure</type>
+            <sensorId>PRESSURE_3</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.3.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Cct 1 Discharge Pressure</label>
+            <sensorSet>Pressure</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pressure_4_sensor">
+            <type>pressure</type>
+            <sensorId>PRESSURE_4</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.3.5.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Cct 2 Discharge Pressure</label>
+            <sensorSet>Pressure</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="relative_humidity_sensor">
+            <type>humidity</type>
+            <sensorId>RELATIVE_HUMIDITY</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.1.3.3.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Relative Humidity</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+
+	
+		<stateSensor ruleid="24v_output_1_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_1</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 1</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_2_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_2</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 2</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_3_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_3</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 3</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_4_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_4</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 4</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_5_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_5</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 5</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_6_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_6</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 6</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_7_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_7</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 7</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_8_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_8</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 8</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_9_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_9</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.9.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 9</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_10_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_10</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 10</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_11_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_11</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.11.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 11</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_12_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_12</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.12.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 12</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_13_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_13</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.13.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 13</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_14_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_14</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.14.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 14</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_15_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_15</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.15.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 15</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="24v_output_16_sensor">
+            <type>state</type>
+            <sensorId>24V_OUTPUT_16</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.4.16.0</getOid>
+				</mapValue>
+            </value>
+            <label>24V Output 16</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_1_sensor">
+            <type>state</type>
+            <sensorId>INPUT_1</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 1</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_2_sensor">
+            <type>state</type>
+            <sensorId>INPUT_2</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 2</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_3_sensor">
+            <type>state</type>
+            <sensorId>INPUT_3</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 3</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_4_sensor">
+            <type>state</type>
+            <sensorId>INPUT_4</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 4</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+	
+		<stateSensor ruleid="input_5_sensor">
+            <type>state</type>
+            <sensorId>INPUT_5</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 5</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_6_sensor">
+            <type>state</type>
+            <sensorId>INPUT_6</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 6</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_7_sensor">
+            <type>state</type>
+            <sensorId>INPUT_7</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 7</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="input_8_sensor">
+            <type>state</type>
+            <sensorId>INPUT_8</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.1.5.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Board Input 8</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="output_aux_sensor">
+            <type>state</type>
+            <sensorId>OUTPUT_AUX</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.3.2.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>24VDC Uncommitted Drive on Output #15</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="fan_1_speed_sensor">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>FAN_1_SPEED</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.2.2.3.0</getOid></op>
+					<op>100</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Fan 1 Speed Drive Level</label>
+            <sensorSet>Speed Percentage</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="fan_2_speed_sensor">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>FAN_2_SPEED</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.2.2.4.0</getOid></op>
+					<op>100</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Fan 2 Speed Drive Level</label>
+            <sensorSet>Speed Percentage</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pump_speed_sensor">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>PUMP_SPEED</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.2.2.5.0</getOid></op>
+					<op>100</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Pump Speed Drive Level</label>
+            <sensorSet>Speed Percentage</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="compressor_speed_sensor">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>COMPRESSOR_SPEED</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.2.2.6.0</getOid></op>
+					<op>100</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Compressor Speed Drive Level</label>
+            <sensorSet>Speed Percentage</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dew_point_sensor">
+            <type>temp</type>
+            <sensorId>DEW_POINT</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.1.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Dew Point</label>
+            <sensorSet>Environment</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="heat_load_sensor">
+            <type>num/powerKW</type>
+            <sensorId>DEW_POINT</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.1.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Calculated Heat Load #1</label>
+            <sensorSet>Environment</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="comp_1_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>COMP_1_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Chiller/Compressor 1 Run Time in Miuntes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="comp_2_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>COMP_2_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Chiller/Compressor 2 Run Time in Miuntes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="comp_3_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>COMP_3_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.3.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Chiller/Compressor 3 Run Time in Miuntes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="comp_4_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>COMP_4_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Chiller/Compressor 4 Run Time in Miuntes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pump_1_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>PUMP_1_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.5.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Pump 1 Run Time in Minutes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pump_2_time_sensor">
+            <type>timeinmin</type>
+            <sensorId>PUMP_2_TIME</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.3.2.6.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>.01</valueInc>
+            <label>Pump 2 Run Time in Minutes</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="unix_time_stamp_sensor">
+            <type>timeinsec</type>
+            <sensorId>UNIX_TIME_STAMP</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.33888.1.3.4.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>SNTP UTC Unix Timestamp</label>
+            <sensorSet>Run Time</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="compressor_1_on_off_sensor">
+            <type>state</type>
+            <sensorId>COMPRESSOR_1_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Chiller/Compressor 1 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="compressor_2_on_off_sensor">
+            <type>state</type>
+            <sensorId>COMPRESSOR_2_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Chiller/Compressor 2 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="compressor_3_on_off_sensor">
+            <type>state</type>
+            <sensorId>COMPRESSOR_3_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Chiller/Compressor 3 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="compressor_4_on_off_sensor">
+            <type>state</type>
+            <sensorId>COMPRESSOR_4_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Chiller/Compressor 4 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="pump_1_on_off_sensor">
+            <type>state</type>
+            <sensorId>PUMP_1_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Pump 1, Chiller 3 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="pump_2_on_off_sensor">
+            <type>state</type>
+            <sensorId>PUMP_2_ON_OFF</sensorId>
+            <value>
+				<mapValue mapid="on_off_vm">
+                	<getOid>.1.3.6.1.4.1.33888.1.4.2.2.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Pump 2, Chiller 4 On/Off</label>
+            <enum>on_off_em</enum>
+            <sensorSet>On/Off</sensorSet>
+        </stateSensor>
+
+
+		<valueMap ruleid="on_off_vm" >
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>				
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>				
+		</valueMap>
+
+		<enumMap ruleid="on_off_em">
+			<label>Unknown</label>
+			<label>Off</label>
+			<label>On</label>		
+		</enumMap>
+
+
+	</device>
+</APC_DDF>

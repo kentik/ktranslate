@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="vanguard_beacon"
+	ddfname="Vanguard Beacon"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\vanguard\VANGUARD-MONITORING-MIB.txt
+		
+		VANGUARD-MONITORING-MIB | 9 November 2020
+	-->
+	<device deviceid="vanguard_beacon">
+		<oidMustExist ruleid="statusManagement_exists" oid=".1.3.6.1.4.1.9882.1.1.2" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Vanguard</setProductData>
+		<setProductData ruleid="modeldata" field="model">Beacon</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		<!--
+			valueMaps
+		-->
+		<valueMap ruleid="1state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="2state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="3state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="6state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>65535</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<!--
+			cellStatus
+		-->
+		<stateSensor ruleid="modemType">
+            <type>state</type>
+            <sensorId>_MODEM_TYPE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getOid>.1.3.6.1.4.1.9882.1.1.2.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Modem Type</label>
+            <enum>modemType-em</enum>
+            <sensorSet>Cell Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="modemType-em">
+			<label>Unknown</label>
+			<label>CTEK CDMA</label>
+			<label>CTEK HSPA</label>
+		</enumMap>
+		
+		<numSensor ruleid="signalStrengthBars">
+            <type>num</type>
+            <sensorId>_SIGNAL_STRENGTH_BARS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9882.1.1.2.1.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Signal Strength (bars)</label>
+            <sensorSet>Cell Status</sensorSet>
+        </numSensor>
+		<numSensor ruleid="signalStrengthDbs">
+            <type>num</type>
+            <sensorId>_SIGNAL_STRENGTH_DBS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9882.1.1.2.1.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Signal Strength (decibals)</label>
+            <sensorSet>Cell Status</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="serviceType">
+            <type>state</type>
+            <sensorId>_SERVICE_TYPE</sensorId>
+            <value>
+				<mapValue mapid="6state-vm">
+					<getOid>.1.3.6.1.4.1.9882.1.1.2.1.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Service Type</label>
+            <enum>serviceType-em</enum>
+            <sensorSet>Cell Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="serviceType-em">
+			<label>Unknown</label>
+			<label>CDMA - No Data</label>
+			<label>1xRTT</label>
+			<label>EvDO Rev 0</label>
+			<label>1xRTT/EvDO Rev 0</label>
+			<label>EvDO Rev A</label>
+			<label>1xRTT/EvDO Rev A</label>
+		</enumMap>
+		
+		<stateSensor ruleid="cdmaStatus">
+            <type>state</type>
+            <sensorId>_CDMA_STATUS</sensorId>
+            <value>
+				<mapValue mapid="1state-vm">
+					<getOid>.1.3.6.1.4.1.9882.1.1.2.1.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>CDMA Status</label>
+            <enum>cdmaStatus-em</enum>
+            <sensorSet>Cell Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="cdmaStatus-em">
+			<label>Not Roaming</label>
+			<label>Roaming</label>
+		</enumMap>
+		<!--
+			ethernetStatus
+		-->
+		<stateSensor ruleid="linkStatus">
+            <type>state</type>
+            <sensorId>_LINK_STATUS</sensorId>
+            <value>
+				<mapValue mapid="1state-vm">
+					<getOid>.1.3.6.1.4.1.9882.1.1.2.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Ethernet Link Status</label>
+            <enum>linkStatus-em</enum>
+            <sensorSet>Ethernet Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="linkStatus-em">
+			<label>Down</label>
+			<label>Up</label>
+		</enumMap>
+		<!--
+			systemInformation | systemControllerDeviceTable
+		-->
+		<numSensor ruleid="systemControllerStatusState" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_STATE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				State Non-Masked Reportable Events
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusNvmemWrites" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_NVMEM_WRITES_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				State Non-Volatile Memory Writes
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusStatus" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.4">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_STATUS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusStatusChanged" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.5">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_STATUS_CHANGED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits Transitioned
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusRebootCounter" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.7">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_REBOOT_COUNTER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Reboot Counter
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusTotalRunTime" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.8">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_TOTAL_RUN_TIME_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Total Run Time
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusClkMsec" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.9">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinsec</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_CLK_MSEC_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.9</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				System Uptime
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerStatusClkDays" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.10">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_SYSTEM_CONTROLLER_STATUS_CLK_DAYS_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Days Of System Uptime
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerThresholdsPdDualDayToNight" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.13">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.13</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_THRESHOLDS_PD_DUAL_DAY_TO_NIGHT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Photodiode Threshold Value For Day To Night Transition Counts
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerThresholdsPdDualNightToDay" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.14">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.14</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_THRESHOLDS_PD_DUAL_NIGHT_TO_DAY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Photodiode Threshold Value For Night To Day Transition Counts
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerThresholdsPdRedDayToNight" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.15">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.15</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_THRESHOLDS_PD_RED_DAY_TO_NIGHT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Red Tower Lighting Photodiode Threshold Value For Day To Night Transition Counts
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		<numSensor ruleid="systemControllerThresholdsPdRedNightToDay" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.16">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.16</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_THRESHOLDS_PD_RED_NIGHT_TO_DAY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Red Tower Lighting Photodiode Threshold Value For Night To Day Transition Counts
+			</label>
+            <sensorSet>System Controller</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="operatingMode" index=".1.3.6.1.4.1.9882.1.1.2.4.1.1.19">
+            <type>state</type>
+            <sensorId>OPERATING_MODE_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="3state-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.1.1.19</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				System Controller<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Tower Lights Operating Mode
+			</label>
+            <enum>operatingMode-em</enum>
+            <sensorSet>System Controller</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="operatingMode-em">
+			<label>Unknown</label>
+			<label>Day</label>
+			<label>White Night</label>
+			<label>Red Night</label>
+		</enumMap>
+		<!--
+			systemInformation | systemControllerA2DTable
+		-->
+		<numSensor ruleid="systemControllerA2DValue" index=".1.3.6.1.4.1.9882.1.1.2.4.2.1.2">
+            <type>num</type>
+            <sensorId>_SYSTEM_CONTROLLER_A2D_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.2.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				System Controller<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> A2D<space/>
+				<mapValue mapid="index-vm">
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</mapValue><space/> 
+				Value
+			</label>
+            <sensorSet>System Controller A2D</sensorSet>
+        </numSensor>
+		<!--
+			systemInformation | beaconDeviceTable
+		-->
+		<numSensor ruleid="beaconStatusState" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_STATUS_STATE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				State Non-Masked Reportable Events
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusNvmemWrites" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_STATUS_NVMEM_WRITES_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				State Non-Volatile Memory Writes
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusStatus" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.4">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_STATUS_STATUS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusStatusChanged" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.5">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_STATUS_STATUS_CHANGED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits Transitioned
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusRebootCounter" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.7">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_STATUS_REBOOT_COUNTER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Reboot Counter
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusTotalRunTime" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.8">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_BEACON_STATUS_TOTAL_RUN_TIME_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Total Run Time
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusClkMsec" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.9">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinsec</type>
+            <sensorId>_BEACON_STATUS_CLK_MSEC_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.9</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				System Uptime
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="beaconStatusClkDays" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.10">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_BEACON_STATUS_CLK_DAYS_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Days Of System Uptime
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		<numSensor ruleid="plcCommunicationsQuality" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.31">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.31</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_BEACON_PLC_COMMUNICATIONS_QUALITY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.31</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				PLC Communications Quality
+			</label>
+            <sensorSet>Beacon</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="beaconRedModeStatus" index=".1.3.6.1.4.1.9882.1.1.2.4.3.1.32">
+            <type>state</type>
+            <sensorId>_BEACON_RED_MODE_STATUS_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.3.1.32</getRowOid>
+            </value>
+            <label>
+				Beacon<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Red Mode Status
+			</label>
+			<enum>beaconRedModeStatus-em</enum>
+            <sensorSet>Beacon</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="beaconRedModeStatus-em">
+			<label>Flashing</label>
+			<label>Steady</label>
+		</enumMap>
+		<!--
+			systemInformation | pwmWhiteTable
+		-->
+		<numSensor ruleid="pwmWhite" index=".1.3.6.1.4.1.9882.1.1.2.4.5.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.5.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_PWM_WHITE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.5.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> PWM White<space/>
+				<mapValue mapid="index-vm">
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</mapValue>
+			</label>
+            <sensorSet>PWM White</sensorSet>
+        </numSensor>
+		<!--
+			systemInformation | pwmRedTable
+		-->
+		<numSensor ruleid="pwmRed" index=".1.3.6.1.4.1.9882.1.1.2.4.6.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.6.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_PWM_RED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.6.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> PWM Red<space/>
+				<mapValue mapid="index-vm">
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</mapValue>
+			</label>
+            <sensorSet>PWM Red</sensorSet>
+        </numSensor>
+		<!--
+			systemInformation | beaconA2DTable
+		-->
+		<valueMap ruleid="index-vm">
+			<valueIn>0</valueIn><valueOut>00</valueOut>
+			<valueIn>1</valueIn><valueOut>01</valueOut>
+			<valueIn>2</valueIn><valueOut>02</valueOut>
+			<valueIn>3</valueIn><valueOut>03</valueOut>
+			<valueIn>4</valueIn><valueOut>04</valueOut>
+			<valueIn>5</valueIn><valueOut>05</valueOut>
+			<valueIn>6</valueIn><valueOut>06</valueOut>
+			<valueIn>7</valueIn><valueOut>07</valueOut>
+			<valueIn>8</valueIn><valueOut>08</valueOut>
+			<valueIn>9</valueIn><valueOut>09</valueOut>
+			<valueIn>*</valueIn><valueOut>*</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="beaconA2DValue" index=".1.3.6.1.4.1.9882.1.1.2.4.7.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.7.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BEACON_A2D_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.7.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Beacon<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> A2D<space/>
+				<mapValue mapid="index-vm">
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</mapValue><space/>
+				Value
+			</label>
+            <sensorSet>Beacon A2D</sensorSet>
+        </numSensor>
+		<!--
+			systemInformation | markerDeviceTable
+		-->
+		<numSensor ruleid="markerStatusState" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_STATUS_STATE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				State Non-Masked Reportable Events
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusNvmemWrites" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_STATUS_NVMEM_WRITES_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				State Non-Volatile Memory Writes
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusStatus" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.4">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_STATUS_STATUS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusStatusChanged" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.5">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_STATUS_STATUS_CHANGED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Status Individual Bits Transitioned
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusRebootCounter" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.7">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_STATUS_REBOOT_COUNTER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Reboot Counter
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusTotalRunTime" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.8">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_MARKER_STATUS_TOTAL_RUN_TIME_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Total Run Time
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusClkMsec" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.9">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinsec</type>
+            <sensorId>_MARKER_STATUS_CLK_MSEC_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.9</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				System Uptime
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="markerStatusClkDays" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.10">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_MARKER_STATUS_CLK_DAYS_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				Days Of System Uptime
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<numSensor ruleid="plcCommunicationsQualityMarker" index=".1.3.6.1.4.1.9882.1.1.2.4.8.1.19">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.19</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_MARKER_PLC_COMMUNICATIONS_QUALITY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.8.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/> 
+				PLC Communications Quality
+			</label>
+            <sensorSet>Marker</sensorSet>
+        </numSensor>
+		<!--
+			systemInformation | markerA2DTable
+		-->
+		<numSensor ruleid="markerA2DValue" index=".1.3.6.1.4.1.9882.1.1.2.4.10.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.10.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_MARKER_A2D_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9882.1.1.2.4.10.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Marker<space/>
+				<regex>
+					<op>(\d)\.\d+</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> A2D<space/>
+				<mapValue mapid="index-vm">
+				<regex>
+					<op>\d\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</mapValue><space/>
+				Value
+			</label>
+            <sensorSet>Marker A2D</sensorSet>
+        </numSensor>
+		<!--
+			alarmTable
+		-->
+		<valueMap ruleid="isAlarm-vm">
+			<valueIn>OK</valueIn><valueOut>0</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="alarmSeverity-vm">
+			<valueIn>Warning</valueIn><valueOut>warning</valueOut>
+			<valueIn>Critical</valueIn><valueOut>critical</valueOut>
+			<valueIn>Info</valueIn><valueOut>informational</valueOut>
+			<valueIn>*</valueIn><valueOut>critical</valueOut>
+		</valueMap>
+		
+		<alarmFlags2 ruleid="alarmTemplate" index=".1.3.6.1.4.1.9882.1.1.2.7.1.5">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.5</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Device Alarms</activeText>
+					<inactiveText>System Device Alarms Cleared</inactiveText>
+				</name>
+				<severity><mapValue mapid="alarmSeverity-vm"><getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.7</getRowOid></mapValue></severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						A System <getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.2</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.3</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.4</getRowOid> condition exists.
+					</activeText>
+					<inactiveText>
+						A System <getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.2</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.3</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.9882.1.1.2.7.1.4</getRowOid> condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+</APC_DDF>

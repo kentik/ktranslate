@@ -1,0 +1,254 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="eaton_powerchain"
+	ddfname="Eaton Powerchain"
+	ddfversion="4"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="eaton_powerchain">
+		<oidMustExist ruleid="eaton_powerchain" oid=".1.3.6.1.4.1.534.8" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.2.1.47.1.1.1.1.12.1</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.2.1.47.1.1.1.1.13.1</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Branch Circuit Monitor</setProductData>
+
+		<alarmFlags2 ruleid="pxgAlarms" index=".1.3.6.1.4.1.534.8.1.1.2.2.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.5</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.534.8.1.1.2.2.1.3</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="pcdMeasuresMainVoltage" index=".1.3.6.1.4.1.534.8.2.1.1.1.1.2">
+            <type>voltage</type>
+            <sensorId>PCD_MEASURES_MAIN_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.1.1.2</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid> - Main Voltage</label>
+            <sensorSet><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcdMeasuresSecondVoltage" index=".1.3.6.1.4.1.534.8.2.1.1.1.1.4">
+            <type>voltage</type>
+            <sensorId>PCD_MEASURES_SECOND_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.1.1.4</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid> - Secondary Voltage</label>
+            <sensorSet><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcdMeasuresCurrent" index=".1.3.6.1.4.1.534.8.2.1.1.1.1.6">
+            <type>amperage</type>
+            <sensorId>PCD_MEASURES_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.534.8.2.1.1.1.1.6</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid> - Current</label>
+            <sensorSet><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcdMeasuresPercentLoad" index=".1.3.6.1.4.1.534.8.2.1.1.1.1.7">
+            <type>pctofcapacity</type>
+            <sensorId>PCD_MEASURES_PERCENT_LOAD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.1.1.7</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid> - Percent Load</label>
+            <sensorSet><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcdMeasuresFrequency" index=".1.3.6.1.4.1.534.8.2.1.1.1.1.8">
+            <type>frequency</type>
+            <sensorId>PCD_MEASURES_MAIN_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.534.8.2.1.1.1.1.8</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid> - Frequency</label>
+            <sensorSet><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.7</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pcdPhaseMeasuresVoltageLL" index=".1.3.6.1.4.1.534.8.2.1.1.2.1.2">
+            <type>voltage</type>
+            <sensorId>PCD_PHASE_MEASURES_VOLTAGE_LL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.2.1.2</getRowOid>
+            </value>
+            <label>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					<op>1</op>
+				</regex>
+				</getOid>
+				<space/> Phase<space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%2$s</op>
+				</regex>
+				<space/>Voltage L-L
+			</label>
+            <sensorSet>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</getOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pcdPhaseMeasuresVoltageLN" index=".1.3.6.1.4.1.534.8.2.1.1.2.1.3">
+            <type>voltage</type>
+            <sensorId>PCD_PHASE_MEASURES_VOLTAGE_LN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.2.1.3</getRowOid>
+            </value>
+            <label>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					<op>1</op>
+				</regex>
+				</getOid>
+				<space/> Phase<space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%2$s</op>
+				</regex>
+				<space/>Voltage L-L
+			</label>
+            <sensorSet>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</getOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pcdPhaseMeasuresCurrent" index=".1.3.6.1.4.1.534.8.2.1.1.2.1.4">
+            <type>amperage</type>
+            <sensorId>PCD_PHASE_MEASURES_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.534.8.2.1.1.2.1.4</getRowOid></op><op>0.1</op></mult>
+            </value>
+            <label>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					<op>1</op>
+				</regex>
+				</getOid>
+				<space/> Phase<space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%2$s</op>
+				</regex>
+				<space/>Current
+			</label>
+            <sensorSet>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</getOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pcdPhaseMeasuresPctLoad" index=".1.3.6.1.4.1.534.8.2.1.1.2.1.5">
+            <type>pctofcapacity</type>
+            <sensorId>PCD_PHASE_MEASURES_PCTLOAD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.534.8.2.1.1.2.1.5</getRowOid>
+            </value>
+            <label>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+					<op>1</op>
+				</regex>
+				</getOid>
+				<space/> Phase<space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%2$s</op>
+				</regex>
+				<space/>Voltage L-L
+			</label>
+            <sensorSet>
+				<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</getOid>
+			</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,676 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="toshiba_t1000_1_3kva_remotEye4"
+	ddfname="Toshiba T1000 1-3kVA RemotEye4"
+	ddfversion="5"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="toshiba_t1000_1-3kva">
+		<oidMustExist ruleid="toshiba_t1000_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.7" istree="yes" />
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="suppressupsmibvendordata" suppressid="upsmib/upsmibdiscdata/vendordata"/>
+        <suppressRule ruleid="suppressupsmibmodeldata" suppressid="upsmib/upsmibdiscdata/modeldata"/>
+		<suppressRule ruleid="suppresstoshibavendordata" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsIdentManufacturer"/>
+        <suppressRule ruleid="suppresstoshibamodeldata" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsIdentTypeform"/>
+        <suppressRule ruleid="suppresstoshibaserialnum" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsIdentSerialNumber"/>
+		<suppressRule ruleid="suppresstoshibafirmware" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsIdentMainFirmwareVersion"/>
+
+		<!-- Vendor -->
+		<setProductData ruleid="vendordata" field="vendor"><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.1.1.0</getOid></setProductData>
+		<!-- Model -->
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.1.2.0</getOid></setProductData>
+		<!-- Serial Number -->
+		<setProductData ruleid="serial_number" field="serial_num"><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.1.3.0</getOid></setProductData>
+		<!-- Firmware Version -->
+		<setProductData ruleid="firmware_version" field="appversion"><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.1.4.0</getOid></setProductData>
+		<!-- Device Type -->
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		<!-- Location -->
+		<setLocationData ruleid="typedata" field="LOCATION"><getOid>1.3.6.1.4.1.186.1.19.2.5.254.1.27.0</getOid></setLocationData>
+
+		<suppressRule ruleid="suppressupsinputpower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<suppressRule ruleid="suppressupsinputvoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<suppressRule ruleid="suppressupsinputcurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<suppressRule ruleid="suppressupsinputfrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<suppressRule ruleid="suppressupsoutputcurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<suppressRule ruleid="suppressupsoutputfrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<suppressRule ruleid="suppressupsoutputload" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<suppressRule ruleid="suppressupsoutputpower" suppressid="upsmib/upsmib/upsOutputPower"/>
+		<suppressRule ruleid="suppressupsoutputsource" suppressid="upsmib/upsmib/upsOutputSource"/>
+		<suppressRule ruleid="suppressupsoutputvoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<suppressRule ruleid="suppressupstimerunningonbatt" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<suppressRule ruleid="suppressupsbatterystatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<suppressRule ruleid="suppressupsbatteryvoltage" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<suppressRule ruleid="suppressupsbatttemperature" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		<suppressRule ruleid="suppressupsbatterycapremaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		
+		<suppressRule ruleid="suppressbatttemperature" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsStsCtlCfgBatteryTemperature"/>
+		<suppressRule ruleid="suppresssystemperature" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsStsCtlCfgSystemTemperature"/>
+		<suppressRule ruleid="suppressbattruntime" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsEstimatedBatteryRuntime"/>
+		<suppressRule ruleid="suppressbattruntime" suppressid="toshiba_remoteye4_1600xp/toshiba_remoteye4_1600xp/upsOutputLoadPercentage"/>
+		
+		<stringSensor ruleid="upsIdentInstallationDate">
+            <type>string</type>
+            <sensorId>UPS_INSTALL_DATE</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.7.1.7.0</getOid>
+            </value>
+            <label>UPS Installation Date</label>
+            <sensorSet>UPS Ident</sensorSet>
+        </stringSensor>
+		
+        <numSensor ruleid="upsInputFrequency" index=".1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1">
+            <type>frequency</type>
+            <sensorId>_INPUT_FREQ_<rowIndex /></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Input Frequency - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1</getRowOid></label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsInputVoltage" index=".1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>_INPUT_VOLTAGE_<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.3</getRowOid>
+            </value>
+            <label>Input Voltage - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1</getRowOid></label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsInputVoltagePercent" index=".1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1">
+            <type>pctofcapacity</type>
+            <sensorId>_INPUT_VOLTAGE_PERCENT_<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Voltage Percent - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1</getRowOid></label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsInputRatedVoltage" index=".1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>_INPUT_RATED_VOLTAGE<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.5</getRowOid>
+            </value>
+            <label>Input Rated Voltage - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.2.1.1.1</getRowOid></label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputVoltage">
+            <type>voltage</type>
+            <sensorId>_OUTPUT_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.1.0</getOid>
+            </value>
+            <label>Output Voltage</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputLoadPercentage">
+            <type>pctofcapacity</type>
+            <sensorId>_OUTPUT_LOAD_PERCENTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Load Percentage</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputRatedFrequency" index=".1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1">
+            <type>frequency</type>
+            <sensorId>_OUTPUT_RATED_FREQ<rowIndex /></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Output Rated Frequency - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1</getRowOid></label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputRatedVoltage" index=".1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1">
+            <type>voltage</type>
+            <sensorId>_OUTPUT RATED_VOLTAGE<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.3</getRowOid>
+            </value>
+            <label>Output Rated Voltage - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1</getRowOid></label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputRatedActivePower" index=".1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1">
+            <type>powerW</type>
+            <sensorId>_OUTPUT_RATED_ACTIVE_POWER<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.4</getRowOid>
+            </value>
+            <label>Output Rated Active Power - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1</getRowOid></label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputRatedApparentPower" index=".1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1">
+            <type>powerVA</type>
+            <sensorId>_OUTPUT_RATED_APPARENT_POWER<rowIndex /></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.5</getRowOid>
+            </value>
+            <label>Output Rated Apparent Power - Phase  <getRowOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.3.1.1</getRowOid></label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsOutputRatedPowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>_OUTPUT_RATED_POWER_FACTOR</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.3.4.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label>Output Rated Power Factor</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="upsBatteryStatus">
+            <type>state</type>
+            <sensorId>_OUTLET_STATE_</sensorId>
+            <value>
+                <mapValue mapid="battery_sts-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.1.0</getOid>
+                </mapValue>
+            </value>
+            <label>Battery Status</label>
+            <enum>battery_sts-em</enum>
+            <sensorSet>UPS Battery</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="battery_sts-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="battery_sts-em">
+			<label>Unknown</label>
+			<label>Battery Normal</label>
+			<label>Battery Low</label>
+			<label>Battery Depleted</label>
+			<label>Battery Discharging</label>
+			<label>Battery Failure</label>
+		</enumMap>
+		
+        <numSensor ruleid="upsBatteryEstimatedBatteryRuntime">
+            <type>timeinmin</type>
+            <sensorId>_BATT_AGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.3.0</getOid>
+            </value>
+            <label>Estimated Battery Run Time</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsBatteryVoltage">
+            <type>voltage</type>
+            <sensorId>_BATTERY_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.4.0</getOid>
+            </value>
+            <label>Battery Voltage</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsBatteryRatedAmpereHour">
+            <type>num</type>
+            <sensorId>_BATTERY_RATED_AMPHOUR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.5.0</getOid>
+            </value>
+            <label>Battery Rated Amp-Hour</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="upsBatteryInstallationDate">
+            <type>string</type>
+            <sensorId>_BATTERY_INSTALL_DATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.6.0</getOid>
+            </value>
+            <label>Battery Installation Date</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </stringSensor>
+		
+        <numSensor ruleid="upsBatteryCapacity">
+            <type>pctofcapacity</type>
+            <sensorId>_BATT_CAPACITY_LEFT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.4.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Battery Capacity</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="upsStsCtlCfgSystemTemperature">
+            <type>temp</type>
+            <sensorId>SYSTEM_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.1.0</getOid>
+            </value>
+            <label>System Temperature</label>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="upsStsCtlCfgPresentMode">
+            <type>state</type>
+            <sensorId>PRESENT_MODE</sensorId>
+            <value>
+                <mapValue mapid="present_mode-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.2.0</getOid>
+                </mapValue>
+            </value>
+            <label>Present Mode</label>
+            <enum>present_mode-em</enum>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="present_mode-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="present_mode-em">
+			<label>Unknown</label>
+			<label>Online</label>
+			<label>Bypass</label>
+			<label>Backup</label>
+			<label>Shutdown</label>
+		</enumMap>
+		
+        <stateSensor ruleid="upsStsCtlCfgRMTIInstallationStatus">
+            <type>state</type>
+            <sensorId>INSTALLATION_STATUS</sensorId>
+            <value>
+                <mapValue mapid="installation_sts-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.10.0</getOid>
+                </mapValue>
+            </value>
+            <label>Installation Status</label>
+            <enum>installation_sts-em</enum>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="installation_sts-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="installation_sts-em">
+			<label>Unknown</label>
+			<label>Uninstalled</label>
+			<label>Installed</label>
+		</enumMap>
+		
+        <stateSensor ruleid="upsStsCtlCfgRMTIBaudRate">
+            <type>state</type>
+            <sensorId>BAUD_RATE</sensorId>
+            <value>
+                <mapValue mapid="baud_rate-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.11.0</getOid>
+                </mapValue>
+            </value>
+            <label>Baud Rate</label>
+            <enum>baud_rate-em</enum>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="baud_rate-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="baud_rate-em">
+			<label>Unknown</label>
+			<label>9600</label>
+			<label>19200</label>
+			<label>38400</label>
+			<label>57600</label>
+		</enumMap>
+		
+        <stateSensor ruleid="upsStsCtlCfgRMTIDataLink">
+            <type>state</type>
+            <sensorId>DATA_LINK</sensorId>
+            <value>
+                <mapValue mapid="data-network_link-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.12.0</getOid>
+                </mapValue>
+            </value>
+            <label>Data Link</label>
+            <enum>data-network_link-em</enum>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="data-network_link-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="data-network_link-em">
+			<label>Unknown</label>
+			<label>Link-down</label>
+			<label>Link-up</label>
+		</enumMap>
+		
+        <stateSensor ruleid="upsStsCtlCfgRMTINetworkLink">
+            <type>state</type>
+            <sensorId>NETWORK_LINK</sensorId>
+            <value>
+                <mapValue mapid="data-network_link-vm">
+                    <getOid>.1.3.6.1.4.1.186.1.19.2.5.7.5.13.0</getOid>
+                </mapValue>
+            </value>
+            <label>Network Link</label>
+            <enum>data-network_link-em</enum>
+            <sensorSet>UPS Status/Control/Config</sensorSet>
+        </stateSensor>
+
+        <alarmFlags ruleid="upsAlarmOnBattery">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.1.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS on Battery Mode</activeText>
+                    <inactiveText>UPS on Battery Mode Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>UPS is on battery mode.</activeText>
+                    <inactiveText>UPS on battery mode condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmLowBattery">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Low Battery Alarm</activeText>
+                    <inactiveText>Low Battery Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>A low battery condition exists.</activeText>
+                    <inactiveText>A low battery condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmDepletedBattery">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.3.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Battery Depleted Alarm</activeText>
+                    <inactiveText>Battery Depleted Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>A battery depleted condition exists. The battery will not be able to support critical loads.</activeText>
+                    <inactiveText>A battery depleted condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmTempBad">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.4.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Overheating Alarm</activeText>
+                    <inactiveText>UPS Overheating Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>The UPS is overheating.</activeText>
+                    <inactiveText>The UPS is overheating condition no longer exists.</inactiveText>
+                </description>
+				<alarmRecommendedActions>
+					<recommendedActionId>
+						Check to see if ambient temperature is abnormally high. If so, turn on air conditioning. Also check ventilation<space/>
+						fan at back of UPS for operation or obstructions. Otherwise, shutdown UPS and contact your Toshiba authorized service center.
+					</recommendedActionId>
+				</alarmRecommendedActions>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmInputBad">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.5.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Input Condition Out of Tolerance Alarm</activeText>
+                    <inactiveText>Input Condition Out of Tolerance Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Input</category>
+                <description>
+                    <activeText>Input condition is out of tolerance.</activeText>
+                    <inactiveText>Input condition out of tolerance no longer exists.</inactiveText>
+                </description>
+				<alarmRecommendedActions>
+					<recommendedActionId>Check the input voltage.</recommendedActionId>
+				</alarmRecommendedActions>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOutputBad">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.6.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Condition Out of Tolerance Alarm</activeText>
+                    <inactiveText>Output Condition Out of Tolerance Alarm Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>An output condition, other than output overload, is out of tolerance.</activeText>
+                    <inactiveText>Output condition out of tolerance no longer exists.</inactiveText>
+                </description>
+				<alarmRecommendedActions>
+					<recommendedActionId>Check the output voltage.</recommendedActionId>
+				</alarmRecommendedActions>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOutputOverload">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.7.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Output Overload Alarm</activeText>
+                    <inactiveText>Inverter Output Overload Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>An inverter output overload reported. UPS will switch to bypass operation or shutdown if no action taken.</activeText>
+                    <inactiveText>Inverter output overload condition no longer exists.</inactiveText>
+                </description>
+				<alarmRecommendedActions>
+					<recommendedActionId>Shutdown excess equipment to reduce load.</recommendedActionId>
+				</alarmRecommendedActions>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOnBypass">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.8.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS in Stop (Bypass) Mode</activeText>
+                    <inactiveText>UPS in Stop (Bypass) Mode Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>The UPS is in stop (bypass) mode.</activeText>
+                    <inactiveText>UPS in stop (bypass) mode condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOutputOffAsRequested">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.9.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Shutdown Mode Requested</activeText>
+                    <inactiveText>Output Shutdown Mode Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>Output shut down mode requested.</activeText>
+                    <inactiveText>Output shut down mode condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmUpsOutputOff">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.10.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Off</activeText>
+                    <inactiveText>Output Off Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>Output off.</activeText>
+                    <inactiveText>Output off condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmCommunicationLost">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.11.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Communication Lost Alarm</activeText>
+                    <inactiveText>Communication Lost Alarm Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>Communication lost between the RemotEye and UPS.</activeText>
+                    <inactiveText>Communication lost condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmShutdownPending">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.12.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Shutdown in Progress</activeText>
+                    <inactiveText>Output Shutdown Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>An output shutdown is in progress. Output will turn off after delay.</activeText>
+                    <inactiveText>Output Shutdown condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmBatteryTestInProgress">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.13.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Battery Test in Progress</activeText>
+                    <inactiveText>Battery Test Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>A battery test is in progress.</activeText>
+                    <inactiveText>A battery test condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOutputUnderVoltage">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.14.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Output Under Voltage Alarm</activeText>
+                    <inactiveText>Inverter Output Under Voltage Alarm Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>An inverter output under voltage condition exists.</activeText>
+                    <inactiveText>An inverter output under voltage condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmOutputOverVoltage">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.15.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Output Over Voltage Alarm</activeText>
+                    <inactiveText>Inverter Output Over Voltage Alarm Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>An inverter output over voltage condition exists.</activeText>
+                    <inactiveText>An inverter output over voltage condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmUserDefinedOverloadWarning">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.16.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Output Load Percentage Alarm</activeText>
+                    <inactiveText>Inverter Output Load Percentage Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>The inverter output load percentage is greater than the user defined overload set point.</activeText>
+                    <inactiveText>An inverter output load percentage condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmRemotEyeCommError">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.17.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Communication Error Alarm</activeText>
+                    <inactiveText>Communication Error Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>A communication error between the main control and RemotEye reported.</activeText>
+                    <inactiveText>A communication error between the main control and RemotEye no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="upsAlarmPowerFailure">
+            <value><getOid>.1.3.6.1.4.1.186.1.19.2.5.7.6.3.19.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Failure Alarm</activeText>
+                    <inactiveText>Power Failure Alarm Cleared</inactiveText>
+                </name>
+                <severity>informational</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A power failure condition exists.</activeText>
+                    <inactiveText>A power failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+	</device>
+</APC_DDF>

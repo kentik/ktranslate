@@ -1,0 +1,2516 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="uniflair_bra_SNMP_chiller"
+	ddfname="Uniflair BRA Chiller [pcoWeb][SNMP]"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="bra_SNMP_chiller">
+		<setProductData ruleid="vendordata" field="vendor">Uniflair</setProductData>
+		<setProductData ruleid="modeldata" field="model">BRA</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+		
+		  <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+       <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+       <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<oidMustExist ruleid="uniflair_bra" oid=".1.3.6.1.4.1.9839.2.1" istree="yes" />
+
+		<stateSensor ruleid="system-on">
+			<type>state</type>
+			<sensorId>SYSTEM_ON</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+			</value>
+			<label>System On</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-1">
+			<type>state</type>
+			<sensorId>COMPRESSOR_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+			</value>
+			<label>Compressor 1</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-2">
+			<type>state</type>
+			<sensorId>COMPRESSOR_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+			</value>
+			<label>Compressor 2</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-3">
+			<type>state</type>
+			<sensorId>COMPRESSOR_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+			</value>
+			<label>Compressor 3</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-4">
+			<type>state</type>
+			<sensorId>COMPRESSOR_4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.5.0</getOid>
+			</value>
+			<label>Compressor 4</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circulating-pump-1">
+			<type>state</type>
+			<sensorId>CIRCULATING_PUMP_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.6.0</getOid>
+			</value>
+			<label>Circulating Pump 1</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circulating-pump-2">
+			<type>state</type>
+			<sensorId>CIRCULATING_PUMP_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.7.0</getOid>
+			</value>
+			<label>Circulating Pump 2</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circ_-1-refrigerant-shut-off-valve">
+			<type>state</type>
+			<sensorId>CIRC__1_REFRIGERANT_SHUT-OFF_VALVE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.8.0</getOid>
+			</value>
+			<label>Circ. 1 Refrigerant Shut-off Valve</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circ_-2-refrigerant-shut-off-valve">
+			<type>state</type>
+			<sensorId>CIRC__2_REFRIGERANT_SHUT-OFF_VALVE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.9.0</getOid>
+			</value>
+			<label>Circ. 2 Refrigerant Shut-off Valve</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="100%-heat-recovery">
+			<type>state</type>
+			<sensorId>100%_HEAT_RECOVERY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.10.0</getOid>
+			</value>
+			<label>100% Heat Recovery</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="antifreeze-heaters">
+			<type>state</type>
+			<sensorId>ANTIFREEZE_HEATERS</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.11.0</getOid>
+			</value>
+			<label>Antifreeze Heaters</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="regulating-condensing-fans">
+			<type>state</type>
+			<sensorId>REGULATING_CONDENSING_FANS</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.12.0</getOid>
+			</value>
+			<label>Regulating Condensing Fans</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="direct-condensing-fans">
+			<type>state</type>
+			<sensorId>DIRECT_CONDENSING_FANS</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid>
+			</value>
+			<label>Direct Condensing Fans</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circuit-1-defrost">
+			<type>state</type>
+			<sensorId>CIRCUIT_1_DEFROST</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.14.0</getOid>
+			</value>
+			<label>Circuit 1 Defrost</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="circuit-2-defrost">
+			<type>state</type>
+			<sensorId>CIRCUIT_2_DEFROST</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.15.0</getOid>
+			</value>
+			<label>Circuit 2 Defrost</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="low-power-consumption-mode">
+			<type>state</type>
+			<sensorId>LOW_POWER_CONSUMPTION_MODE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.16.0</getOid>
+			</value>
+			<label>Low Power Consumption Mode</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="winter-mode">
+			<type>state</type>
+			<sensorId>WINTER_MODE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.17.0</getOid>
+			</value>
+			<label>Winter Mode</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="free-cooling">
+			<type>state</type>
+			<sensorId>FREE-COOLING</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.18.0</getOid>
+			</value>
+			<label>Free-Cooling</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		 <stateSensor ruleid="general-alarm-state_Sensor">
+      <type>state</type>
+      <sensorId>general-alarm-state</sensorId>
+      <value>
+        <mapValue mapid="normal-alarm-vm">
+            <getOid>.1.3.6.1.4.1.9839.2.1.1.51.0</getOid>
+        </mapValue>
+      </value>
+      <label>General-alarm-state</label>
+      <enum>normal-alarm-em</enum>
+      <sensorSet>Digital</sensorSet>
+    </stateSensor>
+    
+     <stateSensor ruleid="second-level-alarm-state-Sensor">
+      <type>state</type>
+      <sensorId>second-level-alarm-state</sensorId>
+      <value>
+        <mapValue mapid="normal-alarm-vm">
+            <getOid>.1.3.6.1.4.1.9839.2.1.1.52.0</getOid>
+        </mapValue>
+      </value>
+      <label>Second-level-alarm-state</label>
+      <enum>normal-alarm-em</enum>
+      <sensorSet>Digital</sensorSet>
+    </stateSensor>
+
+		<alarmFlags ruleid="wrong-password-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.19.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Wrong Password Alarm</activeText>
+					<inactiveText>Wrong Password Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Wrong Password Alarm condition exists.</activeText>
+					<inactiveText>A Wrong Password Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="water-inlet-high-temperature-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.20.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Inlet High Temperature Alarm</activeText>
+					<inactiveText>Water Inlet High Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Water Inlet High Temperature Alarm condition exists.</activeText>
+					<inactiveText>A Water Inlet High Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="water-inlet-low-temperature-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.21.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Inlet Low Temperature Alarm</activeText>
+					<inactiveText>Water Inlet Low Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Water Inlet Low Temperature Alarm condition exists.</activeText>
+					<inactiveText>A Water Inlet Low Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="loss-of-water-flow-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.22.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Loss of Water Flow Alarm</activeText>
+					<inactiveText>Loss of Water Flow Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Loss of Water Flow Alarm condition exists.</activeText>
+					<inactiveText>A Loss of Water Flow Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-pressure-1-prealarm-(auto-reset)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Pressure 1 Prealarm (Auto Reset)</activeText>
+					<inactiveText>Low Pressure 1 Prealarm (Auto Reset) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Pressure 1 Prealarm (Auto Reset) condition exists.</activeText>
+					<inactiveText>A Low Pressure 1 Prealarm (Auto Reset) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-pressure-2-prealarm-(auto-reset)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.24.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Pressure 2 Prealarm (Auto Reset)</activeText>
+					<inactiveText>Low Pressure 2 Prealarm (Auto Reset) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Pressure 2 Prealarm (Auto Reset) condition exists.</activeText>
+					<inactiveText>A Low Pressure 2 Prealarm (Auto Reset) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-pressure-1-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.25.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Pressure 1 Alarm</activeText>
+					<inactiveText>Low Pressure 1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Pressure 1 Alarm condition exists.</activeText>
+					<inactiveText>A Low Pressure 1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-pressure-2-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.26.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Pressure 2 Alarm</activeText>
+					<inactiveText>Low Pressure 2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Pressure 2 Alarm condition exists.</activeText>
+					<inactiveText>A Low Pressure 2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-pressure-1-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.27.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Pressure 1 Alarm</activeText>
+					<inactiveText>High Pressure 1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Pressure 1 Alarm condition exists.</activeText>
+					<inactiveText>A High Pressure 1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-pressure-2-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.28.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Pressure 2 Alarm</activeText>
+					<inactiveText>High Pressure 2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Pressure 2 Alarm condition exists.</activeText>
+					<inactiveText>A High Pressure 2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-1-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.29.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 1 Overload Alarm</activeText>
+					<inactiveText>Compressor 1 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 1 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 1 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-2-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 2 Overload Alarm</activeText>
+					<inactiveText>Compressor 2 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 2 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 2 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-3-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 3 Overload Alarm</activeText>
+					<inactiveText>Compressor 3 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 3 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 3 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-4-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 4 Overload Alarm</activeText>
+					<inactiveText>Compressor 4 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 4 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 4 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circulating-pump-1-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circulating Pump 1 Overload Alarm</activeText>
+					<inactiveText>Circulating Pump 1 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circulating Pump 1 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Circulating Pump 1 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circulating-pump-2-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circulating Pump 2 Overload Alarm</activeText>
+					<inactiveText>Circulating Pump 2 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circulating Pump 2 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Circulating Pump 2 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="free-cooling-pump-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Free-Cooling Pump Overload Alarm</activeText>
+					<inactiveText>Free-Cooling Pump Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Free-Cooling Pump Overload Alarm condition exists.</activeText>
+					<inactiveText>A Free-Cooling Pump Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-1-antifreeze-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 1 Antifreeze Alarm</activeText>
+					<inactiveText>Circuit 1 Antifreeze Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 1 Antifreeze Alarm condition exists.</activeText>
+					<inactiveText>A Circuit 1 Antifreeze Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-2-antifreeze-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 2 Antifreeze Alarm</activeText>
+					<inactiveText>Circuit 2 Antifreeze Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 2 Antifreeze Alarm condition exists.</activeText>
+					<inactiveText>A Circuit 2 Antifreeze Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="heat-recovery-limit-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Heat Recovery Limit Alarm</activeText>
+					<inactiveText>Heat Recovery Limit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Heat Recovery Limit Alarm condition exists.</activeText>
+					<inactiveText>A Heat Recovery Limit Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="heat-recovery-limit-prealarm-(auto-reset)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.39.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Heat Recovery Limit Prealarm (Auto Reset)</activeText>
+					<inactiveText>Heat Recovery Limit Prealarm (Auto Reset) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Heat Recovery Limit Prealarm (Auto Reset) condition exists.</activeText>
+					<inactiveText>A Heat Recovery Limit Prealarm (Auto Reset) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="interrupted-lan-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.40.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Interrupted LAN Alarm</activeText>
+					<inactiveText>Interrupted LAN Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Interrupted LAN Alarm condition exists.</activeText>
+					<inactiveText>A Interrupted LAN Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="water-inlet-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.41.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Inlet Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Water Inlet Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Water Inlet Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Water Inlet Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="water-outlet-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.42.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Outlet Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Water Outlet Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Water Outlet Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Water Outlet Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="water-tank-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.43.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Tank Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Water Tank Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Water Tank Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Water Tank Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="outdoor-air-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.44.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Outdoor Air Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Outdoor Air Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Outdoor Air Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Outdoor Air Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="condensing-1-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.45.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Condensing 1 Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Condensing 1 Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Condensing 1 Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Condensing 1 Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="condensing-2-temp_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.46.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Condensing 2 Temp. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Condensing 2 Temp. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Condensing 2 Temp. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Condensing 2 Temp. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="condensing-1-press_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.47.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Condensing 1 Press. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Condensing 1 Press. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Condensing 1 Press. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Condensing 1 Press. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="condensing-2-press_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.48.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Condensing 2 Press. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Condensing 2 Press. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Condensing 2 Press. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Condensing 2 Press. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="evaporating-1-press_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.49.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Evaporating 1 Press. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Evaporating 1 Press. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Evaporating 1 Press. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Evaporating 1 Press. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="evaporating-2-press_-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.50.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Evaporating 2 Press. Sensor Failure/Disconnected</activeText>
+					<inactiveText>Evaporating 2 Press. Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Evaporating 2 Press. Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Evaporating 2 Press. Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+			<alarmFlags ruleid="general-alarm-state">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.51.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>General Alarm State</activeText>
+					<inactiveText>General Alarm State Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A General Alarm State condition exists.</activeText>
+					<inactiveText>A General Alarm State condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="second-level-alarm-state">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.52.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Second Level Alarm State</activeText>
+					<inactiveText>Second Level Alarm State Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A 2nd Level Alarm State condition exists.</activeText>
+					<inactiveText>A 2nd Level Alarm State condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-1:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.53.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 1: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 1: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 1: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 1: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-2:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.54.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 2: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 2: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 2: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 2: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-3:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.55.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 3: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 3: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 3: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 3: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-4:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.56.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 4: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 4: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 4: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 4: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circulating-pump-1:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.57.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circulating Pump 1: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Circulating Pump 1: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circulating Pump 1: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Circulating Pump 1: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circulating-pump-2:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.58.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circulating Pump 2: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Circulating Pump 2: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circulating Pump 2: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Circulating Pump 2: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="number-of-standby-units">
+			<type>state</type>
+			<sensorId>NUMBER_OF_STANDBY_UNITS</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.66.0</getOid>
+			</value>
+			<label>Number of Standby Units</label>
+			<enum>numUnits-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="water-tank-temp_-sensor-fitted">
+			<type>state</type>
+			<sensorId>WATER_TANK_TEMP__SENSOR_FITTED</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.67.0</getOid>
+			</value>
+			<label>Water Tank Temp. Sensor Fitted</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="run+standby-circulating-pumps-fitted">
+			<type>state</type>
+			<sensorId>RUN+STANDBY_CIRCULATING_PUMPS_FITTED</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.70.0</getOid>
+			</value>
+			<label>Run+Standby Circulating Pumps Fitted</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="circuit-1-pump-down-failed">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.71.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 1 Pump-down Failed</activeText>
+					<inactiveText>Circuit 1 Pump-down Failed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 1 Pump-down Failed condition exists.</activeText>
+					<inactiveText>A Circuit 1 Pump-down Failed condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-2-pump-down-failed">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.72.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 2 Pump-down Failed</activeText>
+					<inactiveText>Circuit 2 Pump-down Failed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 2 Pump-down Failed condition exists.</activeText>
+					<inactiveText>A Circuit 2 Pump-down Failed condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-1-compressor-malfunction">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.73.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 1 Compressor Malfunction</activeText>
+					<inactiveText>Circuit 1 Compressor Malfunction Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 1 Compressor Malfunction condition exists.</activeText>
+					<inactiveText>A Circuit 1 Compressor Malfunction condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-2-compressor-malfunction">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.74.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 2 Compressor Malfunction</activeText>
+					<inactiveText>Circuit 2 Compressor Malfunction Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 2 Compressor Malfunction condition exists.</activeText>
+					<inactiveText>A Circuit 2 Compressor Malfunction condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-condensing-temperature-1">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.75.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Condensing Temperature 1</activeText>
+					<inactiveText>High Condensing Temperature 1 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Condensing Temperature 1 condition exists.</activeText>
+					<inactiveText>A High Condensing Temperature 1 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-condensing-temperature-2">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.76.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Condensing Temperature 2</activeText>
+					<inactiveText>High Condensing Temperature 2 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Condensing Temperature 2 condition exists.</activeText>
+					<inactiveText>A High Condensing Temperature 2 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-1-compressor-operative-limits">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.77.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 1 Compressor Operative Limits</activeText>
+					<inactiveText>Circuit 1 Compressor Operative Limits Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 1 Compressor Operative Limits condition exists.</activeText>
+					<inactiveText>A Circuit 1 Compressor Operative Limits condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="circuit-2-compressor-operative-limits">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.78.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Circuit 2 Compressor Operative Limits</activeText>
+					<inactiveText>Circuit 2 Compressor Operative Limits Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Circuit 2 Compressor Operative Limits condition exists.</activeText>
+					<inactiveText>A Circuit 2 Compressor Operative Limits condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="defrost-limits-non-performing">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.79.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Defrost Limits Non-Performing</activeText>
+					<inactiveText>Defrost Limits Non-Performing Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Defrost Limits Non-Performing condition exists.</activeText>
+					<inactiveText>A Defrost Limits Non-Performing condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-5-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.80.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 5 Overload Alarm</activeText>
+					<inactiveText>Compressor 5 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 5 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 5 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-6-overload-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.81.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 6 Overload Alarm</activeText>
+					<inactiveText>Compressor 6 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 6 Overload Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 6 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="compressor-5">
+			<type>state</type>
+			<sensorId>COMPRESSOR_5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.82.0</getOid>
+			</value>
+			<label>Compressor 5</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-6">
+			<type>state</type>
+			<sensorId>COMPRESSOR_6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.83.0</getOid>
+			</value>
+			<label>Compressor 6</label>
+			<enum>onOff-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="compressor-5:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.84.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 5: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 5: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 5: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 5: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor-6:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.85.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 6: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor 6: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor 6: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor 6: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="exv-circuit-1-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.86.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>EXV Circuit 1 Alarm</activeText>
+					<inactiveText>EXV Circuit 1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A EXV Circuit 1 Alarm condition exists.</activeText>
+					<inactiveText>A EXV Circuit 1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="exv-circuit-2-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.87.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>EXV Circuit 2 Alarm</activeText>
+					<inactiveText>EXV Circuit 2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A EXV Circuit 2 Alarm condition exists.</activeText>
+					<inactiveText>A EXV Circuit 2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-board-2-not-connected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.88.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Alarm Board 2 Not Connected</activeText>
+					<inactiveText>Alarm Board 2 Not Connected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Alarm Board 2 Not Connected condition exists.</activeText>
+					<inactiveText>A Alarm Board 2 Not Connected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="mains-phase-error/voltage-out-of-limit">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.89.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Mains Phase Error/Voltage Out of Limit</activeText>
+					<inactiveText>Mains Phase Error/Voltage Out of Limit Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Mains Phase Error/Voltage Out of Limit condition exists.</activeText>
+					<inactiveText>A Mains Phase Error/Voltage Out of Limit condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="exv-circuit-1-not-connected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.90.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>EXV Circuit 1 Not Connected</activeText>
+					<inactiveText>EXV Circuit 1 Not Connected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A EXV Circuit 1 Not Connected condition exists.</activeText>
+					<inactiveText>A EXV Circuit 1 Not Connected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="exv-circuit-2-not-connected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.91.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>EXV Circuit 2 Not Connected</activeText>
+					<inactiveText>EXV Circuit 2 Not Connected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A EXV Circuit 2 Not Connected condition exists.</activeText>
+					<inactiveText>A EXV Circuit 2 Not Connected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<numSensor ruleid="water-outlet-temperature">
+			<type>temp</type>
+			<sensorId>WATER_OUTLET_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Water Outlet Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="water-outlet-temperature-(regulator)">
+			<type>temp</type>
+			<sensorId>WATER_OUTLET_TEMPERATURE_(REGULATOR)</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Water Outlet Temperature (Regulator)</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="water-inlet-temperature">
+			<type>temp</type>
+			<sensorId>WATER_INLET_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.3.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Water Inlet Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="water-tank-temperature">
+			<type>temp</type>
+			<sensorId>WATER_TANK_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Water Tank Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outdoor-air-temperature">
+			<type>temp</type>
+			<sensorId>OUTDOOR_AIR_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Outdoor Air Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-1-condensing-temperature">
+			<type>temp</type>
+			<sensorId>CIRCUIT_1_CONDENSING_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.6.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Circuit 1 Condensing Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-2-condensing-temperature">
+			<type>temp</type>
+			<sensorId>CIRCUIT_2_CONDENSING_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.7.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Circuit 2 Condensing Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-1-evaporating-temperature">
+			<type>temp</type>
+			<sensorId>CIRCUIT_1_EVAPORATING_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.8.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Circuit 1 Evaporating Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-2-evaporating-temperature">
+			<type>temp</type>
+			<sensorId>CIRCUIT_2_EVAPORATING_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.9.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Circuit 2 Evaporating Temperature</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-1-condensing-pressure">
+			<type>pressure</type>
+			<sensorId>CIRCUIT_1_CONDENSING_PRESSURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.10.0</getOid></op>
+				<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 1 Condensing Pressure</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-2-condensing-pressure">
+			<type>pressure</type>
+			<sensorId>CIRCUIT_2_CONDENSING_PRESSURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.11.0</getOid></op>
+				<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 2 Condensing Pressure</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-1-evaporating-pressure">
+			<type>pressure</type>
+			<sensorId>CIRCUIT_1_EVAPORATING_PRESSURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.12.0</getOid></op>
+				<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 1 Evaporating Pressure</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-2-evaporating-pressure">
+			<type>pressure</type>
+			<sensorId>CIRCUIT_2_EVAPORATING_PRESSURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.13.0</getOid></op>
+				<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 2 Evaporating Pressure</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="fan-speed-modul_-ramp-(circuit-1)">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>FAN_SPEED_MODUL__RAMP_(CIRCUIT_1)</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.16.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Fan Speed Modul. Ramp (Circuit 1)</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="fan-speed-modul_-ramp-(circuit-2)">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>FAN_SPEED_MODUL__RAMP_(CIRCUIT_2)</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.17.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Fan Speed Modul. Ramp (Circuit 2)</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp_-summer-std-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP__SUMMER_STD_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.21.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Summer STD Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp_-summer-opt-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP__SUMMER_OPT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.22.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Summer OPT Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp-actual-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP_ACTUAL_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.18.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Actual Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp-max-hysteresi">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP_MAX_HYSTERESI</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.19.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Max. Hysteresi</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp_-summer-setback-mode-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP__SUMMER_SETBACK_MODE_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.23.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Summer Setback Mode Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp_-winter-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP__WINTER_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.24.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Winter Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="delivery-water-temp_-winter-setback-mode-setpoint">
+			<type>temp</type>
+			<sensorId>DELIVERY_WATER_TEMP__WINTER_SETBACK_MODE_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.25.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Delivery Water Temp. Winter Setback Mode Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="cw-inlet-high-temp_-summer-alarm-threshold">
+			<type>temp</type>
+			<sensorId>CW_INLET_HIGH_TEMP__SUMMER_ALARM_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.26.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>CW Inlet High Temp. Summer Alarm Threshold</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="cw-inlet-low-temp_-summer-alarm-threshold">
+			<type>temp</type>
+			<sensorId>CW_INLET_LOW_TEMP__SUMMER_ALARM_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.27.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>CW Inlet Low Temp. Summer Alarm Threshold</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="cw-inlet-high-temp_-alarm-winter-threshold">
+			<type>temp</type>
+			<sensorId>CW_INLET_HIGH_TEMP__ALARM_WINTER_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.28.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>CW Inlet High Temp. Alarm Winter Threshold</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="cw-inlet-low-temp_-alarm-winter-threshold">
+			<type>temp</type>
+			<sensorId>CW_INLET_LOW_TEMP__ALARM_WINTER_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.29.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>CW Inlet Low Temp. Alarm Winter Threshold</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="summer-t_ext_-compens_:-p1-t_ext-setpoint">
+			<type>temp</type>
+			<sensorId>SUMMER_T_EXT__COMPENS_:_P1_T_EXT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.30.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Summer T.ext. Compens.: P1 T.Ext Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="summer-t_ext_-compens_:-p2-t_wout-setpoint">
+			<type>temp</type>
+			<sensorId>SUMMER_T_EXT__COMPENS_:_P2_T_WOUT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.31.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Summer T.ext. Compens.: P2 T.Wout Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="summer-t_ext_-compens_:-p2-t_ext-setpoint">
+			<type>temp</type>
+			<sensorId>SUMMER_T_EXT__COMPENS_:_P2_T_EXT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.32.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Summer T.ext. Compens.: P2 T.Ext Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="winter-t_ext_-compens_:-p1-t_ext-setpoint">
+			<type>temp</type>
+			<sensorId>WINTER_T_EXT__COMPENS_:_P1_T_EXT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.33.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Winter T.ext. Compens.: P1 T.Ext Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="winter-t_ext_-compens_:-p2-t_wout-setpoint">
+			<type>temp</type>
+			<sensorId>WINTER_T_EXT__COMPENS_:_P2_T_WOUT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.34.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Winter T.ext. Compens.: P2 T.Wout Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="winter-t_ext_-compens_:-p2-t_ext-setpoint">
+			<type>temp</type>
+			<sensorId>WINTER_T_EXT__COMPENS_:_P2_T_EXT_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.35.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Winter T.ext. Compens.: P2 T.Ext Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="free-cooling-activation-setpoint">
+			<type>temp</type>
+			<sensorId>FREE-COOLING_ACTIVATION_SETPOINT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.36.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Free-Cooling Activation Setpoint</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="superheating-circuit-1">
+			<type>temp</type>
+			<sensorId>SUPERHEATING_CIRCUIT_1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.37.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Superheating Circuit 1</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<numSensor ruleid="superheating-circuit-2">
+			<type>temp</type>
+			<sensorId>SUPERHEATING_CIRCUIT_2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.38.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Superheating Circuit 2</label>
+			<sensorSet>Analog</sensorSet>
+		</numSensor>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>*</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+		<enumMap ruleid="numUnits-em">
+			<label>One</label>
+			<label>Two</label>
+		</enumMap>
+
+		<numSensor ruleid="compressor-1-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_1_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 1 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-2-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_2_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 2 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-3-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_3_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 3 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-4-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_4_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 4 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circulating-pump-1-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>CIRCULATING_PUMP_1_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circulating Pump 1 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circulating-pump-2-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>CIRCULATING_PUMP_2_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circulating Pump 2 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="free-cooling-pump-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>FREE-COOLING_PUMP_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Free-Cooling Pump Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-1-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_1_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.8.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.9.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 1 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-2-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_2_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.10.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.11.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 2 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-3-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_3_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.12.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.13.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 3 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-4-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_4_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.14.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.15.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 4 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-1-defrost-counter">
+			<type>num</type>
+			<sensorId>CIRCUIT_1_DEFROST_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.16.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.17.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 1 Defrost Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="circuit-2-defrost-counter">
+			<type>num</type>
+			<sensorId>CIRCUIT_2_DEFROST_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.18.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.19.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circuit 2 Defrost Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="both-circuit-defrost-counter">
+			<type>num</type>
+			<sensorId>BOTH_CIRCUIT_DEFROST_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.20.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.21.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Both Circuit Defrost Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="non-performing-defrost-counter">
+			<type>num</type>
+			<sensorId>NON-PERFORMING_DEFROST_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.22.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.23.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Non-Performing Defrost Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="unit-type">
+			<type>state</type>
+			<sensorId>UNIT_TYPE</sensorId>
+			<value>
+				<mapValue mapid="unitType-vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.3.24.0</getOid>
+				</mapValue>
+			</value>
+			<enum>unitType-em</enum>
+			<label>Unit Type</label>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<valueMap ruleid="unitType-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="unitType-em">
+			<label>STD Chiller</label>
+			<label>Low Temp Chiller</label>
+			<label>Chiller + Heat Rec.</label>
+			<label>Heat Pump</label>
+			<label>Heat Pump + Heat Rec.</label>
+			<label>Chiller + Energy Saving</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<numSensor ruleid="circulating-pump-config">
+			<type>num</type>
+			<sensorId>CIRCULATING_PUMP_CONFIG</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.25.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Circulating Pumps</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="total-units-connected-in-lan">
+			<type>num</type>
+			<sensorId>TOTAL_UNITS_CONNECTED_IN_LAN</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.26.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Total Units Connected in LAN</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="compressorStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		<enumMap ruleid="compressorStatus-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Alarm</label>
+			<label>Pump Down</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="compressor-1-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_1_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.27.0</getOid>
+				</mapValue>
+			</value>
+			<label>Compressor 1 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-2-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_2_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.28.0</getOid>
+				</mapValue>
+			</value>
+			<label>Compressor 2 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-3-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_3_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.29.0</getOid>
+				</mapValue>
+			</value>
+			<label>Compressor 3 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-4-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_4_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.30.0</getOid>
+				</mapValue>
+			</value>
+			<label>Compressor 4 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pump-1-status">
+			<type>state</type>
+			<sensorId>PUMP_1_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.31.0</getOid>
+				</mapValue>
+			</value>
+			<label>Pump 1 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pump-2-status">
+			<type>state</type>
+			<sensorId>PUMP_2_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.32.0</getOid>
+				</mapValue>
+			</value>
+			<label>Pump 2 Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="free-cooling-pump-status">
+			<type>state</type>
+			<sensorId>FREE-COOLING_PUMP_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.33.0</getOid>
+				</mapValue>
+			</value>
+			<label>Free-Cooling Pump Status</label>
+			<enum>compressorStatus-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="setptMode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		<enumMap ruleid="setptMode-em">
+			<label>Standard</label>
+			<label>T.ext Compens.</label>
+			<label>OPT Setpoint</label>
+			<label>Setback Setpoint</label>
+			<label>Remote Offset</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="actual-setpoint-mode">
+			<type>state</type>
+			<sensorId>ACTUAL_SETPOINT_MODE</sensorId>
+			<value>
+				<mapValue mapid="setptMode-vm">
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.34.0</getOid>
+				</mapValue>
+			</value>
+			<label>Actual Setpoint Mode</label>
+			<enum>setptMode-em</enum>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="last-defrost-length">
+			<type>timeinsec</type>
+			<sensorId>LAST_DEFROST_LENGTH</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.37.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Last Defrost Length</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="restart-delay">
+			<type>timeinsec</type>
+			<sensorId>RESTART_DELAY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.38.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Restart Delay</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="regulation-start-transitory">
+			<type>timeinsec</type>
+			<sensorId>REGULATION_START_TRANSITORY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.39.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Regulation Start Transitory</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="low-pressure-delay">
+			<type>timeinsec</type>
+			<sensorId>LOW_PRESSURE_DELAY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.40.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Pressure Delay</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="water-high/low-temp_-alarm-delay">
+			<type>timeinmin</type>
+			<sensorId>WATER_HIGH/LOW_TEMP__ALARM_DELAY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.41.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Water High/Low Temp. Alarm Delay</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="stand-by-unit-switch-over-time">
+			<type>timeinhrs</type>
+			<sensorId>STAND-BY_UNIT_SWITCH-OVER_TIME</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.44.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Stand-by Unit Switch-Over Time</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="setback-mode-cyclical-start">
+			<type>timeinmin</type>
+			<sensorId>SETBACK_MODE_CYCLICAL_START</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.45.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Setback Mode Cyclical Start</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-1-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_1_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.46.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 1 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-2-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_2_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.47.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 2 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-3-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_3_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.48.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 3 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-4-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_4_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.49.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 4 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pump-1-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>PUMP_1_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.50.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pump 1 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pump-2-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>PUMP_2_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.51.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pump 2 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="free-cooling-pump-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>FREE-COOLING_PUMP_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.52.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Free-Cooling Pump Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-5-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_5_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.53.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 5 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-6-hour-counter">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_6_HOUR_COUNTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.54.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 6 Hour Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-5-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_5_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.55.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.56.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 5 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-6-starting-counter">
+			<type>num</type>
+			<sensorId>COMPRESSOR_6_STARTING_COUNTER</sensorId>
+			<value>
+				<add>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.57.0</getOid></op>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.3.58.0</getOid></op>
+					<op>10000</op>
+					</mult>
+				</op>
+				</add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 6 Starting Counter</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="compressor-5-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_5_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.3.59.0</getOid>
+				</mapValue>
+			</value>
+			<enum>compressorStatus-em</enum>
+			<label>Compressor 5 Status</label>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="compressor-6-status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_6_STATUS</sensorId>
+			<value>
+				<mapValue mapid="compressorStatus-vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.3.60.0</getOid>
+				</mapValue>
+			</value>
+			<enum>compressorStatus-em</enum>
+			<label>Compressor 6 Status</label>
+			<sensorSet>Integer</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="compressor-5-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_5_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.61.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 5 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="compressor-6-working-hours-threshold">
+			<type>timeinhrs</type>
+			<sensorId>COMPRESSOR_6_WORKING_HOURS_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.62.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Compressor 6 Working Hours Threshold</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="exv-1-required-capacity">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>EXV_1_REQUIRED_CAPACITY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.77.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>EXV 1 Required Capacity</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="exv-2-required-capacity">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>EXV_2_REQUIRED_CAPACITY</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.78.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>EXV 2 Required Capacity</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="exv-1-position-valve">
+			<type>num</type>
+			<sensorId>EXV_1_POSITION_VALVE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.79.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>EXV 1 Position Valve</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+		<numSensor ruleid="exv-2-position-valve">
+			<type>num</type>
+			<sensorId>EXV_2_POSITION_VALVE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.3.80.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>EXV 2 Position Valve</label>
+			<sensorSet>Integer</sensorSet>
+		</numSensor>
+
+
+    <enumMap ruleid="on-off-em">
+      <label>Off</label>
+      <label>On</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="normal-alarm-em">
+      <label>Normal</label>
+      <label>Alarm</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="unit-type-em">
+      <label>STD Chiller</label>
+      <label>Low Temp Chiller</label>
+      <label>Chiller + Heat Rectifier</label>
+      <label>Heat Pump</label>
+      <label>Heat Pump + Heat Rectifier</label>
+      <label>Chiller + Energy Saving</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="circ-pumps-em">
+      <label>Zero</label>
+      <label>One</label>
+      <label>Two</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="comp-status-em">
+      <label>Off</label>
+      <label>On</label>
+      <label>AL</label>
+      <label>Pump Down</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="setpoint-mode-em">
+      <label>STD Chiller</label>
+      <label>T. Ext Compens.</label>
+      <label>OPT SetP</label>
+      <label>Setback SetP</label>
+      <label>Remote Offset</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <enumMap ruleid="num-standby-units-em">
+      <label>One</label>
+      <label>Two</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <valueMap ruleid="on-off-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>*</valueIn>  <valueOut>2</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="normal-alarm-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>*</valueIn>  <valueOut>2</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="unit-type-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>3</valueIn>  <valueOut>3</valueOut>
+      <valueIn>4</valueIn>  <valueOut>4</valueOut>
+      <valueIn>5</valueIn>  <valueOut>5</valueOut>
+      <valueIn>*</valueIn>  <valueOut>6</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="circ-pumps-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>*</valueIn>  <valueOut>3</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="comp-status-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>3</valueIn>  <valueOut>3</valueOut>
+      <valueIn>*</valueIn>  <valueOut>4</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="setpoint-mode-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>3</valueIn>  <valueOut>3</valueOut>
+      <valueIn>4</valueIn>  <valueOut>4</valueOut>
+      <valueIn>*</valueIn>  <valueOut>5</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="num-standby-units-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>*</valueIn>  <valueOut>2</valueOut>
+    </valueMap>
+
+
+
+	</device>
+</APC_DDF>

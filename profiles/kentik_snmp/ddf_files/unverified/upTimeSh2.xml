@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<!-- upTimeSh2 DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+		 ddfid ="upTimeSh2" ddfname="UpTimeSh2" ddfversion="4" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+ 
+ 
+	<!-- Set Ident -->
+	<device deviceid="upTimeSh2discdata">
+		<oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.13045.1.1.2.1.0"/> 
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+		<setProductData ruleid="vendordata" field="vendor">Uptime Devices</setProductData>
+		<setProductData ruleid="modeldata" field="model">SH2</setProductData>
+	</device>
+	 
+	<device deviceid="upTimeSh2">
+		<oidMustExist ruleid="upTimeSh2Detect" oid=".1.3.6.1.4.1.13045.1.1.2.1.0"/> 
+
+		<valueMap ruleid="is_sensor_state_exists-vm">
+			<valueIn>6</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="sh2SensorOnline-em">
+			<label>Unknown</label>
+			<label>Online</label>
+			<label>Offline</label>
+		</enumMap>
+
+		<enumMap ruleid="sh2SensorState-em">
+			<label>Unknown</label>
+			<label>High Critical</label>
+			<label>High Warning</label>
+			<label>Low Warning</label>
+			<label>Low Critical</label>
+			<label>Normal</label>
+			<label>Not Present</label>
+		</enumMap>
+
+		<!-- commenting out, as this just creates duplicate sensors for humid/temp
+		<numSensor ruleid="sh2SensorCurrentValue" index=".1.3.6.1.4.1.13045.1.1.2.2.1.1">
+			<type>num</type>
+			<sensorId>SH2_SENSOR_CURRENT_VALUE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<if>
+					<op>
+						<eq>
+							<op>2</op> 
+							<op><getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.13</getRowOid></op> 
+						</eq>
+					</op>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.4</getRowOid>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.4</getRowOid>
+					</op>
+				</if>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current Value - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.2</getRowOid></label>
+			<sensorSet>Generic Sensors</sensorSet>
+		</numSensor>
+		
+		<stateSensor ruleid="sh2SensorOnlineStatus" index=".1.3.6.1.4.1.13045.1.1.2.2.1.1">
+			<type>state</type>
+			<sensorId>SH2_SENSOR_ONLINE_STATUS<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.5</getRowOid>
+			</value>
+			<label>Online Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.2</getRowOid></label>
+			<enum>sh2SensorOnline-em</enum>
+			<sensorSet>Generic Sensors</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="sh2SensorState" index=".1.3.6.1.4.1.13045.1.1.2.2.1.1">
+			<type>state</type>
+			<sensorId>SH2_SENSOR_STATE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.6</getRowOid>
+			</value>
+			<label>Sensor Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.3</getRowOid> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.2.1.2</getRowOid></label>
+			<enum>sh2SensorState-em</enum>
+			<sensorSet>Generic Sensors</sensorSet>
+		</stateSensor>
+		
+		-->
+
+
+		<!-- sh2TempSensorEntry Begin --> 
+
+		<!-- sh2TempSensorCurrentValue -->
+		<numSensor ruleid="sh2TempSensorCurrentValue" index=".1.3.6.1.4.1.13045.1.1.2.3.1.1">
+			<type>temp</type>
+			<sensorId>SH2_TEMP_SENSOR_CURRENT_VALUE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<if>
+					<op>
+						<eq>
+							<op>2</op> <!-- fahrenheit -->
+							<op><getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.13</getRowOid></op> <!-- units -->
+						</eq>
+					</op>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.4</getRowOid>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.4</getRowOid>
+					</op>
+				</if>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current Value - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.2</getRowOid></label>
+			<sensorSet>Temperature Sensors</sensorSet>
+		</numSensor>
+		
+		<!-- sh2TempSensorOnlineStatus -->
+		<stateSensor ruleid="sh2TempSensorOnlineStatus" index=".1.3.6.1.4.1.13045.1.1.2.3.1.1">
+			<type>state</type>
+			<sensorId>SH2_TEMP_SENSOR_ONLINE_STATUS<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.5</getRowOid>
+			</value>
+			<label>Online Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.2</getRowOid></label>
+			<enum>sh2SensorOnline-em</enum>
+			<sensorSet>Temperature Sensors</sensorSet>
+		</stateSensor>
+
+		<!-- sh2TempSensorState -->
+		<stateSensor ruleid="sh2TempSensorState" index=".1.3.6.1.4.1.13045.1.1.2.3.1.1">
+			<type>state</type>
+			<sensorId>SH2_TEMP_SENSOR_STATE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.6</getRowOid>
+			</value>
+			<label>Sensor Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.3.1.2</getRowOid></label>
+			<enum>sh2SensorState-em</enum>
+			<sensorSet>Temperature Sensors</sensorSet>
+		</stateSensor>
+
+		
+		<!--sh2HumdSensorEntry Begin -->
+
+		<!-- sh2HumdSensorCurrentValue -->
+		<numSensor ruleid="sh2HumdSensorCurrentValue" index=".1.3.6.1.4.1.13045.1.1.2.4.1.1">
+			<type>humidity</type>
+			<sensorId>SH2_HUMD_SENSOR_CURRENT_VALUE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Current Value - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.2</getRowOid></label>
+			<sensorSet>Humidity Sensors</sensorSet>
+		</numSensor>
+
+		<!-- sh2HumdSensorOnlineStatus -->
+		<stateSensor ruleid="sh2HumdSensorOnlineStatus" index=".1.3.6.1.4.1.13045.1.1.2.4.1.1">
+			<type>state</type>
+			<sensorId>SH2_HUMD_SENSOR_ONLINE_STATUS<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.5</getRowOid>
+			</value>
+			<label>Online Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.2</getRowOid></label>
+			<enum>sh2SensorOnline-em</enum>
+			<sensorSet>Humidity Sensors</sensorSet>
+		</stateSensor>
+
+		<!-- sh2HumdSensorState -->
+		<stateSensor ruleid="sh2HumdSensorState" index=".1.3.6.1.4.1.13045.1.1.2.4.1.1">
+			<type>state</type>
+			<sensorId>SH2_HUMD_SENSOR_STATE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.6</getRowOid>
+			</value>
+			<label>Sensor Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.4.1.2</getRowOid></label>
+			<enum>sh2SensorState-em</enum>
+			<sensorSet>Humidity Sensors</sensorSet>
+		</stateSensor>
+
+		<!-- sh2StateSensorEntry Begin-->
+
+		<!-- sh2StateSensorCurrentValue -->
+		<numSensor ruleid="sh2StateSensorCurrentValue" index=".1.3.6.1.4.1.13045.1.1.2.5.1.1">
+			<type>num</type>
+			<sensorId>SH2_STATE_SENSOR_CURRENT_VALUE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mult>
+					<op>0.01</op>
+					<op><getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.4</getRowOid></op>
+				</mult>
+			</value>
+			<label>Current Value - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.2</getRowOid></label>
+			<sensorSet>State Sensors</sensorSet>
+		</numSensor>
+
+		<!-- sh2StateSensorOnlineStatus -->
+		<stateSensor ruleid="sh2StateSensorOnlineStatus" index=".1.3.6.1.4.1.13045.1.1.2.5.1.1">
+			<type>state</type>
+			<sensorId>SH2_STATE_SENSOR_ONLINE_STATUS<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.5</getRowOid>
+			</value>
+			<label>Online Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.2</getRowOid></label>
+			<enum>sh2SensorOnline-em</enum>
+			<sensorSet>State Sensors</sensorSet>
+		</stateSensor>
+
+		<!-- sh2StateSensorState -->
+		<stateSensor ruleid="sh2StateSensorState" index=".1.3.6.1.4.1.13045.1.1.2.5.1.1">
+			<type>state</type>
+			<sensorId>SH2_STATE_SENSOR_STATE<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="is_sensor_state_exists-vm">
+					<getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.6</getRowOid>
+			</value>
+			<label>Sensor Status - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.3</getRowOid><space/><rowIndex/> - <getRowOid>.1.3.6.1.4.1.13045.1.1.2.5.1.2</getRowOid></label>
+			<enum>sh2SensorState-em</enum>
+			<sensorSet>State Sensors</sensorSet>
+		</stateSensor>
+
+	 </device>	
+</APC_DDF>
+

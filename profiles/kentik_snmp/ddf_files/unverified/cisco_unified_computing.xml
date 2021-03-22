@@ -1,0 +1,1545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="cisco_unified_computing"
+	ddfname="Cisco Unified Computing"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="cisco_unified_computing">
+		<oidMustExist ruleid="cisco_unified_computing" oid=".1.3.6.1.4.1.9.9.719" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+
+		<setProductData ruleid="cucsComputeRackUnitModel" field="model">
+			<getOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.32.1</getOid>
+		</setProductData>
+		<setDefaultLabel ruleid="cucsComputeRackUnitName">
+			<getOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.33.1</getOid>
+		</setDefaultLabel>
+		<setProductData ruleid="cucsComputeRackUnitSerial" field="serial_num">
+			<getOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.47.1</getOid>
+		</setProductData>
+		<setProductData ruleid="cucsComputeRackUnitVendor" field="vendor">
+			<getOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.51.1</getOid>
+		</setProductData>
+
+		<valueMap ruleid="cucsComputeAdminState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsComputeAdminState-em">
+			<label>Unknown</label>
+			<label>In Service</label>
+			<label>Out of Service</label>
+			<label>In Maintenance</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsComputeAssociation-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsComputeAssociation-em">
+			<label>None</label>
+			<label>Establishing</label>
+			<label>Associated</label>
+			<label>Removing</label>
+			<label>Failed</label>
+			<label>Throttled</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsComputeAvailability-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsComputeAvailability-em">
+			<label>Unavailable</label>
+			<label>Available</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsComputeCheckPoint-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsComputeCheckPoint-em">
+			<label>Unknown</label>
+			<label>Removing</label>
+			<label>Shallow Checkpoint</label>
+			<label>Deep Checkpoint</label>
+			<label>Discovered</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsComputeDiscovery-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>8</valueIn><valueOut>6</valueOut>
+			<valueIn>16</valueIn><valueOut>7</valueOut>
+			<valueIn>32</valueIn><valueOut>8</valueOut>
+			<valueIn>64</valueIn><valueOut>9</valueOut>
+			<valueIn>128</valueIn><valueOut>10</valueOut>
+			<valueIn>129</valueIn><valueOut>11</valueOut>
+			<valueIn>130</valueIn><valueOut>12</valueOut>
+			<valueIn>131</valueIn><valueOut>13</valueOut>
+			<valueIn>132</valueIn><valueOut>14</valueOut>
+			<valueIn>133</valueIn><valueOut>15</valueOut>
+			<valueIn>134</valueIn><valueOut>16</valueOut>
+			<valueIn>135</valueIn><valueOut>17</valueOut>
+			<valueIn>136</valueIn><valueOut>18</valueOut>
+			<valueIn>137</valueIn><valueOut>19</valueOut>
+			<valueIn>*</valueIn><valueOut>20</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsComputeDiscovery-em">
+			<label>Undiscovered</label>
+			<label>In Progress</label>
+			<label>Malformed FRU Info</label>
+			<label>FRU Not Ready</label>
+			<label>Insufficiently Equipped</label>
+			<label>Invalid Adaptor I/O Card</label>
+			<label>Failed</label>
+			<label>Complete</label>
+			<label>Retry</label>
+			<label>Throttled</label>
+			<label>Illegal FRU</label>
+			<label>FRU Identity Indeterminate</label>
+			<label>FRU State Indeterminate</label>
+			<label>Diagnostics in Progress</label>
+			<label>EFI Diagnostics in Progress</label>
+			<label>Diagnostics Failed</label>
+			<label>Diagnostics Complete</label>
+			<label>Waiting for User Acknowledge</label>
+			<label>User Acknowledged</label>
+			<label>Waiting for Management Acknowledge</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentPowerState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>100</valueIn><valueOut>12</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentPowerState-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Test</label>
+			<label>Off</label>
+			<label>Online</label>
+			<label>Offline</label>
+			<label>Off Duty</label>
+			<label>Degraded</label>
+			<label>Power Save</label>
+			<label>Error</label>
+			<label>OK</label>
+			<label>Failed</label>
+			<label>Not Supported</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsLsOperState-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>10</valueIn><valueOut>2</valueOut>
+			<valueIn>11</valueIn><valueOut>3</valueOut>
+			<valueIn>12</valueIn><valueOut>4</valueOut>
+			<valueIn>13</valueIn><valueOut>5</valueOut>
+			<valueIn>14</valueIn><valueOut>6</valueOut>
+			<valueIn>15</valueIn><valueOut>7</valueOut>
+			<valueIn>20</valueIn><valueOut>8</valueOut>
+			<valueIn>21</valueIn><valueOut>9</valueOut>
+			<valueIn>29</valueIn><valueOut>10</valueOut>
+			<valueIn>30</valueIn><valueOut>11</valueOut>
+			<valueIn>31</valueIn><valueOut>12</valueOut>
+			<valueIn>32</valueIn><valueOut>13</valueOut>
+			<valueIn>33</valueIn><valueOut>14</valueOut>
+			<valueIn>34</valueIn><valueOut>15</valueOut>
+			<valueIn>35</valueIn><valueOut>16</valueOut>
+			<valueIn>36</valueIn><valueOut>17</valueOut>
+			<valueIn>40</valueIn><valueOut>18</valueOut>
+			<valueIn>41</valueIn><valueOut>19</valueOut>
+			<valueIn>50</valueIn><valueOut>20</valueOut>
+			<valueIn>60</valueIn><valueOut>21</valueOut>
+			<valueIn>61</valueIn><valueOut>22</valueOut>
+			<valueIn>62</valueIn><valueOut>23</valueOut>
+			<valueIn>63</valueIn><valueOut>24</valueOut>
+			<valueIn>101</valueIn><valueOut>25</valueOut>
+			<valueIn>201</valueIn><valueOut>26</valueOut>
+			<valueIn>202</valueIn><valueOut>27</valueOut>
+			<valueIn>203</valueIn><valueOut>28</valueOut>
+			<valueIn>204</valueIn><valueOut>29</valueOut>
+			<valueIn>210</valueIn><valueOut>30</valueOut>
+			<valueIn>211</valueIn><valueOut>31</valueOut>
+			<valueIn>212</valueIn><valueOut>32</valueOut>
+			<valueIn>*</valueIn><valueOut>33</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsLsOperState-em">
+			<label>Indeterminate</label>
+			<label>Unassociated</label>
+			<label>OK</label>
+			<label>Discovery</label>
+			<label>Config</label>
+			<label>Unconfig</label>
+			<label>Power Off</label>
+			<label>Restart</label>
+			<label>Maintenance</label>
+			<label>Test</label>
+			<label>Compute Mismatch</label>
+			<label>Compute Failed</label>
+			<label>Degraded</label>
+			<label>Discovery Failed</label>
+			<label>Config Failure</label>
+			<label>Unconfig Failed</label>
+			<label>Test Failed</label>
+			<label>Maintenance Failed</label>
+			<label>Removed</label>
+			<label>Disabled</label>
+			<label>Inaccessible</label>
+			<label>Thermal Problem</label>
+			<label>Power Problem</label>
+			<label>Voltage Problem</label>
+			<label>Inoperable</label>
+			<label>Decommissioning</label>
+			<label>BIOS Restore</label>
+			<label>CMOS Reset</label>
+			<label>Diagnostics</label>
+			<label>Diagnostics Failed</label>
+			<label>Pending Reboot</label>
+			<label>Pending Reassociation</label>
+			<label>SVNIC Not Present</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentOperability-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>51</valueIn><valueOut>17</valueOut>
+			<valueIn>52</valueIn><valueOut>18</valueOut>
+			<valueIn>81</valueIn><valueOut>19</valueOut>
+			<valueIn>82</valueIn><valueOut>20</valueOut>
+			<valueIn>83</valueIn><valueOut>21</valueOut>
+			<valueIn>84</valueIn><valueOut>22</valueOut>
+			<valueIn>100</valueIn><valueOut>23</valueOut>
+			<valueIn>101</valueIn><valueOut>24</valueOut>
+			<valueIn>102</valueIn><valueOut>25</valueOut>
+			<valueIn>103</valueIn><valueOut>26</valueOut>
+			<valueIn>104</valueIn><valueOut>27</valueOut>
+			<valueIn>105</valueIn><valueOut>28</valueOut>
+			<valueIn>106</valueIn><valueOut>29</valueOut>
+			<valueIn>107</valueIn><valueOut>30</valueOut>
+			<valueIn>108</valueIn><valueOut>31</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentOperability-em">
+			<label>Unknown</label>
+			<label>Operable</label>
+			<label>Inoperable</label>
+			<label>Degraded</label>
+			<label>Powered Off</label>
+			<label>Power Problem</label>
+			<label>Removed</label>
+			<label>Voltage Problem</label>
+			<label>Thermal Problem</label>
+			<label>Performance Problem</label>
+			<label>Accessibility Problem</label>
+			<label>Identity Unestablishable</label>
+			<label>BIOS Post Timeout</label>
+			<label>Disabled</label>
+			<label>Malformed FRU</label>
+			<label>Backplane Port Problem</label>
+			<label>Chassis Intrusion</label>
+			<label>Fabric Connection Problem</label>
+			<label>Fabric Unsupported Connection </label>
+			<label>Config</label>
+			<label>Equipment Problem</label>
+			<label>Decommissioning</label>
+			<label>Chassis Limit Exceeded</label>
+			<label>Not Supported</label>
+			<label>Discovery</label>
+			<label>Discovery Failed</label>
+			<label>Identify</label>
+			<label>Post Failure</label>
+			<label>Upgrade Problem</label>
+			<label>Peer Communication Problem</label>
+			<label>Auto Upgrade</label>
+			<label>Link Activate Blocked</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentPresence-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>10</valueIn><valueOut>2</valueOut>
+			<valueIn>11</valueIn><valueOut>3</valueOut>
+			<valueIn>12</valueIn><valueOut>4</valueOut>
+			<valueIn>13</valueIn><valueOut>5</valueOut>
+			<valueIn>14</valueIn><valueOut>6</valueOut>
+			<valueIn>15</valueIn><valueOut>7</valueOut>
+			<valueIn>16</valueIn><valueOut>8</valueOut>
+			<valueIn>20</valueIn><valueOut>9</valueOut>
+			<valueIn>21</valueIn><valueOut>10</valueOut>
+			<valueIn>22</valueIn><valueOut>11</valueOut>
+			<valueIn>30</valueIn><valueOut>12</valueOut>
+			<valueIn>40</valueIn><valueOut>13</valueOut>
+			<valueIn>101</valueIn><valueOut>14</valueOut>
+			<valueIn>102</valueIn><valueOut>15</valueOut>
+			<valueIn>103</valueIn><valueOut>16</valueOut>
+			<valueIn>104</valueIn><valueOut>17</valueOut>
+			<valueIn>105</valueIn><valueOut>18</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentPresence-em">
+			<label>Unknown</label>
+			<label>Empty</label>
+			<label>Equipped</label>
+			<label>Missing</label>
+			<label>Mismatch</label>
+			<label>Equipped - Not Primary</label>
+			<label>Equipped - Slave</label>
+			<label>Mismatch - Slave</label>
+			<label>Missing Slave</label>
+			<label>Equipped - Identity Unestablishable</label>
+			<label>Mismatch - Identity Unestablishable</label>
+			<label>Equipped - Malformed FRU</label>
+			<label>Inaccessible</label>
+			<label>Unauthorized</label>
+			<label>Equipped - Unsupported</label>
+			<label>Equipped - Discovery Not Started</label>
+			<label>Equipped - Discovery In Progress</label>
+			<label>Equipped - Discovery Error</label>
+			<label>Equipped - Discovery Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentSlotStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>10</valueIn><valueOut>2</valueOut>
+			<valueIn>11</valueIn><valueOut>3</valueOut>
+			<valueIn>12</valueIn><valueOut>4</valueOut>
+			<valueIn>13</valueIn><valueOut>5</valueOut>
+			<valueIn>14</valueIn><valueOut>6</valueOut>
+			<valueIn>15</valueIn><valueOut>7</valueOut>
+			<valueIn>16</valueIn><valueOut>8</valueOut>
+			<valueIn>20</valueIn><valueOut>9</valueOut>
+			<valueIn>21</valueIn><valueOut>10</valueOut>
+			<valueIn>22</valueIn><valueOut>11</valueOut>
+			<valueIn>30</valueIn><valueOut>12</valueOut>
+			<valueIn>40</valueIn><valueOut>13</valueOut>
+			<valueIn>101</valueIn><valueOut>14</valueOut>
+			<valueIn>102</valueIn><valueOut>15</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentSlotStatus-em">
+			<label>Unknown</label>
+			<label>Empty</label>
+			<label>Equipped</label>
+			<label>Missing</label>
+			<label>Mismatch</label>
+			<label>Equipped - Not Primary</label>
+			<label>Equipped - Slave</label>
+			<label>Mismatch - Slave</label>
+			<label>Missing Slave</label>
+			<label>Equipped - Identity Unestablishable</label>
+			<label>Mismatch - Identity Unestablishable</label>
+			<label>Equipped - Malformed FRU</label>
+			<label>Inaccessible</label>
+			<label>Unauthorized</label>
+			<label>Equipped - Unsupported</label>
+			<label>Equipped - Deprecated</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentInternalFanType-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentInternalFanType-em">
+			<label>Chassis</label>
+			<label>Switch</label>
+			<label>FEX</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="cucsEquipmentSensorThresholdStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>100</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cucsEquipmentSensorThresholdStatus-em">
+			<label>Unknown</label>
+			<label>OK</label>
+			<label>Upper Non-Recoverable</label>
+			<label>Upper Critical</label>
+			<label>Upper Non-Critical</label>
+			<label>Lower Non-Critical</label>
+			<label>Lower Critical</label>
+			<label>Lower Non-Recoverable</label>
+			<label>Not Supported</label>
+		</enumMap>
+
+		<stateSensor ruleid="cucsComputeRackUnitAdminState" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.5">
+            <type>state</type>
+            <sensorId>RACKUNIT_ADMINSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsComputeAdminState-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Admin State</label>
+            <enum>cucsComputeAdminState-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitAssociation" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.7">
+            <type>state</type>
+            <sensorId>RACKUNIT_ASSOCIATION_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsComputeAssociation-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Association</label>
+            <enum>cucsComputeAssociation-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitAvailability" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.8">
+            <type>state</type>
+            <sensorId>RACKUNIT_AVAILABILITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsComputeAvailability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Availability</label>
+            <enum>cucsComputeAvailability-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="cucsComputeRackUnitAvailableMemory" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.9">
+            <type>num</type>
+            <sensorId>RACKUNIT_AVAILABLEMEMORY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.9</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Available Memory (MB)</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="cucsComputeRackUnitCheckPoint" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.10">
+            <type>state</type>
+            <sensorId>RACKUNIT_CHECKPOINT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsComputeCheckPoint-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Checkpoint</label>
+            <enum>cucsComputeCheckPoint-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitDiscovery" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.14">
+            <type>state</type>
+            <sensorId>RACKUNIT_DISCOVERY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsComputeDiscovery-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Discovery</label>
+            <enum>cucsComputeDiscovery-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="cucsComputeRackUnitNumOfAdaptors" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.34">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMADAPTORS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.34</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of Adaptors</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeRackUnitNumOfCores" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.35">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMCORES_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.35</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of Cores</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeRackUnitNumOfCpus" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.36">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMCPUS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.36</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of CPUs</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeRackUnitNumOfEthHostIfs" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.37">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMETHHOSTIFS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.37</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of Ethernet Host Interfaces</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeRackUnitNumOfFcHostIfs" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.38">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMFCHOSTIFS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.38</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of Fibre Channel Host Interfaces</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeRackUnitNumOfThreads" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.39">
+            <type>num</type>
+            <sensorId>RACKUNIT_NUMTHREADS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.39</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Number of Threads</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="cucsComputeRackUnitOperPower" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.40">
+            <type>state</type>
+            <sensorId>RACKUNIT_OPERPOWER_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPowerState-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.40</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Oper. Power</label>
+            <enum>cucsEquipmentPowerState-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitOperState" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.42">
+            <type>state</type>
+            <sensorId>RACKUNIT_OPERSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsLsOperState-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.42</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Oper. State</label>
+            <enum>cucsLsOperState-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitOperability" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.43">
+            <type>state</type>
+            <sensorId>RACKUNIT_OPERABILITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.43</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Operability</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeRackUnitPresence" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.45">
+            <type>state</type>
+            <sensorId>RACKUNIT_PRESENCE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentSlotStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.45</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Presence</label>
+            <enum>cucsEquipmentSlotStatus-em</enum>
+            <sensorSet>Rack Units</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="cucsComputeRackUnitTotalMemory" index=".1.3.6.1.4.1.9.9.719.1.9.35.1.49">
+            <type>num</type>
+            <sensorId>RACKUNIT_TOTALMEMORY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.49</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.35.1.27</getRowOid> - Total Memory (MB)</label>
+            <sensorSet>Rack Units</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="cucsComputeBoardOperPower" index=".1.3.6.1.4.1.9.9.719.1.9.6.1.7">
+            <type>state</type>
+            <sensorId>BOARD_OPERPOWER_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPowerState-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Oper. Power</label>
+            <enum>cucsEquipmentPowerState-em</enum>
+            <sensorSet>Boards</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeBoardOperState" index=".1.3.6.1.4.1.9.9.719.1.9.6.1.8">
+            <type>state</type>
+            <sensorId>BOARD_OPERSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Oper. State</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Boards</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeBoardOperability" index=".1.3.6.1.4.1.9.9.719.1.9.6.1.9">
+            <type>state</type>
+            <sensorId>BOARD_OPERABILITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Operability</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Boards</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsComputeBoardPresence" index=".1.3.6.1.4.1.9.9.719.1.9.6.1.12">
+            <type>state</type>
+            <sensorId>BOARD_PRESENCE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPresence-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Presence</label>
+            <enum>cucsEquipmentPresence-em</enum>
+            <sensorSet>Boards</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="cucsComputeMbPowerStatsConsumedPower" index=".1.3.6.1.4.1.9.9.719.1.9.14.1.4">
+            <type>powerW</type>
+            <sensorId>POWERSTATS_CONSUMEDPOWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.14.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Consumed Power</label>
+            <sensorSet>Power Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbPowerStatsInputCurrent" index=".1.3.6.1.4.1.9.9.719.1.9.14.1.8">
+            <type>amperage</type>
+            <sensorId>POWERSTATS_INPUTCURRENT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.14.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Input Current</label>
+            <sensorSet>Power Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbPowerStatsInputVoltage" index=".1.3.6.1.4.1.9.9.719.1.9.14.1.12">
+            <type>voltage</type>
+            <sensorId>POWERSTATS_INPUTVOLTAGE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.14.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Input Voltage</label>
+            <sensorSet>Power Stats</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="cucsComputeMbTempStatsAmbientTemp" index=".1.3.6.1.4.1.9.9.719.1.9.44.1.4">
+            <type>temp</type>
+            <sensorId>TEMPSTATS_AMBIENTTEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.44.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Ambient Temperature</label>
+            <sensorSet>Temperature Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbTempStatsFrontTemp" index=".1.3.6.1.4.1.9.9.719.1.9.44.1.8">
+            <type>temp</type>
+            <sensorId>TEMPSTATS_FRONTTEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.44.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Front Temperature</label>
+            <sensorSet>Temperature Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbTempStatsIoh1Temp" index=".1.3.6.1.4.1.9.9.719.1.9.44.1.13">
+            <type>temp</type>
+            <sensorId>TEMPSTATS_IOH1TEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.44.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - IOH1 Temperature</label>
+            <sensorSet>Temperature Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbTempStatsIoh2Temp" index=".1.3.6.1.4.1.9.9.719.1.9.44.1.17">
+            <type>temp</type>
+            <sensorId>TEMPSTATS_IOH2TEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.44.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - IOH2 Temperature</label>
+            <sensorSet>Temperature Stats</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cucsComputeMbTempStatsRearTemp" index=".1.3.6.1.4.1.9.9.719.1.9.44.1.21">
+            <type>temp</type>
+            <sensorId>TEMPSTATS_REARTEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.44.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Board <getRowOid>.1.3.6.1.4.1.9.9.719.1.9.6.1.5</getRowOid> - Rear Temperature</label>
+            <sensorSet>Temperature Stats</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="cucsEquipmentFanIntType" index=".1.3.6.1.4.1.9.9.719.1.15.12.1.6">
+            <type>state</type>
+            <sensorId>FAN_INTTYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentInternalFanType-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.7</getRowOid> - Internal Type</label>
+            <enum>cucsEquipmentInternalFanType-em</enum>
+            <sensorSet>Fans</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentFanOperState" index=".1.3.6.1.4.1.9.9.719.1.15.12.1.9">
+            <type>state</type>
+            <sensorId>FAN_OPERSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.7</getRowOid> - Oper. State</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Fans</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentFanOperability" index=".1.3.6.1.4.1.9.9.719.1.15.12.1.10">
+            <type>state</type>
+            <sensorId>FAN_OPERABILITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.7</getRowOid> - Operability</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Fans</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentFanPresence" index=".1.3.6.1.4.1.9.9.719.1.15.12.1.13">
+            <type>state</type>
+            <sensorId>FAN_PRESENCE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPresence-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.13</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.719.1.15.12.1.7</getRowOid> - Presence</label>
+            <enum>cucsEquipmentPresence-em</enum>
+            <sensorSet>Fans</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="cucsEquipmentPsuOperState" index=".1.3.6.1.4.1.9.9.719.1.15.56.1.7">
+            <type>state</type>
+            <sensorId>PSU_OPERSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>PSU <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.5</getRowOid> - Oper. State</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Power Supply Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentPsuOperability" index=".1.3.6.1.4.1.9.9.719.1.15.56.1.8">
+            <type>state</type>
+            <sensorId>PSU_OPERABILITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentOperability-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>PSU <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.5</getRowOid> - Operability</label>
+            <enum>cucsEquipmentOperability-em</enum>
+            <sensorSet>Power Supply Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentPsuPower" index=".1.3.6.1.4.1.9.9.719.1.15.56.1.10">
+            <type>state</type>
+            <sensorId>PSU_POWER_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPowerState-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>PSU <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.5</getRowOid> - Power</label>
+            <enum>cucsEquipmentPowerState-em</enum>
+            <sensorSet>Power Supply Units</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cucsEquipmentPsuPresence" index=".1.3.6.1.4.1.9.9.719.1.15.56.1.11">
+            <type>state</type>
+            <sensorId>PSU_PRESENCE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="cucsEquipmentPresence-vm">
+                <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>PSU <getRowOid>.1.3.6.1.4.1.9.9.719.1.15.56.1.5</getRowOid> - Presence</label>
+            <enum>cucsEquipmentPresence-em</enum>
+            <sensorSet>Power Supply Units</sensorSet>
+        </stateSensor>
+
+	</device>
+	<device deviceid="cucsFaultObjects">
+		<oidMustExist ruleid="cisco_faults" oid=".1.3.6.1.4.1.9.9.719.1.1" istree="yes"/> 
+
+		<valueMap ruleid="cucsFaultSeverity-vm">
+			<valueIn>3</valueIn><valueOut>warning</valueOut>
+			<valueIn>4</valueIn><valueOut>warning</valueOut>
+			<valueIn>5</valueIn><valueOut>critical</valueOut>
+			<valueIn>6</valueIn><valueOut>critical</valueOut>
+			<valueIn>*</valueIn><valueOut>information</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="cucsFaultCode" index=".1.3.6.1.4.1.9.9.719.1.1.1.1.9">
+			<value>
+				<getRowOid>.1.3.6.1.4.1.9.9.719.1.1.1.1.9</getRowOid>
+			</value>
+			<alarmFlagsTest match="9C"><!-- 0x9C = 156 -->
+				<name>
+					<activeText>Fabric Compute Slot Misplaced in Chassis Slot</activeText>
+					<inactiveText>Cleared - Fabric Compute Slot Misplaced in Chassis Slot</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Fabric Compute Slot</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="9D"><!-- 0x9D = 157 -->
+				<name>
+					<activeText>Fabric Compute Slot Server Identification Problem</activeText>
+					<inactiveText>Cleared - Fabric Compute Slot Server Identification Problem</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Fabric Compute Slot</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="A9"><!-- 0xA9 = 169 -->
+				<name>
+					<activeText>VNIC Ethernet Configuration Failed</activeText>
+					<inactiveText>Cleared - VNIC Ethernet Configuration Failed</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>VNIC</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="AA"><!-- 0xA9 = 170 -->
+				<name>
+					<activeText>VNIC Fibre Channel Configuration Failed</activeText>
+					<inactiveText>Cleared - VNIC Fibre Channel Configuration Failed</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>VNIC</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="AE"><!-- 0xAE = 174 -->
+				<name>
+					<activeText>Processor Unit Inoperable</activeText>
+					<inactiveText>Cleared - Processor Unit Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="AF"><!-- 0xAF = 175 -->
+				<name>
+					<activeText>Processor Unit Thermal Non-Critical</activeText>
+					<inactiveText>Cleared - Processor Unit Thermal Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B0"><!-- 0xB0 = 176 -->
+				<name>
+					<activeText>Processor Unit Thermal Critical</activeText>
+					<inactiveText>Cleared - Processor Unit Thermal Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B1"><!-- 0xB1 = 177 -->
+				<name>
+					<activeText>Processor Unit Thermal Non-Recoverable</activeText>
+					<inactiveText>Cleared - Processor Unit Thermal Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B2"><!-- 0xB2 = 178 -->
+				<name>
+					<activeText>Processor Unit Voltage Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - Processor Unit Voltage Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B3"><!-- 0xB3 = 179 -->
+				<name>
+					<activeText>Processor Unit Voltage Threshold Critical</activeText>
+					<inactiveText>Cleared - Processor Unit Voltage Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B4"><!-- 0xB4 = 180 -->
+				<name>
+					<activeText>Processor Unit Voltage Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - Processor Unit Voltage Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Processor</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="B5"><!-- 0xB5 = 181 -->
+				<name>
+					<activeText>Storage Local Disk Inoperable</activeText>
+					<inactiveText>Cleared - Storage Local Disk Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Storage</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B6"><!-- 0xB6 = 182 -->
+				<name>
+					<activeText>Storage Item Capacity Exceeded</activeText>
+					<inactiveText>Cleared - Storage Item Capacity Exceeded</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Storage</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B7"><!-- 0xB7 = 183 -->
+				<name>
+					<activeText>Storage Item Capacity Warning</activeText>
+					<inactiveText>Cleared - Storage Item Capacity Warning</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Storage</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="B8"><!-- 0xB8 = 184 -->
+				<name>
+					<activeText>Memory Unit Degraded</activeText>
+					<inactiveText>Cleared - Memory Unit Degraded</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="B9"><!-- 0xB9 = 185 -->
+				<name>
+					<activeText>Memory Unit Inoperable</activeText>
+					<inactiveText>Cleared - Memory Unit Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BA"><!-- 0xBA = 186 -->
+				<name>
+					<activeText>Memory Unit Thermal Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - Memory Unit Thermal Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BB"><!-- 0xBB = 187 -->
+				<name>
+					<activeText>Memory Unit Thermal Threshold Critical</activeText>
+					<inactiveText>Cleared - Memory Unit Thermal Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BC"><!-- 0xBC = 188 -->
+				<name>
+					<activeText>Memory Unit Thermal Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - Memory Unit Thermal Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BD"><!-- 0xBD = 189 -->
+				<name>
+					<activeText>Memory Array Voltage Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - Memory Array Voltage Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BE"><!-- 0xBE = 190 -->
+				<name>
+					<activeText>Memory Array Voltage Threshold Critical</activeText>
+					<inactiveText>Cleared - Memory Array Voltage Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="BF"><!-- 0xBF = 191 -->
+				<name>
+					<activeText>Memory Array Voltage Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - Memory Array Voltage Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Memory</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="171"><!-- 0x171 = 369 -->
+				<name>
+					<activeText>Power Supply Problem</activeText>
+					<inactiveText>Cleared - Power Supply Problem</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="173"><!-- 0x173 = 371 -->
+				<name>
+					<activeText>Fan Degraded</activeText>
+					<inactiveText>Cleared - Fan Degraded</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="175"><!-- 0x175 = 373 -->
+				<name>
+					<activeText>Fan Inoperable</activeText>
+					<inactiveText>Cleared - Fan Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="176"><!-- 0x176 = 374 -->
+				<name>
+					<activeText>PSU Inoperable</activeText>
+					<inactiveText>Cleared - PSU Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="178"><!-- 0x178 = 376 -->
+				<name>
+					<activeText>I/O Card Removed</activeText>
+					<inactiveText>Cleared - I/O Card Removed</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="179"><!-- 0x179 = 377 -->
+				<name>
+					<activeText>Fan Module Missing</activeText>
+					<inactiveText>Cleared - Fan Module Missing</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17A"><!-- 0x17A = 378 -->
+				<name>
+					<activeText>PSU Missing</activeText>
+					<inactiveText>Cleared - PSU Missing</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17B"><!-- 0x17B = 379 -->
+				<name>
+					<activeText>I/O Card Thermal Problem</activeText>
+					<inactiveText>Cleared - I/O Card Thermal Problem</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17C"><!-- 0x17C = 380 -->
+				<name>
+					<activeText>Fan Module Thermal Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - Fan Module Thermal Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17D"><!-- 0x17D = 381 -->
+				<name>
+					<activeText>PSU Thermal Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - PSU Thermal Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17E"><!-- 0x17E = 382 -->
+				<name>
+					<activeText>Fan Module Thermal Threshold Critical</activeText>
+					<inactiveText>Cleared - Fan Module Thermal Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="17F"><!-- 0x17F = 383 -->
+				<name>
+					<activeText>PSU Thermal Threshold Critical</activeText>
+					<inactiveText>Cleared - PSU Thermal Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="180"><!-- 0x180 = 384 -->
+				<name>
+					<activeText>Fan Module Thermal Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - Fan Module Thermal Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="181"><!-- 0x181 = 385 -->
+				<name>
+					<activeText>PSU Thermal Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - PSU Thermal Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="183"><!-- 0x183 = 387 -->
+				<name>
+					<activeText>PSU Voltage Threshold Non-Critical</activeText>
+					<inactiveText>Cleared - PSU Voltage Threshold Non-Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="184"><!-- 0x184 = 388 -->
+				<name>
+					<activeText>PSU Voltage Threshold Critical</activeText>
+					<inactiveText>Cleared - PSU Voltage Threshold Critical</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="185"><!-- 0x185 = 389 -->
+				<name>
+					<activeText>PSU Voltage Threshold Non-Recoverable</activeText>
+					<inactiveText>Cleared - PSU Voltage Threshold Non-Recoverable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Equipment</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="1CE"><!-- 0x1CE = 462 -->
+				<name>
+					<activeText>Log Full</activeText>
+					<inactiveText>Cleared - Log Full</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Faults</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+
+			<alarmFlagsTest match="213"><!-- 0x213 = 531 -->
+				<name>
+					<activeText>Storage RAID Battery Inoperable</activeText>
+					<inactiveText>Cleared - Storage RAID Battery Inoperable</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Faults</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3E5"><!-- 0x3E5 = 997 -->
+				<name>
+					<activeText>Storage RAID Battery Degraded</activeText>
+					<inactiveText>Cleared - Storage RAID Battery Degraded</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="cucsFaultSeverity-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.9.9.719.1.1.1.1.20</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Faults</category>
+				<description>
+					<activeText><getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></activeText>
+					<inactiveText>Cleared - <getRowOid default="no description">.1.3.6.1.4.1.9.9.719.1.1.1.1.11</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+	</device>
+</APC_DDF>

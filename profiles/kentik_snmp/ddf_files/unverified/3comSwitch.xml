@@ -1,0 +1,818 @@
+<?xml version="1.0"?>
+<!-- 3com 775x DDF -->
+<!-- Created By DDF Creater v1.0 06/18/2009  -->
+<APC_DDF ddfid ="3comSwitch" ddfname="3Com Switch" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+<device deviceid="3comSwitch_Headers">
+	<oidMustExist ruleid="3com_switch_Exist" oid=".1.3.6.1.4.1.43.45.1.2.23.1.18.1.4.0"/>
+
+	<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.1.4.0</getOid>
+		</setProductData>
+	</device>
+
+
+<device deviceid="3comSwitch_Sensors">
+		<oidMustExist ruleid="3com_switch_Exist" oid=".1.3.6.1.4.1.43.45.1.2.23.1.18.1.4.0"/>
+		
+		<!-- fan Status -->
+		<stateSensor ruleid="hwdevfanStatus" index=".1.3.6.1.4.1.43.45.1.2.23.1.9.1.1.1.1">
+			<type>state</type>
+			<sensorId>HWDEV_FAN_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="fan_Status-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.1.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Fan<space/><getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.1.1.1</getRowOid><space/>Status</label>
+			<enum>fan_Status-em</enum>
+			<sensorSet>Fan</sensorSet>
+		</stateSensor>
+		
+		<!-- power Status -->
+		<stateSensor ruleid="hwdevpowerStatus" index=".1.3.6.1.4.1.43.45.1.2.23.1.9.1.2.1.1">
+			<type>state</type>
+			<sensorId>HWDEV_POWER_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="fan_Status-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Power<space/><getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.2.1.1</getRowOid><space/>Status</label>
+			<enum>fan_Status-em</enum>
+			<sensorSet>Power</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="fan_Status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="fan_Status-em">
+			<label>Active</label>
+			<label>Deactive</label>
+			<label>Not-Installed</label>
+			<label>Unsupported</label>
+		</enumMap>
+		
+		
+		<!-- ENV Status -->
+		<stateSensor ruleid="hwdevenvStatus" index=".1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.1">
+			<type>state</type>
+			<sensorId>HWDEV_POWER_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="env_Status-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.1</getRowOid><space/>Status</label>
+			<enum>env_Status-em</enum>
+			<sensorSet>Env</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="env_Status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="env_Status-em">
+			<label>Normal</label>
+			<label>Upper</label>
+			<label>Lower</label>
+		</enumMap>
+		
+		<!-- ENV Value -->
+		<numSensor ruleid="hwdevenvValue" index=".1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.1">
+			<type><mapValue mapid="env_Type">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.1</getRowOid>
+				</mapValue>
+			</type>
+			<sensorId>HWDEV_POWER_VALUE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.3</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.9.1.3.1.1</getRowOid><space/>Value</label>
+			<sensorSet>Env</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="env_Type-vm">
+			<valueIn>1</valueIn><valueOut>temp</valueOut>
+			<valueIn>2</valueIn><valueOut>humidity</valueOut>
+			<valueIn>3</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		
+		<!-- hwLswSlotType -->
+		<stateSensor ruleid="hwLswSlotType" index=".1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor_hwLswSlotType">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>HW_LSW_SLOT_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SlotType-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.2</getRowOid>
+				</mapValue>
+			</value>	
+			<label>Slot#<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1</getRowOid><space/>Type</label>
+			<enum>SlotType-em</enum>
+			<sensorSet>Slot</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="delete_null_sensor_hwLswSlotType">
+			<valueIn>0</valueIn>			<valueOut>[false]</valueOut>
+			<valueIn>*</valueIn>			<valueOut>[true]</valueOut>
+		</valueMap>	
+
+		<valueMap ruleid="SlotType-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>10</valueIn>			<valueOut>2</valueOut>
+			<valueIn>100</valueIn>			<valueOut>3</valueOut>
+			<valueIn>101</valueIn>			<valueOut>4</valueOut>
+			<valueIn>102</valueIn>			<valueOut>5</valueOut>
+			<valueIn>103</valueIn>			<valueOut>6</valueOut>
+			<valueIn>104</valueIn>			<valueOut>7</valueOut>
+			<valueIn>105</valueIn>			<valueOut>8</valueOut>
+			<valueIn>106</valueIn>			<valueOut>9</valueOut>
+			<valueIn>107</valueIn>			<valueOut>10</valueOut>
+			<valueIn>108</valueIn>			<valueOut>11</valueOut>
+			<valueIn>109</valueIn>			<valueOut>12</valueOut>
+			<valueIn>11</valueIn>			<valueOut>13</valueOut>
+			<valueIn>110</valueIn>			<valueOut>14</valueOut>
+			<valueIn>111</valueIn>			<valueOut>15</valueOut>
+			<valueIn>112</valueIn>			<valueOut>16</valueOut>
+			<valueIn>113</valueIn>			<valueOut>17</valueOut>
+			<valueIn>114</valueIn>			<valueOut>18</valueOut>
+			<valueIn>115</valueIn>			<valueOut>19</valueOut>
+			<valueIn>116</valueIn>			<valueOut>20</valueOut>
+			<valueIn>117</valueIn>			<valueOut>21</valueOut>
+			<valueIn>118</valueIn>			<valueOut>22</valueOut>
+			<valueIn>119</valueIn>			<valueOut>23</valueOut>
+			<valueIn>12</valueIn>			<valueOut>24</valueOut>
+			<valueIn>120</valueIn>			<valueOut>25</valueOut>
+			<valueIn>121</valueIn>			<valueOut>26</valueOut>
+			<valueIn>122</valueIn>			<valueOut>27</valueOut>
+			<valueIn>123</valueIn>			<valueOut>28</valueOut>
+			<valueIn>125</valueIn>			<valueOut>29</valueOut>
+			<valueIn>126</valueIn>			<valueOut>30</valueOut>
+			<valueIn>127</valueIn>			<valueOut>31</valueOut>
+			<valueIn>128</valueIn>			<valueOut>32</valueOut>
+			<valueIn>129</valueIn>			<valueOut>33</valueOut>
+			<valueIn>13</valueIn>			<valueOut>34</valueOut>
+			<valueIn>130</valueIn>			<valueOut>35</valueOut>
+			<valueIn>131</valueIn>			<valueOut>36</valueOut>
+			<valueIn>132</valueIn>			<valueOut>37</valueOut>
+			<valueIn>133</valueIn>			<valueOut>38</valueOut>
+			<valueIn>134</valueIn>			<valueOut>39</valueOut>
+			<valueIn>135</valueIn>			<valueOut>40</valueOut>
+			<valueIn>136</valueIn>			<valueOut>41</valueOut>
+			<valueIn>137</valueIn>			<valueOut>42</valueOut>
+			<valueIn>138</valueIn>			<valueOut>43</valueOut>
+			<valueIn>139</valueIn>			<valueOut>44</valueOut>
+			<valueIn>14</valueIn>			<valueOut>45</valueOut>
+			<valueIn>140</valueIn>			<valueOut>46</valueOut>
+			<valueIn>141</valueIn>			<valueOut>47</valueOut>
+			<valueIn>142</valueIn>			<valueOut>48</valueOut>
+			<valueIn>143</valueIn>			<valueOut>49</valueOut>
+			<valueIn>144</valueIn>			<valueOut>50</valueOut>
+			<valueIn>145</valueIn>			<valueOut>51</valueOut>
+			<valueIn>146</valueIn>			<valueOut>52</valueOut>
+			<valueIn>147</valueIn>			<valueOut>53</valueOut>
+			<valueIn>148</valueIn>			<valueOut>54</valueOut>
+			<valueIn>149</valueIn>			<valueOut>55</valueOut>
+			<valueIn>15</valueIn>			<valueOut>56</valueOut>
+			<valueIn>150</valueIn>			<valueOut>57</valueOut>
+			<valueIn>151</valueIn>			<valueOut>58</valueOut>
+			<valueIn>152</valueIn>			<valueOut>59</valueOut>
+			<valueIn>153</valueIn>			<valueOut>60</valueOut>
+			<valueIn>154</valueIn>			<valueOut>61</valueOut>
+			<valueIn>155</valueIn>			<valueOut>62</valueOut>
+			<valueIn>156</valueIn>			<valueOut>63</valueOut>
+			<valueIn>157</valueIn>			<valueOut>64</valueOut>
+			<valueIn>158</valueIn>			<valueOut>65</valueOut>
+			<valueIn>159</valueIn>			<valueOut>66</valueOut>
+			<valueIn>16</valueIn>			<valueOut>67</valueOut>
+			<valueIn>160</valueIn>			<valueOut>68</valueOut>
+			<valueIn>161</valueIn>			<valueOut>69</valueOut>
+			<valueIn>162</valueIn>			<valueOut>70</valueOut>
+			<valueIn>163</valueIn>			<valueOut>71</valueOut>
+			<valueIn>164</valueIn>			<valueOut>72</valueOut>
+			<valueIn>165</valueIn>			<valueOut>73</valueOut>
+			<valueIn>166</valueIn>			<valueOut>74</valueOut>
+			<valueIn>167</valueIn>			<valueOut>75</valueOut>
+			<valueIn>168</valueIn>			<valueOut>76</valueOut>
+			<valueIn>169</valueIn>			<valueOut>77</valueOut>
+			<valueIn>17</valueIn>			<valueOut>78</valueOut>
+			<valueIn>170</valueIn>			<valueOut>79</valueOut>
+			<valueIn>171</valueIn>			<valueOut>80</valueOut>
+			<valueIn>172</valueIn>			<valueOut>81</valueOut>
+			<valueIn>173</valueIn>			<valueOut>82</valueOut>
+			<valueIn>174</valueIn>			<valueOut>83</valueOut>
+			<valueIn>175</valueIn>			<valueOut>84</valueOut>
+			<valueIn>176</valueIn>			<valueOut>85</valueOut>
+			<valueIn>18</valueIn>			<valueOut>86</valueOut>
+			<valueIn>19</valueIn>			<valueOut>87</valueOut>
+			<valueIn>2</valueIn>			<valueOut>88</valueOut>
+			<valueIn>20</valueIn>			<valueOut>89</valueOut>
+			<valueIn>21</valueIn>			<valueOut>90</valueOut>
+			<valueIn>22</valueIn>			<valueOut>91</valueOut>
+			<valueIn>23</valueIn>			<valueOut>92</valueOut>
+			<valueIn>24</valueIn>			<valueOut>93</valueOut>
+			<valueIn>25</valueIn>			<valueOut>94</valueOut>
+			<valueIn>254</valueIn>			<valueOut>95</valueOut>
+			<valueIn>255</valueIn>			<valueOut>96</valueOut>
+			<valueIn>256</valueIn>			<valueOut>97</valueOut>
+			<valueIn>26</valueIn>			<valueOut>98</valueOut>
+			<valueIn>27</valueIn>			<valueOut>99</valueOut>
+			<valueIn>28</valueIn>			<valueOut>100</valueOut>
+			<valueIn>29</valueIn>			<valueOut>101</valueOut>
+			<valueIn>3</valueIn>			<valueOut>102</valueOut>
+			<valueIn>30</valueIn>			<valueOut>103</valueOut>
+			<valueIn>31</valueIn>			<valueOut>104</valueOut>
+			<valueIn>32</valueIn>			<valueOut>105</valueOut>
+			<valueIn>33</valueIn>			<valueOut>106</valueOut>
+			<valueIn>34</valueIn>			<valueOut>107</valueOut>
+			<valueIn>35</valueIn>			<valueOut>108</valueOut>
+			<valueIn>36</valueIn>			<valueOut>109</valueOut>
+			<valueIn>37</valueIn>			<valueOut>110</valueOut>
+			<valueIn>38</valueIn>			<valueOut>111</valueOut>
+			<valueIn>39</valueIn>			<valueOut>112</valueOut>
+			<valueIn>4</valueIn>			<valueOut>113</valueOut>
+			<valueIn>40</valueIn>			<valueOut>114</valueOut>
+			<valueIn>41</valueIn>			<valueOut>115</valueOut>
+			<valueIn>42</valueIn>			<valueOut>116</valueOut>
+			<valueIn>43</valueIn>			<valueOut>117</valueOut>
+			<valueIn>44</valueIn>			<valueOut>118</valueOut>
+			<valueIn>45</valueIn>			<valueOut>119</valueOut>
+			<valueIn>46</valueIn>			<valueOut>120</valueOut>
+			<valueIn>47</valueIn>			<valueOut>121</valueOut>
+			<valueIn>48</valueIn>			<valueOut>122</valueOut>
+			<valueIn>49</valueIn>			<valueOut>123</valueOut>
+			<valueIn>5</valueIn>			<valueOut>124</valueOut>
+			<valueIn>50</valueIn>			<valueOut>125</valueOut>
+			<valueIn>51</valueIn>			<valueOut>126</valueOut>
+			<valueIn>52</valueIn>			<valueOut>127</valueOut>
+			<valueIn>53</valueIn>			<valueOut>128</valueOut>
+			<valueIn>54</valueIn>			<valueOut>129</valueOut>
+			<valueIn>55</valueIn>			<valueOut>130</valueOut>
+			<valueIn>56</valueIn>			<valueOut>131</valueOut>
+			<valueIn>57</valueIn>			<valueOut>132</valueOut>
+			<valueIn>58</valueIn>			<valueOut>133</valueOut>
+			<valueIn>59</valueIn>			<valueOut>134</valueOut>
+			<valueIn>6</valueIn>			<valueOut>135</valueOut>
+			<valueIn>60</valueIn>			<valueOut>136</valueOut>
+			<valueIn>61</valueIn>			<valueOut>137</valueOut>
+			<valueIn>62</valueIn>			<valueOut>138</valueOut>
+			<valueIn>63</valueIn>			<valueOut>139</valueOut>
+			<valueIn>64</valueIn>			<valueOut>140</valueOut>
+			<valueIn>65</valueIn>			<valueOut>141</valueOut>
+			<valueIn>66</valueIn>			<valueOut>142</valueOut>
+			<valueIn>67</valueIn>			<valueOut>143</valueOut>
+			<valueIn>68</valueIn>			<valueOut>144</valueOut>
+			<valueIn>69</valueIn>			<valueOut>145</valueOut>
+			<valueIn>7</valueIn>			<valueOut>146</valueOut>
+			<valueIn>70</valueIn>			<valueOut>147</valueOut>
+			<valueIn>71</valueIn>			<valueOut>148</valueOut>
+			<valueIn>72</valueIn>			<valueOut>149</valueOut>
+			<valueIn>73</valueIn>			<valueOut>150</valueOut>
+			<valueIn>74</valueIn>			<valueOut>151</valueOut>
+			<valueIn>75</valueIn>			<valueOut>152</valueOut>
+			<valueIn>76</valueIn>			<valueOut>153</valueOut>
+			<valueIn>77</valueIn>			<valueOut>154</valueOut>
+			<valueIn>78</valueIn>			<valueOut>155</valueOut>
+			<valueIn>79</valueIn>			<valueOut>156</valueOut>
+			<valueIn>8</valueIn>			<valueOut>157</valueOut>
+			<valueIn>80</valueIn>			<valueOut>158</valueOut>
+			<valueIn>81</valueIn>			<valueOut>159</valueOut>
+			<valueIn>82</valueIn>			<valueOut>160</valueOut>
+			<valueIn>83</valueIn>			<valueOut>161</valueOut>
+			<valueIn>84</valueIn>			<valueOut>162</valueOut>
+			<valueIn>85</valueIn>			<valueOut>163</valueOut>
+			<valueIn>86</valueIn>			<valueOut>164</valueOut>
+			<valueIn>87</valueIn>			<valueOut>165</valueOut>
+			<valueIn>88</valueIn>			<valueOut>166</valueOut>
+			<valueIn>89</valueIn>			<valueOut>167</valueOut>
+			<valueIn>9</valueIn>			<valueOut>168</valueOut>
+			<valueIn>90</valueIn>			<valueOut>169</valueOut>
+			<valueIn>91</valueIn>			<valueOut>170</valueOut>
+			<valueIn>92</valueIn>			<valueOut>171</valueOut>
+			<valueIn>93</valueIn>			<valueOut>172</valueOut>
+			<valueIn>94</valueIn>			<valueOut>173</valueOut>
+			<valueIn>95</valueIn>			<valueOut>174</valueOut>
+			<valueIn>96</valueIn>			<valueOut>175</valueOut>
+			<valueIn>97</valueIn>			<valueOut>176</valueOut>
+			<valueIn>98</valueIn>			<valueOut>177</valueOut>
+			<valueIn>99</valueIn>			<valueOut>178</valueOut>
+		</valueMap>	
+
+		<enumMap ruleid="SlotType-em">
+			<label>type-NULL</label>
+			<label>type-10OR100M</label>
+			<label>type-STACK</label>
+			<label>type-LSB1XP2B</label>
+			<label>type-LSB1XP2C</label>
+			<label>type-LSB1GV48B</label>
+			<label>type-LSB1GV48C</label>
+			<label>type-LSB1SRPC</label>
+			<label>type-LSB1SRP1N0</label>
+			<label>type-LSB1SRP1N1</label>
+			<label>type-LSB1SRP1N2</label>
+			<label>type-GT24</label>
+			<label>type-GP24</label>
+			<label>type-1000BASE-ZENITH-FX</label>
+			<label>type-XP2</label>
+			<label>type-GV48</label>
+			<label>type-LSG1GP8U</label>
+			<label>type-LSG1GT8U</label>
+			<label>type-LSG1TG1U</label>
+			<label>type-LSG1TD1U</label>
+			<label>type-LSB2FT48C</label>
+			<label>type-LSB1GT48B</label>
+			<label>type-LSB1GT48C</label>
+			<label>type-LS81GT48</label>
+			<label>type-1000BASE-LONG-FX</label>
+			<label>type-LS81SRPG0</label>
+			<label>type-LS81SRPG1</label>
+			<label>type-LS81SRPG2</label>
+			<label>type-LS81SRPG3</label>
+			<label>type-SR01SRPUB</label>
+			<label>type-SR01SRPUA</label>
+			<label>type-SR01GP12L</label>
+			<label>type-SR01GP12W</label>
+			<label>type-SR01FT48L</label>
+			<label>type-ADSL</label>
+			<label>type-SR01FT48W</label>
+			<label>type-SR01XK1W</label>
+			<label>type-SR01FP20W</label>
+			<label>type-SR01GT12W</label>
+			<label>type-SR01F32GL</label>
+			<label>type-SR01F32GW</label>
+			<label>type-SR01GT8PL</label>
+			<label>type-SR01GT8PW</label>
+			<label>type-SR01P4G8W</label>
+			<label>type-LSA1FP8U</label>
+			<label>type-4T10OR100-4FX100SM</label>
+			<label>type-LSB1SP4B</label>
+			<label>type-LSB1SP4C</label>
+			<label>type-LSB1UP1B</label>
+			<label>type-LSB1UP1C</label>
+			<label>type-LSB1XP4B</label>
+			<label>type-LSB1XP4C</label>
+			<label>type-SP4</label>
+			<label>type-UP1</label>
+			<label>type-XP4</label>
+			<label>type-LS81VSNP</label>
+			<label>type-4T10OR100-4FX100MM</label>
+			<label>type-LS81T12P</label>
+			<label>type-LS81P12T</label>
+			<label>type-LS81GP8UB</label>
+			<label>type-LS81FT48E</label>
+			<label>type-LS81GP4UB</label>
+			<label>type-LS81GT8UE</label>
+			<label>type-LS81GT48A</label>
+			<label>type-LS81FP48</label>
+			<label>type-LSB1XK1B</label>
+			<label>type-LSB1XK1C</label>
+			<label>type-VSPL</label>
+			<label>type-SR01SRPUC</label>
+			<label>type-SR01SRPUD</label>
+			<label>type-SR01SRPUE</label>
+			<label>type-LSB1SRP1N3</label>
+			<label>type-LSB1VP2B</label>
+			<label>type-LSB1NATB</label>
+			<label>type-LSB1VPNB</label>
+			<label>type-LSGP8P</label>
+			<label>type-LSXK1P</label>
+			<label>type-LSXP2P</label>
+			<label>type-ASPL</label>
+			<label>type-LS81FT48F</label>
+			<label>type-LS81PT8G</label>
+			<label>type-LS81PT4G</label>
+			<label>type-LSSTK24G</label>
+			<label>type-LS82GT20A</label>
+			<label>type-LS82GP20A</label>
+			<label>type-LS81TGX1C</label>
+			<label>type-1000M-SFP</label>
+			<label>type-LS82O2CM</label>
+			<label>type-1000BASE-LX-SM</label>
+			<label>type-LS82P2CM</label>
+			<label>type-LS82O4GM</label>
+			<label>type-LS82GB4C</label>
+			<label>type-LS82GT4C</label>
+			<label>type-LS82ST4C</label>
+			<label>bOARD-TYPE-LS82DSPU</label>
+			<label>bOARD-TYPE-LS82SRPB</label>
+			<label>bORAD-TYPE-LS83SRPC</label>
+			<label>type-Main</label>
+			<label>bOARD-TYPE-LS81GP8U</label>
+			<label>bOARD-TYPE-LS82GT20</label>
+			<label>bOARD-TYPE-LS82FE48</label>
+			<label>type-LS82T24B</label>
+			<label>type-1000BASE-SX-MM</label>
+			<label>type-LSB1SRPA</label>
+			<label>type-LSB1FT48A</label>
+			<label>type-LSB1FT48B</label>
+			<label>type-LSB1F48GA</label>
+			<label>type-LSB1F48GB</label>
+			<label>type-LSB1FP20A</label>
+			<label>type-LSB1FP20B</label>
+			<label>type-FT48A</label>
+			<label>type-GP4U</label>
+			<label>type-GP2U</label>
+			<label>type-1000BASE-TX</label>
+			<label>type-TGX1A</label>
+			<label>type-1000BASE-LX-SM-IR-SC</label>
+			<label>type-1000BASE-SX-MM-SR-SC</label>
+			<label>type-1000BASE-T-RJ45</label>
+			<label>type-100BASE-FX-SM-IR-SC</label>
+			<label>type-100BASE-FX-MM-SR-SC</label>
+			<label>type-GIGA-STACK-1M-PC</label>
+			<label>type-1000BASE-LX-SM-VLR-LC</label>
+			<label>type-1000BASE-LX-SM-LR-LC</label>
+			<label>type-100BASE-FX-SM-LR-SC</label>
+			<label>type-100M-SINGLEMODE-FX</label>
+			<label>type-1000BASE-X-GBIC</label>
+			<label>type-100M-SINGLEMODE-FX-LC</label>
+			<label>type-100M-MULTIMODE-FX-LC</label>
+			<label>type-1000BASE-4SFP</label>
+			<label>type-1000BASE-4GBIC</label>
+			<label>type-1000BASE-FIXED-4SFP</label>
+			<label>type-1000BASE-FIXED-4GBIC</label>
+			<label>type-LSB1GP12A</label>
+			<label>type-LSB1GP12B</label>
+			<label>type-LSB1TGX1A</label>
+			<label>type-100M-MULTIMODE-FX</label>
+			<label>type-LSB1TGX1B</label>
+			<label>type-LSB1P4G8A</label>
+			<label>type-LSB1P4G8B</label>
+			<label>type-LSB1A4G8A</label>
+			<label>type-LSB1A4G8B</label>
+			<label>type-FT48C</label>
+			<label>type-FP20</label>
+			<label>bOARD-TYPE-LS81FT48</label>
+			<label>bOARD-TYPE-LS81GB8U</label>
+			<label>bOARD-TYPE-LS81GT8U</label>
+			<label>type-100M-100BASE-TX</label>
+			<label>bOARD-TYPE-LS81FS24</label>
+			<label>bOARD-TYPE-LS81FM24</label>
+			<label>bOARD-TYPE-LS82GP20</label>
+			<label>type-LSB1SRPB</label>
+			<label>type-LSB1F32GA</label>
+			<label>type-LSB1F32GB</label>
+			<label>type-LSB2FT48A</label>
+			<label>type-LSB2FT48B</label>
+			<label>type-LSB1GT12A</label>
+			<label>type-LSB1GT12B</label>
+			<label>type-100M-HUB</label>
+			<label>type-PC4U</label>
+			<label>type-FT32A</label>
+			<label>type-GT4U</label>
+			<label>bOARD-TYPE-LS83FP20A</label>
+			<label>bOARD-TYPE-LS82HGMU</label>
+			<label>type-LSB1GP8TB</label>
+			<label>type-LSB1GP8TC</label>
+			<label>type-LSB1GT8PB</label>
+			<label>type-LSB1GT8PC</label>
+			<label>type-LSB1FT48C</label>
+			<label>type-VDSL</label>
+			<label>type-LSB1FP20C</label>
+			<label>type-LSB1F32GC</label>
+			<label>type-LSB1GT12C</label>
+			<label>type-LSB1GP12C</label>
+			<label>type-LSB1P4G8C</label>
+			<label>type-LSB1TGX1C</label>
+			<label>type-LSB1GT24B</label>
+			<label>type-LSB1GT24C</label>
+			<label>type-LSB1GP24B</label>
+			<label>type-LSB1GP24C</label>
+		</enumMap>	
+			
+	<!-- hwLswSlotAdminStatus -->
+		<stateSensor ruleid="hwLswSlotAdminStatus" index=".1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1">
+			<type>state</type>
+			<sensorId>HW_LSW_SLOT_ADMIN_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="hwLswSlotAdminStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.8</getRowOid>
+				</mapValue>
+			</value>	
+			<label>Slot#<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1</getRowOid><space/>Admin Status</label>
+			<enum>hwLswSlotAdminStatus-em</enum>
+			<sensorSet>Slot</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="hwLswSlotAdminStatus-vm">
+			<valueIn>1</valueIn>			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>			<valueOut>3</valueOut>
+		</valueMap>	
+
+		<enumMap ruleid="hwLswSlotAdminStatus-em">
+			<label>not-install</label>
+			<label>normal</label>
+			<label>fault</label>
+			<label>forbidden</label>
+		</enumMap>	
+			
+					<!-- hwLswSlotOperStatus -->
+		<stateSensor ruleid="hwLswSlotOperStatus" index=".1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1">
+			<type>state</type>
+			<sensorId>HW_LSW_SLOT_OPER_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="hwLswSlotOperStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.9</getRowOid>
+				</mapValue>
+			</value>	
+			<label>Slot#<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.3.1.1</getRowOid><space/>Operation Status</label>
+			<enum>hwLswSlotOperStatus-em</enum>
+			<sensorSet>Slot</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="hwLswSlotOperStatus-vm">
+			<valueIn>1</valueIn>			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>			<valueOut>3</valueOut>
+		</valueMap>	
+
+		<enumMap ruleid="hwLswSlotOperStatus-em">
+			<label>disable</label>
+			<label>enable</label>
+			<label>reset</label>
+			<label>test</label>
+		</enumMap>	
+			
+	
+		<!-- hwLswPortType -->
+		<stateSensor ruleid="hwLswPortType" index=".1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor_hwLswPortType">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>HW_LSW_PORT_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="PortType-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.2</getRowOid>
+				</mapValue>
+			</value>	
+			<label>Port #<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.1</getRowOid><space/>Port Type</label>
+			<enum>PortType-em</enum>
+			<sensorSet>Port</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="delete_null_sensor_hwLswPortType">
+			<valueIn>0</valueIn>			<valueOut>[false]</valueOut>
+			<valueIn>*</valueIn>			<valueOut>[true]</valueOut>
+		</valueMap>	
+
+		<valueMap ruleid="PortType-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>10</valueIn>			<valueOut>2</valueOut>
+			<valueIn>100</valueIn>			<valueOut>3</valueOut>
+			<valueIn>11</valueIn>			<valueOut>4</valueOut>
+			<valueIn>12</valueIn>			<valueOut>5</valueOut>
+			<valueIn>13</valueIn>			<valueOut>6</valueOut>
+			<valueIn>14</valueIn>			<valueOut>7</valueOut>
+			<valueIn>15</valueIn>			<valueOut>8</valueOut>
+			<valueIn>16</valueIn>			<valueOut>9</valueOut>
+			<valueIn>17</valueIn>			<valueOut>10</valueOut>
+			<valueIn>18</valueIn>			<valueOut>11</valueOut>
+			<valueIn>19</valueIn>			<valueOut>12</valueOut>
+			<valueIn>2</valueIn>			<valueOut>13</valueOut>
+			<valueIn>20</valueIn>			<valueOut>14</valueOut>
+			<valueIn>21</valueIn>			<valueOut>15</valueOut>
+			<valueIn>22</valueIn>			<valueOut>16</valueOut>
+			<valueIn>23</valueIn>			<valueOut>17</valueOut>
+			<valueIn>24</valueIn>			<valueOut>18</valueOut>
+			<valueIn>25</valueIn>			<valueOut>19</valueOut>
+			<valueIn>26</valueIn>			<valueOut>20</valueOut>
+			<valueIn>27</valueIn>			<valueOut>21</valueOut>
+			<valueIn>28</valueIn>			<valueOut>22</valueOut>
+			<valueIn>29</valueIn>			<valueOut>23</valueOut>
+			<valueIn>3</valueIn>			<valueOut>24</valueOut>
+			<valueIn>30</valueIn>			<valueOut>25</valueOut>
+			<valueIn>31</valueIn>			<valueOut>26</valueOut>
+			<valueIn>32</valueIn>			<valueOut>27</valueOut>
+			<valueIn>33</valueIn>			<valueOut>28</valueOut>
+			<valueIn>34</valueIn>			<valueOut>29</valueOut>
+			<valueIn>35</valueIn>			<valueOut>30</valueOut>
+			<valueIn>36</valueIn>			<valueOut>31</valueOut>
+			<valueIn>37</valueIn>			<valueOut>32</valueOut>
+			<valueIn>38</valueIn>			<valueOut>33</valueOut>
+			<valueIn>39</valueIn>			<valueOut>34</valueOut>
+			<valueIn>4</valueIn>			<valueOut>35</valueOut>
+			<valueIn>40</valueIn>			<valueOut>36</valueOut>
+			<valueIn>41</valueIn>			<valueOut>37</valueOut>
+			<valueIn>42</valueIn>			<valueOut>38</valueOut>
+			<valueIn>43</valueIn>			<valueOut>39</valueOut>
+			<valueIn>44</valueIn>			<valueOut>40</valueOut>
+			<valueIn>45</valueIn>			<valueOut>41</valueOut>
+			<valueIn>46</valueIn>			<valueOut>42</valueOut>
+			<valueIn>47</valueIn>			<valueOut>43</valueOut>
+			<valueIn>48</valueIn>			<valueOut>44</valueOut>
+			<valueIn>49</valueIn>			<valueOut>45</valueOut>
+			<valueIn>5</valueIn>			<valueOut>46</valueOut>
+			<valueIn>50</valueIn>			<valueOut>47</valueOut>
+			<valueIn>51</valueIn>			<valueOut>48</valueOut>
+			<valueIn>52</valueIn>			<valueOut>49</valueOut>
+			<valueIn>53</valueIn>			<valueOut>50</valueOut>
+			<valueIn>54</valueIn>			<valueOut>51</valueOut>
+			<valueIn>55</valueIn>			<valueOut>52</valueOut>
+			<valueIn>56</valueIn>			<valueOut>53</valueOut>
+			<valueIn>57</valueIn>			<valueOut>54</valueOut>
+			<valueIn>58</valueIn>			<valueOut>55</valueOut>
+			<valueIn>59</valueIn>			<valueOut>56</valueOut>
+			<valueIn>6</valueIn>			<valueOut>57</valueOut>
+			<valueIn>60</valueIn>			<valueOut>58</valueOut>
+			<valueIn>61</valueIn>			<valueOut>59</valueOut>
+			<valueIn>62</valueIn>			<valueOut>60</valueOut>
+			<valueIn>63</valueIn>			<valueOut>61</valueOut>
+			<valueIn>64</valueIn>			<valueOut>62</valueOut>
+			<valueIn>65</valueIn>			<valueOut>63</valueOut>
+			<valueIn>66</valueIn>			<valueOut>64</valueOut>
+			<valueIn>67</valueIn>			<valueOut>65</valueOut>
+			<valueIn>68</valueIn>			<valueOut>66</valueOut>
+			<valueIn>69</valueIn>			<valueOut>67</valueOut>
+			<valueIn>7</valueIn>			<valueOut>68</valueOut>
+			<valueIn>70</valueIn>			<valueOut>69</valueOut>
+			<valueIn>71</valueIn>			<valueOut>70</valueOut>
+			<valueIn>72</valueIn>			<valueOut>71</valueOut>
+			<valueIn>73</valueIn>			<valueOut>72</valueOut>
+			<valueIn>74</valueIn>			<valueOut>73</valueOut>
+			<valueIn>75</valueIn>			<valueOut>74</valueOut>
+			<valueIn>76</valueIn>			<valueOut>75</valueOut>
+			<valueIn>77</valueIn>			<valueOut>76</valueOut>
+			<valueIn>78</valueIn>			<valueOut>77</valueOut>
+			<valueIn>79</valueIn>			<valueOut>78</valueOut>
+			<valueIn>8</valueIn>			<valueOut>79</valueOut>
+			<valueIn>80</valueIn>			<valueOut>80</valueOut>
+			<valueIn>81</valueIn>			<valueOut>81</valueOut>
+			<valueIn>82</valueIn>			<valueOut>82</valueOut>
+			<valueIn>83</valueIn>			<valueOut>83</valueOut>
+			<valueIn>84</valueIn>			<valueOut>84</valueOut>
+			<valueIn>85</valueIn>			<valueOut>85</valueOut>
+			<valueIn>86</valueIn>			<valueOut>86</valueOut>
+			<valueIn>87</valueIn>			<valueOut>87</valueOut>
+			<valueIn>88</valueIn>			<valueOut>88</valueOut>
+			<valueIn>89</valueIn>			<valueOut>89</valueOut>
+			<valueIn>9</valueIn>			<valueOut>90</valueOut>
+			<valueIn>90</valueIn>			<valueOut>91</valueOut>
+			<valueIn>91</valueIn>			<valueOut>92</valueOut>
+			<valueIn>92</valueIn>			<valueOut>93</valueOut>
+			<valueIn>93</valueIn>			<valueOut>94</valueOut>
+			<valueIn>94</valueIn>			<valueOut>95</valueOut>
+			<valueIn>95</valueIn>			<valueOut>96</valueOut>
+			<valueIn>96</valueIn>			<valueOut>97</valueOut>
+			<valueIn>97</valueIn>			<valueOut>98</valueOut>
+			<valueIn>98</valueIn>			<valueOut>99</valueOut>
+			<valueIn>99</valueIn>			<valueOut>100</valueOut>
+		</valueMap>	
+
+		<enumMap ruleid="PortType-em">
+			<label>type-NULL</label>
+			<label>type-10OR100M</label>
+			<label>type-STACK</label>
+			<label>type-24G-CASCADE</label>
+			<label>type-1000BASE-ZENITH-FX</label>
+			<label>type-1000BASE-LONG-FX</label>
+			<label>type-ADSL</label>
+			<label>type-10OR100M-db</label>
+			<label>type-10GBASE-LR-SM</label>
+			<label>type-10GBASE-LX4-MM</label>
+			<label>type-10GBASE-LX4-SM</label>
+			<label>type-100M-LONG-FX</label>
+			<label>type-1000BASE-CX</label>
+			<label>type-1000BASE-LX-SM</label>
+			<label>type-1000BASE-ZENITH-FX-LC</label>
+			<label>type-1000BASE-LONG-FX-LC</label>
+			<label>type-100M-SM-FX-SC</label>
+			<label>type-100M-MM-FX-SC</label>
+			<label>type-100M-SM-FX-LC</label>
+			<label>type-100M-MM-FX-LC</label>
+			<label>type-GBIC-NO-CONNECTOR</label>
+			<label>type-GBIC-1000-BASE-T</label>
+			<label>type-GBIC-1000-BASE-LX</label>
+			<label>type-GBIC-1000-BASE-SX</label>
+			<label>type-1000BASE-SX-MM</label>
+			<label>type-GBIC-1000-BASE-ZX</label>
+			<label>type-COMBO-NO-CONNECTOR</label>
+			<label>type-COMBO-1000-BASE-LX</label>
+			<label>type-COMBO-1000-BASE-LX-FIBER</label>
+			<label>type-COMBO-1000-BASE-LX-COPPER</label>
+			<label>type-COMBO-1000-BASE-SX</label>
+			<label>type-COMBO-1000-BASE-SX-FIBER</label>
+			<label>type-COMBO-1000-BASE-SX-COPPER</label>
+			<label>type-COMBO-1000-BASE-ZX</label>
+			<label>type-COMBO-1000-BASE-ZX-FIBER</label>
+			<label>type-1000BASE-TX</label>
+			<label>type-COMBO-1000-BASE-ZX-COPPER</label>
+			<label>type-155-POS-SX-MMF</label>
+			<label>type-155-POS-LX-SMF</label>
+			<label>type-1000BASE-T</label>
+			<label>type-1000BASE-SX-SFP</label>
+			<label>type-1000BASE-LX-SFP</label>
+			<label>type-1000BASE-T-AN-SFP</label>
+			<label>type-10GBASE-LX4-XENPAK</label>
+			<label>type-10GBASE-LR-XENPAK</label>
+			<label>type-10GBASE-CX4</label>
+			<label>type-100M-SINGLEMODE-FX</label>
+			<label>type-1000BASE-ZX-SFP</label>
+			<label>type-1000BASE-MM-SFP</label>
+			<label>type-100BASE-SX-SFP</label>
+			<label>type-100BASE-LX-SFP</label>
+			<label>type-100BASE-T-AN-SFP</label>
+			<label>type-100BASE-ZX-SFP</label>
+			<label>type-100BASE-MM-SFP</label>
+			<label>type-SFP-NO-CONNECTOR</label>
+			<label>type-SFP-UNKNOWN-CONNECTOR</label>
+			<label>type-POS-NO-CONNECTOR</label>
+			<label>type-100M-MULTIMODE-FX</label>
+			<label>type-10G-BASE-SR</label>
+			<label>type-10G-BASE-ER</label>
+			<label>type-10G-BASE-LX4</label>
+			<label>type-10G-BASE-SW</label>
+			<label>type-10G-BASE-LW</label>
+			<label>type-10G-BASE-EW</label>
+			<label>type-10G-LR-SM-LC</label>
+			<label>type-10G-SR-MM-LC</label>
+			<label>type-10G-ER-SM-LC</label>
+			<label>type-10G-LW-SM-LC</label>
+			<label>type-100M-100BASE-TX</label>
+			<label>type-10G-SW-MM-LC</label>
+			<label>type-10G-EW-SM-LC</label>
+			<label>type-100BASE-SM-MTRJ</label>
+			<label>type-100BASE-MM-MTRJ</label>
+			<label>type-XFP-NO-CONNECTOR</label>
+			<label>type-XFP-10GBASE-SR</label>
+			<label>type-XFP-10GBASE-LR</label>
+			<label>type-XFP-10GBASE-ER</label>
+			<label>type-XFP-10GBASE-SW</label>
+			<label>type-XFP-10GBASE-LW</label>
+			<label>type-100M-HUB</label>
+			<label>type-XFP-10GBASE-EW</label>
+			<label>type-XFP-10GBASE-CX4</label>
+			<label>type-XFP-10GBASE-LX4</label>
+			<label>type-XFP-UNKNOWN</label>
+			<label>type-XPK-NOCONNECTOR</label>
+			<label>type-XPK-10GBASE-SR</label>
+			<label>type-XPK-10GBASE-LR</label>
+			<label>type-XPK-10GBASE-ER</label>
+			<label>type-XPK-10GBASE-SW</label>
+			<label>type-XPK-10GBASE-LW</label>
+			<label>type-VDSL</label>
+			<label>type-XPK-10GBASE-EW</label>
+			<label>type-XPK-10GBASE-CX4</label>
+			<label>type-XPK-10GBASE-LX4</label>
+			<label>type-XPK-UNKNOWN</label>
+			<label>type-POS-OC48-SR-SM-LC</label>
+			<label>type-POS-OC48-IR-SM-LC</label>
+			<label>type-POS-OC48-LR-SM-LC</label>
+			<label>type-10G-BASE-CX4</label>
+			<label>type-OLT-1000BASE-BX-SFF-SC</label>
+			<label>type-ONU-1000BASE-BX-SFF-SC</label>
+		</enumMap>	
+			
+					<!-- hwLswPortIsPlugged -->
+		<stateSensor ruleid="hwLswPortIsPlugged" index=".1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.1">
+			<type>state</type>
+			<sensorId>HW_LSW_PORT_IS_PLUGGED_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="hwLswPortIsPlugged-vm">
+					<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.4</getRowOid>
+				</mapValue>
+			</value>	
+			<label>Port #<getRowOid>.1.3.6.1.4.1.43.45.1.2.23.1.18.4.5.1.1</getRowOid><space/>Port Status</label>
+			<enum>hwLswPortIsPlugged-em</enum>
+			<sensorSet>Port</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="hwLswPortIsPlugged-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+		</valueMap>	
+
+		<enumMap ruleid="hwLswPortIsPlugged-em">
+			<label>Unplugged</label>
+			<label>Plugged</label>
+		</enumMap>	
+			
+	</device>
+
+</APC_DDF>
+
+
+
+
+
+		

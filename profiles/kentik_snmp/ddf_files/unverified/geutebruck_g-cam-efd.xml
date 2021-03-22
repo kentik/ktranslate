@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="geutebruck_g-cam-efd"
+	ddfname="Geutebruck G-Cam EFD"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="geutebruck_g-cam-efd">
+		<oidMustExist ruleid="geutebruck_g-cam-efd" oid=".1.3.6.1.4.1.1486" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Geutebruck</setProductData>
+		<setProductData ruleid="modeldata" field="model">G-Cam EFD</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<numSensor ruleid="capVideoMaxCh">
+            <type>num</type>
+            <sensorId>CAP_VIDEO_MAX_CH</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.1.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Video Max Ch.</label>
+            <sensorSet>Video</sensorSet>
+        </numSensor>
+		<stringSensor ruleid="capVideoLoss">
+            <type>string</type>
+            <sensorId>CAP_VIDEO_LOSS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.1.2.0</getOid>
+            </value>
+            <label>Video Loss</label>
+            <sensorSet>Video</sensorSet>
+        </stringSensor>
+
+		<numSensor ruleid="capDigitalInputMaxCh">
+            <type>num</type>
+            <sensorId>CAP_DI_MAX_CH</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Digital Input Max Ch.</label>
+            <sensorSet>Digital Input</sensorSet>
+        </numSensor>
+		<stringSensor ruleid="capDigitalIOInput">
+            <type>string</type>
+            <sensorId>CAP_DIO_INPUT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.2.2.0</getOid>
+            </value>
+            <label>Digital I/O Input</label>
+            <sensorSet>Digital Input</sensorSet>
+        </stringSensor>
+
+		<numSensor ruleid="capDigitalOutputMaxCh">
+            <type>num</type>
+            <sensorId>CAP_DO_MAX_CH</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.2.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Digital Input Max Ch.</label>
+            <sensorSet>Digital Output</sensorSet>
+        </numSensor>
+		<stringSensor ruleid="capDigitalIOOutput">
+            <type>string</type>
+            <sensorId>CAP_DIO_OUTPUT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.1486.2.4.0</getOid>
+            </value>
+            <label>Digital I/O Output</label>
+            <sensorSet>Digital Output</sensorSet>
+        </stringSensor>
+
+	</device>
+</APC_DDF>

@@ -6,6 +6,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/snmp/mibs/apc"
 
 	"gopkg.in/yaml.v2"
 )
@@ -140,30 +141,20 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 			}
 		}
 
-		if !strings.HasSuffix(fname, ".yaml") && !strings.HasSuffix(fname, ".yml") {
-			continue
-		}
-
-		t := Profile{ContextL: mdb.log, From: file.Name()}
-		data, err := os.ReadFile(fname)
-		if err != nil {
-			mdb.log.Errorf("Cannot read file %s", fname)
-			continue
-		}
-
-		err = yaml.Unmarshal(data, &t)
-		if err != nil {
-			mdb.log.Errorf("Cannot unmarshal file %s -> %v", fname, err)
-			continue
-		}
-
-		// Keep this in case someone references this file
-		extends[file.Name()] = &t
-
-		// For each sysobjid listed, add this file into our map.
-		for _, sysid := range t.Sysobjectid {
-			mdb.profiles[sysid] = &t
-			mdb.log.Debugf("Adding profile for %s: %s", sysid, t.Device.Vendor)
+		pts := strings.Split(fname, ".")
+		switch pts[len(pts)-1] {
+		case "xml":
+			err := mdb.parseMibFromXml(fname)
+			if err != nil {
+				mdb.log.Errorf("Cannot parse XML mib %s %v", fname, err)
+			}
+		case "yaml", "yml":
+			err := mdb.parseMibFromYml(fname, file, extends)
+			if err != nil {
+				mdb.log.Errorf("Cannot parse Yaml mib %s %v", fname, err)
+			}
+		default:
+			mdb.log.Infof("Ignoring file %s", fname)
 		}
 	}
 
@@ -199,11 +190,11 @@ func (p *Profile) validate() {
 			p.Warnf("Possibly corrupted table? %s %s %v", p.From, metric.Mib, metric)
 		}
 		if metric.Symbol.Oid != "" && metric.Symbol.Name == "" {
-			p.Warnf("Possibly corrupted oid? %s %s %v", p.From, metric.Mib, metric.Symbol.Oid)
+			p.Warnf("Possibly corrupted symbol oid? %s %s %v", p.From, metric.Mib, metric.Symbol.Oid)
 		}
 		for _, s := range metric.Symbols {
 			if s.Oid != "" && s.Name == "" {
-				p.Warnf("Possibly corrupted oid? %s %s %v", p.From, metric.Mib, s.Oid)
+				p.Warnf("Possibly corrupted symbols oid? %s %s %v", p.From, metric.Mib, s.Oid)
 			}
 		}
 	}
@@ -299,7 +290,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			otype = kt.Counter
 		}
 
-		// TODO -- so we want to collase Symobol and Symbols?
+		// TODO -- so we want to collase Symbol and Symbols?
 		if metric.Symbol.Oid != "" {
 			mib := &kt.Mib{
 				Oid:  metric.Symbol.Oid,
@@ -388,4 +379,110 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 		}
 	}
 	return deviceMetadata, interfaceMetadata
+}
+
+func (mdb *MibDB) parseMibFromYml(fname string, file os.DirEntry, extends map[string]*Profile) error {
+	t := Profile{ContextL: mdb.log, From: file.Name()}
+	data, err := os.ReadFile(fname)
+	if err != nil {
+		return err
+	}
+
+	err = yaml.Unmarshal(data, &t)
+	if err != nil {
+		return err
+	}
+
+	// Keep this in case someone references this file
+	extends[file.Name()] = &t
+
+	// For each sysobjid listed, add this file into our map.
+	for _, sysid := range t.Sysobjectid {
+		mdb.profiles[sysid] = &t
+		mdb.log.Debugf("Adding profile for %s: %s", sysid, t.Device.Vendor)
+	}
+
+	return nil
+}
+
+func (mdb *MibDB) parseMibFromXml(file string) error {
+	ap, err := apc.ParseApcMib(file, mdb.log)
+	if err != nil {
+		return err
+	}
+
+	profiles := newProfileFromApc(ap, file, mdb.log)
+	for _, t := range profiles {
+		for _, sysid := range t.Sysobjectid {
+			mdb.profiles[sysid] = t
+			mdb.log.Debugf("Adding profile for %s: %s %d metrics and %d tags", sysid, t.Device.Vendor, len(t.Metrics), len(t.MetricTags))
+		}
+	}
+
+	return nil
+}
+
+func newProfileFromApc(ap *apc.APC, file string, log logger.ContextL) []*Profile {
+	profiles := make([]*Profile, 0, len(ap.Devices))
+	for _, device := range ap.Devices {
+		t := Profile{
+			ContextL:    log,
+			From:        file,
+			Device:      Device{Vendor: device.Id},
+			Sysobjectid: []string{},
+			MetricTags:  []Tag{},
+			Metrics:     []MIB{},
+		}
+		for _, oid := range device.OidMustExist {
+			t.Sysobjectid = append(t.Sysobjectid, oid.Oid)
+		}
+		for _, data := range device.SetProductData {
+			if data.Oid != "" {
+				t.MetricTags = append(t.MetricTags, Tag{
+					Column: OID{
+						Oid:  data.Oid,
+						Name: data.Field,
+					},
+					Tag:    data.RuleId,
+					Symbol: data.Id,
+				})
+			}
+		}
+		for _, data := range device.SetLocationData {
+			if data.Oid != "" {
+				t.MetricTags = append(t.MetricTags, Tag{
+					Column: OID{
+						Oid:  data.Oid,
+						Name: data.Field,
+					},
+					Tag:    data.RuleId,
+					Symbol: data.Id,
+				})
+			}
+		}
+
+		mibSet := map[string]*MIB{}
+		for _, sensor := range device.NumSensors {
+			if _, ok := mibSet[sensor.SensorSet]; !ok {
+				mibSet[sensor.SensorSet] = &MIB{
+					ForcedType: sensor.Type,
+					Mib:        sensor.SensorSet,
+					Symbols:    []OID{},
+				}
+			}
+			mib := mibSet[sensor.SensorSet]
+			mib.Symbols = append(mib.Symbols, OID{
+				Oid:  sensor.Value.Oid,
+				Name: sensor.SensorId,
+			})
+		}
+
+		for _, mib := range mibSet {
+			t.Metrics = append(t.Metrics, *mib)
+		}
+
+		profiles = append(profiles, &t)
+	}
+
+	return profiles
 }

@@ -1,0 +1,1751 @@
+<APC_DDF
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid="toshiba_remoteye4_4400"
+		ddfname="Toshiba 4400 UPS (RemotEye 4)"
+		ddfversion="1"
+		canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="toshiba_remoteye4_4400">
+		<oidMustExist ruleid="toshiba_remoteye4_4400" oid=".1.3.6.1.4.1.186.1.19.2.5.4" istree="yes" />
+
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		
+		<setLocationData field="LOCATION">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.254.1.27.0</getOid>
+		</setLocationData>
+		
+		<setProductData ruleid="upsIdentManufacturer" field="vendor">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="upsIdentTypeform" field="model">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="upsIdentSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.1.3.0</getOid>
+		</setProductData>
+
+
+		<setProductData ruleid="upsInputNumOfPhases" field="inputphasecount">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="upsOutputNumOfPhases" field="outputphasecount">
+			<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.1.0</getOid>
+		</setProductData>
+
+
+		
+			<!-- UPS Input Sensors -->
+
+			<suppressRule suppressid="upsmib/upsmib/upsInputFrequency"/>
+			<suppressRule suppressid="upsmib/upsmib/upsInputVoltage"/>
+			<suppressRule suppressid="upsmib/upsmib/upsInputCurrent"/>
+			<suppressRule suppressid="upsmib/upsmib/upsInputTruePower"/>
+
+			<numSensor ruleid="ups-input-ll-voltage-ab">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-2_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.2.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L1-2</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-ll-voltage-bc">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-3_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.3.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L2-3</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-ll-voltage-ca">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-1_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.4.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L3-1</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-ln-voltage-an">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-N_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.5.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L1-N</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-ln-voltage-bn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-N_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.6.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L2-N</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-ln-voltage-cn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-N_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.7.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Voltage L3-N</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-phase-a">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L1_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.8.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current L1</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-phaseb">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L2_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.9.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current L2</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-phasec">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L3_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.10.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current L3</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-frequency">
+				<type>frequency</type>
+				<sensorId>_FREQUENCY_INPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.11.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Frequency</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-percent-a">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_A</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.15.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current Percent A</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-percent-b">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_B</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.16.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current Percent B</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-input-current-percent-c">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_C</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.2.17.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Input Current Percent C</label>
+				<sensorSet>UPS Input Status</sensorSet>
+			</numSensor>
+
+			<!--UPS Output Sensors-->
+
+			<suppressRule suppressid="upsmib/upsmib/upsOutputSource"/>
+			<suppressRule suppressid="upsmib/upsmib/upsOutputFrequency"/>
+			<suppressRule suppressid="upsmib/upsmib/upsOutputVoltage"/>
+			<suppressRule suppressid="upsmib/upsmib/upsOutputCurrent"/>
+			<suppressRule suppressid="upsmib/upsmib/upsOutputPower"/>
+			<suppressRule suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+			<suppressRule suppressid="upsmib/upsmib/totalPowerOutputSensor"/>
+			<suppressRule suppressid="upsmib/upsmib/totalOutputPowerLoadPercentSensor"/>
+
+			<numSensor ruleid="ups-output-ll-voltage-ab">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-2_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.2.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L1-2</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-ll-voltage-bc">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-3_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.3.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L2-3 </label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-ll-voltage-ca">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-1_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.4.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L3-1 </label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-ln-voltage-an">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-N_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.5.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L1-N </label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-ln-voltage-bn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-N_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.6.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L2-N </label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-ln-voltage-cn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-N_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.7.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Voltage L3-N </label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-phase-a">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L1_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.8.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current L1</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-phase-b">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L2_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.9.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current L2</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-phase-c">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L3_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.10.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current L3</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-frequency">
+				<type>frequency</type>
+				<sensorId>_FREQUENCY_OUTPUT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.11.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Frequency</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-total-active-power">
+				<type>powerW</type>
+				<sensorId>_TOTAL_OUTPUT_ACTIVE_POWER</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.12.0</getOid></op>
+						<op>100</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Total Active Power</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-percent-a">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_A</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.16.0</getOid></op>
+						<op>1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current Percent A</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-percent-b">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_B</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.17.0</getOid></op>
+						<op>1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current Percent B</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-current-percent-c">
+				<type>pctofcapacity</type>
+				<sensorId>CURRENT_PCT_C</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.18.0</getOid></op>
+						<op>1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Current Percent C</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-total-active-power-percent">
+				<type>pctofcapacity</type>
+				<sensorId>_OUTPUT_LOAD_PCT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.19.0</getOid></op>
+						<op>1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Total Active Power Percent</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-output-power-factor">
+				<type>num/powerfactor</type>
+				<sensorId>_OUTPUT_POWER_FACTOR_TOTAL</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.3.20.0</getOid></op>
+						<op>1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Output Power Factor total</label>
+				<sensorSet>UPS Output Status</sensorSet>
+			</numSensor>
+
+			<!--UPS Bypass Sensors-->
+
+			<suppressRule suppressid="upsmib/upsmib/upsBypassFrequency"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBypassVoltage"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBypassCurrent"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBypassPower"/>
+
+
+			<numSensor ruleid="ups-bypass-ll-voltage-ab">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-2_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.2.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L1-2</label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-ll-voltage-bc">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-3_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.3.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L2-3 </label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-ll-voltage-ca">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-1_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.4.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L3-1 </label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-ln-voltage-an">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L1-N_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.5.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L1-N </label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-ln-voltage-bn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L2-N_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.6.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L2-N </label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-ln-voltage-cn">
+				<type>voltage</type>
+				<sensorId>_VOLTAGE_L3-N_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.7.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Voltage L3-N </label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-current-phase-a">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L1_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.8.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Current L1</label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-current-phase-b">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L2_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.9.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Current L2</label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-current-phase-c">
+				<type>amperage</type>
+				<sensorId>_CURRENT_L3_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.10.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Current L3</label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="ups-bypass-frequency">
+				<type>frequency</type>
+				<sensorId>_FREQUENCY_BYPASS</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.4.11.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Bypass Frequency</label>
+				<sensorSet>UPS Bypass Status</sensorSet>
+			</numSensor>
+
+			<!--DC Bus Voltage-->
+
+			<numSensor ruleid="upsDCBusTotalVoltage">
+				<type>voltage</type>
+				<sensorId>DCBUS_TOTAL_VOLTAGE</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.5.1.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>DC Bus Total Voltage</label>
+				<sensorSet>UPS DC Bus Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsDCBusPositiveVoltage">
+				<type>voltage</type>
+				<sensorId>DCBUS_POSITIVE_VOLTAGE</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.5.2.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>DC Bus Positive Voltage</label>
+				<sensorSet>UPS DC Bus Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsDCBusNegativeVoltage">
+				<type>voltage</type>
+				<sensorId>DCBUS_NEGATIVE_VOLTAGE</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.5.3.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>DC Bus Negative Voltage</label>
+				<sensorSet>UPS DC Bus Status</sensorSet>
+			</numSensor>
+
+			<!--UPS Battery Sensors-->
+
+			<suppressRule suppressid="upsmib/upsmib/upsBatteryStatus"/>
+			<suppressRule suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+			<suppressRule suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+			<suppressRule suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+			<suppressRule suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+
+			<stateSensor ruleid="upsBatteryStatus">
+				<type>state/battstatus</type>
+				<sensorId>BATTSTATUS</sensorId>
+				<value>
+					<mapValue mapid="upsBatteryStatus-vm">
+						<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.1.0</getOid>
+					</mapValue>
+				</value>
+				<label>Battery Status</label>
+				<enum>upsBatteryStatus-em</enum>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</stateSensor>
+			<valueMap ruleid="upsBatteryStatus-vm">
+				<valueIn>1</valueIn><valueOut>0</valueOut>
+				<valueIn>2</valueIn><valueOut>1</valueOut>
+				<valueIn>3</valueIn><valueOut>2</valueOut>
+				<valueIn>4</valueIn><valueOut>3</valueOut>
+				<valueIn>5</valueIn><valueOut>4</valueOut>
+				<valueIn>6</valueIn><valueOut>5</valueOut>
+				<valueIn>*</valueIn><valueOut>0</valueOut>
+			</valueMap>
+			<enumMap ruleid="upsBatteryStatus-em">
+				<label>Unknown</label>
+				<label>Normal</label>
+				<label>Low</label>
+				<label>Depleted</label>
+				<label>Discharging</label>
+				<label>Failure</label>
+			</enumMap>
+			<numSensor ruleid="upsElapsedTimeOnBatteryPower">
+				<type>timeinsec</type>
+				<sensorId>TIME_ON_BATT</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.2.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Time Running on Battery</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsEstimatedBatteryRuntime">
+				<type>timeinmin/timeremainingonbatt</type>
+				<sensorId>TIME_REMAINING_ON_BATT</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.3.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Battery Time Remaining</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsBatteryVoltage">
+				<type>voltageDC/battvoltage</type>
+				<sensorId>BATT_VOLTAGE</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.4.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Battery Voltage</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsBatteryCurrent">
+				<type>amperage</type>
+				<sensorId>UPS_BATTERY_CURRENT</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.5.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>0.1</valueInc>
+				<label>Battery Current</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsBatteryAmpereHour">
+				<type>num</type><units>amphours</units>
+				<sensorId>BATT_CAPACITY</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.6.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Battery Capacity</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+
+			<stateSensor ruleid="upsBatteryChargeStatus">
+				<type>state</type>
+				<sensorId>BATT_CHARGE_STATUS</sensorId>
+				<value>
+					<mapValue mapid="chargeStatus-vm">
+						<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.7.0</getOid>
+					</mapValue>
+				</value>
+				<label>Battery Charge Status</label>
+				<enum>chargeStatus-em</enum>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</stateSensor>
+
+			<valueMap ruleid="chargeStatus-vm">
+				<valueIn>1</valueIn><valueOut>1</valueOut>
+				<valueIn>2</valueIn><valueOut>2</valueOut>
+				<valueIn>3</valueIn><valueOut>3</valueOut>
+				<valueIn>*</valueIn><valueOut>0</valueOut>
+			</valueMap>
+			<enumMap ruleid="chargeStatus-em">
+				<label>Unknown</label>
+				<label>Normal Charging</label>
+				<label>Preventative Charging</label>
+				<label>Stop Charging</label>
+			</enumMap>	
+
+
+			<numSensor ruleid="upsBatteryVoltageShutdownLevel">
+				<type>voltageDC/battvoltage</type>
+				<sensorId>BATT_VOLTAGE_SHUTDOWN</sensorId>
+				<value>
+					<mult>
+						<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.17.0</getOid></op>
+						<op>0.1</op>
+					</mult>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Battery Voltage Shutdown Level</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsBatteryInSeries">
+				<type>num</type>
+				<sensorId>BATT_IN_SERIES</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.21.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Number of Batteries Connected in Series</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+			<numSensor ruleid="upsBatteryInParallel">
+				<type>num</type>
+				<sensorId>BATT_IN_PARALLEL</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.4.6.22.0</getOid>
+				</value>
+				<valueInc>1</valueInc>
+				<label>Number of Batteries Connected in Parallel</label>
+				<sensorSet>UPS Battery Status</sensorSet>
+			</numSensor>
+
+			<alarmFlags2 ruleid="upsAlarmDescr" index=".1.3.6.1.4.1.186.1.19.2.5.4.10.2.1.2">
+				<value>
+					<regex>
+						<op>1\.3\.6\.1\.4\.1\.186\.1\.19\.2\.5\.4\.10\.3\.(\d+)</op>
+						<op><getRowOid>.1.3.6.1.4.1.186.1.19.2.5.2.10.2.1.2</getRowOid></op>
+						<op>%1$s</op>
+						<op>0</op>
+					</regex>
+				</value>
+
+				<alarmFlagsTest match="1">
+					<name>
+						<activeText>UPS Fault/Alarm</activeText>
+						<inactiveText>UPS Fault/Alarm Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category></category>
+					<description>
+						<activeText>A UPS Fault/Alarm condition exists. </activeText>
+						<inactiveText>A UPS Fault/Alarm condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2">
+					<name>
+						<activeText>EPO Tripped</activeText>
+						<inactiveText>EPO Tripped Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category></category>
+					<description>
+						<activeText>An EPO tripped condition exists. </activeText>
+						<inactiveText>An EPO tripped condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3">
+					<name>
+						<activeText>Current Limit Fault</activeText>
+						<inactiveText>Current Limit Fault Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category></category>
+					<description>
+						<activeText>An input over current condition exists. </activeText>
+						<inactiveText>An input over current condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4">
+					<name>
+						<activeText>DC Bus Abnormal</activeText>
+					</name>
+					<severity>critical</severity>
+					<category>battery</category>
+					<description>
+						<activeText>DC Bus Abnormal condition exists.</activeText>
+						<inactiveText>DC Bus Abnormal condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="5">
+					<name>
+						<activeText>DC Bus Over Voltage</activeText>
+						<inactiveText>DC Bus Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>battery</category>
+					<description>
+						<activeText>DC Bus Over Voltage condition exists.</activeText>
+						<inactiveText>DC Bus Over Voltage condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="6">
+					<name>
+						<activeText>DC Bus Imbalance</activeText>
+						<inactiveText>DC Bus Imbalance Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>battery</category>
+					<description>
+						<activeText>DC Bus Imbalance condition exists.</activeText>
+						<inactiveText>DC Bus Imbalance condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="7">
+					<name>
+						<activeText>Inverter Over Voltage</activeText>
+						<inactiveText>Inverter Over Voltage Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>Inverter Over Voltage condition exists.</activeText>
+						<inactiveText>Inverter Over Voltage condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="8">
+					<name>
+						<activeText>Inverter Under Voltage</activeText>
+						<inactiveText>Inverter Under Voltage Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>Inverter Under Voltage condition exists.</activeText>
+						<inactiveText>Inverter Under Voltage condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="9">
+					<name>
+						<activeText>UPS Overheat</activeText>
+						<inactiveText>UPS Overheat Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>temperature</category>
+					<description>
+						<activeText>UPS Overheat condition exists.</activeText>
+						<inactiveText>UPS Overheat condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="A">
+					<name>
+						<activeText>Load Abnormal</activeText>
+						<inactiveText>Load Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>Load Abnormal condition exists.</activeText>
+						<inactiveText>Load Abnormal condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="B">
+					<name>
+						<activeText>Chopper Over Current</activeText>
+						<inactiveText>Chopper Over Current Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>Chopper Over Current condition exists.</activeText>
+						<inactiveText>Chopper Over Current condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="C">
+					<name>
+						<activeText>Inverter Over Current</activeText>
+						<inactiveText>Inverter Over Current Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>Inverter Over Current condition exists.</activeText>
+						<inactiveText>Inverter Over Current condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="D">
+					<name>
+						<activeText>PreCharge Error</activeText>
+						<inactiveText>PreCharge Error Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>battery</category>
+					<description>
+						<activeText>PreCharge Error condition exists.</activeText>
+						<inactiveText>PreCharge Error condition no longer exists.</inactiveText>
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="E">
+					<name>
+						<activeText>DC Bus Under Voltage</activeText>
+						<inactiveText>DC Bus Under Voltage Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A DC Bus Under Voltage condition exists.</activeText>
+						<inactiveText>A DC Bus Under Voltage condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="F">
+					<name>
+						<activeText>Bypass Overheat</activeText>
+						<inactiveText>Bypass Overheat Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>A Bypass Overheat condition exists.</activeText>
+						<inactiveText>A Bypass Overheat condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="10">
+					<name>
+						<activeText>PCB Abnormal</activeText>
+						<inactiveText>PCB Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>device</category>
+					<description>
+						<activeText>A PCB Abnormal condition exists.</activeText>
+						<inactiveText>A PCB Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="12">
+					<name>
+						<activeText>An Input Phase Rotation Error</activeText> 
+						<inactiveText>An Input Phase Rotation Error Cleared</inactiveText> 
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An  Input Phase Rotation Error condition exists.</activeText>
+						<inactiveText>An Input Phase Rotation Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="13">
+					<name>
+						<activeText>Bypass Phase Rotation Error</activeText>
+						<inactiveText>Bypass Phase Rotation Error Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Bypass Phase Rotation Error condition exists.</activeText> 
+						<inactiveText>A Bypass Phase Rotation Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="14">
+					<name>
+						<activeText>Input Abnormal</activeText>
+						<inactiveText>Input Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Input Abnormal condition exists.</activeText> 
+						<inactiveText>An Input Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="15">
+					<name>
+						<activeText>Power Supply Out of Range</activeText>
+						<inactiveText>Power Supply Out of Range Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Power Supply Out of Range condition exists.</activeText> 
+						<inactiveText>A Power Supply Out of Range condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="16">
+					<name>
+						<activeText>Inverter Voltage Abnormal</activeText>
+						<inactiveText>Inverter Voltage Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Inverter Voltage Abnormal condition exists.</activeText> 
+						<inactiveText>An Inverter Voltage Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="17">
+					<name>
+						<activeText>Output Voltage Abnormal</activeText>
+						<inactiveText>Output Voltage Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Voltage Abnormal condition exists.</activeText> 
+						<inactiveText>An Output Voltage Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="18">
+					<name>
+						<activeText>Output Under Voltage</activeText>
+						<inactiveText>Output Under Voltage Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Under Voltage condition exists.</activeText> 
+						<inactiveText>An Output Under Voltage condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="19">
+					<name>
+						<activeText>Current Abnormal</activeText>
+						<inactiveText>Current Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Current Abnormal condition exists.</activeText> 
+						<inactiveText>A Current Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1A">
+					<name>
+						<activeText>Inverter Output Voltage Abnormal</activeText>
+						<inactiveText>Inverter Output Voltage Abnormal Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Inverter Output Voltage Abnormal condition exists.</activeText> 
+						<inactiveText>An Inverter Output Voltage Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1B">
+					<name>
+						<activeText>Gate Voltage Lost</activeText>
+						<inactiveText>Gate Voltage Lost Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Gate Voltage Lost condition exists.</activeText> 
+						<inactiveText>A Gate Voltage Lost condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1C">
+					<name>
+						<activeText>Inverter Current Error</activeText>
+						<inactiveText>Inverter Current Error Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Inverter Current Error condition exists.</activeText> 
+						<inactiveText>An Inverter Current Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1D">
+					<name>
+						<activeText>Inverter Bypass Voltage Mismatch</activeText>
+						<inactiveText>Inverter Bypass Voltage Mismatch Cleared</inactiveText>
+					</name>
+					<severity>critical</severity>
+					<category>device</category>
+					<description>
+						<activeText>An Inverter Bypass Voltage Mismatch condition exists.</activeText> 
+						<inactiveText>An Inverter Bypass Voltage Mismatch condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1E">
+					<name>
+						<activeText>No Control Connection</activeText>
+						<inactiveText>No Control Connection Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A No Control Connection condition exists.</activeText> 
+						<inactiveText>A No Control Connection condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="1F">
+					<name>
+						<activeText>Input Voltage Error</activeText>
+						<inactiveText>Input Voltage Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>An Input Voltage Error condition exists.</activeText> 
+						<inactiveText>An Input Voltage Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="20">
+					<name>
+						<activeText>Batt Volt Exceed</activeText>
+						<inactiveText>Batt Volt Exceed Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>A Batt Volt Exceed condition exists.</activeText> 
+						<inactiveText>A Batt Volt Exceed condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="21">
+					<name>
+						<activeText>Bypass Frequency Error</activeText>
+						<inactiveText>Bypass Frequency Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Bypass Frequency Error condition exists.</activeText> 
+						<inactiveText>A Bypass Frequency Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="22">
+					<name>
+						<activeText>Input Frequency Error</activeText>
+						<inactiveText>Input Frequency Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Input Frequency Error condition exists.</activeText> 
+						<inactiveText>An Input Frequency Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="23">
+					<name>
+						<activeText>Bypass Error</activeText>
+						<inactiveText>Bypass Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>A Bypass Error condition exists.</activeText> 
+						<inactiveText>A Bypass Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="24">
+					<name>
+						<activeText>EE to RAM Error</activeText>
+						<inactiveText>EE to RAM Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>An EE to RAM Error condition exists.</activeText> 
+						<inactiveText>An EE to RAM Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="25">
+					<name>
+						<activeText>Battery TestFailed</activeText>
+						<inactiveText>Battery TestFailed Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery TestFailed condition exists.</activeText> 
+						<inactiveText>A Battery TestFailed condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="26">
+					<name>
+						<activeText>Battery Abnormal</activeText>
+						<inactiveText>Battery Abnormal Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Abnormal condition exists.</activeText> 
+						<inactiveText>A Battery Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="27">
+					<name>
+						<activeText>Battery Low</activeText>
+						<inactiveText>Battery Low Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Low condition exists.</activeText> 
+						<inactiveText>A Battery Low condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="28">
+					<name>
+						<activeText>Battery Depleted</activeText>
+						<inactiveText>Battery Depleted Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Depleted condition exists.</activeText> 
+						<inactiveText>A Battery Depleted condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="29">
+					<name>
+						<activeText>Battery Voltage Below Shutdown</activeText>
+						<inactiveText>Battery Voltage Below Shutdown Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Voltage Below Shutdown condition exists.</activeText> 
+						<inactiveText>A Battery Voltage Below Shutdown condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2A">
+					<name>
+						<activeText>Battery Contact Open</activeText>
+						<inactiveText>Battery Contact Open Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Contact Open condition exists.</activeText> 
+						<inactiveText>A Battery Contact Open condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2B">
+					<name>
+						<activeText>Output Current Exceeded</activeText>
+						<inactiveText>Output Current Exceeded Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Current Exceeded condition exists.</activeText> 
+						<inactiveText>An Output Current Exceeded condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2D">
+					<name>
+						<activeText>Charger Voltage Abnormal</activeText>
+						<inactiveText>Charger Voltage Abnormal Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Charger Voltage Abnormal condition exists.</activeText> 
+						<inactiveText>A Charger Voltage Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2E">
+					<name>
+						<activeText>Batt Overheat Batt Breaker Open</activeText>
+						<inactiveText>Batt Overheat Batt Breaker Open Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Batt Overheat Batt Breaker Open condition exists.</activeText> 
+						<inactiveText>A Batt Overheat Batt Breaker Open condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="2F">
+					<name>
+						<activeText>Output Overload Warning</activeText>
+						<inactiveText>Output Overload Warning Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Overload Warning condition exists.</activeText> 
+						<inactiveText>An Output Overload Warning condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="30">
+					<name>
+						<activeText>Inverter Overload Warning</activeText>
+						<inactiveText>Inverter Overload Warning Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Inverter Overload Warning condition exists.</activeText> 
+						<inactiveText>An Inverter Overload Warning condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="31">
+					<name>
+						<activeText>Output Load Exceeded</activeText>
+						<inactiveText>Output Load Exceeded Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Load Exceeded condition exists.</activeText> 
+						<inactiveText>An Output Load Exceeded condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="32">
+					<name>
+						<activeText>Current Limit Warning</activeText>
+						<inactiveText>Current Limit Warning Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Current Limit Warning condition exists.</activeText> 
+						<inactiveText>A Current Limit Warning condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="33">
+					<name>
+						<activeText>Async Operation</activeText>
+						<inactiveText>Async Operation Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>Async Operation condition exists.</activeText> 
+						<inactiveText>Async Operation condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="34">
+					<name>
+						<activeText>Output Overload</activeText>
+						<inactiveText>Output Overload Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Overload condition exists.</activeText> 
+						<inactiveText>An Output Overload condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="35">
+					<name>
+						<activeText>User Defined Overload Warning</activeText>
+						<inactiveText>User Defined Overload Warning Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A User Defined Overload Warning condition exists.</activeText> 
+						<inactiveText>A User Defined Overload Warning condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="36">
+					<name>
+						<activeText>Cooling Fan Abnormal</activeText>
+						<inactiveText>Cooling Fan Abnormal Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>cooling</category>
+					<description>
+						<activeText>A Cooling Fan Abnormal condition exists.</activeText> 
+						<inactiveText>A Cooling Fan Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="37">
+					<name>
+						<activeText>Volt Deviation Exceed Batt Volt</activeText>
+						<inactiveText>Volt Deviation Exceed Batt Volt Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Volt Deviation Exceed Batt Volt condition exists.</activeText> 
+						<inactiveText>A Volt Deviation Exceed Batt Volt condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="38">
+					<name>
+						<activeText>Inverter Output Volt Out of Spec</activeText>
+						<inactiveText>Inverter Output Volt Out of Spec Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Inverter Output Volt Out of Spec condition exists.</activeText> 
+						<inactiveText>An Inverter Output Volt Out of Spec condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="39">
+					<name>
+						<activeText>Local Button Abnormal</activeText>
+						<inactiveText>Local Button Abnormal Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Local Button Abnormal condition exists.</activeText> 
+						<inactiveText>A Local Button Abnormal condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3A">
+					<name>
+						<activeText>Battery Over Temperature</activeText>
+						<inactiveText>Battery Over Temperature Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Over Temperature condition exists.</activeText> 
+						<inactiveText>A Battery Over Temperature condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3B">
+					<name>
+						<activeText>Discharge Warning</activeText>
+						<inactiveText>Discharge Warning Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Discharge Warning condition exists.</activeText> 
+						<inactiveText>A Discharge Warning condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3C">
+					<name>
+						<activeText>Byp PCB No Comm</activeText>
+						<inactiveText>Byp PCB No Comm Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Byp PCB No Comm condition exists.</activeText> 
+						<inactiveText>A Byp PCB No Comm condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3D">
+					<name>
+						<activeText>Auto Transfer Disabled</activeText>
+						<inactiveText>Auto Transfer Disabled Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>Auto Transfer Disabled condition exists.</activeText> 
+						<inactiveText>Auto Transfer Disabled condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3E">
+					<name>
+						<activeText>Control PCB Supply Error</activeText>
+						<inactiveText>Control PCB Supply Error Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Control PCB Supply Error condition exists.</activeText> 
+						<inactiveText>A Control PCB Supply Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="3F">
+					<name>
+						<activeText>ROM to EEError</activeText>
+						<inactiveText>ROM to EEError Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A ROM to EEError condition exists.</activeText> 
+						<inactiveText>A ROM to EEError condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="40">
+					<name>
+						<activeText>On Bypass</activeText>
+						<inactiveText>On Bypass Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>An On Bypass condition exists.</activeText> 
+						<inactiveText>An On Bypass condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="41">
+					<name>
+						<activeText>Power Failure</activeText>
+						<inactiveText>Power Failure Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Power Failure condition exists.</activeText> 
+						<inactiveText>A Power Failure condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="42">
+					<name>
+						<activeText>EPO Tripped</activeText>
+						<inactiveText>EPO Tripped Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>An EPO Tripped condition exists.</activeText> 
+						<inactiveText>An EPO Tripped condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="43">
+					<name>
+						<activeText>Remote Switch Enable</activeText>
+						<inactiveText>Remote Switch Enable Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Remote Switch Enable condition exists.</activeText> 
+						<inactiveText>A Remote Switch Enable condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="44">
+					<name>
+						<activeText>Auto Transfer Enable</activeText>
+						<inactiveText>Auto Transfer Enable Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>Auto Transfer Enable condition exists.</activeText> 
+						<inactiveText>Auto Transfer Enable condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="45">
+					<name>
+						<activeText>Protective Charging</activeText>
+						<inactiveText>Protective Charging Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Protective Charging condition exists.</activeText> 
+						<inactiveText>A Protective Charging condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="46">
+					<name>
+						<activeText>Equalized Charging</activeText>
+						<inactiveText>Equalized Charging Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>An Equalized Charging condition exists.</activeText> 
+						<inactiveText>An Equalized Charging condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="47">
+					<name>
+						<activeText>Manual Mode</activeText>
+						<inactiveText>Manual Mode Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Manual Mode condition exists.</activeText> 
+						<inactiveText>A Manual Mode condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="48">
+					<name>
+						<activeText>Output Frequency 50Hz</activeText>
+						<inactiveText>Output Frequency 50Hz Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Frequency 50Hz condition exists.</activeText> 
+						<inactiveText>An Output Frequency 50Hz condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="49">
+					<name>
+						<activeText>Battery Test In Progress</activeText>
+						<inactiveText>Battery Test In Progress Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Test In Progress condition exists.</activeText> 
+						<inactiveText>A Battery Test In Progress condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4A">
+					<name>
+						<activeText>Forced Bypass</activeText>
+						<inactiveText>Forced Bypass Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>A Forced Bypass condition exists.</activeText> 
+						<inactiveText>A Forced Bypass condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4B">
+					<name>
+						<activeText>Firmware Update</activeText>
+						<inactiveText>Firmware Update Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Firmware Update condition exists.</activeText> 
+						<inactiveText>A Firmware Update condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4C">
+					<name>
+						<activeText>EE 1ST</activeText>
+						<inactiveText>EE 1ST Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>device</category>
+					<description>
+						<activeText>An EE 1ST condition exists.</activeText> 
+						<inactiveText>An EE 1ST condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4D">
+					<name>
+						<activeText>Bypass Enable</activeText>
+						<inactiveText>Bypass Enable Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>bypass</category>
+					<description>
+						<activeText>A Bypass Enable condition exists.</activeText> 
+						<inactiveText>A Bypass Enable condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4E">
+					<name>
+						<activeText>Battery Test Disable</activeText>
+						<inactiveText>Battery Test Disable Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Battery Test Disable condition exists.</activeText> 
+						<inactiveText>A Battery Test Disable condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="4F">
+					<name>
+						<activeText>Default Calibration</activeText>
+						<inactiveText>Default Calibration Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>battery</category>
+					<description>
+						<activeText>A Default Calibration condition exists.</activeText> 
+						<inactiveText>A Default Calibration condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="50">
+					<name>
+						<activeText>Shutdown Pending</activeText>
+						<inactiveText> Shutdown Pending Cleared</inactiveText> 
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>A Shutdown Pending condition exists.</activeText> 
+						<inactiveText>A Shutdown Pending condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="51">
+					<name>
+						<activeText>Output Off</activeText>
+						<inactiveText>Output Off Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An Output Off condition exists.</activeText> 
+						<inactiveText>An Output Off condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="52">
+					<name>
+						<activeText>On Battery </activeText>
+						<inactiveText>On Battery  Cleared</inactiveText>
+					</name>
+					<severity>warning</severity>
+					<category>power</category>
+					<description>
+						<activeText>An On Battery  condition exists.</activeText> 
+						<inactiveText>An On Battery  condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+				<alarmFlagsTest match="53">
+					<name>
+						<activeText>Log In Error</activeText>
+						<inactiveText>Log In Error Cleared</inactiveText>
+					</name>
+					<severity>informational</severity>
+					<category>device</category>
+					<description>
+						<activeText>A Log In Error condition exists.</activeText> 
+						<inactiveText>A Log In Error condition no longer exists.</inactiveText> 
+					</description>
+				</alarmFlagsTest>
+			</alarmFlags2>
+
+		</device>
+</APC_DDF>

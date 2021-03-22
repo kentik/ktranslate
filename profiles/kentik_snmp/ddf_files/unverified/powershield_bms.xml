@@ -1,0 +1,715 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid ="powershield_bms"
+	ddfname="PowerShield Battery Manager"
+	ddfversion="5"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="powershield_bms_discovery">
+    <oidMustExist ruleid="powershield_bms_exists" istree="yes" oid=".1.3.6.1.4.1.35154"/>
+	
+    <setProductData ruleid="vendordata" field="vendor">PowerShield</setProductData>
+    <setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+
+	<valueMap ruleid="delete_null_sensor">
+	  <valueIn>999999</valueIn><valueOut>[false]</valueOut>
+	  <valueIn>*</valueIn><valueOut>[true]</valueOut>
+	</valueMap>
+
+	<valueMap ruleid="psStringState-vm">
+	  <valueIn>0</valueIn><valueOut>0</valueOut>
+	  <valueIn>1</valueIn><valueOut>1</valueOut>
+	  <valueIn>2</valueIn><valueOut>2</valueOut>
+	  <valueIn>3</valueIn><valueOut>3</valueOut>
+	  <valueIn>4</valueIn><valueOut>4</valueOut>
+	  <valueIn>Float</valueIn><valueOut>1</valueOut>
+	  <valueIn>Charge</valueIn><valueOut>2</valueOut>
+	  <valueIn>Discharge</valueIn><valueOut>3</valueOut>
+	  <valueIn>Idle</valueIn><valueOut>4</valueOut>
+	  <valueIn>*</valueIn><valueOut>5</valueOut>
+	</valueMap>
+	<enumMap ruleid="psStringState-em">
+		<label>Disabled</label>
+		<label>Float</label>
+		<label>Charge</label>
+		<label>Discharge</label>
+		<label>Idle</label>
+		<label>Unknown</label>
+	</enumMap>
+	<valueMap ruleid="truefalse_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="truefalse_em">
+			<label>False</label>
+			<label>True</label>
+	</enumMap>
+	<valueMap ruleid="chargedischarge_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="chargedischarge_em">
+			<label>Charge</label>
+			<label>Discharge</label>
+	</enumMap>
+	</device>
+
+  <device deviceid="powershield_bms_1_1001">
+    <oidMustExist ruleid="powershield_bms_1_1001_exists" istree="yes" oid=".1.3.6.1.4.1.35154.1.1001"/>
+
+    <stateSensor ruleid="psStringState" index=".1.3.6.1.4.1.35154.1.1001.3.1.1.4">
+      <type>voltage</type>
+      <sensorId>STATE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.4</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+			<mapValue mapid="powershield_bms/powershield_bms_discovery/psStringState-vm">
+       		<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.4</getRowOid>
+			</mapValue>
+      </value>
+	  <enum>powershield_bms/powershield_bms_discovery/psStringState-em</enum>
+      <label>State - String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>String Status</sensorSet>
+    </stateSensor>
+
+    <numSensor ruleid="battManStringVoltage" index=".1.3.6.1.4.1.35154.1.1001.3.1.1.5">
+      <type>voltage</type>
+      <sensorId>VOLTAGE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.5</getRowOid>
+		 </mapValue>
+	  </rowTest>
+       <value>
+        <div>
+          <op><getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.5</getRowOid></op>
+          <op>10</op>
+        </div>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>Voltage - String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManStringTemp" index=".1.3.6.1.4.1.35154.1.1001.3.1.1.6">
+      <type>temp</type>
+      <sensorId>TEMPERATURE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.6</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+		  <mult>
+			<op>
+			  <getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.6</getRowOid>
+			</op>
+			<op>0.1</op>
+		  </mult>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>Temperature - String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="BattManStringCurrent" index=".1.3.6.1.4.1.35154.1.1001.3.1.1.7">
+      <type>amperage</type>
+      <sensorId>CURRENT_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.7</getRowOid>
+		 </mapValue>
+	  </rowTest>
+ 		<value>
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.7</getRowOid>
+        </value>
+	  <valueInc>1</valueInc>
+      <label>Current - String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManMonoblockVoltage" index=".1.3.6.1.4.1.35154.1.1001.4.1.1.3">
+      <type>voltage</type>
+      <sensorId>VOLTAGE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.3</getRowOid>
+		 </mapValue>
+	  </rowTest>
+       <value>
+        <div>
+          <op><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.3</getRowOid></op>
+          <op>1000</op>
+        </div>
+      </value>
+	  <valueInc>0.001</valueInc>
+      <label>
+		Voltage - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.1</getRowOid>
+		</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManMonoblockTemp" index=".1.3.6.1.4.1.35154.1.1001.4.1.1.4">
+      <type>temp</type>
+      <sensorId>TEMPERATURE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.4</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+		<getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.4</getRowOid>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>
+		Temperature - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.1</getRowOid>
+		</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="BattManMonoblockImpedance" index=".1.3.6.1.4.1.35154.1.1001.4.1.1.5">
+      <type>num</type>
+      <sensorId>IMPEDANCE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.5</getRowOid>
+		 </mapValue>
+	  </rowTest>
+		<value>
+			<getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.5</getRowOid>
+        </value>
+	  <valueInc>1</valueInc>
+      <label>
+		Impedance - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1.1001.4.1.1.1</getRowOid>
+		<space/>(uOhms)</label>
+      <sensorSet>Impedance</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="monoblock_charge_discharge">
+      <type>state</type>
+      <sensorId>_MONOBLOCK_CHARGE_DISCHARGE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/chargedischarge_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Monoblock Charge Discharge</label>
+      <enum>powershield_bms/powershield_bms_discovery/chargedischarge_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="monoblock_float">
+      <type>num</type>
+      <sensorId>_MONOBLOCK_FLOAT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monoblock Float</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="monoblock_voltage_variation">
+      <type>voltage</type>
+      <sensorId>_MONOBLOCK_VOLTAGE_VARIATION</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.3.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monoblock Voltage Variation</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="monoblock_voltage_idle">
+      <type>voltage</type>
+      <sensorId>_MONOBLOCK_VOLTAGE_IDLE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monoblock Voltage Idle</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="string_voltage_charge_discharge">
+      <type>state</type>
+      <sensorId>_STRING_VOLTAGE_CHARGE_DISCHARGE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/chargedischarge_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>String Voltage Charge Discharge</label>
+      <enum>powershield_bms/powershield_bms_discovery/chargedischarge_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="string_voltage_float">
+      <type>voltage</type>
+      <sensorId>_STRING_VOLTAGE_FLOAT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.6.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>String Voltage Float</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="charge_current">
+      <type>amperage</type>
+      <sensorId>_BATTERY_CURRENT_1</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Charge Current</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="discharge_current">
+      <type>amperage</type>
+      <sensorId>_BATTERY_CURRENT_2</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.8.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Discharge Current</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="float_current">
+      <type>amperage</type>
+      <sensorId>_BATTERY_CURRENT_3</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.9.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Float Current</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="string_mode_charge">
+      <type>state</type>
+      <sensorId>_STRING_MODE_CHARGE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>String Mode Charge</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="string_mode_discharge">
+      <type>state</type>
+      <sensorId>_STRING_MODE_DISCHARGE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>String Mode Discharge</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="string_mode_float">
+      <type>num</type>
+      <sensorId>_STRING_MODE_FLOAT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.12.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>String Mode Float</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="string_mode_idle">
+      <type>state</type>
+      <sensorId>_STRING_MODE_IDLE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>String Mode Idle</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="module_failure">
+      <type>state</type>
+      <sensorId>_MODULE_FAILURE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>Module Failure</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="monitor_offline">
+      <type>state</type>
+      <sensorId>_MONITOR_OFFLINE</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>Monitor Offline</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="memory_format">
+      <type>state</type>
+      <sensorId>_MEMORY_FORMAT</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>Memory Format</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="memory_low">
+      <type>state</type>
+      <sensorId>_MEMORY_LOW</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Memory Low</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="memory_full">
+      <type>state</type>
+      <sensorId>_MEMORY_FULL</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.18.0</getOid>
+        </mapValue>
+      </value>
+      <label>Memory Full</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="long_term_memory_low">
+      <type>state</type>
+      <sensorId>_LONG_TERM_MEMORY_LOW</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.19.0</getOid>
+        </mapValue>
+      </value>
+      <label>Long Term Memory Low</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="long_term_memory_full">
+      <type>state</type>
+      <sensorId>_LONG_TERM_MEMORY_FULL</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.20.0</getOid>
+        </mapValue>
+      </value>
+      <label>Long Term Memory Full</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="ambient_temperature">
+      <type>temp</type>
+      <sensorId>_AMBIENT_TEMPERATURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.21.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Ambient Temperature</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="monoblock_post_temperature">
+      <type>temp</type>
+      <sensorId>_MONOBLOCK_POST_TEMPERATURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.22.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monoblock Post Temperature</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="monoblock_temperature_variation">
+      <type>temp</type>
+      <sensorId>_MONOBLOCK_TEMPERATURE_VARIATION</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.23.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monoblock Temperature Variation</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="monitored_mains">
+      <type>num</type>
+      <sensorId>_MONITORED_MAINS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.24.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Monitored Mains</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="communication_notification">
+      <type>num</type>
+      <sensorId>_COMMUNICATION_NOTIFICATION</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1.1001.5.25.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Communication Notification</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="baseline_impedance_exceeded">
+      <type>state</type>
+      <sensorId>_BASELINE_IMPEDANCE_EXCEEDED</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.26.0</getOid>
+        </mapValue>
+      </value>
+      <label>Baseline Impedance Exceeded</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="string_variance_impedance_exceeded">
+      <type>state</type>
+      <sensorId>_STRING_VARIANCE_IMPEDANCE_EXCEEDED</sensorId>
+      <value>
+        <mapValue mapid="powershield_bms/powershield_bms_discovery/truefalse_vm">
+          <getOid>.1.3.6.1.4.1.35154.1.1001.5.27.0</getOid>
+        </mapValue>
+      </value>
+      <label>String Variance Impedance Exceeded</label>
+      <enum>powershield_bms/powershield_bms_discovery/truefalse_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+ </device>
+<device deviceid="powershield_bms_1001">
+    <oidMustExist ruleid="powershield_bms_1001_exists" istree="yes" oid=".1.3.6.1.4.1.35154.1001"/>
+
+    <stateSensor ruleid="psStringState" index=".1.3.6.1.4.1.35154.1001.3.1.1.4">
+      <type>voltage</type>
+      <sensorId>STATE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.4</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+			<mapValue mapid="powershield_bms/powershield_bms_discovery/psStringState-vm">
+       		<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.4</getRowOid>
+			</mapValue>
+      </value>
+	  <enum>powershield_bms/powershield_bms_discovery/psStringState-em</enum>
+      <label>State - String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>String Status</sensorSet>
+    </stateSensor>
+
+    <numSensor ruleid="battManStringVoltage" index=".1.3.6.1.4.1.35154.1001.3.1.1.5">
+      <type>voltage</type>
+      <sensorId>VOLTAGE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.5</getRowOid>
+		 </mapValue>
+	  </rowTest>
+       <value>
+        <div>
+          <op><getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.5</getRowOid></op>
+          <op>10</op>
+        </div>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>Voltage - String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManStringTemp" index=".1.3.6.1.4.1.35154.1001.3.1.1.6">
+      <type>temp</type>
+      <sensorId>TEMPERATURE_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.6</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+		  <mult>
+			<op>
+			  <getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.6</getRowOid>
+			</op>
+			<op>0.1</op>
+		  </mult>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>Temperature - String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="BattManStringCurrent" index=".1.3.6.1.4.1.35154.1001.3.1.1.7">
+      <type>amperage</type>
+      <sensorId>CURRENT_STRING_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.7</getRowOid>
+		 </mapValue>
+	  </rowTest>
+ 		<value>
+			<getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.7</getRowOid>
+        </value>
+	  <valueInc>1</valueInc>
+      <label>Current - String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.3.1.1.1</getRowOid></label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManMonoblockVoltage" index=".1.3.6.1.4.1.35154.1001.4.1.1.3">
+      <type>voltage</type>
+      <sensorId>VOLTAGE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.3</getRowOid>
+		 </mapValue>
+	  </rowTest>
+       <value>
+        <div>
+          <op><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.3</getRowOid></op>
+          <op>1000</op>
+        </div>
+      </value>
+	  <valueInc>0.001</valueInc>
+      <label>
+		Voltage - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.1</getRowOid>
+		</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="battManMonoblockTemp" index=".1.3.6.1.4.1.35154.1001.4.1.1.4">
+      <type>temp</type>
+      <sensorId>TEMPERATURE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.4</getRowOid>
+		 </mapValue>
+	  </rowTest>
+      <value>
+		<getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.4</getRowOid>
+      </value>
+	  <valueInc>0.1</valueInc>
+      <label>
+		Temperature - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.1</getRowOid>
+		</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+    <numSensor ruleid="BattManMonoblockImpedance" index=".1.3.6.1.4.1.35154.1001.4.1.1.5">
+      <type>num</type>
+      <sensorId>IMPEDANCE_MONOBLOCK_<rowIndex/></sensorId>
+	  <rowTest>
+		 <mapValue mapid="powershield_bms/powershield_bms_discovery/delete_null_sensor">
+			<getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.5</getRowOid>
+		 </mapValue>
+	  </rowTest>
+		<value>
+			<getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.5</getRowOid>
+        </value>
+	  <valueInc>1</valueInc>
+      <label>
+		Impedance - 
+		String<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.2</getRowOid><space/>
+		Monoblock<space/><getRowOid>.1.3.6.1.4.1.35154.1001.4.1.1.1</getRowOid>
+		<space/>(uOhms)</label>
+      <sensorSet>Impedance</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="psDebuggingTimeouts">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_TIMEOUTS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Serial Timeouts</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingOverflows">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_OVERFLOWS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Serial Overflows</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingRequests">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_REQUESTS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.3.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Request Packets</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingResponses">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_RESPONSES</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Response Packets</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingValid">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_VALID</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.5.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Packets Valid</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingInvalid">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_INVALID</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.6.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Packets Invalid</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+    <numSensor ruleid="psDebuggingRetries">
+      <type>num</type>
+      <sensorId>PS_DEBUGGING_RETRIES</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.35154.1001.5.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Retries</label>
+      <sensorSet>Debugging</sensorSet>
+    </numSensor>
+
+
+
+
+ </device>
+</APC_DDF>

@@ -1,0 +1,5404 @@
+<?xml version="1.0"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid ="dpc_dc_rectifier_snmp" ddfname="APC by Schneider Electric DC Rectifier" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="dpc_dc_rectifier">
+		<oidMustExist istree="yes" ruleid="dc_rectifier_exist" oid=".1.3.6.1.4.1.39553.1"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">APC by Schneider Electric</setProductData>
+		<setProductData ruleid="modeldata" field="model">DCPM11KT240</setProductData>
+        <!-- Customer needs to support Operations and since DC Rectifier type doesn't support
+                much in Operations, we are defining the device as a Power Meter
+ 		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+        -->
+ 		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+
+		<!-- AC Analog Values --> 
+		<numSensor ruleid="ac1VoltageU">
+			<type>voltage</type>
+			<sensorId>AC1_VOLTAGE_PHASE_A_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.1.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC1 Voltage - Phase A</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac1VoltageV">
+			<type>voltage</type>
+			<sensorId>AC1_VOLTAGE_PHASE_B_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.2.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC1 Voltage - Phase B</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac1VoltageW">
+			<type>voltage</type>
+			<sensorId>AC1_VOLTAGE_PHASE_C_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.3.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC1 Voltage - Phase C</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac1Frequency">
+			<type>frequency</type>
+			<sensorId>AC1_FREQUENCY_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Frequency</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+		<numSensor ruleid="ac2VoltageU">
+			<type>voltage</type>
+			<sensorId>AC2_VOLTAGE_PHASE_A_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.5.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC2 Voltage - Phase A</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac2VoltageV">
+			<type>voltage</type>
+			<sensorId>AC2_VOLTAGE_PHASE_B_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.6.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC2 Voltage - Phase B</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac2VoltageW">
+			<type>voltage</type>
+			<sensorId>AC2_VOLTAGE_PHASE_C_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.7.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC2 Voltage - Phase C</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac2Frequency">
+			<type>frequency</type>
+			<sensorId>AC2_FREQUENCY_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Frequency</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+		<numSensor ruleid="ac3VoltageU">
+			<type>voltage</type>
+			<sensorId>AC3_VOLTAGE_PHASE_A_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.9.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC3 Voltage - Phase A</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac3VoltageV">
+			<type>voltage</type>
+			<sensorId>AC3_VOLTAGE_PHASE_B_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.10.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC3 Voltage - Phase B</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac3VoltageW">
+			<type>voltage</type>
+			<sensorId>AC3_VOLTAGE_PHASE_C_N</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.11.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC3 Voltage - Phase C</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac3Frequency">
+			<type>frequency</type>
+			<sensorId>AC3_FREQUENCY_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.12.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Frequency</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac1CurrentU">
+			<type>amperage</type>
+			<sensorId>AC1_CURRENT_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.13.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Current - Phase A</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac1CurrentV">
+			<type>amperage</type>
+			<sensorId>AC1_CURRENT_2</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.14.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Current - Phase B</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac1CurrentW">
+			<type>amperage</type>
+			<sensorId>AC1_CURRENT_3</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.15.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Current - Phase C</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac2CurrentU">
+			<type>amperage</type>
+			<sensorId>AC2_CURRENT_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.16.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Current - Phase A</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac2CurrentV">
+			<type>amperage</type>
+			<sensorId>AC2_CURRENT_2</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.17.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Current - Phase B</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac2CurrentW">
+			<type>amperage</type>
+			<sensorId>AC2_CURRENT_3</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.18.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Current - Phase C</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+  
+		<numSensor ruleid="ac3CurrentU">
+			<type>amperage</type>
+			<sensorId>AC3_CURRENT_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.19.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Current - Phase A</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac3CurrentV">
+			<type>amperage</type>
+			<sensorId>AC3_CURRENT_2</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.20.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Current - Phase B</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+ 
+		<numSensor ruleid="ac3CurrentW">
+			<type>amperage</type>
+			<sensorId>AC3_CURRENT_3</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.21.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Current - Phase C</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+		<numSensor ruleid="pue">
+			<type>pctofcapacity</type>
+			<sensorId>PUE_PCT</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.22.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PUE</label>
+			<sensorSet>ACDTU Sensors</sensorSet>
+		</numSensor>		
+
+        
+		<numSensor ruleid="ac1ActivePower">
+			<type>num/powerKW</type>
+			<sensorId>AC1_TOTAL_POWER_KW_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.23.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Real Power</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac1ActiveEnergy">
+			<type>num/kwatthr</type>
+			<sensorId>AC1_TOTAL_ENERGY_KWH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.24.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.25.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.25.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.25.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC1 Real Energy</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac1ReactivePower">
+			<type>num/powerKVAR</type>
+			<sensorId>AC1_TOTAL_POWER_KVAR_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.26.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Reactive Power</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac1ReactiveEnergy">
+			<type>num/kVARhr</type>
+			<sensorId>AC1_TOTAL_ENERGY_KVAR_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.27.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.28.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.28.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.28.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC1 Reactive Energy</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac1Powerfactor">
+			<type>num/powerfactor</type>
+			<sensorId>AC1_TOTAL_POWER_FACTOR</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.29.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC1 Power Factor</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac1ApparentPower">
+			<type>num/powerKVA</type>
+			<sensorId>AC1_TOTAL_POWER_KVA_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.30.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC1 Apparent Power</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac1ApparentEnergy">
+			<type>num/kVAhr</type>
+			<sensorId>AC1_TOTAL_ENERGY_KVAH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.31.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.32.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.32.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.32.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC1 Apparent Energy</label>
+			<sensorSet>AC1 Sensors</sensorSet>
+		</numSensor>		
+        
+		<numSensor ruleid="ac2ActivePower">
+			<type>num/powerKW</type>
+			<sensorId>AC2_TOTAL_POWER_KW_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.33.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Real Power</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac2ActiveEnergy">
+			<type>num/kwatthr</type>
+			<sensorId>AC2_TOTAL_ENERGY_KWH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.34.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.35.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.35.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.35.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC2 Real Energy</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac2ReactivePower">
+			<type>num/powerKVAR</type>
+			<sensorId>AC2_TOTAL_POWER_KVAR_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.36.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Reactive Power</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac2ReactiveEnergy">
+			<type>num/kVARhr</type>
+			<sensorId>AC2_TOTAL_ENERGY_KVAR_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.37.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.38.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.38.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.38.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC2 Reactive Energy</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac2Powerfactor">
+			<type>num/powerfactor</type>
+			<sensorId>AC2_TOTAL_POWER_FACTOR</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.39.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC2 Power Factor</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac2ApparentPower">
+			<type>num/powerKVA</type>
+			<sensorId>AC2_TOTAL_POWER_KVA_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.40.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC2 Apparent Power</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+    
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac2ApparentEnergy">
+			<type>num/kVAhr</type>
+			<sensorId>AC2_TOTAL_ENERGY_KVAH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.41.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.42.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.42.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.42.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC2 Apparent Energy</label>
+			<sensorSet>AC2 Sensors</sensorSet>
+		</numSensor>		
+
+		<numSensor ruleid="ac3ActivePower">
+			<type>num/powerKW</type>
+			<sensorId>AC3_TOTAL_POWER_KW_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.43.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Real Power</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac3ActiveEnergy">
+			<type>num/kwatthr</type>
+			<sensorId>AC3_TOTAL_ENERGY_KWH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.44.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.45.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.45.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.45.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC3 Real Energy</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac3ReactivePower">
+			<type>num/powerKVAR</type>
+			<sensorId>AC3_TOTAL_POWER_KVAR_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.46.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Reactive Power</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac3ReactiveEnergy">
+			<type>num/kVARhr</type>
+			<sensorId>AC3_TOTAL_ENERGY_KVAR_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.47.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.48.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.48.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.48.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC3 Reactive Energy</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac3Powerfactor">
+			<type>num/powerfactor</type>
+			<sensorId>AC3_TOTAL_POWER_FACTOR</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.49.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC3 Power Factor</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="ac3ApparentPower">
+			<type>num/powerKVA</type>
+			<sensorId>AC3_TOTAL_POWER_KVA_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.1.50.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC3 Apparent Power</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+       
+    <!-- Calculating Energy which is stored in 2 OIDs -->
+		<numSensor ruleid="ac3ApparentEnergy">
+			<type>num/kVAhr</type>
+			<sensorId>AC3_TOTAL_ENERGY_KVAH_1</sensorId>
+			<value>
+                <add>
+                    <op><mult>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.51.0</getOid></op>
+                            <op>65536</op>
+                        </mult></op>
+                    <op><if>
+                            <op><lt><op><getOid>.1.3.6.1.4.1.39553.1.1.1.52.0</getOid></op><op>0</op></lt></op>
+                            <op><sub><op>65536</op><op><getOid>.1.3.6.1.4.1.39553.1.1.1.52.0</getOid></op></sub></op>
+                            <op><getOid>.1.3.6.1.4.1.39553.1.1.1.52.0</getOid></op>
+                        </if></op>
+                </add>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC3 Apparent Energy</label>
+			<sensorSet>AC3 Sensors</sensorSet>
+		</numSensor>		
+
+ 
+		<!-- AC Alarms --> 
+		<valueMap ruleid="acAlarms-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>2</valueIn><valueOut>3</valueOut>
+			<valueIn>3</valueIn><valueOut>4</valueOut>
+			<valueIn>128</valueIn><valueOut>5</valueOut>
+			<valueIn>129</valueIn><valueOut>6</valueOut>
+			<valueIn>240</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="acAlarms-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Below Lower Limit</label>
+			<label>Above Upper Limit</label>
+			<label>Phase Lost</label>
+			<label>Power Lost</label>
+			<label>SPD</label>
+			<label>Fault</label>
+		</enumMap>
+
+		<stateSensor ruleid="ac1AlarmVoltageU">
+			<type>state</type>
+			<sensorId>AC1_ALARM_VOLTAGE_A</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 Voltage - Phase A Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac1AlarmVoltageV">
+			<type>state</type>
+			<sensorId>AC1_ALARM_VOLTAGE_B</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 Voltage - Phase B Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac1AlarmVoltageW">
+			<type>state</type>
+			<sensorId>AC1_ALARM_VOLTAGE_C</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 Voltage - Phase C Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac1AlarmStatus">
+			<type>state</type>
+			<sensorId>AC1_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac1AlarmThunder">
+			<type>state</type>
+			<sensorId>AC1_ALARM_THUNDER</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 SPD Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac2AlarmVoltageU">
+			<type>state</type>
+			<sensorId>AC2_ALARM_VOLTAGE_A</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 Voltage - Phase A Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac2AlarmVoltageV">
+			<type>state</type>
+			<sensorId>AC2_ALARM_VOLTAGE_B</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 Voltage - Phase B Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac2AlarmVoltageW">
+			<type>state</type>
+			<sensorId>AC2_ALARM_VOLTAGE_C</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 Voltage - Phase C Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac2AlarmStatus">
+			<type>state</type>
+			<sensorId>AC2_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.11.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac2AlarmThunder">
+			<type>state</type>
+			<sensorId>AC2_ALARM_THUNDER</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.12.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 SPD Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac3AlarmVoltageU">
+			<type>state</type>
+			<sensorId>AC3_ALARM_VOLTAGE_A</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.13.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC3 Voltage - Phase A Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac3AlarmVoltageV">
+			<type>state</type>
+			<sensorId>AC3_ALARM_VOLTAGE_B</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.14.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC3 Voltage - Phase B Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac3AlarmVoltageW">
+			<type>state</type>
+			<sensorId>AC3_ALARM_VOLTAGE_C</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.15.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC3 Voltage - Phase C Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac3AlarmStatus">
+			<type>state</type>
+			<sensorId>AC3_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.17.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC3 Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="ac3AlarmThunder">
+			<type>state</type>
+			<sensorId>AC3_ALARM_THUNDER</sensorId>
+			<value>
+				<mapValue mapid="acAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.2.18.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC3 SPD Status</label>
+			<enum>acAlarms-em</enum>
+			<sensorSet>AC Alarms</sensorSet>
+		</stateSensor>
+
+        
+		<!-- AC Switch --> 
+		<valueMap ruleid="acSwitch-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="acSwitch-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Switch Off</label>
+		</enumMap>
+
+		<stateSensor ruleid="acSwitch01">
+			<type>state</type>
+			<sensorId>AC1_SWITCH_FAULT</sensorId>
+			<value>
+				<mapValue mapid="acSwitch-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC1 Switch Fault</label>
+			<enum>acSwitch-em</enum>
+			<sensorSet>AC Switches</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="acSwitch02">
+			<type>state</type>
+			<sensorId>AC2_SWITCH_FAULT</sensorId>
+			<value>
+				<mapValue mapid="acSwitch-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.1.3.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>AC2 Switch Fault</label>
+			<enum>acSwitch-em</enum>
+			<sensorSet>AC Switches</sensorSet>
+		</stateSensor>
+
+        
+		<!-- AC Parameters --> 
+ 		<numSensor ruleid="acvh">
+			<type>voltage</type>
+			<sensorId>UPPER_AC_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.4.1.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC Voltage - Upper Limit</label>
+			<sensorSet>AC Parameters</sensorSet>
+		</numSensor>		
+   
+ 		<numSensor ruleid="acvl">
+			<type>voltage</type>
+			<sensorId>LOWER_AC_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.1.4.2.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>AC Voltage - Lower Limit</label>
+			<sensorSet>AC Parameters</sensorSet>
+		</numSensor>		
+
+
+		<!-- DC Analog Values --> 
+ 		<numSensor ruleid="systemVoltage">
+			<type>voltage</type>
+			<sensorId>DC_OUTPUT_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.1.1.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>DC Voltage - Output</label>
+			<sensorSet>DC Analog</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="systemCurrent">
+			<type>amperage</type>
+			<sensorId>TOTAL_CURRENT_DEMAND_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.1.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Total Load Current</label>
+			<sensorSet>DC Analog</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="batteryCurrent1">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.1.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Current - Battery Pack A</label>
+			<sensorSet>DC Analog</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="batteryCurrent2">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_2</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.1.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Current - Battery Pack B</label>
+			<sensorSet>DC Analog</sensorSet>
+		</numSensor>		
+
+ 
+		<!-- DC Alarms --> 
+		<valueMap ruleid="dcAlarms-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>2</valueIn><valueOut>3</valueOut>
+			<valueIn>3</valueIn><valueOut>4</valueOut>
+			<valueIn>4</valueIn><valueOut>5</valueOut>
+			<valueIn>130</valueIn><valueOut>6</valueOut>
+			<valueIn>132</valueIn><valueOut>7</valueOut>
+			<valueIn>133</valueIn><valueOut>8</valueOut>
+			<valueIn>138</valueIn><valueOut>9</valueOut>
+			<valueIn>240</valueIn><valueOut>10</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="dcAlarms-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Below Lower Limit</label>
+			<label>Above Upper Limit</label>
+			<label>Fuse Broken</label>
+			<label>Switch ON</label>
+			<label>Protection Warning</label>
+			<label>Positive DC Bus Warning</label>
+			<label>Negative DC Bus Warning</label>
+			<label>P/N DC Bus Warning</label>
+			<label>Fault</label>
+		</enumMap>
+
+		<stateSensor ruleid="dcAlarmVoltage">
+			<type>state</type>
+			<sensorId>DC_ALARM_VOLTAGE</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>DC Output Voltage Status</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="batfuseAlarm01">
+			<type>state</type>
+			<sensorId>BAT_FUSE_ALARM01</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack A Fuse Status</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="batfuseAlarm02">
+			<type>state</type>
+			<sensorId>BAT_FUSE_ALARM02</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack B Fuse Status</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="dcAlarmBranch">
+			<type>state</type>
+			<sensorId>DC_ALARM_BRANCH</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>DC Fuse Fault Warning</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="dcAlarmBLVD">
+			<type>state</type>
+			<sensorId>DC_ALARM_BLVD</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.46.0</getOid>
+				</mapValue>
+			</value>
+			<label>Low Battery Protection Warning</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="posBusinsAlarm">
+			<type>state</type>
+			<sensorId>POS_BUSINS_ALARM</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.47.0</getOid>
+				</mapValue>
+			</value>
+			<label>Insulator Warning of Positive Bus</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="negBusinsAlarm">
+			<type>state</type>
+			<sensorId>NEG_BUSINS_ALARM</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.48.0</getOid>
+				</mapValue>
+			</value>
+			<label>Insulator Warning of Negative Bus</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="posnegBusinsAlarm">
+			<type>state</type>
+			<sensorId>POS_NEG_BUSINS_ALARM</sensorId>
+			<value>
+				<mapValue mapid="dcAlarms-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.2.2.49.0</getOid>
+				</mapValue>
+			</value>
+			<label>Insulator Warning of Positive/Negative Bus</label>
+			<enum>dcAlarms-em</enum>
+			<sensorSet>DC Alarms</sensorSet>
+		</stateSensor>
+
+        
+		<!-- DC Parameters --> 
+ 		<numSensor ruleid="dcVoltageAlarmUpperLimit">
+			<type>voltage</type>
+			<sensorId>UPPER_DC_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.4.1.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>DC Voltage - Upper Limit</label>
+			<sensorSet>DC Parameters</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="dcVoltageAlarmLowerLimit">
+			<type>voltage</type>
+			<sensorId>LOWER_DC_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.4.2.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>DC Voltage - Lower Limit</label>
+			<sensorSet>DC Parameters</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="FltchargeVoltage">
+			<type>voltage</type>
+			<sensorId>FLT_CHARGE_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.4.5.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Floating Charging Voltage</label>
+			<sensorSet>DC Parameters</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="EqlchargeVoltage">
+			<type>voltage</type>
+			<sensorId>EQL_CHARGE_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.4.6.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Equalization Charging Voltage</label>
+			<sensorSet>DC Parameters</sensorSet>
+		</numSensor>		
+
+ 		<numSensor ruleid="BatProtectVoltage">
+			<type>voltage</type>
+			<sensorId>BAT_PROTECT_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.2.4.19.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Low Battery Protection Voltage</label>
+			<sensorSet>DC Parameters</sensorSet>
+		</numSensor>		
+
+        
+		<!-- Rectifier Analog Values --> 
+ 		<numSensor ruleid="recDcVoltage">
+			<type>voltage</type>
+			<sensorId>RECT_VOLTAGE_LN_1</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.39553.1.3.1.1.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Output Voltage - Rectifier</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>		
+
+		<numSensor ruleid="recDcCurrent01">
+			<type>amperage</type>
+			<sensorId>RECT01_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.2.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 01</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent02">
+			<type>amperage</type>
+			<sensorId>RECT02_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.3.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 02</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent03">
+			<type>amperage</type>
+			<sensorId>RECT03_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.4.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 03</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent04">
+			<type>amperage</type>
+			<sensorId>RECT04_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.5.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 04</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent05">
+			<type>amperage</type>
+			<sensorId>RECT05_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.6.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 05</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent06">
+			<type>amperage</type>
+			<sensorId>RECT06_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.7.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 06</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent07">
+			<type>amperage</type>
+			<sensorId>RECT07_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 07</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent08">
+			<type>amperage</type>
+			<sensorId>RECT08_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.9.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 08</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent09">
+			<type>amperage</type>
+			<sensorId>RECT09_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.10.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 09</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent10">
+			<type>amperage</type>
+			<sensorId>RECT10_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.11.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 10</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent11">
+			<type>amperage</type>
+			<sensorId>RECT11_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.12.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 11</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent12">
+			<type>amperage</type>
+			<sensorId>RECT12_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.13.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 12</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent13">
+			<type>amperage</type>
+			<sensorId>RECT13_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.14.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 13</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent14">
+			<type>amperage</type>
+			<sensorId>RECT14_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.15.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 14</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent15">
+			<type>amperage</type>
+			<sensorId>RECT15_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.16.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 15</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="recDcCurrent16">
+			<type>amperage</type>
+			<sensorId>RECT16_CURRENT_4</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.3.1.17.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Current - Rectifier Module 16</label>
+			<sensorSet>Rectifier Analog</sensorSet>
+		</numSensor>
+	
+	
+		<!-- Rectifier Alarm -->
+		<valueMap ruleid="norm_fault-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="norm_fault-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Fault</label>
+		</enumMap>
+	
+		<stateSensor ruleid="rect01AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT01_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 01</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect02AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT02_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 02</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect03AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT03_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.15.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 03</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect04AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT04_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.22.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 04</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect05AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT05_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.29.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 05</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect06AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT06_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 06</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect07AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT07_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.43.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 07</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect08AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT08_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.50.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 08</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect09AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT09_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.57.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 09</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect10AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT10_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.64.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 10</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect11AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT11_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.71.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 11</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect12AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT12_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.78.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 12</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect13AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT13_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.85.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 13</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect14AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT14_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.92.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 14</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect15AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT15_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.99.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 15</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect16AlarmStatus">
+			<type>state</type>
+			<sensorId>RECT16_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.2.106.0</getOid>
+				</mapValue>
+			</value>
+			<label>Warning of Rectifier Module 16</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Rectifier Alarm</sensorSet>
+		</stateSensor>
+	
+	
+		<!-- Rectifier Status -->
+		<valueMap ruleid="on_off-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="on_off-em">
+			<label>Unknown</label>
+			<label>ON</label>
+			<label>OFF</label>
+		</enumMap>
+	
+		<stateSensor ruleid="rect01SwitchOn">
+			<type>state</type>
+			<sensorId>RECT01_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 01</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect02SwitchOn">
+			<type>state</type>
+			<sensorId>RECT02_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 02</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect03SwitchOn">
+			<type>state</type>
+			<sensorId>RECT03_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 03</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect04SwitchOn">
+			<type>state</type>
+			<sensorId>RECT04_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.13.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 04</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect05SwitchOn">
+			<type>state</type>
+			<sensorId>RECT05_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.17.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 05</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect06SwitchOn">
+			<type>state</type>
+			<sensorId>RECT06_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.21.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 06</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect07SwitchOn">
+			<type>state</type>
+			<sensorId>RECT07_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.25.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 07</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect08SwitchOn">
+			<type>state</type>
+			<sensorId>RECT08_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.29.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 08</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect09SwitchOn">
+			<type>state</type>
+			<sensorId>RECT09_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.33.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 09</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect10SwitchOn">
+			<type>state</type>
+			<sensorId>RECT10_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 10</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect11SwitchOn">
+			<type>state</type>
+			<sensorId>RECT11_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.41.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 11</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect12SwitchOn">
+			<type>state</type>
+			<sensorId>RECT12_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.45.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 12</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect13SwitchOn">
+			<type>state</type>
+			<sensorId>RECT13_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.49.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 13</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect14SwitchOn">
+			<type>state</type>
+			<sensorId>RECT14_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.53.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 14</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect15SwitchOn">
+			<type>state</type>
+			<sensorId>RECT15_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.57.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 15</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="rect16SwitchOn">
+			<type>state</type>
+			<sensorId>RECT16_SWITCH_ON</sensorId>
+			<value>
+				<mapValue mapid="on_off-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.3.3.61.0</getOid>
+				</mapValue>
+			</value>
+			<label>Switch Status of Rectifier Module 16</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Switch Rectifier Status</sensorSet>
+		</stateSensor>
+
+
+        
+		<!-- Battery Data -->
+		<numSensor ruleid="batTypeA">
+			<type>voltage</type>
+			<sensorId>BATTA_RATING_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.1.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Rating Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage01">
+			<type>voltage</type>
+			<sensorId>BATA_CELL01_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.2.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 001 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage02">
+			<type>voltage</type>
+			<sensorId>BATA_CELL02_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.3.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 002 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage03">
+			<type>voltage</type>
+			<sensorId>BATA_CELL03_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.4.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 003 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage04">
+			<type>voltage</type>
+			<sensorId>BATA_CELL04_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.5.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 004 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage05">
+			<type>voltage</type>
+			<sensorId>BATA_CELL05_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.6.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 005 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage06">
+			<type>voltage</type>
+			<sensorId>BATA_CELL06_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.7.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 006 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage07">
+			<type>voltage</type>
+			<sensorId>BATA_CELL07_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.8.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 007 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage08">
+			<type>voltage</type>
+			<sensorId>BATA_CELL08_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.9.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 008 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage09">
+			<type>voltage</type>
+			<sensorId>BATA_CELL09_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.10.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 009 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage10">
+			<type>voltage</type>
+			<sensorId>BATA_CELL10_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.11.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 010 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage11">
+			<type>voltage</type>
+			<sensorId>BATA_CELL11_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.12.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 011 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage12">
+			<type>voltage</type>
+			<sensorId>BATA_CELL12_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.13.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 012 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage13">
+			<type>voltage</type>
+			<sensorId>BATA_CELL13_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.14.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 013 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage14">
+			<type>voltage</type>
+			<sensorId>BATA_CELL14_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.15.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 014 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage15">
+			<type>voltage</type>
+			<sensorId>BATA_CELL15_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.16.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 015 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage16">
+			<type>voltage</type>
+			<sensorId>BATA_CELL16_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.17.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 016 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage17">
+			<type>voltage</type>
+			<sensorId>BATA_CELL17_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.18.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 017 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage18">
+			<type>voltage</type>
+			<sensorId>BATA_CELL18_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.19.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 018 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage19">
+			<type>voltage</type>
+			<sensorId>BATA_CELL19_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.20.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 019 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage20">
+			<type>voltage</type>
+			<sensorId>BATA_CELL20_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.21.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 020 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage21">
+			<type>voltage</type>
+			<sensorId>BATA_CELL21_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.22.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 021 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage22">
+			<type>voltage</type>
+			<sensorId>BATA_CELL22_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.23.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 022 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage23">
+			<type>voltage</type>
+			<sensorId>BATA_CELL23_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.24.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 023 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage24">
+			<type>voltage</type>
+			<sensorId>BATA_CELL24_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.25.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 024 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage25">
+			<type>voltage</type>
+			<sensorId>BATA_CELL25_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.26.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 025 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage26">
+			<type>voltage</type>
+			<sensorId>BATA_CELL26_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.27.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 026 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage27">
+			<type>voltage</type>
+			<sensorId>BATA_CELL27_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.28.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 027 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage28">
+			<type>voltage</type>
+			<sensorId>BATA_CELL28_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.29.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 028 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage29">
+			<type>voltage</type>
+			<sensorId>BATA_CELL29_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.30.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 029 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage30">
+			<type>voltage</type>
+			<sensorId>BATA_CELL30_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.31.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 030 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage31">
+			<type>voltage</type>
+			<sensorId>BATA_CELL31_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.32.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 031 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage32">
+			<type>voltage</type>
+			<sensorId>BATA_CELL32_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.33.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 032 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage33">
+			<type>voltage</type>
+			<sensorId>BATA_CELL33_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.34.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 033 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage34">
+			<type>voltage</type>
+			<sensorId>BATA_CELL34_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.35.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 034 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage35">
+			<type>voltage</type>
+			<sensorId>BATA_CELL35_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.36.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 035 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage36">
+			<type>voltage</type>
+			<sensorId>BATA_CELL36_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.37.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 036 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage37">
+			<type>voltage</type>
+			<sensorId>BATA_CELL37_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.38.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 037 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage38">
+			<type>voltage</type>
+			<sensorId>BATA_CELL38_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.39.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 038 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage39">
+			<type>voltage</type>
+			<sensorId>BATA_CELL39_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.40.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 039 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage40">
+			<type>voltage</type>
+			<sensorId>BATA_CELL40_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.41.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 040 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage41">
+			<type>voltage</type>
+			<sensorId>BATA_CELL41_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.42.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 041 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage42">
+			<type>voltage</type>
+			<sensorId>BATA_CELL42_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.43.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 042 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage43">
+			<type>voltage</type>
+			<sensorId>BATA_CELL43_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.44.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 043 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage44">
+			<type>voltage</type>
+			<sensorId>BATA_CELL44_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.45.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 044 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage45">
+			<type>voltage</type>
+			<sensorId>BATA_CELL45_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.46.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 045 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage46">
+			<type>voltage</type>
+			<sensorId>BATA_CELL46_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.47.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 046 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage47">
+			<type>voltage</type>
+			<sensorId>BATA_CELL47_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.48.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 047 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage48">
+			<type>voltage</type>
+			<sensorId>BATA_CELL48_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.49.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 048 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage49">
+			<type>voltage</type>
+			<sensorId>BATA_CELL49_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.50.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 049 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage50">
+			<type>voltage</type>
+			<sensorId>BATA_CELL50_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.51.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 050 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage51">
+			<type>voltage</type>
+			<sensorId>BATA_CELL51_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.52.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 051 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage52">
+			<type>voltage</type>
+			<sensorId>BATA_CELL52_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.53.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 052 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage53">
+			<type>voltage</type>
+			<sensorId>BATA_CELL53_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.54.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 053 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage54">
+			<type>voltage</type>
+			<sensorId>BATA_CELL54_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.55.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 054 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage55">
+			<type>voltage</type>
+			<sensorId>BATA_CELL55_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.56.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 055 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage56">
+			<type>voltage</type>
+			<sensorId>BATA_CELL56_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.57.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 056 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage57">
+			<type>voltage</type>
+			<sensorId>BATA_CELL57_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.58.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 057 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage58">
+			<type>voltage</type>
+			<sensorId>BATA_CELL58_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.59.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 058 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage59">
+			<type>voltage</type>
+			<sensorId>BATA_CELL59_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.60.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 059 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage60">
+			<type>voltage</type>
+			<sensorId>BATA_CELL60_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.61.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 060 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage61">
+			<type>voltage</type>
+			<sensorId>BATA_CELL61_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.62.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 061 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage62">
+			<type>voltage</type>
+			<sensorId>BATA_CELL62_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.63.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 062 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage63">
+			<type>voltage</type>
+			<sensorId>BATA_CELL63_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.64.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 063 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage64">
+			<type>voltage</type>
+			<sensorId>BATA_CELL64_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.65.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 064 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage65">
+			<type>voltage</type>
+			<sensorId>BATA_CELL65_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.66.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 065 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage66">
+			<type>voltage</type>
+			<sensorId>BATA_CELL66_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.67.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 066 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage67">
+			<type>voltage</type>
+			<sensorId>BATA_CELL67_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.68.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 067 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage68">
+			<type>voltage</type>
+			<sensorId>BATA_CELL68_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.69.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 068 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage69">
+			<type>voltage</type>
+			<sensorId>BATA_CELL69_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.70.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 069 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage70">
+			<type>voltage</type>
+			<sensorId>BATA_CELL70_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.71.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 070 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage71">
+			<type>voltage</type>
+			<sensorId>BATA_CELL71_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.72.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 071 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage72">
+			<type>voltage</type>
+			<sensorId>BATA_CELL72_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.73.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 072 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage73">
+			<type>voltage</type>
+			<sensorId>BATA_CELL73_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.74.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 073 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage74">
+			<type>voltage</type>
+			<sensorId>BATA_CELL74_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.75.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 074 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage75">
+			<type>voltage</type>
+			<sensorId>BATA_CELL75_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.76.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 075 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage76">
+			<type>voltage</type>
+			<sensorId>BATA_CELL76_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.77.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 076 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage77">
+			<type>voltage</type>
+			<sensorId>BATA_CELL77_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.78.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 077 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage78">
+			<type>voltage</type>
+			<sensorId>BATA_CELL78_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.79.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 078 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage79">
+			<type>voltage</type>
+			<sensorId>BATA_CELL79_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.80.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 079 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage80">
+			<type>voltage</type>
+			<sensorId>BATA_CELL80_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.81.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 080 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage81">
+			<type>voltage</type>
+			<sensorId>BATA_CELL81_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.82.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 081 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage82">
+			<type>voltage</type>
+			<sensorId>BATA_CELL82_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.83.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 082 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage83">
+			<type>voltage</type>
+			<sensorId>BATA_CELL83_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.84.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 083 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage84">
+			<type>voltage</type>
+			<sensorId>BATA_CELL84_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.85.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 084 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage85">
+			<type>voltage</type>
+			<sensorId>BATA_CELL85_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.86.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 085 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage86">
+			<type>voltage</type>
+			<sensorId>BATA_CELL86_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.87.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 086 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage87">
+			<type>voltage</type>
+			<sensorId>BATA_CELL87_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.88.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 087 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage88">
+			<type>voltage</type>
+			<sensorId>BATA_CELL88_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.89.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 088 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage89">
+			<type>voltage</type>
+			<sensorId>BATA_CELL89_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.90.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 089 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage90">
+			<type>voltage</type>
+			<sensorId>BATA_CELL90_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.91.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 090 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage91">
+			<type>voltage</type>
+			<sensorId>BATA_CELL91_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.92.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 091 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage92">
+			<type>voltage</type>
+			<sensorId>BATA_CELL92_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.93.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 092 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage93">
+			<type>voltage</type>
+			<sensorId>BATA_CELL93_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.94.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 093 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage94">
+			<type>voltage</type>
+			<sensorId>BATA_CELL94_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.95.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 094 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage95">
+			<type>voltage</type>
+			<sensorId>BATA_CELL95_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.96.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 095 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage96">
+			<type>voltage</type>
+			<sensorId>BATA_CELL96_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.97.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 096 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage97">
+			<type>voltage</type>
+			<sensorId>BATA_CELL97_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.98.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 097 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage98">
+			<type>voltage</type>
+			<sensorId>BATA_CELL98_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.99.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 098 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage99">
+			<type>voltage</type>
+			<sensorId>BATA_CELL99_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.100.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 099 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage100">
+			<type>voltage</type>
+			<sensorId>BATA_CELL100_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.101.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 100 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage101">
+			<type>voltage</type>
+			<sensorId>BATA_CELL101_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.102.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 101 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage102">
+			<type>voltage</type>
+			<sensorId>BATA_CELL102_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.103.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 102 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage103">
+			<type>voltage</type>
+			<sensorId>BATA_CELL103_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.104.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 103 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage104">
+			<type>voltage</type>
+			<sensorId>BATA_CELL104_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.105.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 104 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage105">
+			<type>voltage</type>
+			<sensorId>BATA_CELL105_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.106.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 105 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage106">
+			<type>voltage</type>
+			<sensorId>BATA_CELL106_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.107.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 106 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage107">
+			<type>voltage</type>
+			<sensorId>BATA_CELL107_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.108.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 107 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage108">
+			<type>voltage</type>
+			<sensorId>BATA_CELL108_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.109.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 108 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage109">
+			<type>voltage</type>
+			<sensorId>BATA_CELL109_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.110.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 109 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage110">
+			<type>voltage</type>
+			<sensorId>BATA_CELL110_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.111.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 110 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage111">
+			<type>voltage</type>
+			<sensorId>BATA_CELL111_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.112.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 111 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage112">
+			<type>voltage</type>
+			<sensorId>BATA_CELL112_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.113.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 112 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage113">
+			<type>voltage</type>
+			<sensorId>BATA_CELL113_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.114.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 113 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage114">
+			<type>voltage</type>
+			<sensorId>BATA_CELL114_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.115.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 114 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage115">
+			<type>voltage</type>
+			<sensorId>BATA_CELL115_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.116.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 115 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage116">
+			<type>voltage</type>
+			<sensorId>BATA_CELL116_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.117.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 116 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage117">
+			<type>voltage</type>
+			<sensorId>BATA_CELL117_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.118.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 117 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage118">
+			<type>voltage</type>
+			<sensorId>BATA_CELL118_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.119.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 118 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage119">
+			<type>voltage</type>
+			<sensorId>BATA_CELL119_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.120.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 119 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batAcellVoltage120">
+			<type>voltage</type>
+			<sensorId>BATA_CELL120_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.121.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack A - Cell 120 Voltage</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batTypeB">
+			<type>voltage</type>
+			<sensorId>BATTB_RATING_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.122.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Rating Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage01">
+			<type>voltage</type>
+			<sensorId>BATB_CELL01_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.123.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 001 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage02">
+			<type>voltage</type>
+			<sensorId>BATB_CELL02_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.124.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 002 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage03">
+			<type>voltage</type>
+			<sensorId>BATB_CELL03_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.125.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 003 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage04">
+			<type>voltage</type>
+			<sensorId>BATB_CELL04_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.126.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 004 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage05">
+			<type>voltage</type>
+			<sensorId>BATB_CELL05_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.127.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 005 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage06">
+			<type>voltage</type>
+			<sensorId>BATB_CELL06_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.128.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 006 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage07">
+			<type>voltage</type>
+			<sensorId>BATB_CELL07_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.129.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 007 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage08">
+			<type>voltage</type>
+			<sensorId>BATB_CELL08_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.130.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 008 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage09">
+			<type>voltage</type>
+			<sensorId>BATB_CELL09_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.131.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 009 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage10">
+			<type>voltage</type>
+			<sensorId>BATB_CELL10_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.132.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 010 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage11">
+			<type>voltage</type>
+			<sensorId>BATB_CELL11_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.133.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 011 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage12">
+			<type>voltage</type>
+			<sensorId>BATB_CELL12_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.134.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 012 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage13">
+			<type>voltage</type>
+			<sensorId>BATB_CELL13_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.135.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 013 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage14">
+			<type>voltage</type>
+			<sensorId>BATB_CELL14_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.136.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 014 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage15">
+			<type>voltage</type>
+			<sensorId>BATB_CELL15_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.137.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 015 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage16">
+			<type>voltage</type>
+			<sensorId>BATB_CELL16_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.138.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 016 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage17">
+			<type>voltage</type>
+			<sensorId>BATB_CELL17_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.139.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 017 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage18">
+			<type>voltage</type>
+			<sensorId>BATB_CELL18_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.140.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 018 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage19">
+			<type>voltage</type>
+			<sensorId>BATB_CELL19_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.141.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 019 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage20">
+			<type>voltage</type>
+			<sensorId>BATB_CELL20_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.142.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 020 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage21">
+			<type>voltage</type>
+			<sensorId>BATB_CELL21_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.143.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 021 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage22">
+			<type>voltage</type>
+			<sensorId>BATB_CELL22_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.144.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 022 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage23">
+			<type>voltage</type>
+			<sensorId>BATB_CELL23_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.145.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 023 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage24">
+			<type>voltage</type>
+			<sensorId>BATB_CELL24_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.146.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 024 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage25">
+			<type>voltage</type>
+			<sensorId>BATB_CELL25_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.147.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 025 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage26">
+			<type>voltage</type>
+			<sensorId>BATB_CELL26_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.148.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 026 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage27">
+			<type>voltage</type>
+			<sensorId>BATB_CELL27_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.149.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 027 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage28">
+			<type>voltage</type>
+			<sensorId>BATB_CELL28_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.150.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 028 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage29">
+			<type>voltage</type>
+			<sensorId>BATB_CELL29_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.151.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 029 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage30">
+			<type>voltage</type>
+			<sensorId>BATB_CELL30_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.152.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 030 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage31">
+			<type>voltage</type>
+			<sensorId>BATB_CELL31_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.153.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 031 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage32">
+			<type>voltage</type>
+			<sensorId>BATB_CELL32_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.154.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 032 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage33">
+			<type>voltage</type>
+			<sensorId>BATB_CELL33_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.155.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 033 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage34">
+			<type>voltage</type>
+			<sensorId>BATB_CELL34_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.156.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 034 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage35">
+			<type>voltage</type>
+			<sensorId>BATB_CELL35_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.157.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 035 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage36">
+			<type>voltage</type>
+			<sensorId>BATB_CELL36_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.158.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 036 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage37">
+			<type>voltage</type>
+			<sensorId>BATB_CELL37_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.159.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 037 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage38">
+			<type>voltage</type>
+			<sensorId>BATB_CELL38_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.160.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 038 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage39">
+			<type>voltage</type>
+			<sensorId>BATB_CELL39_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.161.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 039 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage40">
+			<type>voltage</type>
+			<sensorId>BATB_CELL40_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.162.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 040 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage41">
+			<type>voltage</type>
+			<sensorId>BATB_CELL41_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.163.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 041 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage42">
+			<type>voltage</type>
+			<sensorId>BATB_CELL42_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.164.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 042 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage43">
+			<type>voltage</type>
+			<sensorId>BATB_CELL43_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.165.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 043 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage44">
+			<type>voltage</type>
+			<sensorId>BATB_CELL44_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.166.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 044 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage45">
+			<type>voltage</type>
+			<sensorId>BATB_CELL45_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.167.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 045 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage46">
+			<type>voltage</type>
+			<sensorId>BATB_CELL46_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.168.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 046 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage47">
+			<type>voltage</type>
+			<sensorId>BATB_CELL47_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.169.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 047 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage48">
+			<type>voltage</type>
+			<sensorId>BATB_CELL48_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.170.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 048 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage49">
+			<type>voltage</type>
+			<sensorId>BATB_CELL49_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.171.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 049 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage50">
+			<type>voltage</type>
+			<sensorId>BATB_CELL50_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.172.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 050 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage51">
+			<type>voltage</type>
+			<sensorId>BATB_CELL51_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.173.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 051 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage52">
+			<type>voltage</type>
+			<sensorId>BATB_CELL52_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.174.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 052 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage53">
+			<type>voltage</type>
+			<sensorId>BATB_CELL53_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.175.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 053 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage54">
+			<type>voltage</type>
+			<sensorId>BATB_CELL54_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.176.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 054 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage55">
+			<type>voltage</type>
+			<sensorId>BATB_CELL55_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.177.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 055 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage56">
+			<type>voltage</type>
+			<sensorId>BATB_CELL56_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.178.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 056 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage57">
+			<type>voltage</type>
+			<sensorId>BATB_CELL57_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.179.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 057 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage58">
+			<type>voltage</type>
+			<sensorId>BATB_CELL58_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.180.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 058 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage59">
+			<type>voltage</type>
+			<sensorId>BATB_CELL59_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.181.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 059 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage60">
+			<type>voltage</type>
+			<sensorId>BATB_CELL60_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.182.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 060 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage61">
+			<type>voltage</type>
+			<sensorId>BATB_CELL61_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.183.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 061 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage62">
+			<type>voltage</type>
+			<sensorId>BATB_CELL62_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.184.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 062 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage63">
+			<type>voltage</type>
+			<sensorId>BATB_CELL63_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.185.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 063 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage64">
+			<type>voltage</type>
+			<sensorId>BATB_CELL64_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.186.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 064 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage65">
+			<type>voltage</type>
+			<sensorId>BATB_CELL65_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.187.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 065 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage66">
+			<type>voltage</type>
+			<sensorId>BATB_CELL66_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.188.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 066 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage67">
+			<type>voltage</type>
+			<sensorId>BATB_CELL67_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.189.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 067 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage68">
+			<type>voltage</type>
+			<sensorId>BATB_CELL68_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.190.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 068 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage69">
+			<type>voltage</type>
+			<sensorId>BATB_CELL69_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.191.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 069 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage70">
+			<type>voltage</type>
+			<sensorId>BATB_CELL70_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.192.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 070 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage71">
+			<type>voltage</type>
+			<sensorId>BATB_CELL71_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.193.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 071 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage72">
+			<type>voltage</type>
+			<sensorId>BATB_CELL72_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.194.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 072 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage73">
+			<type>voltage</type>
+			<sensorId>BATB_CELL73_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.195.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 073 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage74">
+			<type>voltage</type>
+			<sensorId>BATB_CELL74_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.196.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 074 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage75">
+			<type>voltage</type>
+			<sensorId>BATB_CELL75_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.197.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 075 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage76">
+			<type>voltage</type>
+			<sensorId>BATB_CELL76_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.198.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 076 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage77">
+			<type>voltage</type>
+			<sensorId>BATB_CELL77_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.199.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 077 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage78">
+			<type>voltage</type>
+			<sensorId>BATB_CELL78_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.200.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 078 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage79">
+			<type>voltage</type>
+			<sensorId>BATB_CELL79_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.201.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 079 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage80">
+			<type>voltage</type>
+			<sensorId>BATB_CELL80_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.202.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 080 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage81">
+			<type>voltage</type>
+			<sensorId>BATB_CELL81_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.203.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 081 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage82">
+			<type>voltage</type>
+			<sensorId>BATB_CELL82_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.204.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 082 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage83">
+			<type>voltage</type>
+			<sensorId>BATB_CELL83_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.205.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 083 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage84">
+			<type>voltage</type>
+			<sensorId>BATB_CELL84_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.206.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 084 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage85">
+			<type>voltage</type>
+			<sensorId>BATB_CELL85_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.207.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 085 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage86">
+			<type>voltage</type>
+			<sensorId>BATB_CELL86_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.208.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 086 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage87">
+			<type>voltage</type>
+			<sensorId>BATB_CELL87_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.209.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 087 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage88">
+			<type>voltage</type>
+			<sensorId>BATB_CELL88_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.210.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 088 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage89">
+			<type>voltage</type>
+			<sensorId>BATB_CELL89_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.211.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 089 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage90">
+			<type>voltage</type>
+			<sensorId>BATB_CELL90_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.212.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 090 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage91">
+			<type>voltage</type>
+			<sensorId>BATB_CELL91_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.213.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 091 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage92">
+			<type>voltage</type>
+			<sensorId>BATB_CELL92_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.214.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 092 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage93">
+			<type>voltage</type>
+			<sensorId>BATB_CELL93_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.215.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 093 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage94">
+			<type>voltage</type>
+			<sensorId>BATB_CELL94_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.216.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 094 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage95">
+			<type>voltage</type>
+			<sensorId>BATB_CELL95_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.217.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 095 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage96">
+			<type>voltage</type>
+			<sensorId>BATB_CELL96_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.218.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 096 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage97">
+			<type>voltage</type>
+			<sensorId>BATB_CELL97_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.219.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 097 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage98">
+			<type>voltage</type>
+			<sensorId>BATB_CELL98_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.220.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 098 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage99">
+			<type>voltage</type>
+			<sensorId>BATB_CELL99_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.221.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 099 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage100">
+			<type>voltage</type>
+			<sensorId>BATB_CELL100_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.222.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 100 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage101">
+			<type>voltage</type>
+			<sensorId>BATB_CELL101_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.223.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 101 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage102">
+			<type>voltage</type>
+			<sensorId>BATB_CELL102_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.224.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 102 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage103">
+			<type>voltage</type>
+			<sensorId>BATB_CELL103_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.225.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 103 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage104">
+			<type>voltage</type>
+			<sensorId>BATB_CELL104_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.226.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 104 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage105">
+			<type>voltage</type>
+			<sensorId>BATB_CELL105_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.227.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 105 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage106">
+			<type>voltage</type>
+			<sensorId>BATB_CELL106_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.228.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 106 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage107">
+			<type>voltage</type>
+			<sensorId>BATB_CELL107_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.229.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 107 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage108">
+			<type>voltage</type>
+			<sensorId>BATB_CELL108_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.230.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 108 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage109">
+			<type>voltage</type>
+			<sensorId>BATB_CELL109_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.231.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 109 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage110">
+			<type>voltage</type>
+			<sensorId>BATB_CELL110_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.232.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 110 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage111">
+			<type>voltage</type>
+			<sensorId>BATB_CELL111_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.233.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 111 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage112">
+			<type>voltage</type>
+			<sensorId>BATB_CELL112_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.234.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 112 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage113">
+			<type>voltage</type>
+			<sensorId>BATB_CELL113_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.235.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 113 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage114">
+			<type>voltage</type>
+			<sensorId>BATB_CELL114_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.236.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 114 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage115">
+			<type>voltage</type>
+			<sensorId>BATB_CELL115_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.237.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 115 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage116">
+			<type>voltage</type>
+			<sensorId>BATB_CELL116_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.238.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 116 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage117">
+			<type>voltage</type>
+			<sensorId>BATB_CELL117_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.239.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 117 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage118">
+			<type>voltage</type>
+			<sensorId>BATB_CELL118_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.240.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 118 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage119">
+			<type>voltage</type>
+			<sensorId>BATB_CELL119_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.241.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 119 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="batBcellVoltage120">
+			<type>voltage</type>
+			<sensorId>BATB_CELL120_VOLTAGE_NR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.242.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>Battery Pack B - Cell 120 Voltage</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="battemp01">
+			<type>temp</type>
+			<sensorId>BATT_A_TEMP</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.243.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Battery Pack A - Temperature</label>
+			<sensorSet>Battery Pack A</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="battemp02">
+			<type>temp</type>
+			<sensorId>BATT_B_TEMP</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.39553.1.5.1.244.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Battery Pack B - Temperature</label>
+			<sensorSet>Battery Pack B</sensorSet>
+		</numSensor>
+	
+	
+        <!-- Battery Alarm -->
+		<stateSensor ruleid="batAlarmVH01">
+			<type>state</type>
+			<sensorId>BAT_ALARM_VH01</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.5.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack A - Battery Voltage Warning</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Battery Alarm</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="batAlarmVH02">
+			<type>state</type>
+			<sensorId>BAT_ALARM_VH02</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.5.2.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack B - Battery Voltage Warning</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Battery Alarm</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="batAlarmTH01">
+			<type>state</type>
+			<sensorId>BAT_ALARM_TH01</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.5.2.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack A - Battery Temperature Warning</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Battery Alarm</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="batAlarmTH02">
+			<type>state</type>
+			<sensorId>BAT_ALARM_TH02</sensorId>
+			<value>
+				<mapValue mapid="norm_fault-vm">
+					<getOid>.1.3.6.1.4.1.39553.1.5.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Pack B - Battery Temperature Warning</label>
+			<enum>norm_fault-em</enum>
+			<sensorSet>Battery Alarm</sensorSet>
+		</stateSensor>
+
+	</device>
+</APC_DDF>

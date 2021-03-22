@@ -1,0 +1,160 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="gs_yuasa"
+	ddfname="GS YUASA - UPS THA1500R-5 EILN"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="gs_yuasa_ups_tha1500r_5_eiln">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+	
+		<setProductData ruleid="vendordata" field="vendor">GS YUASA</setProductData>
+		<setProductData ruleid="modeldata" field="model">UPS THA1500R-5 EILN</setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+		<oidMustExist ruleid="gs_yuasa_oid_must_exist" oid="1.3.6.1.4.1.5912.1.1.1.8.4.2.0"/> 
+        
+
+		<enumMap ruleid="shutdown_event_em">
+			<label>Unknown</label>
+			<label>acFail</label>
+			<label>batteryLow</label>
+			<label>overLoad</label>
+			<label>overTemperature</label>
+			<label>weeklyScheduling</label>
+			<label>specialEventScheduling</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<enumMap ruleid="shutdown_event_action_em">
+			<label>Unknown</label>
+			<label>disable</label>
+			<label>warning</label>
+			<label>clientShutdown</label>
+			<label>upsShutdown</label>
+		</enumMap>
+
+		<enumMap ruleid="control_boot_dhcp_em">
+			<label>Unknown</label>
+			<label>Enable</label>
+			<label>Disable</label>
+			<label>Unknown</label>
+		</enumMap>
+
+
+		<stateSensor ruleid="EXTMNGSDOWNEVENT_SENSOR" index=".1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1">
+            <type>state</type>
+            <sensorId>extmngsdownevent<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngSDownEvent <rowIndex/></label>
+			<enum>shutdown_event_em</enum>
+            <sensorSet>extManagement</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="EXTMNGSDOWNEVENTACTION_SENSOR" index=".1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1">
+            <type>state</type>
+            <sensorId>extmngsdowneventaction<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.5912.1.1.1.8.1.1.1.2</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngSDownEventAction <rowIndex/></label>
+			<enum>shutdown_event_action_em</enum>
+            <sensorSet>extManagement</sensorSet>
+        </stateSensor>
+
+        <numSensor ruleid="EXTMNGSDOWNDELAY_SENSOR" index=".1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1">
+            <type>timeinmin</type>
+            <sensorId>extmngsdowndelay<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.5912.1.1.1.8.1.1.1.3</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngSDownDelay <rowIndex/></label>
+            <sensorSet>extManagement</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="EXTMNGSDOWNFIRSTWARNING_SENSOR" index=".1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1">
+            <type>timeinsec</type>
+            <sensorId>extmngsdownfirstwarning<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.5912.1.1.1.8.1.1.1.4</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngSDownFirstWarning <rowIndex/></label>
+            <sensorSet>extManagement</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="EXTMNGSDOWNFIRSTWARNINGINTERVAL_SENSOR" index=".1.3.6.1.4.1.5912.1.1.1.8.1.1.1.1">
+            <type>timeinsec</type>
+            <sensorId>extmngsdownfirstwarninginterval<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.5912.1.1.1.8.1.1.1.5</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngSDownFirstWarningInterval <rowIndex/></label>
+            <sensorSet>extManagement</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="EXTMNGCONTROLBOOTPDHCP_SENSOR">
+            <type>state</type>
+            <sensorId>extmngcontrolbootpdhcp</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.5912.1.1.1.8.4.1.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngControlBootpDHCP</label>
+			<enum>control_boot_dhcp_em</enum>
+            <sensorSet>extManagement</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="EXTMNGCONTROLTELNET_SENSOR">
+            <type>state</type>
+            <sensorId>extmngcontroltelnet</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.5912.1.1.1.8.4.2.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>extMngControlTelnet</label>
+			<enum>control_boot_dhcp_em</enum>
+            <sensorSet>extManagement</sensorSet>
+        </stateSensor>
+
+	</device>
+</APC_DDF>

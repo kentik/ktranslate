@@ -1,0 +1,730 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="uec_starline_cpm"
+	ddfname="UEC Starline CPM"
+	ddfversion="3"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\uec\UEC_v23.mib
+		UEC STARLINE MIB | 9 April 2020
+	-->
+	<device deviceid="uec_starline_cpm">
+		<oidMustExist ruleid="uec_starline_cpm" oid=".1.3.6.1.4.1.35774.2" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Universal Electric Corp.</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.35774.2.1.1.3.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+		<setProductData ruleid="sernumdata" field="serial_num"><getOid>.1.3.6.1.4.1.35774.2.1.1.5.0</getOid></setProductData>
+
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.35774.2.1.1.1.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="lineToNeutVoltAverage">
+            <type>voltage</type>
+            <sensorId>AVERAGE_VOLTAGE_LN_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.1.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Line to Neutral Voltage Average</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltAverage">
+            <type>voltage</type>
+            <sensorId>AVERAGE_VOLTAGE_LL_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.2.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Line to Line Voltage Average</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentAverage">
+            <type>amperage</type>
+            <sensorId>CURRENT_AVG</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.3.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Line Current Average</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedCurrentDemand">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURR_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.4.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Current Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedCurrentPeakDemand">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURR_PEAKDMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.5.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Current Peak Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedDemandTime">
+            <type>timeinmin</type>
+            <sensorId>INFEED_DMD_TIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.6.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Demand Time</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="infeedTotalActivePower">
+            <type>powerW</type>
+            <sensorId>INFEED_TOTAL_ACTIVE_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.7.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Active Power</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPeakTotalActivePower">
+            <type>powerW</type>
+            <sensorId>INFEED_PEAK_TOTAL_ACTIVE_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.8.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Peak Total Active Power</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedTotalActivePowerDemand">
+            <type>powerW</type>
+            <sensorId>INFEED_TOTAL_ACTIVE_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.9.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Active Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPeakTotalActivePowerDemand">
+            <type>powerW</type>
+            <sensorId>INFEED_PEAK_TOTAL_ACTIVE_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.10.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Peak Total Active Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="infeedTotalReactivePower">
+            <type>powerVA/powerVAR</type>
+            <sensorId>INFEED_TOTAL_REACTIVE_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.11.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Reactive Power</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedTotalReactivePowerDemand">
+            <type>powerVA/powerVAR</type>
+            <sensorId>INFEED_TOTAL_REACTIVE_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.12.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Reactive Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPeakTotalReactivePowerDemand">
+            <type>powerVA/powerVAR</type>
+            <sensorId>INFEED_PEAK_TOTAL_REACTIVE_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.13.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Peak Total Reactive Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="infeedTotalApparentPower">
+            <type>powerVA</type>
+            <sensorId>INFEED_TOTAL_APPARENT_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.14.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Apparent Power</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedTotalApparentPowerDemand">
+            <type>powerVA</type>
+            <sensorId>INFEED_TOTAL_APPARENT_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.15.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Total Apparent Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPeakTotalApparentPowerDemand">
+            <type>powerVA</type>
+            <sensorId>INFEED_PEAK_TOTAL_APPARENT_POWER_DMD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.16.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Peak Total Apparent Power Demand</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="infeedTotalPowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>INFEED_TOTAL_PF</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.17.0</getOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Infeed Total Power Factor</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="frequency">
+            <type>frequency</type>
+            <sensorId>FREQUENCY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.18.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Frequency</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedTotalEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>INFEED_TOTAL_ENERGY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.19.0</getOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Infeed Total Energy</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentRating">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURR_RATING</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.20.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Line Current Rating</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedMeasuredNeutralCurrent">
+            <type>amperage</type>
+            <sensorId>INFEED_MEAS_NEUTRAL_CURR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.35774.2.1.4.21.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed Measured Neutral Current</label>
+            <sensorSet>Infeed - General</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="infeedLine-vm">
+			<valueIn>1</valueIn><valueOut>Line 1</valueOut>
+			<valueIn>2</valueIn><valueOut>Line 2</valueOut>
+			<valueIn>3</valueIn><valueOut>Line 3</valueOut>
+			<valueIn>4</valueIn><valueOut>Neutral</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		<numSensor ruleid="infeedLineCurrent" index=".1.3.6.1.4.1.35774.2.1.5.1.3">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentMin" index=".1.3.6.1.4.1.35774.2.1.5.1.4">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_MIN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Minimum</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentMax" index=".1.3.6.1.4.1.35774.2.1.5.1.5">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Maximum</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentRatingPercentOf" index=".1.3.6.1.4.1.35774.2.1.5.1.6">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>INFEED_LINE_CURRENT_PCTRATING_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.3</getRowOid></op>
+				<op>100</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Percent of Rated Current</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentMinAlarm" index=".1.3.6.1.4.1.35774.2.1.5.1.7">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_MIN_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Minimum Alarm Threshold</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentMaxAlarm" index=".1.3.6.1.4.1.35774.2.1.5.1.8">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_MAX_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.8</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Maximum Alarm Threshold</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentDemand" index=".1.3.6.1.4.1.35774.2.1.5.1.9">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_DEMAND_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.9</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Demand</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedLineCurrentDemandPeak" index=".1.3.6.1.4.1.35774.2.1.5.1.10">
+            <type>amperage</type>
+            <sensorId>INFEED_LINE_CURRENT_DEMAND_PEAK_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.10</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedLine-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.5.1.1</getRowOid></mapValue> Current Demand Peak</label>
+            <sensorSet>Infeed - Line</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="infeedPhase-vm">
+			<valueIn>1</valueIn><valueOut>Phase A</valueOut>
+			<valueIn>2</valueIn><valueOut>Phase B</valueOut>
+			<valueIn>3</valueIn><valueOut>Phase C</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="infeedPhase_ll-vm">
+			<valueIn>1</valueIn><valueOut>Phase A-B</valueOut>
+			<valueIn>2</valueIn><valueOut>Phase B-C</valueOut>
+			<valueIn>3</valueIn><valueOut>Phase C-A</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="lineToNeutVoltage" index=".1.3.6.1.4.1.35774.2.1.6.1.2">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.2</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue>-N Voltage</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltage" index=".1.3.6.1.4.1.35774.2.1.6.1.3">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LL_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase_ll-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Voltage</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltageMin" index=".1.3.6.1.4.1.35774.2.1.6.1.4">
+            <type>voltage</type>
+            <sensorId>L2L_VOLTAGE_MIN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase_ll-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Voltage Minimum</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltageMax" index=".1.3.6.1.4.1.35774.2.1.6.1.5">
+            <type>voltage</type>
+            <sensorId>L2L_VOLTAGE_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase_ll-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Voltage Maximum</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltageMinAlarm" index=".1.3.6.1.4.1.35774.2.1.6.1.6">
+            <type>voltage</type>
+            <sensorId>L2L_VOLTAGE_MIN_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.6</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase_ll-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Voltage Minimum</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="lineToLineVoltageMaxAlarm" index=".1.3.6.1.4.1.35774.2.1.6.1.7">
+            <type>voltage</type>
+            <sensorId>L2L_VOLTAGE_MAX_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase_ll-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Voltage Maximum</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="infeedPhasePowerFactor" index=".1.3.6.1.4.1.35774.2.1.6.1.8">
+            <type>num/powerfactor</type>
+            <sensorId>POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.8</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Power Factor</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPhaseApparentPower" index=".1.3.6.1.4.1.35774.2.1.6.1.9">
+            <type>powerVA</type>
+            <sensorId>INFEED_PHASE_APPARENT_PWR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.9</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Apparent Power</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPhaseActivePower" index=".1.3.6.1.4.1.35774.2.1.6.1.10">
+            <type>powerW</type>
+            <sensorId>INFEED_PHASE_ACTIVE_PWR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.10</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Active Power</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPhasePeakActivePower" index=".1.3.6.1.4.1.35774.2.1.6.1.11">
+            <type>powerW</type>
+            <sensorId>INFEED_PHASE_PEAK_ACTIVE_PWR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.11</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Peak Active Power</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPhaseReactivePower" index=".1.3.6.1.4.1.35774.2.1.6.1.12">
+            <type>powerVA/powerVAR</type>
+            <sensorId>INFEED_PHASE_REACTIVE_PWR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.12</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Reactive Power</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="infeedPhaseEnergy" index=".1.3.6.1.4.1.35774.2.1.6.1.13">
+            <type>num/kwatthr</type>
+            <sensorId>INFEED_PHASE_ENERGY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.13</getRowOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Infeed <mapValue mapid="infeedPhase-vm"><getRowOid>.1.3.6.1.4.1.35774.2.1.6.1.1</getRowOid></mapValue> Energy</label>
+            <sensorSet>Infeed - Phase</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="notUsed-vm">
+			<valueIn>9.999</valueIn><valueOut>[false]</valueOut>
+			<valueIn>9999.99</valueIn><valueOut>[false]</valueOut>
+			<valueIn>999999.99</valueIn><valueOut>[false]</valueOut>
+			<valueIn>999999.999</valueIn><valueOut>[false]</valueOut>
+			<valueIn>999999.991</valueIn><valueOut>[false]</valueOut>
+			<valueIn>9999999.999</valueIn><valueOut>[false]</valueOut>
+			<valueIn>1000000.00</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<numSensor ruleid="outletLineCurrentRating" index=".1.3.6.1.4.1.35774.2.1.7.1.3">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_RATING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Current Rating</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletDemandTime" index=".1.3.6.1.4.1.35774.2.1.7.1.4">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>timeinmin</type>
+            <sensorId>OUTLET_DEMAND_TIME_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Demand Time</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletTotalActivePower" index=".1.3.6.1.4.1.35774.2.1.7.1.5">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+            <sensorId>OUTLET_TOTAL_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Active Power</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletPeakTotalActivePower" index=".1.3.6.1.4.1.35774.2.1.7.1.6">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+            <sensorId>OUTLET_TOTAL_ACTIVE_PEAK_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.6</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Peak Active Power</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletTotalReactivePower" index=".1.3.6.1.4.1.35774.2.1.7.1.7">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerVA/powerVAR</type>
+            <sensorId>OUTLET_TOTAL_REACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.7</getRowOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Reactive Power</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletTotalApparentPower" index=".1.3.6.1.4.1.35774.2.1.7.1.8">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerVA</type>
+            <sensorId>OUTLET_TOTAL_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.8</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Apparent Power</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletTotalPowerFactor" index=".1.3.6.1.4.1.35774.2.1.7.1.9">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/powerfactor</type>
+            <sensorId>OUTLET_TOTAL_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.9</getRowOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Power Factor</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletTotalEnergy" index=".1.3.6.1.4.1.35774.2.1.7.1.10">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/kwatthr</type>
+            <sensorId>OUTLET_TOTAL_ENERGY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.10</getRowOid>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Total Energy</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletCurrentMinAlarm" index=".1.3.6.1.4.1.35774.2.1.7.1.11">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_CURRENT_MIN_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.11</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Current Minimum Alarm Threshold</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletCurrentMaxAlarm" index=".1.3.6.1.4.1.35774.2.1.7.1.12">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_CURRENT_MAX_ALARM_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.12</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid> Current Maximum Alarm Threshold</label>
+            <sensorSet>Outlet <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.1</getRowOid> - <getRowOid>.1.3.6.1.4.1.35774.2.1.7.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="outletLineCurrent" index=".1.3.6.1.4.1.35774.2.1.8.1.4">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletLineCurrentRatingPercentOf" index=".1.3.6.1.4.1.35774.2.1.8.1.5">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<units>percent</units>
+            <sensorId>OUTLET_LINE_CURRENT_PCT_RATING_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.5</getRowOid></op>
+				<op>100</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current Percent of Rating</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletLineCurrentDemand" index=".1.3.6.1.4.1.35774.2.1.8.1.6">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_DEMAND_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.6</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current Demand</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletLineCurrentPeakDemand" index=".1.3.6.1.4.1.35774.2.1.8.1.7">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_PEAK_DEMAND_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current Peak Demand</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletLineCurrentMin" index=".1.3.6.1.4.1.35774.2.1.8.1.8">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_MIN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.8</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current Minimum</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletLineCurrentMax" index=".1.3.6.1.4.1.35774.2.1.8.1.9">
+			<rowTest>
+				<mapValue mapid="notUsed-vm">
+				<getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+            <sensorId>OUTLET_LINE_CURRENT_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.9</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid> Current Maximum</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.35774.2.1.8.1.3</getRowOid></sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

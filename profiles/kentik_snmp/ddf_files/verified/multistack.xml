@@ -1,0 +1,1949 @@
+<?xml version="1.0"?>
+<!-- Multistack (Carel) DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="multistack" ddfname="Multistack" ddfversion="4" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <!-- Multistack specific functionality -->
+  
+  <device deviceid="multistack">
+    <oidMustExist ruleid="multistackMibDetect" oid=".1.3.6.1.4.1.9839.2.1.1.1.0"/>
+
+  <!-- digital section -->
+    <!-- chillerStatus -->
+    <stateSensor ruleid="chillerStatus">
+      <type>state</type>
+      <sensorId>CHILLER_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+      </value>
+      <label>Chiller Status</label>
+      <enum>onOff-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="onOff-em">
+      <label>Off</label>
+      <label>On</label>
+    </enumMap>
+
+    <!-- lowChwFlow	-->
+    <stateSensor ruleid="lowChwFlow">
+      <type>state</type>
+      <sensorId>LOW_CHILLED_WATER_FLOW</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+      </value>
+      <label>Low Chilled Water Flow</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="normalFault-em">
+      <label>Normal</label>
+      <label>Fault</label>
+    </enumMap>
+
+    <!-- powerPhaseMonitor -->
+    <stateSensor ruleid="powerPhaseMonitor">
+      <type>state</type>
+      <sensorId>POWER_PHASE_MONITOR</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+      </value>
+      <label>Power Phase Monitor</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- remoteStartStop -->
+    <stateSensor ruleid="remoteStartStop">
+      <type>state</type>
+      <sensorId>REMOTE_START_STOP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+      </value>
+      <label>Remote Start/Stop</label>
+      <enum>remoteStartStop-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="remoteStartStop-em">
+      <label>Started</label>
+      <label>Stopped</label>
+    </enumMap>
+
+    <!-- ex1Fault	-->
+    <stateSensor ruleid="ex1Fault">
+      <type>state</type>
+      <sensorId>EX1_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.5.0</getOid>
+      </value>
+      <label>EX1 Input</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- lowLchwTempSystem -->
+    <stateSensor ruleid="lowLchwTempSystem">
+      <type>state</type>
+      <sensorId>LOW_CHILLED_WATER_TEMP_SYSTEM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.6.0</getOid>
+      </value>
+      <label>Low Leaving Chilled Water Temperature - System</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- lchwSysSensorFail -->
+    <stateSensor ruleid="lchwSysSensorFail">
+      <type>state</type>
+      <sensorId>LEAVING_CHILLED_WATER_SYSTEM_SENSOR_FAIL</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.7.0</getOid>
+      </value>
+      <label>Leaving Chilled Water Sensor - System</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- echwSysSensorFail -->
+    <stateSensor ruleid="echwSysSensorFail">
+      <type>state</type>
+      <sensorId>ENTERING_CHILLED_WATER_SYSTEM_SENSOR_FAIL</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.8.0</getOid>
+      </value>
+      <label>Entering Chilled Water Sensor - System</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- globalAlarm -->
+    <stateSensor ruleid="globalAlarm">
+      <type>state</type>
+      <sensorId>GLOBAL_ALARM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.9.0</getOid>
+      </value>
+      <label>Global Alarm</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- fahrenheitCelcius
+    <stateSensor ruleid="fahrenheitCelcius">
+      <type>state</type>
+      <sensorId>FAHRENHEIT_CELCIUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid>
+      </value>
+      <label>Fahrenheit/Celcius</label>
+      <enum>fahrenheitCelcius-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <enumMap ruleid="fahrenheitCelcius-em">
+      <label>Fahrenheit</label>
+      <label>Celcius</label>
+    </enumMap>
+    -->
+    
+    <!-- customerResetActive -->
+    <stateSensor ruleid="customerResetActive">
+      <type>state</type>
+      <sensorId>CUSTOMER_RESET_ACTIVE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.14.0</getOid>
+      </value>
+      <label>Customer Reset</label>
+      <enum>activeInactive-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="activeInactive-em">
+      <label>Inactive</label>
+      <label>Active</label>
+    </enumMap>
+
+    <!-- lLResetActive -->
+    <stateSensor ruleid="lLResetActive">
+      <type>state</type>
+      <sensorId>LOAD_LIMIT_RESET_ACTIVE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.15.0</getOid>
+      </value>
+      <label>Load Limit Reset</label>
+      <enum>activeInactive-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- cHWResetActive	-->
+    <stateSensor ruleid="cHWResetActive">
+      <type>state</type>
+      <sensorId>CHILLED_WATER_RESET_ACTIVE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.16.0</getOid>
+      </value>
+      <label>Chilled Water Reset</label>
+      <enum>activeInactive-em</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+
+    <!-- m1-1RunStatus -->
+    <stateSensor ruleid="m1-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_1_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.18.0</getOid>
+      </value>
+      <label>Run Status - Module 1-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m1-2RunStatus -->
+    <stateSensor ruleid="m1-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_1_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.19.0</getOid>
+      </value>
+      <label>Run Status - Module 1-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m1CommError -->
+    <stateSensor ruleid="m1CommError">
+      <type>state</type>
+      <sensorId>MODULE_1_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.20.0</getOid>
+      </value>
+      <label>Communication Status - Module 1</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m1Fan1Status -->
+    <stateSensor ruleid="m1Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_1_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.21.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m1Fan2Status -->
+    <stateSensor ruleid="m1Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_1_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.22.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m2-1RunStatus -->
+    <stateSensor ruleid="m2-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_2_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid>
+      </value>
+      <label>Run Status - Module 2-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m2-2RunStatus -->
+    <stateSensor ruleid="m2-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_2_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.24.0</getOid>
+      </value>
+      <label>Run Status - Module 2-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m2CommError -->
+    <stateSensor ruleid="m2CommError">
+      <type>state</type>
+      <sensorId>MODULE_2_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.25.0</getOid>
+      </value>
+      <label>Communication Status - Module 2</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m2Fan1Status -->
+    <stateSensor ruleid="m2Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_2_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.26.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m2Fan2Status -->
+    <stateSensor ruleid="m2Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_2_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.27.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m3-1RunStatus -->
+    <stateSensor ruleid="m3-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_3_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.28.0</getOid>
+      </value>
+      <label>Run Status - Module 3-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m3-2RunStatus -->
+    <stateSensor ruleid="m3-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_3_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.29.0</getOid>
+      </value>
+      <label>Run Status - Module 3-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m3CommError -->
+    <stateSensor ruleid="m3CommError">
+      <type>state</type>
+      <sensorId>MODULE_3_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid>
+      </value>
+      <label>Communication Status - Module 3</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m3Fan1Status -->
+    <stateSensor ruleid="m3Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_3_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 3</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m3Fan2Status -->
+    <stateSensor ruleid="m3Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_3_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 3</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m4-1RunStatus -->
+    <stateSensor ruleid="m4-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_4_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid>
+      </value>
+      <label>Run Status - Module 4-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m4-2RunStatus -->
+    <stateSensor ruleid="m4-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_4_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid>
+      </value>
+      <label>Run Status - Module 4-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m4CommError -->
+    <stateSensor ruleid="m4CommError">
+      <type>state</type>
+      <sensorId>MODULE_4_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid>
+      </value>
+      <label>Communication Status - Module 4</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m4Fan1Status -->
+    <stateSensor ruleid="m4Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_4_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 4</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m4Fan2Status -->
+    <stateSensor ruleid="m4Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_4_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 4</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m5-1RunStatus -->
+    <stateSensor ruleid="m5-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_5_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid>
+      </value>
+      <label>Run Status - Module 5-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m5-2RunStatus -->
+    <stateSensor ruleid="m5-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_5_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.39.0</getOid>
+      </value>
+      <label>Run Status - Module 5-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m5CommError -->
+    <stateSensor ruleid="m5CommError">
+      <type>state</type>
+      <sensorId>MODULE_5_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.40.0</getOid>
+      </value>
+      <label>Communication Status - Module 5</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m5Fan1Status -->
+    <stateSensor ruleid="m5Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_5_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.41.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 5</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m5Fan2Status -->
+    <stateSensor ruleid="m5Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_5_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.42.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 5</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m6-1RunStatus -->
+    <stateSensor ruleid="m6-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_6_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.43.0</getOid>
+      </value>
+      <label>Run Status - Module 6-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m6-2RunStatus -->
+    <stateSensor ruleid="m6-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_6_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.44.0</getOid>
+      </value>
+      <label>Run Status - Module 6-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m6CommError -->
+    <stateSensor ruleid="m6CommError">
+      <type>state</type>
+      <sensorId>MODULE_6_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.45.0</getOid>
+      </value>
+      <label>Communication Status - Module 6</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m6Fan1Status -->
+    <stateSensor ruleid="m6Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_6_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.46.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 6</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m6Fan2Status -->
+    <stateSensor ruleid="m6Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_6_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.47.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 6</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m7-1RunStatus -->
+    <stateSensor ruleid="m7-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_7_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.48.0</getOid>
+      </value>
+      <label>Run Status - Module 7-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m7-2RunStatus -->
+    <stateSensor ruleid="m7-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_7_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.49.0</getOid>
+      </value>
+      <label>Run Status - Module 7-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m7CommError -->
+    <stateSensor ruleid="m7CommError">
+      <type>state</type>
+      <sensorId>MODULE_7_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.50.0</getOid>
+      </value>
+      <label>Communication Status - Module 7</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m7Fan1Status -->
+    <stateSensor ruleid="m7Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_7_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.51.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 7</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m7Fan2Status -->
+    <stateSensor ruleid="m7Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_7_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.52.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 7</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m8-1RunStatus -->
+    <stateSensor ruleid="m8-1RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_8_1_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.53.0</getOid>
+      </value>
+      <label>Run Status - Module 8-1</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m8-2RunStatus -->
+    <stateSensor ruleid="m8-2RunStatus">
+      <type>state</type>
+      <sensorId>MODULE_8_2_RUN_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.54.0</getOid>
+      </value>
+      <label>Run Status - Module 8-2</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Run Status</sensorSet>
+    </stateSensor>
+
+    <!-- m8CommError -->
+    <stateSensor ruleid="m8CommError">
+      <type>state</type>
+      <sensorId>MODULE_8_COMM_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.55.0</getOid>
+      </value>
+      <label>Communication Status - Module 8</label>
+      <enum>normalFault-em</enum>
+      <sensorSet>Communication Status</sensorSet>
+    </stateSensor>
+
+    <!-- m8Fan1Status -->
+    <stateSensor ruleid="m8Fan1Status">
+      <type>state</type>
+      <sensorId>MODULE_8_FAN_1_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.56.0</getOid>
+      </value>
+      <label>Fan 1 Status - Module 8</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+
+    <!-- m8Fan2Status -->
+    <stateSensor ruleid="m8Fan2Status">
+      <type>state</type>
+      <sensorId>MODULE_8_FAN_2_STATUS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.1.57.0</getOid>
+      </value>
+      <label>Fan 2 Status - Module 8</label>
+      <enum>onOff-em</enum>
+      <sensorSet>Fan Status</sensorSet>
+    </stateSensor>
+    
+  <!-- analog section -->   
+    <!-- systemEchw -->
+    <numSensor ruleid="systemEchw">
+      <type>temp</type>
+      <sensorId>SYSTEM_ENTERING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Entering Chilled Water Temperature - System</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- systemLchw -->
+    <numSensor ruleid="systemLchw">
+      <type>temp</type>
+      <sensorId>SYSTEM_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - System</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m1LchwTemp -->
+    <numSensor ruleid="m1LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_1_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.8.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.8.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m1SuctTempCir1 -->
+    <numSensor ruleid="m1SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_1_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.9.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.9.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 1 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m1SuctTempCir2 -->
+    <numSensor ruleid="m1SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_1_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.10.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.10.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 1 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m2LchwTemp -->
+    <numSensor ruleid="m2LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_2_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.11.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.11.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m2SuctTempCir1 -->
+    <numSensor ruleid="m2SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_2_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.12.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.12.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 2 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m2SuctTempCir2 -->
+    <numSensor ruleid="m2SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_2_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.13.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.13.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 2 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m3LchwTemp -->
+    <numSensor ruleid="m3LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_3_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.14.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.14.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 3</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m3SuctTempCir1 -->
+    <numSensor ruleid="m3SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_3_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.15.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.15.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 3 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m3SuctTempCir2 -->
+    <numSensor ruleid="m3SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_3_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.16.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.16.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 3 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m4LchwTemp -->
+    <numSensor ruleid="m4LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_4_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.17.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.17.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 4</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m4SuctTempCir1 -->
+    <numSensor ruleid="m4SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_4_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.18.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.18.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 4 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m4SuctTempCir2 -->
+    <numSensor ruleid="m4SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_4_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.19.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.19.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 4 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m5LchwTemp -->
+    <numSensor ruleid="m5LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_5_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.20.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.20.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 5</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m5SuctTempCir1 -->
+    <numSensor ruleid="m5SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_5_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.21.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.21.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 5 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m5SuctTempCir2 -->
+    <numSensor ruleid="m5SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_5_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.22.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.22.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 5 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m6LchwTemp -->
+    <numSensor ruleid="m6LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_6_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.23.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.23.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 6</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m6SuctTempCir1 -->
+    <numSensor ruleid="m6SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_6_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.24.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.24.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 6 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m6SuctTempCir2 -->
+    <numSensor ruleid="m6SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_6_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.25.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.25.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 6 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m7LchwTemp -->
+    <numSensor ruleid="m7LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_7_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.26.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.26.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 7</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m7SuctTempCir1 -->
+    <numSensor ruleid="m7SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_7_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.27.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.27.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 7 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m7SuctTempCir2 -->
+    <numSensor ruleid="m7SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_7_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.28.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.28.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 7 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m8LchwTemp -->
+    <numSensor ruleid="m8LchwTemp">
+      <type>temp</type>
+      <sensorId>MODULE_8_LEAVING_CHILLED_WATER_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.29.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.29.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Leaving Chilled Water Temperature - Module 8</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m8SuctTempCir1 -->
+    <numSensor ruleid="m8SuctTempCir1">
+      <type>temp</type>
+      <sensorId>MODULE_8_CIRCUIT_1_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 8 - Circuit 1</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+    <!-- m8SuctTempCir2 -->
+    <numSensor ruleid="m8SuctTempCir2">
+      <type>temp</type>
+      <sensorId>MODULE_8_CIRCUIT_2_SUCTION_TEMP</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.31.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.2.31.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Suction Temperature - Module 8 - Circuit 2</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+
+  <!-- integer section -->
+    <!-- capacity -->
+    <numSensor ruleid="capacity">
+      <type>pctofcapacity</type>
+      <sensorId>SYSTEM_CAPACITY</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.1.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>System Capacity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- demand -->
+    <numSensor ruleid="demand">
+      <type>pctofcapacity</type>
+      <sensorId>SYSTEM_DEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.2.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>System Demand</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- tdiffCountdown -->
+    <numSensor ruleid="tdiffCountdown">
+      <type>timeinsec</type>
+      <sensorId>TIME_DIFFERENCE_COUNTDOWN</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.3.0</getOid>
+      </value>
+      <label>Time Difference Countdown</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- systemCountdown -->
+    <numSensor ruleid="systemCountdown">
+      <type>timeinsec</type>
+      <sensorId>SYSTEM_COUNTDOWN</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.4.0</getOid>
+      </value>
+      <label>System Countdown</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- numOfFaults -->
+    <numSensor ruleid="numOfFaults">
+      <type>num</type>
+      <sensorId>NUMBER_OF_FAULTS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.5.0</getOid>
+      </value>
+      <label>Number Of Faults</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- leadCompressor -->
+    <numSensor ruleid="leadCompressor">
+      <type>num</type>
+      <sensorId>LEAD_COMPRESSOR</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.6.0</getOid>
+      </value>
+      <label>Lead Compressor</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- loadLimit -->
+    <numSensor ruleid="loadLimit">
+      <type>pctofcapacity</type>
+      <sensorId>LOAD_LIMIT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Load Limit</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- chwOffset -->
+    <numSensor ruleid="chwOffset">
+      <type>temp</type>
+      <sensorId>CHILLED_WATER_OFFSET</sensorId>
+      <value>
+        <if>
+          <op><eq><op><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></op><op>0</op></eq></op>
+          <op><mult><op><div><op>5</op><op>9</op></div></op><op><sub><op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.3.8.0</getOid></op><op>10</op></div></op><op>32</op></sub></op></mult></op>
+          <op><div><op><getOid>.1.3.6.1.4.1.9839.2.1.3.8.0</getOid></op><op>10</op></div></op>
+        </if>
+      </value>
+      <label>Chilled Water Offset</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- totalLoadProfile -->
+    <numSensor ruleid="totalLoadProfile">
+      <type>timeinhrs</type>
+      <sensorId>TOTAL_LOAD_PROFILE</sensorId>
+      <value>
+        <formatNumber precision="0">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.33.0</getOid>
+        </formatNumber>
+      </value>
+      <label>Runhours - Total</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m1Fault -->
+    <stateSensor ruleid="m1Fault">
+      <type>state</type>
+      <sensorId>MODULE_1_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.34.0</getOid>
+      </value>
+      <label>Module 1 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="faultCode-em">
+      <label>Auto Mode - No Faults</label>
+      <label>High Pressure - Circuit 1</label>
+      <label>Low Pressure - Circuit 1</label>
+      <label>Circuit 1 Fault</label>
+      <label>Circuit 2 Fault</label>
+      <label>Low Suction Temperature - Circuit 1</label>
+      <label>Suction Sensor Failure - Circuit 1</label>
+      <label>Leaving Chilled Water Sensor Failure</label>
+      <label>Low Leaving Chilled Water Temperature</label>
+      <label>Low Pressure Delay - Circuit 1</label>
+      <label>Manual Mode</label>
+      <label>Disabled</label>
+      <label>High Pressure Sensor Failure - Circuit 1</label>
+      <label>Low Pressure Sensor Failure - Circuit 1</label>
+      <label>High Pressure Sensor Failure - Circuit 2</label>
+      <label>Low Pressure Sensor Failure - Circuit 2</label>
+      <label>Suction Sensor Failure - Circuit 2</label>
+      <label>High Pressure - Circuit 2</label>
+      <label>Low Pressure - Circuit 2</label>
+      <label>Low Suction Temperature - Circuit 2</label>
+      <label>Low Pressure Delay - Circuit 2</label>
+    </enumMap>
+
+    <!-- m1-1RunHours -->
+    <numSensor ruleid="m1-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_1_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.35.0</getOid>
+      </value>
+      <label>Runhours - Module 1-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m1-2RunHours -->
+    <numSensor ruleid="m1-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_1_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.36.0</getOid>
+      </value>
+      <label>Runhours - Module 1-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m1-1HighPressure -->
+    <numSensor ruleid="m1-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_1_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.37.0</getOid>
+      </value>
+      <label>High Pressure - Module 1-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m1-1LowPressure -->
+    <numSensor ruleid="m1-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_1_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.38.0</getOid>
+      </value>
+      <label>Low Pressure - Module 1-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m1-2HighPressure -->
+    <numSensor ruleid="m1-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_1_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.39.0</getOid>
+      </value>
+      <label>High Pressure - Module 1-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m1-2LowPressure -->
+    <numSensor ruleid="m1-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_1_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.40.0</getOid>
+      </value>
+      <label>Low Pressure - Module 1-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m1ControlMode -->
+    <stateSensor ruleid="m1ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_1_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.41.0</getOid>
+        </mapValue>  
+      </value>
+      <label>Control Mode - Module 1</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="controlMode-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>*</valueIn><valueOut>3</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="controlMode-em">
+      <label>Auto</label>
+      <label>Manual</label>
+      <label>Disabled</label>
+      <label>Unknown</label>
+    </enumMap>
+
+    <!-- m2Fault -->
+    <stateSensor ruleid="m2Fault">
+      <type>state</type>
+      <sensorId>MODULE_2_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.42.0</getOid>
+      </value>
+      <label>Module 2 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m2-1RunHours -->
+    <numSensor ruleid="m2-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_2_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.43.0</getOid>
+      </value>
+      <label>Runhours - Module 2-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m2-2RunHours -->
+    <numSensor ruleid="m2-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_2_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.44.0</getOid>
+      </value>
+      <label>Runhours - Module 2-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m2-1HighPressure -->
+    <numSensor ruleid="m2-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_2_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.45.0</getOid>
+      </value>
+      <label>High Pressure - Module 2-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m2-1LowPressure -->
+    <numSensor ruleid="m2-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_2_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.46.0</getOid>
+      </value>
+      <label>Low Pressure - Module 2-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m2-2HighPressure -->
+    <numSensor ruleid="m2-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_2_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.47.0</getOid>
+      </value>
+      <label>High Pressure - Module 2-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m2-2LowPressure -->
+    <numSensor ruleid="m2-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_2_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.48.0</getOid>
+      </value>
+      <label>Low Pressure - Module 2-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m2ControlMode -->
+    <stateSensor ruleid="m2ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_2_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.49.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 2</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m3Fault -->
+    <stateSensor ruleid="m3Fault">
+      <type>state</type>
+      <sensorId>MODULE_3_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.50.0</getOid>
+      </value>
+      <label>Module 3 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m3-1RunHours -->
+    <numSensor ruleid="m3-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_3_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.51.0</getOid>
+      </value>
+      <label>Runhours - Module 3-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m3-2RunHours -->
+    <numSensor ruleid="m3-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_3_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.52.0</getOid>
+      </value>
+      <label>Runhours - Module 3-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m3-1HighPressure -->
+    <numSensor ruleid="m3-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_3_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.53.0</getOid>
+      </value>
+      <label>High Pressure - Module 3-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m3-1LowPressure -->
+    <numSensor ruleid="m3-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_3_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.54.0</getOid>
+      </value>
+      <label>Low Pressure - Module 3-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m3-2HighPressure -->
+    <numSensor ruleid="m3-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_3_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.55.0</getOid>
+      </value>
+      <label>High Pressure - Module 3-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m3-2LowPressure -->
+    <numSensor ruleid="m3-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_3_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.56.0</getOid>
+      </value>
+      <label>Low Pressure - Module 3-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m3ControlMode -->
+    <stateSensor ruleid="m3ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_3_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.57.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 3</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m4Fault -->
+    <stateSensor ruleid="m4Fault">
+      <type>state</type>
+      <sensorId>MODULE_4_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.58.0</getOid>
+      </value>
+      <label>Module 4 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m4-1RunHours -->
+    <numSensor ruleid="m4-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_4_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.59.0</getOid>
+      </value>
+      <label>Runhours - Module 4-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m4-2RunHours -->
+    <numSensor ruleid="m4-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_4_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.60.0</getOid>
+      </value>
+      <label>Runhours - Module 4-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m4-1HighPressure -->
+    <numSensor ruleid="m4-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_4_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.61.0</getOid>
+      </value>
+      <label>High Pressure - Module 4-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m4-1LowPressure -->
+    <numSensor ruleid="m4-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_4_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.62.0</getOid>
+      </value>
+      <label>Low Pressure - Module 4-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m4-2HighPressure -->
+    <numSensor ruleid="m4-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_4_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.63.0</getOid>
+      </value>
+      <label>High Pressure - Module 4-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m4-2LowPressure -->
+    <numSensor ruleid="m4-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_4_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.64.0</getOid>
+      </value>
+      <label>Low Pressure - Module 4-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m4ControlMode -->
+    <stateSensor ruleid="m4ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_4_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.65.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 4</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m5Fault -->
+    <stateSensor ruleid="m5Fault">
+      <type>state</type>
+      <sensorId>MODULE_5_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.66.0</getOid>
+      </value>
+      <label>Module 5 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m5-1RunHours -->
+    <numSensor ruleid="m5-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_5_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.67.0</getOid>
+      </value>
+      <label>Runhours - Module 5-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m5-2RunHours -->
+    <numSensor ruleid="m5-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_5_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.68.0</getOid>
+      </value>
+      <label>Runhours - Module 5-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m5-1HighPressure -->
+    <numSensor ruleid="m5-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_5_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.69.0</getOid>
+      </value>
+      <label>High Pressure - Module 5-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m5-1LowPressure -->
+    <numSensor ruleid="m5-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_5_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.70.0</getOid>
+      </value>
+      <label>Low Pressure - Module 5-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m5-2HighPressure -->
+    <numSensor ruleid="m5-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_5_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.71.0</getOid>
+      </value>
+      <label>High Pressure - Module 5-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m5-2LowPressure -->
+    <numSensor ruleid="m5-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_5_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.72.0</getOid>
+      </value>
+      <label>Low Pressure - Module 5-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m5ControlMode -->
+    <stateSensor ruleid="m5ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_5_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.73.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 5</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m6Fault -->
+    <stateSensor ruleid="m6Fault">
+      <type>state</type>
+      <sensorId>MODULE_6_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.74.0</getOid>
+      </value>
+      <label>Module 6 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m6-1RunHours -->
+    <numSensor ruleid="m6-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_6_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.75.0</getOid>
+      </value>
+      <label>Runhours - Module 6-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m6-2RunHours -->
+    <numSensor ruleid="m6-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_6_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.76.0</getOid>
+      </value>
+      <label>Runhours - Module 6-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m6-1HighPressure -->
+    <numSensor ruleid="m6-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_6_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.77.0</getOid>
+      </value>
+      <label>High Pressure - Module 6-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m6-1LowPressure -->
+    <numSensor ruleid="m6-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_6_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.78.0</getOid>
+      </value>
+      <label>Low Pressure - Module 6-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m6-2HighPressure -->
+    <numSensor ruleid="m6-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_6_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.79.0</getOid>
+      </value>
+      <label>High Pressure - Module 6-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m6-2LowPressure -->
+    <numSensor ruleid="m6-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_6_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.80.0</getOid>
+      </value>
+      <label>Low Pressure - Module 6-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m6ControlMode -->
+    <stateSensor ruleid="m6ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_6_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.81.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 6</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m7Fault -->
+    <stateSensor ruleid="m7Fault">
+      <type>state</type>
+      <sensorId>MODULE_7_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.82.0</getOid>
+      </value>
+      <label>Module 7 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m7-1RunHours -->
+    <numSensor ruleid="m7-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_7_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.83.0</getOid>
+      </value>
+      <label>Runhours - Module 7-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m7-2RunHours -->
+    <numSensor ruleid="m7-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_7_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.84.0</getOid>
+      </value>
+      <label>Runhours - Module 7-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m7-1HighPressure -->
+    <numSensor ruleid="m7-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_7_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.85.0</getOid>
+      </value>
+      <label>High Pressure - Module 7-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m7-1LowPressure -->
+    <numSensor ruleid="m7-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_7_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.86.0</getOid>
+      </value>
+      <label>Low Pressure - Module 7-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m7-2HighPressure -->
+    <numSensor ruleid="m7-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_7_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.87.0</getOid>
+      </value>
+      <label>High Pressure - Module 7-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m7-2LowPressure -->
+    <numSensor ruleid="m7-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_7_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.88.0</getOid>
+      </value>
+      <label>Low Pressure - Module 7-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m7ControlMode -->
+    <stateSensor ruleid="m7ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_7_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.89.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 7</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>
+
+    <!-- m8Fault -->
+    <stateSensor ruleid="m8Fault">
+      <type>state</type>
+      <sensorId>MODULE_8_FAULT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.90.0</getOid>
+      </value>
+      <label>Module 8 Fault</label>
+      <enum>faultCode-em</enum>
+      <sensorSet>Faults</sensorSet>
+    </stateSensor>
+
+    <!-- m8-1RunHours -->
+    <numSensor ruleid="m8-1RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_8_1_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.91.0</getOid>
+      </value>
+      <label>Runhours - Module 8-1</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m8-2RunHours -->
+    <numSensor ruleid="m8-2RunHours">
+      <type>timeinhrs</type>
+      <sensorId>MODULE_8_2_RUNHOURS</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.92.0</getOid>
+      </value>
+      <label>Runhours - Module 8-2</label>
+      <sensorSet>Runhours</sensorSet>
+    </numSensor>
+
+    <!-- m8-1HighPressure -->
+    <numSensor ruleid="m8-1HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_8_1_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.93.0</getOid>
+      </value>
+      <label>High Pressure - Module 8-1</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m8-1LowPressure -->
+    <numSensor ruleid="m8-1LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_8_1_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.94.0</getOid>
+      </value>
+      <label>Low Pressure - Module 8-1</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m8-2HighPressure -->
+    <numSensor ruleid="m8-2HighPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_8_2_HIGH_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.95.0</getOid>
+      </value>
+      <label>High Pressure - Module 8-2</label>
+      <sensorSet>High Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m8-2LowPressure -->
+    <numSensor ruleid="m8-2LowPressure">
+      <type>num/psi</type>
+      <sensorId>MODULE_8_2_LOW_PRESSURE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.9839.2.1.3.96.0</getOid>
+      </value>
+      <label>Low Pressure - Module 8-2</label>
+      <sensorSet>Low Pressure</sensorSet>
+    </numSensor>
+
+    <!-- m8ControlMode -->
+    <stateSensor ruleid="m8ControlMode">
+      <type>state</type>
+      <sensorId>MODULE_8_CONTROL_MODE</sensorId>
+      <value>
+        <mapValue mapid="controlMode-vm">
+          <getOid>.1.3.6.1.4.1.9839.2.1.3.97.0</getOid>
+        </mapValue>
+      </value>
+      <label>Control Mode - Module 8</label>
+      <enum>controlMode-em</enum>
+      <sensorSet>Control Mode</sensorSet>
+    </stateSensor>    
+    
+  </device>
+</APC_DDF>

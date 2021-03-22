@@ -1,0 +1,387 @@
+<?xml version="1.0"?>
+<!-- APC DDF for shpro -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="shpro"  ddfname="SHPRO" ddfversion="3" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+<!-- deviceInfo-->
+    <!-- productTitle -->
+    <device deviceid="shprodiscdata">
+        <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.13045.1.2.2.1.0"/>
+    
+     
+        <!-- Set Product Version -->
+        <setProductData ruleid="bootversion" field="bootversion">
+            <getOid>.1.3.6.1.4.1.13045.1.2.2.1.0</getOid>
+        </setProductData>
+    </device>
+    			 
+	<device deviceid="shpro">
+        <oidMustExist ruleid="shproDetect" oid=".1.3.6.1.4.1.13045.1.2.2.1.0"/>
+    
+    <!-- shproSensorEntry Begin -->
+
+       <valueMap ruleid="delete_offline">
+            <valueIn>1</valueIn>            <valueOut>[true]</valueOut>
+            <valueIn>*</valueIn>            <valueOut>[false]</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="isFahrenheit">
+            <valueIn>2</valueIn>            <valueOut>[true]</valueOut>
+            <valueIn>*</valueIn>            <valueOut>[false]</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="map_units">
+            <valueIn>2</valueIn>            <valueOut>temp</valueOut>
+            <valueIn>3</valueIn>            <valueOut>temp</valueOut>
+            <valueIn>*</valueIn>            <valueOut>humidity</valueOut>
+        </valueMap>
+
+        <!-- shproSensorCurrentValue -->
+        <numSensor ruleid="shproSensorCurrentValue" index=".1.3.6.1.4.1.13045.1.2.2.2.1.4">
+            <rowTest>
+                <mapValue mapid="delete_offline">
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.5</getRowOid>
+                </mapValue>
+            </rowTest>
+            <type><mapValue mapid="map_units"><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.13</getRowOid></mapValue></type>
+            <sensorId>SENSOR_CURRENT_VALUE<rowIndex/></sensorId>
+            <value>
+                <if><!-- Fahrenheit -->
+                    <op><mapValue mapid="isFahrenheit"><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.13</getRowOid></mapValue></op>
+                    <op><div><!-- true fahrenheit -->
+                            <op><sub>
+                                    <op><add>
+                                            <op><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.4</getRowOid></op>
+                                            <op><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.17</getRowOid></op>
+                                        </add></op>
+                                    <op>32</op>
+                                </sub></op>
+                            <op>1.8</op>
+                        </div></op><!-- end fahrenheit -->                       
+                    <op><add>
+                            <op><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.4</getRowOid></op>
+                            <op><getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.17</getRowOid></op>
+                        </add></op>  <!-- Celcius and Humidity -->
+                </if>
+            </value>
+            <label>Sensor Current Value - <getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.3</getRowOid> <rowIndex/></label>
+            <sensorSet>Sensor<rowIndex/></sensorSet>
+        </numSensor>
+        
+        <!-- shproSensorOnlineStatus -->
+        <stateSensor ruleid="shproSensorOnlineStatus" index=".1.3.6.1.4.1.13045.1.2.2.2.1.5">
+            <type>state</type>
+            <sensorId>SHPRO_SENSOR_ONLINE_STATUS<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value2-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.5</getRowOid>
+                </mapValue>
+            </value>
+            <label>Sensor Online Status<rowIndex/></label>
+            <enum>onoff-em</enum>
+            <sensorSet>Sensor<rowIndex/></sensorSet>
+        </stateSensor>
+            
+        <valueMap ruleid="value2-vm">
+            <valueIn>1</valueIn><valueOut>0</valueOut>
+            <valueIn>2</valueIn><valueOut>1</valueOut>
+            <valueIn>*</valueIn><valueOut>2</valueOut>
+        </valueMap>
+    
+        <enumMap ruleid="onoff-em">
+            <label>Online</label>
+            <label>Offline</label>
+            <label>Unknown</label>
+        </enumMap>
+    
+        <!-- shproSensorState -->
+		<stateSensor ruleid="shproSensorState" index=".1.3.6.1.4.1.13045.1.2.2.2.1.6">
+            <type>state</type>
+            <sensorId>SHPRO_SENSOR_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value6-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.2.2.1.6</getRowOid>
+                </mapValue>
+            </value>
+            <label>Sensor State<rowIndex/></label>
+            <enum>sensorstate-em</enum>
+            <sensorSet>Sensor<rowIndex/></sensorSet>
+        </stateSensor>
+		
+        <valueMap ruleid="value6-vm">
+            <valueIn>1</valueIn><valueOut>0</valueOut>
+            <valueIn>2</valueIn><valueOut>1</valueOut>
+            <valueIn>3</valueIn><valueOut>2</valueOut>
+            <valueIn>4</valueIn><valueOut>3</valueOut>
+            <valueIn>5</valueIn><valueOut>4</valueOut>
+            <valueIn>6</valueIn><valueOut>5</valueOut>
+            <valueIn>*</valueIn><valueOut>6</valueOut>
+        </valueMap>
+    
+        <enumMap ruleid="sensorstate-em">
+            <label>highCritical</label>
+            <label>highWarning</label>
+            <label>lowWarning</label>
+            <label>lowCritical</label>
+            <label>normal</label>
+            <label>notPresent</label>
+            <label>Unknown</label>
+        </enumMap>
+    
+    
+    <!-- shproOutletEntry Begin -->
+        <!-- shproOutletState -->
+		<stateSensor ruleid="shproOutletState" index=".1.3.6.1.4.1.13045.1.2.4.3.1.3">
+            <type>state</type>
+            <sensorId>SHPRO_OUTLET_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="state-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.3.1.3</getRowOid>
+                </mapValue>
+            </value>
+            <label>Outlet State<rowIndex/></label>
+            <enum>state-em</enum>
+            <sensorSet>Outlet<rowIndex/></sensorSet>
+        </stateSensor>
+
+        <valueMap ruleid="state-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+            <valueIn>*</valueIn><valueOut>6</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="state-em">
+            <label>off</label>
+            <label>on</label>
+            <label>reboot</label>
+            <label>lockon</label>
+            <label>lockoff</label>
+            <label>unlock</label>
+            <label>unknown</label>
+        </enumMap>
+    
+    
+    <!-- shproAllOutletsEntry Begin -->
+        <!-- shproAllOutletsStatus -->
+		<stateSensor ruleid="shproAllOutletsStatus" index=".1.3.6.1.4.1.13045.1.2.4.4.1.3">
+            <type>state</type>
+            <sensorId>SHPRO_ALL_OUTLET_STATUS<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="alloutletstatus-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.4.1.3</getRowOid>
+                </mapValue>
+            </value>
+            <label>All Outlet Status<rowIndex/></label>
+            <enum>alloutletstatus-em</enum>
+            <sensorSet>AllOutlet<rowIndex/></sensorSet>
+        </stateSensor>
+
+        <valueMap ruleid="alloutletstatus-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>*</valueIn><valueOut>5</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="alloutletstatus-em">
+            <label>off</label>
+            <label>on</label>
+            <label>reboot</label>
+            <label>lockon</label>
+            <label>lockoff</label>
+            <label>unknown</label>
+        </enumMap>
+    
+
+    <!-- shproCurrentEntry Begin -->
+        <!-- shproCurrentValue -->
+        <numSensor ruleid="shproCurrentValue" index=".1.3.6.1.4.1.13045.1.2.4.5.1.3">
+            <type>amperage</type>
+            <sensorId>CURRENT_VALUE<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13045.1.2.4.5.1.3</getRowOid>
+            </value>
+            <label>Current Value<rowIndex/></label>
+            <sensorSet>Current<rowIndex/></sensorSet>
+        </numSensor>
+    
+        <!-- shproCurrentState -->
+        <stateSensor ruleid="shproCurrentState" index=".1.3.6.1.4.1.13045.1.2.4.5.1.5">
+            <type>state</type>
+            <sensorId>SHPRO_CURRENT_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value6-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.5.1.5</getRowOid>
+                </mapValue>
+            </value>
+            <label>Current State<rowIndex/></label>
+            <enum>sensorstate-em</enum>
+            <sensorSet>Current<rowIndex/></sensorSet>
+        </stateSensor>
+
+
+    <!-- shproVoltageEntry Begin -->
+        <!-- shproVoltageValue -->
+        <numSensor ruleid="shproVoltageValue" index=".1.3.6.1.4.1.13045.1.2.4.6.1.3">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_VALUE<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13045.1.2.4.6.1.3</getRowOid>
+            </value>
+            <label>Voltage Value<rowIndex/></label>
+            <sensorSet>Voltage<rowIndex/></sensorSet>
+        </numSensor>
+    
+        <!-- shproVoltageState -->
+		<stateSensor ruleid="shproVoltageState" index=".1.3.6.1.4.1.13045.1.2.4.6.1.4">
+            <type>state</type>
+            <sensorId>SHPRO_VOLTAGE_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value6-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.6.1.4</getRowOid>
+                </mapValue>
+            </value>
+            <label>Voltage State<rowIndex/></label>
+            <enum>sensorstate-em</enum>
+            <sensorSet>Voltage<rowIndex/></sensorSet>
+        </stateSensor>
+
+
+    <!-- shproPowerEntry Begin -->
+        <!-- shproPowerValue -->
+        <numSensor ruleid="shproPowerValue" index=".1.3.6.1.4.1.13045.1.2.4.7.1.3">
+            <type>powerW</type>
+            <sensorId>POWER_VALUE<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13045.1.2.4.7.1.3</getRowOid>
+            </value>
+            <label>Power Value<rowIndex/></label>
+            <sensorSet>Power<rowIndex/></sensorSet>
+        </numSensor>
+    
+        <!-- shproPowerState -->
+		<stateSensor ruleid="shproPowerState" index=".1.3.6.1.4.1.13045.1.2.4.7.1.4">
+            <type>state</type>
+            <sensorId>SHPRO_POWER_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value6-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.7.1.4</getRowOid>
+                </mapValue>
+            </value>
+            <label>Power State<rowIndex/></label>
+            <enum>sensorstate-em</enum>
+            <sensorSet>Power<rowIndex/></sensorSet>
+        </stateSensor>
+
+
+    <!-- shproTemperatureEntry Begin -->
+        <!-- shproTemperatureValue -->
+		<numSensor ruleid="shproTemperatureValue" index=".1.3.6.1.4.1.13045.1.2.4.8.1.3">
+            <type>temp</type>
+            <sensorId>TEMPERATURE_VALUE<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13045.1.2.4.8.1.3</getRowOid>
+            </value>
+            <label>Temperature Value<rowIndex/></label>
+            <sensorSet>Temperature<rowIndex/></sensorSet>
+        </numSensor>
+    
+        <!-- shproTemperatureState -->
+		<stateSensor ruleid="shproTemperatureState" index=".1.3.6.1.4.1.13045.1.2.4.8.1.4">
+            <type>state</type>
+            <sensorId>SHPRO_TEMPERATURE_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value6-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.8.1.4</getRowOid>
+                </mapValue>
+            </value>
+            <label>Temperature State<rowIndex/></label>
+            <enum>sensorstate-em</enum>
+            <sensorSet>Temperature<rowIndex/></sensorSet>
+        </stateSensor>
+
+
+    <!-- shproBreakersEntry Begin -->
+        <!-- shproBreakersState -->
+        <stateSensor ruleid="shproBreakersState" index=".1.3.6.1.4.1.13045.1.2.4.9.1.3">
+            <type>state</type>
+            <sensorId>SHPRO_BREAKER_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value3-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.4.9.1.3</getRowOid>
+                </mapValue>
+            </value>
+            <label>Breaker State<rowIndex/></label>
+            <enum>offonpres-em</enum>
+            <sensorSet>Breaker<rowIndex/></sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="value3-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+        </valueMap>
+    
+        <enumMap ruleid="offonpres-em">
+            <label>off</label>
+            <label>on</label>
+            <label>notPresent</label>
+        </enumMap>
+    
+    <!-- shproContactEntry Begin -->
+        <!-- shproContactCurrentValue -->
+		<stateSensor ruleid="shproContactCurrentValue" index=".1.3.6.1.4.1.13045.1.2.5.1.1.3">
+            <type>state</type>
+            <sensorId>CONTACT_CURRENT_VALUE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="contact22-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.5.1.1.3</getRowOid>
+                </mapValue>
+            </value>
+            <label>Contact Current Value<rowIndex/></label>
+            <enum>clop-em</enum>
+            <sensorSet>Contact<rowIndex/></sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="contact2-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>*</valueIn><valueOut>2</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="clop-em">
+            <label>closed</label>
+            <label>open</label>
+            <label>unknown</label>
+        </enumMap>
+    
+
+        <!-- shproContactState -->
+		<stateSensor ruleid="shproContactState" index=".1.3.6.1.4.1.13045.1.2.5.1.1.5">
+            <type>state</type>
+            <sensorId>CONTACT_STATE<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="value2-vm"> 
+                    <getRowOid>.1.3.6.1.4.1.13045.1.2.5.1.1.5</getRowOid>
+                </mapValue>
+            </value>
+            <label>Contact State<rowIndex/></label>
+            <enum>crinorm-em</enum>
+            <sensorSet>Contact<rowIndex/></sensorSet>
+        </stateSensor>
+    	
+        <enumMap ruleid="crinorm-em">
+            <label>critical</label>
+            <label>normal</label>
+            <label>unknown</label>
+        </enumMap>
+
+    </device>  
+</APC_DDF>

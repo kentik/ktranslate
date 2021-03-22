@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!-- APC DDF for Knurr -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="knurr"  ddfname="Knurr" ddfversion="2" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+<!-- deviceInfo-->
+  <!-- productTitle -->
+  <device deviceid="knurrdiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.3711.15.1.1.1.1.4.0"/>
+    
+     
+  <!-- Set Product Version -->
+    <setProductData ruleid="bootversion" field="bootversion">
+      <getOid>.1.3.6.1.4.1.3711.15.1.1.1.1.4.0</getOid>
+    </setProductData>
+    </device>
+    
+    <device deviceid="knurr">
+    <oidMustExist ruleid="knurrDetect" oid=".1.3.6.1.4.1.3711.15.1.1.1.1.4.0"/>
+    
+<!-- rms-cTemp1Current -->
+		<numSensor ruleid="rms-cTemp1Current">
+      <type>temp</type>
+      <sensorId>RMS_TEMP1_CURRENT_</sensorId>
+      <value> 
+      <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.3711.15.1.1.1.1.4.0</getOid>
+          </op>
+          <op>0.1</op>
+      </mult>
+      </value>
+      <label>Current Temperature 1</label>
+      <sensorSet>Current Temperature</sensorSet>
+    </numSensor>
+
+
+<!-- rms-cHumid1Current -->
+		<numSensor ruleid="rms-cHumid1Current">
+      <type>humidity</type>
+      <sensorId>RMS_HUMID1_CURRENT_</sensorId>
+      <value> 
+         <getOid>.1.3.6.1.4.1.3711.15.1.1.1.2.4.0</getOid>
+      </value>
+      <label>Current Humidity</label>
+      <sensorSet>Current Humidity</sensorSet>
+    </numSensor>
+    
+    
+<!-- rms-cTemp2Current -->
+		<numSensor ruleid="rms-cTemp2Current">
+      <type>temp</type>
+      <sensorId>RMS_TEMP2_CURRENT_</sensorId>
+      <value> 
+      <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.3711.15.1.1.1.3.4.0</getOid>
+          </op>
+          <op>0.1</op>
+      </mult>
+      </value>
+      <label>Current Temperature 2</label>
+      <sensorSet>Current Temperature</sensorSet>
+    </numSensor>
+    
+
+<!-- ContactCurrentStates Begin -->
+	<!--  Contact1CurrentState -->
+     <stateSensor ruleid="rms-cContact1CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT1_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.1.0</getOid>
+      </value>
+      <label>Contact 1 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+    
+    <enumMap ruleid="ContactCurrentState-em">
+      <label>off</label>
+      <label>on</label>
+    </enumMap>
+    
+
+	<!--  Contact2CurrentState -->
+     <stateSensor ruleid="rms-cContact2CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT2_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.2.0</getOid>
+      </value>
+      <label>Contact 2 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+ 
+    
+	<!--  Contact3CurrentState -->
+     <stateSensor ruleid="rms-cContact3CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT3_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.3.0</getOid>
+      </value>
+      <label>Contact 3 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+  
+    
+    
+	<!--  Contact4CurrentState -->
+     <stateSensor ruleid="rms-cContact4CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT4_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.4.0</getOid>
+      </value>
+      <label>Contact 4 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+  
+    
+	<!--  Contact5CurrentState -->
+     <stateSensor ruleid="rms-cContact5CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT5_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.5.0</getOid>
+      </value>
+      <label>Contact 5 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+ 
+    
+	<!--  Contact6CurrentState -->
+     <stateSensor ruleid="rms-cContact6CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT6_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.6.0</getOid>
+      </value>
+      <label>Contact 6 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+
+
+	<!--  Contact7CurrentState -->
+     <stateSensor ruleid="rms-cContact7CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT7_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.7.0</getOid>
+      </value>
+      <label>Contact 7 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+    
+
+	<!--  Contact8CurrentState -->
+     <stateSensor ruleid="rms-cContact8CurrentState">
+      <type>state</type>
+      <sensorId>CONTACT8_CURRENT_STATE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.2.5.8.0</getOid>
+      </value>
+      <label>Contact 8 Current State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Contact Current States</sensorSet>
+    </stateSensor>
+ 
+
+<!-- rms-cOutputStates Begin -->
+	<!--rms-cOutput1State -->
+     <stateSensor ruleid="rms-cOutput1State">
+      <type>state</type>
+      <sensorId>OUTPUT1_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.3.1.0</getOid>
+      </value>
+      <label>Output 1 State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output States</sensorSet>
+    </stateSensor>
+   
+    
+	<!--rms-cOutput1State -->
+     <stateSensor ruleid="rms-cOutput2State">
+      <type>state</type>
+      <sensorId>OUTPUT2_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.3.2.0</getOid>
+      </value>
+      <label>Output 2 State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output States</sensorSet>
+    </stateSensor>
+  
+    
+    <!--rms-cOutput3State -->
+     <stateSensor ruleid="rms-cOutput3State">
+      <type>state</type>
+      <sensorId>OUTPUT3_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.3.3.0</getOid>
+      </value>
+      <label>Output 3 State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output States</sensorSet>
+    </stateSensor>
+  
+  
+    
+<!-- OutputBooleanStates -->
+	<!-- rms-cOutput1BooleanState -->
+		 <stateSensor ruleid="rms-cOutput1BooleanState">
+      <type>state</type>
+      <sensorId>OUTPUT1_BOOLEAN_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.4.1.0</getOid>
+      </value>
+      <label>Output 1 Boolean State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output Boolean States</sensorSet>
+    </stateSensor>
+    
+    
+	<!-- rms-cOutput2BooleanState -->
+		 <stateSensor ruleid="rms-cOutput2BooleanState">
+      <type>state</type>
+      <sensorId>OUTPUT2_BOOLEAN_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.4.2.0</getOid>
+      </value>
+      <label>Output 2 Boolean State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output Boolean States</sensorSet>
+    </stateSensor>
+   
+    
+	<!-- rms-cOutput3BooleanState -->
+		 <stateSensor ruleid="rms-cOutput3BooleanState">
+      <type>state</type>
+      <sensorId>OUTPUT3_BOOLEAN_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.4.3.0</getOid>
+      </value>
+      <label>Output 3 Boolean State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output Boolean States</sensorSet>
+    </stateSensor>
+ 
+    
+	<!-- rms-cOutput4BooleanState -->
+		 <stateSensor ruleid="rms-cOutput4BooleanState">
+      <type>state</type>
+      <sensorId>OUTPUT4_BOOLEAN_STATE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.3711.15.1.1.3.4.4.0</getOid>
+      </value>
+      <label>Output 4 Boolean State</label>
+      <enum>ContactCurrentState-em</enum>
+      <sensorSet>Output Boolean States</sensorSet>
+    </stateSensor>
+ 
+    
+    </device>  
+</APC_DDF>

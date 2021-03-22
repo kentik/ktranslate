@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="alber_bds_battery_monitor"
+	ddfname="Alber BDSBatteryMonitor"
+	ddfversion="3"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="Alber_BDSBatteryMonitor">
+    <oidMustExist ruleid="battmon" oid=".1.3.6.1.4.1.21735.1.1.1" istree="yes" />
+
+    <setProductData ruleid="vendordata" field="vendor">Alber</setProductData>
+    <setProductData ruleid="modeldata" field="model">BDS Battery Monitor</setProductData>
+    <setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+
+	<setLocationData ruleid="locdata" field="LOCATION">
+		<getOid>.1.3.6.1.4.1.21735.1.1.1.1.8.0</getOid>
+	</setLocationData>
+	<setDefaultLabel>
+		<getOid>.1.3.6.1.4.1.21735.1.1.1.1.9.0</getOid>
+	</setDefaultLabel>
+
+	<valueMap ruleid="2state-vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>*</valueOut>
+	</valueMap>
+	<enumMap ruleid="alarmStatus-em">
+		<label>Enabled</label>
+		<label>Disabled</label>
+		<label>Unknown</label>
+	</enumMap>
+
+	<numSensor ruleid="monOverallVoltage" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.3">
+      <type>voltage</type>
+		<sensorId>_MON_OVERALL_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.3</getRowOid></op>
+			<op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Overall Voltage</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<numSensor ruleid="monDischargeTime" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.4">
+		<type>timeinsec</type>
+		<sensorId>_MON_DISCHARGE_TIME_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.3</getRowOid></op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Discharge Time</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<numSensor ruleid="monDischargeCurrent" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.5">
+      <type>amperage</type>
+		<sensorId>_MON_DISCHARGE_CURRENT_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.5</getRowOid></op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Discharge Current</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<numSensor ruleid="monFloatCurrent" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.6">
+      <type>amperage</type>
+		<sensorId>_MON_FLOAT_CURRENT_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.6</getRowOid></op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Float Current</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<numSensor ruleid="monTimeToGo" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.7">
+      <type>timeinhrs</type>
+		<sensorId>_MON_TIME_TO_GO_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.7</getRowOid></op>
+			<op>0.01</op>
+        </mult>
+      </value>
+		<valueInc>0.01</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Time To Go</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<numSensor ruleid="monAmpHoursRemaining" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.8">
+      <type>num</type>
+		<units>amphours</units>
+		<sensorId>_MON_AH_REMAINING_<rowIndex/></sensorId>
+      <value>
+        <mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.8</getRowOid></op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Amp-Hours Remaining</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </numSensor>
+	<stateSensor ruleid="monAlarmStatus" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.9">
+      <type>state</type>
+		<sensorId>_MON_ALARM_STATUS_<rowIndex/></sensorId>
+      <value>
+			<mapValue mapid="2state-vm">
+			<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.9</getRowOid>
+        </mapValue>
+      </value>
+		<enum>alarmStatus-em</enum>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Alarm Status</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+    </stateSensor>
+	<!--
+    <alarmFlags ruleid="mon_alarm_status">
+      <value>
+        <getOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.9.1</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>mon Alarm Status Condition Present</activeText>
+          <inactiveText>mon Alarm Status Condition Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>mon Alarm Status Condition Present</activeText>
+          <inactiveText>mon Alarm Status Condition Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+	-->
+    <alarmFlags2 ruleid="monCriticalAlarmStatus" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.10">
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.10</getRowOid>
+      </value>
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>Critical Alarm Present</activeText>
+          <inactiveText>Critical Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid>: A Critical Alarm has occurred.</activeText>
+          <inactiveText>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid>: Critical Alarm has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags2>
+    <alarmFlags2 ruleid="monMaintenanceAlarmStatus" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.11">
+      <value>
+        <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.11</getRowOid>
+      </value>
+      <alarmFlagsTest match="1">
+        <name>
+          <activeText>Maintenance Alarm Present</activeText>
+          <inactiveText>Maintenance Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid>: A Maintenance Alarm has occurred.</activeText>
+          <inactiveText>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid>: Maintenance Alarm has been cleared.</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+	<numSensor ruleid="monHighCellVoltageAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.13">
+		<type>voltage</type>
+		<sensorId>_MON_HIGH_CELL_VOLTAGE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+		<value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.13</getRowOid></op>
+			<op>0.01</op>
+        	</mult>
+		</value>
+		<valueInc>0.01</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> High Cell Voltage Alarm Threshold</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monLowCellVoltageAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.14">
+		<type>voltage</type>
+		<sensorId>_MON_LOW_CELL_VOLTAGE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.14</getRowOid></op>
+			<op>0.01</op>
+        	</mult>
+      </value>
+		<valueInc>0.01</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Low Cell Voltage Alarm Threshold</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monHighCellResistanceAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.15">
+		<type>num</type>
+		<sensorId>_MON_HIGH_CELL_RESISTANCE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.15</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> High Cell Resistance Alarm Threshold (microOhms)</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monHighIntercellResistanceAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.16">
+		<type>num</type>
+		<sensorId>_MON_HIGH_INTERCELL_RESISTANCE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.16</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> High Intercell Resistance Alarm Threshold (microOhms)</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monHighOverallVoltageAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.17">
+		<type>voltage</type>
+		<sensorId>_MON_HIGH_OVERALL_VOLTAGE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.17</getRowOid></op>
+			<op>0.1</op>
+        	</mult>
+      </value>
+		<valueInc>0.1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> High Overall Voltage Alarm Threshold</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monLowOverallVoltageAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.18">
+		<type>voltage</type>
+		<sensorId>_MON_LOW_OVERALL_VOLTAGE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.18</getRowOid></op>
+			<op>0.1</op>
+        	</mult>
+      </value>
+		<valueInc>0.1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Low Overall Voltage Alarm Threshold</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monHighFloatCurrentAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.19">
+		<type>amperage</type>
+		<sensorId>_MON_HIGH_FLOAT_CURRENT_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.19</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> High Float Current Alarm Threshold</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monDischargeLevel" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.20">
+		<type>num</type>
+		<sensorId>_MON_DISCHARGE_LEVEL_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.20</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Discharge Level</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+	<numSensor ruleid="monWarningPercentage" index=".1.3.6.1.4.1.21735.1.1.1.1.1.1.22">
+		<type>pctofcapacity</type>
+		<sensorId>_MON_WARNING_PCT_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.22</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid> Warning Percentage</label>
+		<sensorSet>String <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.1.1.1</getRowOid></sensorSet>
+	</numSensor>
+
+	<numSensor ruleid="monCellVoltage" index=".1.3.6.1.4.1.21735.1.1.1.1.2.1.2">
+		<type>voltage</type>
+		<sensorId>_MON_CELL_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.2.1.2</getRowOid></op>
+			<op>0.01</op>
+        	</mult>
+      </value>
+		<valueInc>0.01</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Cell %2$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>
+			Voltage
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+
+	<numSensor ruleid="monCellResistance" index=".1.3.6.1.4.1.21735.1.1.1.1.3.1.2">
+		<type>num</type>
+		<sensorId>_MON_CELL_RESISTANCE_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.3.1.2</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Cell %2$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>
+			Resistance (microOhms)
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+
+	<numSensor ruleid="monIntercellResistance" index=".1.3.6.1.4.1.21735.1.1.1.1.4.1.2">
+		<type>num</type>
+		<sensorId>_MON_INTERCELL_RESISTANCE_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.4.1.2</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Cell %2$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>
+			Intercell Resistance (microOhms)
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+
+	<numSensor ruleid="monIntertierResistance" index=".1.3.6.1.4.1.21735.1.1.1.1.5.1.3">
+		<rowTest>
+			<neq><op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.2</getRowOid></op><op>-1</op></neq>
+		</rowTest>
+		<type>num</type>
+		<sensorId>_MON_INTERTIER_RESISTANCE_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.3</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>
+			Cell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.2</getRowOid><space/>
+			Intertier Resistance (microOhms)
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+
+	<numSensor ruleid="monIntertierResistanceAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.5.1.4">
+		<rowTest>
+			<neq><op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.2</getRowOid></op><op>-1</op></neq>
+		</rowTest>
+		<type>num</type>
+		<sensorId>_MON_INTERTIER_RESISTANCE_ALARM_THRESHOLD_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.4</getRowOid></op>
+			<op>1</op>
+        	</mult>
+      </value>
+		<valueInc>1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>
+			Cell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.5.1.2</getRowOid><space/>
+			Intertier Resistance Alarm Threshold (microOhms)
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="monTemperature" index=".1.3.6.1.4.1.21735.1.1.1.1.6.1.2">
+		<type>temp</type>
+		<sensorId>_MON_TEMPERATURE_<rowIndex/></sensorId>
+		<value>
+			<mult>
+			<op>
+				<sub>
+				<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.6.1.2</getRowOid></op>
+				<op>32</op>
+	        	</sub>
+			</op>
+			<op><div><op>5</op><op>9</op></div></op>
+			</mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Temperature %2$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+	<numSensor ruleid="monTemperatureHighAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.6.1.3">
+		<type>temp</type>
+		<sensorId>_MON_TEMPERATURE_HIGH_ALARM_THRESHOLD_<rowIndex/></sensorId>
+		<value>
+			<mult>
+			<op>
+				<sub>
+				<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.6.1.3</getRowOid></op>
+				<op>32</op>
+	        	</sub>
+			</op>
+			<op><div><op>5</op><op>9</op></div></op>
+			</mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Temperature %2$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>High Alarm Threshold
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+	<numSensor ruleid="monTemperatureLowAlarmThreshold" index=".1.3.6.1.4.1.21735.1.1.1.1.6.1.4">
+		<type>temp</type>
+		<sensorId>_MON_TEMPERATURE_LOW_ALARM_THRESHOLD_<rowIndex/></sensorId>
+		<value>
+			<mult>
+			<op>
+				<sub>
+				<op><getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.6.1.4</getRowOid></op>
+				<op>32</op>
+	        	</sub>
+			</op>
+			<op><div><op>5</op><op>9</op></div></op>
+			</mult>
+		</value>
+		<valueInc>0.1</valueInc>
+		<label>
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s Temperature %2$s</op>
+			<op><rowIndex/></op>
+			</regex><space/>Low Alarm Threshold
+		</label>
+		<sensorSet>
+			<regex>
+			<op>(\d?)\.(\d?)</op>
+			<op><rowIndex/></op>
+			<op>String %1$s</op>
+			<op><rowIndex/></op>
+			</regex>
+		</sensorSet>
+	</numSensor>
+	
+	<valueMap ruleid="alarmTypeExists-vm">
+		<valueIn>0</valueIn><valueOut>2</valueOut>
+		<valueIn>1</valueIn><valueOut>2</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>1</valueOut>
+		<valueIn>5</valueIn><valueOut>1</valueOut>
+		<valueIn>6</valueIn><valueOut>1</valueOut>
+		<valueIn>7</valueIn><valueOut>1</valueOut>
+		<valueIn>8</valueIn><valueOut>1</valueOut>
+		<valueIn>9</valueIn><valueOut>4</valueOut>
+		<valueIn>10</valueIn><valueOut>4</valueOut>
+		<valueIn>29</valueIn><valueOut>5</valueOut>
+		<valueIn>39</valueIn><valueOut>1</valueOut>
+		<valueIn>40</valueIn><valueOut>1</valueOut>
+		<valueIn>41</valueIn><valueOut>1</valueOut>
+		<valueIn>42</valueIn><valueOut>1</valueOut>
+		<valueIn>43</valueIn><valueOut>1</valueOut>
+		<valueIn>44</valueIn><valueOut>1</valueOut>
+		<valueIn>45</valueIn><valueOut>1</valueOut>
+		<valueIn>46</valueIn><valueOut>1</valueOut>
+		<valueIn>47</valueIn><valueOut>1</valueOut>
+		<valueIn>48</valueIn><valueOut>1</valueOut>
+		<valueIn>49</valueIn><valueOut>1</valueOut>
+		<valueIn>50</valueIn><valueOut>1</valueOut>
+		<valueIn>51</valueIn><valueOut>1</valueOut>
+		<valueIn>52</valueIn><valueOut>1</valueOut>
+		<valueIn>53</valueIn><valueOut>1</valueOut>
+		<valueIn>54</valueIn><valueOut>1</valueOut>
+		<valueIn>55</valueIn><valueOut>1</valueOut>
+		<valueIn>56</valueIn><valueOut>1</valueOut>
+		<valueIn>62</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<valueMap ruleid="alarmTypeDesc-vm">
+		<valueIn>0</valueIn><valueOut>High Cell Voltage</valueOut>
+		<valueIn>1</valueIn><valueOut>Low Cell Voltage</valueOut>
+		<valueIn>2</valueIn><valueOut>High Cell Resistance</valueOut>
+		<valueIn>3</valueIn><valueOut>High Intercell Resistance</valueOut>
+		<valueIn>4</valueIn><valueOut>High Overall Voltage</valueOut>
+		<valueIn>5</valueIn><valueOut>Low Overall Voltage</valueOut>
+		<valueIn>6</valueIn><valueOut>High Float Current</valueOut>
+		<valueIn>7</valueIn><valueOut>Warning</valueOut>
+		<valueIn>8</valueIn><valueOut>Ground Fault</valueOut>
+		<valueIn>9</valueIn><valueOut>High Temperature</valueOut>
+		<valueIn>10</valueIn><valueOut>Low Temperature</valueOut>
+		<valueIn>29</valueIn><valueOut>High Intertier Resistance</valueOut>
+		<valueIn>39</valueIn><valueOut>Discharge</valueOut>
+		<valueIn>40</valueIn><valueOut>Digital Input 1</valueOut>
+		<valueIn>41</valueIn><valueOut>Digital Input 2</valueOut>
+		<valueIn>42</valueIn><valueOut>Digital Input 3</valueOut>
+		<valueIn>43</valueIn><valueOut>Digital Input 4</valueOut>
+		<valueIn>44</valueIn><valueOut>Digital Input 5</valueOut>
+		<valueIn>45</valueIn><valueOut>Digital Input 6</valueOut>
+		<valueIn>46</valueIn><valueOut>Digital Input 7</valueOut>
+		<valueIn>47</valueIn><valueOut>Digital Input 8</valueOut>
+		<valueIn>48</valueIn><valueOut>Digital Input 9</valueOut>
+		<valueIn>49</valueIn><valueOut>Digital Input 10</valueOut>
+		<valueIn>50</valueIn><valueOut>Digital Input 11</valueOut>
+		<valueIn>51</valueIn><valueOut>Digital Input 12</valueOut>
+		<valueIn>52</valueIn><valueOut>Digital Input 13</valueOut>
+		<valueIn>53</valueIn><valueOut>Digital Input 14</valueOut>
+		<valueIn>54</valueIn><valueOut>Digital Input 15</valueOut>
+		<valueIn>55</valueIn><valueOut>Digital Input 16</valueOut>
+		<valueIn>56</valueIn><valueOut>Memory Full</valueOut>
+		<valueIn>62</valueIn><valueOut>UPS Low Voltage</valueOut>
+		<valueIn>*</valueIn><valueOut>null</valueOut>
+</valueMap>
+
+    <alarmFlags2 ruleid="monAlarmType" index=".1.3.6.1.4.1.21735.1.1.1.1.7.1.2">
+		<value>
+			<mapValue mapid="alarmTypeExists-vm">
+			<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+			</mapValue>
+		</value>
+		<alarmFlagsTest match="1"><!-- no alarmItem -->
+			<name>
+				<activeText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue>
+				</activeText>
+				<inactiveText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>Cleared
+				</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category>system</category>
+			<description>
+				<activeText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					A(n) <mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue> condition exists.
+				</activeText>
+				<inactiveText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>no longer exists.
+				</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="2"><!-- alarmItem = cell number -->
+			<name>
+				<activeText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>
+					(Cell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>)
+				</activeText>
+				<inactiveText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>Cleared
+				</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category>system</category>
+			<description>
+				<activeText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					A(n) <mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue> condition exists for Cell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>.
+				</activeText>
+				<inactiveText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>for Cell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid> no longer exists.
+				</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="3"><!-- alarmItem = intercell number -->
+			<name>
+				<activeText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>
+					(Intercell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>)
+				</activeText>
+				<inactiveText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>Cleared
+				</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category>system</category>
+			<description>
+				<activeText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					A(n) <mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue> condition exists for Intercell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>.
+				</activeText>
+				<inactiveText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>for Intercell <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid> no longer exists.
+				</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="4"><!-- alarmItem = temp number -->
+			<name>
+				<activeText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>
+					(Temperature <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>)
+				</activeText>
+				<inactiveText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>Cleared
+				</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category>system</category>
+			<description>
+				<activeText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					A(n) <mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue> condition exists for Temperature <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>.
+				</activeText>
+				<inactiveText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>for Temperature <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid> no longer exists.
+				</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="5"><!-- alarmItem = intertier number -->
+			<name>
+				<activeText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>
+					(Intertier <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>)
+				</activeText>
+				<inactiveText>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>Cleared
+				</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category>system</category>
+			<description>
+				<activeText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					A(n) <mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue> condition exists for Intertier <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid>.
+				</activeText>
+				<inactiveText>
+					<regex>
+					<op>(\d?)\.(\d?)</op>
+					<op><rowIndex/></op>
+					<op>String %1$s</op>
+					<op><rowIndex/></op>
+					</regex>:<space/>
+					<mapValue mapid="alarmTypeDesc-vm">
+					<getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.2</getRowOid>
+					</mapValue><space/>for Intertier <getRowOid>.1.3.6.1.4.1.21735.1.1.1.1.7.1.3</getRowOid> no longer exists. 
+				</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	
+  </device>
+</APC_DDF>

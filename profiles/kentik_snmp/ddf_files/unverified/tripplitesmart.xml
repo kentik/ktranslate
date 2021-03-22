@@ -1,0 +1,413 @@
+<?xml version="1.0"?>
+
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="tripplitesmart" ddfname="Tripplite-Smart-1500CRXML" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+ <device deviceid="trippliteproductinfo">
+    <oidMustExist ruleid="trippliteheader" oid="1.3.6.1.4.1.850.10.1.2.6.0"/>
+
+	<setProductData ruleid="vendordata" field="vendor">
+		Tripplite
+	</setProductData>
+ 	
+	<setProductData ruleid="modeldata" field="model">
+		Smart 1500CRMXL
+	</setProductData>
+	
+	<setProductData ruleid="typedata" field="type">
+		UPS
+	</setProductData>
+	
+	<setProductData ruleid="macaddrdata" field="mac_addr">
+		<getOid>1.3.6.1.4.1.850.10.1.2.6.0</getOid>
+	</setProductData>
+	
+	<setLocationData field="LOCATION">
+		<getOid>1.3.6.1.2.1.1.6.0</getOid>
+	</setLocationData> 
+	
+	<setLocationData field="CONTACT">
+		<getOid>1.3.6.1.2.1.1.4.0</getOid>
+	</setLocationData> 
+	
+	<setLocationData field="SYSNAME">
+		<getOid>1.3.6.1.2.1.33.1.1.5.0</getOid>
+	</setLocationData> 
+		
+	
+	<numSensor ruleid="ambient_humidity">
+		<type>humidity</type>
+		<units></units>
+		<sensorId>_AMBIENT_HUMIDITY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.850.101.1.2.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Ambient Humidity</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ambient_temperature">
+		<type>temp</type>
+		<units>degreeC</units>
+		<sensorId>_AMBIENT_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.850.101.1.1.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Ambient Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="ambient_temperature_2">
+		<type>temp</type>
+		<units>degreeF</units>
+		<sensorId>_AMBIENT_TEMPERATURE_2</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.850.101.1.1.2.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Ambient Temperature 2(Fahranheit)</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_temperature">
+		<type>temp</type>
+		<units>degreeF</units>
+		<sensorId>_BATTERY_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.850.100.1.2.2.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>Battery Temperature</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_age">
+		<type>num</type>
+		<units></units>
+		<sensorId>_Battery_Age</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.4.1.850.100.1.2.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Age</label>
+		<sensorSet>General</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="Battery_Capacity_Remaining">
+		<type>pctofcapacity</type>
+		<units>percent</units>
+		<sensorId>_battery_capacity_remaining</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.2.4.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Capacity Remaining</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	<stateSensor ruleid="battery_status">
+		<type>state</type>
+		<sensorId>_BATTERY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="fourstate-vm">
+				<getOid>1.3.6.1.2.1.33.1.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Status</label>
+			<enum>fourstate_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	
+	<numSensor ruleid="battery_temperature">
+		<type>temp</type>
+		<units>degreeC</units>
+		<sensorId>_BATTERY_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.2.7.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Temperature</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_time_remaining">
+		<type>timeinmin</type>
+		<units>min</units>
+		<sensorId>_BATTERY_TIME_REMAINING</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.2.3.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Battery Time Remaining</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battery_voltage">
+		<type>voltage</type>
+		<units>volts</units>
+		<sensorId>_BATTERY_VOLTAGE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.2.5.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>Battery Voltage</label>
+		<sensorSet>Battery</sensorSet>
+	</numSensor>
+	
+	
+	<stateSensor ruleid="config_audible_status">
+		<type>state</type>
+		<sensorId>_CONFIG_AUDIBLE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="threestate_vm">
+				<getOid>1.3.6.1.2.1.33.1.9.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>Config Audible Status</label>
+			<enum>threestate_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	
+	<numSensor ruleid="firmware">
+		<type>num</type>
+		<units></units>
+		<sensorId>_FIRMWARE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.1.4.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Firmware</label>
+		<sensorSet>General</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="input_frequency">
+		<type>frequency</type>
+		<units>hertz</units>
+		<sensorId>_INPUT_FREQUENCY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.3.3.1.2.1</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>Input Frequency</label>
+		<sensorSet>Frequency</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="input_voltage">
+		<type>voltage</type>
+		<units>volts</units>
+		<sensorId>_INPUT_VOLTAGE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.3.3.1.3.1</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Input Voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="output_current">
+		<type>amperage</type>
+		<units>amps</units>
+		<sensorId>_OUTPUT_CURRENT</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.4.4.1.3.1</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>Output Current</label>
+		<sensorSet>Current</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="output_frequency">
+		<type>frequency</type>
+		<units>hertz</units>
+		<sensorId>_OUTPUT_FREQUENCY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.4.2.0</getOid>
+				</op>
+				<op>0.1</op>
+			</mult>
+		</value>
+		<label>Output Current</label>
+		<sensorSet>Frequency</sensorSet>
+	</numSensor>
+	
+	
+	<numSensor ruleid="output_load">
+		<type>pctofcapacity</type>
+		<units></units>
+		<sensorId>_OUTPUT_LOAD</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.4.4.1.5.1</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Output Load</label>
+		<sensorSet>Output load</sensorSet>
+	</numSensor>
+	
+	<stateSensor ruleid="output_source">
+		<type>state</type>
+		<sensorId>_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="sevenstate_vm">
+				<getOid>1.3.6.1.2.1.33.1.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Output Source</label>
+			<enum>sevenstate_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	
+	<numSensor ruleid="output_voltage">
+		<type>voltage</type>
+		<units>volts</units>
+		<sensorId>_OUTPUT_VOLTAGE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>1.3.6.1.2.1.33.1.4.4.1.2.1</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Output Voltage</label>
+		<sensorSet>Voltage</sensorSet>
+	</numSensor>
+	
+	<stateSensor ruleid="state_of_the_main_output">
+		<type>state</type>
+		<sensorId>_STATE_OF_THE_MAIN_OUTPUT</sensorId>
+			<value>
+				<mapValue mapid="mainout-vm">
+				<getOid>1.3.6.1.4.1.850.100.1.12.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>State of the Main Output</label>
+			<enum>mainout_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	
+	
+	<valueMap ruleid="fourstate-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+	</valueMap>
+	<enumMap ruleid="fourstate_enum">
+		<label>Unknown</label>
+		<label>batteryNormal</label>
+		<label>batteryLow</label>
+		<label>batteryDepleted</label>
+	</enumMap>
+	
+	
+	<valueMap ruleid="threestate_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+	</valueMap>
+	<enumMap ruleid="threestate_enum">
+		<label>disabled</label>
+		<label>enabled</label>
+		<label>muted</label>
+	</enumMap>
+	
+	
+	<valueMap ruleid="sevenstate_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+	</valueMap>
+	<enumMap ruleid="sevenstate_enum">
+		<label>other</label>
+		<label>none</label>
+		<label>normal</label>
+		<label>bypass</label>
+		<label>battery</label>
+		<label>booster</label>
+		<label>reducer</label>
+	</enumMap>
+	
+	<valueMap ruleid="mainout-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+	</valueMap>
+	<enumMap ruleid="mainout_enum">
+		<label>unknown</label>
+		<label>off</label>
+		<label>on</label>
+		<label>mixed</label>
+	</enumMap>
+	
+	</device>
+	
+</APC_DDF>

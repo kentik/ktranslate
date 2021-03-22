@@ -1,0 +1,650 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="netbotz750"
+	ddfname="NetBotz 750"
+	ddfversion="17"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="netbotz750_discovery">
+	
+		<oidMustMatch ruleid="nb750sysid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.52674</value>
+				<value>.1.3.6.1.4.1.52674.*</value>
+				<value>.1.3.6.1.4.1.52674.500</value>
+	        	<value>.1.3.6.1.4.1.52674.500.*</value>
+			</valueList>
+		</oidMustMatch>
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<!-- <suppressRule ruleid="suppressmib2ifmac_addr" suppressid="mib2if/setmacaddr1/mac_addr"/> -->
+		
+		
+		<setProductData ruleid="vendordata" field="vendor">Schneider Electric</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.318.1.4.2.2.1.2.1</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">
+			<mapValue mapid="netbotz_typedata-vm">
+				<regex>
+					<op>.?(\d+)</op>
+					<op><getOid>.1.3.6.1.4.1.318.1.4.2.2.1.2.1</getOid></op>
+					<op>%1$s</op>
+				</regex>
+			</mapValue>
+		</setProductData>
+
+		<!-- set typedata depending on modeldata NetBotz 750 or 755 -->
+		<valueMap ruleid="netbotz_typedata-vm">
+			<valueIn>*</valueIn><valueOut>Environmental Monitor</valueOut>
+			<valueIn>750</valueIn><valueOut>NetBotz Rack Appliance</valueOut>
+			<valueIn>755</valueIn><valueOut>NetBotz Wall Appliance</valueOut>
+		</valueMap>
+		
+		<setProductData ruleid="mac_addr" field="mac_addr">
+            <regex>
+                <!-- Pattern match on valid MAC address chars. Add colons into mac address for display -->
+                <op>([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])</op>
+                <op><getRowOid is-binary="yes">.1.3.6.1.2.1.2.2.1.6</getRowOid></op> 
+                <op>%1$s:%2$s:%3$s:%4$s:%5$s:%6$s</op>
+            </regex>
+        </setProductData>
+		
+		<setProductData ruleid="bootver" field="bootversion">1.0.0</setProductData>
+		<setProductData ruleid="modelnum" field="apcmodelnumber">NBRK0750</setProductData>
+		 
+	</device>
+
+	<device deviceid="netbotz750_sensors">
+		<oidMustExist ruleid="netbotz_750" oid=".1.3.6.1.4.1.52674.500.4" istree="yes"/> 
+
+		<numSensor ruleid="tempSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.1.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>STATUS_TEMP_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.1.1.10</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.1.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Temperature - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.1.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="humiSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.2.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.2.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>STATUS_HUMID_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.2.1.9</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.2.1.7</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+            <label>Humidity - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.2.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Humidity</sensorSet>
+        </numSensor>
+		<numSensor ruleid="airFlowSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.5.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.5.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>airflow</type>
+            <sensorId>AIRFLOW_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.5.1.9</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.5.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Airflow - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.5.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Airflow</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ampDetectSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.6.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.6.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>AMP_DETECT_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.6.1.9</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.6.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Amp Detect - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.6.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Airflow</sensorSet>
+        </numSensor>
+		<valueMap ruleid="otherNumericSensorValue_units-vm">
+			<valueIn>MILLIAMPS</valueIn><valueOut>amperage</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<valueMap ruleid="otherNumericSensorValue_scale-vm">
+			<valueIn>MILLIAMPS</valueIn><valueOut>0.001</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<numSensor ruleid="otherNumericSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.10.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>
+				<mapValue mapid="otherNumericSensorValue_units-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.9</getRowOid>
+				</mapValue>
+			</type>
+            <sensorId>OTHER_NUM_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.12</getRowOid></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.7</getRowOid></op>
+				<op>
+					<mapValue mapid="otherNumericSensorValue_scale-vm">
+					<getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.9</getRowOid>
+					</mapValue>
+				</op>
+				</mult>
+            </value>
+			<valueInc>
+				<mapValue mapid="otherNumericSensorValue_scale-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.9</getRowOid>
+				</mapValue>
+			</valueInc>
+            <label>Other - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.10.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Other</sensorSet>
+        </numSensor>
+		<numSensor ruleid="rssiSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.11.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.11.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>RSSI_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.11.1.10</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.11.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>RSSI - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.11.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - RSSI</sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentInputSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.12.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.12.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>CURRENT_INPUT_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.12.1.12</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.12.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current Input - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.12.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Current Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="voltageSensorValue" index=".1.3.6.1.4.1.52674.500.4.1.13.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.13.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>VOLTAGE_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.13.1.12</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.13.1.7</getRowOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.13.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="batterySensorValue" index=".1.3.6.1.4.1.52674.500.4.1.14.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.14.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>BATTERY_<getRowOid>.1.3.6.1.4.1.52674.500.4.1.14.1.12</getRowOid></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.1.14.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Battery - <getRowOid>.1.3.6.1.4.1.52674.500.4.1.14.1.4</getRowOid></label>
+            <sensorSet>Numeric Sensors - Battery</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="dryContactSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.1.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DRY_CONTACT_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.1.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.1.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Dry Contact - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.1.1.4</getRowOid></label>
+			<enum>open-em</enum>
+            <sensorSet>State Sensors - Dry Contact</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="doorSwitchSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.2.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DOOR_SWITCH_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.2.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.2.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Door Switch - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.2.1.4</getRowOid></label>
+			<enum>open-em</enum>
+            <sensorSet>State Sensors - Door Switch</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cameraMotionSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.3.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>CAMERA_MOTION_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.3.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.3.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Camera Motion - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.3.1.4</getRowOid></label>
+			<enum>motion-em</enum>
+            <sensorSet>State Sensors - Camera Motion</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="otherStateSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.10.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.10.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>OTHER_STATE_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.10.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.10.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Other - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.10.1.4</getRowOid></label>
+			<enum>open-em</enum>
+            <sensorSet>State Sensors - Other</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="vibrationSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.11.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.11.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>VIBRATION_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.11.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.11.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Vibration - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.11.1.4</getRowOid></label>
+			<enum>vibration-em</enum>
+            <sensorSet>State Sensors - Vibration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="smokeSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.12.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.12.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SMOKE_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.12.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.12.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Smoke - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.12.1.4</getRowOid></label>
+			<enum>smoke-em</enum>
+            <sensorSet>State Sensors - Smoke</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="leakSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.13.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.13.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>LEAK_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.13.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.13.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Leak - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.13.1.4</getRowOid></label>
+			<enum>leak-em</enum>
+            <sensorSet>State Sensors - Leak</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="beaconValue" index=".1.3.6.1.4.1.52674.500.4.2.14.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.14.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BEACON_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.14.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.14.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Beacon - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.14.1.4</getRowOid></label>
+			<enum>offOn-em</enum>
+            <sensorSet>State Sensors - Beacon</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="switchedOutletValue" index=".1.3.6.1.4.1.52674.500.4.2.15.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.15.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SWITCHED_OUTLET_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.15.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.15.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Switched Outlet - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.15.1.4</getRowOid></label>
+			<enum>offOn-em</enum>
+            <sensorSet>State Sensors - Switched Outlet</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="doorLockSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.16.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DOOR_LOCK_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Door Lock - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.4</getRowOid></label>
+			<enum>open-em</enum>
+            <sensorSet>State Sensors - Door Lock</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="doorLockSensorErrorStatus" index=".1.3.6.1.4.1.52674.500.4.2.16.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DOOR_LOCK_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.8</getRowOid>_ERROR_STATUS</sensorId>
+            <value>
+				<mapValue mapid="5state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Door Lock - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.4</getRowOid> Status</label>
+			<enum>doorLockSensorStatus-em</enum>
+            <sensorSet>State Sensors - Door Lock</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="rackHandleSensorValue" index=".1.3.6.1.4.1.52674.500.4.2.17.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.17.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>RACK_HANDLE_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.17.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.17.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Handle - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.17.1.4</getRowOid></label>
+			<enum>open-em</enum>
+            <sensorSet>State Sensors - Rack Handle</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="outputRelaySensorValue" index=".1.3.6.1.4.1.52674.500.4.2.18.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.18.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>OUTPUT_RELAY_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.18.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.4.2.18.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Output Relay - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.18.1.4</getRowOid></label>
+			<enum>active-em</enum>
+            <sensorSet>State Sensors - Output Relay</sensorSet>
+        </stateSensor>
+	
+		<valueMap ruleid="errorCond-severity-vm">
+			<valueIn>1</valueIn><valueOut>information</valueOut>
+			<valueIn>2</valueIn><valueOut>warning</valueOut>
+			<valueIn>3</valueIn><valueOut>critical</valueOut>
+			<valueIn>4</valueIn><valueOut>error</valueOut>
+			<valueIn>5</valueIn><valueOut>failure</valueOut>
+			<valueIn>*</valueIn><valueOut>information</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="errorCond" index=".1.3.6.1.4.1.52674.500.5.1.1.6">
+			<value><getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.6</getRowOid></value>
+			<alarmFlagsTest match="0">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.3</getRowOid></activeText>
+					<inactiveText>Cleared: <getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.3</getRowOid></inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="errorCond-severity-vm">
+					<getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.2</getRowOid>
+					</mapValue>
+				</severity>
+				<category>System</category>
+				<description>
+					<activeText>A(n) <getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.3</getRowOid> condition is present.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.52674.500.5.1.1.3</getRowOid> condition is no longer present.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<stateSensor ruleid="cameraConnectionStatus" index=".1.3.6.1.4.1.52674.500.6.1.1.4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.6.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>CAMERA_STATUS_<getRowOid>.1.3.6.1.4.1.52674.500.6.1.1.8</getRowOid></sensorId>
+            <value>
+				<mapValue mapid="cameraConnectionStatus-vm">
+				<getRowOid>.1.3.6.1.4.1.52674.500.6.1.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>Connection Status - <getRowOid>.1.3.6.1.4.1.52674.500.6.1.1.6</getRowOid></label>
+			<enum>cameraConnectionStatus-em</enum>
+            <sensorSet>Cameras</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="deleteNull-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="enclosureStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="enclosureStatus-em">
+			<label>Disconnected</label>
+			<label>Error</label>
+			<label>Normal</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<valueMap ruleid="5state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="open-em">
+			<label>Open</label>
+			<label>Closed</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="motion-em">
+			<label>No Motion</label>
+			<label>Motion Detected</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="vibration-em">
+			<label>No Vibration</label>
+			<label>Vibration Detected</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="smoke-em">
+			<label>No Smoke</label>
+			<label>Smoke Detected</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="leak-em">
+			<label>No Leak</label>
+			<label>Leak Detected</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="offOn-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="active-em">
+			<label>Inactive</label>
+			<label>Active</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="doorLockSensorStatus-em">
+			<label>Normal</label>
+			<label>Informational</label>
+			<label>Warning</label>
+			<label>Error</label>
+			<label>Critical</label>
+			<label>Failure</label>
+		</enumMap>
+
+		<valueMap ruleid="cameraConnectionStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="cameraConnectionStatus-em">
+			<label>Disconnected</label>
+			<label>Error</label>
+			<label>Normal</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+	
+	<device deviceid="netbotz750_doorLockSensor_control">
+		<oidMustExist ruleid="doorLockSensorTable_exists" oid=".1.3.6.1.4.1.52674.500.4.2.16" istree="yes" />
+	
+		<valueMap ruleid="doorLockSensorPresent-vm">
+			<valueIn>0</valueIn><valueOut>[true]</valueOut>
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		
+		<stateControl ruleid="doorLockSensorSwitchControl" index=".1.3.6.1.4.1.52674.500.4.2.16.1.2">
+			<rowTest>
+				<mapValue mapid="doorLockSensorPresent-vm">
+					<formatNumber printffmt="%1.0f">
+						<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.2</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<type>state/rackaccesslockcontrol</type>
+			<controlId>DOOR_LOCK_<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.8</getRowOid>_CONTROL
+			</controlId>
+			<value>
+				<mapValue mapid="doorLockSensorSwitchState-vm">
+					<formatNumber printffmt="%1.0f">
+						<getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.2</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<val_enum>doorLockSensorSwitchState-em</val_enum>
+			<set_value>
+				<setRowOid>
+					<op>.1.3.6.1.4.1.52674.500.4.2.16.1.2</op>
+					<op>
+						<mapValue mapid="doorLockSensorValue-vm">
+							<setOidValue/>
+						</mapValue>
+					</op>
+				</setRowOid>
+			</set_value>
+			<cntrl_enum>doorLockSensorValue-em</cntrl_enum>
+			<label>Door Lock - <getRowOid>.1.3.6.1.4.1.52674.500.4.2.16.1.4</getRowOid></label>
+		</stateControl>
+		
+		<valueMap ruleid="doorLockSensorSwitchState-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="doorLockSensorSwitchState-em">
+			<label>Unlocked</label>
+			<label>Locked</label>
+			<label>Unavailable</label>
+		</enumMap>
+		
+		<valueMap ruleid="doorLockSensorValue-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="doorLockSensorValue-em">
+			<label>Unlocked</label>
+			<label>Locked</label>
+		</enumMap>
+	
+	</device>
+</APC_DDF>

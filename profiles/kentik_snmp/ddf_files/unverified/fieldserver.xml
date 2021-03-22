@@ -1,0 +1,708 @@
+<?xml version="1.0"?>
+<!-- fieldserver -->
+<APC_DDF ddfid ="fieldserver" ddfname="Fieldserver" ddfversion="2" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+		<device deviceid="rtu12detect">
+   	 <oidMustExist ruleid="rtu12" oid=".1.3.6.1.4.1.6347.1.10.1.0"/>
+   	 
+				<!-- dataValue10_1 -->
+				<numSensor ruleid="dataValue101">
+					<rowTest>
+			 			<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.10.1.0</getOid>
+			 			</mapValue>
+		  		</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_0_1_</sensorId>
+					<value>
+					<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.10.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU12 Ambient Temp</label>
+					<sensorSet>dataArray10</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue10_2 -->
+				<numSensor ruleid="dataValue102">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.10.2.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_0_2_</sensorId>
+					<value>
+					<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.10.2.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU12 Supply Air Temp</label>
+					<sensorSet>dataArray10</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue10_3 -->
+				<numSensor ruleid="dataValue103">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.10.3.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_0_3_</sensorId>
+					<value>
+					<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.10.3.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU12 Return Air Temp</label>
+					<sensorSet>dataArray10</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue10_4 -->
+				<stateSensor ruleid="dataValue104">
+					<type>state</type>
+					<sensorId>DATA_VALUE_1_0_4_</sensorId>
+					<value>
+						<mapValue mapid="dataValue10_4-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.10.4.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU12 System State</label>
+					<enum>dataValue10_4-em</enum>
+					<sensorSet>dataArray10</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue10_4-vm">
+					<valueIn>0</valueIn><valueOut>0</valueOut>
+					<valueIn>1</valueIn><valueOut>1</valueOut>
+					<valueIn>2</valueIn><valueOut>2</valueOut>
+					<valueIn>*</valueIn><valueOut>0</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue10_4-em">
+					<label>Unknown</label>
+					<label>On</label>
+					<label>Off</label>
+				</enumMap>
+				
+				<!-- dataValue10_5 -->
+				<stateSensor ruleid="dataValue105">
+					<type>state</type>
+					<sensorId>DATA_VALUE_1_0_5_</sensorId>
+					<value>
+						<mapValue mapid="dataValue10_5-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.10.5.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU12 Cooling State</label>
+					<enum>dataValue10_5-em</enum>
+					<sensorSet>dataArray10</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue10_5-vm">
+					<valueIn>0</valueIn><valueOut>0</valueOut>
+					<valueIn>1</valueIn><valueOut>1</valueOut>
+					<valueIn>2</valueIn><valueOut>2</valueOut>
+					<valueIn>*</valueIn><valueOut>0</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue10_5-em">
+					<label>Unknown</label>
+					<label>On</label>
+					<label>Off</label>
+				</enumMap>
+				
+				<!-- dataValue10_6 -->
+				<numSensor ruleid="dataValue106">
+					<type>timeinhrs</type>
+					<sensorId>DATA_VALUE_1_0_6_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.10.6.0</getOid>
+					</value>
+					<label>RTU12 Cooling Mode Hrs</label>
+					<sensorSet>dataArray10</sensorSet>
+				</numSensor>
+				
+								<!-- dataValue11_1 -->
+				<numSensor ruleid="dataValue111">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.11.1.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_1_1_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.11.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU12 Control Temp</label>
+					<sensorSet>dataArray11</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue11_2 -->
+				<numSensor ruleid="dataValue112">
+					<type>humidity</type>
+					<sensorId>DATA_VALUE_1_1_2_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.11.2.0</getOid>
+					</value>
+					<label>RTU12 Control Humidity</label>
+					<sensorSet>dataArray11</sensorSet>
+				</numSensor>
+				
+				<valueMap ruleid="delete_null_sensor">
+					<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		  		<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   		</valueMap>
+				
+				
+		</device>
+		
+		<device deviceid="rtu13detect">
+   	 <oidMustExist ruleid="rtu13" oid=".1.3.6.1.4.1.6347.1.13.1.0"/>
+
+				<!-- dataValue13_1 -->
+				<numSensor ruleid="dataValue131">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.13.1.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_Value_1_3_1_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.13.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU13 Ambient Temp</label>
+					<sensorSet>dataArray13</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue13_2 -->
+				<numSensor ruleid="dataValue132">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.13.2.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_Value_1_3_2_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.13.2.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU13 Supply Air Temp</label>
+					<sensorSet>dataArray13</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue13_3 -->
+				<numSensor ruleid="dataValue133">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.3.3.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_Value_1_3_3_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.13.3.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU13 Return Air Temp</label>
+					<sensorSet>dataArray13</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue13_4 -->
+				<stateSensor ruleid="dataValue134">
+					<type>state</type>
+					<sensorId>DATA_Value_1_3_4_</sensorId>
+					<value>
+						<mapValue mapid="dataValue13_4-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.13.4.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU13 System State</label>
+					<enum>dataValue13_4-em</enum>
+					<sensorSet>dataArray13</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue13_4-vm">
+					<valueIn>0</valueIn><valueOut>0</valueOut>
+					<valueIn>1</valueIn><valueOut>1</valueOut>
+					<valueIn>2</valueIn><valueOut>2</valueOut>
+					<valueIn>*</valueIn><valueOut>0</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue13_4-em">
+					<label>Unknown</label>
+					<label>On</label>
+					<label>Off</label>
+				</enumMap>
+				
+				<!-- dataValue13_5 -->
+				<stateSensor ruleid="dataValue135">
+					<type>state</type>
+					<sensorId>DATA_Value_1_3_5_</sensorId>
+					<value>
+						<mapValue mapid="dataValue13_5-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.13.5.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU13 Cooling State</label>
+					<enum>dataValue13_5-em</enum>
+					<sensorSet>dataArray13</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue13_5-vm">
+					<valueIn>0</valueIn><valueOut>0</valueOut>
+					<valueIn>1</valueIn><valueOut>1</valueOut>
+					<valueIn>2</valueIn><valueOut>2</valueOut>
+					<valueIn>*</valueIn><valueOut>0</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue13_5-em">
+					<label>Unknown</label>
+					<label>On</label>
+					<label>Off</label>
+				</enumMap>
+				
+				<!-- dataValue13_6 -->
+				<numSensor ruleid="dataValue136">
+					<type>timeinhrs</type>
+					<sensorId>DATA_Value_1_3_6_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.13.6.0</getOid>
+					</value>
+					<label>RTU13 Cooling Mode Hrs</label>
+					<sensorSet>dataArray13</sensorSet>
+				</numSensor>
+				
+								<!-- dataValue14_1 -->
+				<numSensor ruleid="dataValue141">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.14.1.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_4_1_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.14.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU13 Control Temp</label>
+					<sensorSet>dataArray14</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue14_2 -->
+				<numSensor ruleid="dataValue142">
+					<type>humidity</type>
+					<sensorId>DATA_VALUE_1_4_2_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.14.2.0</getOid>
+					</value>
+					<label>RTU13 Control Humidity</label>
+					<sensorSet>dataArray14</sensorSet>
+				</numSensor>
+				
+				<valueMap ruleid="delete_null_sensor">
+					<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		  		<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   		</valueMap>
+
+		</device>
+
+		<device deviceid="rtu1detect">
+   	 <oidMustExist ruleid="rtu1" oid=".1.3.6.1.4.1.6347.1.1.1.0"/>
+		
+						<!-- dataValue1_1 -->
+				<numSensor ruleid="dataValue11">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.1.1.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_1_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.1.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU1 Space Temp</label>
+					<sensorSet>dataArray1</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue1_2 -->
+				<numSensor ruleid="dataValue12">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.1.2.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_2_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.1.2.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU1 Supply Air Temp</label>
+					<sensorSet>dataArray1</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue1_3 -->
+				<numSensor ruleid="dataValue13">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.1.3.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_1_3_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.1.3.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU1 Return Air Temp</label>
+					<sensorSet>dataArray1</sensorSet>
+				</numSensor>
+				
+						<!-- dataValue1_4 -->
+				<numSensor ruleid="dataValue14">
+					<type>num</type>
+					<sensorId>DATA_VALUE_1_4_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.1.4.0</getOid>
+					</value>
+					<label>RTU1 Control Status</label>
+					<sensorSet>dataArray1</sensorSet>
+				</numSensor>
+
+				
+				<!-- dataValue1_5 -->
+				<stateSensor ruleid="dataValue15">
+					<type>state</type>
+					<sensorId>DATA_VALUE_1_5_</sensorId>
+					<value>
+						<mapValue mapid="dataValue1_5-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.1.5.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU1 Econ. Enabled</label>
+					<enum>dataValue1_5-em</enum>
+					<sensorSet>dataArray1</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue1_5-vm">
+						<valueIn>0</valueIn><valueOut>0</valueOut>
+						<valueIn>1</valueIn><valueOut>1</valueOut>
+						<valueIn>*</valueIn><valueOut>2</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue1_5-em">
+					 <label>Disabled</label>
+					 <label>Enabled</label>
+					 <label>Unknown</label>
+				</enumMap>
+				
+				<valueMap ruleid="delete_null_sensor">
+					<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		  		<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   		</valueMap>
+				
+				
+		</device>
+		
+		<device deviceid="rtu2detect">
+   	 <oidMustExist ruleid="rtu2" oid=".1.3.6.1.4.1.6347.1.4.1.0"/>
+   	 
+				   	 
+				<!-- dataValue4_1 -->
+				<numSensor ruleid="dataValue41">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.4.1.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_4_1_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.4.1.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU2 Space Temp</label>
+					<sensorSet>dataArray4</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue4_2 -->
+				<numSensor ruleid="dataValue42">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.4.2.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_4_2_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.4.2.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU2 Supply Air Temp</label>
+					<sensorSet>dataArray4</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue4_3 -->
+				<numSensor ruleid="dataValue43">
+					<rowTest>
+						<mapValue mapid="delete_null_sensor">
+							<getOid>.1.3.6.1.4.1.6347.1.4.3.0</getOid>
+						</mapValue>
+					</rowTest>
+					<type>temp</type>
+					<sensorId>DATA_VALUE_4_3_</sensorId>
+					<value>
+						<!-- Fahrenheit to Celsius -->
+						<div><op><sub><op><getOid>.1.3.6.1.4.1.6347.1.4.3.0</getOid></op><op>32</op></sub></op><op>1.8</op></div>
+					</value>
+					<label>RTU2 Return Air Temp</label>
+					<sensorSet>dataArray4</sensorSet>
+				</numSensor>
+				
+								<!-- dataValue4_4 -->
+				<numSensor ruleid="dataValue44">
+					<type>num</type>
+					<sensorId>DATA_VALUE_4_4_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.4.4.0</getOid>
+					</value>
+					<label>RTU2 Control Status</label>
+					<sensorSet>dataArray4</sensorSet>
+				</numSensor>
+
+				
+				<!-- dataValue4_5 -->
+				<stateSensor ruleid="dataValue45">
+					<type>state</type>
+					<sensorId>DATA_VALUE_4_5_</sensorId>
+					<value>
+						<mapValue mapid="dataValue4_5-vm">
+							<getOid>.1.3.6.1.4.1.6347.1.4.5.0</getOid>
+						</mapValue>
+					</value>
+					<label>RTU2 Econ. Enabled</label>
+					<enum>dataValue4_5-em</enum>
+					<sensorSet>dataArray4</sensorSet>
+				</stateSensor>
+				
+				<valueMap ruleid="dataValue4_5-vm">
+						<valueIn>0</valueIn><valueOut>0</valueOut>
+						<valueIn>1</valueIn><valueOut>1</valueOut>
+						<valueIn>*</valueIn><valueOut>2</valueOut>
+				</valueMap>
+				
+				<enumMap ruleid="dataValue4_5-em">
+					 <label>Disabled</label>
+					 <label>Enabled</label>
+					 <label>Unknown</label>
+				</enumMap>
+				
+				<valueMap ruleid="delete_null_sensor">
+					<valueIn>0</valueIn><valueOut>[false]</valueOut>
+		  		<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   		</valueMap>
+				
+		</device>
+
+		<device deviceid="humidifierdetect">
+   	 <oidMustExist ruleid="humidifier" oid=".1.3.6.1.4.1.6347.1.7.1.0"/>
+
+				<!-- dataValue7_1 -->
+			<numSensor ruleid="dataValue71">
+				<type>humidity</type>
+				<sensorId>DATA_VALUE_7_1_</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.6347.1.7.1.0</getOid>
+				</value>
+				<label>Humidifer Desired RH/Demand</label>
+				<sensorSet>dataArray7</sensorSet>
+			</numSensor>
+
+				<!-- dataValue7_2 -->
+				<numSensor ruleid="dataValue72">
+					<type>num</type>
+					<sensorId>DATA_VALUE_7_2_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.7.2.0</getOid>
+					</value>
+					<label>Humidifier Steam Output</label>
+					<sensorSet>dataArray7</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue7_3 -->
+			<stateSensor ruleid="dataValue73">
+				<type>state</type>
+				<sensorId>DATA_VALUE_7_3_</sensorId>
+				<value>
+					<mapValue mapid="dataValue7_3-vm">
+						<getOid>.1.3.6.1.4.1.6347.1.7.3.0</getOid>
+					</mapValue>
+				</value>
+				<label>Humidifier Run Status</label>
+				<enum>dataValue7_3-em</enum>
+				<sensorSet>dataArray7</sensorSet>
+			</stateSensor>
+	
+			<valueMap ruleid="dataValue7_3-vm">
+				<valueIn>0</valueIn><valueOut>0</valueOut>
+				<valueIn>1</valueIn><valueOut>1</valueOut>
+				<valueIn>2</valueIn><valueOut>2</valueOut>
+				<valueIn>3</valueIn><valueOut>3</valueOut>
+				<valueIn>4</valueIn><valueOut>4</valueOut>
+				<valueIn>5</valueIn><valueOut>5</valueOut>
+				<valueIn>6</valueIn><valueOut>6</valueOut>
+				<valueIn>7</valueIn><valueOut>7</valueOut>
+				<valueIn>8</valueIn><valueOut>8</valueOut>
+				<valueIn>9</valueIn><valueOut>9</valueOut>
+				<valueIn>10</valueIn><valueOut>10</valueOut>
+				<valueIn>11</valueIn><valueOut>11</valueOut>
+				<valueIn>12</valueIn><valueOut>12</valueOut>
+				<valueIn>*</valueIn><valueOut>0</valueOut>
+			</valueMap>
+	
+			<enumMap ruleid="dataValue7_3-em">
+				<label>Idle</label>
+				<label>Steam Gen</label>
+				<label>Cycle drain</label>
+				<label>End of season drain</label>
+				<label>Bed dring</label>
+				<label>Failure</label>
+				<label>Drain</label>
+				<label>Heat</label>
+				<label>Manual Drain</label>
+				<label>Fill</label>
+				<label>Test</label>
+				<label>Manual Stop</label>
+				<label>Empty Drain</label>
+			</enumMap>
+				
+				<!-- dataValue7_4 -->
+				<numSensor ruleid="dataValue74">
+					<type>timeinhrs</type>
+					<sensorId>DATA_VALUE_7_4_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.7.4.0</getOid>
+					</value>
+					<label>Humidifier Bed Life (Hours)</label>
+					<sensorSet>dataArray7</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue7_5 -->
+				<numSensor ruleid="dataValue75">
+					<type>timeinmin</type>
+					<sensorId>DATA_VALUE_7_5_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.7.5.0</getOid>
+					</value>
+					<label>Humidifier Bed Life (Minutes)</label>
+					<sensorSet>dataArray7</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue7_6 -->
+				<numSensor ruleid="dataValue76">
+					<type>timeinhrs</type>
+					<sensorId>DATA_VALUE_7_6_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.7.6.0</getOid>
+					</value>
+					<label>Humidifier Run Time (Hours)</label>
+					<sensorSet>dataArray7</sensorSet>
+				</numSensor>
+				
+				<!-- dataValue7_7 -->
+				<numSensor ruleid="dataValue77">
+					<type>timeinmin</type>
+					<sensorId>DATA_VALUE_7_7_</sensorId>
+					<value>
+						<getOid>.1.3.6.1.4.1.6347.1.7.7.0</getOid>
+					</value>
+					<label>Humidifier Run Time (Minutes)</label>
+					<sensorSet>dataArray7</sensorSet>
+				</numSensor>
+				
+					<!-- dataValue7_8 -->
+				<numSensor ruleid="dataValue78">
+				<type>humidity</type>
+				<sensorId>DATA_VALUE_7_8_</sensorId>
+				<value>
+					<getOid>.1.3.6.1.4.1.6347.1.7.8.0</getOid>
+				</value>
+				<label>Humidifier RH/Demand (Analog Input)</label>
+				<sensorSet>dataArray7</sensorSet>
+			</numSensor>
+			
+				<!-- dataValue7_9 -->
+			<stateSensor ruleid="dataValue79">
+				<type>state</type>
+				<sensorId>DATA_VALUE_7_9_</sensorId>
+				<value>
+					<mapValue mapid="dataValue7_9-vm">
+						<getOid>.1.3.6.1.4.1.6347.1.7.9.0</getOid>
+					</mapValue>
+				</value>
+				<label>Humidity Failure</label>
+				<enum>dataValue7_9-em</enum>
+				<sensorSet>dataArray7</sensorSet>
+			</stateSensor>
+	
+			<valueMap ruleid="dataValue7_9-vm">
+				<valueIn>0</valueIn><valueOut>0</valueOut>
+				<valueIn>1</valueIn><valueOut>1</valueOut>
+				<valueIn>2</valueIn><valueOut>2</valueOut>
+				<valueIn>3</valueIn><valueOut>3</valueOut>
+				<valueIn>4</valueIn><valueOut>4</valueOut>
+				<valueIn>5</valueIn><valueOut>5</valueOut>
+				<valueIn>6</valueIn><valueOut>6</valueOut>
+				<valueIn>7</valueIn><valueOut>7</valueOut>
+				<valueIn>8</valueIn><valueOut>8</valueOut>
+				<valueIn>9</valueIn><valueOut>9</valueOut>
+				<valueIn>10</valueIn><valueOut>10</valueOut>
+				<valueIn>11</valueIn><valueOut>11</valueOut>
+				<valueIn>*</valueIn><valueOut>12</valueOut>
+			</valueMap>
+	
+			<enumMap ruleid="dataValue7_9-em">
+				<label>No Failure Exists</label>
+				<label>Over Temperature</label>
+				<label>High Humidity/Sail Switch Circuit is open</label>
+				<label>Illegal Level Switch State</label>
+				<label>Unit have reached 100% of bed Life</label>
+				<label>Fill time out of low level</label>
+				<label>Water Level dropped below level durring normal run</label>
+				<label>Fill time out of low to high level</label>
+				<label>Water Level above high level time out</label>
+				<label>Water Level has not dropped below low level during an empty drain</label>
+				<label>End of bed drying</label>
+				<label>Sensor Input Error</label>
+				<label>Unknown</label>
+			</enumMap>
+			
+			
+			<valueMap ruleid="delete_null_sensor">
+				<valueIn>0</valueIn><valueOut>[true]</valueOut>
+		  	<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   	</valueMap>
+			
+				
+		</device>	
+
+</APC_DDF>
+
+
+
+
+
+
+
+
+
+
+

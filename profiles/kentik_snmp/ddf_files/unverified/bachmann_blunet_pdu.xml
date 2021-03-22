@@ -1,0 +1,414 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="bachmann_blunet_pdu"
+	ddfname="Bachmann BluNet PDU"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="bachmann_blunet_pdu">
+		<oidMustExist ruleid="bachmann_blunet_pdu" oid=".1.3.6.1.4.1.31770.1" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Bachmann</setProductData>
+		<setProductData ruleid="modeldata" field="model">BluNet</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><getOid>.1.3.6.1.4.1.31770.1.1.2.2.1.2</getOid></setProductData>
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><getOid>.1.3.6.1.4.1.31770.1.1.2.2.1.2</getOid></setProductData>
+
+		<numSensor ruleid="pdusCount">
+            <type>num</type>
+            <sensorId>PDUS_COUNT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31770.1.1.2.1</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of PDUs</label>
+            <sensorSet>PDUs</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+
+		<numSensor ruleid="pdusPhaseCount" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>num</type>
+            <sensorId>PDUS_PHASE_COUNT_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> Phase Count</label>
+            <sensorSet>PDUs</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pdusfeMeasure" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>state</type>
+            <sensorId>PDUS_FE_MEASURE_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.8</getRowOid>
+				</mapValue>
+            </value>
+			<enum>trueFalse-em</enum>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> Measurement</label>
+            <sensorSet>PDUs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdusfeSinglePoolMeasure" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>state</type>
+            <sensorId>PDUS_FE_SINGLE_POOL_MEASURE_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.9</getRowOid>
+				</mapValue>
+            </value>
+			<enum>trueFalse-em</enum>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> Single Outlet Measurement</label>
+            <sensorSet>PDUs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdusfeNeutralCurrentMeasure" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>state</type>
+            <sensorId>PDUS_FE_NEUTRAL_CURRENT_MEASURE_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.10</getRowOid>
+				</mapValue>
+            </value>
+			<enum>trueFalse-em</enum>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> Neutral Current Measurement</label>
+            <sensorSet>PDUs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdusfeSwitching" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>state</type>
+            <sensorId>PDUS_FE_SWITCHING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.11</getRowOid>
+				</mapValue>
+            </value>
+			<enum>trueFalse-em</enum>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> Switching</label>
+            <sensorSet>PDUs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdusfeHasIRS" index=".1.3.6.1.4.1.31770.1.1.2.2.1.2">
+            <type>state</type>
+            <sensorId>PDUS_FE_SWITCHING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.12</getRowOid>
+				</mapValue>
+            </value>
+			<enum>trueFalse-em</enum>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.31770.1.1.2.2.1.4</getRowOid> has IRS-Server</label>
+            <sensorSet>PDUs</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="phgrCount">
+            <type>num</type>
+            <sensorId>PHGR_COUNT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31770.1.1.2.3</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Ground Count</label>
+            <sensorSet>Ground</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="gNeutralCurrent" index=".1.3.6.1.4.1.31770.1.1.2.4.1.2">
+            <type>amperage</type>
+            <sensorId>G_NEUTRAL_CURRENT_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.3</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Ground <getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.2</getRowOid> Neutral Current</label>
+            <sensorSet>Ground</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="gNeutralCurrentWarning" index=".1.3.6.1.4.1.31770.1.1.2.4.1.2">
+            <type>state</type>
+            <sensorId>G_NEUTRAL_CURRENT_WARNING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>trueFalse-em</enum>
+            <label>Ground <getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.2</getRowOid> Neutral Current Warning</label>
+            <sensorSet>Ground</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="gNeutralCurrentLimitMin" index=".1.3.6.1.4.1.31770.1.1.2.4.1.2">
+            <type>amperage</type>
+            <sensorId>G_NEUTRAL_CURRENT_LIMIT_MIN_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Ground <getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.2</getRowOid> Neutral Current Limit Min</label>
+            <sensorSet>Ground</sensorSet>
+        </numSensor>
+		<numSensor ruleid="gNeutralCurrentLimitMax" index=".1.3.6.1.4.1.31770.1.1.2.4.1.2">
+            <type>amperage</type>
+            <sensorId>G_NEUTRAL_CURRENT_LIMIT_MAX_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.6</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Ground <getRowOid>.1.3.6.1.4.1.31770.1.1.2.4.1.2</getRowOid> Neutral Current Limit Max</label>
+            <sensorSet>Ground</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="phasCount">
+            <type>num</type>
+            <sensorId>PHAS_COUNT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31770.1.1.2.5</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Total Phase Count</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pCurrent" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>amperage</type>
+            <sensorId>P_CURRENT_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.3</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Current</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pCurrentWarning" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>state</type>
+            <sensorId>P_CURRENT_WARNING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>trueFalse-em</enum>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Current Warning</label>
+            <sensorSet>Phase</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="pVoltage" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>voltage</type>
+            <sensorId>P_VOLTAGE_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Voltage</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pVoltageWarning" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>state</type>
+            <sensorId>P_VOLTAGE_WARNING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>trueFalse-em</enum>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Voltage Warning</label>
+            <sensorSet>Phase</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="pPhaseAngle" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>num</type>
+			<units>degreesAngle</units>
+            <sensorId>P_PHASE_ANGLE_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.7</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Angle</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pPhaseAngleWarning" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>state</type>
+            <sensorId>P_PHASE_ANGLE_WARNING_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.8</getRowOid>
+				</mapValue>
+			</value>
+			<enum>trueFalse-em</enum>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Angle Warning</label>
+            <sensorSet>Phase</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="pFrequency" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>frequency</type>
+            <sensorId>P_FREQUENCY_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.9</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Frequency</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pRealPower" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>powerW</type>
+            <sensorId>P_REAL_POWER_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.10</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Real Power</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pApparentPower" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>powerW</type>
+            <sensorId>P_APPARENT_POWER_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.11</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Apparent Power</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pRealEnergy" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>P_REAL_ENERGY_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.12</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Real Energy</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pApparentEnergy" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>P_APPARENT_ENERGY_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.13</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Apparent Energy</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pCurrentLimitMin" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>amperage</type>
+            <sensorId>P_CURRENT_LIMIT_MIN_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.14</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Current Limit Min</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pCurrentLimitMax" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>amperage</type>
+            <sensorId>P_CURRENT_LIMIT_MAX<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.15</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Current Limit Max</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pVoltageLimitMin" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>voltage</type>
+            <sensorId>P_VOLTAGE_LIMIT_MIN_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.16</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Voltage Limit Min</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pVoltageLimitMax" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>voltage</type>
+            <sensorId>P_VOLTAGE_LIMIT_MAX_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.17</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Voltage Limit Max</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pPhaseAngleMin" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>num</type>
+			<units>degreesAngle</units>
+            <sensorId>P_PHASE_ANGLE_MIN_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.18</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Angle Min</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pPhaseAngleMax" index=".1.3.6.1.4.1.31770.1.1.2.6.1.2">
+            <type>num</type>
+			<units>degreesAngle</units>
+            <sensorId>P_PHASE_ANGLE_MAX_<rowNumber/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.19</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Phase <getRowOid>.1.3.6.1.4.1.31770.1.1.2.6.1.2</getRowOid> Angle Max</label>
+            <sensorSet>Phase</sensorSet>
+        </numSensor>
+	</device>
+</APC_DDF>

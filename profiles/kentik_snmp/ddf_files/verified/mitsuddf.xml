@@ -1,0 +1,909 @@
+<?xml version="1.0"?>
+<!-- Mitsubishi; DDF: mitsuddf; MIB: Mitsubishi-->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid ="mitsuddf" ddfname="Mitsubishi UPS*" ddfversion="8" canremove="yes">
+	<!-- Mitsubishi UPS* - what is with the asterisk?  There are two DDFs with this name.  I wanted to be able to tell the difference -->
+	
+	<schemaVersion>1.6</schemaVersion>
+  <!-- UPS  MIB specific functionality -->
+
+       <!-- 
+       Some Mitsubishi UPSs will return 0 for phase 2 and 3 of 
+       certain values such as input frequency.  Therefore,
+       these values have a rowTest around them to check for 0.
+       -->
+
+
+
+  <!-- upsIdentName -->
+  <device deviceid="mitsuddfdiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.13891.101.1.5.0"/>
+    <oidMustNotExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.4550.1.1.1.1.0"/> <!-- jema.xml -->
+    <oidMustNotExist ruleid="mib2objidtest" oid=".1.3.6.1.2.1.33.1.1.1.0"/> <!-- upsmib.xml -->
+    <oidMustNotExist ruleid="upsMibDetect" oid=".1.3.6.1.2.1.33.1.2.1.0"/> <!-- upsmib.xml -->
+
+    <!-- upsIdentAgentSoftwareVersion-->
+    <setProductData ruleid="appversiondata" field="appversion">
+      <getOid>.1.3.6.1.4.1.13891.101.1.4.0</getOid>
+    </setProductData>
+
+    <!-- upsIdentModel -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.13891.101.1.2.0</getOid>
+    </setProductData>
+  </device>
+
+  <device deviceid="mitsuddf">
+    <oidMustExist ruleid="mitsuddfDetect" oid=".1.3.6.1.4.1.13891.101.2.1.0"/>
+
+
+    <!-- upsBypass -->
+    <!-- upsBypassFrequency -->
+    <numSensor ruleid="upsBypassFrequency">
+      <type>frequency/bypassfrequency</type>
+      <sensorId>BYPASS_FREQUENCY</sensorId>
+      <value>
+        <div>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.5.1.0</getOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Bypass Frequency</label>
+      <sensorSet>UPS Bypass</sensorSet>
+    </numSensor>
+
+    <!-- upsBypassVoltage -->
+
+    <numSensor ruleid="upsBypassVoltage" index=".1.3.6.1.4.1.13891.101.5.3.1.2">
+      <type>voltageAC/bypass/phase</type>
+      <sensorId>BYPASS_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.5.3.1.2</getRowOid>
+      </value>
+      <label>Bypass Voltage - Phase <rowIndex/></label>
+      <sensorSet>Bypass - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsBypassCurrent -->
+
+    <numSensor ruleid="upsBypassCurrent" index=".1.3.6.1.4.1.13891.101.5.3.1.2">
+      <type>amperage/bypass/phase</type>
+      <sensorId>BYPASS_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.13891.101.5.3.1.3</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Bypass Current - Phase <rowIndex/></label>
+      <sensorSet>Bypass - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsBypassPower -->
+
+    <numSensor ruleid="upsBypassPower" index=".1.3.6.1.4.1.13891.101.5.3.1.2">
+      <type>powerW/bypasspower/phase</type>
+      <sensorId>BYPASS_POWER_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.5.3.1.4</getRowOid>
+      </value>
+      <label>Bypass Power - Phase <rowIndex/></label>
+      <sensorSet>Bypass - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsOutput -->
+    <!-- upsOutputSource -->
+    <stateSensor ruleid="upsOutputSource">
+      <type>state/outputsource</type>
+      <sensorId>OUTPUT_SOURCE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.4.1.0</getOid>
+      </value>
+      <label>Output Source</label>
+      <enum>upsOutputSource-em</enum>
+      <sensorSet>UPS Output</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="upsOutputSource-em">
+      <label>Unknown</label>
+      <label>Other</label>
+      <label>None</label>
+      <label>Normal</label>
+      <label>Bypass</label>
+      <label>Battery</label>
+      <label>Booster</label>
+      <label>Reducer</label>
+    </enumMap>
+
+    <!-- upsOutputFrequency -->
+    <numSensor ruleid="upsOutputFrequency">
+      <type>frequency/outputfrequency</type>
+      <sensorId>OUTPUT_FREQUENCY</sensorId>
+      <value>
+        <div>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.4.2.0</getOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+
+    <!-- upsOutputVoltage -->
+
+    <numSensor ruleid="upsOutputVoltage" index=".1.3.6.1.4.1.13891.101.4.4.1.2">
+      <type>voltageAC/output/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.2</getRowOid>
+      </value>
+      <label>Output Voltage - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsOutputCurrent -->
+
+    <numSensor ruleid="upsOutputCurrent" index=".1.3.6.1.4.1.13891.101.4.4.1.2">
+      <type>amperage/output/phase</type>
+      <sensorId>OUTPUT_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.3</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Output Current - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsOutputPower -->
+	
+	<valueMap ruleid="validate-phase-value-vm">
+      <valueIn>-1</valueIn><valueOut>[false]</valueOut>
+      <valueIn>*</valueIn><valueOut>true</valueOut>
+    </valueMap>
+
+    <numSensor ruleid="upsOutputPower" index=".1.3.6.1.4.1.13891.101.4.4.1.2">
+      <rowTest>
+        <mapValue mapid="validate-phase-value-vm">
+          <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>powerW/inputpower/phase</type>
+      <sensorId>OUTPUT_POWER_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.4</getRowOid>
+      </value>
+      <label>Output Power - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+
+    </numSensor>
+
+    <!-- upsOutputPercentLoad -->
+
+    <numSensor ruleid="upsOutputPercentLoad" index=".1.3.6.1.4.1.13891.101.4.4.1.2">
+      <rowTest>
+        <mapValue mapid="validate-value-vm">
+          <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.5</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_LOAD_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.4.4.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Output Load - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+
+    </numSensor>
+
+
+    <!-- upsInput -->
+    <!-- upsInputFrequency -->
+
+    <numSensor ruleid="upsInputFrequency" index=".1.3.6.1.4.1.13891.101.3.3.1.2">
+      <rowTest>
+        <mapValue mapid="validate-value-vm">
+          <getRowOid>.1.3.6.1.4.1.13891.101.3.3.1.2</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>frequency/inputfrequency</type>
+      <sensorId>INPUT_FREQ_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.13891.101.3.3.1.2</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Input Frequency - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <valueMap ruleid="validate-value-vm">
+      <valueIn>0</valueIn><valueOut>[false]</valueOut>
+      <valueIn>-1</valueIn><valueOut>[false]</valueOut>
+      <valueIn>*</valueIn><valueOut>true</valueOut>
+    </valueMap>
+
+    <!-- upsInputVoltage -->
+
+    <numSensor ruleid="upsInputVoltage" index=".1.3.6.1.4.1.13891.101.3.3.1.2">
+      <type>voltageAC/input/phase</type>
+      <sensorId>INPUT_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+	    <getRowOid>.1.3.6.1.4.1.13891.101.3.3.1.3</getRowOid>
+      </value>
+      <label>Input Voltage - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsInputCurrent -->
+
+    <numSensor ruleid="upsInputCurrent" index=".1.3.6.1.4.1.13891.101.3.3.1.2">
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.13891.101.3.3.1.4</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Input Current - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsInputTruePower -->
+
+    <numSensor ruleid="upsInputTruePower" index=".1.3.6.1.4.1.13891.101.3.3.1.2">
+      <type>powerW/outputpower/phase</type>
+      <sensorId>INPUT_POWER_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.13891.101.3.3.1.5</getRowOid>
+      </value>
+      <label>Input Power - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+
+    <!-- upsBattery section -->
+    <!-- upsBatteryStatus  -->
+    <stateSensor ruleid="upsBatteryStatus">
+      <type>state/battstatus</type>
+      <sensorId>BATTSTATUS</sensorId>
+      <value>
+        <mapValue mapid="upsBatteryStatus-vm">
+          <getOid>.1.3.6.1.4.1.13891.101.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Battery Status</label>
+      <enum>upsBatteryStatus-em</enum>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="upsBatteryStatus-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="upsBatteryStatus-em">
+      <label>Unknown</label>
+      <label>Normal</label>
+      <label>Low</label>
+      <label>Depleted</label>
+    </enumMap>
+
+    <!-- upsSecondsOnBattery -->
+    <numSensor ruleid="upsSecondsOnBattery">
+      <type>timeinsec</type>
+      <sensorId>TIME_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.2.2.0</getOid>
+      </value>
+      <label>Time Running on Battery</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsEstimatedMinutesRemaining -->
+    <numSensor ruleid="upsEstimatedMinutesRemaining">
+      <type>timeinmin/timeremainingonbatt</type>
+      <sensorId>TIME_REMAINING_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.2.3.0</getOid>
+      </value>
+      <label>Battery Time Remaining</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsEstimatedChargeRemaining -->
+    <numSensor ruleid="upsEstimatedChargeRemaining">
+      <type>pctofcapacity/pctofbatt</type>
+      <sensorId>BATT_CAPACITY_LEFT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.2.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Battery Capacity Remaining</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsBatteryVoltage -->
+    <numSensor ruleid="upsBatteryVoltage">
+      <type>voltageDC/battvoltage</type>
+      <sensorId>BATT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.5.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Voltage</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsBatteryCurrent -->
+    <numSensor ruleid="upsBatteryCurrent">
+      <type>amperage/battamps</type>
+      <sensorId>BATT_AMPERAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.13891.101.2.6.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Current</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsBatteryTemperature -->
+    <numSensor ruleid="upsBatteryTemperature">
+      <type>temp/batttemp</type>
+      <sensorId>BATT_TEMP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.13891.101.2.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Battery Temperature</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+    <!-- upsTest -->
+
+    <stateSensor ruleid="upsTestId">
+      <type>state</type>
+      <sensorId>LAST_TEST_PERFORMED</sensorId>
+      <value>
+        <mapValue mapid="upstestperformed-vm">
+          <getOid>.1.3.6.1.4.1.13891.101.7.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Current or last test performed</label>
+      <enum>upstestperformed-em</enum>
+      <sensorSet>UPS Test</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="upsTestResult">
+      <type>state</type>
+      <sensorId>LAST_TEST_RESULT</sensorId>
+      <value>
+        <mapValue mapid="upstestresult-vm">
+          <getOid>.1.3.6.1.4.1.13891.101.7.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Current or last test result</label>
+      <enum>upstestresult-em</enum>
+      <sensorSet>UPS Test</sensorSet>
+    </stateSensor>
+
+
+    <!-- Note: The mibwalk of the device doesn't show the leading period (.) It's getting added somewhere along the way  -->
+    <valueMap ruleid="upstestperformed-vm">
+        <valueIn>.1.3.6.1.4.1.13891.101.7.7.1</valueIn><valueOut>1</valueOut>
+        <valueIn>.1.3.6.1.4.1.13891.101.7.7.2</valueIn><valueOut>2</valueOut>
+        <valueIn>.1.3.6.1.4.1.13891.101.7.7.3</valueIn><valueOut>3</valueOut>
+        <valueIn>.1.3.6.1.4.1.13891.101.7.7.4</valueIn><valueOut>4</valueOut>
+        <valueIn>.1.3.6.1.4.1.13891.101.7.7.5</valueIn><valueOut>5</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="upstestresult-vm">
+        <valueIn>1</valueIn><valueOut>1</valueOut>
+        <valueIn>2</valueIn><valueOut>2</valueOut>
+        <valueIn>3</valueIn><valueOut>3</valueOut>
+        <valueIn>4</valueIn><valueOut>4</valueOut>
+        <valueIn>5</valueIn><valueOut>5</valueOut>
+        <valueIn>6</valueIn><valueOut>6</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="upstestresult-em">
+        <label>Unknown</label>
+        <label>Pass</label>
+        <label>Warning</label>
+        <label>Error</label>
+        <label>Aborted</label>
+        <label>In Progress</label>
+        <label>No Test Initiated</label>
+    </enumMap>
+
+    <enumMap ruleid="upstestperformed-em">
+        <label>Unknown</label>
+        <label>No Test Initiated</label>
+        <label>Abort Test In Progress</label>
+        <label>General Systems Test</label>
+        <label>Quick Battery Test</label>
+        <label>Deep Battery Calibration</label>
+    </enumMap>
+  </device>
+
+	<!-- upsAlarm -->
+	<device deviceid="mitsuddf_alarm">
+		<oidMustExist ruleid="mitsuddfAlarmDetect" istree="yes" oid="1.3.6.1.4.1.13891.101.6"/>
+		
+		<alarmFlags2 ruleid="mitsubishi_alarms" index=".1.3.6.1.4.1.13891.101.6.2.1.2">
+			<value>
+				<baseNToInt base="16">
+					<mapValue mapid="alarm_map">
+						<getRowOid>.1.3.6.1.4.1.13891.101.6.2.1.2</getRowOid>
+					</mapValue>
+				</baseNToInt>
+			</value>
+
+			<!-- upsAlarmBatteryBad -->
+			<alarmFlagsTest match="1" log="no">
+				<name>
+					<activeText>Battery Bad</activeText>
+					<inactiveText>Battery Bad Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>One or more batteries have been determined to require replacement.</activeText>
+					<inactiveText>'One or more batteries have been determined to require replacement' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmOnBattery -->
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>On Battery</activeText>
+					<inactiveText>On Battery Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS is drawing power from the batteries.</activeText>
+					<inactiveText>'The UPS is drawing power from the batteries' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmLowBattery -->
+			<alarmFlagsTest match="3" log="no">
+				<name>
+					<activeText>Low Battery</activeText>
+					<inactiveText>Low Battery Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The remaining battery run-time is less than or equal to the configured threshold.</activeText>
+					<inactiveText>'The remaining battery run-time is less than or equal to the configured threshold' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmDepletedBattery -->
+			<alarmFlagsTest match="4" log="no">
+				<name>
+					<activeText>Depleted Battery</activeText>
+					<inactiveText>Depleted Battery Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS will be unable to sustain the present load when and if the utility power is lost.</activeText>
+					<inactiveText>'The UPS will be unable to sustain the present load when and if the utility power is lost' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmTempBad -->
+			<alarmFlagsTest match="5" log="no">
+				<name>
+					<activeText>Temperature Bad</activeText>
+					<inactiveText>Temperature Bad Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>A temperature is out of tolerance.</activeText>
+					<inactiveText>'A temperature is out of tolerance' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmInputBad -->
+			<alarmFlagsTest match="6" log="no">
+				<name>
+					<activeText>Input Bad</activeText>
+					<inactiveText>Input Bad Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>An input condition is out of tolerance.</activeText>
+					<inactiveText>'An input condition is out of tolerance' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmOutputBad -->
+			<alarmFlagsTest match="7" log="no">
+				<name>
+					<activeText>Output Bad</activeText>
+					<inactiveText>Output Bad Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>An output condition (other than OutputOverload) is out of tolerance.</activeText>
+					<inactiveText>'An output condition (other than OutputOverload) is out of tolerance' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmOutputOverload -->
+			<alarmFlagsTest match="8" log="no">
+				<name>
+					<activeText>Output Overload</activeText>
+					<inactiveText>Output Overload Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The output load exceeds the UPS output capacity.</activeText>
+					<inactiveText>'The output load exceeds the UPS output capacity' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmOnBypass -->
+			<alarmFlagsTest match="9" log="no">
+				<name>
+					<activeText>On Bypass</activeText>
+					<inactiveText>On Bypass Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The Bypass is presently engaged on the UPS.</activeText>
+					<inactiveText>'The Bypass is presently engaged on the UPS' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmBypassBad -->
+			<alarmFlagsTest match="10" log="no">
+				<name>
+					<activeText>Bypass Bad</activeText>
+					<inactiveText>Bypass Bad Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The Bypass is out of tolerance.</activeText>
+					<inactiveText>'The Bypass is out of tolerance' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmOutputOffAsRequested -->
+			<alarmFlagsTest match="11" log="no">
+				<name>
+					<activeText>Output Off As Requested</activeText>
+					<inactiveText>Output Off As Requested Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS has shutdown as requested, i.e., the output is off.</activeText>
+					<inactiveText>'The UPS has shutdown as requested' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmUpsOffAsRequested -->
+			<alarmFlagsTest match="12" log="no">
+				<name>
+					<activeText>Ups Off As Requested</activeText>
+					<inactiveText>Ups Off As Requested Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The entire UPS has shutdown as commanded.</activeText>
+					<inactiveText>'The entire UPS has shutdown as commanded' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmChargerFailed -->
+			<alarmFlagsTest match="13" log="no">
+				<name>
+					<activeText>Charger Failed</activeText>
+					<inactiveText>Charger Failed Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>An uncorrected problem has been detected within the UPS charger subsystem.</activeText>
+					<inactiveText>'An uncorrected problem has been detected within the UPS charger subsystem' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmUpsOutputOff -->
+			<alarmFlagsTest match="14" log="no">
+				<name>
+					<activeText>Ups Output Off</activeText>
+					<inactiveText>Ups Output Off Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The output of the UPS is in the off state.</activeText>
+					<inactiveText>'The output of the UPS is in the off state' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmUpsSystemOff -->
+			<alarmFlagsTest match="15" log="no">
+				<name>
+					<activeText>Ups System Off</activeText>
+					<inactiveText>Ups System Off Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS system is in the off state.</activeText>
+					<inactiveText>'The UPS system is in the off state' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmFanFailure -->
+			<alarmFlagsTest match="16" log="no">
+				<name>
+					<activeText>Fan Failure</activeText>
+					<inactiveText>Fan Failure Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The failure of one or more fans in the UPS has been detected.</activeText>
+					<inactiveText>'The failure of one or more fans in the UPS has been detected' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmFuseFailure -->
+			<alarmFlagsTest match="17" log="no">
+				<name>
+					<activeText>Fuse Failure</activeText>
+					<inactiveText>Fuse Failure Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The failure of one or more fuses has been detected.</activeText>
+					<inactiveText>'The failure of one or more fuses has been detected' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmGeneralFault -->
+			<alarmFlagsTest match="18" log="no">
+				<name>
+					<activeText>General Fault</activeText>
+					<inactiveText>General Fault Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>A general fault in the UPS has been detected.</activeText>
+					<inactiveText>'A general fault in the UPS has been detected' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmDiagnosticTestFailed -->
+			<alarmFlagsTest match="19" log="no">
+				<name>
+					<activeText>Diagnostic Test Failed</activeText>
+					<inactiveText>Diagnostic Test Failed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The result of the last diagnostic test indicates a failure.</activeText>
+					<inactiveText>'The result of the last diagnostic test indicates a failure' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmCommunicationsLost -->
+			<alarmFlagsTest match="20" log="no">
+				<name>
+					<activeText>Communications Lost</activeText>
+					<inactiveText>Communications Lost Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>A problem has been encountered in the communications between the agent and the UPS.</activeText>
+					<inactiveText>'A problem has been encountered in the communications between the agent and the UPS' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmAwaitingPower -->
+			<alarmFlagsTest match="21" log="no">
+				<name>
+					<activeText>Awaiting Power</activeText>
+					<inactiveText>Awaiting Power Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS output is off and the UPS is awaiting the return of input power.</activeText>
+					<inactiveText>'The UPS output is off and the UPS is awaiting the return of input power' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmShutdownPending -->
+			<alarmFlagsTest match="22" log="no">
+				<name>
+					<activeText>Shutdown Pending</activeText>
+					<inactiveText>Shutdown Pending Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>A shutdown after delay countdown is underway.</activeText>
+					<inactiveText>'A shutdown after delay countdown is underway' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmShutdownImminent -->
+			<alarmFlagsTest match="23" log="no">
+				<name>
+					<activeText>Shutdown Imminent</activeText>
+					<inactiveText>Shutdown Imminent Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>The UPS will turn off power to the load in less than 5 seconds; this may be either a timed shutdown or a low battery shutdown.</activeText>
+					<inactiveText>'The UPS will turn off power to the load in less than 5 seconds' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- upsAlarmTestInProgress -->
+			<alarmFlagsTest match="24" log="no">
+				<name>
+					<activeText>Test In Progress</activeText>
+					<inactiveText>Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>informational</severity>
+				<category>Well Known Alarms</category>
+				<description>
+					<activeText>A test is in progress.</activeText>
+					<inactiveText>'A test is in progress' alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+		</alarmFlags2>
+
+		<valueMap ruleid="alarm_map">
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.1</valueIn><valueOut>1</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.2</valueIn><valueOut>2</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.3</valueIn><valueOut>3</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.4</valueIn><valueOut>4</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.5</valueIn><valueOut>5</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.6</valueIn><valueOut>6</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.7</valueIn><valueOut>7</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.8</valueIn><valueOut>8</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.9</valueIn><valueOut>9</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.10</valueIn><valueOut>10</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.11</valueIn><valueOut>11</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.12</valueIn><valueOut>12</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.13</valueIn><valueOut>13</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.14</valueIn><valueOut>14</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.15</valueIn><valueOut>15</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.16</valueIn><valueOut>16</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.17</valueIn><valueOut>17</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.18</valueIn><valueOut>18</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.19</valueIn><valueOut>19</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.20</valueIn><valueOut>20</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.21</valueIn><valueOut>21</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.22</valueIn><valueOut>22</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.23</valueIn><valueOut>23</valueOut>
+			<valueIn>.1.3.6.1.4.1.13891.101.6.3.24</valueIn><valueOut>24</valueOut>
+		</valueMap>
+  </device>
+</APC_DDF>

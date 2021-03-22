@@ -1,0 +1,259 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="actipower_pdu"
+	ddfname="ActiPower PDU"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="actipower_pdu_system">
+		<oidMustExist ruleid="actipower" oid=".1.3.6.1.4.1.32137.5" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">ActiPower</setProductData>
+		<setProductData ruleid="modeldata" field="model">PDU</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+	</device>
+
+	<device deviceid="actipower_pdu_device1">
+		<oidMustExist ruleid="actipower" oid=".1.3.6.1.4.1.32137.5.1.1" istree="yes"/> 
+
+		<numSensor ruleid="masterLineOnePower">
+            <type>powerW</type>
+            <sensorId>DEVICE1_RPDU_OUTPUT_POWER_1</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.32137.5.1.1.3.1.0</getOid></op><op>1000</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L1 Power</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineOnePF">
+            <type>num/powerfactor</type>
+            <sensorId>DEVICE1_POWER_FACTOR_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.3.2.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L1 Power Factor</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineOneEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE1_ENERGY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.3.3.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L1 Energy</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineOneCurrent">
+            <type>amperage</type>
+            <sensorId>DEVICE1_INPUT_CURRENT_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.3.4.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L1 Current</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineOneVoltage">
+            <type>voltage</type>
+            <sensorId>DEVICE1_INPUT_VOLTAGE_LL_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.3.5.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L1 Voltage</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineTwoPower">
+            <type>powerW</type>
+            <sensorId>DEVICE1_RPDU_OUTPUT_POWER_2</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.32137.5.1.1.4.1.0</getOid></op><op>1000</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L2 Power</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineTwoPF">
+            <type>num/powerfactor</type>
+            <sensorId>DEVICE1_POWER_FACTOR_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.4.2.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L2 Power Factor</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineTwoEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE1_ENERGY_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.4.3.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L2 Energy</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineTwoCurrent">
+            <type>amperage</type>
+            <sensorId>DEVICE1_INPUT_CURRENT_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.4.4.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L2 Current</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineTwoVoltage">
+            <type>voltage</type>
+            <sensorId>DEVICE1_INPUT_VOLTAGE_LL_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.4.5.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L2 Voltage</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineThreePower">
+            <type>powerW</type>
+            <sensorId>DEVICE1_RPDU_OUTPUT_POWER_3</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.32137.5.1.1.5.1.0</getOid></op><op>1000</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L3 Power</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineThreePF">
+            <type>num/powerfactor</type>
+            <sensorId>DEVICE1_POWER_FACTOR_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.5.2.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L3 Power Factor</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineThreeEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE1_ENERGY_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.5.3.0</getOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L3 Energy</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineThreeCurrent">
+            <type>amperage</type>
+            <sensorId>DEVICE1_INPUT_CURRENT_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.5.4.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L3 Current</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterLineThreeVoltage">
+            <type>voltage</type>
+            <sensorId>DEVICE1_INPUT_VOLTAGE_LL_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.5.5.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> L3 Voltage</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="masterTempOne">
+            <type>temp</type>
+            <sensorId>RPDU_TEMP_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.1.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Temperature 1</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterTempTwo">
+            <type>temp</type>
+            <sensorId>RPDU_TEMP_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.2.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Temperature 2</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterTempThree">
+            <type>temp</type>
+            <sensorId>RPDU_TEMP_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.3.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Temperature 3</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterTempFour">
+            <type>temp</type>
+            <sensorId>RPDU_TEMP_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.4.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Temperature 4</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterHumOne">
+            <type>humidity</type>
+            <sensorId>RPDU_HUMIDITY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.5.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Humidity 1</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterHumTwo">
+            <type>humidity</type>
+            <sensorId>RPDU_HUMIDITY_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.6.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Humidity 2</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterHumThree">
+            <type>humidity</type>
+            <sensorId>RPDU_HUMIDITY_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.7.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Humidity 3</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="masterHumFour">
+            <type>humidity</type>
+            <sensorId>RPDU_HUMIDITY_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.32137.5.1.1.6.8.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid> Humidity 4</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.32137.5.1.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

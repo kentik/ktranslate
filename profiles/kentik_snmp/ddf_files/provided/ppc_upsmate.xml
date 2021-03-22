@@ -1,0 +1,1173 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ppc_upsmate"
+	ddfname="PPC UPSMate UPS"
+	ddfversion="4"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="ppc_upsmate">
+		<oidMustExist ruleid="ppc" oid=".1.3.6.1.4.1.935.1" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">PPC</setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+		<setProductData ruleid="upsBaseIdentModel" field="model">
+			<getOid>.1.3.6.1.4.1.935.1.1.1.1.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="upsSmartIdentFirmwareRevision" field="appversion">
+			<getOid>.1.3.6.1.4.1.935.1.1.1.1.2.1.0</getOid>
+		</setProductData>
+
+        <suppressRule ruleid="suppress-upsBatteryStatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<valueMap ruleid="batteryStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>			
+		</valueMap>
+		<enumMap ruleid="batteryStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Low</label>
+		</enumMap>
+		<stateSensor ruleid="upsBaseBatteryStatus">
+            <type>state</type>
+            <sensorId>BATTSTATUS</sensorId>
+            <value>
+				<mapValue mapid="batteryStatus-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.2.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Status</label>
+            <enum>batteryStatus-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+
+        <suppressRule ruleid="suppress-upsSecondsOnBattery" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<numSensor ruleid="upsBaseBatteryTimeOnBattery">
+            <type>timeinsec</type>
+            <sensorId>_TIME_ON_BATT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.935.1.1.1.2.1.2.0</getOid>
+            </value>
+            <label>Time Running on Battery</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="upsBaseBatteryLastReplaceDate">
+            <type>timeindays/batteryage</type>
+			<sensorId>BATT_AGE</sensorId>
+            <value>
+				<div>
+				<op>
+					<sub>
+					<op><curUTCTime/></op>
+					<op>
+						<sub>
+						<op><parseDate><getOid>.1.3.6.1.4.1.935.1.1.1.2.1.3.0</getOid></parseDate></op>
+						<op>43200</op><!-- parseDate assumes Noon, so offset -12h -->
+						</sub>
+					</op>
+					</sub>
+				</op>
+				<op>86400</op>
+				</div>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Time Since Battery Last Replaced</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsEstimatedChargeRemaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		<numSensor ruleid="upsSmartBatteryCapacity">
+            <type>pctofcapacity/pctofbatt</type>
+            <sensorId>BATT_CAPACITY_LEFT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.935.1.1.1.2.2.1.0</getOid>
+            </value>
+            <label>Battery Capacity Remaining</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsBatteryVoltage" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<numSensor ruleid="upsSmartBatteryCapacity">
+            <type>voltage</type>
+            <sensorId>_BATT_VOLTAGE</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.935.1.1.1.2.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+            <label>Battery Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsBatteryTemperature" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		<numSensor ruleid="upsSmartBatteryTemperature">
+            <type>temp</type>
+            <sensorId>BATT_TEMP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.935.1.1.1.2.2.3.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+            <label>Battery Temperature</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsEstimatedMinutesRemaining" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+		<numSensor ruleid="upsSmartBatteryRunTimeRemaining">
+            <type>timeinmin</type>
+            <sensorId>TIME_REMAINING_ON_BATT</sensorId>
+            <value>
+				<div>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.2.2.4.0</getOid></op>
+				<op>60</op>
+				</div>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Battery Time Remaining</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="batteryReplace-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>			
+		</valueMap>
+		<enumMap ruleid="batteryReplace-em">
+			<label>Unknown</label>
+			<label>No</label>
+			<label>Yes</label>
+		</enumMap>
+		<stateSensor ruleid="upsSmartBatteryReplaceIndicator">
+            <type>state</type>
+            <sensorId>BATTERY_REPLACE</sensorId>
+            <value>
+				<mapValue mapid="batteryReplace-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.2.2.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Needs Replacing</label>
+            <enum>batteryReplace-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="upsSmartBatteryFullChargeVoltage">
+            <type>voltage</type>
+            <sensorId>_FULLCHG_VOLTAGE</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.935.1.1.1.2.2.6.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+            <label>Battery Full Charge Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsBatteryCurrent" suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+		<numSensor ruleid="upsSmartBatteryCurrent">
+            <type>pctofcapacity</type>
+            <sensorId>BATT_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.935.1.1.1.2.2.7.0</getOid>
+            </value>
+            <label>Battery Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<numSensor ruleid="upsSmartInputLineVoltage">
+            <type>voltageAC</type>
+            <sensorId>_INPUT_VOLTAGE_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.3.2.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Voltage</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsSmartInputMaxLineVoltage">
+            <type>voltageAC</type>
+            <sensorId>_INPUT_VOLTAGE_2</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.3.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Max Voltage</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsSmartInputMinLineVoltage">
+            <type>voltageAC</type>
+            <sensorId>_INPUT_VOLTAGE_3</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.3.2.3.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Min Voltage</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsInputFrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<numSensor ruleid="upsSmartInputFrequency">
+            <type>frequency</type>
+            <sensorId>_INPUT_FREQ_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.3.2.4.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input Frequency</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="lineFailCause-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>			
+		</valueMap>
+		<enumMap ruleid="lineFailCause-em">
+			<label>Unknown</label>
+			<label>No Transfer</label>
+			<label>High Line Voltage</label>
+			<label>Brownout</label>
+			<label>Blackout</label>
+			<label>Small Momentary Sag</label>
+			<label>Deep Momentary Sag</label>
+			<label>Small Momentary Spike</label>
+			<label>Large Momentary Spike</label>
+		</enumMap>
+		<stateSensor ruleid="upsSmartInputLineFailCause">
+            <type>state</type>
+            <sensorId>LINE_FAIL_CAUSE</sensorId>
+            <value>
+				<mapValue mapid="lineFailCause-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.3.2.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Input Line Fail Cause</label>
+            <enum>lineFailCause-em</enum>
+            <sensorSet>Input</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="outputStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>			
+		</valueMap>
+		<enumMap ruleid="outputStatus-em">
+			<label>Unknown</label>
+			<label>Online</label>
+			<label>On Battery</label>
+			<label>On Boost</label>
+			<label>Sleeping</label>
+			<label>On Bypass</label>
+			<label>Rebooting</label>
+			<label>Standby</label>
+			<label>On Buck</label>
+		</enumMap>
+		<stateSensor ruleid="upsBaseOutputStatus">
+            <type>state</type>
+            <sensorId>OUTPUT_STATUS</sensorId>
+            <value>
+				<mapValue mapid="outputStatus-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.4.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Status</label>
+            <enum>outputStatus-em</enum>
+            <sensorSet>Input</sensorSet>
+        </stateSensor>
+
+        <suppressRule ruleid="suppress-upsOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<numSensor ruleid="upsSmartOutputVoltage">
+            <type>voltageAC</type>
+            <sensorId>_OUTPUT_VOLTAGE_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.4.2.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<numSensor ruleid="upsSmartOutputFrequency">
+            <type>frequency</type>
+            <sensorId>_OUTPUT_FREQ_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.4.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Frequency</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsOutputLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<numSensor ruleid="upsSmartOutputLoad">
+            <type>pctofcapacity</type>
+            <sensorId>_OUTPUT_LOAD_PCT</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.4.2.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Load</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+        <suppressRule ruleid="suppress-upsInputPower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+        <suppressRule ruleid="suppress-upsInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+        <suppressRule ruleid="suppress-upsInputPower" suppressid="upsmib/upsmib/upsInputPower"/>
+
+        <suppressRule ruleid="suppress-upsOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+        <suppressRule ruleid="suppress-upsOutputPower" suppressid="upsmib/upsmib/upsOutputPower"/>
+
+        <suppressRule ruleid="suppress-upsBypassFrequency" suppressid="upsmib/upsmib/upsBypassFrequency"/>
+        <suppressRule ruleid="suppress-upsBypassVoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+        <suppressRule ruleid="suppress-upsBypassCurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+        <suppressRule ruleid="suppress-upsBypassPower" suppressid="upsmib/upsmib/upsBypassPower"/>
+
+		<numSensor ruleid="upsEnvTemperature">
+            <type>temp</type>
+            <sensorId>_EM_TEMP_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Env. Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEnvHumidity">
+            <type>humidity</type>
+            <sensorId>_EM_HUMIDITY_1</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Env. Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="upsEnvOverTemperature">
+            <type>temp</type>
+            <sensorId>_EM_TEMP_2</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.2.1.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Env. Over Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEnvOverHumidity">
+            <type>humidity</type>
+            <sensorId>_EM_HUMIDITY_2</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.2.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Env. Over Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEnvUnderTemperature">
+            <type>temp</type>
+            <sensorId>_EM_TEMP_3</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.2.2.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Env. Under Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEnvUnderHumidity">
+            <type>humidity</type>
+            <sensorId>_EM_HUMIDITY_3</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.935.1.1.1.9.2.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Env. Under Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="envNormal-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>			
+		</valueMap>
+		<enumMap ruleid="envNormal-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Abnormal</label>
+		</enumMap>
+		<stateSensor ruleid="upsEnvWater">
+			<rowTest>
+				<neq><op>0</op><op><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.3.0</getOid></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_WATER</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Water Status</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSmoke">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.4.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SMOKE</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Smoke Status</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity1">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.5.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY1</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 1</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity2">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.6.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY2</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 2</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity3">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.7.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY3</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 3</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity4">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.8.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY4</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 4</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity5">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.9.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY5</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.9.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 5</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity6">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.10.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY6</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 6</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="upsEnvSecurity7">
+			<rowTest>
+				<neq><op>0</op><op><formatNumber printffmt="%1.0f"><getOid>.1.3.6.1.4.1.935.1.1.1.9.1.11.0</getOid></formatNumber></op></neq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_ENV_SECURITY7</sensorId>
+            <value>
+				<mapValue mapid="envNormal-vm">
+                <getOid>.1.3.6.1.4.1.935.1.1.1.9.1.11.0</getOid>
+				</mapValue>
+            </value>
+            <label>Security Status 7</label>
+            <enum>envNormal-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+
+	</device>
+	<device deviceid="ppc_upsmate_3phase">
+		<oidMustExist ruleid="ppc_upsmate_3phase_mustexist" istree="yes" oid=".1.3.6.1.4.1.935.1.1.1.8"/>
+		<oidMustMatch ruleid="is_3phase" oid=".1.3.6.1.2.1.33.1.3.2.0">
+			<valueList>
+				<value>3</value>
+			</valueList>
+		</oidMustMatch>
+
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<!-- Only Phase 1 is displayed for these sensors using UPS MIB; suppressing and using PPC UpsMate MIB -->
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsInputFrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsInputTruePower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsOutputPower" suppressid="upsmib/upsmib/upsOutputPower"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsOutputPercentLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsBypassVoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsBypassCurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+		<suppressRule ruleid="stomp_upsmib_upsmib_upsBypassPower" suppressid="upsmib/upsmib/upsBypassPower"/>
+		
+		
+		<numSensor ruleid="input_frequency">
+			<type>frequency</type>
+			<sensorId>INPUT_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.2.1.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Input Frequency</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="input_voltage_ph1">
+			<type>voltage</type>
+			<sensorId>INPUT_VOLTAGE_PH1</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.2.2.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Input Voltage Phase 1</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="input_voltage_ph2">
+			<type>voltage</type>
+			<sensorId>INPUT_VOLTAGE_PH2</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.2.3.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Input Voltage Phase 2</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="input_voltage_ph3">
+			<type>voltage</type>
+			<sensorId>INPUT_VOLTAGE_PH3</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.2.4.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Input Voltage Phase 3</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="output_frequency">
+			<type>frequency</type>
+			<sensorId>OUTPUT_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.1.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Frequency</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="output_voltage_ph1">
+			<type>voltage</type>
+			<sensorId>OUTPUT_VOLTAGE_PH1</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.2.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Voltage Phase 1</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="output_voltage_ph2">
+			<type>voltage</type>
+			<sensorId>OUTPUT_VOLTAGE_PH2</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.3.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Voltage Phase 2</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="output_voltage_ph3">
+			<type>voltage</type>
+			<sensorId>OUTPUT_VOLTAGE_PH3</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.4.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Output Voltage Phase 3</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="load_percentage_ph1">
+			<type>pctofcapacity</type>
+			<sensorId>LOAD_PERCENTAGE_PH1</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.5.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Load Percentage Phase 1</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="load_percentage_ph2">
+			<type>pctofcapacity</type>
+			<sensorId>LOAD_PERCENTAGE_PH2</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.6.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Load Percentage Phase 2</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="load_percentage_ph3">
+			<type>pctofcapacity</type>
+			<sensorId>LOAD_PERCENTAGE_PH3</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.3.7.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Load Percentage Phase 3</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="bypass_frequency">
+			<type>frequency</type>
+			<sensorId>BYPASS_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.4.1.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Bypass Frequency</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="bypass_voltage_ph1">
+			<type>voltage</type>
+			<sensorId>BYPASS_VOLTAGE_PH1</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.4.2.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Bypass Voltage Phase 1</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="bypass_voltage_ph2">
+			<type>voltage</type>
+			<sensorId>BYPASS_VOLTAGE_PH2</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.4.3.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Bypass Voltage Phase 2</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="bypass_voltage_ph3">
+			<type>voltage</type>
+			<sensorId>BYPASS_VOLTAGE_PH3</sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getOid>.1.3.6.1.4.1.935.1.1.1.8.4.4.0</getOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Bypass Voltage Phase 3</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="rectifier_rotation_error">
+			<type>state</type>
+			<sensorId>RECTIFIER_ROTATION_ERROR</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.1.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Rectifier Status - Rectifier Rotation Error</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="low_battery_shutdown">
+			<type>state</type>
+			<sensorId>LOW_BATTERY_SHUTDOWN</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.2.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Rectifier Status - Low Battery Shutdown</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="low_battery">
+			<type>state</type>
+			<sensorId>LOW_BATTERY</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.3.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Rectifier Status - Low Battery</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="in_and_out">
+			<type>state</type>
+			<sensorId>IN_AND_OUT</sensorId>
+			<value>
+				<mapValue mapid="threeinoneout_threeinthreeout-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>threeinoneout_threeinthreeout-em</enum>
+			<label>Rectifier Status - In and Out</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="back_status">
+			<type>state</type>
+			<sensorId>BACK_STATUS</sensorId>
+			<value>
+				<mapValue mapid="backup_acnormal-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.5.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>backup_acnormal-em</enum>
+			<label>Rectifier Status - Back Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="charge_status">
+			<type>state</type>
+			<sensorId>CHARGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="boost_float_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.6.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>boost_float_no-em</enum>
+			<label>Rectifier Status - Charge Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rectifier_operating">
+			<type>state</type>
+			<sensorId>RECTIFIER_OPERATING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.5.7.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Rectifier Status - Rectifier Operating</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="bypass_status">
+			<type>state</type>
+			<sensorId>BYPASS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.6.1.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>UPS Status - Bypass Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="breaker_status">
+			<type>state</type>
+			<sensorId>BREAKER_STATUS</sensorId>
+			<value>
+				<mapValue mapid="close_open-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.6.2.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>close_open-em</enum>
+			<label>UPS Status - Breaker Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="ac_status">
+			<type>state</type>
+			<sensorId>AC_STATUS</sensorId>
+			<value>
+				<mapValue mapid="normal_abnormal-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.6.3.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>normal_abnormal-em</enum>
+			<label>UPS Status - AC Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="switch_mode">
+			<type>state</type>
+			<sensorId>SWITCH_MODE</sensorId>
+			<value>
+				<mapValue mapid="invermode_bypassmode-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.6.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>invermode_bypassmode-em</enum>
+			<label>UPS Status - Switch Mode</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="operating">
+			<type>state</type>
+			<sensorId>OPERATING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.6.5.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>UPS Status - Inverter Operating</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="emergency_stop">
+			<type>state</type>
+			<sensorId>EMERGENCY_STOP</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.1.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Emergency Stop</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="high_dc_shutdown">
+			<type>state</type>
+			<sensorId>HIGH_DC_SHUTDOWN</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.2.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - High DC Shutdown</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="bypass_breaker">
+			<type>state</type>
+			<sensorId>BYPASS_BREAKER</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.3.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Bypass Breaker</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="over_load">
+			<type>state</type>
+			<sensorId>OVER_LOAD</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Over Load</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="output_fail">
+			<type>state</type>
+			<sensorId>OUTPUT_FAIL</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.5.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Output Fail</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="over_temperature">
+			<type>state</type>
+			<sensorId>OVER_TEMPERATURE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.6.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Over Temperature</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="short_circuit">
+			<type>state</type>
+			<sensorId>SHORT_CIRCUIT</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.935.1.1.1.8.7.7.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>yes_no-em</enum>
+			<label>Fault Status - Short Circuit</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="yes_no-vm">
+			<valueIn>14</valueIn><valueOut>0</valueOut>
+			<valueIn>16</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="yes_no-em">
+			<label>Yes</label>
+			<label>No</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="threeinoneout_threeinthreeout-vm">
+			<valueIn>2</valueIn><valueOut>0</valueOut>
+			<valueIn>3</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="threeinoneout_threeinthreeout-em">
+			<label>Three In One Out</label>
+			<label>Three In Three Out</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="backup_acnormal-vm">
+			<valueIn>4</valueIn><valueOut>0</valueOut>
+			<valueIn>5</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="backup_acnormal-em">
+			<label>Backup</label>
+			<label>Acnormal</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="boost_float_no-vm">
+			<valueIn>6</valueIn><valueOut>0</valueOut>
+			<valueIn>7</valueIn><valueOut>1</valueOut>
+			<valueIn>16</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="boost_float_no-em">
+			<label>Boost</label>
+			<label>Float</label>
+			<label>No</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="close_open-vm">
+			<valueIn>8</valueIn><valueOut>0</valueOut>
+			<valueIn>9</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="close_open-em">
+			<label>Close</label>
+			<label>Open</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="normal_abnormal-vm">
+			<valueIn>10</valueIn><valueOut>0</valueOut>
+			<valueIn>11</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="normal_abnormal-em">
+			<label>Normal</label>
+			<label>Abnormal</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="invermode_bypassmode-vm">
+			<valueIn>12</valueIn><valueOut>0</valueOut>
+			<valueIn>13</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="invermode_bypassmode-em">
+			<label>Invermode</label>
+			<label>Bypassmode</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

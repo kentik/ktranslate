@@ -1,0 +1,854 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="iceotope_petagen"
+	ddfname="Iceotope Petagen"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="petagen">
+		<oidMustExist ruleid="iceotope-petagen" oid=".1.3.6.1.4.1.44252.1.1" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Iceotope</setProductData>
+		<setProductData ruleid="modeldata" field="model">Petagen</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+		<setProductData ruleid="firmwareVersoin" field="appversion">
+			<getOid>.1.3.6.1.4.1.44252.1.1.1.3.0</getOid>
+		</setProductData>
+		<setLocationData field="LOCATION">
+			<getOid>.1.3.6.1.4.1.44252.1.1.1.2.0</getOid>
+		</setLocationData>
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.44252.1.1.1.1.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="hxARackFlowTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXA_RACK_FLOW_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.1.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger A Rack Flow Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxARackReturnTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXA_RACK_RETURN_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.2.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger A Rack Return Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxARackFlowPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.3.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXA_RACK_FLOW_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.3.0</getOid>
+            </value>
+            <label>Heat Exchanger A Rack Flow Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxARackReturnPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.4.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXA_RACK_RETURN_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.4.0</getOid>
+            </value>
+            <label>Heat Exchanger A Rack Return Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBRackFlowTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXB_RACK_FLOW_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.5.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger B Rack Flow Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBRackReturnTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.6.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXB_RACK_RETURN_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.6.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger B Rack Return Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBRackFlowPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXB_RACK_FLOW_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.7.0</getOid>
+            </value>
+            <label>Heat Exchanger B Rack Flow Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBRackReturnPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXB_RACK_RETURN_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.8.0</getOid>
+            </value>
+            <label>Heat Exchanger B Rack Return Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxAFacilityFlowTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXA_FACILITY_FLOW_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.9.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger A Facility Flow Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxAFacilityReturnTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.10.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXA_FACILITY_RETURN_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.10.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger A Facility Return Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxAFacilityFlowPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.11.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXA_FACILITY_FLOW_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.11.0</getOid>
+            </value>
+            <label>Heat Exchanger A Facility Flow Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxAFacilityReturnPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.12.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXA_FACILITY_RETURN_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.12.0</getOid>
+            </value>
+            <label>Heat Exchanger A Facility Return Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBFacilityFlowTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.13.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXB_FACILITY_FLOW_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.13.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger B Facility Flow Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBFacilityReturnTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.14.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>HXB_FACILITY_RETURN_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.14.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Heat Exchanger B Facility Return Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBFacilityFlowPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.15.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXB_FACILITY_FLOW_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.15.0</getOid>
+            </value>
+            <label>Heat Exchanger B Facility Flow Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="hxBFacilityReturnPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.16.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>HXB_FACILITY_RETURN_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.16.0</getOid>
+            </value>
+            <label>Heat Exchanger B Facility Return Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="tankTemp">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.17.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>TANK_TEMP</sensorId>
+            <value>
+				<mult>
+                <op><getOid>.1.3.6.1.4.1.44252.1.1.2.17.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Tank Temperature</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<numSensor ruleid="tankPressure">
+			<rowTest>
+				<mapValue mapid="pressureNotPresent-vm">
+				<getOid>.1.3.6.1.4.1.44252.1.1.2.18.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>TANK_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.18.0</getOid>
+            </value>
+            <label>Tank Pressure</label>
+            <sensorSet>Cabinet</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="doorAOpen">
+            <type>state</type>
+            <sensorId>DOOR_A_OPEN</sensorId>
+            <value>
+				<mapValue mapid="truthValue-vm">
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.19.0</getOid>
+				</mapValue>
+            </value>
+            <label>Door A Open</label>
+            <enum>truthValue-em</enum>
+            <sensorSet>Cabinet</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="doorBOpen">
+            <type>state</type>
+            <sensorId>DOOR_B_OPEN</sensorId>
+            <value>
+				<mapValue mapid="truthValue-vm">
+                <getOid>.1.3.6.1.4.1.44252.1.1.2.20.0</getOid>
+				</mapValue>
+            </value>
+            <label>Door B Open</label>
+            <enum>truthValue-em</enum>
+            <sensorSet>Cabinet</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="backplanesSupported">
+            <type>num</type>
+            <sensorId>BP_SUPPORTED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.3.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Backplanes</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="backplaneHealth" index=".1.3.6.1.4.1.44252.1.1.3.2.1.3">
+			<rowTest>
+				<mapValue mapid="healthNotAvailable-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BP_HEALTH_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="petaHealthStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - Health</label>
+            <enum>petaHealthStatus-em</enum>
+            <sensorSet>Backplanes</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="vAuxiliary3V3" index=".1.3.6.1.4.1.44252.1.1.3.2.1.4">
+			<rowTest>
+				<mapValue mapid="voltageNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>V_AUX_3V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.4</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - 3.3V Auxiliary Line Voltage</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="vBackplane48V" index=".1.3.6.1.4.1.44252.1.1.3.2.1.5">
+			<rowTest>
+				<mapValue mapid="voltageNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>V_BP_48V_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - 48V Bus Voltage</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="vBackplane5V" index=".1.3.6.1.4.1.44252.1.1.3.2.1.6">
+			<rowTest>
+				<mapValue mapid="voltageNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>V_BP_5V_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.6</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - 5V Backplane Line Voltage</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="vBackplane3V3" index=".1.3.6.1.4.1.44252.1.1.3.2.1.7">
+			<rowTest>
+				<mapValue mapid="voltageNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>V_BP_3V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.7</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - 3.3V Backplane Voltage</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcbTempLeft" index=".1.3.6.1.4.1.44252.1.1.3.2.1.8">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PCB_TEMP_LEFT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.8</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - Left Temperature</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcbTempCentre" index=".1.3.6.1.4.1.44252.1.1.3.2.1.9">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PCB_TEMP_CENTRE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.9</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - Centre Temperature</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcbTempRight" index=".1.3.6.1.4.1.44252.1.1.3.2.1.10">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PCB_TEMP_RIGHT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.10</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - Right Temperature</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pcbTempRear" index=".1.3.6.1.4.1.44252.1.1.3.2.1.11">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PCB_TEMP_REAR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.11</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Backplane <getRowOid>.1.3.6.1.4.1.44252.1.1.3.2.1.1</getRowOid> - Rear Temperature</label>
+            <sensorSet>Backplanes</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="bladesSupported">
+            <type>num</type>
+            <sensorId>BL_SUPPORTED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.4.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Blades</label>
+            <sensorSet>Blades</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="bladeHealth" index=".1.3.6.1.4.1.44252.1.1.4.2.1.3">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>BL_HEALTH_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="petaHealthStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Blade <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.1</getRowOid> - Health</label>
+            <enum>petaHealthStatus-em</enum>
+            <sensorSet>Blades</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="summaryTemperature" index=".1.3.6.1.4.1.44252.1.1.4.2.1.9">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SUMMARY_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.9</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Blade <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.1</getRowOid> - Summary Temperature</label>
+            <sensorSet>Blades</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="powerGood" index=".1.3.6.1.4.1.44252.1.1.4.2.1.8">
+			<rowTest>
+				<mapValue mapid="tempNotPresent-vm">
+                <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>POWER_GOOD_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="truthValue-vm">
+				<getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>Blade <getRowOid>.1.3.6.1.4.1.44252.1.1.4.2.1.1</getRowOid> - Power Good</label>
+            <enum>truthValue-em</enum>
+            <sensorSet>Blades</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="pumpsFitted">
+            <type>num</type>
+            <sensorId>PUMPS_FITTED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.44252.1.1.5.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pumps Fitted</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpHead" index=".1.3.6.1.4.1.44252.1.1.5.2.1.2">
+            <type>num</type>
+			<units>meters</units>
+            <sensorId>PUMP_HEAD_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.2</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Coolant Head</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpFlow" index=".1.3.6.1.4.1.44252.1.1.5.2.1.3">
+            <type>fluidflow</type>
+            <sensorId>PUMP_FLOW_<rowIndex/></sensorId>
+            <value>
+				<div>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.3</getRowOid></op>
+				<op>60</op>
+				</div>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Flow Rate</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpEfficiency" index=".1.3.6.1.4.1.44252.1.1.5.2.1.4">
+            <type>pctofcapacity</type>
+            <sensorId>PUMP_EFFICIENCY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.4</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Efficiency</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpFrequency" index=".1.3.6.1.4.1.44252.1.1.5.2.1.5">
+            <type>frequency</type>
+            <sensorId>PUMP_FREQ_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Frequency</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpActualSetPoint" index=".1.3.6.1.4.1.44252.1.1.5.2.1.6">
+            <type>pctofcapacity</type>
+            <sensorId>PUMP_ACTUAL_SETPOINT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.6</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Actual Setpoint</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpSpeed" index=".1.3.6.1.4.1.44252.1.1.5.2.1.7">
+            <type>num</type>
+            <units>rpm</units>
+            <sensorId>PUMP_SPEED_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.7</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Speed</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpEnergy" index=".1.3.6.1.4.1.44252.1.1.5.2.1.8">
+            <type>num/kwatthr</type>
+            <sensorId>PUMP_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.8</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Energy</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpTotalPoweredTime" index=".1.3.6.1.4.1.44252.1.1.5.2.1.9">
+            <type>timeinhrs</type>
+            <sensorId>PUMP_TOTAL_POWERED_TIME_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.9</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Total Powered Time</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpPower" index=".1.3.6.1.4.1.44252.1.1.5.2.1.10">
+            <type>powerW</type>
+            <sensorId>PUMP_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.10</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Power</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpCircuitTemp" index=".1.3.6.1.4.1.44252.1.1.5.2.1.11">
+            <type>temp</type>
+            <sensorId>PUMP_CIRCUIT_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.11</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Circuit Temperature</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpMotorTemp" index=".1.3.6.1.4.1.44252.1.1.5.2.1.12">
+            <type>temp</type>
+            <sensorId>PUMP_MOTOR_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.12</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Motor Temperature</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpLiquidTemp" index=".1.3.6.1.4.1.44252.1.1.5.2.1.13">
+            <type>temp</type>
+            <sensorId>PUMP_LIQUID_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.13</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Coolant Temperature</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pumpOperationTime" index=".1.3.6.1.4.1.44252.1.1.5.2.1.14">
+            <type>runhours</type>
+            <sensorId>PUMP_OPERATION_TIME_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.14</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Pump <getRowOid>.1.3.6.1.4.1.44252.1.1.5.2.1.1</getRowOid> - Operation Time</label>
+            <sensorSet>Pumps</sensorSet>
+        </numSensor>
+
+		<alarmFlags ruleid="healthIndicator">
+			<value><getOid>.1.3.6.1.4.1.44252.1.1.999.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Overall Health Red</activeText>
+					<inactiveText>Overall Health Red Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Overall health state for the cabinet is Red.</activeText>
+					<inactiveText>Overall health state for the cabinet is no longer Red.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Overall Health Amber</activeText>
+					<inactiveText>Overall Health Amber Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Overall health state for the cabinet is Amber.</activeText>
+					<inactiveText>Overall health state for the cabinet is no longer Amber.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="controllerOk">
+			<value><getOid>.1.3.6.1.4.1.44252.1.1.999.2.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Controller Fault</activeText>
+					<inactiveText>Controller OK</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Fault detected in controller.</activeText>
+					<inactiveText>No fault detected in controller.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<valueMap ruleid="tempNotPresent-vm">
+			<valueIn>-273000</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="pressureNotPresent-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="voltageNotPresent-vm">
+			<valueIn>-1000000</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="healthNotAvailable-vm">
+			<valueIn>4</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="truthValue-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="truthValue-em">
+			<label>Unknown</label>
+			<label>True</label>
+			<label>False</label>
+		</enumMap>
+
+		<valueMap ruleid="petaHealthStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="petaHealthStatus-em">
+			<label>Unknown</label>
+			<label>Health Red</label>
+			<label>Health Amber</label>
+			<label>Health Green</label>
+			<label>Not Available</label>
+		</enumMap>
+
+		<valueMap ruleid="bladePresent-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>2</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+
+	</device>
+</APC_DDF>

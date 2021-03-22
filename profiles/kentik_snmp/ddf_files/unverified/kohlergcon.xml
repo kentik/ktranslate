@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<APC_DDF 
+	ddfid ="kohlergcon" 
+	ddfname="Kohler GCON" 
+	ddfversion="3" 
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="kohlergcon">
+		<oidMustExist ruleid="kohlergcon_exists" oid=".1.3.6.1.4.1.22978.1.3.1" istree="yes" />
+		
+		<setProductData ruleid="vendordata" field="vendor">Kohler</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<mapValue mapid="model_type-vm">
+				<getOid>.1.3.6.1.4.1.22978.1.3.1.1.1.1.1</getOid>
+			</mapValue>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Generator</setProductData>
+		
+		<valueMap ruleid="model_type-vm">
+			<valueIn>*</valueIn><valueOut>GCON</valueOut>
+			<valueIn>18</valueIn><valueOut>DEC3PI</valueOut>
+			<valueIn>19</valueIn><valueOut>MPAC1000</valueOut>
+			<valueIn>20</valueIn><valueOut>DEC550</valueOut>
+			<valueIn>23</valueIn><valueOut>MPAC1500</valueOut>
+			<valueIn>37</valueIn><valueOut>DEC3000</valueOut>
+			<valueIn>41</valueIn><valueOut>DEC6000</valueOut>
+			<valueIn>75</valueIn><valueOut>APM402</valueOut>
+		</valueMap>
+
+		<stateSensor ruleid="gconType" index=".1.3.6.1.4.1.22978.1.3.1.1.1.2">
+			<type>state</type>
+			<sensorId>GCON_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="gconType-vm">
+					<getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>Generator Controller <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid> Type</label>
+			<enum>gconType-em</enum>
+			<sensorSet>GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid></sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="gconType-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>18</valueIn><valueOut>1</valueOut>
+			<valueIn>19</valueIn><valueOut>2</valueOut>
+			<valueIn>20</valueIn><valueOut>3</valueOut>
+			<valueIn>23</valueIn><valueOut>4</valueOut>
+			<valueIn>37</valueIn><valueOut>5</valueOut>
+			<valueIn>41</valueIn><valueOut>6</valueOut>
+			<valueIn>75</valueIn><valueOut>7</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="gconType-em">
+			<label>Unknown</label>
+			<label>DEC3PI</label>
+			<label>MPAC1000</label>
+			<label>DEC550</label>
+			<label>MPAC1500</label>
+			<label>DEC3000</label>
+			<label>DEC6000</label>
+			<label>APM402</label>
+		</enumMap>
+
+		<stateSensor ruleid="gconStatus" index=".1.3.6.1.4.1.22978.1.3.1.1.1.2">
+			<type>state</type>
+			<sensorId>GCON_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="gconStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>Generator Controller <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid> Comm Status</label>
+			<enum>gconStatus-em</enum>
+			<sensorSet>GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="gconStatus-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="gconStatus-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Error</label>
+		</enumMap>
+		
+		<stateSensor ruleid="gconPreferredSrcAvail" index=".1.3.6.1.4.1.22978.1.3.1.1.1.2">
+			<type>state</type>
+			<sensorId>GCON_PREFERRED_SRC_AVAIL_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="gconSrcAvail-vm">
+					<getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>Transfer Switch Controller <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid> Preferred Source Available</label>
+			<enum>gconSrcAvail-em</enum>
+			<sensorSet>GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid></sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="gconStandbySrcAvail" index=".1.3.6.1.4.1.22978.1.3.1.1.1.2">
+			<type>state</type>
+			<sensorId>GCON_STANDBY_SRC_AVAIL_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="gconSrcAvail-vm">
+					<getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>Transfer Switch Controller <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid> Standby Source Available</label>
+			<enum>gconSrcAvail-em</enum>
+			<sensorSet>GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.1.1.2</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="gconSrcAvail-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="gconSrcAvail-em">
+			<label>Unknown</label>
+			<label>Not Supported</label>
+			<label>Not Available</label>
+			<label>Is Available</label>
+		</enumMap>
+		
+		<valueMap ruleid="isAlarm-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="gconAlarmEntry" index=".1.3.6.1.4.1.22978.1.3.1.2.1.2">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.4</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>GCON Alarm</activeText>
+					<inactiveText>GCON Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.1</getRowOid><space/>
+						Alarm <getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.2</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.5</getRowOid>.
+					</activeText>
+					<inactiveText>
+						GCON <getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.1</getRowOid><space/>
+						Alarm <getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.2</getRowOid><space/>
+						<getRowOid>.1.3.6.1.4.1.22978.1.3.1.2.1.5</getRowOid> no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+	</device>
+</APC_DDF>

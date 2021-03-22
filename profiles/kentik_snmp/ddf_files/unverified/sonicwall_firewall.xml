@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="sonicwall_firewall"
+	ddfname="SonicWall Firewall Products"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!-- 
+		SOURCE
+		\snmp\resources\mibs\sonicwall\SONICWALL-FIREWALL-IP-STATISTICS-MIB.MIB
+		SONICWALL FIREWALL IP STATISTICS MIB | 9 April 2020
+	-->
+	<device deviceid="sonicwall_firewall_discovery">
+		<oidMustExist ruleid="sonicwall_firewall_exists" oid=".1.3.6.1.4.1.8741.1" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">SonicWall</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.8741.2.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="serial_number" field="serial_num"><getOid>.1.3.6.1.4.1.8741.2.1.1.2.0</getOid></setProductData>
+		<setProductData ruleid="firmware_version" field="appversion"><getOid>.1.3.6.1.4.1.8741.2.1.1.3.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+		
+	</device>
+	
+	<device deviceid="sonicwallFwStats">
+		<oidMustExist ruleid="sonicwallFwStats_exists" oid=".1.3.6.1.4.1.8741.1.3.1" istree="yes"/>
+
+		<numSensor ruleid="sonicMaxConnCacheEntries">
+            <type>num</type>
+            <sensorId>MAX_CONNECTION_CACHE_ENTRIES_ALLOWED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Maximum Connection Cache Entries Allowed Through the Firewall</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicCurrentConnCacheEntries">
+            <type>num</type>
+            <sensorId>ACTIVE_CONNECTION_CACHE_ENTRIES_PRESENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Active Connection Cache Entries Through the Firewall</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicCurrentCPUUtil">
+            <type>pctofcapacity</type>
+            <sensorId>INSTANTANEOUS_CPU_UTILIZATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Instantaneous CPU Utilization</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicCurrentRAMUtil">
+            <type>pctofcapacity</type>
+            <sensorId>INSTANTANEOUS_RAM_UTILIZATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Instantaneous RAM Utilization</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicNatTranslationCount">
+            <type>num</type>
+            <sensorId>CURRENT_DYNAMIC_NAT_TRANSLATIONS_PERFORMED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Current Number of Dynamic NAT Translations Being Performed</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicCurrentManagementCPUUtil">
+            <type>pctofcapacity</type>
+            <sensorId>INSTANTANEOUS_MANAGEMENT_CPU_UTILIZATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Instantaneous Management CPU Utilization</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicCurrentFwdAndInspectCPUUtil">
+            <type>pctofcapacity</type>
+            <sensorId>INSTANTANEOUS_FORWARDING_INSPECTION_CPU_UTILIZATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.1.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Instantaneous Forwarding/Inspection CPU Utilization</label>
+            <sensorSet>Firewall Statistics</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="sonicIfStatTable">
+		<oidMustExist ruleid="sonicIfStatTable_exists" oid=".1.3.6.1.4.1.8741.1.3.1.8" istree="yes"/>
+
+		<numSensor ruleid="sonicIfUsage" index=".1.3.6.1.4.1.8741.1.3.1.8.1.1">
+            <type>pctofcapacity</type>
+            <sensorId>INTERFACE_BANDWIDTH_USAGE_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.1.8.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Interface <getRowOid>.1.3.6.1.4.1.8741.1.3.1.8.1.1</getRowOid><space/>
+				Bandwidth Usage Value
+			</label>
+            <sensorSet>Interface</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicIfThroughput" index=".1.3.6.1.4.1.8741.1.3.1.8.1.1">
+            <type>num</type>
+            <sensorId>INTERFACE_THROUGHPUT_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.1.8.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Interface <getRowOid>.1.3.6.1.4.1.8741.1.3.1.8.1.1</getRowOid><space/>
+				Throughput Value (bits per second)
+			</label>
+            <sensorSet>Interface</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="sonicSAStatTable">
+		<oidMustExist ruleid="sonicSAStatTable_exists" oid=".1.3.6.1.4.1.8741.1.3.2.1.1" istree="yes"/>
+		
+		<stringSensor ruleid="sonicSAStatCreateTime" index=".1.3.6.1.4.1.8741.1.3.2.1.1.1.7">
+            <type>string</type>
+            <sensorId>SA_STATISTICS_CREATE_TIME_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.2.1.1.1.7</getRowOid>
+            </value>
+            <label>
+				<!-- sonicSAStatUserName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.2.1.1.1.14</getRowOid><space/>
+				Phase 2 SA <getRowOid>.1.3.6.1.4.1.8741.1.3.2.1.1.1.1</getRowOid><space/>
+				- Time Created
+			</label>
+            <sensorSet>SA Statistics</sensorSet>
+        </stringSensor>
+		
+	</device>
+	
+	<device deviceid="sonicwallSensorsTable">
+		<oidMustExist ruleid="sonicwallSensorsTable_exists" oid=".1.3.6.1.4.1.8741.1.3.3.3.1" istree="yes"/>
+		
+		<numSensor ruleid="sonicwallSensorsValue" index=".1.3.6.1.4.1.8741.1.3.3.3.1.1.1">
+            <type>num</type>
+            <sensorId>SENSOR_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.3.3.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<!-- sonicwallSensorsDevice -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.3.3.1.1.3</getRowOid><space/>
+				<!-- sonicwallSensorsId -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.3.3.1.1.2</getRowOid> Value<space/>
+				<!-- sonicwallSensorsUnit -->
+				(<getRowOid>.1.3.6.1.4.1.8741.1.3.3.3.1.1.5</getRowOid>)
+			</label>
+            <sensorSet>Sensors</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="sonicwallFwSyslogSetting">
+		<oidMustExist ruleid="sonicwallFwSyslogSetting_exists" oid=".1.3.6.1.4.1.8741.1.3.4.1" istree="yes"/>
+		
+		<stateSensor ruleid="sonicSyslogFacility">
+            <type>state</type>
+            <sensorId>SYSLOG_FACILITY_CONFIGURED_ON_FIREWALL</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogFacility-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog Facility Configured On Firewall</label>
+            <enum>sonicSyslogFacility-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="sonicSyslogFacility-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>20</valueIn><valueOut>20</valueOut>
+			<valueIn>21</valueIn><valueOut>21</valueOut>
+			<valueIn>22</valueIn><valueOut>22</valueOut>
+			<valueIn>23</valueIn><valueOut>23</valueOut>
+			<valueIn>*</valueIn><valueOut>24</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="sonicSyslogFacility-em">
+			<label>kern</label>
+			<label>user</label>
+			<label>mail</label>
+			<label>daemon</label>
+			<label>syslog</label>
+			<label>lpr</label>
+			<label>news</label>
+			<label>uucp</label>
+			<label>cron</label>
+			<label>auth</label>
+			<label>priv</label>
+			<label>ftp</label>
+			<label>ntp</label>
+			<label>audit</label>
+			<label>alert</label>
+			<label>cron2</label>
+			<label>local0</label>
+			<label>local1</label>
+			<label>local2</label>
+			<label>local3</label>
+			<label>local4</label>
+			<label>local5</label>
+			<label>local6</label>
+			<label>local7</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="sonicSyslogOverrideSetting">
+            <type>state</type>
+            <sensorId>SYSLOG_OVERRIDE_SETTING</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogTrueFalse-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog Override Setting</label>
+            <enum>sonicSyslogTrueFalse-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="sonicSyslogTrueFalse-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="sonicSyslogTrueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+		
+		<stateSensor ruleid="sonicSyslogFormat">
+            <type>state</type>
+            <sensorId>SYSLOG_FORMAT</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogFormat-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog Format</label>
+            <enum>sonicSyslogFormat-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="sonicSyslogFormat-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="sonicSyslogFormat-em">
+			<label>Default</label>
+			<label>WebTrends</label>
+			<label>Enhanced Syslog</label>
+			<label>ArcSight</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<numSensor ruleid="sonicSyslogID">
+            <type>num</type>
+            <sensorId>SYSLOG_ID</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.1.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog ID</label>
+            <sensorSet>Syslog Setting</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="sonicSyslogEventRateLimitEnable">
+            <type>state</type>
+            <sensorId>SYSLOG_EVENT_RATE_LIMIT_ENABLE</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogTrueFalse-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog Event Rate Limit Enable</label>
+            <enum>sonicSyslogTrueFalse-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+		
+		<numSensor ruleid="sonicSyslogEventRateLimit">
+            <type>num</type>
+            <sensorId>SYSLOG_EVENT_RATE_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.1.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog Event Rate Limititing: Maximum Events Per Second</label>
+            <sensorSet>Syslog Setting</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="sonicSyslogDataRateLimitEnable">
+            <type>state</type>
+            <sensorId>SYSLOG_DATA_RATE_LIMIT_ENABLE</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogTrueFalse-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog Data Rate Limit Enable</label>
+            <enum>sonicSyslogTrueFalse-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+		
+		<numSensor ruleid="sonicSyslogDataRateLimit">
+            <type>num</type>
+            <sensorId>SYSLOG_DATA_RATE_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.1.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog Data Rate Limititing: Maximum Bytes Per Second</label>
+            <sensorSet>Syslog Setting</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="sonicSyslogNDPPEnable">
+            <type>state</type>
+            <sensorId>SYSLOG_NDPP_ENABLE</sensorId>
+            <value>
+				<mapValue mapid="sonicSyslogTrueFalse-vm">
+					<getOid>.1.3.6.1.4.1.8741.1.3.4.1.9.0</getOid>
+				</mapValue>
+            </value>
+            <label>Syslog NDPP Enforcement Enable</label>
+            <enum>sonicSyslogTrueFalse-em</enum>
+            <sensorSet>Syslog Setting</sensorSet>
+        </stateSensor>
+		
+	</device>
+	
+	<device deviceid="sonicSyslogServerTable">
+		<oidMustExist ruleid="sonicSyslogServerTable_exists" oid=".1.3.6.1.4.1.8741.1.3.4.2" istree="yes"/>
+
+		<numSensor ruleid="sonicSyslogMaxServers">
+            <type>num</type>
+            <sensorId>SYSLOG_MAX_SERVERS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog Maximum Number of Servers</label>
+            <sensorSet>Syslog Server</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="sonicSyslogServerAddr" index=".1.3.6.1.4.1.8741.1.3.4.2.2.1.1">
+            <type>string</type>
+            <sensorId>SYSLOG_SERVER_ADDRESS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.4.2.2.1.2</getRowOid>
+            </value>
+            <label>
+				Syslog Server<space/>
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.4.2.2.1.1</getRowOid><space/>
+				Address
+			</label>
+            <sensorSet>Syslog Server</sensorSet>
+        </stringSensor>
+		
+		<numSensor ruleid="sonicSyslogServerPort" index=".1.3.6.1.4.1.8741.1.3.4.2.2.1.1">
+            <type>num</type>
+            <sensorId>SYSLOG_SERVER_PORT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.4.2.2.1.3</getRowOid>
+            </value>
+            <label>
+				Syslog Server<space/>
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.4.2.2.1.1</getRowOid><space/>
+				Port
+			</label>
+            <sensorSet>Syslog Server</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="sonicwallFwSyslogStatistic">
+		<oidMustExist ruleid="sonicwallFwSyslogStatistic_exists" oid=".1.3.6.1.4.1.8741.1.3.4.3" istree="yes"/>
+		
+		<numSensor ruleid="sonicSyslogMessage">
+            <type>num</type>
+            <sensorId>SYSLOG_MESSAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.3.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog Total Message Generated Since Startup</label>
+            <sensorSet>Syslog Statistic</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sonicSyslogStreamData">
+            <type>num</type>
+            <sensorId>SYSLOG_STREAM_DATA</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.8741.1.3.4.3.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Syslog Total Stream Data Generated Since Startup</label>
+            <sensorSet>Syslog Statistic</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="sonicwallFwZoneTable">
+		<oidMustExist ruleid="sonicwallFwZoneTable_exists" oid=".1.3.6.1.4.1.8741.1.3.7.1.1" istree="yes"/>
+		
+		<stateSensor ruleid="sonicZoneSecurity" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.2">
+            <type>state</type>
+            <sensorId>ZONE_SECURITY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneSecurity-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Security Type
+			</label>
+            <enum>sonicZoneSecurity-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="sonicZoneSecurity-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>*</valueIn><valueOut>10</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="sonicZoneSecurity-em">
+			<label>untrusted1</label>
+			<label>trusted1</label>
+			<label>public</label>
+			<label>other1</label>
+			<label>wireless</label>
+			<label>encrypted</label>
+			<label>untrusted2</label>
+			<label>other2</label>
+			<label>sslvpn</label>
+			<label>management</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stringSensor ruleid="sonicSyslogMessage" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.3">
+            <type>string</type>
+            <sensorId>ZONE_INTERFACE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.3</getRowOid>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Interface Name
+			</label>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stringSensor>
+		
+		<stateSensor ruleid="sonicZoneIfTrust" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.4">
+            <type>state</type>
+            <sensorId>INTERFACE_TRUST_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Interface Trust Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="sonicZoneDisabledEnabled-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="sonicZoneDisabledEnabled-em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+		
+		<stateSensor ruleid="sonicZoneCFS" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.5">
+            <type>state</type>
+            <sensorId>ENFORCE_CONTENT_FILTERING_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Enforce Content Filtering Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneClientAv" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.6">
+            <type>state</type>
+            <sensorId>CLIENT_AV_ENFORCEMENT_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Client AV Enforcement Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneClientCf" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.7">
+            <type>state</type>
+            <sensorId>CLIENT_CF_ENFORCEMENT_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Client CF Enforcement Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneGwAv" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.8">
+            <type>state</type>
+            <sensorId>GATEWAY_ANTI_VIRUS_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Gateway Anti-Virus Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneAntiSpyware" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.9">
+            <type>state</type>
+            <sensorId>ANTI_SPYWARE_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone Anti-Spyware Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneIps" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.10">
+            <type>state</type>
+            <sensorId>IPS_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone IPS Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneAppControl" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.11">
+            <type>state</type>
+            <sensorId>APP_CONTROL_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone App Control Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneSslControl" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.12">
+            <type>state</type>
+            <sensorId>SSL_CONTROL_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone SSL Control Service Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="sonicZoneSslvpnAccess" index=".1.3.6.1.4.1.8741.1.3.7.1.1.1.13">
+            <type>state</type>
+            <sensorId>SSLVPN_ACCESS_ENABLED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sonicZoneDisabledEnabled-vm">
+					<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.13</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- sonicZoneName -->
+				<getRowOid>.1.3.6.1.4.1.8741.1.3.7.1.1.1.1</getRowOid><space/>
+				Zone SSLVPN Access Status
+			</label>
+            <enum>sonicZoneDisabledEnabled-em</enum>
+            <sensorSet>Zone Statistics</sensorSet>
+        </stateSensor>
+		
+	</device>
+</APC_DDF>

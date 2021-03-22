@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="enatel_sm3x"
+	ddfname="Enatel SM3X"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<!--
+		SOURCE
+		/snmp/resources/mibs/enatel/enatel_v207.mib
+		ENATEL MIB | 18 March 2020
+	-->
+	
+	<device deviceid="enatel_sm3x">
+		<oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.21940.2" istree="yes"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Enatel</setProductData>
+		<setProductData ruleid="modeldata" field="model">SM3X</setProductData>
+		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+
+		<valueMap ruleid="delete-null-sensor">
+			<valueIn>32767</valueIn>  <valueOut>[false]</valueOut>
+			<valueIn>3276700</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn>      <valueOut>[true]</valueOut>
+		</valueMap>
+		<!-- Mains Monitor 1 -->
+		<numSensor ruleid="mainsMonitor1VoltagePhase1">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR1VOLTAGEPHASE1</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.1.2.1.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 1 Voltage Phase 1</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1VoltagePhase2">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR1VOLTAGEPHASE2</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.1.2.2.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 1 Voltage Phase 2</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1VoltagePhase3">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.3.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR1VOLTAGEPHASE3</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.1.2.3.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 1 Voltage Phase 3</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1CurrentPhase1">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.4.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR1CURRENTPHASE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.1.2.4.0</getOid>
+			</value>
+			<label>Mains Monitor 1 Current Phase 1</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1CurrentPhase2">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.5.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR1CURRENTPHASE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.1.2.5.0</getOid>
+			</value>
+			<label>Mains Monitor 1 Current Phase 2</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1CurrentPhase3">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.6.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR1CURRENTPHASE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.1.2.6.0</getOid>
+			</value>
+			<label>Mains Monitor 1 Current Phase 3</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor1Frequency">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.1.2.7.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>frequency</type>
+			<sensorId>MAINSMONITOR1FREQUENCY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.1.2.7.0</getOid>
+			</value>
+			<label>Mains Monitor 1 Frequency</label>
+			<sensorSet>Mains Monitor 1</sensorSet>
+		</numSensor>
+		<!-- Mains Monitor 2 -->
+		<numSensor ruleid="mainsMonitor2VoltagePhase1">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR2VOLTAGEPHASE1</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.2.2.1.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 2 Voltage Phase 1</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2VoltagePhase2">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR2VOLTAGEPHASE2</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.2.2.2.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 2 Voltage Phase 2</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2VoltagePhase3">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.3.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MAINSMONITOR2VOLTAGEPHASE3</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.3.2.2.3.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Mains Monitor 2 Voltage Phase 3</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2CurrentPhase1">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.4.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR2CURRENTPHASE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.2.2.4.0</getOid>
+			</value>
+			<label>Mains Monitor 2 Current Phase 1</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2CurrentPhase2">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.5.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR2CURRENTPHASE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.2.2.5.0</getOid>
+			</value>
+			<label>Mains Monitor 2 Current Phase 2</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2CurrentPhase3">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.6.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MAINSMONITOR2CURRENTPHASE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.2.2.6.0</getOid>
+			</value>
+			<label>Mains Monitor 2 Current Phase 3</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitor2Frequency">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.3.2.2.7.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>frequency</type>
+			<sensorId>MAINSMONITOR2FREQUENCY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.3.2.2.7.0</getOid>
+			</value>
+			<label>Mains Monitor 2 Frequency</label>
+			<sensorSet>Mains Monitor 2</sensorSet>
+		</numSensor>
+		<!-- Rectifier -->
+		<numSensor ruleid="rectifierVoltage">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIERVOLTAGE</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.4.2.1.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Rectifier Voltage</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifierCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>RECTIFIERCURRENT</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.4.2.2.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Rectifier Current</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		<!-- Inverter -->
+		<numSensor ruleid="inverterVoltage">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.11.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>INVERTERVOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.11.0</getOid>
+			</value>
+			<label>Inverter Voltage</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="inverterCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.12.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>INVERTERCURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.12.0</getOid>
+			</value>
+			<label>Inverter Current</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<!-- Other -->
+		<numSensor ruleid="loadCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.13.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>LOADCURRENT</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.4.2.13.0</getOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<label>Load Current</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<!-- Battery -->
+		<numSensor ruleid="batteryCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.14.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>BATTERYCURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.14.0</getOid>
+			</value>
+			<label>Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperature">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.15.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>BATTERYTEMPERATURE</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.4.2.15.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<!-- Other -->
+		<numSensor ruleid="ambientTemperature">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.16.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>AMBIENTTEMPERATURE</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.21940.2.4.2.16.0</getOid>
+					</op>
+					<op>10</op>
+				</div>
+			</value>
+			<label>Ambient Temperature</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<!-- Battery -->
+		<numSensor ruleid="batteryCapacity">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.17.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>BATTERYCAPACITY</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.21940.2.4.2.17.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryDischargeTimeRemaining">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.24.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>timeinsec</type>
+			<sensorId>BATTERYDISCHARGETIMEREMAINING</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.24.0</getOid>
+			</value>
+			<label>Battery Discharge Time Remaining</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<!-- Solar -->
+		<numSensor ruleid="solarCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.25.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>SOLARCURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.25.0</getOid>
+			</value>
+			<label>Solar Current</label>
+			<sensorSet>Solar</sensorSet>
+		</numSensor>
+		<!-- Wind -->
+		<numSensor ruleid="windCurrent">
+			<rowTest>
+				<mapValue mapid="delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.21940.2.4.2.26.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>WINDCURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21940.2.4.2.26.0</getOid>
+			</value>
+			<label>Wind Current</label>
+			<sensorSet>Wind</sensorSet>
+		</numSensor>
+		
+		<!-- Alarms -->
+		
+        <alarmFlags ruleid="almwdusr1_16">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.1.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>User Alarms 1-16</activeText>
+                    <inactiveText>User Alarms 1-16 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A user alarms 1-16 condition exists.</activeText>
+                    <inactiveText>A user alarms 1-16 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdusr16_32">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>User Alarms 16-32</activeText>
+                    <inactiveText>User Alarms 16-32 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A user alarms 16-32 condition exists.</activeText>
+                    <inactiveText>A user alarms 16-32 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdrect">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.3.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Rectifier Alarms</activeText>
+                    <inactiveText>Rectifier Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A rectifier alarms condition exists.</activeText>
+                    <inactiveText>A rectifier alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdconv">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.4.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Converter Alarms</activeText>
+                    <inactiveText>Converter Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A converter alarms condition exists.</activeText>
+                    <inactiveText>A converter alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdinv">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.5.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Alarms</activeText>
+                    <inactiveText>Inverter Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A inverter alarms condition exists.</activeText>
+                    <inactiveText>A inverter alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwddev">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.6.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Device Alarms</activeText>
+                    <inactiveText>Device Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A device alarms condition exists.</activeText>
+                    <inactiveText>A device alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdvolt">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.7.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Voltage Alarms</activeText>
+                    <inactiveText>Voltage Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A voltage alarms condition exists.</activeText>
+                    <inactiveText>A voltage alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwditemp">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.8.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Current and Temperature Alarms</activeText>
+                    <inactiveText>Current and Temperature Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A current and temperature alarms condition exists.</activeText>
+                    <inactiveText>A current and temperature alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdmon">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.9.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Monitor Alarms</activeText>
+                    <inactiveText>Monitor Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A monitor alarms condition exists.</activeText>
+                    <inactiveText>A monitor alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdac">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.10.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>AC Alarms</activeText>
+                    <inactiveText>AC Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>A ac alarms condition exists.</activeText>
+                    <inactiveText>A ac alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdsbm">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.11.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Static Bypass Alarms</activeText>
+                    <inactiveText>Static Bypass Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>A static bypass alarms condition exists.</activeText>
+                    <inactiveText>A static bypass alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdren">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.12.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Renewables Alarms</activeText>
+                    <inactiveText>Renewables Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A renewables alarms condition exists.</activeText>
+                    <inactiveText>A renewables alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdsconv1">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.13.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Solar Device Alarms 1</activeText>
+                    <inactiveText>Solar Device Alarms 1 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A solar device alarms 1 condition exists.</activeText>
+                    <inactiveText>A solar device alarms 1 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdsconv2">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.14.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Solar Device Alarms 2</activeText>
+                    <inactiveText>Solar Device Alarms 2 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A solar device alarms 2 condition exists.</activeText>
+                    <inactiveText>A solar device alarms 2 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdwconv1">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.15.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Wind Device Alarms 1</activeText>
+                    <inactiveText>Wind Device Alarms 1 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A wind device alarms 1 condition exists.</activeText>
+                    <inactiveText>A wind device alarms 1 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdwconv2">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.16.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Wind Device Alarms 2</activeText>
+                    <inactiveText>Wind Device Alarms 2 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A wind device alarms 2 condition exists.</activeText>
+                    <inactiveText>A wind device alarms 2 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb1">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.17.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 1</activeText>
+                    <inactiveText>Hybrid Alarms 1 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 1 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 1 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb2">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.18.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 2</activeText>
+                    <inactiveText>Hybrid Alarms 2 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 2 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 2 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb3">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.19.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 3</activeText>
+                    <inactiveText>Hybrid Alarms 3 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 3 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 3 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb4">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.20.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 4</activeText>
+                    <inactiveText>Hybrid Alarms 4 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 4 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 4 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb5">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.21.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 5</activeText>
+                    <inactiveText>Hybrid Alarms 5 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 5 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 5 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhyb6">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.22.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Alarms 6</activeText>
+                    <inactiveText>Hybrid Alarms 6 Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A hybrid alarms 6 condition exists.</activeText>
+                    <inactiveText>A hybrid alarms 6 condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdhybop">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.23.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Hybrid Outputs</activeText>
+                    <inactiveText>Hybrid Outputs Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>A hybrid outputs condition exists.</activeText>
+                    <inactiveText>A hybrid outputs condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdacm1">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.24.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Mains Monitor 1 Alarms</activeText>
+                    <inactiveText>Mains Monitor 1 Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A mains monitor 1 alarms condition exists.</activeText>
+                    <inactiveText>A mains monitor 1 alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdacm2">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.25.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Mains Monitor 2 Alarms</activeText>
+                    <inactiveText>Mains Monitor 2 Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A mains monitor 2 alarms condition exists.</activeText>
+                    <inactiveText>A mains monitor 2 alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="almwdphbal">
+            <value><getOid>.1.3.6.1.4.1.21940.2.11.26.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Phase Balancing Alarms</activeText>
+                    <inactiveText>Phase Balancing Alarms Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A phase balancing alarms condition exists.</activeText>
+                    <inactiveText>A phase balancing alarms condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>		
+		
+	</device>
+</APC_DDF>

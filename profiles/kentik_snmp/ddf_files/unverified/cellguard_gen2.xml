@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="cellguard_gen2" ddfname="CellGuard Gen2" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="cellguard_gen2">
+    <oidMustExist ruleid="snmpdevicetest" oid="1.3.6.1.4.1.31049.1.1.1.3.1 " />
+    <setProductData ruleid="vendordata" field="vendor">CellGuard</setProductData>
+    <setProductData ruleid="modeldata" field="model">Gen2</setProductData>
+    <setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+    <numSensor ruleid="str_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_STR_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.1.1.3.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>str Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="str_current">
+      <type>amperage</type>
+      <units />
+      <sensorId>_STR_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.1.1.4.1</getOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <label>str Current</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="str_temp_a">
+      <type>temp</type>
+      <units />
+      <sensorId>_STR_TEMP_A</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.1.1.5.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>str Temp A</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="str_temp_b">
+      <type>temp</type>
+      <units />
+      <sensorId>_STR_TEMP_B</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.1.1.6.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>str Temp B</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="bat_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_BAT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.2.1.3.1</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <label>bat Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="bat_cond">
+      <type>num</type>
+      <units />
+      <sensorId>_BAT_COND</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.2.1.4.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>bat Cond</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="bat_temp">
+      <type>temp</type>
+      <units />
+      <sensorId>_BAT_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.2.1.5.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>bat Temp</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="bat_strap">
+      <type>num</type>
+      <units />
+      <sensorId>_BAT_STRAP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.31049.1.2.1.6.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>bat Strap</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="str_alert_status">
+      <type>state</type>
+      <sensorId>_STR_ALERT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="status3_vm">
+          <getOid>1.3.6.1.4.1.31049.1.1.1.2.1</getOid>
+        </mapValue>
+      </value>
+      <label>str Alert Status</label>
+      <enum>status3_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="bat_alert_status">
+      <type>state</type>
+      <sensorId>_BAT_ALERT_STATUS</sensorId>
+      <value>
+        <mapValue mapid="status3_vm">
+          <getOid>1.3.6.1.4.1.31049.1.2.1.2.1</getOid>
+        </mapValue>
+      </value>
+      <label>bat Alert Status</label>
+      <enum>status3_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="alert_type">
+      <type>state</type>
+      <sensorId>_ALERT_TYPE</sensorId>
+      <value>
+        <mapValue mapid="status2_vm">
+          <getOid>1.3.6.1.4.1.31049.1.3.1.2.1</getOid>
+        </mapValue>
+      </value>
+      <label>alert Type</label>
+      <enum>status2_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="item_id">
+      <type>state</type>
+      <sensorId>_ITEM_ID</sensorId>
+      <value>
+        <mapValue mapid="status1_vm">
+          <getOid>1.3.6.1.4.1.31049.1.3.1.3.1</getOid>
+        </mapValue>
+      </value>
+      <label>item Id</label>
+      <enum>status1_em</enum>
+      <sensorSet>General</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="str_location">
+      <type>string</type>
+      <units />
+      <sensorId>_STR_LOCATION</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.4.1.31049.1.1.1.7.1</getOid>
+        </op>
+      </value>
+      <label>str Location</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="bat_location">
+      <type>string</type>
+      <units />
+      <sensorId>_BAT_LOCATION</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.4.1.31049.1.2.1.7.1</getOid>
+        </op>
+      </value>
+      <label>bat Location</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="alert_desc">
+      <type>string</type>
+      <units />
+      <sensorId>_ALERT_DESC</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.4.1.31049.1.3.1.4.1</getOid>
+        </op>
+      </value>
+      <label>alert Desc</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="alert_location">
+      <type>string</type>
+      <units />
+      <sensorId>_ALERT_LOCATION</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.4.1.31049.1.3.1.5.1</getOid>
+        </op>
+      </value>
+      <label>alert Location</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+	<valueMap ruleid="status1_vm">
+<valueIn>10000</valueIn>
+			<valueOut>0</valueOut>
+<valueIn>15000</valueIn>
+			<valueOut>1</valueOut>
+<valueIn>15100</valueIn>
+			<valueOut>2</valueOut>
+<valueIn>20000</valueIn>
+			<valueOut>3</valueOut>
+<valueIn>20100</valueIn>
+			<valueOut>4</valueOut>
+<valueIn>20400</valueIn>
+			<valueOut>5</valueOut>
+<valueIn>20500</valueIn>
+			<valueOut>6</valueOut>
+<valueIn>20600</valueIn>
+			<valueOut>7</valueOut>
+<valueIn>25000</valueIn>
+			<valueOut>8</valueOut>
+<valueIn>25001</valueIn>
+			<valueOut>9</valueOut>
+<valueIn>25002</valueIn>
+			<valueOut>10</valueOut>
+<valueIn>30000</valueIn>
+			<valueOut>11</valueOut>
+<valueIn>30010</valueIn>
+			<valueOut>12</valueOut>
+<valueIn>30020</valueIn>
+			<valueOut>13</valueOut>
+<valueIn>30030</valueIn>
+			<valueOut>14</valueOut>
+<valueIn>30040</valueIn>
+			<valueOut>15</valueOut>
+<valueIn>30100</valueIn>
+			<valueOut>16</valueOut>
+<valueIn>30110</valueIn>
+			<valueOut>17</valueOut>
+<valueIn>30120</valueIn>
+			<valueOut>18</valueOut>
+<valueIn>30130</valueIn>
+			<valueOut>19</valueOut>
+<valueIn>30140</valueIn>
+			<valueOut>20</valueOut>
+<valueIn>30300</valueIn>
+			<valueOut>21</valueOut>
+<valueIn>30301</valueIn>
+			<valueOut>22</valueOut>
+<valueIn>30302</valueIn>
+			<valueOut>23</valueOut>
+<valueIn>30303</valueIn>
+			<valueOut>24</valueOut>
+<valueIn>30311</valueIn>
+			<valueOut>25</valueOut>
+<valueIn>30312</valueIn>
+			<valueOut>26</valueOut>
+<valueIn>30313</valueIn>
+			<valueOut>27</valueOut>
+<valueIn>30321</valueIn>
+			<valueOut>28</valueOut>
+<valueIn>30322</valueIn>
+			<valueOut>29</valueOut>
+<valueIn>30323</valueIn>
+			<valueOut>30</valueOut>
+<valueIn>30331</valueIn>
+			<valueOut>31</valueOut>
+<valueIn>30332</valueIn>
+			<valueOut>32</valueOut>
+<valueIn>30333</valueIn>
+			<valueOut>33</valueOut>
+<valueIn>30341</valueIn>
+			<valueOut>34</valueOut>
+<valueIn>30342</valueIn>
+			<valueOut>35</valueOut>
+<valueIn>30343</valueIn>
+			<valueOut>36</valueOut>
+<valueIn>30700</valueIn>
+			<valueOut>37</valueOut>
+<valueIn>30710</valueIn>
+			<valueOut>38</valueOut>
+<valueIn>30720</valueIn>
+			<valueOut>39</valueOut>
+<valueIn>30730</valueIn>
+			<valueOut>40</valueOut>
+<valueIn>30740</valueIn>
+			<valueOut>41</valueOut>
+<valueIn>30800</valueIn>
+			<valueOut>42</valueOut>
+<valueIn>30810</valueIn>
+			<valueOut>43</valueOut>
+<valueIn>30820</valueIn>
+			<valueOut>44</valueOut>
+<valueIn>30830</valueIn>
+			<valueOut>45</valueOut>
+<valueIn>30840</valueIn>
+			<valueOut>46</valueOut>
+<valueIn>30900</valueIn>
+			<valueOut>47</valueOut>
+<valueIn>35000</valueIn>
+			<valueOut>48</valueOut>
+<valueIn>35010</valueIn>
+			<valueOut>49</valueOut>
+<valueIn>35020</valueIn>
+			<valueOut>50</valueOut>
+<valueIn>35030</valueIn>
+			<valueOut>51</valueOut>
+<valueIn>35040</valueIn>
+			<valueOut>52</valueOut>
+<valueIn>36000</valueIn>
+			<valueOut>53</valueOut>
+<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+</valueMap>
+
+<enumMap ruleid="status1_em">
+<label>Voltage</label>
+<label>Temperature</label>
+<label>Relative humidity</label>
+<label>String Voltage</label>
+<label>Combined Jar Voltage</label>
+<label>String Current</label>
+<label>Ripple voltage(0-peak)</label>
+<label>Ripple current(0-peak)</label>
+<label>Ambient Temperature</label>
+<label>Temperature Zone A</label>
+<label>Temperature Zone B</label>
+<label>Voltage</label>
+<label>Cell A Voltage</label>
+<label>Cell B Voltage</label>
+<label>Cell C Voltage</label>
+<label>Cell D Voltage</label>
+<label>Conductance</label>
+<label>Cell A Conductance</label>
+<label>Cell B Conductance</label>
+<label>Cell C Conductance</label>
+<label>Cell D Conductance</label>
+<label>Strap Resistance</label>
+<label>Strap 1 Resistance</label>
+<label>Strap 2 Resistance</label>
+<label>Strap 3 Resistance</label>
+<label>Strap A-1 Resistance</label>
+<label>Strap A-2 Resistance</label>
+<label>Strap A-3 Resistance</label>
+<label>Strap B-1 Resistance</label>
+<label>Strap B-2 Resistance</label>
+<label>Strap B-3 Resistance</label>
+<label>Strap C-1 Resistance</label>
+<label>Strap C-2 Resistance</label>
+<label>Strap C-3 Resistance</label>
+<label>Strap D-1 Resistance</label>
+<label>Strap D-2 Resistance</label>
+<label>Strap D-3 Resistance</label>
+<label>% Conductance</label>
+<label>Cell A % Conductance</label>
+<label>Cell B % Conductance</label>
+<label>Cell C % Conductance</label>
+<label>Cell D % Conductance</label>
+<label>T-Comp % Conductance</label>
+<label>Cell AT-Comp % Conductance</label>
+<label>Cell BT-Comp % Conductance</label>
+<label>Cell CT-Comp % Conductance</label>
+<label>Cell DT-Comp % Conductance</label>
+<label>Running Average Conductance</label>
+<label>Temperature</label>
+<label>Cell A Temperature</label>
+<label>Cell B Temperature</label>
+<label>Cell C Temperature</label>
+<label>Cell D Temperature</label>
+<label>Specific Gravity/Temp</label>
+</enumMap>
+
+<valueMap ruleid="status2_vm">
+<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+<valueIn>3</valueIn>
+			<valueOut>3</valueOut>
+<valueIn>4</valueIn>
+			<valueOut>4</valueOut>
+<valueIn>5</valueIn>
+			<valueOut>5</valueOut>
+<valueIn>6</valueIn>
+			<valueOut>6</valueOut>
+<valueIn>7</valueIn>
+			<valueOut>7</valueOut>
+<valueIn>8</valueIn>
+			<valueOut>8</valueOut>
+<valueIn>9</valueIn>
+			<valueOut>9</valueOut>
+<valueIn>10</valueIn>
+			<valueOut>10</valueOut>
+<valueIn>30</valueIn>
+			<valueOut>11</valueOut>
+<valueIn>31</valueIn>
+			<valueOut>12</valueOut>
+<valueIn>32</valueIn>
+			<valueOut>13</valueOut>
+<valueIn>34</valueIn>
+			<valueOut>14</valueOut>
+<valueIn>35</valueIn>
+			<valueOut>15</valueOut>
+<valueIn>31</valueIn>
+			<valueOut>16</valueOut>
+<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+</valueMap>
+
+<enumMap ruleid="status2_em">
+<label>High Alarm</label>
+<label>High Alarm</label>
+<label>High Warning</label>
+<label>Low Warning</label>
+<label>Low Alarm</label>
+<label>VTC Warning</label>
+<label>Sensor Warning</label>
+<label>BCU Warning</label>
+<label>Handheld Tester Warning</label>
+<label>Hardware Alarm</label>
+<label>Initial Reading Alert</label>
+<label>VTC Not Reporting</label>
+<label>Sensor Not Reporting</label>
+<label>BCU Not Reporting</label>
+<label>Handheld Tester Not Reporting</label>
+<label>Initial Reading Not Reporting</label>
+<label>00 Sensor Fault-HA 100</label>
+</enumMap>
+
+<valueMap ruleid="status3_vm">
+<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+</valueMap>
+
+<enumMap ruleid="status3_em">
+<label>Normal</label>
+<label>Warning</label>
+<label>Alarm</label>
+</enumMap>
+  </device>
+</APC_DDF>

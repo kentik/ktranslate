@@ -1,0 +1,271 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="huawei_ccu"
+	ddfname="Huawei CCU"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="huawei_ccu">
+		<oidMustExist ruleid="huawei_ccu" oid=".1.3.6.1.4.1.2011.2.217" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Huawei</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.2011.2.217.1.1.1.0</getOid>
+		</setDefaultLabel>
+
+		<valueMap ruleid="isAnalog-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>2</valueIn><valueOut>[true]</valueOut>
+			<valueIn>3</valueIn><valueOut>[true]</valueOut>
+			<valueIn>4</valueIn><valueOut>[true]</valueOut>
+			<valueIn>5</valueIn><valueOut>[true]</valueOut>
+			<valueIn>6</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="hwSensorTypeAnalog-vm">
+			<valueIn>1</valueIn><valueOut>temp</valueOut>
+			<valueIn>2</valueIn><valueOut>voltage</valueOut>
+			<valueIn>3</valueIn><valueOut>amperage</valueOut>
+			<valueIn>4</valueIn><valueOut>powerW</valueOut>
+			<valueIn>5</valueIn><valueOut>humidity</valueOut>
+			<valueIn>6</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="isDiscrete-vm">
+			<valueIn>7</valueIn><valueOut>[true]</valueOut>
+			<valueIn>8</valueIn><valueOut>[true]</valueOut>
+			<valueIn>9</valueIn><valueOut>[true]</valueOut>
+			<valueIn>10</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="hwSensorCurVal-analog" index=".1.3.6.1.4.1.2011.2.217.1.4.1.1.6">
+			<rowTest>
+				<mapValue mapid="isAnalog-vm">
+				<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.4</getRowOid>
+				</mapValue>				
+			</rowTest>
+            <type>
+				<mapValue mapid="hwSensorTypeAnalog-vm">
+				<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.4</getRowOid>
+				</mapValue>
+			</type>
+            <sensorId>HW_SENSOR_CURVAL_<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.1</getRowOid></sensorId>
+            <value>
+				<mult>
+				<op>
+					<mult>
+					<op>
+						<add>
+						<op>
+							<div>
+							<op>
+								<bitwise_and>
+								<op>
+									<baseNToInt base="16">
+										<regex>
+										<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+										<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+										<op>%4$s%3$s%2$s%1$s</op>
+										</regex>
+									</baseNToInt>
+								</op>
+								<op>8388607</op>
+								</bitwise_and>
+							</op>
+							<op>8388608</op>
+							</div>
+						</op>
+						<op>1</op>
+						</add>
+					</op>
+					<op>
+						<left_shift>
+						<op>1</op>
+						<op>
+						<sub>
+							<op>
+								<bitwise_and>
+								<op>
+									<right_shift>
+									<op>
+										<baseNToInt base="16">
+											<regex>
+											<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+											<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+											<op>%4$s%3$s%2$s%1$s</op>
+											</regex>
+										</baseNToInt>
+									</op>
+									<op>23</op>
+									</right_shift>
+								</op>
+								<op>255</op>
+								</bitwise_and>
+							</op>
+							<op>127</op>
+						</sub>
+						</op>
+						</left_shift>
+					</op>
+					</mult>
+				</op>
+				<op>
+					<if>
+					<op>
+						<eq>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op>
+									<baseNToInt base="16">
+										<regex>
+										<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+										<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+										<op>%4$s%3$s%2$s%1$s</op>
+										</regex>
+									</baseNToInt>
+								</op>
+								<op>31</op>
+								</right_shift>
+							</op>
+							<op>1</op>
+							</bitwise_and>
+						</op>
+						<op>1</op>
+						</eq>
+					</op>
+					<op>-1</op>
+					<op>1</op>
+					</if>
+				</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.2</getRowOid></label>
+            <sensorSet>Sensors</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="hwSensorCurVal-discrete" index=".1.3.6.1.4.1.2011.2.217.1.4.1.1.6">
+			<rowTest>
+				<mapValue mapid="isDiscrete-vm">
+				<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.4</getRowOid>
+				</mapValue>				
+			</rowTest>
+            <type>state</type>
+            <sensorId>HW_SENSOR_CURVAL_<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.1</getRowOid></sensorId>
+            <value>
+                <!--<getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid>-->
+				<mult>
+				<op>
+					<mult>
+					<op>
+						<add>
+						<op>
+							<div>
+							<op>
+								<bitwise_and>
+								<op>
+									<baseNToInt base="16">
+										<regex>
+										<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+										<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+										<op>%4$s%3$s%2$s%1$s</op>
+										</regex>
+									</baseNToInt>
+								</op>
+								<op>8388607</op>
+								</bitwise_and>
+							</op>
+							<op>8388608</op>
+							</div>
+						</op>
+						<op>1</op>
+						</add>
+					</op>
+					<op>
+						<left_shift>
+						<op>1</op>
+						<op>
+						<sub>
+							<op>
+								<bitwise_and>
+								<op>
+									<right_shift>
+									<op>
+										<baseNToInt base="16">
+											<regex>
+											<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+											<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+											<op>%4$s%3$s%2$s%1$s</op>
+											</regex>
+										</baseNToInt>
+									</op>
+									<op>23</op>
+									</right_shift>
+								</op>
+								<op>255</op>
+								</bitwise_and>
+							</op>
+							<op>127</op>
+						</sub>
+						</op>
+						</left_shift>
+					</op>
+					</mult>
+				</op>
+				<op>
+					<if>
+					<op>
+						<eq>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op>
+									<baseNToInt base="16">
+										<regex>
+										<op>(?:0x)?([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])\s*([0-9a-fA-F][0-9a-fA-F])</op>
+										<op><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.6</getRowOid></op>
+										<op>%4$s%3$s%2$s%1$s</op>
+										</regex>
+									</baseNToInt>
+								</op>
+								<op>31</op>
+								</right_shift>
+							</op>
+							<op>1</op>
+							</bitwise_and>
+						</op>
+						<op>1</op>
+						</eq>
+					</op>
+					<op>-1</op>
+					<op>1</op>
+					</if>
+				</op>
+				</mult>
+            </value>
+			<enum>onOff-em</enum>
+            <label><getRowOid>.1.3.6.1.4.1.2011.2.217.1.4.1.1.2</getRowOid></label>
+            <sensorSet>Sensors</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="onOff-em">
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

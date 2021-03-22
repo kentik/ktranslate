@@ -1,0 +1,2520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" 
+	ddfid="deepsea_892" 
+	ddfname="Deep Sea 892" 
+	ddfversion="1" 
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\deepsea\892v2.mib
+		DSE-892 MIB | 21 April 2020
+	-->
+	<device deviceid="deepsea_892">
+		<oidMustExist ruleid="deepsea_892_exists" oid=".1.3.6.1.4.1.41385.1.3" istree="yes"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Deep Sea Electronics</setProductData>
+		<setProductData ruleid="modeldata" field="model">DSE-892</setProductData>
+		<setProductData ruleid="typedata" field="type">Generator</setProductData>
+
+        <numSensor ruleid="oilPressure">
+            <type>pressure</type>
+            <sensorId>OIL_PRESSURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.2.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Oil Pressure</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="coolantTemp">
+            <type>temp</type>
+            <sensorId>_EXTTEMP_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.3.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Coolant Temperature</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="fuelLevel">
+            <type>pctofcapacity</type>
+            <sensorId>FUEL_LEVEL</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.4.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Fuel Level</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryVolts">
+            <type>voltage</type>
+            <sensorId>BATTERY_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.5.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="engineSpeed">
+            <type>num</type>
+            <sensorId>ENGINE_SPEED</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.6.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Engine Speed</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1Volts">
+            <type>voltage</type>
+            <sensorId>GEN_L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.7.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1-N Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2Volts">
+            <type>voltage</type>
+            <sensorId>GEN_L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.8.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2-N Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3Volts">
+            <type>voltage</type>
+            <sensorId>GEN_L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.9.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3-N Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1Current">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.10.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1 Current</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2Current">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.11.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2 Current</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3Current">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.12.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3 Current</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1Watts">
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.13.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1 Active Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2Watts">
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.14.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2 Active Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3Watts">
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.15.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3 Active Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="oilTemp">
+            <type>temp</type>
+            <sensorId>_EXTTEMP_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.16.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Oil Temperature</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="altVolts">
+            <type>voltage</type>
+            <sensorId>ALT_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.17.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Charge Alternator Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genFreq">
+            <type>frequency</type>
+            <sensorId>GEN_FREQ</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.18.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Frequency</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1L2Volts">
+            <type>voltage</type>
+            <sensorId>GEN_ L1L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.19.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1-L2 Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2L3Volts">
+            <type>voltage</type>
+            <sensorId>GEN_ L2L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.20.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2-L3 Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3L1Volts">
+            <type>voltage</type>
+            <sensorId>GEN_ L3L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.21.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3-L1 Voltage</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genECurrent">
+            <type>amperage</type>
+            <sensorId>GEN_ECURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.22.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Earth Current</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsFreq">
+            <type>frequency</type>
+            <sensorId>MAINS_FREQ</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.23.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Frequency</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1Volts">
+            <type>voltage</type>
+            <sensorId>MAINS_L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.24.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1-N Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2Volts">
+            <type>voltage</type>
+            <sensorId>MAINS_L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.25.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2-N Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3Volts">
+            <type>voltage</type>
+            <sensorId>MAINS_L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.26.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3-N Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1L2Volts">
+            <type>voltage</type>
+            <sensorId>MAI_ L1L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.27.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1-L2 Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2L3Volts">
+            <type>voltage</type>
+            <sensorId>MAI_ L2L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.28.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2-L3 Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3L1Volts">
+            <type>voltage</type>
+            <sensorId>MAI_ L3L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.29.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3-L1 Voltage</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1Current">
+            <type>amperage</type>
+            <sensorId>MAINS_L1_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.30.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1 Current</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2Current">
+            <type>amperage</type>
+            <sensorId>MAINS_L2_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.31.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2 Current</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3Current">
+            <type>amperage</type>
+            <sensorId>MAINS_L3_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.32.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3 Current</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsECurrent">
+            <type>amperage</type>
+            <sensorId>MAINS_ECURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.33.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Earth Current</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1Watts">
+            <type>powerW</type>
+            <sensorId>MAINS_L1_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.34.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1 Active Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2Watts">
+            <type>powerW</type>
+            <sensorId>MAINS_L2_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.35.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2 Active Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3Watts">
+            <type>powerW</type>
+            <sensorId>MAINS_L3_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.36.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3 Active Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busFreq">
+            <type>frequency</type>
+            <sensorId>BUS_FREQ</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.37.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Frequency</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1Volts">
+            <type>voltage</type>
+            <sensorId>BUS_L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.38.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1-N Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2Volts">
+            <type>voltage</type>
+            <sensorId>BUS_L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.39.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2-N Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3Volts">
+            <type>voltage</type>
+            <sensorId>BUS_L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.40.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3-N Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1L2Volts">
+            <type>voltage</type>
+            <sensorId>BUS_ L1L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.41.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1-L2 Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2L3Volts">
+            <type>voltage</type>
+            <sensorId>BUS_ L2L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.42.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2-L3 Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3L1Volts">
+            <type>voltage</type>
+            <sensorId>BUS_ L3L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.43.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3-L1 Voltage</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1Current">
+            <type>amperage</type>
+            <sensorId>BUS_L1_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.44.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1 Current</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2Current">
+            <type>amperage</type>
+            <sensorId>BUS_L2_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.45.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2 Current</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3Current">
+            <type>amperage</type>
+            <sensorId>BUS_L3_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.46.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3 Current</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busECurrent">
+            <type>amperage</type>
+            <sensorId>BUS_ECURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.47.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Earth Current</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1Watts">
+            <type>powerW</type>
+            <sensorId>BUS_L1_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.48.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1 Active Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2Watts">
+            <type>powerW</type>
+            <sensorId>BUS_L2_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.49.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2 Active Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3Watts">
+            <type>powerW</type>
+            <sensorId>BUS_L3_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.50.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3 Active Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="canLink">
+            <type>num</type>
+            <sensorId>CAN_LINK</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.51.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>CAN Link Status</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genWattsTotal">
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_TOTAL</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.52.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Active Power Total</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1VA">
+            <type>powerVA</type>
+            <sensorId>GEN_L1_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.53.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1 Apparent Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2VA">
+            <type>powerVA</type>
+            <sensorId>GEN_L2_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.54.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2 Apparent Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3VA">
+            <type>powerVA</type>
+            <sensorId>GEN_L3_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.55.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Genrator L3 Apparent Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genTotalVA">
+            <type>powerVA</type>
+            <sensorId>GEN_TO_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.56.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Apparent Power Total</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL1VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>GEN_L1_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.57.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1 Reactive Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL2VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>GEN_L2_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.58.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2 Reactive Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genL3VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>GEN_L3_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.59.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3 Reactive Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genTotalVAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>GEN_TOT_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.60.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Reactive Power Total</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genPowerFactorL1">
+            <type>num/powerfactor</type>
+            <sensorId>GEN_PF_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.61.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L1 Power Factor</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genPowerFactorL2">
+            <type>num/powerfactor</type>
+            <sensorId>GEN_PF_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.62.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L2 Power Factor</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genPowerFactorL3">
+            <type>num/powerfactor</type>
+            <sensorId>GEN_PF_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.63.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator L3 Power Factor</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genAvgPowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>GEN_AVG_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.64.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Generator Average Power Factor</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsTotalWatts">
+            <type>powerW</type>
+            <sensorId>MAINS_TOTAL_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.65.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Active Power Total</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1VA">
+            <type>powerVA</type>
+            <sensorId>MAINS_L1_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.66.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1 Apparent Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2VA">
+            <type>powerVA</type>
+            <sensorId>MAINS_L2_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.67.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2 Apparent Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3VA">
+            <type>powerVA</type>
+            <sensorId>MAINS_L3_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.68.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3 Apparent Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsTotalVA">
+            <type>powerVA</type>
+            <sensorId>MAINS_TOT_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.69.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Apparent Power Total</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL1VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>MAINS_L1_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.70.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1 Reactive Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL2VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>MAINS_L2_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.71.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2 Reactive Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsL3VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>MAINS_L3_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.72.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3 Reactive Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsTotalVAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>MAINS_TOT_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.73.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Reactive Power Total</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsPowerFactorL1">
+            <type>num/powerfactor</type>
+            <sensorId>MAI_PF_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.74.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L1 Power Factor</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsPowerFactorL2">
+            <type>num/powerfactor</type>
+            <sensorId>MAI_PF_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.75.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L2 Power Factor</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsPowerFactorL3">
+            <type>num/powerfactor</type>
+            <sensorId>MAI_PF_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.76.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains L3 Power Factor</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsAvgPowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>MAINS_AVG_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.77.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Mains Average Power Factor</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busTotalWatts">
+            <type>powerW</type>
+            <sensorId>BUS_TOTAL_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.78.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Active Power Total</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1VA">
+            <type>powerVA</type>
+            <sensorId>BUS_L1_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.79.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1 Apparent Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2VA">
+            <type>powerVA</type>
+            <sensorId>BUS_L2_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.80.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2 Apparent Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3VA">
+            <type>powerVA</type>
+            <sensorId>BUS_L3_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.81.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3 Apparent Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busTotalVA">
+            <type>powerVA</type>
+            <sensorId>BUS_TOT_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.82.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Apparent Power Total</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL1VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>BUS_L1_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.83.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1 Reactive Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL2VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>BUS_L2_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.84.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2 Reactive Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busL3VAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>BUS_L3_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.85.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3 Reactive Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busTotalVAr">
+            <type>powerVA/powerVAR</type>
+            <sensorId>BUS_TOT_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.86.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Reactive Power Total</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busPowerFactorL1">
+            <type>num/powerfactor</type>
+            <sensorId>BUS_PF_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.87.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L1 Power Factor</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busPowerFactorL2">
+            <type>num/powerfactor</type>
+            <sensorId>BUS_PF_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.88.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L2 Power Factor</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busPowerFactorL3">
+            <type>num/powerfactor</type>
+            <sensorId>BUS_PF_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.89.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus L3 Power Factor</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busAvgPowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>BUS_AVG_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.90.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bus Average Power Factor</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="engHours">
+            <type>timeinhrs</type>
+            <sensorId>ENG_HOURS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.91.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Engine Hours</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genAccKW">
+            <type>num/powerKW</type>
+            <sensorId>GEN_ACC_KW</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.92.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Generator Accumulated Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genAccKVA">
+            <type>num/powerKVA</type>
+            <sensorId>GEN_ACC_KVA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.93.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Generator Accumulated Apparent Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="genAccKVAr">
+            <type>num/powerKVAR</type>
+            <sensorId>GEN_ACC_KVAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.94.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Generator Accumulated Reactive Power</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="startAttempts">
+            <type>num</type>
+            <sensorId>START_ATTEMPTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.95.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Start Attempts</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsAccKW">
+            <type>num/powerKW</type>
+            <sensorId>MAINS_ACC_KW</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.96.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Mains Accumulated Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsAccKVA">
+            <type>num/powerKVA</type>
+            <sensorId>MAINS_ACC_KVA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.97.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Mains Accumulated Apparent Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="mainsAccKVAr">
+            <type>num/powerKVAR</type>
+            <sensorId>MAINS_ACC_KVAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.98.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Mains Accumulated Reactive Power</label>
+            <sensorSet>Mains</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busAccKW">
+            <type>num/powerKW</type>
+            <sensorId>BUS_ACC_KW</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.99.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bus Accumulated Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busAccKVA">
+            <type>num/powerKVA</type>
+            <sensorId>BUS_ACC_KVA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.100.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bus Accumulated Apparent Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="busAccKVAr">
+            <type>num/powerKVAR</type>
+            <sensorId>BUS_ACC_KVAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.101.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bus Accumulated Reactive Power</label>
+            <sensorSet>Bus</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcVoltage">
+            <type>voltage</type>
+            <sensorId>DC_VOLTAGE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.104.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcLoadCurrent">
+            <type>amperage</type>
+            <sensorId>DC_LOAD_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.105.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Load Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcPlantBattCurrent">
+            <type>amperage</type>
+            <sensorId>DC_PLANT_BATT_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.106.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Plant Battery Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcTotalCurrent">
+            <type>amperage</type>
+            <sensorId>DC_TOTAL_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.107.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Total Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcPlantBattCycles">
+            <type>num</type>
+            <sensorId>DC_PLANT_BATT_CYCLES</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.108.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>DC Plant Battery Cycles</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcPlantBattTemp">
+            <type>temp</type>
+            <sensorId>_EXTTEMP_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.110.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Plant Battery Temperature</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcChargerCurrent">
+            <type>amperage</type>
+            <sensorId>DC_CHARGER_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.112.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Battery Charger Output Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcPlantBattRunTime">
+            <type>num</type>
+            <sensorId>DC_PLANT_BATT_RUN_TIME</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.113.1</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>DC Plant Battery Runtime</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcChargerWatts">
+            <type>powerW</type>
+            <sensorId>DC_CHARGER_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.114.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Charger Power</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcLoadWatts">
+            <type>powerW</type>
+            <sensorId>DC_LOAD_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.115.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Load Power</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcBatteryWatts">
+            <type>powerW</type>
+            <sensorId>DC_BATTERY_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.116.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Battery Power</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dcTotalWatts">
+            <type>powerW</type>
+            <sensorId>DC_TOTAL_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.117.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>DC Power Total</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="loadKwh">
+            <type>num/kwatthr</type>
+            <sensorId>LOAD_KWH</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.118.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Load Energy</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="battChargingKwh">
+            <type>num/kwatthr</type>
+            <sensorId>BATT_CHARGING_KWH</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.119.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Charging Energy</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="battDischargingKwh">
+            <type>num/kwatthr</type>
+            <sensorId>BATT_DISCHARGING_KWH</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.120.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Discharging Energy</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2Kwh">
+            <type>num/kwatthr</type>
+            <sensorId>S2_KWH</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.121.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Positive Energy</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2Kva">
+            <type>num/KVAhr</type>
+            <sensorId>S2_KVA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.122.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Apparent Energy</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2Kvar">
+            <type>num/KVARhr</type>
+            <sensorId>S2_KVAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.123.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Reactive Energy</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1Kwh">
+            <type>num/kwatthr</type>
+            <sensorId>S1_KWH</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.124.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Positive Energy</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1Kva">
+            <type>num/KVAhr</type>
+            <sensorId>S1_KVA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.125.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Apparent Energy</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1Kvar">
+            <type>num/KVARhr</type>
+            <sensorId>S1_KVAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.126.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Reactive Energy</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1Frequency">
+            <type>frequency</type>
+            <sensorId>S1_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.127.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Frequency</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1Volts">
+            <type>voltage</type>
+            <sensorId>S1_L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.128.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1-N Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2Volts">
+            <type>voltage</type>
+            <sensorId>S1_L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.129.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2-N Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3Volts">
+            <type>voltage</type>
+            <sensorId>S1_L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.130.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3-N Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1L2Volts">
+            <type>voltage</type>
+            <sensorId>S1_L1L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.131.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1-L2 Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2L3Volts">
+            <type>voltage</type>
+            <sensorId>S1_L2L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.132.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2-L3 Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3L1Volts">
+            <type>voltage</type>
+            <sensorId>S1_L3L1_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.133.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3-L1 Voltage</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1Current">
+            <type>amperage</type>
+            <sensorId>S1_L1_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.134.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Current</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2Current">
+            <type>amperage</type>
+            <sensorId>S1_L2_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.135.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Current</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3Current">
+            <type>amperage</type>
+            <sensorId>S1_L3_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.136.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Current</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1EarthCurrent">
+            <type>amperage</type>
+            <sensorId>S1_EARTH_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.137.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Earth Current</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1Watts">
+            <type>powerW</type>
+            <sensorId>S1_L1_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.138.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Active Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2Watts">
+            <type>powerW</type>
+            <sensorId>S1_L2_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.139.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Active Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3Watts">
+            <type>powerW</type>
+            <sensorId>S1_L3_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.140.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Active Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1CurrentLagLead">
+            <type>amperage</type>
+            <sensorId>S1_CURRENT_LAG_LEAD</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.141.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Current Lag/Lead</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2Frequency">
+            <type>frequency</type>
+            <sensorId>S2_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.142.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Frequency</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1Volts">
+            <type>voltage</type>
+            <sensorId>S2_L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.143.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1-N Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2Volts">
+            <type>voltage</type>
+            <sensorId>S2_L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.144.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2-N Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3Volts">
+            <type>voltage</type>
+            <sensorId>S2_L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.145.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3-N Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1L2Volts">
+            <type>voltage</type>
+            <sensorId>S2_L1L2_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.146.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1-L2 Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2L3Volts">
+            <type>voltage</type>
+            <sensorId>S2_L2L3_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.147.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2-L3 Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3L1Volts">
+            <type>voltage</type>
+            <sensorId>L2_L3L1_VOLTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.148.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3-L1 Voltage</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1Current">
+            <type>amperage</type>
+            <sensorId>S2_L1_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.149.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Current</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2Current">
+            <type>amperage</type>
+            <sensorId>S2_L2_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.150.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Current</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3Current">
+            <type>amperage</type>
+            <sensorId>S2_L3_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.151.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Current</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2EarthCurrent">
+            <type>amperage</type>
+            <sensorId>S2_EARTH_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.152.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Earth Current</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1Watts">
+            <type>powerW</type>
+            <sensorId>S2_L1_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.153.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Active Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2Watts">
+            <type>powerW</type>
+            <sensorId>S2_L2_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.154.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Active Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3Watts">
+            <type>powerW</type>
+            <sensorId>S2_L3_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.155.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Active Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2CurrentLagLead">
+            <type>amperage</type>
+            <sensorId>S2_CURRENT_LAG_LEAD</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.156.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Current Lag/Lead</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2TotalWatts">
+            <type>powerW</type>
+            <sensorId>S2_TOTAL_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.157.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Active Power Total</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1Va">
+            <type>powerVA</type>
+            <sensorId>S2_L1_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.158.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Apparent Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2Va">
+            <type>powerVA</type>
+            <sensorId>S2_L2_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.159.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Apparent Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3Va">
+            <type>powerVA</type>
+            <sensorId>S2_L3_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.160.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Apparent Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2TotalVa">
+            <type>powerVA</type>
+            <sensorId>S2_TOT_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.161.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Apparent Power Total</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S2_L1_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.162.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Reactive Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S2_L2_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.163.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Reactive Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S2_L3_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.164.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Reactive Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2TotalVar">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S2_TOT_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.165.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Reactive Power Total</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S2_L1_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.166.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Power Factor</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S2_L2_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.167.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Power Factor</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S2_L3_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.168.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Power Factor</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2AveragePowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S2_AVERAGE_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.169.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Average Power Factor</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2PercentFullPower">
+            <type>pctofcapacity</type>
+            <sensorId>S2_PERCENT_FP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.170.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Percentage of Full Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2PercentFullVar">
+            <type>pctofcapacity</type>
+            <sensorId>S2_PERCENT_FV</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.171.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Percentage of Full Reactive Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1TotalWatts">
+            <type>powerW</type>
+            <sensorId>S1_TOTAL_WATTS</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.172.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Active Power Total</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1Va">
+            <type>powerVA</type>
+            <sensorId>S1_L1_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.173.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Apparent Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2Va">
+            <type>powerVA</type>
+            <sensorId>S1_L2_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.174.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Apparent Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3Va">
+            <type>powerVA</type>
+            <sensorId>S1_L3_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.175.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Apparent Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1TotalVa">
+            <type>powerVA</type>
+            <sensorId>S1_TOT_VA</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.176.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Apparent Power Total</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S1_L1_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.177.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Reactive Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S1_L2_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.178.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Reactive Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3Var">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S1_L3_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.179.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Reactive Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1TotalVar">
+            <type>powerVA/powerVAR</type>
+            <sensorId>S1_TOT_VAR</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.180.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Reactive Power Total</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S1_L1_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.181.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Power Factor</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S1_L2_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.182.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Power Factor</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3PowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S1_L3_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.183.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Power Factor</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1AveragePowerFactor">
+            <type>num/powerfactor</type>
+            <sensorId>S1_AVERAGE_PF</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.184.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Average Power Factor</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1PercentFullPower">
+            <type>pctofcapacity</type>
+            <sensorId>S1_PERCENT_FP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.185.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Percentage of Full Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1PercentFullVar">
+            <type>pctofcapacity</type>
+            <sensorId>S1_PERCENT_FV</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.186.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Percentage of Full Reactive Power</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1LeadLag">
+            <type>num</type>
+            <sensorId>S2_L1_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.187.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Lead/Lag</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2LeadLag">
+            <type>num</type>
+            <sensorId>S2_L2_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.188.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Lead/Lag</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3LeadLag">
+            <type>num</type>
+            <sensorId>S2_L3_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.189.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Lead/Lag</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2TotalLeadLag">
+            <type>num</type>
+            <sensorId>S2_TOTAL_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.190.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 Total Lead/Lag</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L1PercentFullPower">
+            <type>pctofcapacity</type>
+            <sensorId>S2_L1_PERCENT_FP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.191.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L1 Percentage of Full Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L2PercentFullPower">
+            <type>pctofcapacity</type>
+            <sensorId>S2_L2_PERCENT_FP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.192.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L2 Percentage of Full Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s2L3PercentFullPower">
+            <type>pctofcapacity</type>
+            <sensorId>S2_L3_PERCENT_FP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.193.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S2 L3 Percentage of Full Power</label>
+            <sensorSet>S2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L1LeadLag">
+            <type>num</type>
+            <sensorId>S1_L1_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.194.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L1 Lead/Lag</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L2LeadLag">
+            <type>num</type>
+            <sensorId>S1_L2_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.195.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L2 Lead/Lag</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1L3LeadLag">
+            <type>num</type>
+            <sensorId>S1_L3_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.196.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 L3 Lead/Lag</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="s1TotalLeadLag">
+            <type>num</type>
+            <sensorId>S1_TOT_LEAD_LAG</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.41385.1.3.1.1.197.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>S1 Total Lead/Lag</label>
+            <sensorSet>S1</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

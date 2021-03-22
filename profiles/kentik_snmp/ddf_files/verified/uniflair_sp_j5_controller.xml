@@ -1,0 +1,383 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="uniflair_sp_j5_controller"
+	ddfname="Uniflair SP (J5 Controller)"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="uniflair_sp">
+		<oidMustMatch ruleid="sysobjidtest" oid=".1.3.6.1.2.1.1.2.0">
+		  <valueList>
+			 <value>.1.3.6.1.4.1.318.1.3.14.21</value>
+		  </valueList>
+	    </oidMustMatch>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Uniflair</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.318.1.1.27.1.3.2.1.3.1.1</getOid></setProductData>
+		<setProductData ruleid="serial_number" field="serial_num"><getOid>.1.3.6.1.4.1.318.1.1.27.1.3.2.1.3.1.2</getOid></setProductData>
+		<setProductData ruleid="application_version" field="appversion"><getOid>.1.3.6.1.4.1.318.1.1.27.1.3.2.1.3.1.12</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<numSensor ruleid="discharge_pressure">
+            <type>num</type>
+			<units>psi</units>
+            <sensorId>DISCHARGE_PRESSURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.1</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Discharge Pressure</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="condensing_temperature">
+            <type>temp</type>
+            <sensorId>CONDENSING_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.4</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Condensing Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="comanded_evap_fan_speed">
+            <type>pctofcapacity</type>
+            <sensorId>COMANDED_EVAP_FAN_SPEED</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.5</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Comanded Evap Fan Speed</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="comanded_cond_fan_speed_">
+            <type>pctofcapacity</type>
+            <sensorId>COMANDED_COND_FAN_SPEED_</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.6</getOid></op>
+                    <op>1</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Comanded Cond Fan Speed </label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="supply_temperature">
+            <type>temp</type>
+            <sensorId>SUPPLY_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.8</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Supply Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outdoor_air_temperature">
+            <type>temp</type>
+            <sensorId>OUTDOOR_AIR_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.10</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Outdoor Air Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="room_temperature">
+            <type>temp</type>
+            <sensorId>ROOM_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.12</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Room Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outdoor_dewpoint_temperature">
+            <type>temp</type>
+            <sensorId>OUTDOOR_DEWPOINT_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.14</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Outdoor Dewpoint Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="average_outdoor_air_temperature">
+            <type>temp</type>
+            <sensorId>AVERAGE_OUTDOOR_AIR_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.16</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Average Outdoor Air Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="average_room_temperature">
+            <type>temp</type>
+            <sensorId>AVERAGE_ROOM_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.18</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Average Room Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="average_outdoor_dewpoint_temperature">
+            <type>temp</type>
+            <sensorId>AVERAGE_OUTDOOR_DEWPOINT_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.20</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Average Outdoor Dewpoint Temperature</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outdoor_air_humidity">
+            <type>humidity</type>
+            <sensorId>OUTDOOR_AIR_HUMIDITY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.21</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outdoor Air Humidity</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+        <numSensor ruleid="average_outdoor_air_humidity">
+            <type>humidity</type>
+            <sensorId>AVERAGE_OUTDOOR_AIR_HUMIDITY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.22</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Average Outdoor Air Humidity</label>
+            <sensorSet>Environmentals</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="unit_state">
+            <type>state</type>
+            <sensorId>UNIT_STATE</sensorId>
+            <value>
+                <mapValue mapid="unit_state-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.1</getOid>
+                </mapValue>
+            </value>
+            <label>Unit State</label>
+            <enum>unit_state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="group_state">
+            <type>state</type>
+            <sensorId>GROUP_STATE</sensorId>
+            <value>
+                <mapValue mapid="group_state-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.2</getOid>
+                </mapValue>
+            </value>
+            <label>Group State</label>
+            <enum>group_state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="compressor">
+            <type>state</type>
+            <sensorId>COMPRESSOR</sensorId>
+            <value>
+                <mapValue mapid="off_on-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.3</getOid>
+                </mapValue>
+            </value>
+            <label>Compressor</label>
+            <enum>off_on-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="airflow_good">
+            <type>state</type>
+            <sensorId>AIRFLOW_GOOD</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.4</getOid>
+                </mapValue>
+            </value>
+            <label>Airflow Good</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="air_filter_clogged">
+            <type>state</type>
+            <sensorId>AIR_FILTER_CLOGGED</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.5</getOid>
+                </mapValue>
+            </value>
+            <label>Air Filter Clogged</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="compressor_on">
+            <type>state</type>
+            <sensorId>COMPRESSOR_ON</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.6</getOid>
+                </mapValue>
+            </value>
+            <label>Compressor On</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="low_suction_pressure">
+            <type>state</type>
+            <sensorId>LOW_SUCTION_PRESSURE</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.7</getOid>
+                </mapValue>
+            </value>
+            <label>Low Suction Pressure</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="smoke_fire_detected">
+            <type>state</type>
+            <sensorId>SMOKE_FIRE_DETECTED</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.8</getOid>
+                </mapValue>
+            </value>
+            <label>Smoke/Fire Detected</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="condenser_powered">
+            <type>state</type>
+            <sensorId>CONDENSER_POWERED</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.9</getOid>
+                </mapValue>
+            </value>
+            <label>Condenser Powered</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="condensate_pan_full">
+            <type>state</type>
+            <sensorId>CONDENSATE_PAN_FULL</sensorId>
+            <value>
+                <mapValue mapid="no_yes-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.10</getOid>
+                </mapValue>
+            </value>
+            <label>Condensate Pan Full</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="unit">
+            <type>state</type>
+            <sensorId>UNIT</sensorId>
+            <value>
+                <mapValue mapid="off_on-vm">
+                    <getOid>.1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.11</getOid>
+                </mapValue>
+            </value>
+            <label>Unit</label>
+            <enum>off_on-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="unit_state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="unit_state-em">
+			<label>Initializing</label>
+			<label>Delaying</label>
+			<label>Maintenance</label>
+			<label>Off</label>
+			<label>Standby</label>
+			<label>No Demand</label>
+			<label>Cooling</label>
+			<label>Free Cooling</label>
+			<label>Idle</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<valueMap ruleid="group_state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="group_state-em">
+			<label>Primary</label>
+			<label>Standby</label>
+			<label>Assist</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<valueMap ruleid="off_on-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="off_on-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		
+		<valueMap ruleid="no_yes-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="no_yes-em">
+			<label>No</label>
+			<label>Yes</label>
+		</enumMap>
+	</device>
+</APC_DDF>

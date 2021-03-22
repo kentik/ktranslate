@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="telect_nrgcontrolbt"
+	ddfname="Telect NrgControlBT"
+	ddfversion="2"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="Telect_NrgControlBT">
+	<oidMustExist ruleid="DDF_1230" oid=".1.3.6.1.4.1.6842.2" istree="yes" />
+
+    <setProductData ruleid="vendordata" field="vendor">Telect</setProductData>
+
+    <setProductData ruleid="modeldata" field="model">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.1.1.0</getOid>
+	</setProductData>
+
+    <setProductData ruleid="typedata" field="type">Rack Manager</setProductData>
+
+    <setProductData ruleid="sernumdata" field="serial_num">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.1.4.0</getOid>
+	</setProductData>
+
+    <setLocationData ruleid="locAddress1" field="ADDRESS1">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.2.6.0</getOid>
+	</setLocationData>
+    <setLocationData ruleid="locCity" field="CITY">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.2.7.0</getOid>
+	</setLocationData>
+    <setLocationData ruleid="locState" field="STATE">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.2.8.0</getOid>
+	</setLocationData>
+    <setLocationData ruleid="locCountry" field="COUNTRY">
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.2.10.0</getOid>
+	</setLocationData>
+
+    <setDefaultLabel>
+		<getOid>.1.3.6.1.4.1.6842.2.1.1.2.1.0</getOid>
+	</setDefaultLabel>
+
+    <numSensor ruleid="ctrldycfgmeasureint">
+      <type>timeinsec</type>
+      <sensorId>_CTRLDYCFGMEASUREINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.6842.2.1.1.2.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Measure Interval</label>
+      <sensorSet>Dynamic Config</sensorSet>
+    </numSensor>
+    <numSensor ruleid="ctrlatpnlnbrpanels">
+      <type>num</type>
+      <sensorId>_CTRLATPNLNBRPANELS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.6842.2.1.1.3.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Number of Attached Panels</label>
+      <sensorSet>Attached Panels</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="atpnlnbrsensors" index=".1.3.6.1.4.1.6842.2.1.1.3.2.1.15">
+      <type>num</type>
+      <sensorId>_ATPNLNBRSENSORS_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.15</getRowOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Panel <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.2</getRowOid></formatNumber> (<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.3</getRowOid>) - Number of Sensors</label>
+      <sensorSet>Attached Panels</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="ctrlstcfgtype">
+      <type>state</type>
+      <sensorId>_CTRLSTCFGTYPE</sensorId>
+      <value>
+        <mapValue mapid="nrgcontrol_dbfb_vm">
+          <getOid>.1.3.6.1.4.1.6842.2.1.1.1.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Controller Type</label>
+      <enum>nrgcontrol_dbfb_em</enum>
+      <sensorSet>Static Config</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="ctrldycfgbdfbconfig">
+      <type>state</type>
+      <sensorId>_CTRLDYCFGBDFBCONFIG</sensorId>
+      <value>
+        <mapValue mapid="notapplicable_skewed_vm">
+          <getOid>.1.3.6.1.4.1.6842.2.1.1.2.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>BDFB Feed Configuration</label>
+      <enum>notapplicable_skewed_em</enum>
+      <sensorSet>Dynamic Config</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="atpnltype" index=".1.3.6.1.4.1.6842.2.1.1.3.2.1.6">
+      <type>state</type>
+      <sensorId>_ATPNLTYPE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="dual_gtm_vm">
+          <getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.6</getRowOid>
+        </mapValue>
+      </value>
+      <label>Panel <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.2</getRowOid></formatNumber> (<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.3</getRowOid>) - Panel Type</label>
+      <enum>dual_gtm_em</enum>
+      <sensorSet>Attached Panels</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="atpnlposition" index=".1.3.6.1.4.1.6842.2.1.1.3.2.1.8">
+      <type>state</type>
+      <sensorId>_ATPNLPOSITION_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="a1_b4_vm">
+          <getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.8</getRowOid>
+        </mapValue>
+      </value>
+      <label>Panel <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.2</getRowOid></formatNumber> (<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.3</getRowOid>) - Panel Position</label>
+      <enum>a1_b4_em</enum>
+      <sensorSet>Attached Panels</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="atpnlauxtype" index=".1.3.6.1.4.1.6842.2.1.1.3.2.1.14">
+      <type>state</type>
+      <sensorId>_ATPNLAUXTYPE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="gmt_bdfb_vm">
+          <getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.14</getRowOid>
+        </mapValue>
+      </value>
+      <label>Panel <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.2</getRowOid></formatNumber> (<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.2.1.3</getRowOid>) - Alarm Card Type</label>
+      <enum>gmt_bdfb_em</enum>
+      <sensorSet>Attached Panels</sensorSet>
+    </stateSensor>
+
+    <numSensor ruleid="atPnlSnsrValue" index=".1.3.6.1.4.1.6842.2.1.1.3.3.1.27">
+		<rowTest>
+			<mapValue mapid="numericOnly-vm">
+			<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.20</getRowOid>
+			</mapValue>
+		</rowTest>
+		<type>
+			<mapValue mapid="sensorType-vm">
+			<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.20</getRowOid>
+			</mapValue>
+		</type>
+		<sensorId>_AT_PNL_SNSR_VALUE_<rowIndex/></sensorId>
+      <value>
+			<mult>
+			<op><getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.27</getRowOid></op>
+        <op>
+				<mapValue mapid="tenToTheMinusX-vm">
+				<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.8</getRowOid>
+				</mapValue>
+        </op>
+			</mult>
+      </value>
+		<valueInc>
+			<mapValue mapid="tenToTheMinusX-vm">
+			<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.8</getRowOid>
+			</mapValue>
+		</valueInc>
+		<label>
+			Panel<space/>
+			<formatNumber printffmt="%02.0f">
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>%1$s</op>
+			</regex>
+			</formatNumber>
+			<space/>-<space/>Sensor<space/>
+			<formatNumber printffmt="%02.0f">
+			<regex>
+			<op>(\d*)\.(\d*)</op>
+			<op><rowIndex/></op>
+			<op>%2$s</op>
+			</regex>
+			</formatNumber>
+			(<getRowOid>.1.3.6.1.4.1.6842.2.1.1.3.3.1.29</getRowOid>)
+		</label>
+      	<sensorSet>Attached Panel Sensors</sensorSet>
+    </numSensor>
+
+		<valueMap ruleid="tenToTheMinusX-vm">
+			<valueIn>1</valueIn><valueOut>0.1</valueOut>
+			<valueIn>2</valueIn><valueOut>0.01</valueOut>
+			<valueIn>3</valueIn><valueOut>0.001</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<valueMap ruleid="numericOnly-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>2</valueIn><valueOut>[true]</valueOut>
+			<valueIn>3</valueIn><valueOut>[true]</valueOut>
+			<valueIn>5</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="sensorType-vm">
+			<valueIn>1</valueIn><valueOut>amperage</valueOut>
+			<valueIn>2</valueIn><valueOut>voltage</valueOut>
+			<valueIn>3</valueIn><valueOut>temp</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+	
+	<valueMap ruleid="nrgcontrol_dbfb_vm">
+			<valueIn>142418</valueIn><valueOut>0</valueOut>
+			<valueIn>142419</valueIn><valueOut>1</valueOut>
+			<valueIn>142420</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="nrgcontrol_dbfb_em">
+			<label>nrgControl</label>
+			<label>nrgControlPlus</label>
+			<label>bDFB</label>
+		</enumMap>
+		
+		
+		<valueMap ruleid="notapplicable_skewed_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="notapplicable_skewed_em">
+			<label>not Applicable</label>
+			<label>eight Independant Feeds</label>
+			<label>four Redundant Feeds</label>
+			<label>three Redundant Feeds TopSkewed</label>
+			<label>two Redundant Feeds TopSkewed</label>
+			<label>single Redundant Feeds</label>
+			<label>two Redundant Feeds BottomSkewed</label>
+			<label>two Redundant Feeds EquallySkewed</label>
+			<label>three Redundant Feeds MiddleSkewed</label>
+			<label>three Redundant Feeds BottomSkewed</label>
+		</enumMap>
+		
+		<valueMap ruleid="disabled_enabled_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="disabled_enabled_em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+		
+		
+		<valueMap ruleid="dual_gtm_vm">
+			<valueIn>142409</valueIn><valueOut>0</valueOut>
+			<valueIn>142410</valueIn><valueOut>1</valueOut>
+			<valueIn>142411</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="dual_gtm_em">
+			<label>dual 100Amp 10Position GMT</label>
+			<label>bdfb 800Amp 20Position Pod</label>
+			<label>dua l600Amp 8PosBreaker 5Pos GMT</label>
+		</enumMap>
+		
+		<valueMap ruleid="a1_b4_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="a1_b4_em">
+			<label>Undefined</label>
+			<label>a1</label>
+			<label>b1</label>
+			<label>a2</label>
+			<label>b2</label>
+			<label>a3</label>
+			<label>b3</label>
+			<label>a4</label>
+			<label>b4</label>
+		</enumMap>
+		
+		
+		<valueMap ruleid="gmt_bdfb_vm">
+			<valueIn>142426</valueIn><valueOut>0</valueOut>
+			<valueIn>142427</valueIn><valueOut>1</valueOut>
+			<valueIn>142428</valueIn><valueOut>2</valueOut>
+			<valueIn>142429</valueIn><valueOut>2</valueOut>
+			<valueIn>142430</valueIn><valueOut>2</valueOut>
+			<valueIn>142431</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="gmt_bdfb_em">
+			<label>gmt Plus AlarmCard</label>
+			<label>gmt AlarmCard</label>
+			<label>loadCenter Plus AlarmCard</label>
+			<label>loadCenter AlarmCard</label>
+			<label>bdfb Plus AlarmCard</label>
+			<label>bdfb AlarmCard</label>
+		</enumMap>
+	
+	
+	
+	
+    
+  </device>
+</APC_DDF>

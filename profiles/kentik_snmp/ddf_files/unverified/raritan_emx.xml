@@ -1,0 +1,213 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="raritan_emx"
+	ddfname="Raritan EMX"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="raritan_emx_header">
+		<oidMustExist ruleid="raritan" oid=".1.3.6.1.4.1.13742" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Raritan</setProductData>
+		<setProductData ruleid="modeldata" field="model">EMX</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+	</device>
+
+	<device deviceid="raritan_emx_assetmanager">
+		<oidMustExist ruleid="assetmgr" oid=".1.3.6.1.4.1.13742.7" istree="yes" /> 
+
+		<numSensor ruleid="assetStripCount">
+            <type>num</type>
+            <sensorId>ASSET_STRIP_COUNT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.13742.7.1.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Asset Strip Count</label>
+            <sensorSet>Asset Management</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="currentMainTagCount" index=".1.3.6.1.4.1.13742.7.1.6.1.1.3">            <type>num</type>
+            <type>num</type>
+            <sensorId>CURRENT_MAIN_TAG_COUNT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13742.7.1.6.1.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Asset Strip <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>: Current Main Tag Count</label>
+            <sensorSet>Asset Management</sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentBladeTagCount" index=".1.3.6.1.4.1.13742.7.1.6.1.1.3">
+            <type>num</type>
+            <sensorId>CURRENT_BLADE_TAG_COUNT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.13742.7.1.6.1.1.9</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Asset Strip <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>: Current Blade Tag Count</label>
+            <sensorSet>Asset Management</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="rackUnitType" index=".1.3.6.1.4.1.13742.7.1.7.1.1.8">
+			<rowTest>
+				<mapValue mapid="rackUnitPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.13742.7.1.7.1.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>RACK_UNIT_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="rackUnitType-vm">
+                <getRowOid>.1.3.6.1.4.1.13742.7.1.7.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>Rack Unit <getRowOid>.1.3.6.1.4.1.13742.7.1.7.1.1.8</getRowOid> (<getRowOid>.1.3.6.1.4.1.13742.7.1.7.1.1.6</getRowOid>) Type</label>
+            <enum>rackUnit-em</enum>
+            <sensorSet>Asset Management</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="rackUnitPresent-vm">
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+			<valueIn>2</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="rackUnitType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="rackUnit-em">
+			<label>Unknown</label>
+			<label>Single Server</label>
+			<label>Blade Extension</label>
+		</enumMap>
+
+
+		<!--
+		<stateSensor ruleid="stSensTemplate">
+            <type>state</type>
+            <sensorId>ST_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>State Sensor</label>
+            <enum>state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="state-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<alarmFlags ruleid="alarmTemplate">
+			<value><getOid>.1.3.6.1.4.1....</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Generic Alarm</activeText>
+					<inactiveText>Generic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Generic Alarm condition exists.</activeText>
+					<inactiveText>A Generic Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		-->
+	</device>
+
+	<device deviceid="raritan_emd">
+		<oidMustExist ruleid="emd" oid=".1.3.6.1.4.1.13742.8" istree="yes" /> 
+
+		<numSensor ruleid="measurementsExternalSensorValue" index=".1.3.6.1.4.1.13742.8.2.1.1.1.1">
+            <type>num</type>
+			<units>
+				<mapValue mapid="externalSensorUnits-vm">
+				<getRowOid>.1.3.6.1.4.1.13742.8.1.2.1.1.11</getRowOid>
+				</mapValue>
+			</units>
+            <sensorId>MEAS_EXT_SENSOR_VALUE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.13742.8.2.1.1.1.3</getRowOid></op>
+				<op>
+					<mult>
+					<op>
+						<!-- to fit unsupported units to supported ones -->
+						<mapValue mapid="externalSensorScale-vm">
+						<getRowOid>.1.3.6.1.4.1.13742.8.1.2.1.1.11</getRowOid>
+						</mapValue>
+					</op>
+					<op>
+						<mapValue mapid="tenToTheMinusX-vm">
+						<getRowOid>.1.3.6.1.4.1.13742.8.1.2.1.1.12</getRowOid>
+						</mapValue>
+					</op>
+					</mult>
+				</op>
+				</mult>
+            </value>
+			<valueInc>
+				<mapValue mapid="tenToTheMinusX-vm">
+				<getRowOid>.1.3.6.1.4.1.13742.8.1.2.1.1.12</getRowOid>
+				</mapValue>
+			</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.13742.8.1.2.1.1.4</getRowOid></label>
+            <sensorSet>External Sensors</sensorSet>
+        </numSensor>
+		<valueMap ruleid="externalSensorUnits-vm">
+			<valueIn>1</valueIn><valueOut>volts</valueOut>
+			<valueIn>2</valueIn><valueOut>amps</valueOut>
+			<valueIn>3</valueIn><valueOut>watts</valueOut>
+			<valueIn>4</valueIn><valueOut>voltamps</valueOut>
+			<valueIn>5</valueIn><valueOut>watthours</valueOut>
+			<valueIn>6</valueIn><valueOut>voltamphours</valueOut>
+			<valueIn>7</valueIn><valueOut>degreeC</valueOut>
+			<valueIn>8</valueIn><valueOut>hertz</valueOut>
+			<valueIn>9</valueIn><valueOut>percent</valueOut>
+			<valueIn>10</valueIn><valueOut>meterspermin</valueOut>
+			<valueIn>11</valueIn><valueOut>kilopascal</valueOut>
+			<valueIn>12</valueIn><valueOut>psi</valueOut>
+			<valueIn>13</valueIn><valueOut>gallons</valueOut>
+			<valueIn>14</valueIn><valueOut>degreeF</valueOut>
+			<valueIn>15</valueIn><valueOut>feet</valueOut>
+			<valueIn>16</valueIn><valueOut>feet</valueOut>
+			<valueIn>17</valueIn><valueOut>meters</valueOut>
+			<valueIn>18</valueIn><valueOut>meters</valueOut>
+			<valueIn>19</valueIn><valueOut>rpm</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<valueMap ruleid="externalSensorScale-vm">
+			<valueIn>10</valueIn><valueOut>60</valueOut>
+			<valueIn>11</valueIn><valueOut>0.001</valueOut>
+			<valueIn>16</valueIn><valueOut>0.083333333</valueOut>
+			<valueIn>17</valueIn><valueOut>0.01</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<valueMap ruleid="tenToTheMinusX-vm">
+			<valueIn>1</valueIn><valueOut>0.1</valueOut>
+			<valueIn>2</valueIn><valueOut>0.01</valueOut>
+			<valueIn>3</valueIn><valueOut>0.001</valueOut>
+			<valueIn>4</valueIn><valueOut>0.0001</valueOut>
+			<valueIn>5</valueIn><valueOut>0.00001</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+	</device>
+
+</APC_DDF>

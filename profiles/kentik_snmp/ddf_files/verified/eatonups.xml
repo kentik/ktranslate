@@ -1,0 +1,1440 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid ="eatonups"
+	ddfname="Eaton Powerware UPS"
+	ddfversion="16"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\eaton\Powerwareups.mib
+		
+		XUPS-MIB | 12 August 2020
+	-->
+	<device deviceid="xupsIdent">
+		<oidMustExist ruleid="xupsIdent_exists" oid=".1.3.6.1.4.1.534.1.1" istree="yes"/>
+		<oidMustExist ruleid="powerwareups_header" oid=".1.3.6.1.2.1.47.1.1.1.1" istree="yes"/>
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="stomp-mib2-model" suppressid="upsmib/upsmib/modeldata"/>
+
+		<setProductData ruleid="manufacturerdata" field="manufacturer"><getOid>.1.3.6.1.4.1.534.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="vendordata" field="vendor">Eaton</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.534.1.1.2.0</getOid></setProductData>
+		<setProductData ruleid="fw_version" field="appversion"><getOid>1.3.6.1.4.1.534.1.1.3.0</getOid></setProductData>
+		<setProductData ruleid="sernumdata" field="serial_num"><getOid>.1.3.6.1.2.1.47.1.1.1.1.11.2</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.2.1.47.1.1.1.1.7.1</getOid>
+			<space/>
+            (<getOid>.1.3.6.1.2.1.47.1.1.1.1.15.1</getOid>)			
+		</setDefaultLabel>
+
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><getOid>.1.3.6.1.4.1.534.1.3.3.0</getOid></setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><getOid>.1.3.6.1.4.1.534.1.4.3.0</getOid></setProductData>
+
+	</device>
+	<!--Check to see if the SN exists in the Eaton section of the MIB and if not, set it from the UPS MIB  -->
+	<device deviceid="upsmib">
+		<oidMustNotExist ruleid="upsmib_sn" oid=".1.3.6.1.2.1.47.1.1.1.1.11.2"/>
+		<oidMustExist ruleid="upsmib_sn" oid=".1.3.6.1.2.1.33.1.1.5.0"/>
+		<setProductData ruleid="sernumdata_upsmib" field="serial_num">
+			<getOid>.1.3.6.1.2.1.33.1.1.5.0</getOid>
+		</setProductData>
+	</device>
+	<!--DDF Sensors -->
+	<device deviceid="powerwareups_sensor">
+		<oidMustExist ruleid="powerwareups_sensor_exist" oid=".1.3.6.1.4.1.534.1.1.2.0"/>
+		<!-- suppress upsmib sensor rules -->
+		<suppressRule suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<suppressRule suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+		<suppressRule suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		<suppressRule suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<suppressRule suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<suppressRule suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<suppressRule suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputSource"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputPower"/>
+		<suppressRule suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBypassFrequency"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBypassVoltage"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBypassCurrent"/>
+		<suppressRule suppressid="upsmib/upsmib/upsBypassPower"/>
+
+		<!-- xupsBatTimeRemaining -->
+		<numSensor ruleid="xupsBatTimeRemaining">
+			<type>timeinmin</type>
+			<sensorId>_TIME_REMAINING_ON_BATT</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.534.1.2.1.0</getOid>
+					</op>
+					<op>60</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Battery Time Remaining</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- xupsBatVoltage -->
+		<numSensor ruleid="xupsBatVoltage">
+			<type>voltage</type>
+			<sensorId>_BATT_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.2.2.0</getOid>
+			</value>
+			<label>Battery Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- xupsBatCurrent -->
+		<numSensor ruleid="xupsBatCurrent">
+			<type>amperage</type>
+			<sensorId>_BATT_AMPERAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.2.3.0</getOid>
+			</value>
+			<label>Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- xupsBatCapacity -->
+		<numSensor ruleid="xupsBatCapacity">
+			<type>pctofcapacity</type>
+			<sensorId>_BATT_CAPACITY_LEFT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.2.4.0</getOid>
+			</value>
+			<label>Battery Capacity Remaining</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- xupsBatteryAbmStatus -->
+		<stateSensor ruleid="xupsBatteryAbmStatus">
+			<type>state</type>
+			<sensorId>XUPS_BATTERY_ABM_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="xupsBatteryAbmStatus-vm">
+					<getOid>.1.3.6.1.4.1.534.1.2.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>Advanced Battery Management (ABM) Status</label>
+			<enum>xupsBatteryAbmStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsBatteryAbmStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsBatteryAbmStatus-em">
+			<label>batteryCharging</label>
+			<label>batteryDischarging</label>
+			<label>batteryFloating</label>
+			<label>batteryResting</label>
+			<label>unknown</label>
+		</enumMap>
+
+		<!-- xupsInputFrequency -->
+		<numSensor ruleid="xupsInputFrequency">
+			<type>frequency</type>
+			<sensorId>_INPUT1_HZ_1</sensorId>
+			<value>
+				<!-- Convert .1 of units to units.-->
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.534.1.3.1.0</getOid>
+					</op>
+					<op>.1</op>
+				</mult>
+			</value>
+			<label>Input Frequency</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+
+		<!-- xupsInputVoltage -->
+		<numSensor ruleid="xupsInputVoltage" index=".1.3.6.1.4.1.534.1.3.4.1.2">
+			<type>voltageAC</type>
+			<sensorId>_INPUT_VOLTAGE_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.3.4.1.2</getRowOid>
+			</value>
+			<label>Input Voltage - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Input - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsInputCurrent -->
+		<numSensor ruleid="xupsInputCurrent" index=".1.3.6.1.4.1.534.1.3.4.1.3">
+			<type>amperage</type>
+			<sensorId>_INPUT_AMPS_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.3.4.1.3</getRowOid>
+			</value>
+			<label>Input Current - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Input - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsInputWatts -->
+		<!-- DDF-138 - Removed scaling "fix". Eaton ConnectUPS device firmware update v4.32 addresses issue -->
+		<numSensor ruleid="xupsInputWatts" index=".1.3.6.1.4.1.534.1.3.4.1.4">
+			<type>powerW</type>
+			<sensorId>INPUT_POWER_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.3.4.1.4</getRowOid>
+			</value>
+			<label>Input Power - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Input - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsInputSource -->
+		<stateSensor ruleid="xupsInputSource">
+			<type>state</type>
+			<sensorId>XUPS_INPUT_SOURCE_</sensorId>
+			<value>
+				<mapValue mapid="xupsInputSource-vm">
+					<getOid>.1.3.6.1.4.1.534.1.3.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>Input Source</label>
+			<enum>xupsInputSource-em</enum>
+			<sensorSet>Input</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsInputSource-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsInputSource-em">
+			<label>other</label>
+			<label>none</label>
+			<label>primaryUtility</label>
+			<label>bypassFeed</label>
+			<label>secondaryUtility</label>
+			<label>generator</label>
+			<label>flywheel</label>
+			<label>fuelcell</label>
+		</enumMap>
+
+		<!-- xupsDualInputStatus -->
+		<stateSensor ruleid="xupsDualInputStatus">
+			<type>state</type>
+			<sensorId>XUPS_DUAL_INPUT_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="xupsDualInputStatus-vm">
+					<getOid>.1.3.6.1.4.1.534.1.3.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>Dual Input Status</label>
+			<enum>xupsDualInputStatus-em</enum>
+			<sensorSet>Input</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsDualInputStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsDualInputStatus-em">
+			<label>bothSourcesBad</label>
+			<label>primarySourceGood</label>
+			<label>secondarySourceGood</label>
+			<label>bothSourcesGood</label>
+		</enumMap>
+
+		<!-- xupsOutputLoad -->
+		<numSensor ruleid="xupsOutputLoad">
+			<type>pctofcapacity</type>
+			<sensorId>_OUTPUT_LOAD_PCT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.4.1.0</getOid>
+			</value>
+			<label>Output Load</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+
+		<!-- xupsOutputFrequency -->
+		<numSensor ruleid="xupsOutputFrequency">
+			<type>frequency</type>
+			<sensorId>_UPS_PHASE_OUTPUT_FREQ_0</sensorId>
+			<value>
+				<!-- Convert .1 of units to units.-->
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.534.1.4.2.0</getOid>
+					</op>
+					<op>.1</op>
+				</mult>
+			</value>
+			<label>Output Frequency</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+
+		<!-- xupsOutputVoltage -->
+		<numSensor ruleid="xupsOutputVoltage" index=".1.3.6.1.4.1.534.1.4.4.1.2">
+			<type>voltageAC</type>
+			<sensorId>_OUTPUT_VOLTAGE_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.4.4.1.2</getRowOid>
+			</value>
+			<label>Output Voltage - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Output - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsOutputCurrent -->
+		<numSensor ruleid="xupsOutputCurrent" index=".1.3.6.1.4.1.534.1.4.4.1.3">
+			<type>amperage</type>
+			<sensorId>_OUTPUT_AMPS_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.4.4.1.3</getRowOid>
+			</value>
+			<label>Output Current - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Output - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsOutputWatts -->
+		<!-- DDF-138 - Removed scaling "fix". Eaton ConnectUPS device firmware update v4.32 addresses issue -->
+		<numSensor ruleid="xupsOutputWatts" index=".1.3.6.1.4.1.534.1.4.4.1.4">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.4.4.1.4</getRowOid>
+			</value>
+			<label>Output Power - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Output - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsOutputSource -->
+		<stateSensor ruleid="xupsOutputSource">
+			<type>state</type>
+			<sensorId>XUPS_OUTPUT_SOURCE_</sensorId>
+			<value>
+				<mapValue mapid="xupsOutputSource-vm">
+					<getOid>.1.3.6.1.4.1.534.1.4.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>Output Source </label>
+			<enum>xupsOutputSource-em</enum>
+			<sensorSet>Output</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsOutputSource-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsOutputSource-em">
+			<label>other</label>
+			<label>none</label>
+			<label>normal</label>
+			<label>bypass</label>
+			<label>battery</label>
+			<label>booster</label>
+			<label>reducer</label>
+			<label>parallelCapacity</label>
+			<label>parallelRedundant</label>
+			<label>highEfficiencyMode</label>
+			<label>maintenanceBypass</label>
+		</enumMap>
+
+		<!-- xupsBypassFrequency -->
+		<numSensor ruleid="xupsBypassFrequency">
+			<type>frequency</type>
+			<sensorId>_INPUT1_HZ_2</sensorId>
+			<value>
+				<!-- Convert .1 of units to units.-->
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.534.1.5.1.0</getOid>
+					</op>
+					<op>.1</op>
+				</mult>            
+			</value>
+			<label>Bypass Frequency</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+
+		<!-- xupsBypassVoltage -->
+		<numSensor ruleid="xupsBypassVoltage" index=".1.3.6.1.4.1.534.1.5.3.1.2">
+			<type>voltageAC</type>
+			<sensorId>_INPUT1_VAC_2_1_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.534.1.5.3.1.2</getRowOid>
+			</value>
+			<label>Bypass Voltage - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+			<sensorSet>Bypass - Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</numSensor>
+
+		<!-- xupsEnvAmbientTemp -->
+		<numSensor ruleid="xupsEnvAmbientTemp">
+			<type>temp</type>
+			<sensorId>XUPS_ENV_AMBIENT_TEMP_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.6.1.0</getOid>
+			</value>
+			<label>Environmental Ambient Temp</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<!-- xupsEnvAmbientHumidity -->
+		<numSensor ruleid="xupsEnvAmbientHumidity">
+			<type>humidity</type>
+			<sensorId>XUPS_ENV_AMBIENT_HUMIDITY_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.6.4.0</getOid>
+			</value>
+			<label>Environmental Ambient Humidity</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<!-- xupsEnvRemoteTemp -->
+		<numSensor ruleid="xupsEnvRemoteTemp">
+			<type>temp</type>
+			<sensorId>XUPS_ENV_REMOTE_TEMP_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.6.5.0</getOid>
+			</value>
+			<label>Environmental Remote Temp</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<!-- xupsEnvRemoteHumidity -->
+		<numSensor ruleid="xupsEnvRemoteHumidity">
+			<type>humidity</type>
+			<sensorId>XUPS_ENV_REMOTE_HUMIDITY_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.534.1.6.6.0</getOid>
+			</value>
+			<label>Environmental Remote Humidity</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<!-- xupsContactType -->
+		<stateSensor ruleid="xupsContactType" index=".1.3.6.1.4.1.534.1.6.8.1.2">
+			<type>state</type>
+			<sensorId>XUPS_CONTACT_TYPE_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<mapValue mapid="xupsContactType-vm">
+					<getRowOid>.1.3.6.1.4.1.534.1.6.8.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Contact<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+				<space/>Type</label>
+			<enum>xupsContactType-em</enum>
+			<sensorSet>Contact<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsContactType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsContactType-em">
+			<label>normallyOpen</label>
+			<label>normallyClosed</label>
+			<label>anyChange</label>
+			<label>notUsed</label>
+		</enumMap>
+
+		<!-- xupsContactState -->
+		<stateSensor ruleid="xupsContactState" index=".1.3.6.1.4.1.534.1.6.8.1.3">
+			<type>state</type>
+			<sensorId>XUPS_CONTACT_STATE_<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorId>
+			<value>
+				<mapValue mapid="xupsContactState-vm">
+					<getRowOid>.1.3.6.1.4.1.534.1.6.8.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>Contact<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+				<space/>State</label>
+			<enum>xupsContactState-em</enum>
+			<sensorSet>Contact<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsContactState-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsContactState-em">
+			<label>open</label>
+			<label>closed</label>
+			<label>openWithNotice</label>
+			<label>closedWithNotice</label>
+		</enumMap>
+
+		<!-- xupsTestBatteryStatus -->
+		<stateSensor ruleid="xupsTestBatteryStatus">
+			<type>state</type>
+			<sensorId>XUPS_TEST_BATTERY_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="xupsTestBatteryStatus-vm">
+					<getOid>.1.3.6.1.4.1.534.1.8.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Test Status</label>
+			<enum>xupsTestBatteryStatus-em</enum>
+			<sensorSet>Test</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsTestBatteryStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsTestBatteryStatus-em">
+			<label>unknown</label>
+			<label>passed</label>
+			<label>failed</label>
+			<label>inProgress</label>
+			<label>notSupported</label>
+			<label>inhibited</label>
+			<label>scheduled</label>
+		</enumMap>
+
+		<!-- xupsLastGeneralTest -->
+		<stateSensor ruleid="xupsLastGeneralTest">
+			<type>state</type>
+			<sensorId>XUPS_LAST_GENERAL_TEST_</sensorId>
+			<value>
+				<mapValue mapid="xupsLastGeneralTest-vm">
+					<getOid>.1.3.6.1.4.1.534.1.8.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Last General Test</label>
+			<enum>xupsLastGeneralTest-em</enum>
+			<sensorSet>Test</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsLastGeneralTest-vm">
+			<valueIn>2</valueIn><valueOut>0</valueOut>
+			<valueIn>3</valueIn><valueOut>1</valueOut>
+			<valueIn>4</valueIn><valueOut>2</valueOut>
+			<valueIn>5</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsLastGeneralTest-em">
+			<label>noTestStarted</label>
+			<label>testSystem</label>
+			<label>testSecondarySource</label>
+			<label>flashLightsTest</label>
+		</enumMap>
+
+		<!-- xupsLastGeneralTestResult -->
+		<stateSensor ruleid="xupsLastGeneralTestResult">
+			<type>state</type>
+			<sensorId>XUPS_LAST_GENERAL_TEST_RESULT_</sensorId>
+			<value>
+				<mapValue mapid="xupsLastGeneralTestResult-vm">
+					<getOid>.1.3.6.1.4.1.534.1.8.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Last General Test Result</label>
+			<enum>xupsLastGeneralTestResult-em</enum>
+			<sensorSet>Test</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="xupsLastGeneralTestResult-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="xupsLastGeneralTestResult-em">
+			<label>unknown</label>
+			<label>passed</label>
+			<label>failed</label>
+			<label>inProgress</label>
+			<label>notSupported</label>
+			<label>inhibited</label>
+			<label>scheduled</label>
+		</enumMap>
+
+	</device>
+
+	<device deviceid="powerwareups_alarms">
+		<oidMustExist ruleid="powerwareups_sensor_exist" oid=".1.3.6.1.4.1.534.1.7.1.0"/>
+
+		<alarmFlags2 ruleid="eaton_ups_alarms" index=".1.3.6.1.4.1.534.1.7.2.1.1">
+			<value>
+				<baseNToInt base="16">
+					<mapValue mapid="alarm_map">
+						<getRowOid>.1.3.6.1.4.1.534.1.7.2.1.2</getRowOid>
+					</mapValue>
+				</baseNToInt>
+			</value>
+
+			<!-- On Battery -->
+			<alarmFlagsTest match="3" log="no">
+				<name>
+					<activeText>On Battery</activeText>
+					<inactiveText>On Battery Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An on battery alarm exists.</activeText>
+					<inactiveText>An on battery alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Low Battery -->
+			<alarmFlagsTest match="4" log="no">
+				<name>
+					<activeText>Low Battery</activeText>
+					<inactiveText>Low Battery Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A low battery alarm exists.</activeText>
+					<inactiveText>A low battery alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Utility Power Restored -->
+			<alarmFlagsTest match="5" log="no">
+				<name>
+					<activeText>Utility Power Restored</activeText>
+					<inactiveText>Utility Power Restored Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An utility power restored alarm exists.</activeText>
+					<inactiveText>An utility power restored alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Return From Low Battery -->
+			<alarmFlagsTest match="6" log="no">
+				<name>
+					<activeText>Return From Low Battery</activeText>
+					<inactiveText>Return From Low Battery Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A return from low battery alarm exists.</activeText>
+					<inactiveText>A return from low battery alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Output Overload -->
+			<alarmFlagsTest match="7" log="no">
+				<name>
+					<activeText>Output Overload</activeText>
+					<inactiveText>Output Overload Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An output overload alarm exists.</activeText>
+					<inactiveText>An output overload alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Internal Failure -->
+			<alarmFlagsTest match="8" log="no">
+				<name>
+					<activeText>Internal Failure</activeText>
+					<inactiveText>Internal Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An internal failure alarm exists.</activeText>
+					<inactiveText>An internal failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Battery Discharged -->
+			<alarmFlagsTest match="9" log="no">
+				<name>
+					<activeText>Battery Discharged</activeText>
+					<inactiveText>Battery Discharged Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A battery discharged alarm exists.</activeText>
+					<inactiveText>A battery discharged alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Inverter Failure -->
+			<alarmFlagsTest match="10" log="no">
+				<name>
+					<activeText>Inverter Failure</activeText>
+					<inactiveText>Inverter Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An inverter failure alarm exists.</activeText>
+					<inactiveText>An inverter failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- On Bypass -->
+			<alarmFlagsTest match="11" log="no">
+				<name>
+					<activeText>On Bypass</activeText>
+					<inactiveText>On Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An on bypass alarm exists.</activeText>
+					<inactiveText>An on bypass alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Bypass Not Available -->
+			<alarmFlagsTest match="12" log="no">
+				<name>
+					<activeText>Bypass Not Available</activeText>
+					<inactiveText>Bypass Not Available Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A bypass not available alarm exists.</activeText>
+					<inactiveText>A bypass not available alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Output Off -->
+			<alarmFlagsTest match="13" log="no">
+				<name>
+					<activeText>Output Off</activeText>
+					<inactiveText>Output Off Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An output off alarm exists.</activeText>
+					<inactiveText>An output off alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Input Failure -->
+			<alarmFlagsTest match="14" log="no">
+				<name>
+					<activeText>Input Failure</activeText>
+					<inactiveText>Input Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An input failure alarm exists.</activeText>
+					<inactiveText>An input failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Building -->
+			<alarmFlagsTest match="15" log="no">
+				<name>
+					<activeText>Building</activeText>
+					<inactiveText>Building Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A building alarm exists.</activeText>
+					<inactiveText>A building alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Shutdown Imminent -->
+			<alarmFlagsTest match="16" log="no">
+				<name>
+					<activeText>Shutdown Imminent</activeText>
+					<inactiveText>Shutdown Imminent Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A shutdown imminent alarm exists.</activeText>
+					<inactiveText>A shutdown imminent alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- On Inverter -->
+			<alarmFlagsTest match="17" log="no">
+				<name>
+					<activeText>On Inverter</activeText>
+					<inactiveText>On Inverter Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An on inverter alarm exists.</activeText>
+					<inactiveText>An on inverter alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Breaker Open -->
+			<alarmFlagsTest match="20" log="no">
+				<name>
+					<activeText>Breaker Open</activeText>
+					<inactiveText>Breaker Open Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A breaker open alarm exists.</activeText>
+					<inactiveText>A breaker open alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Entry Added -->
+			<alarmFlagsTest match="21" log="no">
+				<name>
+					<activeText>Entry Added</activeText>
+					<inactiveText>Entry Added Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An entry added alarm exists.</activeText>
+					<inactiveText>An entry added alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Entry Removed -->
+			<alarmFlagsTest match="22" log="no">
+				<name>
+					<activeText>Entry Removed</activeText>
+					<inactiveText>Entry Removed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An entry removed alarm exists.</activeText>
+					<inactiveText>An entry removed alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Battery Bad -->
+			<alarmFlagsTest match="23" log="no">
+				<name>
+					<activeText>Battery Bad</activeText>
+					<inactiveText>Battery Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A battery bad alarm exists.</activeText>
+					<inactiveText>A battery bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Output Off As Requested -->
+			<alarmFlagsTest match="24" log="no">
+				<name>
+					<activeText>Output Off As Requested</activeText>
+					<inactiveText>Output Off As Requested Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An output off as requested alarm exists.</activeText>
+					<inactiveText>An output off as requested alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Diagnostic Test Failed -->
+			<alarmFlagsTest match="25" log="no">
+				<name>
+					<activeText>Diagnostic Test Failed</activeText>
+					<inactiveText>Diagnostic Test Failed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A diagnostic test failed alarm exists.</activeText>
+					<inactiveText>A diagnostic test failed alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Communications Lost -->
+			<alarmFlagsTest match="26" log="no">
+				<name>
+					<activeText>Communications Lost</activeText>
+					<inactiveText>Communications Lost Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A communications lost alarm exists.</activeText>
+					<inactiveText>A communications lost alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Ups Shutdown Pending -->
+			<alarmFlagsTest match="27" log="no">
+				<name>
+					<activeText>Ups Shutdown Pending</activeText>
+					<inactiveText>Ups Shutdown Pending Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An ups shutdown pending alarm exists.</activeText>
+					<inactiveText>An ups shutdown pending alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Test In Progress -->
+			<alarmFlagsTest match="28" log="no">
+				<name>
+					<activeText>Test In Progress</activeText>
+					<inactiveText>Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A test in progress alarm exists.</activeText>
+					<inactiveText>A test in progress alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Ambient Temperature Bad -->
+			<alarmFlagsTest match="29" log="no">
+				<name>
+					<activeText>Ambient Temperature Bad</activeText>
+					<inactiveText>Ambient Temperature Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An ambient temperature bad alarm exists.</activeText>
+					<inactiveText>An ambient temperature bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Loss Of Redundancy -->
+			<alarmFlagsTest match="30" log="no">
+				<name>
+					<activeText>Loss Of Redundancy</activeText>
+					<inactiveText>Loss Of Redundancy Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A loss of redundancy alarm exists.</activeText>
+					<inactiveText>A loss of redundancy alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Temperature Bad -->
+			<alarmFlagsTest match="31" log="no">
+				<name>
+					<activeText>Temperature Bad</activeText>
+					<inactiveText>Temperature Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A temperature bad alarm exists.</activeText>
+					<inactiveText>A temperature bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Charger Failed -->
+			<alarmFlagsTest match="32" log="no">
+				<name>
+					<activeText>Charger Failed</activeText>
+					<inactiveText>Charger Failed Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A charger failed alarm exists.</activeText>
+					<inactiveText>A charger failed alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Fan Failure -->
+			<alarmFlagsTest match="33" log="no">
+				<name>
+					<activeText>Fan Failure</activeText>
+					<inactiveText>Fan Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A fan failure alarm exists.</activeText>
+					<inactiveText>A fan failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Fuse Failure -->
+			<alarmFlagsTest match="34" log="no">
+				<name>
+					<activeText>Fuse Failure</activeText>
+					<inactiveText>Fuse Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A fuse failure alarm exists.</activeText>
+					<inactiveText>A fuse failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Power Switch Bad -->
+			<alarmFlagsTest match="35" log="no">
+				<name>
+					<activeText>Power Switch Bad</activeText>
+					<inactiveText>Power Switch Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A power switch bad alarm exists.</activeText>
+					<inactiveText>A power switch bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Module Failure -->
+			<alarmFlagsTest match="36" log="no">
+				<name>
+					<activeText>Module Failure</activeText>
+					<inactiveText>Module Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A module failure alarm exists.</activeText>
+					<inactiveText>A module failure alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- On Alternate Power Source -->
+			<alarmFlagsTest match="37" log="no">
+				<name>
+					<activeText>On Alternate Power Source</activeText>
+					<inactiveText>On Alternate Power Source Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An on alternate power source alarm exists.</activeText>
+					<inactiveText>An on alternate power source alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Alternate Power Not Available -->
+			<alarmFlagsTest match="38" log="no">
+				<name>
+					<activeText>Alternate Power Not Available</activeText>
+					<inactiveText>Alternate Power Not Available Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An alternate power not available alarm exists.</activeText>
+					<inactiveText>An alternate power not available alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Notice Condition -->
+			<alarmFlagsTest match="39" log="no">
+				<name>
+					<activeText>Notice Condition</activeText>
+					<inactiveText>Notice Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A notice condition alarm exists.</activeText>
+					<inactiveText>A notice condition alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Remote Temperature Bad -->
+			<alarmFlagsTest match="40" log="no">
+				<name>
+					<activeText>Remote Temperature Bad</activeText>
+					<inactiveText>Remote Temperature Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A remote temperature bad alarm exists.</activeText>
+					<inactiveText>A remote temperature bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Remote Humidity Bad -->
+			<alarmFlagsTest match="41" log="no">
+				<name>
+					<activeText>Remote Humidity Bad</activeText>
+					<inactiveText>Remote Humidity Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>A remote humidity bad alarm exists.</activeText>
+					<inactiveText>A remote humidity bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Output Bad -->
+			<alarmFlagsTest match="42" log="no">
+				<name>
+					<activeText>Output Bad</activeText>
+					<inactiveText>Output Bad Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An output bad alarm exists.</activeText>
+					<inactiveText>An output bad alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- Awaiting Power -->
+			<alarmFlagsTest match="43" log="no">
+				<name>
+					<activeText>Awaiting Power</activeText>
+					<inactiveText>Awaiting Power Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An awaiting power alarm exists.</activeText>
+					<inactiveText>An awaiting power alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+			<!-- On Maintenance Bypass -->
+			<alarmFlagsTest match="44" log="no">
+				<name>
+					<activeText>On Maintenance Bypass</activeText>
+					<inactiveText>On Maintenance Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>An on maintenance bypass alarm exists.</activeText>
+					<inactiveText>An on maintenance bypass alarm has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId/>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+
+		</alarmFlags2>
+
+		<valueMap ruleid="alarm_map">
+			<valueIn>.1.3.6.1.4.1.534.1.7.3</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.4</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.5</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.6</valueIn>
+			<valueOut>6</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.7</valueIn>
+			<valueOut>7</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.8</valueIn>
+			<valueOut>8</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.9</valueIn>
+			<valueOut>9</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.10</valueIn>
+			<valueOut>10</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.11</valueIn>
+			<valueOut>11</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.12</valueIn>
+			<valueOut>12</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.13</valueIn>
+			<valueOut>13</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.14</valueIn>
+			<valueOut>14</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.15</valueIn>
+			<valueOut>15</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.16</valueIn>
+			<valueOut>16</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.17</valueIn>
+			<valueOut>17</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.20</valueIn>
+			<valueOut>20</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.21</valueIn>
+			<valueOut>21</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.22</valueIn>
+			<valueOut>22</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.23</valueIn>
+			<valueOut>23</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.24</valueIn>
+			<valueOut>24</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.25</valueIn>
+			<valueOut>25</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.26</valueIn>
+			<valueOut>26</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.27</valueIn>
+			<valueOut>27</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.28</valueIn>
+			<valueOut>28</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.29</valueIn>
+			<valueOut>29</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.30</valueIn>
+			<valueOut>30</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.31</valueIn>
+			<valueOut>31</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.32</valueIn>
+			<valueOut>32</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.33</valueIn>
+			<valueOut>33</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.34</valueIn>
+			<valueOut>34</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.35</valueIn>
+			<valueOut>35</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.36</valueIn>
+			<valueOut>36</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.37</valueIn>
+			<valueOut>37</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.38</valueIn>
+			<valueOut>38</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.39</valueIn>
+			<valueOut>39</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.40</valueIn>
+			<valueOut>40</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.41</valueIn>
+			<valueOut>41</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.42</valueIn>
+			<valueOut>42</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.43</valueIn>
+			<valueOut>43</valueOut>
+			<valueIn>.1.3.6.1.4.1.534.1.7.44</valueIn>
+			<valueOut>44</valueOut>
+		</valueMap>
+	</device>
+
+	<device deviceid="mge-fix">
+		<!--
+		some Eaton devices also present OIDs for MGE
+		devices (.1.3.6.1.4.1.705); this can lead to
+		duplicate sensors. This section contains
+		suppressRules to block sensors in mge.xml
+	-->
+		<oidMustExist ruleid="eaton" oid=".1.3.6.1.4.1.534" istree="yes" />
+		<oidMustExist ruleid="mge" oid=".1.3.6.1.4.1.705" istree="yes" />
+
+		<suppressRule suppressid="mge/mgeups/timeremainingonbatt"/>
+		<suppressRule suppressid="mge/mgeups/pctofbatt"/>
+		<suppressRule suppressid="mge/mgeups/battvoltage"/>
+		<suppressRule suppressid="mge/mgeups/outputcurrent"/>
+		<suppressRule suppressid="mge/mgeups/outputload"/>
+		<suppressRule suppressid="mge/mgeups/outputfrequency"/>
+		<suppressRule suppressid="mge/mgeups/outputvoltage"/>
+		<suppressRule suppressid="mge/mgeups/outputpower"/>
+		<suppressRule suppressid="mge/mgeups/phaseoutputva"/>
+
+	</device>
+
+</APC_DDF>

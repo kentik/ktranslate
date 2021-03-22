@@ -1,0 +1,597 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid="socomec_statys_transfer_switch"
+	ddfname="Socomec Statys Transfer Switch"
+	ddfversion="2"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!-- Socomec STS (Static Transfer Switch) Model Info -->
+  <device deviceid="socomec_statys_sts_disc">
+    <oidMustExist ruleid="sys_branch" oid=".1.3.6.1.4.1.4555.1.1.10.1" istree="yes"/>
+  
+    <!-- Replace MIB2 Model with Model from socomec MIB -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.1.1.0</getOid>
+    </setProductData>  
+
+    <setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+    <!-- Set Software Version -->
+    <setProductData ruleid="appversion" field="appversion">
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.1.4.0</getOid>
+    </setProductData>
+  
+    <!-- Set Firmware Version -->
+    <setProductData ruleid="bootversion" field="bootversion">
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.1.3.0</getOid>
+    </setProductData>
+    
+    <!-- Set Serial Number -->
+    <setProductData ruleid="serialdata" field="serial_num">
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.1.2.0</getOid>
+    </setProductData>
+  </device>
+  
+  <device deviceid="socomec_statys_sts_sensors">
+    <oidMustExist ruleid="sys_branch" oid=".1.3.6.1.4.1.4555.1.1.10.1" istree="yes"/>
+
+    <!-- Source 1 -->
+    <stateSensor ruleid="source1StatusSensor">
+      <type>state</type>
+      <sensorId>SOURCE_1_STATUS</sensorId>
+      <value>
+        <mapValue mapid="5value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.2.1.0</getOid>
+        </mapValue>      
+      </value>
+      <label>Source 1 Status</label>
+      <enum>status-em</enum>
+      <sensorSet>Input 1</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="source1PreferredSourceSensor">
+      <type>state</type>
+      <sensorId>SOURCE_1_PREFERRED_SOURCE</sensorId>
+      <value>
+        <mapValue mapid="3value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.2.2.0</getOid>
+        </mapValue>      
+      </value>
+      <label>Source 1 Preferred Source</label>
+      <enum>preferred-em</enum>
+      <sensorSet>Input 1</sensorSet>
+    </stateSensor>
+
+
+    <numSensor ruleid="source1Frequency">
+      <type>frequency</type>
+      <sensorId>SOURCE_1_FREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op><getOid>.1.3.6.1.4.1.4555.1.1.10.1.2.3.0</getOid></op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Source 1 Input Frequency</label>
+      <sensorSet>Input 1</sensorSet>
+    </numSensor>  
+
+    <numSensor ruleid="source1NumPhasesSensor">
+      <type>num</type>
+      <sensorId>SOURCE_1_NUM_PHASES</sensorId>
+      <value><getOid>.1.3.6.1.4.1.4555.1.1.10.1.2.4.0</getOid></value>
+      <valueInc>1.0</valueInc>    
+      <label>Source 1 Phase count</label>
+      <sensorSet>Input 1</sensorSet>
+    </numSensor>  
+  
+    <numSensor ruleid="source1InputVoltage" index="1.3.6.1.4.1.4555.1.1.10.1.2.5.1.1">
+      <type>voltageAC</type>
+      <sensorId>SOURCE_1_INPUT_VOLTAGE_<rowIndex/></sensorId>
+      <value><getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.2.5.1.2</getRowOid></value>
+      <label>Source 1 Input Voltage Phase <rowIndex/></label>
+      <sensorSet>Input 1</sensorSet>
+    </numSensor>  
+
+    <!-- Source 2 -->
+    <stateSensor ruleid="source2StatusSensor">
+      <type>state</type>
+      <sensorId>Source_2_STATUS</sensorId>
+      <value>
+        <mapValue mapid="5value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.3.1.0</getOid>
+        </mapValue>      
+      </value>
+      <label>Source 2 Status</label>
+      <enum>status-em</enum>
+      <sensorSet>Input 2</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="source2PreferredSourceSensor">
+      <type>state</type>
+      <sensorId>Source_2_PREFERRED_SOURCE</sensorId>
+      <value>
+        <mapValue mapid="3value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.3.2.0</getOid>
+        </mapValue>      
+      </value>
+      <label>Source 2 Preferred Source</label>
+      <enum>preferred-em</enum>
+      <sensorSet>Input 2</sensorSet>
+    </stateSensor>
+
+    <numSensor ruleid="source2Frequency">
+      <type>frequency</type>
+      <sensorId>Source_2_FREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op><getOid>.1.3.6.1.4.1.4555.1.1.10.1.3.3.0</getOid></op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Source 2 Input Frequency</label>
+      <sensorSet>Input 2</sensorSet>
+    </numSensor>  
+
+    <numSensor ruleid="source2NumPhasesSensor">
+      <type>num</type>
+      <sensorId>SOURCE_2_NUM_PHASES</sensorId>
+      <value><getOid>.1.3.6.1.4.1.4555.1.1.10.1.3.4.0</getOid></value>
+      <valueInc>1.0</valueInc>    
+      <label>Source 2 Phase count</label>
+      <sensorSet>Input 2</sensorSet>
+    </numSensor>  
+  
+    <numSensor ruleid="source2InputVoltage" index="1.3.6.1.4.1.4555.1.1.10.1.3.5.1.1">
+      <type>voltageAC</type>
+      <sensorId>SOURCE_2_INPUT_VOLTAGE_<rowIndex/></sensorId>
+      <value><getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.3.5.1.2</getRowOid></value>
+      <label>Source 2 Input Voltage Phase <rowIndex/></label>
+      <sensorSet>Input 2</sensorSet>
+    </numSensor>  
+
+    <stateSensor ruleid="sourcesSynchStatus">
+      <type>state</type>
+      <sensorId>SOURCES_SYNCH_STATUS</sensorId>
+      <value>
+        <mapValue mapid="4value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.4.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Sources Synchronization Status</label>
+      <enum>sourcesSynch-em</enum>
+      <sensorSet>System</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="outputLoadStatus">
+      <type>state</type>
+      <sensorId>OUTPUT_LOAD_STATUS</sensorId>
+      <value>
+        <mapValue mapid="6value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.5.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Output Load Status</label>
+      <enum>outputLoadStatus-em</enum>
+      <sensorSet>Output</sensorSet>
+    </stateSensor>
+
+
+    <stateSensor ruleid="staticSwitchesStatus">
+      <type>state</type>
+      <sensorId>STATIC_SWITCHES_STATUS</sensorId>
+      <value>
+        <mapValue mapid="4value-vm">
+          <getOid>.1.3.6.1.4.1.4555.1.1.10.1.5.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Static Switches Status</label>
+      <enum>staticSwitches-em</enum>
+      <sensorSet>Output</sensorSet>
+    </stateSensor>
+
+    <numSensor ruleid="outputFrequency">
+      <type>frequency</type>
+      <sensorId>OUTPUT_FREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.4555.1.1.10.1.5.3.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>  
+
+    <numSensor ruleid="outputLoadRate">
+      <type>pctofcapacity</type>
+      <sensorId>OUTPUT_LOAD_PERCENT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.5.4.0</getOid>
+      </value>
+      <label>Output Load Rate</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>  
+
+    <numSensor ruleid="numOutputPhases">
+      <type>num</type>
+      <sensorId>NUM_OUTPUT_PHASES</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.5.5.0</getOid>
+      </value>
+      <label>Output Phase count</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outputVoltage" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>voltageAC</type>
+      <sensorId>OUTPUT_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.2</getRowOid>
+      </value>
+      <label>Output Voltage Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outputCurrent" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>amperage</type>
+      <sensorId>OUTPUT_CURRENT_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.3</getRowOid>
+      </value>
+      <label>Output Current Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- The device supports Apparent Power from the oid  1.3.6.1.4.1.4555.1.1.10.1.5.6.1.4, 
+         but the value is in kVA.  So if voltage is 230V, and current is 7.0A, the value 
+         should be 1610 VA.  However, the device shows 1 kVA, which we translate to 1000VA.
+         Due to this, we make the calculation here in the DDF, rather than rely on the device.
+     -->
+    <numSensor ruleid="outputApparentPower" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>powerVA/apparentpower/phase</type>
+      <sensorId>OUTPUT_APPARENT_POWER_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.2</getRowOid>
+          </op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.3</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Output Apparent Power Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outputPower" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>powerW/outputpower/phase</type>
+      <sensorId>OUTPUT_POWER_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.5</getRowOid>
+          </op>
+          <op>1000</op>
+        </mult>
+      </value>
+      <label>Output Power Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outputCrestFactor" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>num</type>
+      <sensorId>OUTPUT_CREST_FACTOR_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.6</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Output Crest Factor Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outputPowerFactor" index=".1.3.6.1.4.1.4555.1.1.10.1.5.6.1.1">
+      <type>powerfactor</type>
+      <sensorId>OUTPUT_POWER_FACTOR_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4555.1.1.10.1.5.6.1.7</getRowOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Output Power Factor Phase <rowIndex/></label>
+      <sensorSet>Output Phase <rowIndex/></sensorSet>
+    </numSensor>
+  
+    <valueMap ruleid="3value-vm">
+        <valueIn>1</valueIn><valueOut>0</valueOut>
+        <valueIn>2</valueIn><valueOut>1</valueOut>
+        <valueIn>3</valueIn><valueOut>2</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="preferred-em">
+        <label>No</label>
+        <label>Yes</label>
+        <label>Unknown</label>
+    </enumMap>
+
+    <valueMap ruleid="4value-vm">
+        <valueIn>1</valueIn><valueOut>0</valueOut>
+        <valueIn>2</valueIn><valueOut>1</valueOut>
+        <valueIn>3</valueIn><valueOut>2</valueOut>
+        <valueIn>4</valueIn><valueOut>3</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="staticSwitches-em">
+        <label>Uknown</label>
+        <label>Output On Switch 1</label>
+        <label>Output On Switch 2</label>
+        <label>Output Off</label>
+    </enumMap>
+
+    <enumMap ruleid="sourcesSynch-em">
+        <label>Unknown</label>
+        <label>Synchronous</label>
+        <label>Sliding</label>
+        <label>Asynchronous</label>
+    </enumMap>
+
+    <valueMap ruleid="5value-vm">
+        <valueIn>1</valueIn><valueOut>0</valueOut>
+        <valueIn>2</valueIn><valueOut>1</valueOut>
+        <valueIn>3</valueIn><valueOut>2</valueOut>
+        <valueIn>4</valueIn><valueOut>3</valueOut>
+        <valueIn>5</valueIn><valueOut>4</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="status-em">
+        <label>Unknown</label>
+        <label>OK</label>
+        <label>Critical</label>
+        <label>OutTol</label>
+        <label>Absent</label>
+    </enumMap>
+
+    <valueMap ruleid="6value-vm">
+        <valueIn>1</valueIn><valueOut>0</valueOut>
+        <valueIn>2</valueIn><valueOut>1</valueOut>
+        <valueIn>3</valueIn><valueOut>2</valueOut>
+        <valueIn>4</valueIn><valueOut>3</valueOut>
+        <valueIn>5</valueIn><valueOut>4</valueOut>
+        <valueIn>6</valueIn><valueOut>5</valueOut>
+        <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="outputLoadStatus-em">
+        <label>Unknown</label>
+        <label>On Preferred Source</label>
+        <label>On Alternate Source</label>
+        <label>Load OFF</label>
+        <label>Load On MBP1</label>
+        <label>Load On MBP2</label>
+    </enumMap>
+
+  </device>
+
+
+  <device deviceid="socomec_statys_alarms">
+    <oidMustExist ruleid="sys_branch" oid=".1.3.6.1.4.1.4555.1.1.10.1" istree="yes"/>
+
+    <alarmFlags2 ruleid="imminentStopAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.1.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Imminent Stop condition</activeText>
+          <inactiveText>Imminent Stop condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>Imminent Stop condition exists.</activeText>
+          <inactiveText>Imminent Stop condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="transferImpossibleAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.2.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Transfer Impossible condition</activeText>
+          <inactiveText>Transfer Impossible condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>Transfer Impossible condition exists.</activeText>
+          <inactiveText>Transfer Impossible condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="consecutiveDetectionAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.3.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Consecutive Detection condition</activeText>
+          <inactiveText>consecutiveDetection condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>Transfer locked after several consecutive detections condition exists.</activeText>
+          <inactiveText>Transfer locked after several consecutive detections condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="overloadAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.4.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Overload condition</activeText>
+          <inactiveText>Overload condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>Overload condition exists.</activeText>
+          <inactiveText>Overload condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="string1Alarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.5.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>String 1 Failure condition</activeText>
+          <inactiveText>String 1 Failure condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>String 1 Failure condition exists.</activeText>
+          <inactiveText>String 1 Failure condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="string2Alarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.6.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>String 2 Failure condition</activeText>
+          <inactiveText>String 2 Failure condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>String 2 Failure condition exists.</activeText>
+          <inactiveText>String 2 Failure condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="preventativeMaintenanceAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.7.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Preventative Maintenance condition</activeText>
+          <inactiveText>Preventative Maintenance condition cleared.</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category></category>
+        <description>
+          <activeText>Preventative Maintenance condition exists.</activeText>
+          <inactiveText>Preventative Maintenance condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="generalAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.8.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>General Alarm condition</activeText>
+          <inactiveText>General Alarm condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>General Alarm condition exists.</activeText>
+          <inactiveText>General Alarm condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+    <alarmFlags2 ruleid="customImputAlarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.4555.1.1.10.1.6.1.9.0</getOid>
+      </value>
+
+      <alarmFlagsTest match="2" log="no">
+        <name>
+          <activeText>Custom Imput Alarm condition</activeText>
+          <inactiveText>Custom Imput Alarm condition cleared.</inactiveText>
+        </name>
+        <severity>error</severity>
+        <category></category>
+        <description>
+          <activeText>Custom Imput Alarm condition exists.</activeText>
+          <inactiveText>Custom Imput Alarm condition no longer exists.</inactiveText>
+        </description>
+        <alarmRecommendedActions>
+        <recommendedActionId></recommendedActionId>
+        </alarmRecommendedActions>
+      </alarmFlagsTest>
+    </alarmFlags2>
+
+</device>
+
+</APC_DDF>

@@ -1,0 +1,755 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="mib-2_interfaces"
+	ddfname="MIB-2 Interfaces"
+	ddfversion="6"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="mib-2_interfaces_devtype">
+		<oidMustExist ruleid="interfaces" oid=".1.3.6.1.2.1.2.1.0"/>
+
+		<!--
+			To prevent struxureware from applying Network Device to anything
+			with an ethernet port, ignore anything with fewer than 4 interfaces
+		-->
+		<oidMustNotMatch ruleid="isNetworkDevice" oid=".1.3.6.1.2.1.2.1.0">
+			<valueList>
+				<value>0</value>
+				<value>1</value>
+				<value>2</value>
+				<value>3</value>
+			</valueList>
+		</oidMustNotMatch>
+		
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<setProductData ruleid="typedata" field="type">Network Device</setProductData>
+	</device>
+
+	<device deviceid="mib-2_interfaces_sensors">
+		<oidMustExist ruleid="interfaces" oid=".1.3.6.1.2.1.2.1.0"/>
+
+		<numSensor ruleid="ifNumber">
+            <type>num</type>
+            <sensorId>IF_NUMBER</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.1.0</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Interfaces</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="ifType" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>state</type>
+            <sensorId>IF_TYPE_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="ifType-vm">
+                <getRowOid>.1.3.6.1.2.1.2.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Interface Type - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+			<enum>ifType-em</enum>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="ifType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>20</valueIn><valueOut>20</valueOut>
+			<valueIn>21</valueIn><valueOut>21</valueOut>
+			<valueIn>22</valueIn><valueOut>22</valueOut>
+			<valueIn>23</valueIn><valueOut>23</valueOut>
+			<valueIn>24</valueIn><valueOut>24</valueOut>
+			<valueIn>25</valueIn><valueOut>25</valueOut>
+			<valueIn>26</valueIn><valueOut>26</valueOut>
+			<valueIn>27</valueIn><valueOut>27</valueOut>
+			<valueIn>28</valueIn><valueOut>28</valueOut>
+			<valueIn>29</valueIn><valueOut>29</valueOut>
+			<valueIn>30</valueIn><valueOut>30</valueOut>
+			<valueIn>31</valueIn><valueOut>31</valueOut>
+			<valueIn>32</valueIn><valueOut>32</valueOut>
+			<valueIn>33</valueIn><valueOut>33</valueOut>
+			<valueIn>34</valueIn><valueOut>34</valueOut>
+			<valueIn>35</valueIn><valueOut>35</valueOut>
+			<valueIn>36</valueIn><valueOut>36</valueOut>
+			<valueIn>37</valueIn><valueOut>37</valueOut>
+			<valueIn>38</valueIn><valueOut>38</valueOut>
+			<valueIn>39</valueIn><valueOut>39</valueOut>
+			<valueIn>40</valueIn><valueOut>40</valueOut>
+			<valueIn>41</valueIn><valueOut>41</valueOut>
+			<valueIn>42</valueIn><valueOut>42</valueOut>
+			<valueIn>43</valueIn><valueOut>43</valueOut>
+			<valueIn>44</valueIn><valueOut>44</valueOut>
+			<valueIn>45</valueIn><valueOut>45</valueOut>
+			<valueIn>46</valueIn><valueOut>46</valueOut>
+			<valueIn>47</valueIn><valueOut>47</valueOut>
+			<valueIn>48</valueIn><valueOut>48</valueOut>
+			<valueIn>49</valueIn><valueOut>49</valueOut>
+			<valueIn>50</valueIn><valueOut>50</valueOut>
+			<valueIn>51</valueIn><valueOut>51</valueOut>
+			<valueIn>52</valueIn><valueOut>52</valueOut>
+			<valueIn>53</valueIn><valueOut>53</valueOut>
+			<valueIn>54</valueIn><valueOut>54</valueOut>
+			<valueIn>55</valueIn><valueOut>55</valueOut>
+			<valueIn>56</valueIn><valueOut>56</valueOut>
+			<valueIn>57</valueIn><valueOut>57</valueOut>
+			<valueIn>58</valueIn><valueOut>58</valueOut>
+			<valueIn>59</valueIn><valueOut>59</valueOut>
+			<valueIn>60</valueIn><valueOut>60</valueOut>
+			<valueIn>61</valueIn><valueOut>61</valueOut>
+			<valueIn>62</valueIn><valueOut>62</valueOut>
+			<valueIn>63</valueIn><valueOut>63</valueOut>
+			<valueIn>64</valueIn><valueOut>64</valueOut>
+			<valueIn>65</valueIn><valueOut>65</valueOut>
+			<valueIn>66</valueIn><valueOut>66</valueOut>
+			<valueIn>67</valueIn><valueOut>67</valueOut>
+			<valueIn>68</valueIn><valueOut>68</valueOut>
+			<valueIn>69</valueIn><valueOut>69</valueOut>
+			<valueIn>70</valueIn><valueOut>70</valueOut>
+			<valueIn>71</valueIn><valueOut>71</valueOut>
+			<valueIn>72</valueIn><valueOut>72</valueOut>
+			<valueIn>73</valueIn><valueOut>73</valueOut>
+			<valueIn>74</valueIn><valueOut>74</valueOut>
+			<valueIn>75</valueIn><valueOut>75</valueOut>
+			<valueIn>76</valueIn><valueOut>76</valueOut>
+			<valueIn>77</valueIn><valueOut>77</valueOut>
+			<valueIn>78</valueIn><valueOut>78</valueOut>
+			<valueIn>79</valueIn><valueOut>79</valueOut>
+			<valueIn>80</valueIn><valueOut>80</valueOut>
+			<valueIn>81</valueIn><valueOut>81</valueOut>
+			<valueIn>82</valueIn><valueOut>82</valueOut>
+			<valueIn>83</valueIn><valueOut>83</valueOut>
+			<valueIn>84</valueIn><valueOut>84</valueOut>
+			<valueIn>85</valueIn><valueOut>85</valueOut>
+			<valueIn>86</valueIn><valueOut>86</valueOut>
+			<valueIn>87</valueIn><valueOut>87</valueOut>
+			<valueIn>88</valueIn><valueOut>88</valueOut>
+			<valueIn>89</valueIn><valueOut>89</valueOut>
+			<valueIn>90</valueIn><valueOut>90</valueOut>
+			<valueIn>91</valueIn><valueOut>91</valueOut>
+			<valueIn>92</valueIn><valueOut>92</valueOut>
+			<valueIn>93</valueIn><valueOut>93</valueOut>
+			<valueIn>94</valueIn><valueOut>94</valueOut>
+			<valueIn>95</valueIn><valueOut>95</valueOut>
+			<valueIn>96</valueIn><valueOut>96</valueOut>
+			<valueIn>97</valueIn><valueOut>97</valueOut>
+			<valueIn>98</valueIn><valueOut>98</valueOut>
+			<valueIn>99</valueIn><valueOut>99</valueOut>
+			<valueIn>100</valueIn><valueOut>100</valueOut>
+			<valueIn>101</valueIn><valueOut>101</valueOut>
+			<valueIn>102</valueIn><valueOut>102</valueOut>
+			<valueIn>103</valueIn><valueOut>103</valueOut>
+			<valueIn>104</valueIn><valueOut>104</valueOut>
+			<valueIn>105</valueIn><valueOut>105</valueOut>
+			<valueIn>106</valueIn><valueOut>106</valueOut>
+			<valueIn>107</valueIn><valueOut>107</valueOut>
+			<valueIn>108</valueIn><valueOut>108</valueOut>
+			<valueIn>109</valueIn><valueOut>109</valueOut>
+			<valueIn>110</valueIn><valueOut>110</valueOut>
+			<valueIn>111</valueIn><valueOut>111</valueOut>
+			<valueIn>112</valueIn><valueOut>112</valueOut>
+			<valueIn>113</valueIn><valueOut>113</valueOut>
+			<valueIn>114</valueIn><valueOut>114</valueOut>
+			<valueIn>115</valueIn><valueOut>115</valueOut>
+			<valueIn>116</valueIn><valueOut>116</valueOut>
+			<valueIn>117</valueIn><valueOut>117</valueOut>
+			<valueIn>118</valueIn><valueOut>118</valueOut>
+			<valueIn>119</valueIn><valueOut>119</valueOut>
+			<valueIn>120</valueIn><valueOut>120</valueOut>
+			<valueIn>121</valueIn><valueOut>121</valueOut>
+			<valueIn>122</valueIn><valueOut>122</valueOut>
+			<valueIn>123</valueIn><valueOut>123</valueOut>
+			<valueIn>124</valueIn><valueOut>124</valueOut>
+			<valueIn>125</valueIn><valueOut>125</valueOut>
+			<valueIn>126</valueIn><valueOut>126</valueOut>
+			<valueIn>127</valueIn><valueOut>127</valueOut>
+			<valueIn>128</valueIn><valueOut>128</valueOut>
+			<valueIn>129</valueIn><valueOut>129</valueOut>
+			<valueIn>130</valueIn><valueOut>130</valueOut>
+			<valueIn>131</valueIn><valueOut>131</valueOut>
+			<valueIn>132</valueIn><valueOut>132</valueOut>
+			<valueIn>133</valueIn><valueOut>133</valueOut>
+			<valueIn>134</valueIn><valueOut>134</valueOut>
+			<valueIn>135</valueIn><valueOut>135</valueOut>
+			<valueIn>136</valueIn><valueOut>136</valueOut>
+			<valueIn>137</valueIn><valueOut>137</valueOut>
+			<valueIn>138</valueIn><valueOut>138</valueOut>
+			<valueIn>139</valueIn><valueOut>139</valueOut>
+			<valueIn>140</valueIn><valueOut>140</valueOut>
+			<valueIn>141</valueIn><valueOut>141</valueOut>
+			<valueIn>142</valueIn><valueOut>142</valueOut>
+			<valueIn>143</valueIn><valueOut>143</valueOut>
+			<valueIn>144</valueIn><valueOut>144</valueOut>
+			<valueIn>145</valueIn><valueOut>145</valueOut>
+			<valueIn>146</valueIn><valueOut>146</valueOut>
+			<valueIn>147</valueIn><valueOut>147</valueOut>
+			<valueIn>148</valueIn><valueOut>148</valueOut>
+			<valueIn>149</valueIn><valueOut>149</valueOut>
+			<valueIn>150</valueIn><valueOut>150</valueOut>
+			<valueIn>151</valueIn><valueOut>151</valueOut>
+			<valueIn>152</valueIn><valueOut>152</valueOut>
+			<valueIn>153</valueIn><valueOut>153</valueOut>
+			<valueIn>154</valueIn><valueOut>154</valueOut>
+			<valueIn>155</valueIn><valueOut>155</valueOut>
+			<valueIn>156</valueIn><valueOut>156</valueOut>
+			<valueIn>157</valueIn><valueOut>157</valueOut>
+			<valueIn>158</valueIn><valueOut>158</valueOut>
+			<valueIn>159</valueIn><valueOut>159</valueOut>
+			<valueIn>160</valueIn><valueOut>160</valueOut>
+			<valueIn>161</valueIn><valueOut>161</valueOut>
+			<valueIn>162</valueIn><valueOut>162</valueOut>
+			<valueIn>163</valueIn><valueOut>163</valueOut>
+			<valueIn>164</valueIn><valueOut>164</valueOut>
+			<valueIn>165</valueIn><valueOut>165</valueOut>
+			<valueIn>166</valueIn><valueOut>166</valueOut>
+			<valueIn>167</valueIn><valueOut>167</valueOut>
+			<valueIn>168</valueIn><valueOut>168</valueOut>
+			<valueIn>169</valueIn><valueOut>169</valueOut>
+			<valueIn>170</valueIn><valueOut>170</valueOut>
+			<valueIn>171</valueIn><valueOut>171</valueOut>
+			<valueIn>172</valueIn><valueOut>172</valueOut>
+			<valueIn>173</valueIn><valueOut>173</valueOut>
+			<valueIn>174</valueIn><valueOut>174</valueOut>
+			<valueIn>175</valueIn><valueOut>175</valueOut>
+			<valueIn>176</valueIn><valueOut>176</valueOut>
+			<valueIn>177</valueIn><valueOut>177</valueOut>
+			<valueIn>178</valueIn><valueOut>178</valueOut>
+			<valueIn>179</valueIn><valueOut>179</valueOut>
+			<valueIn>180</valueIn><valueOut>180</valueOut>
+			<valueIn>181</valueIn><valueOut>181</valueOut>
+			<valueIn>182</valueIn><valueOut>182</valueOut>
+			<valueIn>183</valueIn><valueOut>183</valueOut>
+			<valueIn>184</valueIn><valueOut>184</valueOut>
+			<valueIn>185</valueIn><valueOut>185</valueOut>
+			<valueIn>186</valueIn><valueOut>186</valueOut>
+			<valueIn>187</valueIn><valueOut>187</valueOut>
+			<valueIn>188</valueIn><valueOut>188</valueOut>
+			<valueIn>189</valueIn><valueOut>189</valueOut>
+			<valueIn>190</valueIn><valueOut>190</valueOut>
+			<valueIn>191</valueIn><valueOut>191</valueOut>
+			<valueIn>192</valueIn><valueOut>192</valueOut>
+			<valueIn>193</valueIn><valueOut>193</valueOut>
+			<valueIn>194</valueIn><valueOut>194</valueOut>
+			<valueIn>195</valueIn><valueOut>195</valueOut>
+			<valueIn>196</valueIn><valueOut>196</valueOut>
+			<valueIn>197</valueIn><valueOut>197</valueOut>
+			<valueIn>198</valueIn><valueOut>198</valueOut>
+			<valueIn>199</valueIn><valueOut>199</valueOut>
+			<valueIn>200</valueIn><valueOut>200</valueOut>
+			<valueIn>201</valueIn><valueOut>201</valueOut>
+			<valueIn>202</valueIn><valueOut>202</valueOut>
+			<valueIn>203</valueIn><valueOut>203</valueOut>
+			<valueIn>204</valueIn><valueOut>204</valueOut>
+			<valueIn>205</valueIn><valueOut>205</valueOut>
+			<valueIn>206</valueIn><valueOut>206</valueOut>
+			<valueIn>207</valueIn><valueOut>207</valueOut>
+			<valueIn>208</valueIn><valueOut>208</valueOut>
+			<valueIn>209</valueIn><valueOut>209</valueOut>
+			<valueIn>210</valueIn><valueOut>210</valueOut>
+			<valueIn>211</valueIn><valueOut>211</valueOut>
+			<valueIn>212</valueIn><valueOut>212</valueOut>
+			<valueIn>213</valueIn><valueOut>213</valueOut>
+			<valueIn>214</valueIn><valueOut>214</valueOut>
+			<valueIn>215</valueIn><valueOut>215</valueOut>
+			<valueIn>216</valueIn><valueOut>216</valueOut>
+			<valueIn>217</valueIn><valueOut>217</valueOut>
+			<valueIn>218</valueIn><valueOut>218</valueOut>
+			<valueIn>219</valueIn><valueOut>219</valueOut>
+			<valueIn>220</valueIn><valueOut>220</valueOut>
+			<valueIn>221</valueIn><valueOut>221</valueOut>
+			<valueIn>222</valueIn><valueOut>222</valueOut>
+			<valueIn>223</valueIn><valueOut>223</valueOut>
+			<valueIn>224</valueIn><valueOut>224</valueOut>
+			<valueIn>225</valueIn><valueOut>225</valueOut>
+			<valueIn>226</valueIn><valueOut>226</valueOut>
+			<valueIn>227</valueIn><valueOut>227</valueOut>
+			<valueIn>228</valueIn><valueOut>228</valueOut>
+			<valueIn>229</valueIn><valueOut>229</valueOut>
+			<valueIn>230</valueIn><valueOut>230</valueOut>
+			<valueIn>231</valueIn><valueOut>231</valueOut>
+			<valueIn>232</valueIn><valueOut>232</valueOut>
+			<valueIn>233</valueIn><valueOut>233</valueOut>
+			<valueIn>234</valueIn><valueOut>234</valueOut>
+			<valueIn>235</valueIn><valueOut>235</valueOut>
+			<valueIn>236</valueIn><valueOut>236</valueOut>
+			<valueIn>237</valueIn><valueOut>237</valueOut>
+			<valueIn>238</valueIn><valueOut>238</valueOut>
+			<valueIn>239</valueIn><valueOut>239</valueOut>
+			<valueIn>240</valueIn><valueOut>240</valueOut>
+			<valueIn>241</valueIn><valueOut>241</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ifType-em">
+			<label>Unknown/Unsupported</label><!-- 0x00 (0) -->
+			<label>Other</label>
+			<label>Regular1822</label>
+			<label>HDH1822</label>
+			<label>DDN X.25</label>
+			<label>RFC 877 X.25</label>
+			<label>Ethernet</label>
+			<label>IEEE 802.3 CSMA/CD</label>
+			<label>IEEE 802.4 Token Bus</label>
+			<label>IEEE 802.5 Token Ring</label>
+			<label>IEEE 802.6 MAN</label>
+			<label>StarLan</label>
+			<label>Proteon 10Mbit</label>
+			<label>Proteon 80Mbit</label>
+			<label>Hyperchannel</label>
+			<label>FDDI</label>
+			<label>LAPB</label><!-- 0x10 (16)-->
+			<label>SDLC</label>
+			<label>DS1</label>
+			<label>E1</label>
+			<label>Basic ISDN</label>
+			<label>Primary ISDN</label>
+			<label>Prop Point to Point Serial</label>
+			<label>PPP</label>
+			<label>Software Loopback</label>
+			<label>EON</label>
+			<label>Ethernet 3Mbit</label>
+			<label>NSIP</label>
+			<label>SLIP</label>
+			<label>Ultra</label>
+			<label>DS3</label>
+			<label>SIP</label>
+			<label>Frame Relay</label><!-- 0x20 (32)-->
+			<label>RS232</label>
+			<label>para</label>
+			<label>arcnet</label>
+			<label>arcnetPlus</label>
+			<label>atm</label>
+			<label>miox25</label>
+			<label>sonet</label>
+			<label>x25ple</label>
+			<label>iso88022llc</label>
+			<label>localTalk</label>
+			<label>smdsDxi</label>
+			<label>frameRelayService</label>
+			<label>v35</label>
+			<label>hssi</label>
+			<label>hippi</label>
+			<label>modem</label><!-- 0x30 (48)-->
+			<label>aal5</label>
+			<label>sonetPath</label>
+			<label>sonetVT</label>
+			<label>smdsIcip</label>
+			<label>propVirtual</label>
+			<label>propMultiplexor</label>
+			<label>ieee80212</label>
+			<label>fibreChannel</label>
+			<label>hippiInterface</label>
+			<label>frameRelayInterconnect</label>
+			<label>aflane8023</label>
+			<label>aflane8025</label>
+			<label>cctEmul</label>
+			<label>fastEther</label>
+			<label>ISDN</label>
+			<label>v11</label><!-- 0x40 (64)-->
+			<label>v36</label>
+			<label>g703at64k</label>
+			<label>g703at2mb</label>
+			<label>qllc</label>
+			<label>fastEtherFX</label>
+			<label>channel</label>
+			<label>ieee80211</label>
+			<label>ibm370parChan</label>
+			<label>escon</label>
+			<label>dlsw</label>
+			<label>isdns</label>
+			<label>isdnu</label>
+			<label>lapd</label>
+			<label>ipSwitch</label>
+			<label>rsrb</label>
+			<label>atmLogical</label><!-- 0x50 (80)-->
+			<label>ds0</label>
+			<label>ds0Bundle</label>
+			<label>bsc</label>
+			<label>async</label>
+			<label>cnr</label>
+			<label>iso88025Dtr</label>
+			<label>eplrs</label>
+			<label>arap</label>
+			<label>propCnls</label>
+			<label>hostPad</label>
+			<label>termPad</label>
+			<label>frameRelayMPI</label>
+			<label>x213</label>
+			<label>adsl</label>
+			<label>radsl</label>
+			<label>sdsl</label><!-- 0x60 (96)-->
+			<label>vdsl</label>
+			<label>iso88025CRFPInt</label>
+			<label>myrinet</label>
+			<label>voiceEM</label>
+			<label>voiceFXO</label>
+			<label>voiceFXS</label>
+			<label>voiceEncap</label>
+			<label>voiceOverIp</label>
+			<label>atmDxi</label>
+			<label>atmFuni</label>
+			<label>atmIma</label>
+			<label>pppMultilinkBundle</label>
+			<label>ipOverCdlc</label>
+			<label>ipOverClaw</label>
+			<label>stackToStack</label>
+			<label>virtualIpAddress</label><!-- 0x70 (112)-->
+			<label>mpc</label>
+			<label>ipOverAtm</label>
+			<label>iso88025Fiber</label>
+			<label>tdlc</label>
+			<label>Gigabit Ethernet</label>
+			<label>hdlc</label>
+			<label>lapf</label>
+			<label>v37</label>
+			<label>x25mlp</label>
+			<label>x25huntGroup</label>
+			<label>trasnpHdlc</label>
+			<label>interleave</label>
+			<label>fast</label>
+			<label>ip</label>
+			<label>docsCableMaclayer</label>
+			<label>docsCableDownstream</label><!-- 0x80 (128)-->
+			<label>docsCableUpstream</label>
+			<label>a12MppSwitch</label>
+			<label>tunnel</label>
+			<label>coffee</label>
+			<label>ces</label>
+			<label>atmSubInterface</label>
+			<label>l2vlan</label>
+			<label>l3ipvlan</label>
+			<label>l3ipxvlan</label>
+			<label>digitalPowerline</label>
+			<label>mediaMailOverIp</label>
+			<label>dtm</label>
+			<label>dcn</label>
+			<label>ipForward</label>
+			<label>msdsl</label>
+			<label>IEEE 1394</label><!-- 0x90 (144)-->
+			<label>if-gsn</label>
+			<label>dvbRccMacLayer</label>
+			<label>dvbRccDownstream</label>
+			<label>dvbRccUpstream</label>
+			<label>atmVirtual</label>
+			<label>mplsTunnel</label>
+			<label>srp</label>
+			<label>voiceOverAtm</label>
+			<label>voiceOverFrameRelay</label>
+			<label>idsl</label>
+			<label>compositeLink</label>
+			<label>ss7SigLink</label>
+			<label>propWirelessP2P</label>
+			<label>frForward</label>
+			<label>RFC 1483</label>
+			<label>USB</label><!-- 0xA0 (160)-->
+			<label>ieee8023adLag</label>
+			<label>bgppolicyaccounting</label>
+			<label>frf16MfrBundle</label>
+			<label>h323Gatekeeper</label>
+			<label>h323Proxy</label>
+			<label>mpls</label>
+			<label>mfsigLink</label>
+			<label>hdsl2</label>
+			<label>shdsl</label>
+			<label>ds1FDL</label>
+			<label>pos</label>
+			<label>dvbAsiIn</label>
+			<label>dvbAsiOut</label>
+			<label>plc</label>
+			<label>nfas</label>
+			<label>tr008</label><!-- 0xB0 (176)-->
+			<label>gr303RDT</label>
+			<label>gr303IDT</label>
+			<label>isup</label>
+			<label>propDocsWirelessMacLayer</label>
+			<label>propDocsWirelessDownstream</label>
+			<label>propDocsWirelessUpstream</label>
+			<label>hiperlan2</label>
+			<label>propBWAp2Mp</label>
+			<label>sonetOverheadChannel</label>
+			<label>digitalWrapperOverheadChannel</label>
+			<label>aal2</label>
+			<label>radioMac</label>
+			<label>atmRadio</label>
+			<label>imt</label>
+			<label>mvl</label>
+			<label>reachDSL</label><!-- 0xC0 (192)-->
+			<label>frDlciEndPt</label>
+			<label>atmVciEndPt</label>
+			<label>opticalChannel</label>
+			<label>opticalTransport</label>
+			<label>propAtm</label>
+			<label>voiceOverCable</label>
+			<label>infiniband</label>
+			<label>teLink</label>
+			<label>q2931</label>
+			<label>virtualTg</label>
+			<label>sipTg</label>
+			<label>sipSig</label>
+			<label>docsCableUpstreamChannel</label>
+			<label>econet</label>
+			<label>pon155</label>
+			<label>pon622</label><!-- 0xD0 (208)-->
+			<label>bridge</label>
+			<label>linegroup</label>
+			<label>voiceEMFGD</label>
+			<label>voiceFGDEANA</label>
+			<label>voiceDID</label>
+			<label>mpegTransport</label>
+			<label>sixToFour</label>
+			<label>gtp</label>
+			<label>pdnEtherLoop1</label>
+			<label>pdnEtherLoop2</label>
+			<label>opticalChannelGroup</label>
+			<label>homepna</label>
+			<label>gfp</label>
+			<label>ciscoISLvlan</label>
+			<label>actelisMetaLOOP</label>
+			<label>fcipLink</label><!-- 0xE0 (224)-->
+			<label>rpr</label>
+			<label>qam</label>
+			<label>lmp</label>
+			<label>cblVectaStar</label>
+			<label>docsVableMCmtsDownstream</label>
+			<label>adsl2</label>
+			<label>macSecControlledIF</label>
+			<label>macSecUncontrolledIF</label>
+			<label>aviciOpticalEther</label>
+			<label>atmbond</label>
+			<label>voiceFGDOS</label>
+			<label>mocaVersion1</label>
+			<label>ieee80216WMAN</label>
+			<label>adsl2plus</label>
+			<label>dvbRcsMacLayer</label>
+			<label>dvbTdm</label><!-- 0xF0 (240)-->
+			<label>dvbRcsTdma</label>
+		</enumMap>
+
+		<stateSensor ruleid="ifOperStatus" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>state</type>
+            <sensorId>IF_OPER_STATUS_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="ifOperStatus-vm">
+                <getRowOid>.1.3.6.1.2.1.2.2.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>Status - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+			<enum>ifOperStatus-em</enum>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="ifAdminStatus" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>state</type>
+            <sensorId>IF_ADMIN_STATUS_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="ifOperStatus-vm">
+                <getRowOid>.1.3.6.1.2.1.2.2.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>Admin Status - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+			<enum>ifOperStatus-em</enum>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="ifOperStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="ifOperStatus-em">
+			<label>Up</label>
+			<label>Down</label>
+			<label>Testing</label>
+			<label>Unknown</label>
+			<label>Dormant</label>
+			<label>Not Present</label>
+			<label>Lower Layer Down</label>
+		</enumMap>
+
+		<numSensor ruleid="ifMtu" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_MTU_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>MTU Size - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ifSpeed" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+			<units>bitspersec</units>
+            <sensorId>IF_SPEED_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Speed - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ifLastChange" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>timeinsec</type>
+            <sensorId>IF_LAST_CHANGE_<rowNumber/></sensorId>
+            <value>
+				<mult>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.2.1.1.3.0</getOid></op>
+					<op><getRowOid>.1.3.6.1.2.1.2.2.1.9</getRowOid></op>
+					</sub>
+				</op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Time Since Last Change - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ifInOctets" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_OCTETS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.10</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Octets In - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifInUCastPkts" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_UCAST_PKTS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Inbound Unicast Packets - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifInNUCastPkts" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_NUCAST_PKTS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Inbound Non-Unicast Packets - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifInDiscards" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_DISCARDS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Inbound Discards - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifInErrors" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_ERRORS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Inbound Errors - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifInUnknownProtos" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_IN_UNKNOWN_PROTOS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Inbound Unknown Protocols - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ifOutOctets" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_OCTETS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Octets Out - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifOutUCastPkts" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_UCAST_PKTS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outbound Unicast Packets - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifOutNUCastPkts" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_NUCAST_PKTS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outbound Non-Unicast Packets - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifOutDiscards" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_DISCARDS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outbound Discards - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifOutErrors" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_ERRORS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outbound Errors - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ifOutQLen" index=".1.3.6.1.2.1.2.2.1.1">
+            <type>num</type>
+            <sensorId>IF_OUT_QLEN_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.2.1.2.2.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Outbound Packet Queue Length - Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></label>
+            <sensorSet>Interface #<getRowOid>.1.3.6.1.2.1.2.2.1.1</getRowOid> - <getRowOid>.1.3.6.1.2.1.2.2.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

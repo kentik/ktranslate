@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="toshiba_rmti4_g9000-g2020"
+	ddfname="Toshiba RemotEye 4 G9000-G2020"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\toshiba\TIC-RMTI4-G9000-G2020-MIB.mib
+		TIC-RMTI4-G9000-G2020-MIB | 15 July 2020
+	-->
+	<device deviceid="toshiba_rmti4_g9000-g2020">
+		<oidMustExist ruleid="upsG9000-G2020_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1" istree="yes"/>
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="suppressupsmibvendordata" suppressid="upsmib/upsmibdiscdata/vendordata"/>
+        <suppressRule ruleid="suppressupsmibmodeldata" suppressid="upsmib/upsmibdiscdata/modeldata"/>
+		<suppressRule ruleid="suppressupsmibinputfrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<suppressRule ruleid="suppressupsmibinputvoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<suppressRule ruleid="suppressupsmibinputcurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<suppressRule ruleid="suppressupsmibinputtruepower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<suppressRule ruleid="suppressupsmiboutputsource" suppressid="upsmib/upsmib/upsOutputSource"/>
+		<suppressRule ruleid="suppressupsmiboutputfrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<suppressRule ruleid="suppressupsmiboutputvoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<suppressRule ruleid="suppressupsmiboutputcurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<suppressRule ruleid="suppressupsmiboutputpower" suppressid="upsmib/upsmib/upsOutputPower"/>
+		<suppressRule ruleid="suppressupsmiboutputpercentload" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<suppressRule ruleid="suppressupsmibtotaloutputpowerloadpercentsensor" suppressid="upsmib/upsmib/totalOutputPowerLoadPercentSensor"/>
+		<suppressRule ruleid="suppressupsmibtotalpoweroutputsensor" suppressid="upsmib/upsmib/totalPowerOutputSensor"/>
+		<suppressRule ruleid="suppressupsmibbypassfrequency" suppressid="upsmib/upsmib/upsBypassFrequency"/>
+		<suppressRule ruleid="suppressupsmibbypassvoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+		<suppressRule ruleid="suppressupsmibbypasscurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+		<suppressRule ruleid="suppressupsmibbypasspower" suppressid="upsmib/upsmib/upsBypassPower"/>
+		<suppressRule ruleid="suppressupsmibbatterystatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<suppressRule ruleid="suppressupsmibsecondsonbattery" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Toshiba</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.1.2.0</getOid></setProductData>
+		<setProductData ruleid="fw_version" field="appversion"><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.1.3.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		
+	</device>
+		
+	<device deviceid="upsInput">
+		<oidMustExist ruleid="upsInput_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1.2" istree="yes"/>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.1.0</getOid></setProductData>
+		
+		<numSensor ruleid="ups_input_ll_voltage_ab">
+			<type>voltage</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_AB</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage L1-L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_ll_voltage_bc">
+			<type>voltage</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_BC</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage L2-L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_ll_voltage_ca">
+			<type>voltage</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_CA</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage L3-L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<!-- 
+		<numSensor ruleid="ups_input_ll_voltage_percent_ab">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_PERCENT_AB</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage Percent L1-L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_ll_voltage_percent_bc">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_PERCENT_BC</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage Percent L2-L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_ll_voltage_percent_ca">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_INPUT_LL_VOLTAGE_PERCENT_CA</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.7.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Voltage Percent L3-L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor> 
+		-->
+		<numSensor ruleid="ups_input_current_phase_a">
+			<type>amperage</type>
+			<sensorId>_UPS_INPUT_CURRENT_PHASE_A</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Input Current L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_current_phase_b">
+			<type>amperage</type>
+			<sensorId>_UPS_INPUT_CURRENT_PHASE_B</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.9.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Input Current L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_current_phase_c">
+			<type>amperage</type>
+			<sensorId>_UPS_INPUT_CURRENT_PHASE_C</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.10.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Input Current L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_frequency">
+			<type>frequency</type>
+			<sensorId>_UPS_INPUT_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.11.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Input Frequency</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_active_power_a">
+			<type>powerW</type>
+			<sensorId>_UPS_INPUT_ACTIVE_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.12.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Active Power L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_active_power_b">
+			<type>powerW</type>
+			<sensorId>_UPS_INPUT_ACTIVE_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.13.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Active Power L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_active_power_c">
+			<type>powerW</type>
+			<sensorId>_UPS_INPUT_ACTIVE_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.14.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Active Power L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_total_active_power">
+			<type>powerW</type>
+			<sensorId>_UPS_INPUT_TOTAL_ACTIVE_POWER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.15.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Total Active Power</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_input_rated_ll_voltage">
+			<type>voltage</type>
+			<sensorId>_UPS_INPUT_RATED_LL_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.2.16.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Input Rated Voltage</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+		
+	</device>
+		
+	<device deviceid="upsOutput">
+		<oidMustExist ruleid="upsOutput_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1.3" istree="yes"/>
+		
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.2.0</getOid></setProductData>
+		
+		<stateSensor ruleid="upsOutputSource">
+			<type>state</type>
+			<sensorId>_UPS_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="5state-vm">
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS Output Source</label>
+			<enum>upsOutputSource-em</enum>
+			<sensorSet>UPS Output</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="5state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="upsOutputSource-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>None</label>
+			<label>Normal</label>
+			<label>Bypass</label>
+			<label>Battery</label>
+		</enumMap>
+		
+		<numSensor ruleid="ups_output_ll_voltage_ab">
+			<type>voltage</type>
+			<sensorId>_UPS_OUTPUT_LL_VOLTAGE_AB</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Voltage L1-L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_ll_voltage_bc">
+			<type>voltage</type>
+			<sensorId>_UPS_OUTPUT_LL_VOLTAGE_BC</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Voltage L2-L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_ll_voltage_ca">
+			<type>voltage</type>
+			<sensorId>_UPS_OUTPUT_LL_VOLTAGE_CA</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Voltage L3-L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_current_phase_a">
+			<type>amperage</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PHASE_A</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.6.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Output Current L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_current_phase_b">
+			<type>amperage</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PHASE_B</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.7.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Output Current L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_current_phase_c">
+			<type>amperage</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PHASE_C</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Output Current L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_frequency">
+			<type>frequency</type>
+			<sensorId>_UPS_OUTPUT_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.9.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Output Frequency</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<!-- 
+		<numSensor ruleid="ups_output_current_percent_a">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PERCENT_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.10.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Current Percent L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_current_percent_b">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PERCENT_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.11.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Current Percent L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_current_percent_c">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_OUTPUT_CURRENT_PERCENT_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.12.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Current Percent L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor> 
+		-->
+		<numSensor ruleid="ups_output_total_active_power">
+			<type>powerW</type>
+			<sensorId>_UPS_OUTPUT_TOTAL_ACTIVE_POWER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.13.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Total Active Power</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<!-- 
+		<numSensor ruleid="ups_output_total_active_power_percent">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_OUTPUT_TOTAL_ACTIVE_POWER_PERCENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.14.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Total Active Power Percent</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor> 
+		-->
+		<numSensor ruleid="ups_output_power_factor">
+			<type>num/powerfactor</type>
+			<sensorId>_UPS_OUTPUT_POWER_FACTOR</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.15.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label>UPS Output Power Factor</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_rated_active_power">
+			<type>powerW</type>
+			<sensorId>_UPS_OUTPUT_RATED_ACTIVE_POWER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.16.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Rated Active Power</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_rated_apparent_power">
+			<type>num/kdispapppower</type>
+			<sensorId>_UPS_OUTPUT_RATED_APPARENT_POWER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.17.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Rated Apparent Power</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_output_rated_l_l_voltage">
+			<type>voltage</type>
+			<sensorId>_UPS_OUTPUT_RATED_L_L_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.3.18.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Output Rated LL Voltage</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+		
+	</device>
+		
+	<device deviceid="upsBypass">
+		<oidMustExist ruleid="upsBypass_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1.4" istree="yes"/>
+		
+		<numSensor ruleid="ups_bypass_ll_voltage_ab">
+			<type>voltage</type>
+			<sensorId>_UPS_BYPASS_LL_VOLTAGE_AB</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.4.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Bypass Voltage L1-L2</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_bypass_ll_voltage_bc">
+			<type>voltage</type>
+			<sensorId>_UPS_BYPASS_LL_VOLTAGE_BC</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.4.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Bypass Voltage L2-L3</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_bypass_ll_voltage_ca">
+			<type>voltage</type>
+			<sensorId>_UPS_BYPASS_LL_VOLTAGE_CA</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.4.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Bypass Voltage L3-L1</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_bypass_frequency">
+			<type>frequency</type>
+			<sensorId>_UPS_BYPASS_FREQUENCY</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.4.5.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>UPS Bypass Frequency</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+		
+	</device>
+		
+	<device deviceid="upsDCBus">
+		<oidMustExist ruleid="upsDCBus_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1.5" istree="yes"/>
+		
+		<numSensor ruleid="upsDCBusTotalVoltage">
+			<type>voltage</type>
+			<sensorId>_UPS_DC_BUS_TOTAL_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.5.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS DC Bus Total Voltage</label>
+			<sensorSet>UPS DC Bus</sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="upsBattery">
+		<oidMustExist ruleid="upsBattery_exists" oid=".1.3.6.1.4.1.186.1.19.2.5.1.6" istree="yes"/>
+		
+		<stateSensor ruleid="upsBatteryStatus">
+			<type>state</type>
+			<sensorId>_UPS_BATT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="6state-vm">
+					<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS Battery Status</label>
+			<enum>upsBatteryStatus-em</enum>
+			<sensorSet>UPS Battery</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="6state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="upsBatteryStatus-em">
+			<label>Unknown</label>
+			<label>Battery Normal</label>
+			<label>Battery Low</label>
+			<label>Battery Depleted</label>
+			<label>Battery Discharging</label>
+			<label>Battery Failure</label>
+		</enumMap>
+		
+		<numSensor ruleid="ups_elapsed_time_on_battery_power">
+			<type>timeinmin</type>
+			<sensorId>_TIME_ON_BATT</sensorId>
+			<value>
+				<div>
+					<op><getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.2.0</getOid></op>
+					<op>60</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Time Running on Battery</label>
+			<sensorSet>UPS Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsEstimatedBatteryRuntime">
+			<type>timeinmin</type>
+			<sensorId>TIME_REMAINING_ON_BATT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Time Remaining</label>
+			<sensorSet>UPS Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ups_battery_voltage">
+			<type>voltage</type>
+			<sensorId>_UPS_BATTERY_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Battery Voltage</label>
+			<sensorSet>UPS Battery</sensorSet>
+		</numSensor>
+		<!-- 
+		<numSensor ruleid="ups_battery_voltage_percent">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_BATTERY_VOLTAGE_PERCENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Battery Voltage Percent</label>
+			<sensorSet>UPS Battery</sensorSet>
+		</numSensor> 
+		-->
+		<numSensor ruleid="ups_battery_estimated_charge">
+			<type>pctofcapacity</type>
+			<sensorId>_UPS_BATTERY_ESTIMATED_CHARGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.186.1.19.2.5.1.6.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>UPS Battery Estimated Charge</label>
+			<sensorSet>UPS Battery</sensorSet>
+		</numSensor>
+		
+	</device>
+</APC_DDF>

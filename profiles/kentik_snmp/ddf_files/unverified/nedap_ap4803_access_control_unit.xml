@@ -1,0 +1,111 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="nedap_ap4803_access_control_unit"
+	ddfname="NEDAP AP4803 Access Control Unit"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="nedap_ap4803_access_control_unit">
+		<oidMustExist ruleid="nedap_aeos" oid=".1.3.6.1.4.1.25696.2.2.1.1.4" istree="yes"/> 
+
+		<setProductData ruleid="vendordata" field="vendor">NEDAP</setProductData>
+		<setProductData ruleid="modeldata" field="model">AP4803 Access Control Unit</setProductData>
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+		<stateSensor ruleid="digital-input" index=".1.3.6.1.4.1.25696.2.2.1.1.4.2.1.1">
+            <type>state</type>
+			<sensorId>DIGITAL_INPUT_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.25696.2.2.1.1.4.2.1.3</getRowOid>
+			</value>
+			<label>
+				<getOid>
+					<mapValue mapid="deviceNameFromDeviceNum-vm">
+						<mapValue mapid="deviceNumFromRowIndex-vm">
+							<rowIndex/>
+						</mapValue>
+					</mapValue>
+				</getOid>
+				<space/>(#<mapValue mapid="deviceNumFromRowIndex-vm"><rowIndex/></mapValue>)
+				<space/><getRowOid>.1.3.6.1.4.1.25696.2.2.1.1.4.2.1.2</getRowOid>
+			</label>
+            <enum>digitalInput-em</enum>
+			<sensorSet>Device #<mapValue mapid="deviceNumFromRowIndex-vm"><rowIndex/></mapValue> Sensors</sensorSet>
+			<!-- <mapValue mapid="deviceNumFromRowIndex-vm"><rowIndex/></mapValue> -->
+        </stateSensor>
+
+		<valueMap ruleid="deviceNumFromRowIndex-vm">
+			<valueIn>2.0</valueIn><valueOut>2</valueOut>
+			<valueIn>2.1</valueIn><valueOut>2</valueOut>
+			<valueIn>2.2</valueIn><valueOut>2</valueOut>
+			<valueIn>2.3</valueIn><valueOut>2</valueOut>
+			<valueIn>2.4</valueIn><valueOut>2</valueOut>
+			<valueIn>2.5</valueIn><valueOut>2</valueOut>
+			<valueIn>2.6</valueIn><valueOut>2</valueOut>
+			<valueIn>2.7</valueIn><valueOut>2</valueOut>
+			<valueIn>2.8</valueIn><valueOut>2</valueOut>
+			<valueIn>3.0</valueIn><valueOut>3</valueOut>
+			<valueIn>3.1</valueIn><valueOut>3</valueOut>
+			<valueIn>3.2</valueIn><valueOut>3</valueOut>
+			<valueIn>3.3</valueIn><valueOut>3</valueOut>
+			<valueIn>3.4</valueIn><valueOut>3</valueOut>
+			<valueIn>3.5</valueIn><valueOut>3</valueOut>
+			<valueIn>3.6</valueIn><valueOut>3</valueOut>
+			<valueIn>3.7</valueIn><valueOut>3</valueOut>
+			<valueIn>3.8</valueIn><valueOut>3</valueOut>
+			<valueIn>99.0</valueIn><valueOut>99</valueOut>
+			<valueIn>99.1</valueIn><valueOut>99</valueOut>
+			<valueIn>99.2</valueIn><valueOut>99</valueOut>
+			<valueIn>99.3</valueIn><valueOut>99</valueOut>
+			<valueIn>99.4</valueIn><valueOut>99</valueOut>
+			<valueIn>99.5</valueIn><valueOut>99</valueOut>
+			<valueIn>99.6</valueIn><valueOut>99</valueOut>
+			<valueIn>99.7</valueIn><valueOut>99</valueOut>
+			<valueIn>99.8</valueIn><valueOut>99</valueOut>
+			<valueIn>10002.0</valueIn><valueOut>10002</valueOut>
+			<valueIn>10003.0</valueIn><valueOut>10003</valueOut>
+			<valueIn>10099.0</valueIn><valueOut>10099</valueOut>
+			<valueIn>20002.0</valueIn><valueOut>20002</valueOut>
+			<valueIn>20003.0</valueIn><valueOut>20003</valueOut>
+			<valueIn>20099.0</valueIn><valueOut>20099</valueOut>
+			<valueIn>30002.0</valueIn><valueOut>30002</valueOut>
+			<valueIn>30003.0</valueIn><valueOut>30003</valueOut>
+			<valueIn>30099.0</valueIn><valueOut>30099</valueOut>
+			<valueIn>40002.0</valueIn><valueOut>40002</valueOut>
+			<valueIn>40003.0</valueIn><valueOut>40003</valueOut>
+			<valueIn>40099.0</valueIn><valueOut>40099</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="deviceNameFromDeviceNum-vm">
+			<valueIn>2</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.2</valueOut>
+			<valueIn>3</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.3</valueOut>
+			<valueIn>99</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.99</valueOut>
+			<valueIn>10002</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.10002</valueOut>
+			<valueIn>10003</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.10003</valueOut>
+			<valueIn>10099</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.10099</valueOut>
+			<valueIn>20002</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.20002</valueOut>
+			<valueIn>20003</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.20003</valueOut>
+			<valueIn>20099</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.20099</valueOut>
+			<valueIn>30002</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.30002</valueOut>
+			<valueIn>30003</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.30003</valueOut>
+			<valueIn>30099</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.30099</valueOut>
+			<valueIn>40002</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.40002</valueOut>
+			<valueIn>40003</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.40003</valueOut>
+			<valueIn>40099</valueIn><valueOut>.1.3.6.1.4.1.25696.2.2.1.1.4.1.1.2.40099</valueOut>
+			<valueIn>0</valueIn><valueOut>Unknown Device</valueOut>
+		</valueMap>
+
+
+		<enumMap ruleid="digitalInput-em">
+			<label>Input Passive</label>
+			<label>Input Active</label>
+			<label>Sabotaged Open</label>
+			<label>Sabotaged Shortcut</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

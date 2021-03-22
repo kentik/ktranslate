@@ -1,0 +1,473 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="akquinet_pcd_m5340"
+	ddfname="Akquinet PCD M5340"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="akquinet_pcd_m5340">
+		<oidMustExist ruleid="akquinet_pcd_m5340_exists" oid=".1.3.6.1.4.1.31977" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Akquinet</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.31977.2.1.0</getOid></setProductData>
+		<setProductData ruleid="firmware_version" field="appversion"><getOid>.1.3.6.1.4.1.31977.2.4.0</getOid></setProductData>
+		<setProductData ruleid="serial_number" field="serial_num"><getOid>.1.3.6.1.4.1.31977.2.5.0</getOid></setProductData>
+		<setProductData ruleid="mac_address" field="mac_addr"><getOid>.1.3.6.1.4.1.31977.2.7.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		
+		<!-- Company Information -->
+		
+		<stringSensor ruleid="company_name">
+            <type>string</type>
+            <sensorId>COMPANY_NAME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.1.3.0</getOid>
+            </value>
+            <label>Company Name</label>
+            <sensorSet>Company Information</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="company_description">
+            <type>string</type>
+            <sensorId>COMPANY_DESCRIPTION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.1.4.0</getOid>
+            </value>
+            <label>Company Description</label>
+            <sensorSet>Company Information</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="company_url">
+            <type>string</type>
+            <sensorId>COMPANY_URL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.1.5.0</getOid>
+            </value>
+            <label>Company URL</label>
+            <sensorSet>Company Information</sensorSet>
+        </stringSensor>
+		
+		<!-- Hardware Information -->
+		
+		<stringSensor ruleid="name_of_found_hardware" index=".1.3.6.1.4.1.31977.3.1.1.3">
+            <type>string</type>
+            <sensorId>NAME_OF_FOUND_HARDWARE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.1.1.3</getRowOid>
+            </value>
+            <label>Name of Found Hardware <getRowOid>.1.3.6.1.4.1.31977.3.1.1.1</getRowOid></label>
+            <sensorSet>Hardware Information</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="location_of_found_hardware" index=".1.3.6.1.4.1.31977.3.1.1.4">
+            <type>string</type>
+            <sensorId>LOCATION_OF_FOUND_HARDWARE<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.1.1.4</getRowOid>
+            </value>
+            <label>Location of Found Hardware <getRowOid>.1.3.6.1.4.1.31977.3.1.1.1</getRowOid></label>
+            <sensorSet>Hardware Information</sensorSet>
+        </stringSensor>
+
+		<numSensor ruleid="identifier_of_found_hardware" index=".1.3.6.1.4.1.31977.3.1.1.2">
+            <type>num</type>
+            <sensorId>IDENTIFIER_OF_FOUND_HARDWARE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.1.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Identifier of Found Hardware <getRowOid>.1.3.6.1.4.1.31977.3.1.1.1</getRowOid></label>
+            <sensorSet>Hardware Information</sensorSet>
+        </numSensor>
+		
+		<!-- Memory Information -->
+		
+		<stringSensor ruleid="name_of_found_memory" index=".1.3.6.1.4.1.31977.3.2.1.2">
+            <type>string</type>
+            <sensorId>NAME_OF_FOUND_MEMORY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.2.1.2</getRowOid>
+            </value>
+            <label>Name of Found Memory <getRowOid>.1.3.6.1.4.1.31977.3.2.1.1</getRowOid></label>
+            <sensorSet>Memory Information</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="partition_name_of_current_memory" index=".1.3.6.1.4.1.31977.3.2.1.3">
+            <type>string</type>
+            <sensorId>PARTITION_NAME_OF_CURRENT_MEMORY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.2.1.3</getRowOid>
+            </value>
+            <label>Partition Name of Current Memory <getRowOid>.1.3.6.1.4.1.31977.3.2.1.1</getRowOid></label>
+            <sensorSet>Memory Information</sensorSet>
+        </stringSensor>
+		
+		<numSensor ruleid="partition_size_of_found_memory" index=".1.3.6.1.4.1.31977.3.2.1.4">
+            <type>num</type>
+            <sensorId>PARTITION_SIZE_OF_FOUND_MEMORY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.2.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Partition Size of Found Memory <getRowOid>.1.3.6.1.4.1.31977.3.2.1.1</getRowOid></label>
+            <sensorSet>Memory Information</sensorSet>
+        </numSensor>
+		
+		<!-- System Status -->
+
+	    <stateSensor ruleid="onBoard_file_system_status">
+            <type>state</type>
+            <sensorId>ONBOARD_FILE_SYSTEM_STATUS</sensorId>
+            <value>
+				<mapValue mapid="0_to_1-vm">
+					<getOid>.1.3.6.1.4.1.31977.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>On-board File System Status</label>
+            <enum>present_absent-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		
+		<!-- Serial Ports -->
+		
+		<stringSensor ruleid="name_of_serial_port" index=".1.3.6.1.4.1.31977.3.4.1.2">
+            <type>string</type>
+            <sensorId>NAME_OF_SERIAL_PORT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.3.4.1.2</getRowOid>
+            </value>
+            <label>Name of Serial Port <getRowOid>.1.3.6.1.4.1.31977.3.4.1.1</getRowOid></label>
+            <sensorSet>Serial Ports</sensorSet>
+        </stringSensor>
+		
+		<stateSensor ruleid="serial_port_status" index=".1.3.6.1.4.1.31977.3.4.1.3">
+            <type>state</type>
+            <sensorId>SERIAL_PORT_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="0_to_1-vm">
+					<getRowOid>.1.3.6.1.4.1.31977.3.4.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Serial Port <getRowOid>.1.3.6.1.4.1.31977.3.4.1.1</getRowOid> Status</label>
+            <enum>present_absent-em</enum>
+            <sensorSet>Serial Ports</sensorSet>
+        </stateSensor>
+		
+		<!-- RTC -->
+		
+		<stringSensor ruleid="current_date_and_time">
+            <type>string</type>
+            <sensorId>CURRENT_DATE_AND_TIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.6.7.0</getOid>
+            </value>
+            <label>Current Date and Time</label>
+            <sensorSet>RTC</sensorSet>
+        </stringSensor>
+		
+		<numSensor ruleid="current_week_since_beginning_of_year">
+            <type>num</type>
+            <sensorId>CURRENT_WEEK_SINCE_BEGINNING_OF_YEAR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.6.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Current Week Since Beginning of Year</label>
+            <sensorSet>RTC</sensorSet>
+        </numSensor>
+		<numSensor ruleid="tick_count_ms_since_beginning_of_year">
+            <type>num</type>
+            <sensorId>TICK_COUNT_MS_SINCE_BEGINNING_OF_YEAR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.31977.6.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Tick Count - Milliseconds Since Beginning of Year</label>
+            <sensorSet>RTC</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="current_day_of_the_week">
+            <type>state</type>
+            <sensorId>CURRENT_DAY_OF_THE_WEEK</sensorId>
+            <value>
+				<mapValue mapid="0_to_6-vm">
+					<getOid>.1.3.6.1.4.1.31977.6.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Current Day of the Week</label>
+            <enum>day_of_the_week-em</enum>
+            <sensorSet>RTC</sensorSet>
+        </stateSensor>
+		
+		<!-- PCD State -->
+		
+		<stateSensor ruleid="current_pcd_state">
+            <type>state</type>
+            <sensorId>CURRENT_PCD_STATE</sensorId>
+            <value>
+				<mapValue mapid="0_to_1-vm">
+					<getOid>.1.3.6.1.4.1.31977.7.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Current PCD State</label>
+            <enum>ok_fault-em</enum>
+            <sensorSet>PCD State</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="current_battery_state">
+            <type>state</type>
+            <sensorId>CURRENT_BATTERY_STATE</sensorId>
+            <value>
+				<mapValue mapid="0_to_1-vm">
+					<getOid>.1.3.6.1.4.1.31977.7.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Current Battery State</label>
+            <enum>ok_fault-em</enum>
+            <sensorSet>PCD State</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="current_switch_state">
+            <type>state</type>
+            <sensorId>CURRENT_SWITCH_STATE</sensorId>
+            <value>
+				<mapValue mapid="0_to_1-vm">
+					<getOid>.1.3.6.1.4.1.31977.7.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Current Switch State</label>
+            <enum>ok_fault-em</enum>
+            <sensorSet>PCD State</sensorSet>
+        </stateSensor>
+		
+		<!-- Register Media -->
+		
+		<numSensor ruleid="register_index" index=".1.3.6.1.4.1.31977.4.3.1.1">
+            <type>num</type>
+            <sensorId>REGISTER_INDEX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.4.3.1.1</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Register <getRowOid>.1.3.6.1.4.1.31977.4.3.1.1</getRowOid> Index</label>
+            <sensorSet>Register Media</sensorSet>
+        </numSensor>
+		<numSensor ruleid="register_value_integer" index=".1.3.6.1.4.1.31977.4.3.1.3">
+            <type>num</type>
+            <sensorId>REGISTER_VALUE_INTEGER_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.31977.4.3.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Register <getRowOid>.1.3.6.1.4.1.31977.4.3.1.1</getRowOid> Value (32-bit signed integer)</label>
+            <sensorSet>Register Media</sensorSet>
+        </numSensor>
+		
+		<!-- General -->
+		
+		<numSensor ruleid="cold_water_temperature">
+            <type>temp</type>
+            <sensorId>COLD_WATER_TEMPERATURE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.31977.4.3.1.3.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Cold Water Temperature</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="module_in_temperature">
+            <type>temp</type>
+            <sensorId>MODULE_IN_TEMPERATURE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.31977.4.3.1.3.1</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Module-In Temperature</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="signal_valve_cold_water_temperature">
+            <type>pctofcapacity</type>
+            <sensorId>SIGNAL_VALVE_COLD_WATER_TEMPERATURE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.31977.4.3.1.3.10</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Cold Water Valve Position</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+		
+		<!-- Value/Enum Maps -->
+
+		<valueMap ruleid="0_to_1-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="0_to_6-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>7</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="present_absent-em">
+			<label>Present</label>
+			<label>Absent</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<enumMap ruleid="day_of_the_week-em">
+			<label>Monday</label>
+			<label>Tuesday</label>
+			<label>Wednesday</label>
+			<label>Thursday</label>
+			<label>Friday</label>
+			<label>Saturday</label>
+			<label>Sunday</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<enumMap ruleid="ok_fault-em">
+			<label>OK</label>
+			<label>Fault</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<!-- Alarms -->
+		
+		<alarmFlags ruleid="f_alarm_cold_water_temperature_too_high">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.506</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Alarm - Cold Water Temperature Too High</activeText>
+					<inactiveText>F-Alarm - Cold Water Temperature Too High - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Alarm - Cold Water Temperature Too High condition exists.</activeText>
+					<inactiveText>F-Alarm - Cold Water Temperature Too High condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_alarm_cold_water_temperature_too_low">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.507</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Alarm - Cold Water Temperature Too Low</activeText>
+					<inactiveText>F-Alarm - Cold Water Temperature Too Low - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Alarm - Cold Water Temperature Too Low condition exists.</activeText>
+					<inactiveText>F-Alarm - Cold Water Temperature Too Low condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_alarm_exhaust_fan">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.504</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Alarm - Exhaust Fan</activeText>
+					<inactiveText>F-Alarm - Exhaust Fan - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Alarm - Exhaust Fan condition exists.</activeText>
+					<inactiveText>F-Alarm - Exhaust Fan condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_alarm_leak_detection">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.503</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Alarm - Leak Detection</activeText>
+					<inactiveText>F-Alarm - Leak Detection - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Alarm - Leak Detection condition exists.</activeText>
+					<inactiveText>F-Alarm - Leak Detection condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_alarm_pump">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.502</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Alarm - Pump</activeText>
+					<inactiveText>F-Alarm - Pump - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Alarm - Pump exists.</activeText>
+					<inactiveText>F-Alarm - Pump condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_fuse_release">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.501</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Fuse Release</activeText>
+					<inactiveText>F-Fuse Release - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Fuse Release exists.</activeText>
+					<inactiveText>F-Fuse Release condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_main_switch">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.500</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Main Switch</activeText>
+					<inactiveText>F-Main Switch - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Main Switch exists.</activeText>
+					<inactiveText>F-Main Switch condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="f_pressure_switch">
+			<value><getOid>.1.3.6.1.4.1.31977.4.2.1.2.505</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>F-Pressure Switch</activeText>
+					<inactiveText>F-Pressure Switch - Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>General Alarms</category>
+				<description>
+					<activeText>F-Pressure Switch exists.</activeText>
+					<inactiveText>F-Pressure Switch condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	</device>
+</APC_DDF>

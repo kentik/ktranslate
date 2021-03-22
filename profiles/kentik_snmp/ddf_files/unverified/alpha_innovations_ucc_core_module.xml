@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="alpha_innovations_ucc_core_module"
+	ddfname="Alpha Innovations UCC Core Module"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\alpha_innovations\Compas.mib
+		SITE-MONITORING-MIB | 4 May 2020
+	-->
+	<device deviceid="ucc_core_module_discovery">
+		<oidMustExist ruleid="atsaEu_exists" oid=".1.3.6.1.4.1.26854.3" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Alpha Innovations</setProductData>
+		<setProductData ruleid="modeldata" field="model">UCC Core Module</setProductData>
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+		
+	</device>
+	
+	<device deviceid="commonValueMaps">
+		<oidMustExist ruleid="siteMonitoring_exists" oid=".1.3.6.1.4.1.26854.3.2" istree="yes"/> 
+	
+		<valueMap ruleid="alarmSeverity-vm">
+			<valueIn>Major</valueIn><valueOut>critical</valueOut>
+			<valueIn>Minor</valueIn><valueOut>warning</valueOut>
+			<valueIn>Warning</valueIn><valueOut>warning</valueOut>
+			<valueIn>major</valueIn><valueOut>critical</valueOut>
+			<valueIn>minor</valueIn><valueOut>warning</valueOut>
+			<valueIn>warning</valueIn><valueOut>warning</valueOut>
+			<valueIn>*</valueIn><valueOut>informational</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="delete_null_value-vm">
+			<valueIn></valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+	</device>
+	
+	<device deviceid="siteV1_global">
+		<oidMustExist ruleid="siteV1_exists" oid=".1.3.6.1.4.1.26854.3.2.1" istree="yes"/> 
+
+		<alarmFlags ruleid="siteV1GlobalAlarmSeverityTypeInt">
+			<value><getOid>.1.3.6.1.4.1.26854.3.2.1.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Site V1 Global Status Warning</activeText>
+					<inactiveText>Site V1 Global Status Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A Site V1 global status warning condition exists.</activeText>
+					<inactiveText>A Site V1 global status warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Site V1 Global Status Minor Alarm</activeText>
+					<inactiveText>Site V1 Global Status Minor Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A Site V1 global status minor alarm condition exists.</activeText>
+					<inactiveText>A Site V1 global status minor alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Site V1 Global Status Major Alarm</activeText>
+					<inactiveText>Site V1 Global Status Major Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A Site V1 global status major alarm condition exists.</activeText>
+					<inactiveText>A Site V1 global status major alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Site V1 Global Status Critical Alarm</activeText>
+					<inactiveText>Site V1 Global Status Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A Site V1 global status critical alarm condition exists.</activeText>
+					<inactiveText>A Site V1 global status critical alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+	</device>
+	
+	<device deviceid="siteV1Description">
+		<oidMustExist ruleid="siteV1Description_exists" oid=".1.3.6.1.4.1.26854.3.2.1.10" istree="yes"/> 
+		
+		<stringSensor ruleid="siteV1DescCompasSoftwareRevision">
+            <type>string</type>
+            <sensorId>SOFTWARE_REVISION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.91.0</getOid>
+            </value>
+            <label>Compass Software Revision</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescCompasOperatingSystemRevision">
+            <type>string</type>
+            <sensorId>OPERATING_SYSTEM</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.92.0</getOid>
+            </value>
+            <label>Compass Operating System</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerCPU">
+            <type>string</type>
+            <sensorId>CONTROLLER_CPU</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.93.0</getOid>
+            </value>
+            <label>CPU Information</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerCard">
+            <type>string</type>
+            <sensorId>CONTROLLER_CARD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.94.0</getOid>
+            </value>
+            <label>Hardware System Containing Compass</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerStarterVersion">
+            <type>string</type>
+            <sensorId>CONTROLLER_STARTER_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.100.0</getOid>
+            </value>
+            <label>Compass Starter Component Information</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerFactoryCompasVersion">
+            <type>string</type>
+            <sensorId>CONTROLLER_FACTORY_COMPASS_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.105.0</getOid>
+            </value>
+            <label>Compass Revision in Factory Folder</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerUserCompasVersion">
+            <type>string</type>
+            <sensorId>CONTROLLER_USER_COMPASS_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.106.0</getOid>
+            </value>
+            <label>Compass Revision in User Folder</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerFactoryFTPServerVersion">
+            <type>string</type>
+            <sensorId>CONTROLLER_FACTORY_FTP_SERVER_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.110.0</getOid>
+            </value>
+            <label>FTP Server Revision in Factory Folder</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="siteV1DescControllerUserFTPServerVersion">
+            <type>string</type>
+            <sensorId>CONTROLLER_USER_FTP_SERVER_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.10.3.111.0</getOid>
+            </value>
+            <label>FTP Server Revision in User Folder</label>
+            <sensorSet>Site V1 Description</sensorSet>
+        </stringSensor>
+		
+	</device>
+	
+	<device deviceid="siteV1Alarm">
+		<oidMustExist ruleid="siteV1Alarm_exists" oid=".1.3.6.1.4.1.26854.3.2.1.11" istree="yes"/> 
+		
+		<numSensor ruleid="siteV1AlarmNumber">
+            <type>num</type>
+            <sensorId>ALARM_NUMBER_OF_ENTRIES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.11.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Entries in Site Alarm Table</label>
+            <sensorSet>Site V1 Alarm</sensorSet>
+        </numSensor>
+		
+		<alarmFlags2 ruleid="siteV1AlarmTable" index=".1.3.6.1.4.1.26854.3.2.1.11.2.1.1">
+			<value><getRowOid>.1.3.6.1.4.1.26854.3.2.1.11.2.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Site V1 Alarm</activeText>
+					<inactiveText>Site V1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="commonValueMaps/alarmSeverity-vm">
+						<getRowOid>.1.3.6.1.4.1.26854.3.2.1.11.2.1.4</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Device</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.26854.3.2.1.11.2.1.2</getRowOid>.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.26854.3.2.1.11.2.1.2</getRowOid> no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+	</device>
+	
+	<device deviceid="siteV1Data">
+		<oidMustExist ruleid="siteV1Data_exists" oid=".1.3.6.1.4.1.26854.3.2.1.13" istree="yes"/> 
+		
+		<numSensor ruleid="siteV1DataNumber">
+            <type>num</type>
+            <sensorId>DATA_NUMBER_OF_ENTRIES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.13.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Entries in Site Data Table</label>
+            <sensorSet>Site V1 Data</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="siteV1DataValue" index=".1.3.6.1.4.1.26854.3.2.1.13.2.1.1">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_value-vm">
+					<getRowOid>.1.3.6.1.4.1.26854.3.2.1.13.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>string</type>
+            <sensorId>S1_DATA_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.26854.3.2.1.13.2.1.3</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.26854.3.2.1.13.2.1.2</getRowOid></label>
+            <sensorSet>Site V1 Data</sensorSet>
+        </stringSensor>
+		
+	</device>
+	
+	<device deviceid="siteV1Config">
+		<oidMustExist ruleid="siteV1Config_exists" oid=".1.3.6.1.4.1.26854.3.2.1.15" istree="yes"/> 
+		
+		<numSensor ruleid="siteV1ConfigNumber">
+            <type>num</type>
+            <sensorId>CONFIG_NUMBER_OF_ENTRIES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.15.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Entries in Site Config Table</label>
+            <sensorSet>Site V1 Config</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="siteV1ConfigValue" index=".1.3.6.1.4.1.26854.3.2.1.15.2.1.1">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_value-vm">
+					<getRowOid>.1.3.6.1.4.1.26854.3.2.1.15.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>string</type>
+            <sensorId>S1_CONFIG_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.26854.3.2.1.15.2.1.3</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.26854.3.2.1.15.2.1.2</getRowOid></label>
+            <sensorSet>Site V1 Config</sensorSet>
+        </stringSensor>
+		
+	</device>
+	
+	<device deviceid="es1_global">
+		<oidMustExist ruleid="es1_exists" oid=".1.3.6.1.4.1.26854.3.2.1.20.1" istree="yes"/> 
+		
+		<alarmFlags ruleid="es1GlobalAlarmSeverityTypeInt">
+			<value><getOid>.1.3.6.1.4.1.26854.3.2.1.20.1.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Energy Systems Global Status Warning</activeText>
+					<inactiveText>Energy Systems Global Status Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>An Energy Systems global status warning condition exists.</activeText>
+					<inactiveText>An Energy Systems global status warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Energy Systems Global Status Minor Alarm</activeText>
+					<inactiveText>Energy Systems Global Status Minor Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>An Energy Systems global status minor alarm condition exists.</activeText>
+					<inactiveText>An Energy Systems global status minor alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Energy Systems Global Status Major Alarm</activeText>
+					<inactiveText>Energy Systems Global Status Major Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>An Energy Systems global status major alarm condition exists.</activeText>
+					<inactiveText>An Energy Systems global status major alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Energy Systems Global Status Critical Alarm</activeText>
+					<inactiveText>Energy Systems Global Status Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>An Energy Systems global status critical alarm condition exists.</activeText>
+					<inactiveText>An Energy Systems global status critical alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+	</device>
+	
+	<device deviceid="es1Alarm">
+		<oidMustExist ruleid="es1Alarm_exists" oid=".1.3.6.1.4.1.26854.3.2.1.20.1.11" istree="yes"/>
+
+		<numSensor ruleid="es1AlarmNumber">
+            <type>num</type>
+            <sensorId>ES_ALARM_NUMBER_OF_ENTRIES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.20.1.11.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Entries in Energy System Alarm Table</label>
+            <sensorSet>Energy System Alarms</sensorSet>
+        </numSensor>
+		
+		<alarmFlags2 ruleid="es1AlarmTable" index=".1.3.6.1.4.1.26854.3.2.1.20.1.11.2.1.1">
+			<value><getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.11.2.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Energy System Alarm</activeText>
+					<inactiveText>Energy System Alarm Cleared</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="commonValueMaps/alarmSeverity-vm">
+						<getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.11.2.1.4</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Device</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.11.2.1.2</getRowOid>.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.11.2.1.2</getRowOid> no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+	</device>
+	
+	<device deviceid="es1Config">
+		<oidMustExist ruleid="es1Config_exists" oid=".1.3.6.1.4.1.26854.3.2.1.20.1.15" istree="yes"/>
+		
+		<numSensor ruleid="es1ConfigNumber">
+            <type>num</type>
+            <sensorId>ES_CONFIG_NUMBER_OF_ENTRIES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26854.3.2.1.20.1.15.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Entries in Energy System Config Table</label>
+            <sensorSet>Energy System Config</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="es1ConfigTable" index=".1.3.6.1.4.1.26854.3.2.1.20.1.15.2.1.1">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_value-vm">
+					<getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.15.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>string</type>
+            <sensorId>ES_CONFIG_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.15.2.1.3</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.26854.3.2.1.20.1.15.2.1.2</getRowOid></label>
+            <sensorSet>Energy System Config</sensorSet>
+        </stringSensor>
+		
+	</device>
+</APC_DDF>

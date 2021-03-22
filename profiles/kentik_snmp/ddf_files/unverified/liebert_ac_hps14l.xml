@@ -1,0 +1,1544 @@
+<?xml version="1.0"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+  ddfid="liebert_ac_hps14l" ddfname="Liebert AC HPS14L" ddfversion="2" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="liebert_ac_hps14l">
+		<oidMustExist ruleid="liebert_ac_hps14l_mustexist" istree="yes" oid=".1.3.6.1.4.1.476.1.42.4.3.21"/>
+
+        <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+		<setProductData ruleid="vendordata" field="vendor">Liebert</setProductData>
+        <setProductData ruleid="modeldata" field="model">HPS14L</setProductData>
+
+        
+  		<valueMap ruleid="sensor_exists0-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+         
+  		<valueMap ruleid="sensor_exists2-vm">
+			<valueIn>2</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+      
+        
+        
+		<valueMap ruleid="no_yes-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_yes-em">
+			<label>No</label>
+			<label>Yes</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="thermal_compressor">
+			<type>state</type>
+			<sensorId>THERMAL_COMPRESSOR</sensorId>
+			<value>
+				<mapValue mapid="no_yes-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.5.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>no_yes-em</enum>
+			<label>Thermal Compressor (Comp_TH_EN)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+  
+		<valueMap ruleid="analog_output_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>*</valueIn><valueOut>20</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="analog_output_status-em">
+			<label>AlarmB</label>
+			<label>Supers</label>
+			<label>Cooling1</label>
+			<label>Cooling2</label>
+			<label>ECFan</label>
+			<label>Humid</label>
+			<label>Heating</label>
+			<label>FanSpeed</label>
+			<label>Ret.Temp</label>
+			<label>Up.Temp</label>
+			<label>HT.Humi</label>
+			<label>HeaterB</label>
+			<label>RadCool</label>
+			<label>SupCont</label>
+			<label>Heat33%</label>
+			<label>3P.Act1</label>
+			<label>3P.Act2</label>
+			<label>Metric</label>
+			<label>I-Veriex</label>
+			<label>D.Scroll</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="analog_output0">
+			<type>state</type>
+			<sensorId>ANALOG_OUTPUT0</sensorId>
+			<value>
+				<mapValue mapid="analog_output_status-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.6.1.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>analog_output_status-em</enum>
+			<label>Analog Output (AnaOutSel1)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+  
+		<valueMap ruleid="analog_output_status-vm">
+			<valueIn>15</valueIn><valueOut>0</valueOut>
+			<valueIn>18</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="analog_output_status-em">
+			<label>3P.Act1</label>
+			<label>I-Variex</label>
+			<label>Unknown</label>
+		</enumMap>
+ 		
+		<stateSensor ruleid="analog_output1">
+			<type>state</type>
+			<sensorId>ANALOG_OUTPUT1</sensorId>
+			<value>
+				<mapValue mapid="analog_output_status-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.6.2.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>analog_output_status-em</enum>
+			<label>Analog Output (AnaOutSel2)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+       
+		<numSensor ruleid="delta_t_room_outdoor">
+			<type>num</type>
+			<sensorId>DELTA_T_ROOM_OUTDOOR</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Delta T Room/Outdoor (dt_RoomAMB)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="temperature_setpoint">
+			<type>temp</type>
+			<sensorId>TEMPERATURE_SETPOINT</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temperature Setpoint (TempSet)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+       
+		<numSensor ruleid="humidity_setpoint">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_SETPOINT</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Humidity Setpoint (HumiSet)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+ 
+		<numSensor ruleid="fanspeed_dx">
+			<type>num</type>
+			<sensorId>FANSPEED_STD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.8.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Fanspeed Standard (Fanspeed)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+      
+		<numSensor ruleid="temp_prop_band">
+			<type>temp</type>
+			<sensorId>TEMP_PROP_BAND</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temperature Proportional Band (TempProp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+     
+		<numSensor ruleid="humidity_prop_band">
+			<type>humidity</type>
+			<sensorId>HUMIDITY_PROP_BAND</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.10.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Humidity Proportional Band (HumiProp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+  
+		<valueMap ruleid="HumiCtrl_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="HumiCtrl_status-em">
+			<label>On/Off</label>
+			<label>Prop</label>
+			<label>Unknown</label>
+		</enumMap>
+ 		
+		<stateSensor ruleid="humidifier_control">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_CONTROL</sensorId>
+			<value>
+				<mapValue mapid="HumiCtrl_status-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.13.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>HumiCtrl_status-em</enum>
+			<label>Humidifier Control (HumiCtrl)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+      
+		<numSensor ruleid="dehum_hyst">
+			<type>humidity</type>
+			<sensorId>DEHUM_HYST</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.7.14.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Dehumidification Hysteresi (DehumHyst)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+      
+		<numSensor ruleid="auto_restart">
+			<type>num</type>
+			<sensorId>AUTO_RESTART</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.9.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Auto Restart (AuRestart)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+  
+		<stateSensor ruleid="remote_enabled">
+			<type>state</type>
+			<sensorId>REMOTE_ENABLED</sensorId>
+			<value>
+				<mapValue mapid="no_yes-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.9.7.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>no_yes-em</enum>
+			<label>Remote Enabled (RemoteEN)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+     
+		<numSensor ruleid="num_standby_units">
+			<type>num</type>
+			<sensorId>NUM_STANDBY_UNITS</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.9.8.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Standby Units (StdByUnit)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+ 
+		<valueMap ruleid="RotationEN-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>9</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="RotationEN-em">
+			<label>No</label>
+			<label>Daily</label>
+			<label>Mon</label>
+			<label>Tue</label>
+			<label>Wed</label>
+			<label>Thu</label>
+			<label>Fri</label>
+			<label>Sat</label>
+			<label>Sun</label>
+			<label>Unknown</label>
+		</enumMap>
+   
+		<stateSensor ruleid="rotation_enabled">
+			<type>state</type>
+			<sensorId>ROTATION_ENABLED</sensorId>
+			<value>
+				<mapValue mapid="RotationEN-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.9.9.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>RotationEN-em</enum>
+			<label>Rotation Enabled (RotationEN)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+         
+		<numSensor ruleid="high_delta_temp">
+			<type>temp</type>
+			<sensorId>HIGH_DELTA_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>High Delta Temperature (HiTemp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+         
+		<numSensor ruleid="low_temp1">
+			<type>temp</type>
+			<sensorId>LOW_TEMP1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Temperature Level 1 (LoTemp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+             
+		<numSensor ruleid="high_humidity1">
+			<rowTest>
+				<mapValue mapid="sensor_exists0-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.3.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>HIGH_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>High Humidity Level 1 (HiHumi)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+           
+		<numSensor ruleid="low_humidity1">
+			<rowTest>
+				<mapValue mapid="sensor_exists0-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.4.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>LOW_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Humidity Level 1 (LoHumi)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="high_temp2">
+			<type>temp</type>
+			<sensorId>HIGH_TEMP2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>High Temperature Level 2 (HiTempE)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+         
+		<numSensor ruleid="low_temp2">
+			<rowTest>
+				<mapValue mapid="sensor_exists0-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.6.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>LOW_TEMP2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Temperature Level 2 (LoTempE)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+             
+		<numSensor ruleid="high_humidity2">
+			<rowTest>
+				<mapValue mapid="sensor_exists0-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.7.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>HIGH_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.7.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>High Humidity Level 2 (HiHumiE)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+           
+		<numSensor ruleid="low_humidity2">
+			<rowTest>
+				<mapValue mapid="sensor_exists0-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.8.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>LOW_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.8.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Humidity Level 2 (LoHumiE)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="low_pressure_delay">
+			<type>num</type>
+			<sensorId>LOW_PRESSURE_DELAY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.9.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Low Pressure Delay (LPd)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+       
+ 		<valueMap ruleid="FanWaAl-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="FanWaAl-em">
+			<label>Warning</label>
+			<label>Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+   
+		<stateSensor ruleid="fan_failure">
+			<type>state</type>
+			<sensorId>FAN_FAILURE</sensorId>
+			<value>
+				<mapValue mapid="FanWaAl-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.13.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>FanWaAl-em</enum>
+			<label>Fan Failure (FanWaAl)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+             
+ 		<valueMap ruleid="LiquiAl-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="LiquiAl-em">
+			<label>Normal</label>
+			<label>Warning</label>
+			<label>Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+   
+		<stateSensor ruleid="liquistat_alarm">
+			<type>state</type>
+			<sensorId>LIQUISTAT_ALARM</sensorId>
+			<value>
+				<mapValue mapid="LiquiAl-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.10.14.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>LiquiAl-em</enum>
+			<label>Liquistat Alarm (LiquiAl)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+         
+		<numSensor ruleid="electrical_heating_step">
+			<type>num</type>
+			<sensorId>ELECTRICAL_HEATING_STEP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Electrical Heating Step (HeatSteps)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+      
+		<numSensor ruleid="heating_dead_band">
+			<type>temmp</type>
+			<sensorId>HEATING_DEAD_BAND</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Heating Dead Band (Heat_DeadB)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+     	<valueMap ruleid="HumTyp-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>*</valueIn><valueOut>10</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="HumTyp-em">
+			<label>21L</label>
+			<label>53L</label>
+			<label>53H</label>
+			<label>93L</label>
+			<label>93H</label>
+			<label>d3H</label>
+			<label>HT2</label>
+			<label>HT5</label>
+			<label>HT9</label>
+			<label>EXT</label>
+			<label>Unknown</label>
+		</enumMap>
+   
+		<stateSensor ruleid="humidifier_type">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_TYPE</sensorId>
+			<value>
+				<mapValue mapid="HumTyp-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.8.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>HumTyp-em</enum>
+			<label>Humidifier Type (HumTyp)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+  
+     	<valueMap ruleid="HumSup-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="HumSup-em">
+			<label>230V</label>
+			<label>400V</label>
+			<label>375V</label>
+			<label>475V</label>
+			<label>Unknown</label>
+		</enumMap>
+   
+		<stateSensor ruleid="humidifier_supply">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_SUPPLY</sensorId>
+			<value>
+				<mapValue mapid="HumSup-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.9.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>HumSup-em</enum>
+			<label>Humidifier Supply (HumSup)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+ 
+        <numSensor ruleid="humidifier_steam_rate">
+			<rowTest>
+				<mapValue mapid="sensor_exists2-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.10.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>HUMIDIFIER_STEAM_RATE</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.11.10.0</getOid></op>
+                    <op>10</op>
+                </mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Humidifier Steam Rate (HumSteam)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+        <numSensor ruleid="actual_humidity_setpoint">
+			<type>humidity</type>
+			<sensorId>ACTUAL_HUMIDITY_SETPOINT</sensorId>
+			<value>
+                <getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.16.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Actual Humidity Setpoint (HumiSet_ac)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+       
+		<numSensor ruleid="analog_output_1_value">
+			<type>num</type>
+			<sensorId>ANALOG_OUTPUT_1_VALUE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.17.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Analog Output 1 Value (AnaOutRam1)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_output_2_value">
+			<type>num</type>
+			<sensorId>ANALOG_OUTPUT_2_VALUE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.17.3.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Analog Output 2 Value (AnaOutRam2)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="freecooling_damper_position">
+			<type>num</type>
+			<sensorId>FREECOOLING_DAMPER_POSITION</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.17.13.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Freecooling Damper Position (Valve3P)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+        <numSensor ruleid="actual_temp_setpoint">
+			<type>temp</type>
+			<sensorId>ACTUAL_TEMP_SETPOINT</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.18.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Actual Temperature Setpoint (TempSet_ac)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+        <numSensor ruleid="return_temp">
+			<type>temp</type>
+			<sensorId>RETURN_TEMP</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.18.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Return Temperature (LocTemp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+ 
+		<numSensor ruleid="actual_return_air_temp">
+			<type>temp</type>
+			<sensorId>ACTUAL_RETURN_AIR_TEMP</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.18.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Actual Return Air Temperature (LocTemp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="cw_temperature">
+			<type>temp</type>
+			<sensorId>CW_TEMPERATURE</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.19.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>CW Temperature (AMB_Temp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="return_air_temp">
+			<type>temp</type>
+			<sensorId>RETURN_AIR_TEMP</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.19.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Return Air Temperature - Humitemp (HT_Temp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="return_air_humidity">
+			<type>humidity</type>
+			<sensorId>RETURN_AIR_HUMIDITY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.19.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Return Air Humidity - Humitemp (HT_Humi)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="supply_air_temp_ptc">
+			<type>temp</type>
+			<sensorId>SUPPLY_AIR_TEMP_PTC</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.19.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Supply Air Temperature - PTC (PTC_Temp)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="supply_air_temp">
+			<type>temp</type>
+			<sensorId>SUPPLY_AIR_TEMP</sensorId>
+			<value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.19.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Supply Air Temperature (GLYC_TempD)</label>
+			<sensorSet>Environment</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="off_on-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="off_on-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="fan_status">
+			<type>state</type>
+			<sensorId>FAN_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.20.3.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>Fan Status (ManFan)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="compressor_status">
+			<type>state</type>
+			<sensorId>COMPRESSOR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.20.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>Compressor Status (ManComp)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="heating_status">
+			<type>state</type>
+			<sensorId>HEATING_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.20.6.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>Heating Status (ManHeat1)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        
+        
+        
+		<valueMap ruleid="active23_acknowledge19_none0-vm">
+			<valueIn>23</valueIn><valueOut>0</valueOut>
+			<valueIn>19</valueIn><valueOut>1</valueOut>
+			<valueIn>0</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="active15_acknowledge11_none0-vm">
+			<valueIn>15</valueIn><valueOut>0</valueOut>
+			<valueIn>11</valueIn><valueOut>1</valueOut>
+			<valueIn>0</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="active1_none0-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>0</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="active_acknowledge_none-em">
+			<label>Alarm Active</label>
+			<label>Alarm Acknowledge</label>
+			<label>No Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="comp1_high_pressure">
+			<type>state</type>
+			<sensorId>COMP1_HIGH_PRESSURE</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.1.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Compressor 1 High Pressure (AlHP)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="comp1_low_pressure">
+			<type>state</type>
+			<sensorId>COMP1_LOW_PRESSURE</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.2.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Compressor 1 Low Pressure (AlLP)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="high_chilled_water">
+			<type>state</type>
+			<sensorId>HIGH_CHILLED_WATER</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.3.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>High Chilled Water (WaHC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="low_water_flow">
+			<type>state</type>
+			<sensorId>LOW_WATER_FLOW</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.4.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Low Water Flow (WaLC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        
+		<stateSensor ruleid="electrical_heaters_overheated">
+			<type>state</type>
+			<sensorId>ELECTRICAL_HEATERS_OVERHEATED</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.5.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Electrical Heaters Overheated (WaEHO)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="fan_failure1">
+			<type>state</type>
+			<sensorId>FAN_FAILURE_1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.6.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Fan Failure (WaAF)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="fan_failure2">
+			<type>state</type>
+			<sensorId>FAN_FAILURE_2</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.7.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Fan Failure (AlAF)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="clogged_filters">
+			<type>state</type>
+			<sensorId>CLOGGED_FILTERS</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.8.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Clogged Filters (WaCF)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="water_leakage_wa">
+			<type>state</type>
+			<sensorId>WATER_LEAKAGE_WA</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.9.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Water Leakage (WaLE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+			
+		<stateSensor ruleid="water_leakage_al">
+			<type>state</type>
+			<sensorId>WATER_LEAKAGE_AL</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.10.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Water Leakage (AlLE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+	   
+		<stateSensor ruleid="user_input_1_triggered1">
+			<type>state</type>
+			<sensorId>USER_INPUT_1_TRIGGERED_1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.11.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>User Input 1 Triggered (WaUI_1_Wa1)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="user_input_1_triggered2">
+			<type>state</type>
+			<sensorId>USER_INPUT_1_TRIGGERED_2</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.12.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>User Input 1 Triggered (AUI)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+       
+		<stateSensor ruleid="humidifier_failure">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_FAILURE</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.13.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier Failure (WaHFA)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+      
+		<stateSensor ruleid="humidifier_high_current">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_HIGH_CURRENT</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.14.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier High Current (WaHHC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+      
+		<stateSensor ruleid="humidifier_failure2">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_FAILURE2</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.15.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier Failure (WaHF)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+      
+		<stateSensor ruleid="humidifier_failure3">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_FAILURE3</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.16.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier Failure (WaHN)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+      
+		<stateSensor ruleid="humidifier_cylinder_worn">
+			<type>state</type>
+			<sensorId>HUMIDIFIER_CYLINDER_WORN</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.17.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier Cylinder Worn (WaHUC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        
+		<stateSensor ruleid="high_supply_temp1">
+			<type>state</type>
+			<sensorId>HIGH_SUPPLY_TEMP1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.18.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>High Supply Temperature Level 1 (Hrt)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="low_supply_temp1">
+			<type>state</type>
+			<sensorId>LOW_SUPPLY_TEMP1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.19.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Low Supply Temperature Level 1 (Lrt)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="high_return_humid1">
+			<type>state</type>
+			<sensorId>HIGH_RETURN_HUMID1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.20.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>High Return Humidity Level 1 (HrH)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="low_return_humid1">
+			<type>state</type>
+			<sensorId>LOW_RETURN_HUMID1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.21.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Low Return Humidity Level 1 (LrH)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+	       
+		<stateSensor ruleid="high_supply_temp2">
+			<type>state</type>
+			<sensorId>HIGH_SUPPLY_TEMP2</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.22.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>High Supply Temperature Level 2 (HTE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="low_supply_temp2">
+			<type>state</type>
+			<sensorId>LOW_SUPPLY_TEMP2</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.23.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Low Supply Temperature Level 2 (LTE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="high_return_humid2">
+			<type>state</type>
+			<sensorId>HIGH_RETURN_HUMID2</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.24.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>High Return Humidity Level 2 (HHE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="low_return_humid2">
+			<type>state</type>
+			<sensorId>LOW_RETURN_HUMID2</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.25.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Low Return Humidity Level 2 (LHE)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+			
+		<stateSensor ruleid="cond_working_hrs_exceed">
+			<type>state</type>
+			<sensorId>COND_WORKING_HRS_EXCEED</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.26.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Cond. Working Hours Exceeded (WaCondHo)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+			
+		<stateSensor ruleid="comp_working_hrs_exceed">
+			<type>state</type>
+			<sensorId>COMP_WORKING_HRS_EXCEED</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.27.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Comp. Working Hours Exceeded (WaCompHo)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+			
+		<stateSensor ruleid="humid_working_hrs_exceed">
+			<type>state</type>
+			<sensorId>HUMID_WORKING_HRS_EXCEED</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.28.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Humidifier Working Hours Exceeded (WaHumiHo)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        
+		<stateSensor ruleid="supply_temp_sensor_failure">
+			<type>state</type>
+			<sensorId>SUPPLY_TEMP_SENSOR_FAILURE</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.29.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Supply Temperature Sensor Failure (WaPTC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="return_temp_sensor_failure">
+			<type>state</type>
+			<sensorId>RETURN_TEMP_SENSOR_FAILURE</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.30.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Return Temperature and Humidity Sensor Failure (WaRoomSe)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="sensors_not_available">
+			<type>state</type>
+			<sensorId>SENSORS_NOT_AVAILABLE</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.31.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Sensors Not Available (AlRoomSe)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="water_presence_sensor_failure">
+			<type>state</type>
+			<sensorId>WATER_PRESENCE_SENSOR_FAILURE</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.33.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Water Presence Sensor Failure (WaWater)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="unit_on">
+			<type>state</type>
+			<sensorId>UNIT_ON</sensorId>
+			<value>
+				<mapValue mapid="active1_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.36.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Unit On (MeUnitOn)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="unit_off">
+			<type>state</type>
+			<sensorId>UNIT_OFF</sensorId>
+			<value>
+				<mapValue mapid="active1_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.37.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Unit Off (MeUnitOff)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+	        
+		<stateSensor ruleid="press_trans_hp1_sensor_na">
+			<type>state</type>
+			<sensorId>PRESS_TRANS_HP1_SENSOR_NA</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.58.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Pressure Transducer HP1 Sensor Not Available (AlHP2)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+	        
+		<stateSensor ruleid="press_trans_lp1_sensor_na">
+			<type>state</type>
+			<sensorId>PRESS_TRANS_LP1_SENSOR_NA</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.59.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Pressure Transducer LP1 Sensor Not Available (AlLP2)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+       
+		<stateSensor ruleid="outdoor_temp_sensor">
+			<type>state</type>
+			<sensorId>OUTDOOR_TEMP_SENSOR</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.61.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>CW Temperature Sensor Failure (WaOutSens)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="glycol_temp_sensor">
+			<type>state</type>
+			<sensorId>GLYCOL_TEMP_SENSOR</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.62.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Glycol Temperature Sensor (WaGlycolSe)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="freecooling_stopped_for_1_hr">
+			<type>state</type>
+			<sensorId>FREECOOLING_STOPPED_FOR_1HR</sensorId>
+			<value>
+				<mapValue mapid="active1_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.63.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Freecooling Stopped For 1 Hour (MeStopFC)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="no_power_user_input">
+			<type>state</type>
+			<sensorId>NO_POWER_USER_INPUT</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.66.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>No Power Active (MeNoPowUI)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="power_on_user_input">
+			<type>state</type>
+			<sensorId>POWER_ON_USER_INPUT</sensorId>
+			<value>
+				<mapValue mapid="active1_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.67.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Power On - User Input (MePowOnUI)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="no_conn_unit1">
+			<type>state</type>
+			<sensorId>NO_CONN_UNIT1</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.70.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>No Connection To Unit 1 (WaNetMast)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="comp1_motor_protection">
+			<type>state</type>
+			<sensorId>COMP1_MOTOR_PROTECTION</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.71.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Compressor Thermal Protection (ATH1)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="comp_power_reduct_active">
+			<type>state</type>
+			<sensorId>COMP_POWER_REDUCT_ACTIVE</sensorId>
+			<value>
+				<mapValue mapid="active15_acknowledge11_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.75.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Compressor Power Reduction Active (WaUI_1_Wa2)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="wrong_damper_position">
+			<type>state</type>
+			<sensorId>WRONG_DAMPER_POSITION</sensorId>
+			<value>
+				<mapValue mapid="active23_acknowledge19_none0-vm">
+					<formatNumber>
+						<getOid>.1.3.6.1.4.1.476.1.42.4.3.21.1.1.50.76.0</getOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>active_acknowledge_none-em</enum>
+			<label>Wrong Damper Position (WaCond2Fan)</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        
+	</device>
+</APC_DDF>	

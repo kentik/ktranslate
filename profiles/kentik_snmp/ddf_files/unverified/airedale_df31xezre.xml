@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="airedale_df31xezre"
+	ddfname="AIREDALE DF31XEZRE"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="AIREDALE_DF31XEZRE">
+		<oidMustExist ruleid="modbusdevicetest" oid=".1.3.6.1.4.1.9839.2.1.1.15.0" />
+		<setProductData ruleid="vendordata" field="vendor">AIREDALE</setProductData>
+		<setProductData ruleid="modeldata" field="model">DF31X EZRE</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+		<numSensor ruleid="agentrelease">
+			<type>num</type>
+			<units />
+			<sensorId>_AGENTRELEASE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.1.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Agentrelease</label>
+			<sensorSet>systm</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pcoid1-errorsnumber">
+			<type>num</type>
+			<units />
+			<sensorId>_PCOID1-ERRORSNUMBER</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.0.11.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Pcoid1-errorsnumber</label>
+			<sensorSet>pCOErrorsNumbergroup</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="agentcode">
+			<type>state</type>
+			<sensorId>_AGENTCODE</sensorId>
+			<value>
+				<mapValue mapid="agentcode_valuemap">
+					<getOid>.1.3.6.1.4.1.9839.1.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Agentcode</label>
+			<enum>agentcode_enum</enum>
+			<sensorSet>systm</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="agentcode_valuemap">
+			<valueIn>2</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>1</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="agentcode_enum">
+			<label>pCOWeb</label>
+			<label>N/A</label>
+		</enumMap>
+
+		<stateSensor ruleid="pcoid1-status">
+			<type>state</type>
+			<sensorId>_PCOID1-STATUS</sensorId>
+			<value>
+				<mapValue mapid="three_state_valuemap">
+					<getOid>.1.3.6.1.4.1.9839.2.0.10.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Pcoid1-status</label>
+			<enum>pcoid1-status_enum</enum>
+			<sensorSet>pCOStatusgroup</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="three_state_valuemap">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pcoid1-status_enum">
+			<label>Off line</label>
+			<label>Init</label>
+			<label>On line</label>
+		</enumMap>
+
+
+
+		<alarmFlags ruleid="airflow-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>airflow-alarm Alarm Present</activeText>
+					<inactiveText>airflow-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>airflow-alarm Alarm Present</activeText>
+					<inactiveText>airflow-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="ahu1-offline-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.24.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>ahu1-offline-alarm Alarm Present</activeText>
+					<inactiveText>ahu1-offline-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>ahu1-offline-alarm Alarm Present</activeText>
+					<inactiveText>ahu1-offline-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fan1-filter-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.25.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>fan1-filter-alarm Alarm Present</activeText>
+					<inactiveText>fan1-filter-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>fan1-filter-alarm Alarm Present</activeText>
+					<inactiveText>fan1-filter-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fan2-filter-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.26.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>fan2-filter-alarm Alarm Present</activeText>
+					<inactiveText>fan2-filter-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>fan2-filter-alarm Alarm Present</activeText>
+					<inactiveText>fan2-filter-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-return-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.27.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>high-return-alarm Alarm Present</activeText>
+					<inactiveText>high-return-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>high-return-alarm Alarm Present</activeText>
+					<inactiveText>high-return-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-supply-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.28.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>high-supply-alarm Alarm Present</activeText>
+					<inactiveText>high-supply-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>high-supply-alarm Alarm Present</activeText>
+					<inactiveText>high-supply-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-supply-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.29.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>low-supply-alarm Alarm Present</activeText>
+					<inactiveText>low-supply-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>low-supply-alarm Alarm Present</activeText>
+					<inactiveText>low-supply-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="system-on">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>system-on Alarm Present</activeText>
+					<inactiveText>system-on Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>system-on Alarm Present</activeText>
+					<inactiveText>system-on Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="off-by-alarms">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>off-by-alarms Alarm Present</activeText>
+					<inactiveText>off-by-alarms Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>off-by-alarms Alarm Present</activeText>
+					<inactiveText>off-by-alarms Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="airflow-interlock">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>airflow-interlock Alarm Present</activeText>
+					<inactiveText>airflow-interlock Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>airflow-interlock Alarm Present</activeText>
+					<inactiveText>airflow-interlock Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fan-enabled">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>fan-enabled Alarm Present</activeText>
+					<inactiveText>fan-enabled Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>fan-enabled Alarm Present</activeText>
+					<inactiveText>fan-enabled Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="go-freecooling1">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>go-freecooling1 Alarm Present</activeText>
+					<inactiveText>go-freecooling1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>go-freecooling1 Alarm Present</activeText>
+					<inactiveText>go-freecooling1 Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="go-freecooling2">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>go-freecooling2 Alarm Present</activeText>
+					<inactiveText>go-freecooling2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>go-freecooling2 Alarm Present</activeText>
+					<inactiveText>go-freecooling2 Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="system-on-delay">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>system-on-delay Alarm Present</activeText>
+					<inactiveText>system-on-delay Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>system-on-delay Alarm Present</activeText>
+					<inactiveText>system-on-delay Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="freecool-on">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>freecool-on Alarm Present</activeText>
+					<inactiveText>freecool-on Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>freecool-on Alarm Present</activeText>
+					<inactiveText>freecool-on Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-return-alarm">
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>low-return-alarm Alarm Present</activeText>
+					<inactiveText>low-return-alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>low-return-alarm Alarm Present</activeText>
+					<inactiveText>low-return-alarm Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+	</device>
+</APC_DDF>

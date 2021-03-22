@@ -1,0 +1,781 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="cpqrack"
+	ddfname="HP (Compaq) Rack"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="cpqrack">
+		<oidMustExist ruleid="cpqRackInfo" oid=".1.3.6.1.4.1.232.22" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+			HP
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.232.22.2.3.1.1.1.3.1</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">
+			Shared Device
+		</setProductData>
+
+		<setLocationData field="CONTACT">
+			<getOid>.1.3.6.1.2.1.1.4.0</getOid>
+		</setLocationData>
+		<setLocationData field="LOCATION">
+			<getOid>.1.3.6.1.2.1.1.6.0</getOid>
+		</setLocationData>
+
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.232.22.2.2.1.1.2.1</getOid>
+		</setDefaultLabel>
+
+		<stateSensor ruleid="cpqRackMibCondition">
+            <type>state</type>
+            <sensorId>CONDITION</sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+                <getOid>.1.3.6.1.4.1.232.22.1.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Overall Condition</label>
+            <enum>condition-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<!-- Temperatures -->
+
+		<numSensor ruleid="cpqRackCommonEnclosureTempCurrent" index=".1.3.6.1.4.1.232.22.2.3.1.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>COM_ENC_TEMP_CUR_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.2</getRowOid><space/>
+				Temp. Sensor #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.3</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.5</getRowOid>) Current Value
+			</label>
+            <sensorSet>Common Enclosure - Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackCommonEnclosureTempThreshold" index=".1.3.6.1.4.1.232.22.2.3.1.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>COM_ENC_TEMP_THRESH_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.2</getRowOid><space/>
+				Temp. Sensor #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.3</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.5</getRowOid>) Threshold
+			</label>
+            <sensorSet>Common Enclosure - Temperature</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureTempCondition" index=".1.3.6.1.4.1.232.22.2.3.1.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>COM_ENC_TEMP_COND_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.2</getRowOid><space/>
+				Temp. Sensor #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.3</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.5</getRowOid>) Condition
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Common Enclosure - Temperature</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureTempType" index=".1.3.6.1.4.1.232.22.2.3.1.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>COM_ENC_TEMP_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="tempType-vm">
+                <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.2</getRowOid><space/>
+				Temp. Sensor #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.3</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.2.1.5</getRowOid>) Type
+			</label>
+            <enum>tempType-em</enum>
+            <sensorSet>Common Enclosure - Temperature</sensorSet>
+        </stateSensor>
+
+		<!-- Fans -->
+
+		<stateSensor ruleid="cpqRackCommonEnclosureFanPresent" index=".1.3.6.1.4.1.232.22.2.3.1.3.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_FAN_PRESENT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="present-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.2</getRowOid><space/>
+				Fan #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.3</getRowOid><space/>Present
+			</label>
+            <enum>present-em</enum>
+            <sensorSet>Common Enclosure - Fans</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureFanRedundant" index=".1.3.6.1.4.1.232.22.2.3.1.3.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_FAN_REDUNDANT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="redundant-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.2</getRowOid><space/>
+				Fan #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.3</getRowOid><space/>Redundant
+			</label>
+            <enum>redundant-em</enum>
+            <sensorSet>Common Enclosure - Fans</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureFanCondition" index=".1.3.6.1.4.1.232.22.2.3.1.3.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_FAN_COND_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.2</getRowOid><space/>
+				Fan #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.3.1.3</getRowOid><space/>Condition
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Common Enclosure - Fans</sensorSet>
+        </stateSensor>
+
+		<!-- Managers -->
+
+		<stateSensor ruleid="cpqRackCommonEnclosureManagerRole" index=".1.3.6.1.4.1.232.22.2.3.1.6.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_MGR_ROLE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="role-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.2</getRowOid><space/>
+				Manager #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.3</getRowOid><space/>Role
+			</label>
+            <enum>role-em</enum>
+            <sensorSet>Common Enclosure - Managers</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureManagerPresent" index=".1.3.6.1.4.1.232.22.2.3.1.6.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_MGR_PRESENT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="present-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.2</getRowOid><space/>
+				Manager #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.3</getRowOid><space/>Present
+			</label>
+            <enum>present-em</enum>
+            <sensorSet>Common Enclosure - Managers</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureManagerRedundant" index=".1.3.6.1.4.1.232.22.2.3.1.6.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_MGR_REDUNDANT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="redundant-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.2</getRowOid><space/>
+				Manager #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.3</getRowOid><space/>Redundant
+			</label>
+            <enum>redundant-em</enum>
+            <sensorSet>Common Enclosure - Managers</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackCommonEnclosureManagerCondition" index=".1.3.6.1.4.1.232.22.2.3.1.6.1.3">
+            <type>state</type>
+            <sensorId>COM_ENC_MGR_COND_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Common Enclosure <getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.2</getRowOid><space/>
+				Manager #<getRowOid>.1.3.6.1.4.1.232.22.2.3.1.6.1.3</getRowOid><space/>Condition
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Common Enclosure - Managers</sensorSet>
+        </stateSensor>
+
+		<!-- Server Enclosures -->
+
+		<numSensor ruleid="cpqRackServerEnclosureMaxNumBlades" index=".1.3.6.1.4.1.232.22.2.3.2.1.1.2">
+            <type>num</type>
+            <sensorId>SRV_ENC_MAXBLADES_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.3.2.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Server Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.2.1.1.2</getRowOid><space/>Maximum Number of Blades
+			</label>
+            <sensorSet>Server</sensorSet>
+        </numSensor>
+
+		<!-- Power Enclosures -->
+
+		<stateSensor ruleid="cpqRackPowerEnclosureRedundant" index=".1.3.6.1.4.1.232.22.2.3.3.1.1.2">
+            <type>state</type>
+            <sensorId>PWR_ENC_REDUNDANT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="redundant-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.2</getRowOid><space/>Redundant
+			</label>
+            <enum>redundant-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackPowerEnclosureLoadBalanced" index=".1.3.6.1.4.1.232.22.2.3.3.1.1.2">
+            <type>state</type>
+            <sensorId>PWR_ENC_LOADBAL_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="loadBalanced-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.2</getRowOid><space/>Load Balanced
+			</label>
+            <enum>loadBalanced-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackPowerEnclosureInputPwrType" index=".1.3.6.1.4.1.232.22.2.3.3.1.1.2">
+            <type>state</type>
+            <sensorId>PWR_ENC_INPWR_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="inPwr-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.2</getRowOid><space/>Input Power Type
+			</label>
+            <enum>inPwr-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="cpqRackPowerEnclosurePowerFeedMax" index=".1.3.6.1.4.1.232.22.2.3.3.1.1.2">
+            <type>powerW</type>
+            <sensorId>PWR_ENC_MAXFEED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Power Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.2</getRowOid><space/>Maximum Power Feed
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="cpqRackPowerEnclosureCondition" index=".1.3.6.1.4.1.232.22.2.3.3.1.1.2">
+            <type>state</type>
+            <sensorId>PWR_ENC_COND_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Enclosure #<getRowOid>.1.3.6.1.4.1.232.22.2.3.3.1.1.2</getRowOid><space/>Condition
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+
+		<!-- Server Blades -->
+
+		<stateSensor ruleid="cpqRackServerBladePresent" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+            <type>state</type>
+            <sensorId>SVR_BLD_PRESENT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="present-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Present
+			</label>
+            <enum>present-em</enum>
+            <sensorSet>Server</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackServerBladeStatus" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SVR_BLD_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.21</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Status
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Server</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackServerBladePowered" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SVR_BLD_POWERED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="powered-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.25</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Powered
+			</label>
+            <enum>powered-em</enum>
+            <sensorSet>Server</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackServerBladeUIDState" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SVR_BLD_UIDSTATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="led-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.26</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>UID State
+			</label>
+            <enum>led-em</enum>
+            <sensorSet>Server</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackServerBladePOSTStatus" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>SVR_BLD_POST_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="post-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.35</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>POST Status
+			</label>
+            <enum>post-em</enum>
+            <sensorSet>Server</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="cpqRackServerBladeWattageMax" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>SVR_BLD_WATT_MAX_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.38</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Wattage Maximum
+			</label>
+            <sensorSet>Server</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackServerBladeWattageAvg" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>SVR_BLD_WATT_AVG_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.39</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Wattage Average
+			</label>
+            <sensorSet>Server</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackServerBladeWattageMax" index=".1.3.6.1.4.1.232.22.2.4.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>SVR_BLD_WATT_MIN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.40</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Server Blade #<getRowOid>.1.3.6.1.4.1.232.22.2.4.1.1.1.3</getRowOid><space/>Wattage Minimum
+			</label>
+            <sensorSet>Server</sensorSet>
+        </numSensor>
+
+		<!-- Power Supply -->
+
+		<numSensor ruleid="cpqRackPowerSupplyMaxPwrOutput" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>powerW</type>
+            <sensorId>PWR_SPLY_MAX_OUT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.9</getRowOid>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Maximum Power Output
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackPowerSupplyCurPwrOutput" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>powerW</type>
+            <sensorId>PWR_SPLY_CUR_OUT_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.10</getRowOid>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Current Power Output
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackPowerSupplyIntakeTemp" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PWR_SPLY_IN_TEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Intake Temperature
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="cpqRackPowerSupplyExhaustTemp" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNullTemp-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.13</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>PWR_SPLY_EXH_TEMP_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Exhaust Temperature
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="cpqRackPowerSupplyStatus" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>state</type>
+            <sensorId>PWR_SPLY_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="powerSupplyStatus-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Status
+			</label>
+            <enum>powerSupplyStatus-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackPowerSupplyInputLineStatus" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>state</type>
+            <sensorId>PWR_SPLY_INLINESTATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="inputLineStatus-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.15</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Input Line Status
+			</label>
+            <enum>inputLineStatus-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackPowerSupplyPresent" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>state</type>
+            <sensorId>PWR_SPLY_PRESENT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="present-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.16</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Present
+			</label>
+            <enum>present-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="cpqRackPowerSupplyCondition" index=".1.3.6.1.4.1.232.22.2.5.1.1.1.3">
+            <type>state</type>
+            <sensorId>PWR_SPLY_COND_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="condition-vm">
+				<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.17</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Power Supply #<getRowOid>.1.3.6.1.4.1.232.22.2.5.1.1.1.3</getRowOid><space/>Condition
+			</label>
+            <enum>condition-em</enum>
+            <sensorSet>Power</sensorSet>
+        </stateSensor>
+
+
+		<valueMap ruleid="tempType-vm">
+			<valueIn>5</valueIn><valueOut>1</valueOut>
+			<valueIn>9</valueIn><valueOut>2</valueOut>
+			<valueIn>15</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tempType-em">
+			<label>Other</label>
+			<label>Blowout</label>
+			<label>Caution</label>
+			<label>Critical</label>
+		</enumMap>
+
+		<valueMap ruleid="condition-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="condition-em">
+			<label>Other</label>
+			<label>OK</label>
+			<label>Degraded</label>
+			<label>Failed</label>
+		</enumMap>
+
+		<valueMap ruleid="present-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="present-em">
+			<label>Other</label>
+			<label>Absent</label>
+			<label>Present</label>
+		</enumMap>
+
+		<valueMap ruleid="role-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="role-em">
+			<label>Other</label>
+			<label>Standby</label>
+			<label>Active</label>
+		</enumMap>
+
+		<valueMap ruleid="redundant-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="redundant-em">
+			<label>Other</label>
+			<label>Not Redundant</label>
+			<label>Redundant</label>
+		</enumMap>
+
+		<valueMap ruleid="loadBalanced-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="loadBalanced-em">
+			<label>Other</label>
+			<label>Not Load Balanced</label>
+			<label>Load Balanced</label>
+		</enumMap>
+
+		<valueMap ruleid="inPwr-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="inPwr-em">
+			<label>Other</label>
+			<label>Single-Phase</label>
+			<label>Three-Phase</label>
+			<label>Direct Current</label>
+		</enumMap>
+
+		<valueMap ruleid="powered-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="powered-em">
+			<label>Other</label>
+			<label>On</label>
+			<label>Off</label>
+			<label>Power Staged Off</label>
+			<label>Reboot</label>
+		</enumMap>
+
+		<valueMap ruleid="led-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="led-em">
+			<label>Other</label>
+			<label>No LED Present</label>
+			<label>LED On</label>
+			<label>LED Off</label>
+		</enumMap>
+
+		<valueMap ruleid="post-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="post-em">
+			<label>Other</label>
+			<label>Started</label>
+			<label>Completed</label>
+			<label>Failed</label>
+		</enumMap>
+
+		<valueMap ruleid="powerSupplyStatus-vm">
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>14</valueIn><valueOut>13</valueOut>
+			<valueIn>15</valueIn><valueOut>14</valueOut>
+			<valueIn>16</valueIn><valueOut>15</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="powerSupplyStatus-em">
+			<label>Other</label>
+			<label>No Error</label>
+			<label>General Failure</label>
+			<label>BIST Failure</label>
+			<label>Fan Failure</label>
+			<label>Temp. Failure</label>
+			<label>Interlock Open</label>
+			<label>EPROM Failed</label>
+			<label>VREF Failed</label>
+			<label>DAC Failed</label>
+			<label>RAM Test Failed</label>
+			<label>Voltage Channel Failed</label>
+			<label>Orring Diode Failed</label>
+			<label>Brownout</label>
+			<label>Give Up On Startup</label>
+			<label>Calibration Table Invalid</label>
+		</enumMap>
+
+		<valueMap ruleid="inputLineStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="inputLineStatus-em">
+			<label>Other</label>
+			<label>No Error</label>
+			<label>Line Over Voltage</label>
+			<label>Line Under Voltage</label>
+			<label>Line Hit</label>
+			<label>Brownout</label>
+			<label>Line Power Loss</label>
+		</enumMap>
+
+		<valueMap ruleid="deleteNullTemp-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="notPresent-vm">
+			<valueIn>3</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+	</device>
+</APC_DDF>

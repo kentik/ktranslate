@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="akcp_plus_series"
+	ddfname="AKCP Plus Series"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="akcp_plus_series">
+		<oidMustExist ruleid="akcp_plus_series" oid=".1.3.6.1.4.1.3854.3" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">AKCP</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.3854.3.2.1.9.0</getOid>
+		</setProductData>
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.3854.3.2.1.8.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="temperatureDegree" index=".1.3.6.1.4.1.3854.3.5.2.1.4">
+            <type>temp</type>
+            <sensorId>PROBE_TEMP<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3854.3.5.2.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.3854.3.5.2.1.2</getRowOid></label>
+            <sensorSet>Temperature Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="humidityPercent" index=".1.3.6.1.4.1.3854.3.5.3.1.4">
+            <type>humidity</type>
+            <sensorId>PROBE_HUMIDITY_PERCENTAGE_<rowNumber/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3854.3.5.3.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.3854.3.5.3.1.2</getRowOid></label>
+            <sensorSet>Humidity Sensors</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="status-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>6</valueIn><valueOut>4</valueOut>
+			<valueIn>7</valueIn><valueOut>5</valueOut>
+			<valueIn>8</valueIn><valueOut>6</valueOut>
+			<valueIn>9</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="dryContactStatus-em">
+			<label>Unknown</label>
+			<label>No Status</label>
+			<label>Normal</label>
+			<label>High Critical</label>
+			<label>Low Critical</label>
+			<label>Sensor Error</label>
+			<label>Output Low</label>
+			<label>Output High</label>
+		</enumMap>
+		<stateSensor ruleid="dryContactStatus" index=".1.3.6.1.4.1.3854.3.5.4.1.6">
+            <type>state</type>
+            <sensorId>DRYCONTACT_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status-vm">
+				<getRowOid>.1.3.6.1.4.1.3854.3.5.4.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.3854.3.5.4.1.2</getRowOid></label>
+            <enum>dryContactStatus-em</enum>
+            <sensorSet>Dry Contacts</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="relayStatus-em">
+			<label>Unknown</label>
+			<label>No Status</label>
+			<label>Normal</label>
+			<label>High Critical</label>
+			<label>Low Critical</label>
+			<label>Sensor Error</label>
+			<label>Relay On</label>
+			<label>Relay Off</label>
+		</enumMap>
+		<stateSensor ruleid="sirenStatus" index=".1.3.6.1.4.1.3854.3.5.11.1.6">
+            <type>state</type>
+            <sensorId>SIREN_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status-vm">
+				<getRowOid>.1.3.6.1.4.1.3854.3.5.11.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.3854.3.5.11.1.2</getRowOid></label>
+            <enum>relayStatus-em</enum>
+            <sensorSet>Sirens</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="relayStatus" index=".1.3.6.1.4.1.3854.3.5.12.1.6">
+            <type>state</type>
+            <sensorId>RELAY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status-vm">
+				<getRowOid>.1.3.6.1.4.1.3854.3.5.12.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.3854.3.5.12.1.2</getRowOid></label>
+            <enum>relayStatus-em</enum>
+            <sensorSet>Relays</sensorSet>
+        </stateSensor>
+	</device>
+</APC_DDF>

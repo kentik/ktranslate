@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid="infrapower_infrabox"
+         ddfname="Infrapower Infrabox"
+         ddfversion="2"
+         canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="infrapower_infrabox">
+		<oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.34550.10.1" />
+		<setProductData ruleid="vendordata" field="vendor">Infrapower</setProductData>
+		<setProductData ruleid="modeldata" field="model">Infrabox</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<stateSensor ruleid="handle_door_status" index=".1.3.6.1.4.1.34550.10.2.1.1.1.19">
+			<type>state</type>
+			<sensorId>_HANDLE_DOOR_STATUS<rowIndex/>
+			</sensorId>
+			<value>
+				<mapValue mapid="closeopen_vm">
+					<getRowOid>.1.3.6.1.4.1.34550.10.2.1.1.1.19</getRowOid>
+				</mapValue>
+			</value>
+			<label>Handle <rowIndex/> Door Status</label>
+			<enum>closeopen_em</enum>
+			<sensorSet>Door Status</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pdu_main_load_voltage" index=".1.3.6.1.4.1.34550.10.3.1.1.1.13">
+			<type>voltageAC</type>
+			<sensorId>_PDU_MAIN_LOAD_VOLTAGE<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.13</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Load Voltage</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_main_load_current" index=".1.3.6.1.4.1.34550.10.3.1.1.1.14">
+			<type>amperage</type>
+			<sensorId>_PDU_MAIN_LOAD_CURRENT<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.14</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Load Current</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_main_power_factor" index=".1.3.6.1.4.1.34550.10.3.1.1.1.15">
+			<type>num/powerfactor</type>
+			<sensorId>_PDU_MAIN_POWER_FACTOR<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.15</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Power Factor</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_main_active_power" index=".1.3.6.1.4.1.34550.10.3.1.1.1.16">
+			<type>powerW</type>
+			<sensorId>_PDU_MAIN_ACTIVE_POWER<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.16</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Active Power</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_main_apparent_power" index=".1.3.6.1.4.1.34550.10.3.1.1.1.17">
+			<type>num/kdispapppower</type>
+			<sensorId>_PDU_MAIN_APPARENT_POWER<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.17</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Apparent Power</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_main_cumulative_energy" index=".1.3.6.1.4.1.34550.10.3.1.1.1.18">
+			<type>num/kwatthr</type>
+			<sensorId>_PDU_MAIN_CUMULATIVE_ENERGY<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.18</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main Cumulative Energy</label>
+			<sensorSet>PDU <formatNumber printffmt="%1.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Main</sensorSet>
+		</numSensor>
+		<valueMap ruleid="circuitname_vm">
+			<valueIn>1</valueIn><valueOut>A</valueOut>
+			<valueIn>2</valueIn><valueOut>B</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		<numSensor ruleid="pdu_circuit_rated_current" index=".1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.2">
+			<type>amperage</type>
+			<sensorId>_PDU_CIRCUIT_RATED_CURRENT<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.2</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue> Rated Current</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue></sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_circuit_load_voltage" index=".1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.6">
+			<type>voltage</type>
+			<sensorId>_PDU_CIRCUIT_LOAD_VOLTAGE<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.6</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue> Load Voltage</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue></sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_circuit_load_current" index=".1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.7">
+			<type>amperage</type>
+			<sensorId>_PDU_CIRCUIT_LOAD_CURRENT<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.7</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue> Load Current</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Circuit <mapValue mapid="circuitname_vm"><getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.24.1.1.1</getRowOid></mapValue></sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pdu_outlet_power_status" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.7">
+			<type>state</type>
+			<sensorId>_PDU_OUTLET_POWER_STATUS<rowIndex/>
+			</sensorId>
+			<value>
+				<mapValue mapid="onoff_vm">
+					<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid> Power Status</label>
+			<enum>onoff_em</enum>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid></sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pdu_outlet_load_current" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.9">
+			<type>amperage</type>
+			<sensorId>_PDU_OUTLET_LOAD_CURRENT<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.9</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid> Load Current</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_outlet_energy" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.10">
+			<type>powerW</type>
+			<sensorId>_PDU_OUTLET_ENERGY<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.10</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid> Energy</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.1.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pdu_c19_outlet_power_status" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.7">
+			<type>state</type>
+			<sensorId>_PDU_C19_OUTLET_POWER_STATUS<rowIndex/>
+			</sensorId>
+			<value>
+				<mapValue mapid="onoff_vm">
+					<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid> Power Status</label>
+			<enum>onoff_em</enum>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid></sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pdu_c19_outlet_load_current" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.9">
+			<type>amperage</type>
+			<sensorId>_PDU_C19_OUTLET_LOAD_CURRENT<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.9</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid> Load Current</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_c19_outlet_energy" index=".1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.10">
+			<type>powerW</type>
+			<sensorId>_PDU_C19_OUTLET_ENERGY<rowIndex/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.10</getRowOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid> Energy</label>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> C19 Outlet <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.26.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pdu_th_sensor_type" index=".1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.4">
+			<type>state</type>
+			<sensorId>_PDU_TH_SENSOR_TYPE<rowIndex/>
+			</sensorId>
+			<value>
+				<mapValue mapid="sensortype_vm">
+					<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Type</label>
+			<enum>sensortype_em</enum>
+			<sensorSet>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor</sensorSet>
+		</stateSensor>
+		<alarmFlags2 ruleid="pdu_th_sensor_alarm_state" index=".1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.6">
+			<value>
+				<getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.6</getRowOid>
+			</value>
+			<alarmFlagsTest match="01">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="10">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="11">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="02">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Rising Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Rising Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Rising Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Humidity Rising Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="20">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Rising Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Rising Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Rising Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature Rising Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="22">
+				<name>
+					<activeText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Rising Alarm State Condition Present</activeText>
+					<inactiveText>PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Rising Alarm State Condition Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>system</category>
+				<description>
+					<activeText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Rising Alarm State Condition exists.</activeText>
+					<inactiveText>A PDU <regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>%1$s</op></regex> TH <getRowOid>.1.3.6.1.4.1.34550.10.3.1.1.1.27.1.1.1</getRowOid> Sensor Temperature and Humidity Rising Alarm State Condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<numSensor ruleid="pdu_temperature_sensor_value1">
+			<type>temp</type>
+			<sensorId>_EM_TEMP_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.34550.10.5.1.1.1.11.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temperature 1</label>
+			<sensorSet>TH Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_temperature_sensor_value2">
+			<type>temp</type>
+			<sensorId>_EM_TEMP_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.34550.10.5.1.1.1.11.2</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temperature 2</label>
+			<sensorSet>TH Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_humidity_sensor_value1">
+			<type>humidity</type>
+			<sensorId>_EM_HUMIDITY_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.34550.10.5.1.1.1.11.3</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Humidity 1</label>
+			<sensorSet>TH Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_humidity_sensor_value2">
+			<type>humidity</type>
+			<sensorId>_EM_HUMIDITY_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.34550.10.5.1.1.1.11.4</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Humidity 2</label>
+			<sensorSet>TH Sensor</sensorSet>
+		</numSensor>
+		<valueMap ruleid="onoff_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="onoff_em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		
+		<valueMap ruleid="sensortype_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="sensortype_vm">
+			<label>Temperature Sensor</label>
+			<label>Temperature Humidity Sensor</label>
+		</enumMap>
+		
+		<valueMap ruleid="closeopen_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="closeopen_em">
+			<label>Close</label>
+			<label>Open</label>
+		</enumMap>
+	</device>
+</APC_DDF>

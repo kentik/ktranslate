@@ -1,0 +1,2736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="avocent_pm3000" ddfname="Avocent PM3000" ddfversion="1" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="avocent_pm3000">
+		<oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.10418.17.2" />
+		<setProductData ruleid="vendordata" field="vendor">Avocent</setProductData>
+		<setProductData ruleid="modeldata" field="model">PM3000</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<stringSensor ruleid="pm_host_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_HOST_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.1.0</getOid>
+				</op>
+			</value>
+			<label>Pm Host Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_product_model">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_PRODUCT_MODEL</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.2.0</getOid>
+				</op>
+			</value>
+			<label>Pm Product Model</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_part_number">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_PART_NUMBER</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.3.0</getOid>
+				</op>
+			</value>
+			<label>Pm Part Number</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_serial_number">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_SERIAL_NUMBER</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.4.0</getOid>
+				</op>
+			</value>
+			<label>Pm Serial Number</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_eidnumber">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_EIDNUMBER</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.5.0</getOid>
+				</op>
+			</value>
+			<label>Pm EIDNumber</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_bootcode_version">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_BOOTCODE_VERSION</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.6.0</getOid>
+				</op>
+			</value>
+			<label>Pm Bootcode Version</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_firmware_version">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_FIRMWARE_VERSION</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.7.0</getOid>
+				</op>
+			</value>
+			<label>Pm Firmware Version</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_reboot">
+			<type>state</type>
+			<sensorId>_PM_REBOOT</sensorId>
+			<value>
+				<mapValue mapid="no_re_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.1.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Reboot</label>
+			<enum>no_re_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_active_sessions_number_of_session">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_ACTIVE_SESSIONS_NUMBER_OF_SESSION</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.2.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Active Sessions Number Of Session</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_num_serial_ports">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_NUM_SERIAL_PORTS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Num Serial Ports</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_port_number">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_PORT_NUMBER</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.2.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Port Number</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_serial_table_device_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_DEVICE_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.3.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Serial Table Device Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_number_pdus">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_NUMBER_PDUS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.4.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Number PDUs</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_buzzer">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_BUZZER</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.10.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Buzzer</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_syslog">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_SYSLOG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.11.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Syslog</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_over_current">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_OVER_CURRENT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.12.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Over Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_cycle_interval">
+			<type>timeinsec</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_CYCLE_INTERVAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.13.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Cycle Interval</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_serial_table_poll_rate">
+			<type>timeinsec</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_POLL_RATE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.14.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Serial Table Poll Rate</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_serial_table_pass_word">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_PASS_WORD</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.15.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Serial Table Pass Word</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_serial_table_save">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_SAVE</sensorId>
+			<value>
+				<mapValue mapid="no_sa_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.20.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Serial Table Save</label>
+			<enum>no_sa_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_serial_table_restore">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SERIAL_TABLE_RESTORE</sensorId>
+			<value>
+				<mapValue mapid="no_res_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.2.1.21.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Serial Table Restore</label>
+			<enum>no_res_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_pdu_id">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_PDU_ID</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.3.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Pdu Id</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_port_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_PORT_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.4.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Port Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_model">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_MODEL</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.5.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Model</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_vendor">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VENDOR</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.6.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Vendor</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_firmware_version">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_FIRMWARE_VERSION</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.7.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Firmware Version</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_number_of_outlets">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_NUMBER_OF_OUTLETS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.8.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Number Of Outlets</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_number_of_phases">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_NUMBER_OF_PHASES</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.37.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Number Of Phases</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_number_of_banks">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_NUMBER_OF_BANKS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.38.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Number Of Banks</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_number_of_sensors">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_NUMBER_OF_SENSORS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.40.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Number Of Sensors</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_factory_default">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_FACTORY_DEFAULT</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.41.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Factory Default</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_cold_start_delay">
+			<type>timeinsec</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_COLD_START_DELAY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.42.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Cold Start Delay</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_reboot">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_REBOOT</sensorId>
+			<value>
+				<mapValue mapid="no_re_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.43.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Reboot</label>
+			<enum>no_re_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_max_current">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_MAX_CURRENT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.44.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Max Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_alarm">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_ALARM</sensorId>
+			<value>
+				<mapValue mapid="norm_cri_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.45.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Alarm</label>
+			<enum>norm_cri_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_value">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.50.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Value</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_max">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.51.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Max</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_min">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.52.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Min</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_avg">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.53.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Avg</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_current_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_resett_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.54.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Current Reset</label>
+			<enum>no_resett_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_value">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.60.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Value</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_max">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.61.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Max</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_min">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.62.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Min</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_avg">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.63.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Avg</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_power_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_resett_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.64.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Power Reset</label>
+			<enum>no_resett_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_power_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.65.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Power Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_voltage_value">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.70.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Voltage Value</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_voltage_max">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.71.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Voltage Max</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_voltage_min">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.72.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Voltage Min</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_voltage_avg">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.73.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Voltage Avg</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_voltage_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_resett_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.74.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Voltage Reset</label>
+			<enum>no_resett_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_voltage_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_VOLTAGE_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.75.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Voltage Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_factor_value">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.80.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Factor Value</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_factor_max">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.81.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Factor Max</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_factor_min">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.82.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Factor Min</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_power_factor_avg">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.83.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Power Factor Avg</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_power_factor_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_resett_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.84.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Power Factor Reset</label>
+			<enum>no_resett_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_power_factor_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_FACTOR_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.85.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Power Factor Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_power_control">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_POWER_CONTROL</sensorId>
+			<value>
+				<mapValue mapid="no_po_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.90.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Power Control</label>
+			<enum>no_po_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_reset_ocp">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_RESET_OCP</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.91.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Reset OCP</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_high_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_HIGH_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.100.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current High Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_high_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_HIGH_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.101.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current High Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_low_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_LOW_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.102.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Low Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_current_low_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_CURRENT_LOW_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.103.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt PDUTable Current Low Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_pdutable_energy_value">
+			<type>num/kwatthr</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_ENERGY_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.105.1.1</getOid>
+					</op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>1E-3</valueInc>
+			<label>Pm Power Mgmt PDUTable Energy Value</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_pdutable_energy_start_time">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_ENERGY_START_TIME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.106.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt PDUTable Energy Start Time</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_pdutable_energy_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_PDUTABLE_ENERGY_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.3.1.107.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt PDUTable Energy Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_total_number_of_outlets">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_TOTAL_NUMBER_OF_OUTLETS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.4.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Total Number Of Outlets</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_outlets_table_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.4.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_status">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_trip_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.5.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Status</label>
+			<enum>off_trip_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_power_control">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_CONTROL</sensorId>
+			<value>
+				<mapValue mapid="noac_po_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.6.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Power Control</label>
+			<enum>noac_po_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stringSensor ruleid="pm_power_mgmt_outlets_table_port_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_PORT_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.7.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Port Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_outlets_table_pdu_id">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_PDU_ID</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.8.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Pdu Id</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_post_on_delay">
+			<type>timeinsec</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POST_ON_DELAY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.9.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Post On Delay</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_post_off_delay">
+			<type>timeinsec</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POST_OFF_DELAY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.10.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Post Off Delay</label>
+			<sensorSet>Time</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_alarm">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_ALARM</sensorId>
+			<value>
+				<mapValue mapid="norm_cri_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.45.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Alarm</label>
+			<enum>norm_cri_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_value">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.50.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Value</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_max">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.51.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Max</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_min">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.52.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Min</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_avg">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.53.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Avg</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_current_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.54.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Current Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_value">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.60.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Value</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_max">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.61.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Max</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_min">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.62.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Min</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_avg">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.63.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Avg</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_power_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.64.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Power Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_power_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.65.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Power Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_voltage_value">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.70.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Voltage Value</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_voltage_max">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.71.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Voltage Max</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_voltage_min">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.72.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Voltage Min</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_voltage_avg">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.73.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Voltage Avg</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_voltage_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.74.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Voltage Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_voltage_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_VOLTAGE_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.75.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Voltage Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_factor_value">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.80.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Factor Value</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_factor_max">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.81.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Factor Max</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_factor_min">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.82.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Factor Min</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_power_factor_avg">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.83.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Power Factor Avg</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_power_factor_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.84.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Power Factor Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_power_factor_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_POWER_FACTOR_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.85.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Power Factor Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_high_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_HIGH_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.100.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current High Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_high_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_HIGH_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.101.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current High Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_low_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_LOW_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.102.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Low Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_current_low_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_CURRENT_LOW_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.103.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Outlets Table Current Low Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_outlets_table_energy_value">
+			<type>num/kwatthr</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_ENERGY_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.105.1.1.1</getOid>
+					</op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>1E-3</valueInc>
+			<label>Pm Power Mgmt Outlets Table Energy Value</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_outlets_table_energy_start_time">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_ENERGY_START_TIME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.106.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Energy Start Time</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_outlets_table_energy_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_OUTLETS_TABLE_ENERGY_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.5.1.107.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Outlets Table Energy Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_number_of_outlet_group">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_NUMBER_OF_OUTLET_GROUP</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.6.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Number Of Outlet Group</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_total_number_of_phases">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_TOTAL_NUMBER_OF_PHASES</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.8.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Total Number Of Phases</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_total_number_of_banks">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_TOTAL_NUMBER_OF_BANKS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.10.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Total Number Of Banks</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_banks_table_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.4.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Banks Table Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_banks_table_port_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_PORT_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.5.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Banks Table Port Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_banks_table_pdu_id">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_PDU_ID</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.6.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Banks Table Pdu Id</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_alarm">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_ALARM</sensorId>
+			<value>
+				<mapValue mapid="norm_cri_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.45.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Alarm</label>
+			<enum>norm_cri_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_value">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.50.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Value</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_max">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.51.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Max</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_min">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.52.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Min</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_avg">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.53.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Avg</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_current_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.54.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Current Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_value">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.60.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Value</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_max">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.61.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Max</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_min">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.62.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Min</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_avg">
+			<type>powerW</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.63.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Avg</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_power_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.64.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Power Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_power_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.65.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Power Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_voltage_value">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.70.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Voltage Value</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_voltage_max">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.71.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Voltage Max</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_voltage_min">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.72.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Voltage Min</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_voltage_avg">
+			<type>voltage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.73.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Voltage Avg</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_voltage_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.74.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Voltage Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_voltage_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_VOLTAGE_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.75.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Voltage Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_factor_value">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.80.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Factor Value</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_factor_max">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_MAX</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.81.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Factor Max</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_factor_min">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_MIN</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.82.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Factor Min</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_power_factor_avg">
+			<type>num/powerfactor</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_AVG</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.83.1.1.1</getOid>
+					</op>
+					<op>100</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Power Factor Avg</label>
+			<sensorSet>Powerfactor</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_power_factor_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.84.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Power Factor Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_power_factor_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_POWER_FACTOR_TYPE</sensorId>
+			<value>
+				<mapValue mapid="no_mea_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.85.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Power Factor Type</label>
+			<enum>no_mea_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_high_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_HIGH_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.100.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current High Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_high_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_HIGH_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.101.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current High Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_low_warning">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_LOW_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.102.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Low Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_current_low_critical">
+			<type>amperage</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_CURRENT_LOW_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.103.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Banks Table Current Low Critical</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_banks_table_energy_value">
+			<type>num/kwatthr</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_ENERGY_VALUE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.105.1.1.1</getOid>
+					</op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>1E-3</valueInc>
+			<label>Pm Power Mgmt Banks Table Energy Value</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_banks_table_energy_start_time">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_ENERGY_START_TIME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.106.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Banks Table Energy Start Time</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_banks_table_energy_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_BANKS_TABLE_ENERGY_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.11.1.107.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Banks Table Energy Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_total_number_of_sensors">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_TOTAL_NUMBER_OF_SENSORS</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.12.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Total Number Of Sensors</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.4.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_port_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_PORT_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.5.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Port Name</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_pdu_id">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_PDU_ID</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.6.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Pdu Id</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stateSensor ruleid="pm_power_mgmt_sensors_table_type">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_TYPE</sensorId>
+			<value>
+				<mapValue mapid="temp_un_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.7.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Type</label>
+			<enum>temp_un_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pm_power_mgmt_sensors_table_status">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="no_clo_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.8.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Status</label>
+			<enum>no_clo_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_value">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.20.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Value</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_value_max">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_MAX</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.21.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Value Max</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_value_min">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_MIN</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.22.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Value Min</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pm_power_mgmt_sensors_table_value_avg">
+			<type>string</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_AVG</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.23.1.1.1</getOid>
+				</op>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Value Avg</label>
+			<sensorSet>String</sensorSet>
+		</stringSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_value_int">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_INT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.25.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Value Int</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_value_max_int">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_MAX_INT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.26.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Value Max Int</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_value_min_int">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_MIN_INT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.27.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Value Min Int</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_value_avg_int">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_AVG_INT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.28.1.1.1</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Value Avg Int</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_sensors_table_value_reset">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_VALUE_RESET</sensorId>
+			<value>
+				<mapValue mapid="no_reset_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.30.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Value Reset</label>
+			<enum>no_reset_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_critical">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.40.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Critical</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_warning">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.41.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Warning</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_warning">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_WARNING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.42.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Warning</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_critical">
+			<type>num</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_CRITICAL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.43.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Critical</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pm_power_mgmt_sensors_table_unit">
+			<type>state</type>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_UNIT</sensorId>
+			<value>
+				<mapValue mapid="un_af_vm">
+					<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.45.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Pm Power Mgmt Sensors Table Unit</label>
+			<enum>un_af_em</enum>
+			<sensorSet>State</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_critical_c">
+			<type>temp</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_CRITICAL_C</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.50.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Critical C</label>
+			<sensorSet>temp</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_warning_c">
+			<type>temp</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_WARNING_C</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.51.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Warning C</label>
+			<sensorSet>temp</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_warning_c">
+			<type>temp</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_WARNING_C</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.52.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Warning C</label>
+			<sensorSet>temp</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_critical_c">
+			<type>temp</type>
+			<units />
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_CRITICAL_C</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.53.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Critical C</label>
+			<sensorSet>temp</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_critical_f">
+			<type>num</type>
+			<units>degreeF</units>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_CRITICAL_F</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.60.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Critical F</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_high_warning_f">
+			<type>num</type>
+			<units>degreeF</units>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_HIGH_WARNING_F</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.61.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table High Warning F</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_warning_f">
+			<type>num</type>
+			<units>degreeF</units>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_WARNING_F</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.62.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Warning F</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pm_power_mgmt_sensors_table_low_critical_f">
+			<type>num</type>
+			<units>degreeF</units>
+			<sensorId>_PM_POWER_MGMT_SENSORS_TABLE_LOW_CRITICAL_F</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.10418.17.2.5.13.1.63.1.1.1</getOid>
+					</op>
+					<op>10</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Pm Power Mgmt Sensors Table Low Critical F</label>
+			<sensorSet>General</sensorSet>
+		</numSensor>
+		<valueMap ruleid="no_re_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_re_em">
+			<label>NOACTION</label>
+			<label>REBOOT</label>
+		</enumMap>
+
+		<valueMap ruleid="no_sa_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_sa_em">
+			<label>NOACTION</label>
+			<label>SAVE</label>
+		</enumMap>
+
+		<valueMap ruleid="no_res_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_res_em">
+			<label>NOACTION</label>
+			<label>RESTORE</label>
+		</enumMap>
+
+		<valueMap ruleid="no_reset_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_reset_em">
+			<label>NOACTION</label>
+			<label>RESET</label>
+		</enumMap>
+
+		<valueMap ruleid="norm_cri_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>7</valueIn>
+			<valueOut>6</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="norm_cri_em">
+			<label>NORMAL</label>
+			<label>BLOW-FUSE</label>
+			<label>HW-OCP</label>
+			<label>HIGH-CRITICAL</label>
+			<label>HIGH-WARNING</label>
+			<label>LOW-WARNING</label>
+			<label>LOW-CRITICAL</label>
+		</enumMap>
+
+		<valueMap ruleid="no_mea_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_mea_em">
+			<label>NONE-SENSOR</label>
+			<label>ESTIMATED</label>
+			<label>MEASURED</label>
+		</enumMap>
+
+		<valueMap ruleid="no_po_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="no_po_em">
+			<label>NOACTION</label>
+			<label>POWERON</label>
+			<label>POWEROFF</label>
+			<label>POWERCYCLE</label>
+		</enumMap>
+
+		<valueMap ruleid="off_trip_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>7</valueIn>
+			<valueOut>6</valueOut>
+			<valueIn>8</valueIn>
+			<valueOut>7</valueOut>
+			<valueIn>9</valueIn>
+			<valueOut>8</valueOut>
+			<valueIn>10</valueIn>
+			<valueOut>9</valueOut>
+			<valueIn>11</valueIn>
+			<valueOut>10</valueOut>
+			<valueIn>12</valueIn>
+			<valueOut>11</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="off_trip_em">
+			<label>OFF</label>
+			<label>ON</label>
+			<label>OFFLOCKED</label>
+			<label>ONLOCKED</label>
+			<label>OFFCYCLE</label>
+			<label>ONPENDINGOFF</label>
+			<label>OFFPENDINGON</label>
+			<label>ONPENDINGCYCLE</label>
+			<label>NOTSET</label>
+			<label>ONFIXED</label>
+			<label>OFFSHUTDOWN</label>
+			<label>TRIPPED</label>
+		</enumMap>
+
+		<valueMap ruleid="noac_po_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="noac_po_em">
+			<label>NOACTION</label>
+			<label>POWERON</label>
+			<label>POWEROFF</label>
+			<label>POWERCYCLE</label>
+			<label>POWERLOCK</label>
+			<label>POWERUNLOCK</label>
+		</enumMap>
+
+		<valueMap ruleid="temp_un_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>
+			<valueOut>5</valueOut>
+			<valueIn>7</valueIn>
+			<valueOut>6</valueOut>
+			<valueIn>8</valueIn>
+			<valueOut>7</valueOut>
+			<valueIn>9</valueIn>
+			<valueOut>8</valueOut>
+			<valueIn>10</valueIn>
+			<valueOut>9</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="temp_un_em">
+			<label>TEMP-INTERNAL</label>
+			<label>TEMPERATURE</label>
+			<label>HUMIDITY</label>
+			<label>AIR-FLOW</label>
+			<label>SMOKE</label>
+			<label>DRY-CONCACT</label>
+			<label>WATER-LEVEL</label>
+			<label>MOTION</label>
+			<label>UNPLUGGED</label>
+			<label>UNKNOWN</label>
+		</enumMap>
+
+		<valueMap ruleid="no_clo_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="no_clo_em">
+			<label>NORMAL</label>
+			<label>TRIGGERED</label>
+			<label>NOT-APPLICABLE</label>
+			<label>OPENED</label>
+			<label>CLOSED</label>
+		</enumMap>
+
+		<valueMap ruleid="un_af_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="un_af_em">
+			<label>UNDEFINED</label>
+			<label>FAHRENHEIT</label>
+			<label>CELSIUS</label>
+			<label>PERCENT</label>
+			<label>AFU</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

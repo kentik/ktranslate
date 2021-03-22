@@ -1,0 +1,564 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="poweragent_bms"
+	ddfname="Phoenix Broadband PowerAgent BMS"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="poweragent_bms">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Phoenix Broadband</setProductData>
+		<setProductData ruleid="modeldata" field="model">PowerAgent BMS</setProductData>
+		<setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.2.1.47.1.1.1.1.14.1</getOid>
+		</setDefaultLabel>
+
+		<oidMustExist ruleid="pbtBatteryAgent" oid=".1.3.6.1.4.1.20433.1.1.1.4" istree="yes" /> 
+
+		<numSensor ruleid="pbtBatMeasurementInterval">
+            <type>timeinhrs</type>
+            <sensorId>PBT_BAT_MEAS_INTERVAL</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.20433.1.1.1.4.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Time Between Measurements</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStrings">
+            <type>num</type>
+            <sensorId>PBT_BAT_STRINGS</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.20433.1.1.1.4.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Battery Strings</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+
+		<!-- per-String -->
+		<numSensor ruleid="pbtBatStringJars" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.2">
+            <type>num</type>
+            <sensorId>PBT_BAT_STRING_JARS_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.2</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Number of Jars</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="pbtBatStringStatus" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.3">
+            <type>state</type>
+            <sensorId>PBT_BAT_STRING_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="stringStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Status</label>
+            <enum>stringStatus-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="stringStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="stringStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Disabled</label>
+			<label>Shorted</label>
+			<label>Missing Sensor</label>
+			<label>Too Many Sensors</label>
+			<label>Sensor Fault</label>
+			<label>Alarms</label>
+			<label>Initializing</label>
+			<label>Sensor Disabled</label>
+			<label>String Disconnected</label>
+			<label>No Sensor Communication</label>
+		</enumMap>
+
+		<numSensor ruleid="pbtBatStringVoltage" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.6">
+            <type>voltageDC</type>
+            <sensorId>PBT_BAT_STRING_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.6</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Voltage</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStringFloatCurrent" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.7">
+            <type>amperage</type>
+            <sensorId>PBT_BAT_STRING_FLOAT_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.7</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Float Current</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStringConnectionAdmittance" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.8">
+            <type>num</type>
+            <sensorId>PBT_BAT_STRING_CONN_ADMIT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.8</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Connection Admittance (mho)</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="pbtBatStringEqualizationControl" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.9">
+            <type>state</type>
+            <sensorId>PBT_BAT_STRING_EQ_CTRL_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="eqControl-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Battery Equalization</label>
+            <enum>eqControl-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="eqControl-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="eqControl-em">
+			<label>Unknown</label>
+			<label>Enabled</label>
+			<label>Disabled</label>
+		</enumMap>
+
+		<numSensor ruleid="pbtBatStringJarVoltageDelta" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.10">
+            <type>voltageDC</type>
+            <sensorId>PBT_BAT_STRING_JAR_VOLTAGE_DELTA_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.10</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Jar Voltage Delta</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStringDischargeCurrent" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.11">
+            <type>amperage</type>
+            <sensorId>PBT_BAT_STRING_DISCHARGE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.11</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Float Current</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="pbtBatStringDischargeStatus" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.12">
+            <type>state</type>
+            <sensorId>PBT_BAT_STRING_DISCH_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="dischStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Discharge Status</label>
+            <enum>dischStatus-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="dischStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="dischStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Discharge</label>
+		</enumMap>
+
+		<numSensor ruleid="pbtBatStringRippleCurrent" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.13">
+            <type>amperage</type>
+            <sensorId>PBT_BAT_STRING_RIPPLE_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.13</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Ripple Current</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="pbtBatStringSensorComStatus" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.14">
+            <type>state</type>
+            <sensorId>PBT_BAT_STRING_COM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="sensorComStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Sensor Communication Status</label>
+            <enum>sensorComStatus-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="sensorComStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="sensorComStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Faulted Sensor</label>
+		</enumMap>
+
+		<numSensor ruleid="pbtBatStringDischargeEvents" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.15">
+            <type>num</type>
+            <sensorId>PBT_BAT_STRING_DISCH_EVENTS_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.15</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Discharge Events</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStringDischargeSeconds" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.16">
+            <type>timeinsec</type>
+            <sensorId>PBT_BAT_STRING_DISCH_SEC_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.16</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Most Recent Discharge Time</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatStringDischargeSecondsTotal" index=".1.3.6.1.4.1.20433.1.1.1.4.3.1.17">
+            <type>timeinsec</type>
+            <sensorId>PBT_BAT_STRING_DISCH_SEC_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid default="0">.1.3.6.1.4.1.20433.1.1.1.4.3.1.17</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid> Total Discharge Time</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.3.1.5</getRowOid></sensorSet>
+        </numSensor>
+
+		<!-- per-Jar -->
+		<stateSensor ruleid="pbtBatJarSensorStatus" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.3">
+            <type>state</type>
+            <sensorId>PBT_BAT_JAR_SENSOR_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="jarStatus-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Status</label>
+            <enum>jarStatus-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="jarStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="jarStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Fault</label>
+			<label>Measuring</label>
+			<label>Sensor Disabled</label>
+			<label>String Disabled</label>
+			<label>Missing</label>
+			<label>Measurement Failed</label>
+		</enumMap>
+
+		<numSensor ruleid="pbtBatJarVoltage" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.7">
+            <type>voltageDC</type>
+            <sensorId>PBT_BAT_JAR_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.7</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Voltage</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatJarVoltageHiRes" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.16">
+            <type>voltageDC</type>
+            <sensorId>PBT_BAT_JAR_VOLTAGE_HIRES_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.16</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Voltage (High-Res)</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pbtBatJarTemperature" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.8">
+            <type>temp</type>
+            <sensorId>PBT_BAT_JAR_TEMP_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.8</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Temperature</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatJarCellAdmittance" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.9">
+            <type>num</type>
+            <sensorId>PBT_BAT_JAR_CELL_ADMIT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.9</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Cell Admittance (mho)</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatJarCellInitialAdmittance" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.11">
+            <type>num</type>
+            <sensorId>PBT_BAT_JAR_CELL_INIT_ADMIT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.11</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Cell Initial Admittance (mho)</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="pbtBatJarCellAdmittanceChange" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.13">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>PBT_BAT_JAR_CELL_ADMIT_CHANGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.13</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Cell Admittance Change</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pbtBatJarSensorVersion" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.14">
+            <type>num</type>
+            <sensorId>PBT_BAT_JAR_CELL_VERSION_<rowIndex/></sensorId>
+            <value>
+				<add>
+				<op>
+					<add>
+					<op>
+						<mult>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.14</getRowOid></op>
+								<op>0</op>
+								</right_shift>
+							</op>
+							<op>15</op>
+							</bitwise_and>
+						</op>
+						<op>0.01</op>
+						</mult>
+					</op>
+					<op>
+						<mult>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.14</getRowOid></op>
+								<op>4</op>
+								</right_shift>
+							</op>
+							<op>15</op>
+							</bitwise_and>
+						</op>
+						<op>0.1</op>
+						</mult>
+					</op>
+					</add>
+				</op>
+				<op>
+					<add>
+					<op>
+						<mult>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.14</getRowOid></op>
+								<op>8</op>
+								</right_shift>
+							</op>
+							<op>15</op>
+							</bitwise_and>
+						</op>
+						<op>1</op>
+						</mult>
+					</op>
+					<op>
+						<mult>
+						<op>
+							<bitwise_and>
+							<op>
+								<right_shift>
+								<op><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.14</getRowOid></op>
+								<op>12</op>
+								</right_shift>
+							</op>
+							<op>15</op>
+							</bitwise_and>
+						</op>
+						<op>10</op>
+						</mult>
+					</op>
+					</add>
+				</op>
+				</add>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Sensor Version</label>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="pbtBatJarElectrolyteLevel" index=".1.3.6.1.4.1.20433.1.1.1.4.4.1.15">
+            <type>state</type>
+            <sensorId>PBT_BAT_JAR_ELEC_LVL_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="elecLvl-vm">
+                <getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.15</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid> Electrolyte Level</label>
+            <enum>elecLvl-em</enum>
+            <sensorSet><getRowOid>.1.3.6.1.4.1.20433.1.1.1.4.4.1.6</getRowOid></sensorSet>
+        </stateSensor>
+		<valueMap ruleid="elecLvl-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="elecLvl-em">
+			<label>Unknown</label>
+			<label>Not Available</label>
+			<label>Normal</label>
+			<label>Low</label>
+		</enumMap>
+
+		<!--
+		<stateSensor ruleid="stSensTemplate">
+            <type>state</type>
+            <sensorId>ST_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>State Sensor</label>
+            <enum>state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="state-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<alarmFlags ruleid="alarmTemplate">
+			<value><getOid>.1.3.6.1.4.1....</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Generic Alarm</activeText>
+					<inactiveText>Generic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Generic Alarm condition exists.</activeText>
+					<inactiveText>A Generic Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		-->
+
+	</device>
+</APC_DDF>

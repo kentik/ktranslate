@@ -1,0 +1,1185 @@
+<?xml version="1.0"?>
+<!-- PowerwareUPs -->
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="layerzero_epanel"
+	ddfname="Layer Zero ePanel"
+	ddfversion="4"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+    <device deviceid="layerzero_epanel">
+        <oidMustExist ruleid="layerzero_epanel_exist" istree="yes" oid=".1.3.6.1.4.1.23760.3.5"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Layer Zero</setProductData>
+        <setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.23760.3.5.3.0</getOid></setProductData>
+        <setProductData ruleid="serialnum" field="serial_num"><getOid>.1.3.6.1.4.1.23760.3.5.2.0</getOid></setProductData>
+        <setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<!-- positionCurrent -->
+		<numSensor ruleid="positionCurrent" index=".1.3.6.1.4.1.23760.3.5.22.1.8">
+			<type>amperage</type>
+			<sensorId>POSITION_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.8</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Current</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- positionRealPower -->
+		<numSensor ruleid="positionRealPower" index=".1.3.6.1.4.1.23760.3.5.22.1.9">
+			<type>num/powerKW</type>
+			<sensorId>POSITION_REAL_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.9</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Real Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- positionApparentPower -->
+		<numSensor ruleid="positionApparentPower" index=".1.3.6.1.4.1.23760.3.5.22.1.10">
+			<type>num/powerKVA</type>
+			<sensorId>POSITION_APPARENT_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.10</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Apparent Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- positionReactivePower -->
+		<numSensor ruleid="positionReactivePower" index=".1.3.6.1.4.1.23760.3.5.22.1.11">
+			<type>num/powerKVAR</type>
+			<sensorId>POSITION_REACTIVE_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.11</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Reactive Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- positionPowerFactor -->
+		<numSensor ruleid="positionPowerFactor" index=".1.3.6.1.4.1.23760.3.5.22.1.12">
+			<type>num/powerfactor</type>
+			<sensorId>POSITION_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op>0.01</op>
+				<op><getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.12</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Power Factor</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- positionEnergySinceReset -->
+		<numSensor ruleid="positionEnergySinceReset" index=".1.3.6.1.4.1.23760.3.5.22.1.13">
+			<type>num/kwatthr</type>
+			<sensorId>POSITION_ENERGY_SINCE_RESET_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.13</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Energy Since Reset</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="positionDemandBlock" index=".1.3.6.1.4.1.23760.3.5.22.1.14">
+			<type>num/powerKW</type>
+			<sensorId>POSITION_DEMAND_BLOCK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.14</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Real Power Demand Block</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="positionDemandBlockPeak" index=".1.3.6.1.4.1.23760.3.5.22.1.15">
+			<type>num/powerKW</type>
+			<sensorId>POSITION_DEMAND_BLOCK_PEAK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.15</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Real Power Demand Block Peak</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="positionRollingBlock" index=".1.3.6.1.4.1.23760.3.5.22.1.16">
+			<type>num/powerKW</type>
+			<sensorId>POSITION_ROLLING_BLOCK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.16</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Real Power Demand Rolling</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="positionRollingBlockPeak" index=".1.3.6.1.4.1.23760.3.5.22.1.17">
+			<type>num/powerKW</type>
+			<sensorId>POSITION_ROLLING_BLOCK_PEAK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.17</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Real Power Demand Rolling Peak</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- branchNeutralConnected -->
+		<stateSensor ruleid="branchNeutralConnected" index=".1.3.6.1.4.1.23760.3.5.22.1.21">
+			<type>state</type>
+			<sensorId>BRANCH_NEUTRAL_CONNECTED_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.21</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Neutral Connected</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- positionCurrentXformerReversed -->
+		<stateSensor ruleid="positionCurrentXformerReversed" index=".1.3.6.1.4.1.23760.3.5.22.1.22">
+			<type>state</type>
+			<sensorId>POSITION_CURRENT_XFORMER_REVERSED_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.22</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Current Transformer Reversed</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- positionHighCurrentAlarm -->
+		<stateSensor ruleid="positionHighCurrentAlarm" index=".1.3.6.1.4.1.23760.3.5.22.1.23">
+			<type>state</type>
+			<sensorId>POSITION_HIGH_CURRENT_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.23</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s High Current Alarm</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- positionOverCurrentAlarm -->
+		<stateSensor ruleid="positionOverCurrentAlarm"  index=".1.3.6.1.4.1.23760.3.5.22.1.24">
+			<type>state</type>
+			<sensorId>POSITION_OVER_CURRENT_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.22.1.24</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s Over Current Alarm</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Branch %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- breakerNotNormalAlarm -->
+		<stateSensor ruleid="breakerNotNormalAlarm" index=".1.3.6.1.4.1.23760.3.5.23.1.4">
+			<type>state</type>
+			<sensorId>BREAKER_NOT_NORMAL_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.23.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label>Breaker<space/><rowIndex/><space/>Not Normal Alarm</label>
+            <sensorSet>Breaker<space/><rowIndex/></sensorSet>
+		</stateSensor>
+
+		<!-- breakerFormCPositionCircuitAlarm -->
+		<stateSensor ruleid="breakerFormCPositionCircuitAlarm" index=".1.3.6.1.4.1.23760.3.5.23.1.5">
+			<type>state</type>
+			<sensorId>BREAKER_FORM_C_POSITION_CIRCUIT_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.23.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label>Breaker<space/><rowIndex/><space/>Form C Position Circuit Alarm</label>
+            <sensorSet>Breaker<space/><rowIndex/></sensorSet>
+		</stateSensor>
+
+		<!-- breakerFormCTripCircuitAlarm -->
+		<stateSensor ruleid="breakerFormCTripCircuitAlarm" index=".1.3.6.1.4.1.23760.3.5.23.1.6">
+			<type>state</type>
+			<sensorId>BREAKER_FORM_C_TRIP_CIRCUIT_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.23.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label>Breaker<space/><rowIndex/><space/>Form C Trip Circuit Alarm</label>
+            <sensorSet>Breaker<space/><rowIndex/></sensorSet>
+		</stateSensor>
+
+		<!-- breakerTrippedAlarm -->
+		<stateSensor ruleid="breakerTrippedAlarm" index=".1.3.6.1.4.1.23760.3.5.23.1.7">
+			<type>state</type>
+			<sensorId>BREAKER_TRIPPED_ALARM_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="normal_active_unknown_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.23.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<enum>normal_active_unknown_em</enum>
+			<label>Breaker<space/><rowIndex/><space/>Tripped Alarm</label>
+            <sensorSet>Breaker<space/><rowIndex/></sensorSet>
+		</stateSensor>
+		
+		<!-- meterCTReversedPhaseA -->
+		<stateSensor ruleid="meterCTReversedPhaseA" index=".1.3.6.1.4.1.23760.3.5.25.1.3">
+			<type>state</type>
+			<sensorId>METER_CURRENT_TRANSFORMER_REVERSED_PHASE_A_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Transformer Reversed Phase A</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- meterCTReversedPhaseB -->
+		<stateSensor ruleid="meterCTReversedPhaseB" index=".1.3.6.1.4.1.23760.3.5.25.1.4">
+			<type>state</type>
+			<sensorId>METER_CURRENT_TRANSFORMER_REVERSED_PHASE_B_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Transformer Reversed Phase B</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- meterCTReversedPhaseC -->
+		<stateSensor ruleid="meterCTReversedPhaseC" index=".1.3.6.1.4.1.23760.3.5.25.1.5">
+			<type>state</type>
+			<sensorId>METER_CURRENT_TRANSFORMER_REVERSED_PHASE_C_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Transformer Reversed Phase C</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- meterCTReversedNeutral -->
+		<stateSensor ruleid="meterCTReversedNeutral" index=".1.3.6.1.4.1.23760.3.5.25.1.6">
+			<type>state</type>
+			<sensorId>METER_CURRENT_TRANSFORMER_REVERSED_NEUTRAL_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true_vm">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true_em</enum>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Transformer Reversed Neutral</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</stateSensor>
+
+		<!-- meterCurrentPhaseA -->
+		<numSensor ruleid="meterCurrentPhaseA" index=".1.3.6.1.4.1.23760.3.5.25.1.7">
+			<type>amperage</type>
+			<sensorId>METER_CURRENT_PHASE_A_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.7</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Phase A</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterCurrentPhaseB -->
+		<numSensor ruleid="meterCurrentPhaseB" index=".1.3.6.1.4.1.23760.3.5.25.1.8">
+			<type>amperage</type>
+			<sensorId>METER_CURRENT_PHASE_B_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.8</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Phase B</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterCurrentPhaseC -->
+		<numSensor ruleid="meterCurrentPhaseC" index=".1.3.6.1.4.1.23760.3.5.25.1.9">
+			<type>amperage</type>
+			<sensorId>METER_CURRENT_PHASE_C_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.9</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Phase C</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterCurrentPhaseN -->
+		<numSensor ruleid="meterCurrentPhaseN" index=".1.3.6.1.4.1.23760.3.5.25.1.10">
+			<type>amperage</type>
+			<sensorId>METER_CURRENT_PHASE_N_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.10</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Phase N</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterCurrentPhaseG -->
+		<numSensor ruleid="meterCurrentPhaseG" index=".1.3.6.1.4.1.23760.3.5.25.1.11">
+			<type>amperage</type>
+			<sensorId>METER_CURRENT_PHASE_G_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.11</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Current Phase G</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterRealPower -->
+		<numSensor ruleid="meterRealPower" index=".1.3.6.1.4.1.23760.3.5.25.1.12">
+			<type>num/powerKW</type>
+			<sensorId>METER_REAL_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.12</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Real Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterApparentPower -->
+		<numSensor ruleid="meterApparentPower" index=".1.3.6.1.4.1.23760.3.5.25.1.13">
+			<type>num/powerKW</type>
+			<sensorId>METER_APPARENT_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.13</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Apparent Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterReactivePower -->
+		<numSensor ruleid="meterReactivePower" index=".1.3.6.1.4.1.23760.3.5.25.1.14">
+			<type>num</type>
+			<sensorId>METER_REACTIVE_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.14</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Reactive Power</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterPowerFactor -->
+		<numSensor ruleid="meterPowerFactor" index=".1.3.6.1.4.1.23760.3.5.25.1.15">
+			<type>num</type>
+			<sensorId>METER_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.01</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.15</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Power Factor</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterEnergySinceReset -->
+		<numSensor ruleid="meterEnergySinceReset" index=".1.3.6.1.4.1.23760.3.5.25.1.16">
+			<type>num/kwatthr</type>
+			<sensorId>METER_ENERGY_SINCE_RESET_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.16</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Energy Since Reset</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="meterDemandBlock" index=".1.3.6.1.4.1.23760.3.5.25.1.17">
+			<type>num/powerKW</type>
+			<sensorId>METER_DEMAND_BLOCK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.17</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Real Power Demand Block</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="meterDemandBlockPeak" index=".1.3.6.1.4.1.23760.3.5.25.1.18">
+			<type>num/powerKW</type>
+			<sensorId>METER_DEMAND_BLOCK_PEAK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.18</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Real Power Demand Block Peak</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="meterDemandRolling" index=".1.3.6.1.4.1.23760.3.5.25.1.19">
+			<type>num/powerKW</type>
+			<sensorId>METER_DEMAND_ROLLING_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.19</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Real Power Demand Rolling</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+		<numSensor ruleid="meterDemandRollingPeak" index=".1.3.6.1.4.1.23760.3.5.25.1.20">
+			<type>num/powerKW</type>
+			<sensorId>METER_DEMAND_ROLLING_PEAK_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.20</getRowOid>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Real Power Demand Rolling Peak</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterHighCurrentAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.25.1.30">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.30</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Current Alarm Phase A</activeText>
+					<inactiveText>High Current Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighCurrentAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.25.1.31">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.31</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Current Alarm Phase B</activeText>
+					<inactiveText>High Current Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighCurrentAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterHighCurrentAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.25.1.32">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.32</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Current Alarm Phase C</activeText>
+					<inactiveText>High Current Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighCurrentAlarmNeutral -->
+		<alarmFlags2 ruleid="meterHighCurrentAlarmNeutral" index=".1.3.6.1.4.1.23760.3.5.25.1.33">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.33</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Current Alarm Neutral</activeText>
+					<inactiveText>High Current Alarm Neutral Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Neutral</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Neutral</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighCurrentAlarmGround -->
+		<alarmFlags2 ruleid="meterHighCurrentAlarmGround" index=".1.3.6.1.4.1.23760.3.5.25.1.34">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.34</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Current Alarm Ground</activeText>
+					<inactiveText>High Current Alarm Ground Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Ground</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Current Alarm Ground</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverCurrentAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.25.1.35">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.35</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Current Alarm Phase A</activeText>
+					<inactiveText>Over Current Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverCurrentAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.25.1.36">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.36</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Current Alarm Phase B</activeText>
+					<inactiveText>Over Current Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverCurrentAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterOverCurrentAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.25.1.37">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.37</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Current Alarm Phase C</activeText>
+					<inactiveText>Over Current Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverCurrentAlarmNeutral -->
+		<alarmFlags2 ruleid="meterOverCurrentAlarmNeutral" index=".1.3.6.1.4.1.23760.3.5.25.1.38">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.38</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Current Alarm Neutral</activeText>
+					<inactiveText>Over Current Alarm Neutral Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Neutral</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Neutral</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverCurrentAlarmGround -->
+		<alarmFlags2 ruleid="meterOverCurrentAlarmGround" index=".1.3.6.1.4.1.23760.3.5.25.1.39">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.25.1.39</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Current Alarm Ground</activeText>
+					<inactiveText>Over Current Alarm Ground Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Ground</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Current Alarm Ground</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterVoltageLineToLineA -->
+		<numSensor ruleid="meterVoltageLineToLineA" index=".1.3.6.1.4.1.23760.3.5.36.1.3">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_LINE_A_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.3</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Line A</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterVoltageLineToLineB -->
+		<numSensor ruleid="meterVoltageLineToLineB" index=".1.3.6.1.4.1.23760.3.5.36.1.4">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_LINE_B_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.4</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Line B</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterVoltageLineToLineC -->
+		<numSensor ruleid="meterVoltageLineToLineC" index=".1.3.6.1.4.1.23760.3.5.36.1.5">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_LINE_C_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.5</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Line C</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterVoltageLineToNeutralA -->
+		<numSensor ruleid="meterVoltageLineToNeutralA" index=".1.3.6.1.4.1.23760.3.5.36.1.6">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_NEUTRAL_A_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.6</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Neutral A</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterVoltageLineToNeutralB -->
+		<numSensor ruleid="meterVoltageLineToNeutralB" index=".1.3.6.1.4.1.23760.3.5.36.1.7">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_NEUTRAL_B_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.7</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Neutral B</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterVoltageLineToNeutralC -->
+		<numSensor ruleid="meterVoltageLineToNeutralC" index=".1.3.6.1.4.1.23760.3.5.36.1.8">
+			<type>voltage</type>
+			<sensorId>METER_VOLTAGE_LINE_TO_NEUTRAL_C_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.8</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Voltage Line To Neutral C</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterFrequency -->
+		<numSensor ruleid="meterFrequency" index=".1.3.6.1.4.1.23760.3.5.36.1.9">
+			<type>frequency</type>
+			<sensorId>METER_FREQUENCY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.9</getRowOid></op>
+				</mult>
+			</value>
+			<label><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Frequency</op></regex></label>
+            <sensorSet><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s</op></regex></sensorSet>
+		</numSensor>
+
+		<!-- meterUnderVoltageAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.36.1.23">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.23</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Under Voltage Alarm Phase A</activeText>
+					<inactiveText>Under Voltage Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterUnderVoltageAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.36.1.24">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.24</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Under Voltage Alarm Phase B</activeText>
+					<inactiveText>Under Voltage Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterUnderVoltageAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterUnderVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.36.1.25">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.25</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Under Voltage Alarm Phase C</activeText>
+					<inactiveText>Under Voltage Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Voltage Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterLowVoltageAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.36.1.26">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.26</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Low Voltage Alarm Phase A</activeText>
+					<inactiveText>Low Voltage Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterLowVoltageAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.36.1.27">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.27</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Low Voltage Alarm Phase B</activeText>
+					<inactiveText>Low Voltage Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterLowVoltageAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterLowVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.36.1.28">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.28</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Low Voltage Alarm Phase C</activeText>
+					<inactiveText>Low Voltage Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Low Voltage Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighVoltageAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.36.1.29">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.29</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Voltage Alarm Phase A</activeText>
+					<inactiveText>High Voltage Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighVoltageAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.36.1.30">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.30</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Voltage Alarm Phase B</activeText>
+					<inactiveText>High Voltage Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterHighVoltageAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterHighVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.36.1.31">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.31</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>High Voltage Alarm Phase C</activeText>
+					<inactiveText>High Voltage Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s High Voltage Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverVoltageAlarmPhaseA -->
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseA" index=".1.3.6.1.4.1.23760.3.5.36.1.32">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.32</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Voltage Alarm Phase A</activeText>
+					<inactiveText>Over Voltage Alarm Phase A Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase A</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase A</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverVoltageAlarmPhaseB -->
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseB" index=".1.3.6.1.4.1.23760.3.5.36.1.33">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.33</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Voltage Alarm Phase B</activeText>
+					<inactiveText>Over Voltage Alarm Phase B Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase B</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase B</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverVoltageAlarmPhaseC -->
+		<alarmFlags2 ruleid="meterOverVoltageAlarmPhaseC" index=".1.3.6.1.4.1.23760.3.5.36.1.34">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.34</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Voltage Alarm Phase C</activeText>
+					<inactiveText>Over Voltage Alarm Phase C Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase C</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Voltage Alarm Phase C</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterUnderFrequencyAlarm -->
+		<alarmFlags2 ruleid="meterUnderFrequencyAlarm" index=".1.3.6.1.4.1.23760.3.5.36.1.35">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.35</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Under Frequency Alarm</activeText>
+					<inactiveText>Under Frequency Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Frequency Alarm</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Under Frequency Alarm</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!-- meterOverFrequencyAlarm -->
+		<alarmFlags2 ruleid="meterOverFrequencyAlarm" index=".1.3.6.1.4.1.23760.3.5.36.1.36">
+			<value>
+				<baseNToInt base="16">
+					<getRowOid>.1.3.6.1.4.1.23760.3.5.36.1.36</getRowOid>
+				</baseNToInt>
+			</value>
+
+			<alarmFlagsTest match="2" log="no">
+				<name>
+					<activeText>Over Frequency Alarm</activeText>
+					<inactiveText>Over Frequency Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Frequency Alarm</op></regex>.</activeText>
+					<inactiveText><regex><op>(\d+)\.(\d+)</op><op><rowIndex/></op><op>Panel %02s Meter %02s Over Frequency Alarm</op></regex> has cleared.</inactiveText>
+				</description>
+				<alarmRecommendedActions>
+					<recommendedActionId></recommendedActionId>
+				</alarmRecommendedActions>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="false_true_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="false_true_em">
+			<label>False</label>
+			<label>True</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="normal_active_unknown_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="normal_active_unknown_em">
+			<label>Normal</label>
+			<label>Active</label>
+			<label>Unknown</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+
+</APC_DDF>

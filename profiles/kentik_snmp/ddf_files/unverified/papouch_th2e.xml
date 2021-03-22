@@ -1,0 +1,148 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="papouch_th2e"
+	ddfname="Papouch TH2E"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="papouch_th2e">
+		<oidMustExist ruleid="papouch_the" oid="1.3.6.1.4.1.18248.20" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Papouch</setProductData>
+		<setProductData ruleid="modeldata" field="model">TH2E</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<enumMap ruleid="flow_em">
+			<label>OK</label>
+			<label>Not Available</label>
+			<label>Overflow</label>		
+			<label>Underflow</label>
+			<label>Error</label>		
+		</enumMap>		
+
+		<enumMap ruleid="units_em">
+			<label>Celsius</label>
+			<label>Fahrenheit</label>
+			<label>Kelvin</label>		
+			<label>Percents</label>
+			<label>Unknown</label>		
+		</enumMap>		
+
+		<enumMap ruleid="on_off_em">
+			<label>On</label>
+			<label>Off</label>
+			<label>Unknown</label>		
+		</enumMap>		
+
+		<valueMap ruleid="inChValueOffset-vm">
+			<valueIn>1</valueIn><valueOut>32</valueOut>
+			<valueIn>2</valueIn><valueOut>273</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="inChValueScalar-vm">
+			<valueIn>1</valueIn><valueOut>1.8</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="inChValueType-vm">
+			<valueIn>3</valueIn><valueOut>humidity</valueOut>
+			<valueIn>*</valueIn><valueOut>temp</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="inChValue" index=".1.3.6.1.4.1.18248.20.1.2.1.1.2">
+            <type>
+				<mapValue mapid="inChValueType-vm">
+				<getRowOid>.1.3.6.1.4.1.18248.20.1.2.1.1.3</getRowOid>
+				</mapValue>
+			</type>
+            <sensorId>IN_CH_VALUE_<rowIndex/></sensorId>
+            <value>
+				<div>
+					<op>
+						<sub>
+						<op>
+							<mult>
+							<op><getRowOid>.1.3.6.1.4.1.18248.20.1.2.1.1.2</getRowOid></op>
+							<op>0.1</op>
+							</mult>
+						</op>
+						<op>
+							<mapValue mapid="inChValueOffset-vm">
+							<getRowOid>.1.3.6.1.4.1.18248.20.1.2.1.1.3</getRowOid>
+							</mapValue>
+						</op>
+						</sub>
+					</op>
+					<op>
+						<mapValue mapid="inChValueScalar-vm">
+						<getRowOid>.1.3.6.1.4.1.18248.20.1.2.1.1.3</getRowOid>
+						</mapValue>
+					</op>
+				</div>
+            </value>
+            <label>inChValue <rowIndex/></label>
+            <sensorSet>Channels</sensorSet>
+        </numSensor>	
+
+		<stateSensor ruleid="inChStatus" index=".1.3.6.1.4.1.18248.20.1.2.1.1.1">
+            <type>state</type>
+            <sensorId>IN_CH_STATUS_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.18248.20.1.2.1.1.1</getRowOid>
+            </value>
+            <label>inChStatus <rowIndex/></label>
+			<enum>flow_em</enum>
+            <sensorSet>Channels</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="modeWatch" index=".1.3.6.1.4.1.18248.20.1.3.1.1.1">
+            <type>state</type>
+            <sensorId>MODE_WATCH_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.18248.20.1.3.1.1.1</getRowOid>
+            </value>
+            <label>modeWatch <rowIndex/></label>
+			<enum>on_off_em</enum>
+            <sensorSet>Watch</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="limitHi" index=".1.3.6.1.4.1.18248.20.1.3.1.1.2">
+            <type>num</type>
+            <sensorId>LIMIT_HI_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.18248.20.1.3.1.1.2</getRowOid>
+            </value>
+            <label>limitHi <rowIndex/></label>
+            <sensorSet>Watch</sensorSet>
+        </numSensor>	
+
+		<numSensor ruleid="limitLo" index=".1.3.6.1.4.1.18248.20.1.3.1.1.3">
+            <type>num</type>
+            <sensorId>LIMIT_LO_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.18248.20.1.3.1.1.3</getRowOid>
+            </value>
+            <label>limitLo <rowIndex/></label>
+            <sensorSet>Watch</sensorSet>
+        </numSensor>	
+
+		<numSensor ruleid="limitHy" index=".1.3.6.1.4.1.18248.20.1.3.1.1.4">
+            <type>num</type>
+            <sensorId>LIMIT_HY_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.18248.20.1.3.1.1.4</getRowOid>
+            </value>
+            <label>limitHy <rowIndex/></label>
+            <sensorSet>Watch</sensorSet>
+        </numSensor>	
+
+		</device>
+</APC_DDF>

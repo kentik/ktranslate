@@ -1,0 +1,638 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid ="hp_pdu"
+	ddfname="HP PDU"
+	ddfversion="3"
+	canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		ATTENTION
+
+		This DDF is deprecated. All functionality has been merged into hp.xml.
+	-->
+    <device deviceid="hp_pdu_header">
+        <oidMustExist istree="yes" ruleid="hp_device" oid=".1.3.6.1.4.1.232.165"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Hewlett-Packard</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.232.165.1.2.6.0</getOid>
+		</setProductData>
+
+		<!-- Firmware Version -->
+		<setProductData ruleid="appversion" field="appversion">
+			<getOid>.1.3.6.1.4.1.232.165.1.2.3.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="serialnum" field="serial_num">
+			<getOid>.1.3.6.1.4.1.232.165.1.2.7.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="macaddr" field="macaddr">
+			<getOid>.1.3.6.1.4.1.232.165.1.2.8.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="delete_null_sensor">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+	</device>
+
+	<device deviceid="hp_pdu">
+        <oidMustExist istree="yes" ruleid="hp_mpdu_exist" oid=".1.3.6.1.4.1.232.165.2"/>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+	
+		<numSensor ruleid="inputVoltage" index=".1.3.6.1.4.1.232.165.2.2.1.1.2">
+			<type>voltage</type>
+			<sensorId>PDU_INPUT_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.2.1.1.2</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Input Voltage</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="inputCurrent" index=".1.3.6.1.4.1.232.165.2.2.1.1.3">
+			<type>amperage</type>
+			<sensorId>PDU_INPUT_CURRENT<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.2.1.1.3</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Input Current</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduOutputLoad" index=".1.3.6.1.4.1.232.165.2.3.1.1.2">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.2.3.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>PDU_OUTPUT_LOAD<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.1.1.2</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Load</label>
+			<sensorSet>PDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduOutputHeat" index=".1.3.6.1.4.1.232.165.2.3.1.1.3">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.2.3.1.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<units>BTU</units>
+			<sensorId>PDU_OUTPUT_HEAT<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.1.1.3</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Heat</label>
+			<sensorSet>PDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduOutputPower" index=".1.3.6.1.4.1.232.165.2.3.1.1.4">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.2.3.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>PDU_OUTPUT_POWER<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.1.1.4</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Power</label>
+			<sensorSet>PDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduOutputNumBreakers" index=".1.3.6.1.4.1.232.165.2.3.1.1.5">
+			<type>num</type>
+			<sensorId>PDU_OUTPUT_NUM_BREAKERS<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.1.1.5</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Number of Breakers</label>
+			<sensorSet>PDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduBreakerVoltage" index=".1.3.6.1.4.1.232.165.2.3.2.1.2">
+			<type>voltage</type>
+			<sensorId>PDU_BREAKER_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.2.1.2</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Breaker Voltage</label>
+			<sensorSet>PDU Output Breakers</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduBreakerCurrent" index=".1.3.6.1.4.1.232.165.2.3.2.1.3">
+			<type>amperage</type>
+			<sensorId>PDU_BREAKER_CURRENT<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.2.1.3</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Breaker Current</label>
+			<sensorSet>PDU Output Breakers</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="pduBreakerPercentLoad" index=".1.3.6.1.4.1.232.165.2.3.2.1.4">
+			<type>pctofcapacity</type>
+			<sensorId>PDU_BREAKER_PERCENT_LOAD<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.2.3.2.1.4</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PDU <rowIndex/> Output Breaker Load</label>
+			<sensorSet>PDU Output Breakers</sensorSet>
+		</numSensor>
+
+        <stateSensor ruleid="pduBreakerStatus" index=".1.3.6.1.4.1.232.165.2.3.2.1.5">
+            <type>state</type>
+			<sensorId>PDU_BREAKER_STATUS<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="breakerStatus-vm">
+                    <getRowOid>.1.3.6.1.4.1.232.165.2.3.2.1.5</getRowOid>
+                </mapValue>
+            </value>
+			<label>PDU <rowIndex/> Output Breaker Status</label>
+            <enum>breakerStatus-em</enum>
+			<sensorSet>PDU Output Breakers</sensorSet>
+        </stateSensor>
+
+        <valueMap ruleid="breakerStatus-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+            <valueIn>*</valueIn><valueOut>0</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="breakerStatus-em">
+            <label>Unknown</label>
+            <label>Normal</label>
+            <label>Overload Warning</label>
+            <label>Overload Critical</label>
+            <label>Voltage Range Warning</label>
+            <label>Voltage Range Critical</label>
+        </enumMap>
+	</device>
+
+	<device deviceid="hp_mpdu">
+        <oidMustExist istree="yes" ruleid="hp_mpdu_exist" oid=".1.3.6.1.4.1.232.165.5"/>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+		
+		<numSensor ruleid="mpduOutputBreakerRating" index=".1.3.6.1.4.1.232.165.5.2.1.1.3">
+			<type>amperage</type>
+			<sensorId>RATED_OUTPUT_CURRENT_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.3</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Rating</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduOutputPercentLoad" index=".1.3.6.1.4.1.232.165.5.2.1.1.5">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>MPDU_OUTPUT_PERCENT_LOAD<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Load</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduOutputVoltage" index=".1.3.6.1.4.1.232.165.5.2.1.1.6">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MPDU_OUTPUT_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Voltage</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduOutputCurrent" index=".1.3.6.1.4.1.232.165.5.2.1.1.7">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_OUTPUT_CURRENT_<rowNumber/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.7</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Current</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="mpduOutputPowerVA" index=".1.3.6.1.4.1.232.165.5.2.1.1.8">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>_OUTPUT_APPARENT_POWER_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.8</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output VA Load</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="mpduTotalPowerWatt" index=".1.3.6.1.4.1.232.165.5.1.2.1.38">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.1.2.1.38</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>MPDU<rowNumber/>_OUTPUT_POWER_TOTAL</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.1.2.1.38</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPDU <getRowOid>.1.3.6.1.4.1.232.165.5.1.2.1.1</getRowOid> Total Output Power</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="mpduOutputPowerWatt" index=".1.3.6.1.4.1.232.165.5.2.1.1.9">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.9</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Power</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduOutputPowerFactor" index=".1.3.6.1.4.1.232.165.5.2.1.1.10">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.2.1.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>_OUTPUT_POWER_FACTOR_<rowNumber/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.2.1.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>MPDU<space/><rowIndex/><space/>Output Power Factor</label>
+			<sensorSet>MPDU Output</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduSmExtBarOutletRating" index=".1.3.6.1.4.1.232.165.5.4.1.1.4">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.4.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MPDU_SM_EXT_BAR_OUTLET_RATING<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.4.1.1.4</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Extension Bar Outlet <rowIndex/> - Rating</label>
+			<sensorSet>Smart Extension Bar</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduSmExtBarOutletVoltage" index=".1.3.6.1.4.1.232.165.5.4.1.1.5">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.4.1.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>MPDU_SM_EXT_BAR_OUTLET_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.4.1.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Extension Bar Outlet <rowIndex/> - Voltage</label>
+			<sensorSet>Smart Extension Bar</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduSmExtBarOutletCurrent" index=".1.3.6.1.4.1.232.165.5.4.1.1.6">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.4.1.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>MPDU_SM_EXT_BAR_OUTLET_CURRENT<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.4.1.1.6</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Extension Bar Outlet <rowIndex/> - Current</label>
+			<sensorSet>Smart Extension Bar</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduSmExtBarOutletPowerWatt" index=".1.3.6.1.4.1.232.165.5.4.1.1.7">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.4.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>MPDU_SM_EXT_BAR_OUTLET_POWER_WATT<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.232.165.5.4.1.1.7</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Extension Bar Outlet <rowIndex/> - Power</label>
+			<sensorSet>Smart Extension Bar</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="mpduSmExtBarOutletPowerFactor" index=".1.3.6.1.4.1.232.165.5.4.1.1.8">
+		<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.5.4.1.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>MPDU_SM_EXT_BAR_OUTLET_POWER_FACTOR<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.5.4.1.1.8</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Extension Bar Outlet <rowIndex/> - Power Factor</label>
+			<sensorSet>Smart Extension Bar</sensorSet>
+		</numSensor>
+	</device>
+	<device deviceid="hp_pdu2">
+        <oidMustExist istree="yes" ruleid="hp_pdu_exist" oid=".1.3.6.1.4.1.232.165.7"/>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<numSensor ruleid="pdu2InputPowerVA" index=".1.3.6.1.4.1.232.165.7.2.1.1.4">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>PDU2_INPUT_POWER_VA_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.1.1.4</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU <rowIndex/> Input Apparent Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPowerWatts" index=".1.3.6.1.4.1.232.165.7.2.1.1.5">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.1.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>PDU2_INPUT_POWER_WATTS_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.1.1.5</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU <rowIndex/> Input Active Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPowerWattHour" index=".1.3.6.1.4.1.232.165.7.2.1.1.6">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.1.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>PDU2_INPUT_POWER_WATT_HOUR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.1.1.6</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <rowIndex/> Input Energy</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPowerFactor" index=".1.3.6.1.4.1.232.165.7.2.1.1.8">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.1.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>PDU2_INPUT_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.1.1.8</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <rowIndex/> Input Power Factor</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhaseVoltage" index=".1.3.6.1.4.1.232.165.7.2.2.1.3">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>PDU2_INPUT_PHASE_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.3</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Voltage</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhaseCurrent" index=".1.3.6.1.4.1.232.165.7.2.2.1.11">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>PDU2_INPUT_PHASE_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.11</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Current</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhaseCurrentPercentLoad" index=".1.3.6.1.4.1.232.165.7.2.2.1.18">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.18</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PDU2_INPUT_PHASE_CURRENT_PERCENT_LOAD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.18</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Current Percent Load</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhasePowerVA" index=".1.3.6.1.4.1.232.165.7.2.2.1.20">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.20</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerVA</type>
+			<sensorId>PDU2_INPUT_PHASE_POWER_VA_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.20</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Apparent Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhasePowerW" index=".1.3.6.1.4.1.232.165.7.2.2.1.21">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.21</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>PDU2_INPUT_PHASE_POWER_W_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.21</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Active Power</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhasePowerWattHour" index=".1.3.6.1.4.1.232.165.7.2.2.1.22">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.22</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>PDU2_INPUT_PHASE_POWER_WATT_HOUR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.22</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Energy</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="pdu2InputPhasePowerFactor" index=".1.3.6.1.4.1.232.165.7.2.2.1.24">
+			<rowTest>
+				<mapValue mapid="hp_pdu/hp_pdu_header/delete_null_sensor">
+					<getRowOid default="-1">.1.3.6.1.4.1.232.165.7.2.2.1.24</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>num/powerfactor</type>
+			<sensorId>PDU2_INPUT_PHASE_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.232.165.7.2.2.1.24</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>PDU <regex><op>([0-9])+\.([0-9])</op><op><rowIndex/></op><op>%1$s Phase %2$s</op></regex> Input Power Factor</label>
+			<sensorSet>PDU Input</sensorSet>
+		</numSensor>
+	</device>
+
+</APC_DDF>

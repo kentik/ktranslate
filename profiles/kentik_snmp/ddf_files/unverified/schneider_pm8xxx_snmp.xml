@@ -1,0 +1,540 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="schneider_pm8xxx_snmp"
+	ddfname="Schneider PM8000"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="schneider_pm8xxx">
+		<oidMustExist ruleid="schneider_pm8xxx" oid=".1.3.6.1.4.1.3833.1.7.255.57" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Schneider Electric</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+
+		<setProductData ruleid="SerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="FirmwareVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.3.0</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.4.0</getOid>
+		</setProductData>
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.5.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="Ia">
+            <type>amperage</type>
+            <sensorId>CURRENT_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.21.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current A</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ib">
+            <type>amperage</type>
+            <sensorId>CURRENT_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.22.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current B</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ic">
+            <type>amperage</type>
+            <sensorId>CURRENT_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.23.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current C</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Iavg">
+            <type>amperage</type>
+            <sensorId>AVERAGE_CURRENT_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.24.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current 3-Phase Average</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_tot">
+            <type>num/powerKW</type>
+            <sensorId>REAL_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.25.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_tot">
+            <type>num/powerKVAR</type>
+            <sensorId>REACTIVE_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.26.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_tot">
+            <type>num/powerKVA</type>
+            <sensorId>APPARENT_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.27.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="PF_sign_tot">
+            <type>num/powerfactor</type>
+            <sensorId>TOTAL_POWER_FACTOR_2</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.28.0</getOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Power Factor Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vll_ab">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LL_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.29.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage A-B</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vll_bc">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LL_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.30.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage B-C</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vll_ca">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LL_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.31.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage C-A</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vll_avg">
+            <type>voltage</type>
+            <sensorId>AVERAGE_VOLTAGE_LL_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.32.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage L-L Average</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vln_a">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LN_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.33.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage A-N</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vln_b">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LN_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.34.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage B-N</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vln_c">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_LN_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.35.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage C-N</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Vln_avg">
+            <type>voltage</type>
+            <sensorId>AVERAGE_VOLTAGE_LN_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.36.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Voltage L-N Average</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="freq">
+            <type>frequency</type>
+            <sensorId>FREQUENCY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.37.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Frequency</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ia_mx">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_PK_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.38.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current A Demand Peak</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ib_mx">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_PK_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.40.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current B Demand Peak</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ic_mx">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_PK_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.42.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current C Demand Peak</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ia_mean">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.39.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current A Demand Last Interval</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ib_mean">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.41.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current B Demand Last Interval</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="Ic_mean">
+            <type>amperage</type>
+            <sensorId>CURRENT_DEMAND_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.43.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Current C Demand Last Interval</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="kW_sd_mx_del">
+            <type>num/powerKW</type>
+            <sensorId>KW_SD_MX_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.44.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Peak Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_sd_mx_rec">
+            <type>num/powerKW</type>
+            <sensorId>KW_SD_MX_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.45.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Peak Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_sd_mx_d-r">
+            <type>num/powerKW</type>
+            <sensorId>TOTAL_PEAK_POWER_KW_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.46.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Peak Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_sd_del">
+            <type>num/powerKW</type>
+            <sensorId>KW_SD_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.47.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Last Interval Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_sd_rec">
+            <type>num/powerKW</type>
+            <sensorId>KW_SD_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.48.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Last Interval Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kW_sd_d-r">
+            <type>num/powerKW</type>
+            <sensorId>TOTAL_POWER_KW_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.49.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Power Demand Last Interval Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_mx_del">
+            <type>num/powerKVAR</type>
+            <sensorId>KVAR_SD_MX_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.50.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Peak Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_mx_rec">
+            <type>num/powerKVAR</type>
+            <sensorId>KVAR_SD_MX_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.51.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Peak Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_mx_d-r">
+            <type>num/powerKVAR</type>
+            <sensorId>TOTAL_PEAK_POWER_KVAR_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.52.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Peak Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_del">
+            <type>num/powerKVAR</type>
+            <sensorId>KVAR_SD_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.53.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Last Interval Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_rec">
+            <type>num/powerKVAR</type>
+            <sensorId>KVAR_SD_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.54.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Last Interval Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAR_sd_d-r">
+            <type>num/powerKVAR</type>
+            <sensorId>TOTAL_POWER_KVAR_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.55.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Power Demand Last Interval Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_mx_del">
+            <type>num/powerKVA</type>
+            <sensorId>KVA_SD_MX_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.56.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Peak Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_mx_rec">
+            <type>num/powerKVA</type>
+            <sensorId>KVA_SD_MX_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.57.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Peak Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_mx_d-r">
+            <type>num/powerKVA</type>
+            <sensorId>TOTAL_PEAK_POWER_KVA_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.58.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Peak Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_del">
+            <type>num/powerKVA</type>
+            <sensorId>KVA_SD_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.59.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Last Interval Delivered</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_rec">
+            <type>num/powerKVA</type>
+            <sensorId>KVA_SD_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.60.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Last Interval Received</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVA_sd_d-r">
+            <type>num/powerKVA</type>
+            <sensorId>TOTAL_POWER_KVA_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.61.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Power Demand Last Interval Total</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kWh_del">
+            <type>num/kwatthr</type>
+            <sensorId>TOTAL_ENERGY_DEL_KWH_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.62.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Energy Delivered</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kWh_rec">
+            <type>num/kwatthr</type>
+            <sensorId>TOTAL_ENERGY_REC_KWH_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.63.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Energy Received</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kWh_d-r">
+            <type>num/kwatthr</type>
+            <sensorId>KWH_D-R</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.64.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Real Energy Total</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVARh_del">
+            <type>num/kVARhr</type>
+            <sensorId>TOTAL_ENERGY_DEL_KVARH_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.65.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Energy Delivered</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVARh_rec">
+            <type>num/kVARhr</type>
+            <sensorId>TOTAL_ENERGY_REC_KVARH_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.66.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Energy Received</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVARh_d-r">
+            <type>num/kVARhr</type>
+            <sensorId>KVARH_D-R</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.67.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Reactive Energy Total</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAh_del">
+            <type>num/kVAhr</type>
+            <sensorId>KVAH_DEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.68.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Energy Delivered</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAh_rec">
+            <type>num/kVAhr</type>
+            <sensorId>KVAH_REC</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.69.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Energy Received</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kVAh_d-r">
+            <type>num/kVAhr</type>
+            <sensorId>TOTAL_ENERGY_DEL_REC_KVAH_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3833.1.7.255.57.1.70.0</getOid>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Apparent Energy Total</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

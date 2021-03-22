@@ -1,0 +1,1032 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="Uniflair_LEL"
+	ddfname="Uniflair LEL"
+	ddfversion="23"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+  <device deviceid="Uniflair_LEL">
+    <setProductData ruleid="vendordata" field="vendor">Uniflair</setProductData>
+    <setProductData ruleid="modeldata" field="model">LEL</setProductData>
+    <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+	
+	<oidMustExist ruleid="apc_cooling" oid="1.3.6.1.4.1.318.1.1.27" istree="yes" /> 
+	<oidMustMatch ruleid="LE-L" oid=".1.3.6.1.2.1.1.2.0">
+		<valueList>
+			<value>.1.3.6.1.4.1.318.1.3.14.14</value>
+		</valueList>
+	</oidMustMatch>
+	
+    <numSensor ruleid="room_temperature">
+      <type>temp</type>
+      <sensorId>_ROOM_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.2</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Return Air Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="outdoor_temperature">
+      <type>temp</type>
+      <sensorId>_OUTDOOR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.4</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Outdoor Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="delivery_air_temperature">
+      <type>temp</type>
+      <sensorId>_DELIVERY_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.6</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Supply Air Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="chilled_water_temperature_(circ.1)">
+      <type>temp</type>
+      <sensorId>_CHILLED_WATER_TEMPERATURE_(CIRC.1)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.8</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 1 Entering Chilled Water Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hot_water_temperature">
+      <type>temp</type>
+      <sensorId>_HOT_WATER_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.10</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Hot Water Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="room_relative_humidity">
+      <type>humidity</type>
+      <sensorId>_ROOM_RELATIVE_HUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.11</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Return Air Relative Humidity</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="outlet_chilled_water_temperature">
+      <type>temp</type>
+      <sensorId>_OUTLET_CHILLED_WATER_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.13</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 1 Leaving Chilled Water Temperature</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cold_water_valve_ramp_(circ.1)">
+      <type>pctofcapacity</type>
+      <sensorId>_COLD_WATER_VALVE_RAMP_(CIRC.1)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.30</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 1 Chilled Water Valve Position</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hot_water_valve_ramp">
+      <type>pctofcapacity</type>
+      <sensorId>_HOT_WATER_VALVE_RAMP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.31</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Hot Water Valve Ramp</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="evaporating_fan_speed">
+      <type>pctofcapacity</type>
+      <sensorId>_EVAPORATING_FAN_SPEED</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.32</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Evaporating Fan Speed</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="air_filter_run_hours">
+      <type>runhours</type>
+      <sensorId>_AIR_FILTER_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.33</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Air Filter Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="unit_run_hours">
+      <type>runhours</type>
+      <sensorId>_UNIT_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.34</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Unit Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_1_run_hours">
+      <type>runhours</type>
+      <sensorId>_HEATER_1_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.39</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Heater 1 Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heater_2_run_hours">
+      <type>runhours</type>
+      <sensorId>_HEATER_2_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.40</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Heater 2 Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidifier_run_hours">
+      <type>runhours</type>
+      <sensorId>_HUMIDIFIER_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.41</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Humidifier Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cold_water_valve_ramp_(circ._2)">
+      <type>pctofcapacity</type>
+      <sensorId>_COLD_WATER_VALVE_RAMP_(CIRC._2)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.44</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 2 Chilled Water Valve Position</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="chilled_water_temperature_(circ._2)">
+      <type>temp</type>
+      <sensorId>_CHILLED_WATER_TEMPERATURE_(CIRC._2)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.46</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Chilled Water Temperature (Circ. 2)</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="outlet_chilled_water_temperature_(circ.2)_">
+      <type>temp</type>
+      <sensorId>_OUTLET_CHILLED_WATER_TEMPERATURE_(CIRC.2)_</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.48</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Outlet Chilled Water Temperature (Circ.2)</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="water_flow_rate">
+      <type>fluidflow</type>
+      <sensorId>_WATER_FLOW_RATE</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.50</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Water Flow Rate</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="total_cooling_capacity">
+      <type>num/powerKW</type>
+      <sensorId>_TOTAL_COOLING_CAPACITY</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.51</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Total Cooling Capacity</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="freecooling_run_hours">
+      <type>runhours</type>
+      <sensorId>_FREECOOLING_RUN_HOURS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.52</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Freecooling Run Hours</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+	<numSensor ruleid="actual_speed_fan_1">
+      <type>pctofcapacity</type>
+      <sensorId>ACTUAL_SPEED_FAN_1</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.53</getOid>
+      </value>
+	  <valueInc>1</valueInc>
+      <label>Actual Speed Fan 1</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+	<numSensor ruleid="actual_speed_fan_2">
+      <type>pctofcapacity</type>
+      <sensorId>ACTUAL_SPEED_FAN_2</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.54</getOid>
+      </value>
+	  <valueInc>1</valueInc>
+      <label>Actual Speed Fan 2</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+	<numSensor ruleid="actual_speed_fan_3">
+      <type>pctofcapacity</type>
+      <sensorId>ACTUAL_SPEED_FAN_3</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.55</getOid>
+      </value>
+	  <valueInc>1</valueInc>
+      <label>Actual Speed Fan 3</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+	<numSensor ruleid="actual_speed_fan_4">
+      <type>pctofcapacity</type>
+      <sensorId>ACTUAL_SPEED_FAN_4</sensorId>
+      <value>
+        <getOid>1.3.6.1.4.1.318.1.1.27.1.4.1.2.1.3.1.56</getOid>
+      </value>
+	  <valueInc>1</valueInc>
+      <label>Actual Speed Fan 4</label>
+      <sensorSet>Status - Analog</sensorSet>
+    </numSensor>
+
+	<valueMap ruleid="off_on_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="off_on_em">
+		<label>OFF</label>
+		<label>ON</label>
+	</enumMap>	
+		
+    <stateSensor ruleid="system_on_fan">
+      <type>state</type>
+      <sensorId>_SYSTEM_ON_(FAN)</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.1</getOid>
+        </mapValue>
+      </value>
+      <label>System On (Fan)</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="electric_heater_1">
+      <type>state</type>
+      <sensorId>_ELECTRIC_HEATER_1</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.6</getOid>
+        </mapValue>
+      </value>
+      <label>Electric Heater 1</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="electric_heater_2">
+      <type>state</type>
+      <sensorId>_ELECTRIC_HEATER_2</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.7</getOid>
+        </mapValue>
+      </value>
+      <label>Electric Heater 2</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="dehumidification">
+      <type>state</type>
+      <sensorId>_DEHUMIDIFICATION</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.8</getOid>
+        </mapValue>
+      </value>
+      <label>Dehumidification</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidification">
+      <type>state</type>
+      <sensorId>_HUMIDIFICATION</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.4.2.2.1.4.1.9</getOid>
+        </mapValue>
+      </value>
+      <label>Humidification</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status - Discrete</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="cooling_setpoint_-_return_air_temperature">
+      <type>temp</type>
+      <sensorId>_COOLING_SETPOINT_-_RETURN_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.2</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Return Air Temperature Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cooling_setpoint_-_delivery_air_temperature">
+      <type>temp</type>
+      <sensorId>_COOLING_SETPOINT_-_DELIVERY_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.4</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Supply Air Temperature Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cooling_sensitivity_-_return_air_temperature">
+      <type>num</type>
+      <units>diffdegreeC</units>
+      <sensorId>_COOLING_SENSITIVITY_-_RETURN_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.6</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Return Air Temperature Sensitivity</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cooling_sensitivity_-_delivery_air_temperature">
+      <type>num</type>
+      <units>diffdegreeC</units>
+      <sensorId>_COOLING_SENSITIVITY_-_DELIVERY_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.8</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Supply Air Temperature Sensitivity</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="second_cooling_setpoint_return_air_temperature">
+      <type>temp</type>
+      <sensorId>_SECOND_COOLING_SETPOINT_RETURN_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.10</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Second Return Air Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="second_cooling_delivery_air_temperature">
+      <type>temp</type>
+      <sensorId>_SECOND_COOLING_DELIVERY_AIR_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.12</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Supply Air Temperature Second Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heating_setpoint">
+      <type>temp</type>
+      <sensorId>_HEATING_SETPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.14</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Reheat Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="second_heating_setpoint">
+      <type>temp</type>
+      <sensorId>_SECOND_HEATING_SETPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.16</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Second Reheat Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="heating_sensitivity">
+      <type>num</type>
+      <units>diffdegreeC</units>
+      <sensorId>_HEATING_SENSITIVITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.18</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Heating Sensitivity</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_room_temperature_alarm_threshold">
+      <type>temp</type>
+      <sensorId>_HIGH_ROOM_TEMPERATURE_ALARM_THRESHOLD</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.20</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Return Air Temperature High Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor> 
+    <numSensor ruleid="low_room_temperature_alarm_threshold">
+      <type>temp</type>
+      <sensorId>_LOW_ROOM_TEMPERATURE_ALARM_THRESHOLD</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.22</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Return Air Temperature Low Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="setback_mode:_cooling_setpoint">
+      <type>temp</type>
+      <sensorId>_SETBACK_MODE:_COOLING_SETPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.24</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Sleep Mode: Cooling Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="setback_mode:_heating_setpoint">
+      <type>temp</type>
+      <sensorId>_SETBACK_MODE:_HEATING_SETPOINT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.26</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Sleep Mode: Heating Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cw_setpoint_to_start_dehumidification">
+      <type>temp</type>
+      <sensorId>_CW_SETPOINT_TO_START_DEHUMIDIFICATION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.28</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>CW Threshold To Start Dehumidification</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cw_high_temperature_alarm_threshold_(circ._1)">
+      <type>temp</type>
+      <sensorId>_CW_HIGH_TEMPERATURE_ALARM_THRESHOLD_(CIRC._1)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.30</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 1 Entering Chilled Water High Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cw_setpoint_to_start_cw_operating_mode">
+      <type>temp</type>
+      <sensorId>_CW_SETPOINT_TO_START_CW_OPERATING_MODE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.32</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>CW Setpoint To Start CW Operating Mode</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="radcooler_setpoint_in_energy_saving_mode">
+      <type>temp</type>
+      <sensorId>_RADCOOLER_SETPOINT_IN_ENERGY_SAVING_MODE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.34</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Radcooler Setpoint In Energy Saving Mode</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="cw_high_temperature_alarm_threshold_(circ._2)">
+      <type>temp</type>
+      <sensorId>_CW_HIGH_TEMPERATURE_ALARM_THRESHOLD_(CIRC._2)</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.36</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Circuit 2 Entering Chilled Water High Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="radcooler_setpoint_in_dx_mode">
+      <type>temp</type>
+      <sensorId>_RADCOOLER_SETPOINT_IN_DX_MODE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.36</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label>Radcooler Setpoint In DX Mode</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dehumidification_proportional_band_(relative)">
+      <type>humidity</type>
+      <sensorId>_DEHUMIDIFICATION_PROPORTIONAL_BAND_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.41</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Dehumidification Proportional Band</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidification_proportional_band_(relative)">
+      <type>humidity</type>
+      <sensorId>_HUMIDIFICATION_PROPORTIONAL_BAND_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.42</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Humidification Proportional Band</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="high_humidity_alarm_threshold_(relative)">
+      <type>humidity</type>
+      <sensorId>_HIGH_HUMIDITY_ALARM_THRESHOLD_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.43</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>High Humidity Alarm Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="low_humidity_alarm_threshold_(relative)">
+      <type>humidity</type>
+      <sensorId>_LOW_HUMIDITY_ALARM_THRESHOLD_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.44</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Low Humidity Alarm Threshold</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dehumidification_setpoint_(relative)">
+      <type>humidity</type>
+      <sensorId>_DEHUMIDIFICATION_SETPOINT_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.45</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Dehumidification Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="setback__mode:_dehumidification_setpoint_(relative)">
+      <type>humidity</type>
+      <sensorId>_SETBACK__MODE:_DEHUMIDIFICATION_SETPOINT_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.46</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Sleep Mode: Dehumidification Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="humidification_setpoint_(relative)">
+      <type>humidity</type>
+      <sensorId>_HUMIDIFICATION_SETPOINT_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.47</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Humidification Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="setback__mode:_humidification_setpoint_(relative)">
+      <type>humidity</type>
+      <sensorId>_SETBACK__MODE:_HUMIDIFICATION_SETPOINT_(RELATIVE)</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.48</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Sleep Mode: Humidification Setpoint</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="temp/hum._alarms_delay:_normal_working_">
+      <type>timeinsec</type>
+      <sensorId>_TEMP/HUM._ALARMS_DELAY:_NORMAL_WORKING_</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.50</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Temp/Hum. Alarms Delay: Normal Working</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="stand-by_cycle_base_time">
+      <type>timeinhrs</type>
+      <sensorId>_STAND-BY_CYCLE_BASE_TIME</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.51</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Unit Rotation Time</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="number_of_lan_units">
+      <type>num</type>
+      <sensorId>_NUMBER_OF_LAN_UNITS</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.52</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Number Of LAN Units</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+    <numSensor ruleid="sleep_mode_fan_cycle_time">
+      <type>timeinmin</type>
+      <sensorId>_SLEEP_MODE_FAN_CYCLE_TIME</sensorId>
+      <value>
+            <getOid>1.3.6.1.4.1.318.1.1.27.1.5.1.2.1.3.1.53</getOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Sleep Mode Fan Cycle Time</label>
+      <sensorSet>Config - Analog</sensorSet>
+    </numSensor>
+	
+    <stateSensor ruleid="dx/cw_switch_on_tc_units">
+      <type>state</type>
+      <sensorId>_DX/CW_SWITCH_ON_TC_UNITS</sensorId>
+      <value>
+        <mapValue mapid="dx_cv_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.1</getOid>
+        </mapValue>
+      </value>
+      <label>DX/CW Switch On TC Units</label>
+      <enum>dx_cv_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="unit_standby/on">
+      <type>state</type>
+      <sensorId>_UNIT_STANDBY/ON</sensorId>
+      <value>
+        <mapValue mapid="standby_on_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.2</getOid>
+        </mapValue>
+      </value>
+      <label>Unit Standby/On</label>
+      <enum>standby_on_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <!-- <stateSensor ruleid="air_filter_run_hours_reset">
+      <type>state</type>
+      <sensorId>_AIR_FILTER_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.3</getOid>
+        </mapValue>
+      </value>
+      <label>Air Filter Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>State Sensor</sensorSet>
+    </stateSensor> -->
+    <stateSensor ruleid="heater_1_run_hours_reset">
+      <type>state</type>
+      <sensorId>_HEATER_1_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.12</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 1 Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heater_2_run_hours_reset">
+      <type>state</type>
+      <sensorId>_HEATER_2_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.13</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 2 Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heater_1_cycle_counter_reset">
+      <type>state</type>
+      <sensorId>_HEATER_1_CYCLE_COUNTER_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.14</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 1 Cycle Counter Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="heater_2_cycle_counter_reset">
+      <type>state</type>
+      <sensorId>_HEATER_2_CYCLE_COUNTER_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.15</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 2 Cycle Counter Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidifier_run_hours_reset">
+      <type>state</type>
+      <sensorId>_HUMIDIFIER_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.16</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="humidifier_cycle_counter_reset">
+      <type>state</type>
+      <sensorId>_HUMIDIFIER_CYCLE_COUNTER_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.17</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier Cycle Counter Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <!-- <stateSensor ruleid="unit_run_hours_reset">
+      <type>state</type>
+      <sensorId>_UNIT_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.18</getOid>
+        </mapValue>
+      </value>
+      <label>Unit Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>State Sensor</sensorSet>
+    </stateSensor> -->
+    <stateSensor ruleid="setback_mode_(sleep_mode)">
+      <type>state</type>
+      <sensorId>_SETBACK_MODE_(SLEEP_MODE)</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.19</getOid>
+        </mapValue>
+      </value>
+      <label>Sleep Mode</label>
+      <enum>disableEnable-em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="sleep_mode_test">
+      <type>state</type>
+      <sensorId>_SLEEP_MODE_TEST</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.20</getOid>
+        </mapValue>
+      </value>
+      <label>Sleep Mode Fan Cycle</label>
+      <enum>disableEnable-em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="local/mean_usage_of_values">
+      <type>state</type>
+      <sensorId>_LOCAL/MEAN_USAGE_OF_VALUES</sensorId>
+      <value>
+        <mapValue mapid="local_mean_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.21</getOid>
+        </mapValue>
+      </value>
+      <label>Sensor Values Used</label>
+      <enum>local_mean_em</enum>
+      <sensorSet>Config - Discrete</sensorSet>
+    </stateSensor>
+    <!-- <stateSensor ruleid="freecooling_run_hours_reset">
+      <type>state</type>
+      <sensorId>_FREECOOLING_RUN_HOURS_RESET</sensorId>
+      <value>
+        <mapValue mapid="reset_vm">
+          <getOid>1.3.6.1.4.1.318.1.1.27.1.5.2.2.1.4.1.22</getOid>
+        </mapValue>
+      </value>
+      <label>Freecooling Run Hours Reset</label>
+      <enum>reset_em</enum>
+      <sensorSet>State Sensor</sensorSet>
+    </stateSensor> -->
+
+	<valueMap ruleid="dx_cv_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="dx_cv_em">
+		<label>DX</label>
+		<label>CW</label>
+	</enumMap>		
+	
+	<valueMap ruleid="reset_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="reset_em">
+		<label>Not Reset</label>
+		<label>Reset</label>
+	</enumMap>
+	
+	<valueMap ruleid="local_mean_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="local_mean_em">
+		<label>Local</label>
+		<label>Mean</label>
+	</enumMap> 
+
+	<valueMap ruleid="standby_on_vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>4</valueOut>
+		<valueIn>5</valueIn><valueOut>5</valueOut>
+		<valueIn>*</valueIn><valueOut>6</valueOut>
+	</valueMap>
+	<enumMap ruleid="standby_on_em">
+		<label>Standby</label>
+		<label>ON</label>
+		<label>Forced Off</label>
+		<label>Forced On</label>
+		<label>Remote On/Off Control</label>
+		<label>Group Control</label>
+		<label>Unknown</label>
+	</enumMap>				
+
+	<enumMap ruleid="disableEnable-em">
+		<label>Disabled</label>
+		<label>Enabled</label>
+	</enumMap>				
+	
+  </device>
+</APC_DDF>

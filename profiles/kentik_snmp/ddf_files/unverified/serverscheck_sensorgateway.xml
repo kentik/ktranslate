@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="serverscheck_sensorgateway"
+	ddfname="ServersCheck Sensor Gateway"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="serverscheck_sensorgateway">
+
+		<!--
+		ATTENTION
+
+		This DDF is a template. It must be modified according to customer
+		specifications re: sensor types prior to being distributed.
+
+		Save a copy first before making any modifications.
+		-->
+
+		<oidMustExist ruleid="serverscheck" oid=".1.3.6.1.4.1.17095" istree="yes" />
+
+		<setProductData ruleid="vendordata" field="vendor">Serverscheck</setProductData>
+		<setProductData ruleid="modeldata" field="model">Sensor Gateway</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<setProductData ruleid="productversion" field="appversion">
+			<getOid>.1.3.6.1.4.1.17095.1.2.0</getOid>
+		</setProductData>
+		<setLocationData ruleid="productuserloc" field="LOCATION">
+			<getOid>.1.3.6.1.4.1.17095.1.5.0</getOid>
+		</setLocationData>
+
+		<valueMap ruleid="deleteNull-vm">
+			<valueIn>-</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="sensor1">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.3.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>SENSOR_1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.3.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.3.1.0</getOid></label>
+			<sensorSet>Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.3.6.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>SENSOR_2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.3.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.3.5.0</getOid></label>
+			<sensorSet>Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.3.10.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>SENSOR_3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.3.10.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.3.9.0</getOid></label>
+			<sensorSet>Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.3.14.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>SENSOR_4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.3.14.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.3.13.0</getOid></label>
+			<sensorSet>Sensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sensor5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.3.18.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>SENSOR_5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.3.18.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.3.17.0</getOid></label>
+			<sensorSet>Sensor</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="input1">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.2.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.1.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.5.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.4.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.8.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.8.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.7.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.11.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.11.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.10.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.14.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.14.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.13.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input6">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.17.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.17.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.16.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.20.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.20.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.19.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.23.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.23.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.22.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input9">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.26.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_9</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.26.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.25.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input10">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.29.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_10</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.29.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.28.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input11">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.32.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_11</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.32.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.31.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input12">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.35.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_12</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.35.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.34.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input13">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_13</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.38.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.37.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input14">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.41.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_14</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.41.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.40.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input15">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.44.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_15</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.44.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.43.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="input16">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getOid>.1.3.6.1.4.1.17095.6.47.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>num</type>
+			<sensorId>INPUT_16</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.17095.6.47.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getOid>.1.3.6.1.4.1.17095.6.46.0</getOid></label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+
+		<!--
+		<numSensor ruleid="internal_temp">
+			<type>temp</type>
+			<units />
+			<sensorId>_INTERNAL_TEMP</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.17095.3.2.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Internal temp</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="temperature">
+			<type>temp</type>
+			<units />
+			<sensorId>_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.17095.3.5.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Temperature</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="humidity">
+			<type>humidity</type>
+			<units />
+			<sensorId>_HUMIDITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.17095.3.10.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Humidity</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dew_point">
+			<type>num</type>
+			<units />
+			<sensorId>_DEW_POINT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.17095.3.14.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Dew point</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<numSensor ruleid="ext._temp">
+			<type>temp</type>
+			<units />
+			<sensorId>_EXT._TEMP</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.17095.3.10.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Ext. temp</label>
+			<sensorSet>Generic</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="water_detect">
+			<type>state</type>
+			<sensorId>_WATER_DETECT</sensorId>
+			<value>
+				<mapValue mapid="water_detect_vm">
+					<getOid>.1.3.6.1.4.1.17095.3.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>Water detect</label>
+			<enum>water_detect_em</enum>
+			<sensorSet>Generic</sensorSet>
+		</stateSensor>
+		<stringSensor ruleid="device_name">
+			<type>string</type>
+			<units />
+			<sensorId>_DEVICE_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.2.1.1.5.0</getOid>
+				</op>
+			</value>
+			<label>Device name</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="device_location">
+			<type>string</type>
+			<units />
+			<sensorId>_DEVICE_LOCATION</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.2.1.1.6.0</getOid>
+				</op>
+			</value>
+			<label>Device location</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="ip_address">
+			<type>string</type>
+			<units />
+			<sensorId>_IP_ADDRESS</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.17095.1.6.0</getOid>
+				</op>
+			</value>
+			<label>Ip address</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="primary_dns">
+			<type>string</type>
+			<units />
+			<sensorId>_PRIMARY_DNS</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.17095.1.8.0</getOid>
+				</op>
+			</value>
+			<label>Primary dns</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="secondary_dns">
+			<type>string</type>
+			<units />
+			<sensorId>_SECONDARY_DNS</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.17095.1.9.0</getOid>
+				</op>
+			</value>
+			<label>Secondary dns</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="firmware_version">
+			<type>string</type>
+			<units />
+			<sensorId>_FIRMWARE_VERSION</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.17095.1.2.0</getOid>
+				</op>
+			</value>
+			<label>Firmware version</label>
+			<sensorSet>Generic</sensorSet>
+		</stringSensor>
+		<valueMap ruleid="water_detect_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="water_detect_em">
+			<label>Dry</label>
+			<label>Wet</label>
+		</enumMap>
+		-->
+
+	</device>
+</APC_DDF>

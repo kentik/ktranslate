@@ -1,0 +1,3045 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="keysource_ecofris_62040_2"
+	ddfname="Keysource Ecofris 62040(2)"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="keysource_ecofris_62040_2">
+		<setProductData ruleid="vendordata" field="vendor">Keysource</setProductData>
+		<setProductData ruleid="modeldata" field="model">Ecofris 62040</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="ecofris62040-2" oid=".1.3.6.1.4.1.4131.1.6.6" istree="yes" />
+
+		<numSensor ruleid="phcm-1-1">
+			<type>num</type>
+			<units>liters</units>
+			<sensorId>PHCM_1-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.1</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Water Usage</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="phcm-1-2">
+			<type>state</type>
+			<sensorId>PHCM_1-2</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.2</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Secondary CW Pump 1 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-1-3">
+			<type>state</type>
+			<sensorId>PHCM_1-3</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.3</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Secondary CW Pump 2 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-1-4">
+			<type>state</type>
+			<sensorId>PHCM_1-4</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.4</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Pump 1 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-1-5">
+			<type>state</type>
+			<sensorId>PHCM_1-5</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.5</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Pump 2 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="phcm-1-6">
+			<type>num</type>
+			<units></units>
+			<sensorId>PHCM_1-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.6</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Alarm Level</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="phcm-1-7">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.7</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Common Alarm Secondary Pump 1</activeText>
+					<inactiveText>PHCM: Common Alarm Secondary Pump 1 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Common Alarm Secondary Pump 1 condition exists.</activeText>
+					<inactiveText>PHCM: Common Alarm Secondary Pump 1 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-1-8">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.8</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Common Alarm Secondary Pump 2</activeText>
+					<inactiveText>PHCM: Common Alarm Secondary Pump 2 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Common Alarm Secondary Pump 2 condition exists.</activeText>
+					<inactiveText>PHCM: Common Alarm Secondary Pump 2 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-1-9">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.9</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Critical + Offline Alarm</activeText>
+					<inactiveText>PHCM: Critical + Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Critical + Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Critical + Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-1-10">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.10</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Common Alarm ADC Pump 1</activeText>
+					<inactiveText>PHCM: Common Alarm ADC Pump 1 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Common Alarm ADC Pump 1 condition exists.</activeText>
+					<inactiveText>PHCM: Common Alarm ADC Pump 1 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-1-11">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.1.1.3.11</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Common Alarm ADC Pump 2</activeText>
+					<inactiveText>PHCM: Common Alarm ADC Pump 2 Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Common Alarm ADC Pump 2 condition exists.</activeText>
+					<inactiveText>PHCM: Common Alarm ADC Pump 2 condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<numSensor ruleid="phcm-2-1">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.1</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Control Panel Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-2">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.2</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Inlet Water Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-3">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.3</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Outlet Water Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-4">
+			<type>num</type>
+			<units></units>
+			<sensorId>PHCM_2-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.4</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Secondary CW Pump 1 DP</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-5">
+			<type>num</type>
+			<units></units>
+			<sensorId>PHCM_2-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.5</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Secondary CW Pump 2 DP</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-6">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.6</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: RAHU Supply Water Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-7">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.7</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: RAHU Return Water Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-8">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.8</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: RAHU Bypass Valve Demand</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-9">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-9</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.9</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Secondary CW Pump 1 Speed</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-10">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-10</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.10</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Secondary CW Pump 2 Speed</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-11">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-11</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.11</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Heat Exchanger Sec. Inlet Temp</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-12">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-12</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.12</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Heat Exchanger Sec. Outlet Temp</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-13">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-13</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.13</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Ambient Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-14">
+			<type>humidity</type>
+			<units></units>
+			<sensorId>PHCM_2-14</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.14</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Ambient Humidity</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-15">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-15</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.15</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Air Off Temperature</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-16">
+			<type>humidity</type>
+			<units></units>
+			<sensorId>PHCM_2-16</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.16</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Air Off Humidity</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-17">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-17</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.17</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Spray Bar 1 Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-18">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-18</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.18</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Spray Bar 2 Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-19">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-19</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.19</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Spray Bar 3 Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-20">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-20</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.20</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Spray Bar 4 Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-21">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-21</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.21</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Mains Water Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-22">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>PHCM_2-22</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.22</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Spray Bar 5 Pressure</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-23">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-23</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.23</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Demand</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="phcm-2-24">
+			<type>state</type>
+			<sensorId>PHCM_2-24</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.24</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Panel Fan Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-25">
+			<type>state</type>
+			<sensorId>PHCM_2-25</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.25</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Bar 1 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-26">
+			<type>state</type>
+			<sensorId>PHCM_2-26</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.26</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Bar 2 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-27">
+			<type>state</type>
+			<sensorId>PHCM_2-27</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.27</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Bar 3 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-28">
+			<type>state</type>
+			<sensorId>PHCM_2-28</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.28</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Bar 4 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-29">
+			<type>state</type>
+			<sensorId>PHCM_2-29</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.29</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: RAHU 1 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-30">
+			<type>state</type>
+			<sensorId>PHCM_2-30</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.30</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Fans Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-31">
+			<type>state</type>
+			<sensorId>PHCM_2-31</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.31</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Secondary CW Pump 1 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-32">
+			<type>state</type>
+			<sensorId>PHCM_2-32</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.32</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Secondary CW Pump 2 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-33">
+			<type>state</type>
+			<sensorId>PHCM_2-33</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.33</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Water Tank Outlet Drain Valve</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-34">
+			<type>state</type>
+			<sensorId>PHCM_2-34</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.34</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Adiabatic HP Drain Valve</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="phcm-2-35">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-35</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.35</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Fan Demand</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-36">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-36</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.36</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: Secondary CW Pump Speed Offset</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="phcm-2-37">
+			<type>state</type>
+			<sensorId>PHCM_2-37</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.37</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="phcm-2-38">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-38</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.38</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Adiabatic Pump 1 Speed</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-39">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>PHCM_2-39</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.39</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Adiabatic Pump 2 Speed</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<numSensor ruleid="phcm-2-40">
+			<type>temp</type>
+			<units></units>
+			<sensorId>PHCM_2-40</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.40</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>PHCM: ADC Water Temperature Setpoint</label>
+			<sensorSet>PHCM</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="phcm-2-41">
+			<type>state</type>
+			<sensorId>PHCM_2-41</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.41</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Pump Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-42">
+			<type>state</type>
+			<sensorId>PHCM_2-42</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.42</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Adiabatic Water Demand Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-43">
+			<type>state</type>
+			<sensorId>PHCM_2-43</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.43</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: ADC Spray Bar 5 Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-44">
+			<type>state</type>
+			<sensorId>PHCM_2-44</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.44</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: PHCM Water Tank Outlet (Pump Fill) Valve Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-45">
+			<type>state</type>
+			<sensorId>PHCM_2-45</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.45</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: PHCM Water Tank Inlet Fill Valve Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-46">
+			<type>state</type>
+			<sensorId>PHCM_2-46</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.46</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Water Tank Inlet Drain Valve</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-47">
+			<type>state</type>
+			<sensorId>PHCM_2-47</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.47</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Dosing Pump Enable Pulse</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-48">
+			<type>state</type>
+			<sensorId>PHCM_2-48</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.48</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: UV Filter Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-49">
+			<type>state</type>
+			<sensorId>PHCM_2-49</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.49</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Elevated Supply Air Temp Mode</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="phcm-2-50">
+			<type>state</type>
+			<sensorId>PHCM_2-50</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.50</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Adiabatic Water Supply Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="phcm-2-51">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.51</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Control Panel Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: Control Panel Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Control Panel Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Control Panel Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-52">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.52</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Inlet Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Inlet Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Inlet Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Inlet Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-53">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.53</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Outlet Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Outlet Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Outlet Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Outlet Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-54">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.54</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 1 Differential Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 Differential Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 1 Differential Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 Differential Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-55">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.55</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 2 Differential Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 Differential Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 2 Differential Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 Differential Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-56">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.56</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU Supply Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: RAHU Supply Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU Supply Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: RAHU Supply Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-57">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.57</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU Return Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: RAHU Return Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU Return Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: RAHU Return Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-58">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.58</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Heat Exchanger Primary Circuit Inlet Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: Heat Exchanger Primary Circuit Inlet Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Heat Exchanger Primary Circuit Inlet Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Heat Exchanger Primary Circuit Inlet Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-59">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.59</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Heat Exchanger Primary Circuit Outlet Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: Heat Exchanger Primary Circuit Outlet Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Heat Exchanger Primary Circuit Outlet Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Heat Exchanger Primary Circuit Outlet Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-60">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.60</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Heat Exchanger Secondary Circuit Inlet Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: Heat Exchanger Secondary Circuit Inlet Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Heat Exchanger Secondary Circuit Inlet Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Heat Exchanger Secondary Circuit Inlet Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-61">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.61</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU Bypass Water Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: RAHU Bypass Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU Bypass Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: RAHU Bypass Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-62">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.62</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Expansion Board 1 Offline Alarm</activeText>
+					<inactiveText>PHCM: Expansion Board 1 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Expansion Board 1 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Expansion Board 1 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-63">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.63</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Expansion Board 2 Offline Alarm</activeText>
+					<inactiveText>PHCM: Expansion Board 2 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Expansion Board 2 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Expansion Board 2 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-64">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.64</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Ambient Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Ambient Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Ambient Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Ambient Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-65">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.65</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Ambient Humidity Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Ambient Humidity Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Ambient Humidity Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Ambient Humidity Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-66">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.66</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Air Off Temperature Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Air Off Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Air Off Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Air Off Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-67">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.67</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Air Off Humidity Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Air Off Humidity Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Air Off Humidity Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Air Off Humidity Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-68">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.68</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Expansion Board 3 Offline Alarm</activeText>
+					<inactiveText>PHCM: Expansion Board 3 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Expansion Board 3 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Expansion Board 3 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-69">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.69</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 1 Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 1 Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-70">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.70</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 2 Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 2 Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-71">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.71</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 3 Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 3 Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-72">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.72</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 4 Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 4 Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-73">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.73</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Expansion Board 4 Offline Alarm</activeText>
+					<inactiveText>PHCM: Expansion Board 4 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Expansion Board 4 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Expansion Board 4 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-74">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.74</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Mains Water Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: Mains Water Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Mains Water Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Mains Water Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-75">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.75</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary Circuit Water Pressure Fail</activeText>
+					<inactiveText>PHCM: Secondary Circuit Water Pressure Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary Circuit Water Pressure Fail condition exists.</activeText>
+					<inactiveText>PHCM: Secondary Circuit Water Pressure Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-76">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.76</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Primary CW Circuit Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: Primary CW Circuit Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Primary CW Circuit Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: Primary CW Circuit Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-77">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.77</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 1 Inverter Fault</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 Inverter Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 1 Inverter Fault condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 Inverter Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-78">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.78</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 2 Inverter Fault</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 Inverter Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 2 Inverter Fault condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 Inverter Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-79">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.79</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Non-Critical Alarm</activeText>
+					<inactiveText>PHCM: Non-Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Non-Critical Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Non-Critical Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-80">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.80</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Critical Alarm</activeText>
+					<inactiveText>PHCM: Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Critical Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Critical Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-81">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.81</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Dosing Pump Unit Fault</activeText>
+					<inactiveText>PHCM: Dosing Pump Unit Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Dosing Pump Unit Fault condition exists.</activeText>
+					<inactiveText>PHCM: Dosing Pump Unit Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-82">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.82</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Adiabatic Circuit 2 No Adiabatic Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Adiabatic Circuit 2 No Adiabatic Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Adiabatic Circuit 2 No Adiabatic Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Adiabatic Circuit 2 No Adiabatic Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-83">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.83</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: UV Filter Unit Fault</activeText>
+					<inactiveText>PHCM: UV Filter Unit Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: UV Filter Unit Fault condition exists.</activeText>
+					<inactiveText>PHCM: UV Filter Unit Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-84">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.84</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Adiabatic Circuit 1 No Adiabatic Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Adiabatic Circuit 1 No Adiabatic Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Adiabatic Circuit 1 No Adiabatic Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Adiabatic Circuit 1 No Adiabatic Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-85">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.85</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Major Alarm (Critical Shutdown)</activeText>
+					<inactiveText>PHCM: ADC Major Alarm (Critical Shutdown) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Major Alarm (Critical Shutdown) condition exists.</activeText>
+					<inactiveText>PHCM: ADC Major Alarm (Critical Shutdown) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-86">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.86</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Minor Alarm (Non-Critical)</activeText>
+					<inactiveText>PHCM: ADC Minor Alarm (Non-Critical) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Minor Alarm (Non-Critical) condition exists.</activeText>
+					<inactiveText>PHCM: ADC Minor Alarm (Non-Critical) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-87">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.87</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Primary Circuit Pressurization Unit Alarm</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Primary Circuit Pressurization Unit Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-88">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.88</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary Circuit Pressurization Unit Alarm</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary Circuit Pressurization Unit Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-89">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.89</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Control Panel High/Low Temperature Alarm</activeText>
+					<inactiveText>PHCM: Control Panel High/Low Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Control Panel High/Low Temperature Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Control Panel High/Low Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-90">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.90</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 1 DP Alarm</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 DP Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 1 DP Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 1 DP Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-91">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.91</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary CW Circuit Pump 2 DP Alarm</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 DP Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary CW Circuit Pump 2 DP Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Secondary CW Circuit Pump 2 DP Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-92">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.92</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU 1 Offline Alarm</activeText>
+					<inactiveText>PHCM: RAHU 1 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU 1 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: RAHU 1 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-93">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.93</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU 2 Offline Alarm</activeText>
+					<inactiveText>PHCM: RAHU 2 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU 2 Offline Alarm condition exists.</activeText>
+					<inactiveText>PHCM: RAHU 2 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-94">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.94</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 1 Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 1 Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-95">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.95</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 2 Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 2 Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-96">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.96</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 3 Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 3 Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-97">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.97</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 4 Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 4 Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-98">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.98</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 5 Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 5 Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-99">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.99</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Mains Water Pipework Trace Heating Fault</activeText>
+					<inactiveText>PHCM: Mains Water Pipework Trace Heating Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Mains Water Pipework Trace Heating Fault condition exists.</activeText>
+					<inactiveText>PHCM: Mains Water Pipework Trace Heating Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-100">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.100</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Softener Fault</activeText>
+					<inactiveText>PHCM: Water Softener Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Softener Fault condition exists.</activeText>
+					<inactiveText>PHCM: Water Softener Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="phcm-2-101">
+			<type>state</type>
+			<sensorId>PHCM_2-101</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.101</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Water Tank Low Level Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="phcm-2-102">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.102</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Outlet (Pump Fill) Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Outlet (Pump Fill) Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Outlet (Pump Fill) Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Outlet (Pump Fill) Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-103">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.103</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Preferred Supply Phase Failure Alarm</activeText>
+					<inactiveText>PHCM: Preferred Supply Phase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Preferred Supply Phase Failure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Preferred Supply Phase Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-104">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.104</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Backup Supply Phase Failure Alarm</activeText>
+					<inactiveText>PHCM: Backup Supply Phase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Backup Supply Phase Failure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Backup Supply Phase Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-105">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.105</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Not Filling Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Not Filling Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Not Filling Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Not Filling Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-106">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.106</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Inlet Fill Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Inlet Fill Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Inlet Fill Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Inlet Fill Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-107">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.107</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Dosing Tank Low Level Alarm</activeText>
+					<inactiveText>PHCM: Dosing Tank Low Level Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Dosing Tank Low Level Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Dosing Tank Low Level Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<stateSensor ruleid="phcm-2-108">
+			<type>state</type>
+			<sensorId>PHCM_2-108</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.108</getOid>
+				</mapValue>
+			</value>
+			<label>PHCM: Water Tank High Level Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>PHCM</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="phcm-2-109">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.109</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 5 Pressure Sensor Fail</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 5 Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-110">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.110</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Low Level Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Low Level Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Low Level Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Low Level Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-111">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.111</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Primary Circuit Pressurization Unit Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Primary Circuit Pressurization Unit Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-112">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.112</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary Circuit Pressurization Unit Low Pressure Alarm</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary Circuit Pressurization Unit Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-113">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.113</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Primary Circuit Pressurization Unit High Pressure Alarm</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit High Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Primary Circuit Pressurization Unit High Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Primary Circuit Pressurization Unit High Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-114">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.114</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Secondary Circuit Pressurization Unit High Pressure Alarm</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit High Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Secondary Circuit Pressurization Unit High Pressure Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Secondary Circuit Pressurization Unit High Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-115">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.115</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Adiabatic Pump 1 Inverter Fault</activeText>
+					<inactiveText>PHCM: Adiabatic Pump 1 Inverter Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Adiabatic Pump 1 Inverter Fault condition exists.</activeText>
+					<inactiveText>PHCM: Adiabatic Pump 1 Inverter Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-116">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.116</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 1 Motorized Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Motorized Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 1 Motorized Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 1 Motorized Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-117">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.117</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 2 Motorized Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Motorized Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 2 Motorized Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 2 Motorized Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-118">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.118</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 3 Motorized Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Motorized Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 3 Motorized Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 3 Motorized Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-119">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.119</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 4 Motorized Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Motorized Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 4 Motorized Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 4 Motorized Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-120">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.120</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: ADC Spray Bar 5 Motorized Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Motorized Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: ADC Spray Bar 5 Motorized Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: ADC Spray Bar 5 Motorized Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-121">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.121</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Adiabatic High Pressure Drain Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: Adiabatic High Pressure Drain Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Adiabatic High Pressure Drain Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Adiabatic High Pressure Drain Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-122">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.122</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Inlet Drain Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Inlet Drain Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Inlet Drain Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Inlet Drain Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-123">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.123</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: Water Tank Outlet Drain Valve Not Open Alarm</activeText>
+					<inactiveText>PHCM: Water Tank Outlet Drain Valve Not Open Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: Water Tank Outlet Drain Valve Not Open Alarm condition exists.</activeText>
+					<inactiveText>PHCM: Water Tank Outlet Drain Valve Not Open Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="phcm-2-124">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.6.2.1.3.124</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>PHCM: RAHU High Supply Water Temperature Alarm</activeText>
+					<inactiveText>PHCM: RAHU High Supply Water Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A PHCM: RAHU High Supply Water Temperature Alarm condition exists.</activeText>
+					<inactiveText>PHCM: RAHU High Supply Water Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<numSensor ruleid="rahu-1-1">
+			<type>num</type>
+			<units>literspersec</units>
+			<sensorId>RAHU_1-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.1.1.3.1</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Fan Air Volume</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-1-2">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_1-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.1.1.3.2</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: AHU TD</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-1-3">
+			<type>num</type>
+			<units></units>
+			<sensorId>RAHU_1-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.1.1.3.3</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Alarm Level</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-1-4">
+			<type>runhours</type>
+			<units></units>
+			<sensorId>RAHU_1-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.1.1.3.4</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Fan Run Hours</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-1-5">
+			<type>num</type>
+			<units></units>
+			<sensorId>RAHU_1-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.1.1.3.5</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: TD Error</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-1">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.1</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Average Coil Supply Air Temp</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-2">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.2</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Constant Pressure Control Proportional Band</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-3">
+			<type>num</type>
+			<units></units>
+			<sensorId>RAHU_2-3</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.3</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Constant Pressure Control Type</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-4">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-4</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.4</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Supply Air Temperature Setpoint</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-5">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-5</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.5</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Constant Pressure Control Setpoint</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-6">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-6</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.6</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Supply Water Temperature</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-7">
+			<type>humidity</type>
+			<units></units>
+			<sensorId>RAHU_2-7</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.7</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Return Air Humidity</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-8">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-8</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.8</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Return Air Temperature</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-9">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-9</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.9</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Room Supply Air Temperature 1</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-10">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-10</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.10</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Coil Supply Air Temperature 1</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-11">
+			<type>humidity</type>
+			<units></units>
+			<sensorId>RAHU_2-11</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.11</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Room Supply Air Humidity</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-12">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-12</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.12</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Return Water Temperature</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-13">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-13</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.13</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Average Supply Air Temperature</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-14">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-14</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.14</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Room Supply Air Pressure 1</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rahu-2-15">
+			<type>state</type>
+			<sensorId>RAHU_2-15</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.15</getOid>
+				</mapValue>
+			</value>
+			<label>RAHU: Filter Change Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>RAHU</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rahu-2-16">
+			<type>state</type>
+			<sensorId>RAHU_2-16</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.16</getOid>
+				</mapValue>
+			</value>
+			<label>RAHU: Damper Limit Switch 2 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>RAHU</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rahu-2-17">
+			<type>state</type>
+			<sensorId>RAHU_2-17</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.17</getOid>
+				</mapValue>
+			</value>
+			<label>RAHU: Damper Limit Switch 1 Status</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>RAHU</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rahu-2-18">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-18</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.18</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Coil Supply Air Temperature 2</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-19">
+			<type>temp</type>
+			<units></units>
+			<sensorId>RAHU_2-19</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.19</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Room Supply Air Temperature 2</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-20">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-20</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.20</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Room Supply Air Pressure 2</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-21">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-21</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.21</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Average Room Pressure</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-22">
+			<type>pressure</type>
+			<units></units>
+			<sensorId>RAHU_2-22</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.22</getOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>RAHU: Fan Differential Air Pressure</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-23">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>RAHU_2-23</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.23</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Fan Speed</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-24">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>RAHU_2-24</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.24</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: CW Valve 1 Position</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rahu-2-25">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>RAHU_2-25</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.25</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>RAHU: Humidification Production</label>
+			<sensorSet>RAHU</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rahu-2-26">
+			<type>state</type>
+			<sensorId>RAHU_2-26</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.26</getOid>
+				</mapValue>
+			</value>
+			<label>RAHU: Damper Enable</label>
+			<enum>trueFalse-em</enum>
+			<sensorSet>RAHU</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="rahu-2-27">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.27</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: High Humidity Alarm</activeText>
+					<inactiveText>RAHU: High Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Humidity Alarm condition exists.</activeText>
+					<inactiveText>RAHU: High Humidity Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-28">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.28</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Low Return Air Temperature Alarm</activeText>
+					<inactiveText>RAHU: Low Return Air Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Low Return Air Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Low Return Air Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-29">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.29</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Low Supply Air Temperature Alarm</activeText>
+					<inactiveText>RAHU: Low Supply Air Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Low Supply Air Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Low Supply Air Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-30">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.30</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Low Humidity Alarm</activeText>
+					<inactiveText>RAHU: Low Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Low Humidity Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Low Humidity Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-31">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.31</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Fan Maintenance Alarm</activeText>
+					<inactiveText>RAHU: Fan Maintenance Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Fan Maintenance Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Fan Maintenance Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-32">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.32</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Preferred Supply Phase Failure Alarm</activeText>
+					<inactiveText>RAHU: Preferred Supply Phase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Preferred Supply Phase Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Preferred Supply Phase Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-33">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.33</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: pLAN Disconnected Alarm</activeText>
+					<inactiveText>RAHU: pLAN Disconnected Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: pLAN Disconnected Alarm condition exists.</activeText>
+					<inactiveText>RAHU: pLAN Disconnected Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-34">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.34</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Return Air Humidity Sensor Fail</activeText>
+					<inactiveText>RAHU: Return Air Humidity Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Return Air Humidity Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Return Air Humidity Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-35">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.35</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Room Supply Air Pressure Sensor 1 Fail</activeText>
+					<inactiveText>RAHU: Room Supply Air Pressure Sensor 1 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Room Supply Air Pressure Sensor 1 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Room Supply Air Pressure Sensor 1 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-36">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.36</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Supply Water Temperature Sensor Fail</activeText>
+					<inactiveText>RAHU: Supply Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Supply Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Supply Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-37">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.37</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Return Air Temperature Sensor Fail</activeText>
+					<inactiveText>RAHU: Return Air Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Return Air Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Return Air Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-38">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.38</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Coil Supply Air Temperature Sensor 1 Fail</activeText>
+					<inactiveText>RAHU: Coil Supply Air Temperature Sensor 1 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Coil Supply Air Temperature Sensor 1 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Coil Supply Air Temperature Sensor 1 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-39">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.39</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Room Supply Air Temperature Sensor 1 Fail</activeText>
+					<inactiveText>RAHU: Room Supply Air Temperature Sensor 1 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Room Supply Air Temperature Sensor 1 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Room Supply Air Temperature Sensor 1 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-40">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.40</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Room Supply Air Humidity Sensor Fail</activeText>
+					<inactiveText>RAHU: Room Supply Air Humidity Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Room Supply Air Humidity Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Room Supply Air Humidity Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-41">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.41</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Room Supply Air Temperature Sensor 2 Fail</activeText>
+					<inactiveText>RAHU: Room Supply Air Temperature Sensor 2 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Room Supply Air Temperature Sensor 2 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Room Supply Air Temperature Sensor 2 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-42">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.42</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Coil Supply Air Temperature Sensor 2 Fail</activeText>
+					<inactiveText>RAHU: Coil Supply Air Temperature Sensor 2 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Coil Supply Air Temperature Sensor 2 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Coil Supply Air Temperature Sensor 2 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-43">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.43</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Supply Water Temperature Alarm</activeText>
+					<inactiveText>RAHU: Supply Water Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Supply Water Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Supply Water Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-44">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.44</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Airflow Failure Alarm</activeText>
+					<inactiveText>RAHU: Airflow Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Airflow Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Airflow Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-45">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.45</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Damper Actuator 1 Failure Alarm</activeText>
+					<inactiveText>RAHU: Damper Actuator 1 Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Damper Actuator 1 Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Damper Actuator 1 Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-46">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.46</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Damper Actuator 2 Failure Alarm</activeText>
+					<inactiveText>RAHU: Damper Actuator 2 Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Damper Actuator 2 Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Damper Actuator 2 Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-47">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.47</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Filter Change Alarm</activeText>
+					<inactiveText>RAHU: Filter Change Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Filter Change Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Filter Change Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-48">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.48</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: High Return Air Temperature Alarm</activeText>
+					<inactiveText>RAHU: High Return Air Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Return Air Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: High Return Air Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-49">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.49</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>	
+					<activeText>RAHU: High Supply Air Temperature Alarm</activeText>
+					<inactiveText>RAHU: High Supply Air Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Supply Air Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: High Supply Air Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-50">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.50</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Fire/Smoke Alarm</activeText>
+					<inactiveText>RAHU: Fire/Smoke Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Fire/Smoke Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Fire/Smoke Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-51">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.51</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Critical Alarm</activeText>
+					<inactiveText>RAHU: Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Critical Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Critical Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-52">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.52</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Alarm Unit Shutdown</activeText>
+					<inactiveText>RAHU: Alarm Unit Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Alarm Unit Shutdown condition exists.</activeText>
+					<inactiveText>RAHU: Alarm Unit Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-53">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.53</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Non-Critical Alarm</activeText>
+					<inactiveText>RAHU: Non-Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Non-Critical Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Non-Critical Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-54">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.54</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Fan Failure Alarm</activeText>
+					<inactiveText>RAHU: Fan Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Fan Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Fan Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-55">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.55</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Fan Air Volumetric Sensor Fail</activeText>
+					<inactiveText>RAHU: Fan Air Volumetric Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Fan Air Volumetric Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Fan Air Volumetric Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-56">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.56</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: CW Valve Feedback Alarm</activeText>
+					<inactiveText>RAHU: CW Valve Feedback Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: CW Valve Feedback Alarm condition exists.</activeText>
+					<inactiveText>RAHU: CW Valve Feedback Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-57">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.57</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Room Supply Air Pressure Sensor 2 Fail</activeText>
+					<inactiveText>RAHU: Room Supply Air Pressure Sensor 2 Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Room Supply Air Pressure Sensor 2 Fail condition exists.</activeText>
+					<inactiveText>RAHU: Room Supply Air Pressure Sensor 2 Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-58">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.58</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Expansion Board 1 Offline Alarm</activeText>
+					<inactiveText>RAHU: Expansion Board 1 Offline Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Expansion Board 1 Offline Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Expansion Board 1 Offline Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-59">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.59</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Backup Supply Phase Failure Alarm</activeText>
+					<inactiveText>RAHU: Backup Supply Phase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Backup Supply Phase Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Backup Supply Phase Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-60">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.60</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Backup Supply Phase Rotation Alarm</activeText>
+					<inactiveText>RAHU: Backup Supply Phase Rotation Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Backup Supply Phase Rotation Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Backup Supply Phase Rotation Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-61">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.61</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Preferred Supply Phase Rotation Alarm</activeText>
+					<inactiveText>RAHU: Preferred Supply Phase Rotation Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Preferred Supply Phase Rotation Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Preferred Supply Phase Rotation Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-62">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.62</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Return Water Temperature Sensor Fail</activeText>
+					<inactiveText>RAHU: Return Water Temperature Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Return Water Temperature Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Return Water Temperature Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-63">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.63</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Critical Supply Phase Failure Alarm</activeText>
+					<inactiveText>RAHU: Critical Supply Phase Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Critical Supply Phase Failure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Critical Supply Phase Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-64">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.64</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Controller Clock Alarm</activeText>
+					<inactiveText>RAHU: Controller Clock Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Controller Clock Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Controller Clock Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-65">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.65</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: High Supply Water Temperature Alarm</activeText>
+					<inactiveText>RAHU: High Supply Water Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Supply Water Temperature Alarm condition exists.</activeText>
+					<inactiveText>RAHU: High Supply Water Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-66">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.66</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Airflow Calculation Alarm</activeText>
+					<inactiveText>RAHU: Airflow Calculation Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Airflow Calculation Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Airflow Calculation Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-67">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.67</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: High Room Supply Air Pressure Alarm</activeText>
+					<inactiveText>RAHU: High Room Supply Air Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Room Supply Air Pressure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: High Room Supply Air Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-68">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.68</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Low Room Supply Air Pressure Alarm</activeText>
+					<inactiveText>RAHU: Low Room Supply Air Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Low Room Supply Air Pressure Alarm condition exists.</activeText>
+					<inactiveText>RAHU: Low Room Supply Air Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-69">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.69</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: High Supply Air Humidity</activeText>
+					<inactiveText>RAHU: High Supply Air Humidity Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: High Supply Air Humidity condition exists.</activeText>
+					<inactiveText>RAHU: High Supply Air Humidity condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-70">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.70</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Low Supply Air Humidity</activeText>
+					<inactiveText>RAHU: Low Supply Air Humidity Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Low Supply Air Humidity condition exists.</activeText>
+					<inactiveText>RAHU: Low Supply Air Humidity condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="rahu-2-71">
+			<value><getOid>.1.3.6.1.4.1.4131.1.6.5.2.1.3.71</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>RAHU: Filter Differential Pressure Sensor Fail</activeText>
+					<inactiveText>RAHU: Filter Differential Pressure Sensor Fail Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A RAHU: Filter Differential Pressure Sensor Fail condition exists.</activeText>
+					<inactiveText>RAHU: Filter Differential Pressure Sensor Fail condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+
+	</device>
+	
+</APC_DDF>

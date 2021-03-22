@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="equicom_ping3" ddfname="Equicom ping3" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="equicom_ping3">
+    <oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.35160.1.2.0" />
+    <setProductData ruleid="vendordata" field="vendor">Equicom</setProductData>
+    <setProductData ruleid="modeldata" field="model">ping3</setProductData>
+    <setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+    <numSensor ruleid="uptime_seconds">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_UPTIME_SECONDS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>uptime Seconds</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dg_directions">
+      <type>num</type>
+      <units />
+      <sensorId>_DG_DIRECTIONS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.12.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>dg Directions</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dg_outputs">
+      <type>num</type>
+      <units />
+      <sensorId>_DG_OUTPUTS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.13.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>dg Outputs</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="dg_inputs">
+      <type>num</type>
+      <units />
+      <sensorId>_DG_INPUTS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.14.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>dg Inputs</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="power_sensor_polarity">
+      <type>num</type>
+      <units />
+      <sensorId>_POWER_SENSOR_POLARITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.25.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>power Sensor Polarity</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vlan_vid">
+      <type>num</type>
+      <units />
+      <sensorId>_VLAN_VID</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.29.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>vlan VID</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <numSensor ruleid="vlan_pcp">
+      <type>num</type>
+      <units />
+      <sensorId>_VLAN_PCP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.35160.1.30.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>vlan PCP</label>
+      <sensorSet>Generic</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="power_sensor_bad_trap">
+      <type>state</type>
+      <sensorId>_POWER_SENSOR_BAD_TRAP</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+          <getOid>.1.3.6.1.4.1.35160.1.23.0</getOid>
+        </mapValue>
+      </value>
+      <label>power Sensor Bad Trap</label>
+      <enum>true_false_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="power_sensor_good_trap">
+      <type>state</type>
+      <sensorId>_POWER_SENSOR_GOOD_TRAP</sensorId>
+      <value>
+        <mapValue mapid="true_false_vm">
+          <getOid>.1.3.6.1.4.1.35160.1.24.0</getOid>
+        </mapValue>
+      </value>
+      <label>power Sensor Good Trap</label>
+      <enum>true_false_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="power_sensor_state">
+      <type>state</type>
+      <sensorId>_POWER_SENSOR_STATE</sensorId>
+      <value>
+        <mapValue mapid="bad_good_vm">
+          <getOid>.1.3.6.1.4.1.35160.1.26.0</getOid>
+        </mapValue>
+      </value>
+      <label>power Sensor State</label>
+      <enum>bad_good_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="vlan_on">
+      <type>state</type>
+      <sensorId>_VLAN_ON</sensorId>
+      <value>
+        <mapValue mapid="off_on_vm">
+          <getOid>.1.3.6.1.4.1.35160.1.28.0</getOid>
+        </mapValue>
+      </value>
+      <label>vlan On</label>
+      <enum>off_on_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="firmware_version">
+      <type>string</type>
+      <units />
+      <sensorId>_FIRMWARE_VERSION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.1.0</getOid>
+        </op>
+      </value>
+      <label>firmware Version</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="my_ip">
+      <type>string</type>
+      <units />
+      <sensorId>_MY_IP</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.3.0</getOid>
+        </op>
+      </value>
+      <label>my IP</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="my_mask">
+      <type>string</type>
+      <units />
+      <sensorId>_MY_MASK</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.4.0</getOid>
+        </op>
+      </value>
+      <label>my Mask</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="my_gateway">
+      <type>string</type>
+      <units />
+      <sensorId>_MY_GATEWAY</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.5.0</getOid>
+        </op>
+      </value>
+      <label>my Gateway</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="my_mac">
+      <type>string</type>
+      <units />
+      <sensorId>_MY_MAC</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.6.0</getOid>
+        </op>
+      </value>
+      <label>my MAC</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="device_name">
+      <type>string</type>
+      <units />
+      <sensorId>_DEVICE_NAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.7.0</getOid>
+        </op>
+      </value>
+      <label>device Name</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="device_description">
+      <type>string</type>
+      <units />
+      <sensorId>_DEVICE_DESCRIPTION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.35160.1.8.0</getOid>
+        </op>
+      </value>
+      <label>device Description</label>
+      <sensorSet>String</sensorSet>
+    </stringSensor>
+    <alarmFlags ruleid="power_sensor_bad_trap_alarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.35160.1.23.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>power Sensor Bad Trap alarm Alarm Present</activeText>
+          <inactiveText>power Sensor Bad Trap alarm Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>power Sensor Bad Trap alarm Alarm Present</activeText>
+          <inactiveText>power Sensor Bad Trap alarm Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+    <alarmFlags ruleid="power_sensor_good_trap_alarm">
+      <value>
+        <getOid>.1.3.6.1.4.1.35160.1.24.0</getOid>
+      </value>
+      <alarmFlagsTest mask="1" match="1">
+        <name>
+          <activeText>power Sensor Good Trap alarm Alarm Present</activeText>
+          <inactiveText>power Sensor Good Trap alarm Alarm Cleared</inactiveText>
+        </name>
+        <severity>warning</severity>
+        <category>system</category>
+        <description>
+          <activeText>power Sensor Good Trap alarm Alarm Present</activeText>
+          <inactiveText>power Sensor Good Trap alarm Alarm Cleared</inactiveText>
+        </description>
+      </alarmFlagsTest>
+    </alarmFlags>
+  
+  <valueMap ruleid="true_false_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="true_false_em">
+			<label>true</label>
+			<label>false</label>
+		</enumMap>
+
+	<valueMap ruleid="bad_good_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="bad_good_em">
+			<label>power is BAD</label>
+			<label>power is good</label>
+		</enumMap>
+	
+	<valueMap ruleid="off_on_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="off_on_em">
+			<label>VLAN is off</label>
+			<label>ON</label>
+		</enumMap>
+	
+  
+  </device>
+</APC_DDF>

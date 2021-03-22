@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<!-- Defines all traps used for Priority Scanning and registers/unregisters
+	as a trap receiver as necessary -->
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="apctraps"
+	ddfname="APC Traps"
+	ddfversion="4">
+	<schemaVersion>1.6</schemaVersion>
+
+    <!-- UnRegister as APC Essential Alarm trap receiver -->
+    <device deviceid="unregisterapcessentialtrapreceiver">
+        <oidMustExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        
+        <userOption ruleid="trapunregistertest" default="false" optionid="trapRegistrationActive" match="false">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.1.4.4.2.1.2" istree="yes">
+			<valueList>
+				<value><trapReceiverAddress/>:162</value>
+			</valueList>
+		</oidMustMatch>
+        
+        <setOid ruleid="unsetapcessentialtrapreceiver" oid=".1.3.6.1.4.1.318.1.4.4.3.0">
+            <type>octetString</type>
+            <value><trapReceiverAddress/>:162,2</value>
+        </setOid>
+    </device>
+
+	<!-- Register as APC Essential Alarm trap receiver -->
+	<device deviceid="registerapcessentialtrapreceiver">
+        <oidMustExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+		
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<setOid ruleid="setapcessentialtrapreceiver" oid=".1.3.6.1.4.1.318.1.4.4.3.0">
+			<type>octetString</type>
+            <value><trapReceiverAddress/>:162,4</value>
+		</setOid>
+	</device>
+
+	<!-- Look for APC Essential traps - do not depend on successful registration or actually finding self in table -->
+	<device deviceid="registerapcessentialpolltrigger">
+        <oidMustExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+		
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+		
+		<pollTrigger ruleid="essentialtrap" type="v1TrapReceived">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1000</specificTrap>
+		</pollTrigger>
+	</device>
+
+    <!-- UnRegister as APC device trap receiver (slot 1) -->
+    <device deviceid="unregisterapctrapreceiver1">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+        
+        <userOption ruleid="trapunregistertest" default="false" optionid="trapRegistrationActive" match="false">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustMatch>
+        
+        <setOid ruleid="unsetapctrapreceiveraccept" oid=".1.3.6.1.4.1.318.2.1.2.1.5.1">
+            <type>integer</type>
+            <value>1</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceiveraddress" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+            <type>ipAddress</type>
+            <value>0.0.0.0</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceivercommunity" oid=".1.3.6.1.4.1.318.2.1.2.1.3.1">
+            <type>octetString</type>
+            <value>public</value>
+        </setOid>
+    </device>
+
+    <!-- UnRegister as APC device trap receiver (slot 2) -->
+    <device deviceid="unregisterapctrapreceiver2">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+        
+        <userOption ruleid="trapunregistertest" default="false" optionid="trapRegistrationActive" match="false">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustMatch>
+        
+        <setOid ruleid="unsetapctrapreceiveraccept" oid=".1.3.6.1.4.1.318.2.1.2.1.5.2">
+            <type>integer</type>
+            <value>1</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceiveraddress" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+            <type>ipAddress</type>
+            <value>0.0.0.0</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceivercommunity" oid=".1.3.6.1.4.1.318.2.1.2.1.3.2">
+            <type>octetString</type>
+            <value>public</value>
+        </setOid>
+    </device>
+
+    <!-- UnRegister as APC device trap receiver (slot 3) -->
+    <device deviceid="unregisterapctrapreceiver3">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+        
+        <userOption ruleid="trapunregistertest" default="false" optionid="trapRegistrationActive" match="false">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.3">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustMatch>
+        
+        <setOid ruleid="unsetapctrapreceiveraccept" oid=".1.3.6.1.4.1.318.2.1.2.1.5.3">
+            <type>integer</type>
+            <value>1</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceiveraddress" oid=".1.3.6.1.4.1.318.2.1.2.1.2.3">
+            <type>ipAddress</type>
+            <value>0.0.0.0</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceivercommunity" oid=".1.3.6.1.4.1.318.2.1.2.1.3.3">
+            <type>octetString</type>
+            <value>public</value>
+        </setOid>
+    </device>
+
+    <!-- UnRegister as APC device trap receiver (slot 4) -->
+    <device deviceid="unregisterapctrapreceiver4">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+        
+        <userOption ruleid="trapunregistertest" default="false" optionid="trapRegistrationActive" match="false">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.4">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustMatch>
+        
+        <setOid ruleid="unsetapctrapreceiveraccept" oid=".1.3.6.1.4.1.318.2.1.2.1.5.4">
+            <type>integer</type>
+            <value>1</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceiveraddress" oid=".1.3.6.1.4.1.318.2.1.2.1.2.4">
+            <type>ipAddress</type>
+            <value>0.0.0.0</value>
+        </setOid>
+
+        <setOid ruleid="unsetapctrapreceivercommunity" oid=".1.3.6.1.4.1.318.2.1.2.1.3.4">
+            <type>octetString</type>
+            <value>public</value>
+        </setOid>
+    </device>
+
+	<!-- Register as APC device trap receiver (slot 1) --> 
+	<device deviceid="registerapctrapreceiver1">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+		
+		<oidMustNotMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2" istree="yes">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustNotMatch>
+        
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustMatch ruleid="emptyregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustMatch>
+        
+		<setOid ruleid="setapctrapreceiver" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<type>ipAddress</type>
+            <value><trapReceiverAddress/></value>
+		</setOid>
+    </device>
+
+	<!-- Register as APC device trap receiver (slot 2) --> 
+	<device deviceid="registerapctrapreceiver2">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+		
+		<oidMustNotMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2" istree="yes">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustNotMatch>
+        
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustNotMatch ruleid="emptyregcheck1" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustMatch ruleid="emptyregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustMatch>
+        
+		<setOid ruleid="setapctrapreceiver" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+			<type>ipAddress</type>
+            <value><trapReceiverAddress/></value>
+		</setOid>
+    </device>
+
+	<!-- Register as APC device trap receiver (slot 3) --> 
+	<device deviceid="registerapctrapreceiver3">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+		
+		<oidMustNotMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2" istree="yes">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustNotMatch>
+        
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustNotMatch ruleid="emptyregcheck1" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustNotMatch ruleid="emptyregcheck2" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustMatch ruleid="emptyregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.3">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustMatch>
+        
+		<setOid ruleid="setapctrapreceiver" oid=".1.3.6.1.4.1.318.2.1.2.1.2.3">
+			<type>ipAddress</type>
+            <value><trapReceiverAddress/></value>
+		</setOid>
+    </device>
+
+	<!-- Register as APC device trap receiver (slot 4) --> 
+	<device deviceid="registerapctrapreceiver4">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+		
+		<oidMustNotMatch ruleid="existingregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2" istree="yes">
+			<valueList>
+				<value><trapReceiverAddress/></value>
+			</valueList>
+		</oidMustNotMatch>
+        
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<oidMustNotMatch ruleid="emptyregcheck1" oid=".1.3.6.1.4.1.318.2.1.2.1.2.1">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustNotMatch ruleid="emptyregcheck2" oid=".1.3.6.1.4.1.318.2.1.2.1.2.2">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustNotMatch ruleid="emptyregcheck3" oid=".1.3.6.1.4.1.318.2.1.2.1.2.3">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustNotMatch>
+        
+		<oidMustMatch ruleid="emptyregcheck" oid=".1.3.6.1.4.1.318.2.1.2.1.2.4">
+			<valueList>
+				<value>0.0.0.0</value>
+			</valueList>
+		</oidMustMatch>
+        
+		<setOid ruleid="setapctrapreceiver" oid=".1.3.6.1.4.1.318.2.1.2.1.2.4">
+			<type>ipAddress</type>
+            <value><trapReceiverAddress/></value>
+		</setOid>
+    </device>
+
+	<!-- Register non-Essential poll triggers --> 
+	<!-- do not depend on successful registration or actually finding self in table -->
+	<device deviceid="registerapcpolltriggers">
+        <oidMustNotExist ruleid="essentialtest" oid=".1.3.6.1.4.1.318.1.4.2.9.0"/>
+        <oidMustExist ruleid="apctrapreceivertest" oid=".1.3.6.1.4.1.318.2.1.1.0"/>
+        
+        <userOption ruleid="trapregistertest" default="false" optionid="trapRegistrationActive">
+            <name>Priority Scanning</name>
+        </userOption>
+        
+		<pollTrigger ruleid="coldstart" type="v1TrapReceived">
+			<genericTrap>0</genericTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="warmstart" type="v1TrapReceived">
+			<genericTrap>1</genericTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="allapctraps" type="v1TrapReceived" ignoreDups="yes">
+			<genericTrap>6</genericTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="upsdipswitchchanged" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>16</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="codeauthenticationdone" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>32</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="configchangesnmp" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>44</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="configchangeoutlet" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>45</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="accessviolationconsole" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>46</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="accessviolationhttp" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>47</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="passwordchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>48</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="useradded" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>82</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="userdeleted" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>83</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="usermodified" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>84</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="msvmdeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>91</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="msvmoutletconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>92</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="mspdeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>102</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="mspoutletconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>103</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="rsconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>107</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="generaldeviceevent" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>125</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="atsconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>129</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="arudeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>228</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="emsdeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>252</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="rpdudeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>270</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="rpduoutletconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>271</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="rpduphaseconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>282</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="rpducancelpendingcommand" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>283</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcdeviceconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>516</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcunregistereduseraccessdenied" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>570</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcregistereduseraccessdenied" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>571</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcregistereduserconfigchange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>572</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcregistereduseraccesschange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>590</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcunregistereduserstatuschange" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>591</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcdeviceclearuserconfigs" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>592</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apctesttrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>636</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcdevicealarmstateheartbeat" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>999</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="apcdiscoveryalarmstatetableupdate" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1000</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="reserved" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1001</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="asidiscoverytrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1002</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="asirpdusyncctrltrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1003</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="asirpdusyncstatustrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1004</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="asiupssyncctrltrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1005</specificTrap>
+		</pollTrigger>
+
+		<pollTrigger ruleid="asiupssyncstatustrap" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>1006</specificTrap>
+		</pollTrigger>
+
+		<!-- PCNS -->
+		<pollTrigger ruleid="pcnsCriticalEventActive" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>779</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsCriticalEventResolved" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>780</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsNetworkComsLost" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>781</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsNetworkComsLostResolved" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>782</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsNMCComsLost" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>783</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsNMCComsLostResolved" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>784</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsTest" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>785</specificTrap>
+		</pollTrigger>
+		<pollTrigger ruleid="pcnsUpdateAvailable" type="v1TrapReceived" ignore="yes">
+			<genericTrap>6</genericTrap>
+			<specificTrap>786</specificTrap>
+		</pollTrigger>
+
+	</device>
+</APC_DDF>

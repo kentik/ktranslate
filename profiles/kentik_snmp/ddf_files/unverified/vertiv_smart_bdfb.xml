@@ -1,0 +1,722 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="vertiv_smart_bdfb"
+	ddfname="Vertiv Smart BDFB"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="vertiv_smart_bdfb">
+		<oidMustExist ruleid="vertiv" oid=".1.3.6.1.4.1.6302.4" istree="yes" /> 
+
+		<setProductData ruleid="manufacturer" field="manufacturer"><getOid>.1.3.6.1.4.1.6302.4.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="model" field="model"><getOid>.1.3.6.1.4.1.6302.4.1.1.2.0</getOid></setProductData>
+             <setProductData ruleid="appVersion" field="appversion"><getOid>.1.3.6.1.4.1.6302.4.1.1.3.0</getOid></setProductData>
+             <setProductData ruleid="serialNumber" field="serial_num"><getOid>.1.3.6.1.4.1.6302.4.1.1.5.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+        
+        <!-- Bay -->
+	 <numSensor ruleid="bayTotalCurrentOutput">
+            <type>amperage</type>
+            <sensorId>BAY_TOTAL_CURRENT_OUTPUT</sensorId>
+            <value>
+                    <div>
+                        <op><getOid>.1.3.6.1.4.1.6302.4.1.2.1.2.0</getOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Bay - Total Current Output</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputPower">
+            <type>powerW</type>
+            <sensorId>BAY_TOTAL_OUTPUT_POWER</sensorId>
+            <value>
+                    <getOid>.1.3.6.1.4.1.6302.4.1.2.1.3.0</getOid>
+            </value>
+            <label>Bay - Total Output Power</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputPowerOverPast24Hours">
+            <type>powerW</type>
+            <sensorId>BAY_TOTAL_OUTPUT_POWER_OVER_PAST_24_HOURS</sensorId>
+            <value>
+                    <getOid>.1.3.6.1.4.1.6302.4.1.2.1.4.0</getOid>
+            </value>
+            <label>Bay - Total Output Power Over the Past 24 Hours</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputPowerOverPastWeek">
+            <type>powerW</type>
+            <sensorId>BAY_TOTAL_OUTPUT_POWER_OVER_PAST_WEEK</sensorId>
+            <value>
+                    <getOid>.1.3.6.1.4.1.6302.4.1.2.1.5.0</getOid>
+            </value>
+            <label>Bay - Total Output Power Over the Past Week</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputPowerOverPastMonth">
+            <type>powerW</type>
+            <sensorId>BAY_TOTAL_OUTPUT_POWER_OVER_PAST_MONTH</sensorId>
+            <value>
+                    <getOid>.1.3.6.1.4.1.6302.4.1.2.1.6.0</getOid>
+            </value>
+            <label>Bay - Total Output Power Over the Past Month</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputEnergyOverPast24Hours">
+            <type>num/kwatthr</type>
+            <sensorId>BAY_TOTAL_OUTPUT_ENERGY_OVER_PAST_24_HOURS</sensorId>
+            <value>
+                    <div>
+                        <op><getOid>.1.3.6.1.4.1.6302.4.1.2.1.7.0</getOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Bay - Total Output Energy Over the Past 24 Hours</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputEnergyOverPastWeek">
+            <type>num/kwatthr</type>
+            <sensorId>BAY_TOTAL_OUTPUT_ENERGY_OVER_PAST_WEEK</sensorId>
+            <value>
+                    <div>
+                        <op><getOid>.1.3.6.1.4.1.6302.4.1.2.1.8.0</getOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Bay - Total Output Energy Over the Past Week</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputEnergyOverPastMonth">
+            <type>num/kwatthr</type>
+            <sensorId>BAY_TOTAL_OUTPUT_ENERGY_OVER_PAST_MONTH</sensorId>
+            <value>
+                    <div>
+                        <op><getOid>.1.3.6.1.4.1.6302.4.1.2.1.9.0</getOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Bay - Total Output Energy Over the Past Month</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="bayTotalOutputEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>BAY_TOTAL_OUTPUT_ENERGY</sensorId>
+            <value>
+                    <div>
+                        <op><getOid>.1.3.6.1.4.1.6302.4.1.2.1.10.0</getOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Bay - Total Output Energy</label>
+            <sensorSet>Bay</sensorSet>
+        </numSensor>
+    
+        <stateSensor ruleid="bayRelay1Status">
+            <type>state</type>
+            <sensorId>BAY_RELAY_1_STATUS</sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.11.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - Relay 1 Status</label>
+		<enum>onOff-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="bayRelay2Status">
+            <type>state</type>
+            <sensorId>BAY_RELAY_2_STATUS</sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.12.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - Relay 2 Status</label>
+		<enum>onOff-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="bayRelay3Status">
+            <type>state</type>
+            <sensorId>BAY_RELAY_3_STATUS</sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.13.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - Relay 3 Status</label>
+		<enum>onOff-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="bayRelay4Status">
+            <type>state</type>
+            <sensorId>BAY_RELAY_4_STATUS</sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.14.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - Relay 4 Status</label>
+		<enum>onOff-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="bayFacbStatus">
+            <type>state</type>
+            <sensorId>BAY_FACB_STATUS</sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.15.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - FA-CB Status</label>
+		<enum>facbStatus-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+        <enumMap ruleid="facbStatus-em">
+		<label>OK</label>
+		<label>Alarm</label>			
+	  </enumMap>
+
+	  <valueMap ruleid="binaryDefaultZero-vm">
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	  </valueMap>
+	  <enumMap ruleid="onOff-em">
+		<label>Off</label>
+		<label>On</label>			
+        </enumMap>
+
+        <stateSensor ruleid="bayNumberOfPanels">
+            <type>state</type>
+            <sensorId>BAY_NUMBER_OF_PANELS</sensorId>
+            <value>
+		  <mapValue mapid="numberOfPanels-vm">
+			<getOid>.1.3.6.1.4.1.6302.4.1.2.1.20.0</getOid>
+		  </mapValue>
+            </value>
+            <label>Bay - Number of Panels</label>
+	     <enum>numberOfPanels-em</enum>
+            <sensorSet>Bay</sensorSet>
+        </stateSensor>
+
+	  <valueMap ruleid="numberOfPanels-vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>*</valueIn><valueOut>4</valueOut>
+	  </valueMap>
+	  <enumMap ruleid="numberOfPanels-em">
+		<label>2</label>
+		<label>4</label>	
+		<label>6</label>
+		<label>8</label>
+		<label>Unknown</label>		
+        </enumMap>
+        
+        <!-- Panel -->
+        <stateSensor ruleid="panelPosition" index=".1.3.6.1.4.1.6302.4.1.2.2.1.1.1">
+            <type>state</type>
+            <sensorId>PANEL_POSITION_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="panelPosition-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.2</getRowOid>
+		  </mapValue>
+            </value>
+            <label>Panel Position - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.3</getRowOid></label>
+	     <enum>panelPosition-em</enum>
+            <sensorSet>Panel</sensorSet>
+        </stateSensor>
+
+	  <valueMap ruleid="panelPosition-vm">
+		<valueIn>0</valueIn><valueOut>0</valueOut>
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>4</valueOut>
+		<valueIn>5</valueIn><valueOut>5</valueOut>
+		<valueIn>6</valueIn><valueOut>6</valueOut>
+		<valueIn>7</valueIn><valueOut>7</valueOut>
+		<valueIn>*</valueIn><valueOut>8</valueOut>
+	  </valueMap>
+	  <enumMap ruleid="panelPosition-em">
+		<label>A</label>
+		<label>B</label>	
+		<label>C</label>
+		<label>D</label>
+		<label>E</label>
+		<label>F</label>	
+		<label>G</label>
+		<label>H</label>
+		<label>Unknown</label>		
+        </enumMap>
+
+        <stateSensor ruleid="panelEnabled" index=".1.3.6.1.4.1.6302.4.1.2.2.1.1.1">
+            <type>state</type>
+            <sensorId>PANEL_ENABLED_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.4</getRowOid>
+		  </mapValue>
+            </value>
+            <label>Panel Enabled - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.3</getRowOid></label>
+	     <enum>panelEnabled-em</enum>
+            <sensorSet>Panel</sensorSet>
+        </stateSensor>
+
+	  <enumMap ruleid="panelEnabled-em">
+		<label>Enabled</label>
+		<label>Disabled</label>		
+        </enumMap>
+
+        <stateSensor ruleid="panelType" index=".1.3.6.1.4.1.6302.4.1.2.2.1.1.1">
+            <type>state</type>
+            <sensorId>PANEL_TYPE_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.6</getRowOid>
+		  </mapValue>
+            </value>
+            <label>Panel Type - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.3</getRowOid></label>
+	     <enum>panelType-em</enum>
+            <sensorSet>Panel</sensorSet>
+        </stateSensor>
+
+	  <enumMap ruleid="panelType-em">
+		<label>Standard</label>
+		<label>Advanced</label>		
+        </enumMap>
+
+        <stateSensor ruleid="panelDistributionMeasurementType" index=".1.3.6.1.4.1.6302.4.1.2.2.1.1.1">
+            <type>state</type>
+            <sensorId>PANEL_TYPE_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.8</getRowOid>
+		  </mapValue>
+            </value>
+            <label>Panel Distribution Measurement Type - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.3</getRowOid></label>
+	     <enum>panelDistributionMeasurementType-em</enum>
+            <sensorSet>Panel</sensorSet>
+        </stateSensor>
+
+	  <enumMap ruleid="panelDistributionMeasurementType-em">
+		<label>Hall</label>
+		<label>Shunt</label>		
+        </enumMap>
+
+        <numSensor ruleid="numberOfDistributionElementsInPanel" index=".1.3.6.1.4.1.6302.4.1.2.2.1.1.1">
+            <type>num</type>
+            <sensorId>NUMBER_OF_DISTRIBUTION_ELEMENTS_IN_PANEL_<rowNumber/></sensorId>
+            <value>
+                   <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.9</getRowOid>
+            </value>
+            <label>Number of Distribution Elements - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.2.1.1.3</getRowOid></label>
+            <sensorSet>Panel</sensorSet>
+        </numSensor>
+
+        <!-- Feed -->
+	 <numSensor ruleid="feedOutputVoltage" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>voltage</type>
+            <sensorId>FEED_OUTPUT_VOLTAGE_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.4</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Output Voltage - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalCurrentOutput" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>amperage</type>
+            <sensorId>FEED_TOTAL_CURRENT_OUTPUT_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.5</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Current Output - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputPower" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>powerW</type>
+            <sensorId>FEED_TOTAL_OUTPUT_POWER_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.6</getRowOid>
+            </value>
+            <label>Total Output Power - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputPowerOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>powerW</type>
+            <sensorId>FEED_TOTAL_OUTPUT_POWER_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.7</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past 24 Hours - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputPowerOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>powerW</type>
+            <sensorId>FEED_TOTAL_OUTPUT_POWER_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.8</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Week - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputPowerOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>powerW</type>
+            <sensorId>FEED_TOTAL_OUTPUT_POWER_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.9</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Month - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputEnergyOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>FEED_TOTAL_OUTPUT_ENERGY_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.10</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past 24 Hours - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputEnergyOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>FEED_TOTAL_OUTPUT_ENERGY_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.11</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Week - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputEnergyOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>FEED_TOTAL_OUTPUT_ENERGY_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.12</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Month - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="feedTotalOutputEnergy" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>FEED_TOTAL_OUTPUT_ENERGY_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.13</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+            <sensorSet>Feed</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="feedFacbStatus" index=".1.3.6.1.4.1.6302.4.1.2.3.1.1.1">
+            <type>state</type>
+            <sensorId>FEED_FACB_STATUS_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.14</getRowOid>
+		  </mapValue>
+            </value>
+            <label>FA-CB Status - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.3</getRowOid></label>
+		<enum>facbStatus-em</enum>
+            <sensorSet>Feed</sensorSet>
+        </stateSensor>
+
+        <!-- Device -->
+        <stateSensor ruleid="deviceExistsStatus" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>state</type>
+            <sensorId>DEVICE_EXISTS_STATUS_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.5</getRowOid>
+		  </mapValue>
+            </value>
+            <label>Device Exists Status - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+		<enum>deviceExists-em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+	  <enumMap ruleid="deviceExists-em">
+		<label>Used</label>
+		<label>Not Used</label>		
+        </enumMap>
+
+	 <numSensor ruleid="deviceTotalCurrentOutput" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>amperage</type>
+            <sensorId>DEVICE_TOTAL_CURRENT_OUTPUT_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.6</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Current Output - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputPower" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>powerW</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_POWER_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.7</getRowOid>
+            </value>
+            <label>Total Output Power - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputPowerOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>powerW</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_POWER_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.8</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past 24 Hours - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputPowerOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>powerW</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_POWER_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.9</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Week - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputPowerOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>powerW</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_POWER_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.3.1.1.10</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Month - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputEnergyOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_ENERGY_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.11</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past 24 Hours - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputEnergyOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_ENERGY_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.12</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Week - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputEnergyOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_ENERGY_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.13</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Month - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="deviceTotalOutputEnergy" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE_TOTAL_OUTPUT_ENERGY_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.14</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="deviceFacbStatus" index=".1.3.6.1.4.1.6302.4.1.2.4.1.1.1">
+            <type>state</type>
+            <sensorId>DEVICE_FACB_STATUS_<rowNumber/></sensorId>
+            <value>
+		  <mapValue mapid="binaryDefaultZero-vm">
+			<getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.15</getRowOid>
+		  </mapValue>
+            </value>
+            <label>FA-CB Status - Panel<mapValue mapid="plusOnePanelNumber-vm"><getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.2</getRowOid></mapValue>, <getRowOid>.1.3.6.1.4.1.6302.4.1.2.4.1.1.4</getRowOid></label>
+		<enum>facbStatus-em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <valueMap ruleid="plusOnePanelNumber-vm">
+		<valueIn>0</valueIn><valueOut>1</valueOut>
+		<valueIn>1</valueIn><valueOut>2</valueOut>
+		<valueIn>2</valueIn><valueOut>3</valueOut>
+		<valueIn>3</valueIn><valueOut>4</valueOut>
+		<valueIn>4</valueIn><valueOut>5</valueOut>
+		<valueIn>5</valueIn><valueOut>6</valueOut>
+		<valueIn>6</valueIn><valueOut>7</valueOut>
+		<valueIn>7</valueIn><valueOut>8</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	  </valueMap>
+
+        <!-- Load -->
+	 <numSensor ruleid="loadTotalCurrentOutput" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>amperage</type>
+            <sensorId>LOAD_TOTAL_CURRENT_OUTPUT_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.3</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Current Output - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputPower" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>powerW</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_POWER_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.4</getRowOid>
+            </value>
+            <label>Total Output Power - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputPowerOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>powerW</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_POWER_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.5</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past 24 Hours - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputPowerOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>powerW</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_POWER_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.6</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Week - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputPowerOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>powerW</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_POWER_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.7</getRowOid>
+            </value>
+            <label>Total Output Power Over the Past Month - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputEnergyOverPast24Hours" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_ENERGY_OVER_PAST_24_HOURS_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.8</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past 24 Hours - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputEnergyOverPastWeek" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_ENERGY_OVER_PAST_WEEK_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.9</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Week - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputEnergyOverPastMonth" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_ENERGY_OVER_PAST_MONTH_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.10</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy Over the Past Month - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+
+	 <numSensor ruleid="loadTotalOutputEnergy" index=".1.3.6.1.4.1.6302.4.1.2.5.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>LOAD_TOTAL_OUTPUT_ENERGY_<rowNumber/></sensorId>
+            <value>
+                    <div>
+                        <op><getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.11</getRowOid></op>
+                        <op>1000</op>
+                    </div>
+            </value>
+            <label>Total Output Energy - <getRowOid>.1.3.6.1.4.1.6302.4.1.2.5.1.1.2</getRowOid></label>
+            <sensorSet>Load</sensorSet>
+        </numSensor>
+        
+        </device>
+</APC_DDF>

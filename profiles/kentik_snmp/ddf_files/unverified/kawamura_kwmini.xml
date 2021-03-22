@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!-- raritan_pdu -->
+<APC_DDF ddfid ="kawamura_kwmini" ddfname="Kawamura KW Mini" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+    <!--DDF Headers -->
+    <device deviceid="kawamura_kwmini">
+        <oidMustExist ruleid="kawamura_kwmini_must_exist" istree="yes" oid=".1.3.6.1.4.1.14307.3.1"/>
+
+        <setProductData ruleid="typedata" field="type">SNMP Device</setProductData>
+		<setProductData ruleid="vendordata" field="vendor">Kawamura</setProductData>
+		<setProductData ruleid="modeldata" field="model">KW Mini</setProductData>
+		
+		
+		<valueMap ruleid="sensor_exists-vm">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="off_on_pulse-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="off_on_pulse-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Pulse</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="diport_current_value" index=".1.3.6.1.4.1.14307.3.1.1.1.1.11">
+			<type>state</type>
+			<sensorId>DIPORT_CURRENT_VALUE_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="off_on_pulse-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.11</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on_pulse-em</enum>
+			<label>DI Port <getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.2</getRowOid> Current Value</label>
+			<sensorSet>Current Value</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="normal_alarm-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="normal_alarm-em">
+			<label>Normal</label>
+			<label>Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="diport_alarm_state" index=".1.3.6.1.4.1.14307.3.1.1.1.1.13">
+			<type>state</type>
+			<sensorId>DIPORT_ALARM_STATE_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="normal_alarm-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.13</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>normal_alarm-em</enum>
+			<label>DI Port <getRowOid>.1.3.6.1.4.1.14307.3.1.1.1.1.2</getRowOid> Alarm State</label>
+			<sensorSet>Alarm Status</sensorSet>
+		</stateSensor>
+		
+		<numSensor ruleid="analog_input_current_value" index=".1.3.6.1.4.1.14307.3.1.2.1.1.13">
+			<type>num</type>
+			<sensorId>ANALOG_INPUT_CURRENT_VALUE_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.13</getRowOid>
+			</value>
+			<enum>normal_alarm-em</enum>
+			<label>AI <getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.2</getRowOid> Current Value (<getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.4</getRowOid>)</label>
+			<sensorSet>Current Value</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="analog_input_alarm-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="analog_input_alarm-em">
+			<label>Normal</label>
+			<label>Low Alarm</label>
+			<label>High Alarm</label>
+			<label>Low Warning</label>
+			<label>High Warning</label>
+			<label>Sensor Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="analog_input_alarm_state" index=".1.3.6.1.4.1.14307.3.1.1.1.1.13">
+			<type>state</type>
+			<sensorId>ANALOG_INPUT_ALARM_STATE_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="analog_input_alarm-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.14</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>analog_input_alarm-em</enum>
+			<label>AI <getRowOid>.1.3.6.1.4.1.14307.3.1.2.1.1.2</getRowOid> Alarm State</label>
+			<sensorSet>Alarm Status</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="off_on-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="off_on-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="digital_output_current_value" index=".1.3.6.1.4.1.14307.3.1.3.1.1.10">
+			<type>state</type>
+			<sensorId>DIGITAL_OUTPUT_CURRENT_VALUE_<rowIndex/></sensorId>
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.3.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.14307.3.1.3.1.1.10</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>DO Port <getRowOid>.1.3.6.1.4.1.14307.3.1.3.1.1.2</getRowOid> Current Value</label>
+			<sensorSet>Current Value</sensorSet>
+		</stateSensor>
+
+    </device>
+
+</APC_DDF>

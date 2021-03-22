@@ -1,0 +1,1013 @@
+<?xml version="1.0"?>
+<!--CMC TC -->
+<APC_DDF ddfid ="cmc_tc" ddfname="CMC TC" ddfversion="4" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+    			 
+	<device deviceid="cmc_tc">
+    <oidMustExist ruleid="cmc_tcDetect" oid=".1.3.6.1.4.1.2606.4.1.1.0"/>
+
+
+<!-- cmcTcStatusSensorUnit1 Begin -->
+	<!-- cmcTcUnit1TypeOfDevice -->
+		<stateSensor ruleid="cmcTcUnit1TypeOfDevice">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.3.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_1_TYPE_OF_DEVICE_</sensorId>
+			<value>
+				<mapValue mapid="TypeOfDevice-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 1 Type Of Device</label>
+			<enum>TypeOfDevice-em</enum>
+			<sensorSet>Unit1</sensorSet>
+		</stateSensor>
+		
+		<!-- cmcTcUnit1Status -->
+		<stateSensor ruleid="cmcTcUnit1Status">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.3.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_1_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="Status-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.3.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 1 Status</label>
+			<enum>Status-em</enum>
+			<sensorSet>Unit1</sensorSet>
+		</stateSensor>
+    
+<!-- cmcTcUnit1SensorEntry Begin --> 
+	<!-- Unit1SensorType -->
+		<!--<stateSensor ruleid="Unit1SensorType" index=".1.3.6.1.4.1.2606.4.2.3.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_1_SENSOR_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorType-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 1 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.3</getRowOid><space/>Type</label>
+			<enum>SensorType-em</enum>
+			<sensorSet>Unit1</sensorSet>
+		</stateSensor>-->
+    
+	<!-- Unit1SensorStatus -->
+		<stateSensor ruleid="Unit1SensorStatus" index=".1.3.6.1.4.1.2606.4.2.3.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_1_SENSOR_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 1 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.3</getRowOid><space/>Status</label>
+			<enum>SensorStatus-em</enum>
+			<sensorSet>Unit1</sensorSet>
+		</stateSensor>
+    
+	<!-- Unit1SensorValue --> 
+		<numSensor ruleid="Unit1SensorValue" index=".1.3.6.1.4.1.2606.4.2.3.5.2.1.1">
+      <rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+      <type>
+      	<mapValue mapid="Sensor_Type_Type-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.2</getRowOid>
+				</mapValue>
+      </type>
+      <sensorId>UNIT1_SENSOR_VALUE_<rowIndex/></sensorId>
+      <value>
+         <if>
+         		<op>
+         			<eq>
+              	<op><mapValue mapid="tempunit-vm" ><getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.2</getRowOid></mapValue></op>
+    						<op>1</op> <!-- is a temperature-->
+              </eq>
+            </op>
+            <op><!-- True convert to correct units -->
+            	<if>
+            		<op>
+            			<eq><!-- if fahrenheit -->
+            				<op><getOid>.1.3.6.1.4.1.2606.4.3.1.1.0</getOid></op>
+            				<op>2</op>
+            			</eq>
+            		</op>
+            		<op>		
+            			<!-- Fahrenheit to Celsius -->
+									<div><op><sub><op><getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.5</getRowOid></op><op>32</op></sub></op><op>1.8</op></div>
+								</op>
+								<op><!-- if celsius -->
+									<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.5</getRowOid>
+								</op>	
+							</if>	
+						</op>
+						<op>
+							<getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.5</getRowOid>
+						</op>
+          </if>	
+      </value>
+      <label>Unit 1 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.3.5.2.1.3</getRowOid><space/>Value</label>
+      <sensorSet>Unit1</sensorSet>
+    </numSensor>
+
+		
+		<!-- cmcTcStatusSensorUnit2 Begin -->
+	<!-- cmcTcUnit2TypeOfDevice -->
+		<stateSensor ruleid="cmcTcUnit2TypeOfDevice">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.4.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_2_TYPE_OF_DEVICE_</sensorId>
+			<value>
+				<mapValue mapid="TypeOfDevice-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 2 Type Of Device</label>
+			<enum>TypeOfDevice-em</enum>
+			<sensorSet>Unit2</sensorSet>
+		</stateSensor>
+		
+		<!-- cmcTcUnit2Status -->
+		<stateSensor ruleid="cmcTcUnit2Status">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.4.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_2_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="Status-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.4.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 2 Status</label>
+			<enum>Status-em</enum>
+			<sensorSet>Unit2</sensorSet>
+		</stateSensor>
+
+    
+<!-- cmcTcUnit2SensorEntry Begin --> 
+	<!-- Unit2SensorType -->
+		<!--<stateSensor ruleid="Unit2SensorType" index=".1.3.6.1.4.1.2606.4.2.4.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_2_SENSOR_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorType-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 2 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.3</getRowOid><space/>Type</label>
+			<enum>SensorType-em</enum>
+			<sensorSet>Unit2</sensorSet>
+		</stateSensor>-->
+    
+	<!-- Unit2SensorStatus -->
+		<stateSensor ruleid="Unit2SensorStatus" index=".1.3.6.1.4.1.2606.4.2.4.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_2_SENSOR_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 2 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.3</getRowOid><space/>Status</label>
+			<enum>SensorStatus-em</enum>
+			<sensorSet>Unit2</sensorSet>
+		</stateSensor>
+    
+	<!-- Unit2SensorValue --> 
+		<numSensor ruleid="Unit2SensorValue" index=".1.3.6.1.4.1.2606.4.2.4.5.2.1.1">
+      <rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+      <type>
+      	<mapValue mapid="Sensor_Type_Type-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.2</getRowOid>
+				</mapValue>
+      </type>
+      <sensorId>UNIT2_SENSOR_VALUE_<rowIndex/></sensorId>
+      <value>
+         	<if>
+         		<op>
+         			<eq>
+              	<op><mapValue mapid="tempunit-vm" ><getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.2</getRowOid></mapValue></op>
+    						<op>1</op> <!-- is a temperature-->
+              </eq>
+            </op>
+            <op><!-- True convert to correct units -->
+            	<if>
+            		<op>
+            			<eq><!-- if fahrenheit -->
+            				<op><getOid>.1.3.6.1.4.1.2606.4.3.1.1.0</getOid></op>
+            				<op>2</op>
+            			</eq>
+            		</op>
+            		<op>		
+            			<!-- Fahrenheit to Celsius -->
+									<div><op><sub><op><getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.5</getRowOid></op><op>32</op></sub></op><op>1.8</op></div>
+								</op>
+								<op><!-- if celsius -->
+									<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.5</getRowOid>
+								</op>	
+							</if>	
+						</op>
+						<op>
+							<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.5</getRowOid>
+						</op>
+          </if>	
+        
+      </value>
+      <label>Unit 2 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.3</getRowOid><space/>Value</label>
+      <sensorSet>Unit2</sensorSet>
+    </numSensor>
+
+		
+		<!-- cmcTcStatusSensorUnit3 Begin -->
+	<!-- cmcTcUnit3TypeOfDevice -->
+		<stateSensor ruleid="cmcTcUnit3TypeOfDevice">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.5.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_3_TYPE_OF_DEVICE_</sensorId>
+			<value>
+				<mapValue mapid="TypeOfDevice-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.5.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 3 Type Of Device</label>
+			<enum>TypeOfDevice-em</enum>
+			<sensorSet>Unit3</sensorSet>
+		</stateSensor>
+		
+		<!-- cmcTcUnit3Status -->
+		<stateSensor ruleid="cmcTcUnit3Status">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.5.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_3_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="Status-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.5.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 3 Status</label>
+			<enum>Status-em</enum>
+			<sensorSet>Unit3</sensorSet>
+		</stateSensor>
+
+    
+<!-- cmcTcUnit3SensorEntry Begin --> 
+	<!-- Unit3SensorType -->
+	<!--	<stateSensor ruleid="Unit3SensorType" index=".1.3.6.1.4.1.2606.4.2.5.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_3_SENSOR_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorType-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 3 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.3</getRowOid><space/>Type</label>
+			<enum>SensorType-em</enum>
+			<sensorSet>Unit3</sensorSet>
+		</stateSensor>-->
+    
+	<!-- Unit3SensorStatus -->
+		<stateSensor ruleid="Unit3SensorStatus" index=".1.3.6.1.4.1.2606.4.2.5.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_3_SENSOR_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 3 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.3</getRowOid><space/>Status</label>
+			<enum>SensorStatus-em</enum>
+			<sensorSet>Unit3</sensorSet>
+		</stateSensor>
+    
+	<!-- Unit3SensorValue --> 
+		<numSensor ruleid="Unit3SensorValue" index=".1.3.6.1.4.1.2606.4.2.5.5.2.1.1">
+      <rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+      <type>
+      	<mapValue mapid="Sensor_Type_Type-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.2</getRowOid>
+				</mapValue>
+      </type>
+      <sensorId>UNIT3_SENSOR_VALUE_<rowIndex/></sensorId>
+      <value>
+         	<if>
+         		<op>
+         			<eq>
+              	<op><mapValue mapid="tempunit-vm"><getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.2</getRowOid></mapValue></op>
+    						<op>1</op> <!-- is a temperature-->
+              </eq>
+            </op>
+            <op><!-- True convert to correct units -->
+            	<if>
+            		<op>
+            			<eq><!-- if fahrenheit -->
+            				<op><getOid>.1.3.6.1.4.1.2606.4.3.1.1.0</getOid></op>
+            				<op>2</op>
+            			</eq>
+            		</op>
+            		<op>		
+            			<!-- Fahrenheit to Celsius -->
+									<div><op><sub><op><getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.5</getRowOid></op><op>32</op></sub></op><op>1.8</op></div>
+								</op>
+								<op><!-- if celsius -->
+									<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.5</getRowOid>
+								</op>	
+							</if>	
+						</op>
+						<op>	<!-- not a temperature -->
+          		<getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.5</getRowOid>
+          	</op>	
+          </if>	
+      </value>
+      <label>Unit 3 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.5.5.2.1.3</getRowOid><space/>Value</label>
+      <sensorSet>Unit3</sensorSet>
+    </numSensor>
+
+		
+		<!-- cmcTcStatusSensorUnit4 Begin -->
+	<!-- cmcTcUnit4TypeOfDevice -->
+		<stateSensor ruleid="cmcTcUnit4TypeOfDevice">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.6.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_4_TYPE_OF_DEVICE_</sensorId>
+			<value>
+				<mapValue mapid="TypeOfDevice-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.6.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 4 Type Of Device</label>
+			<enum>TypeOfDevice-em</enum>
+			<sensorSet>Unit4</sensorSet>
+		</stateSensor>
+		
+		<!-- cmcTcUnit4Status -->
+		<stateSensor ruleid="cmcTcUnit4Status">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getOid>.1.3.6.1.4.1.2606.4.2.6.1.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>CMC_TC_UNIT_4_STATUS_</sensorId>
+			<value>
+				<mapValue mapid="Status-vm">
+					<getOid>.1.3.6.1.4.1.2606.4.2.6.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Unit 4 Status</label>
+			<enum>Status-em</enum>
+			<sensorSet>Unit4</sensorSet>
+		</stateSensor>
+    
+<!-- cmcTcUnit4SensorEntry Begin --> 
+	<!-- Unit4SensorType -->
+		<!--<stateSensor ruleid="Unit4SensorType" index=".1.3.6.1.4.1.2606.4.2.6.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_4_SENSOR_TYPE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorType-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 4 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.3</getRowOid><space/>Type</label>
+			<enum>SensorType-em</enum>
+			<sensorSet>Unit4</sensorSet>
+		</stateSensor>-->
+    
+	<!-- Unit4SensorStatus -->
+		<stateSensor ruleid="Unit4SensorStatus" index=".1.3.6.1.4.1.2606.4.2.6.5.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>UNIT_4_SENSOR_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="SensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Unit 4 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.3</getRowOid><space/>Status</label>
+			<enum>SensorStatus-em</enum>
+			<sensorSet>Unit4</sensorSet>
+		</stateSensor>
+    
+	<!-- Unit4SensorValue --> 
+		<numSensor ruleid="Unit4SensorValue" index=".1.3.6.1.4.1.2606.4.2.6.5.2.1.1">
+      <rowTest>
+				<mapValue mapid="delete_null_sensor">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+      <type>
+      	<mapValue mapid="Sensor_Type_Type-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.2</getRowOid>
+				</mapValue>
+      </type>
+      <sensorId>UNIT4_SENSOR_VALUE_<rowIndex/></sensorId>
+      <value>
+         	<if>
+         		<op>
+         			<eq>
+              	<op><mapValue mapid="tempunit-vm" ><getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.2</getRowOid></mapValue></op>
+    						<op>1</op> <!-- is a temperature-->
+              </eq>
+            </op>
+            <op><!-- True convert to correct units -->
+            	<if>
+            		<op>
+            			<eq><!-- if fahrenheit -->
+            				<op><getOid>.1.3.6.1.4.1.2606.4.3.1.1.0</getOid></op>
+            				<op>2</op>
+            			</eq>
+            		</op>
+            		<op>		
+            			<!-- Fahrenheit to Celsius -->
+									<div><op><sub><op><getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.5</getRowOid></op><op>32</op></sub></op><op>1.8</op></div>
+								</op>
+								<op><!-- if celsius -->
+									<getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.5</getRowOid>
+								</op>	
+							</if>	
+						</op>
+						<op>
+							<getRowOid>.1.3.6.1.4.1.2606.4.2.4.5.2.1.5</getRowOid>
+						</op>
+          </if>	
+      </value>
+      <label>Unit 4 Sensor #<rowIndex/><space/><getRowOid>.1.3.6.1.4.1.2606.4.2.6.5.2.1.3</getRowOid><space/>Value</label>
+      <sensorSet>Unit4</sensorSet>
+    </numSensor>
+
+		
+		<valueMap ruleid="tempunit-vm">
+			<valueIn>10</valueIn><valueOut>1</valueOut>
+			<valueIn>48</valueIn><valueOut>1</valueOut>
+			<valueIn>49</valueIn><valueOut>1</valueOut>
+			<valueIn>50</valueIn><valueOut>1</valueOut>
+			<valueIn>51</valueIn><valueOut>1</valueOut>
+			<valueIn>52</valueIn><valueOut>1</valueOut>
+			<valueIn>53</valueIn><valueOut>1</valueOut>
+			<valueIn>54</valueIn><valueOut>1</valueOut>
+			<valueIn>55</valueIn><valueOut>1</valueOut>
+			<valueIn>56</valueIn><valueOut>1</valueOut>
+			<valueIn>57</valueIn><valueOut>1</valueOut>
+			<valueIn>58</valueIn><valueOut>1</valueOut>
+			<valueIn>59</valueIn><valueOut>1</valueOut>
+			<valueIn>65</valueIn><valueOut>1</valueOut>
+			<valueIn>66</valueIn><valueOut>1</valueOut>
+			<valueIn>100</valueIn><valueOut>1</valueOut>
+			<valueIn>101</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>	
+			
+		<valueMap ruleid="tempType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>		
+		
+    <valueMap ruleid="valuesStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="valuesStatus-em">
+			<label>notAvail</label>
+			<label>lost</label>
+			<label>changed</label>
+			<label>ok</label>
+			<label>tooLow</label>
+			<label>tooHigh</label>
+			<label>error</label>
+		</enumMap>
+    
+    <valueMap ruleid="delete_null_sensor">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		
+		<valueMap ruleid="Status-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="Status-em">
+			<label>ok</label>
+			<label>error</label>
+			<label>changed</label>
+			<label>quit</label>
+			<label>timeout</label>
+			<label>detected</label>
+			<label>notAvail</label>
+			<label>lowPower</label>
+		</enumMap>
+    
+    
+    <valueMap ruleid="TypeOfDevice-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="TypeOfDevice-em">
+			<label>notAvail</label>
+			<label>unitIO</label>
+			<label>unitAccess</label>
+			<label>unitClimate</label>
+			<label>unitFCS</label>
+			<label>unitRTT</label>
+			<label>unitRCT</label>
+			<label>unitPSM</label>
+			<label>unitPSM8</label>
+			<label>unitPSMMetered</label>
+			<label>unitIOWireless</label>
+			<label>unitPSM6Schuko</label>
+			<label>unitPSM6C19</label>
+		</enumMap>
+  
+
+    
+    
+     <valueMap ruleid="SensorStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+
+		<valueMap ruleid="OutputStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="OutputStatus-em">
+			<label>notAvail</label>
+			<label>lost</label>
+			<label>changed</label>
+			<label>ok</label>
+			<label>off</label>
+			<label>on</label>
+			<label>setOff</label>
+			<label>setOn</label>
+		</enumMap>
+
+		<enumMap ruleid="SensorStatus-em">
+			<label>notAvail</label>
+			<label>lost</label>
+			<label>changed</label>
+			<label>ok</label>
+			<label>off</label>
+			<label>on</label>
+			<label>warning</label>
+			<label>tooLow</label>
+			<label>tooHigh</label>
+		</enumMap>
+		
+		
+		<valueMap ruleid="OutputType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>14</valueIn><valueOut>13</valueOut>
+			<valueIn>15</valueIn><valueOut>14</valueOut>
+			<valueIn>16</valueIn><valueOut>15</valueOut>
+			<valueIn>17</valueIn><valueOut>16</valueOut>
+			<valueIn>18</valueIn><valueOut>17</valueOut>
+			<valueIn>19</valueIn><valueOut>18</valueOut>
+			<valueIn>20</valueIn><valueOut>19</valueOut>
+			<valueIn>21</valueIn><valueOut>20</valueOut>
+			<valueIn>22</valueIn><valueOut>21</valueOut>
+			<valueIn>23</valueIn><valueOut>22</valueOut>
+			<valueIn>30</valueIn><valueOut>23</valueOut>
+			<valueIn>31</valueIn><valueOut>24</valueOut>
+			<valueIn>32</valueIn><valueOut>25</valueOut>
+			<valueIn>33</valueIn><valueOut>26</valueOut>
+			<valueIn>38</valueIn><valueOut>27</valueOut>
+			<valueIn>42</valueIn><valueOut>28</valueOut>
+			<valueIn>43</valueIn><valueOut>29</valueOut>
+			<valueIn>44</valueIn><valueOut>30</valueOut>
+			<valueIn>45</valueIn><valueOut>31</valueOut>
+			<valueIn>46</valueIn><valueOut>32</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="OutputType-em">
+			<label>Unknown</label>
+			<label>failure</label>
+			<label>overflow</label>
+			<label>doorLock</label>
+			<label>univLock1</label>
+			<label>univLock2</label>
+			<label>fan</label>
+			<label>fanSpeedContr</label>
+			<label>universalOut</label>
+			<label>roomLock</label>
+			<label>powerOut</label>
+			<label>doorLockMaster</label>
+			<label>doorLockFRi</label>
+			<label>setpoint</label>
+			<label>setpointTimax</label>
+			<label>hysteresisRCT</label>
+			<label>commandRCT</label>
+			<label>relayPSM</label>
+			<label>setHighPSM</label>
+			<label>setLowPSM</label>
+			<label>setpointRTT</label>
+			<label>setTimaxRTT</label>
+			<label>powerOut1</label>
+			<label>controlModeLCP</label>
+			<label>minFanSpeedLCP</label>
+			<label>minDeltaTLCP</label>
+			<label>maxDeltaTLCP</label>
+			<label>cwValueLCP</label>
+			<label>voltHighPSM</label>
+			<label>voltLowPSM</label>
+			<label>ampHighPSM</label>
+			<label>ampLowPSM</label>
+			<label>commandPSM</label>
+		</enumMap>
+		
+    
+    <valueMap ruleid="SensorType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>14</valueIn><valueOut>13</valueOut>
+			<valueIn>15</valueIn><valueOut>14</valueOut>
+			<valueIn>16</valueIn><valueOut>15</valueOut>
+			<valueIn>17</valueIn><valueOut>16</valueOut>
+			<valueIn>18</valueIn><valueOut>17</valueOut>
+			<valueIn>19</valueIn><valueOut>18</valueOut>
+			<valueIn>20</valueIn><valueOut>19</valueOut>
+			<valueIn>21</valueIn><valueOut>20</valueOut>
+			<valueIn>22</valueIn><valueOut>21</valueOut>
+			<valueIn>23</valueIn><valueOut>22</valueOut>
+			<valueIn>24</valueIn><valueOut>23</valueOut>
+			<valueIn>25</valueIn><valueOut>24</valueOut>
+			<valueIn>26</valueIn><valueOut>25</valueOut>
+			<valueIn>27</valueIn><valueOut>26</valueOut>
+			<valueIn>28</valueIn><valueOut>27</valueOut>
+			<valueIn>29</valueIn><valueOut>28</valueOut>
+			<valueIn>30</valueIn><valueOut>29</valueOut>
+			<valueIn>31</valueIn><valueOut>30</valueOut>
+			<valueIn>32</valueIn><valueOut>31</valueOut>
+			<valueIn>33</valueIn><valueOut>32</valueOut>
+			<valueIn>34</valueIn><valueOut>33</valueOut>
+			<valueIn>35</valueIn><valueOut>34</valueOut>
+			<valueIn>36</valueIn><valueOut>35</valueOut>
+			<valueIn>37</valueIn><valueOut>36</valueOut>
+			<valueIn>40</valueIn><valueOut>37</valueOut>
+			<valueIn>41</valueIn><valueOut>38</valueOut>
+			<valueIn>42</valueIn><valueOut>39</valueOut>
+			<valueIn>43</valueIn><valueOut>40</valueOut>
+			<valueIn>44</valueIn><valueOut>41</valueOut>
+			<valueIn>45</valueIn><valueOut>42</valueOut>
+			<valueIn>46</valueIn><valueOut>43</valueOut>
+			<valueIn>47</valueIn><valueOut>44</valueOut>
+			<valueIn>48</valueIn><valueOut>45</valueOut>
+			<valueIn>49</valueIn><valueOut>46</valueOut>
+			<valueIn>50</valueIn><valueOut>47</valueOut>
+			<valueIn>51</valueIn><valueOut>48</valueOut>
+			<valueIn>52</valueIn><valueOut>49</valueOut>
+			<valueIn>53</valueIn><valueOut>50</valueOut>
+			<valueIn>54</valueIn><valueOut>51</valueOut>
+			<valueIn>55</valueIn><valueOut>52</valueOut>
+			<valueIn>56</valueIn><valueOut>53</valueOut>
+			<valueIn>57</valueIn><valueOut>54</valueOut>
+			<valueIn>58</valueIn><valueOut>55</valueOut>
+			<valueIn>59</valueIn><valueOut>56</valueOut>
+			<valueIn>60</valueIn><valueOut>57</valueOut>
+			<valueIn>61</valueIn><valueOut>58</valueOut>
+			<valueIn>62</valueIn><valueOut>59</valueOut>
+			<valueIn>63</valueIn><valueOut>60</valueOut>
+			<valueIn>64</valueIn><valueOut>61</valueOut>
+			<valueIn>65</valueIn><valueOut>62</valueOut>
+			<valueIn>66</valueIn><valueOut>63</valueOut>
+			<valueIn>72</valueIn><valueOut>64</valueOut>
+			<valueIn>73</valueIn><valueOut>65</valueOut>
+			<valueIn>74</valueIn><valueOut>66</valueOut>
+			<valueIn>75</valueIn><valueOut>67</valueOut>
+			<valueIn>76</valueIn><valueOut>68</valueOut>
+			<valueIn>77</valueIn><valueOut>69</valueOut>
+			<valueIn>78</valueIn><valueOut>70</valueOut>
+			<valueIn>79</valueIn><valueOut>71</valueOut>
+			<valueIn>80</valueIn><valueOut>72</valueOut>
+			<valueIn>81</valueIn><valueOut>73</valueOut>
+			<valueIn>100</valueIn><valueOut>74</valueOut>
+			<valueIn>101</valueIn><valueOut>75</valueOut>
+			<valueIn>102</valueIn><valueOut>76</valueOut>
+			<valueIn>103</valueIn><valueOut>77</valueOut>
+			<valueIn>104</valueIn><valueOut>78</valueOut>
+			<valueIn>105</valueIn><valueOut>79</valueOut>
+			<valueIn>106</valueIn><valueOut>80</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="SensorType-em">
+			<label>Unknown</label>
+			<label>failure</label>
+			<label>overflow</label>
+			<label>access</label>
+			<label>vibration</label>
+			<label>motion</label>
+			<label>smoke</label>
+			<label>airFlow</label>
+			<label>type6</label>
+			<label>temperature</label>
+			<label>current4to20</label>
+			<label>humidity</label>
+			<label>userNO</label>
+			<label>userNC</label>
+			<label>lock</label>
+			<label>unlock</label>
+			<label>voltOK</label>
+			<label>voltage</label>
+			<label>fanOK</label>
+			<label>readerKeypad</label>
+			<label>dutyPWM</label>
+			<label>fanStatus</label>
+			<label>leakage</label>
+			<label>warningRTT</label>
+			<label>alarmRTT</label>
+			<label>filterRTT</label>
+			<label>heatflowRCT</label>
+			<label>alarmRCT</label>
+			<label>warningRCT</label>
+			<label>currentPSM</label>
+			<label>statusPSM</label>
+			<label>positionPSM</label>
+			<label>airFlap</label>
+			<label>acoustic</label>
+			<label>detACfault</label>
+			<label>detACfirstAlarm</label>
+			<label>detACmainAlarm</label>
+			<label>rpm11LCP</label>
+			<label>rpm12LCP</label>
+			<label>rpm21LCP</label>
+			<label>rpm22LCP</label>
+			<label>rpm31LCP</label>
+			<label>rpm32LCP</label>
+			<label>rpm41LCP</label>
+			<label>rpm42LCP</label>
+			<label>airTemp11LCP</label>
+			<label>airTemp12LCP</label>
+			<label>airTemp21LCP</label>
+			<label>airTemp22LCP</label>
+			<label>airTemp31LCP</label>
+			<label>airTemp32LCP</label>
+			<label>airTemp41LCP</label>
+			<label>airTemp42LCP</label>
+			<label>temp1LCP</label>
+			<label>temp2LCP</label>
+			<label>waterInTemp</label>
+			<label>waterOutTemp</label>
+			<label>waterFlow</label>
+			<label>fanSpeed</label>
+			<label>valve</label>
+			<label>statusLCP</label>
+			<label>waterDelta</label>
+			<label>contrTemp1</label>
+			<label>contrTemp2</label>
+			<label>totalKWhPSM</label>
+			<label>totalKWPSM</label>
+			<label>frequencyPSM</label>
+			<label>voltagePSM</label>
+			<label>voltStatusPSM</label>
+			<label>amperePSM</label>
+			<label>ampStatusPSM</label>
+			<label>kWPSM</label>
+			<label>kWhPSM</label>
+			<label>kWhTempPSM</label>
+			<label>temperatureWL</label>
+			<label>temperature1WL</label>
+			<label>humidityWL</label>
+			<label>accessWL</label>
+			<label>userNOWL</label>
+			<label>userNCWL</label>
+			<label>analogWL</label>
+		</enumMap>
+		
+		<valueMap ruleid="Sensor_Type_Type-vm">
+			<valueIn>1</valueIn><valueOut>num</valueOut>
+			<valueIn>2</valueIn><valueOut>num</valueOut>
+			<valueIn>3</valueIn><valueOut>num</valueOut>
+			<valueIn>4</valueIn><valueOut>num</valueOut>
+			<valueIn>5</valueIn><valueOut>num</valueOut>
+			<valueIn>6</valueIn><valueOut>num</valueOut>
+			<valueIn>7</valueIn><valueOut>num</valueOut>
+			<valueIn>8</valueIn><valueOut>airflow</valueOut>
+			<valueIn>9</valueIn><valueOut>num</valueOut>
+			<valueIn>10</valueIn><valueOut>temp</valueOut>
+			<valueIn>11</valueIn><valueOut>amperage</valueOut>
+			<valueIn>12</valueIn><valueOut>humidity</valueOut>
+			<valueIn>13</valueIn><valueOut>num</valueOut>
+			<valueIn>14</valueIn><valueOut>num</valueOut>
+			<valueIn>15</valueIn><valueOut>num</valueOut>
+			<valueIn>16</valueIn><valueOut>num</valueOut>
+			<valueIn>17</valueIn><valueOut>num</valueOut>
+			<valueIn>18</valueIn><valueOut>voltage</valueOut>
+			<valueIn>19</valueIn><valueOut>num</valueOut>
+			<valueIn>20</valueIn><valueOut>num</valueOut>
+			<valueIn>21</valueIn><valueOut>num</valueOut>
+			<valueIn>22</valueIn><valueOut>num</valueOut>
+			<valueIn>23</valueIn><valueOut>num</valueOut>
+			<valueIn>24</valueIn><valueOut>num</valueOut>
+			<valueIn>25</valueIn><valueOut>num</valueOut>
+			<valueIn>26</valueIn><valueOut>num</valueOut>
+			<valueIn>27</valueIn><valueOut>num</valueOut>
+			<valueIn>28</valueIn><valueOut>num</valueOut>
+			<valueIn>29</valueIn><valueOut>num</valueOut>
+			<valueIn>30</valueIn><valueOut>num</valueOut>
+			<valueIn>31</valueIn><valueOut>num</valueOut>
+			<valueIn>32</valueIn><valueOut>num</valueOut>
+			<valueIn>33</valueIn><valueOut>num</valueOut>
+			<valueIn>34</valueIn><valueOut>num</valueOut>
+			<valueIn>35</valueIn><valueOut>num</valueOut>
+			<valueIn>36</valueIn><valueOut>num</valueOut>
+			<valueIn>37</valueIn><valueOut>num</valueOut>
+			<valueIn>40</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>41</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>42</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>43</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>44</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>45</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>46</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>47</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>48</valueIn><valueOut>temp</valueOut>
+			<valueIn>49</valueIn><valueOut>temp</valueOut>
+			<valueIn>50</valueIn><valueOut>temp</valueOut>
+			<valueIn>51</valueIn><valueOut>temp</valueOut>
+			<valueIn>52</valueIn><valueOut>temp</valueOut>
+			<valueIn>53</valueIn><valueOut>temp</valueOut>
+			<valueIn>54</valueIn><valueOut>temp</valueOut>
+			<valueIn>55</valueIn><valueOut>temp</valueOut>
+			<valueIn>56</valueIn><valueOut>temp</valueOut>
+			<valueIn>57</valueIn><valueOut>temp</valueOut>
+			<valueIn>58</valueIn><valueOut>temp</valueOut>
+			<valueIn>59</valueIn><valueOut>temp</valueOut>
+			<valueIn>60</valueIn><valueOut>num</valueOut>
+			<valueIn>61</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>62</valueIn><valueOut>num</valueOut>
+			<valueIn>63</valueIn><valueOut>num</valueOut>
+			<valueIn>64</valueIn><valueOut>num</valueOut>
+			<valueIn>65</valueIn><valueOut>temp</valueOut>
+			<valueIn>66</valueIn><valueOut>temp</valueOut>
+			<valueIn>72</valueIn><valueOut>num</valueOut>
+			<valueIn>73</valueIn><valueOut>num</valueOut>
+			<valueIn>74</valueIn><valueOut>frequency</valueOut>
+			<valueIn>75</valueIn><valueOut>voltage</valueOut>
+			<valueIn>76</valueIn><valueOut>voltage</valueOut>
+			<valueIn>77</valueIn><valueOut>amperage</valueOut>
+			<valueIn>78</valueIn><valueOut>num</valueOut>
+			<valueIn>79</valueIn><valueOut>num</valueOut>
+			<valueIn>80</valueIn><valueOut>num</valueOut>
+			<valueIn>81</valueIn><valueOut>num</valueOut>
+			<valueIn>100</valueIn><valueOut>temp</valueOut>
+			<valueIn>101</valueIn><valueOut>temp</valueOut>
+			<valueIn>102</valueIn><valueOut>humidity</valueOut>
+			<valueIn>103</valueIn><valueOut>num</valueOut>
+			<valueIn>104</valueIn><valueOut>num</valueOut>
+			<valueIn>105</valueIn><valueOut>num</valueOut>
+			<valueIn>106</valueIn><valueOut>num</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+    
+    
+    
+</device>  
+</APC_DDF>

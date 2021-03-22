@@ -1,0 +1,2322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="tripplite_webcardlx"
+	ddfname="TrippLite WEBCARDLX"
+	ddfversion="10"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="tripplite_webcardlx">
+		<oidMustExist ruleid="tlpProducts" oid=".1.3.6.1.4.1.850.1" istree="yes"/>
+
+		<valueMap ruleid="type-vm">
+			<valueIn>.1.3.6.1.4.1.850.1.1.3.1</valueIn><valueOut>UPS</valueOut>
+			<valueIn>.1.3.6.1.4.1.850.1.1.3.2</valueIn><valueOut>PDU</valueOut>
+			<valueIn>.1.3.6.1.4.1.850.1.1.3.3</valueIn><valueOut>Environmental Monitor</valueOut>
+			<valueIn>.1.3.6.1.4.1.850.1.1.3.4</valueIn><valueOut>Transfer Switch</valueOut>
+			<valueIn>*</valueIn><valueOut>Generic Device</valueOut>
+		</valueMap>
+		<setProductData ruleid="typedata" field="type">
+			<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/type-vm">
+				<getOid usegetnext="yes" default="0">.1.3.6.1.4.1.850.1.1.1.2.1.3</getOid>
+			</mapValue>
+		</setProductData>
+
+		<setProductData ruleid="tlpDeviceManufacturer" field="vendor">
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.1.2.1.4</getOid>
+		</setProductData>
+		<setProductData ruleid="tlpDeviceModel" field="model">
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.1.2.1.5</getOid>
+		</setProductData>
+
+		<setDefaultLabel>
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.1.2.1.6</getOid>
+		</setDefaultLabel>
+		<setDefaultLocation ruleid="tlpDeviceLocation" field="LOCATION">
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.1.2.1.8</getOid>
+		</setDefaultLocation>
+
+		<setProductData ruleid="tlpAgentVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.850.1.2.1.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="tlpDeviceIdentSerialNum" field="serial_num">
+			<getOid>.1.3.6.1.4.1.850.1.2.1.1.5.0</getOid>
+		</setProductData>
+		<setProductData ruleid="tlpAgentMAC" field="mac_addr">
+			<getOid>.1.3.6.1.4.1.850.1.2.1.1.4.0</getOid>
+		</setProductData>
+
+		<numSensor ruleid="tlp_device_num_devices">
+			<type>num</type>
+			<sensorId>_TLP_DEVICE_NUM_DEVICES</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Devices</label>
+			<sensorSet>Devices</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="tlp_device_row_status" index=".1.3.6.1.4.1.850.1.1.1.2.1.2">
+			<type>state</type>
+			<sensorId>_TLP_DEVICE_ROW_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/rowStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Row Status</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/rowStatus-em</enum>
+			<sensorSet>Devices</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="tlp_device_status" index=".1.3.6.1.4.1.850.1.1.1.2.1.10">
+			<type>state</type>
+			<sensorId>_TLP_DEVICE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/alarmStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.10</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Status</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/alarmStatus-em</enum>
+			<sensorSet>Devices</sensorSet>
+		</stateSensor>
+
+		<stringSensor ruleid="tlp_device_ident_firmware_version" index=".1.3.6.1.4.1.850.1.1.2.1.1.4">
+			<type>string</type>
+			<sensorId>_TLP_DEVICE_IDENT_FIRMWARE_VERSION_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.2.1.1.4</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Firmware Version</label>
+			<sensorSet>Devices</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="tlp_device_ident_serial_num" index=".1.3.6.1.4.1.850.1.1.2.1.1.5">
+			<type>string</type>
+			<sensorId>_TLP_DEVICE_IDENT_SERIAL_NUM_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.2.1.1.5</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Serial Number</label>
+			<sensorSet>Devices</sensorSet>
+		</stringSensor>
+
+		<stringSensor ruleid="tlp_agent_version">
+			<type>string</type>
+			<sensorId>_TLP_AGENT_VERSION</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.850.1.2.1.1.2.0</getOid>
+			</value>
+			<label>Device Agent Version</label>
+			<sensorSet>Devices</sensorSet>
+		</stringSensor>
+
+		<valueMap ruleid="rowStatus-vm">
+			<valueIn>1</valueIn>			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>			<valueOut>2</valueOut>
+			<valueIn>4</valueIn>			<valueOut>3</valueOut>
+			<valueIn>5</valueIn>			<valueOut>4</valueOut>
+			<valueIn>6</valueIn>			<valueOut>5</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="rowStatus-em">
+			<label>Active</label>
+			<label>Not In Service</label>
+			<label>Not Ready</label>
+			<label>Create And Go</label>
+			<label>Create And Wait</label>
+			<label>Destroy</label>
+		</enumMap>
+
+		<valueMap ruleid="alarmStatus-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>			<valueOut>3</valueOut>
+			<valueIn>4</valueIn>			<valueOut>4</valueOut>
+			<valueIn>5</valueIn>			<valueOut>5</valueOut>
+			<valueIn>6</valueIn>			<valueOut>6</valueOut>
+			<valueIn>7</valueIn>			<valueOut>7</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="alarmStatus-em">
+			<label>None</label>
+			<label>Critical</label>
+			<label>Warning</label>
+			<label>Info</label>
+			<label>Status</label>
+			<label>Offline</label>
+			<label>Custom</label>
+			<label>Configuration</label>
+		</enumMap>
+
+		<valueMap ruleid="openClosed-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>			<valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="openClosed-em">
+			<label>Open</label>
+			<label>Closed</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="onOff-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Unknown</label>
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<valueMap ruleid="id_cy_vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>			<valueOut>3</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="id_cy_em">
+			<label>Idle</label>
+			<label>Turn Off</label>
+			<label>Turn On</label>
+			<label>Cycle</label>
+		</enumMap>
+
+		<valueMap ruleid="inputSource-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>			<valueOut>3</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="inputSource-em">
+			<label>None</label>
+			<label>Source A</label>
+			<label>Source B</label>
+			<label>Sources A and B</label>
+		</enumMap>
+
+		<valueMap ruleid="rampAction-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="rampAction-em">
+			<label>Remain Off</label>
+			<label>Turn On After Delay</label>
+		</enumMap>
+
+		<valueMap ruleid="shedAction-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="shedAction-em">
+			<label>Remain On</label>
+			<label>Turn Off After Delay</label>
+		</enumMap>
+
+		<valueMap ruleid="phase-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>			<valueOut>3</valueOut>
+			<valueIn>4</valueIn>			<valueOut>4</valueOut>
+			<valueIn>5</valueIn>			<valueOut>5</valueOut>
+			<valueIn>6</valueIn>			<valueOut>6</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="phase-em">
+			<label>Unknown</label>
+			<label>Phase1</label>
+			<label>Phase2</label>
+			<label>Phase3</label>
+			<label>Phase1-2</label>
+			<label>Phase2-3</label>
+			<label>Phase3-1</label>
+		</enumMap>
+
+		<valueMap ruleid="enabledDisabled-vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="enabledDisabled-em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+
+		<valueMap ruleid="un_nm_vm">
+			<valueIn>0</valueIn>			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>			<valueOut>3</valueOut>
+			<valueIn>4</valueIn>			<valueOut>4</valueOut>
+			<valueIn>5</valueIn>			<valueOut>5</valueOut>
+			<valueIn>6</valueIn>			<valueOut>6</valueOut>
+			<valueIn>7</valueIn>			<valueOut>7</valueOut>
+			<valueIn>8</valueIn>			<valueOut>8</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="un_nm_em">
+			<label>Unknown</label>
+			<label>TEMPERATURE</label>
+			<label>Pal</label>
+			<label>Pansa</label>
+			<label>Delta</label>
+			<label>Sinetica</label>
+			<label>Netos6</label>
+			<label>Netos7</label>
+			<label>Panms</label>
+			<label>Nmc5</label>
+		</enumMap>
+
+		<valueMap ruleid="cri_in_vm">
+			<valueIn>1</valueIn>			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>			<valueOut>1</valueOut>
+			<valueIn>3</valueIn>			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="cri_in_vm">
+			<label>Critical</label>
+			<label>Warning</label>
+			<label>Warning</label>
+		</enumMap>
+
+	</device>
+
+	<device deviceid="tlpUps">
+		<oidMustExist ruleid="exists-tlpUps" istree="yes" oid=".1.3.6.1.4.1.850.1.1.3.1" />
+		<oidMustNotMatch ruleid="tlpIdentNumUps" oid=".1.3.6.1.4.1.850.1.1.3.1.1.1.0">
+			<valueList>
+				<value>0</value>
+			</valueList>
+		</oidMustNotMatch>
+
+		<setProductData ruleid="tlpUpsNumInputs" field="inputphasecount">
+			<getOid>.1.3.6.1.4.1.850.1.1.3.1.1.2.1.1.1</getOid>
+		</setProductData>
+		<setProductData ruleid="tlpUpsNumOutputs" field="outputphasecount">
+			<getOid>.1.3.6.1.4.1.850.1.1.3.1.1.2.1.2.1</getOid>
+		</setProductData>
+
+		<suppressRule ruleid="suppress-upsBatteryStatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<valueMap ruleid="upsBatteryStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsBatteryStatus-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Low</label>
+			<label>Depleted</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryStatus" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.1">
+			<type>state/battstatus</type>
+			<sensorId>TLPUPS<rowIndex/>_BATTSTATUS</sensorId>
+			<value>
+				<mapValue mapid="upsBatteryStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Status</label>
+			<enum>upsBatteryStatus-em</enum>
+			<sensorSet>UPS - Battery Summary</sensorSet>
+		</stateSensor>
+
+		<suppressRule ruleid="suppress-upsBatteryStatus" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<numSensor ruleid="tlpUpsSecondsOnBattery" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.2">
+			<type>timeinmin</type>
+			<sensorId>TLPUPS<rowIndex/>_TIME_ON_BATT</sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.2</getRowOid></op>
+					<op>60</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Time Running on Battery</label>
+			<sensorSet>UPS - Battery Summary</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBatteryStatus" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+		<numSensor ruleid="tlpUpsEstimatedMinutesRemaining" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.3">
+			<type>timeinmin/timeremainingonbatt</type>
+			<sensorId>TLPUPS<rowIndex/>_TIME_REMAINING_ON_BATT</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.3</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Time Remaining</label>
+			<sensorSet>UPS - Battery Summary</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsEstimatedChargeRemaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		<numSensor ruleid="tlpUpsEstimatedChargeRemaining" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.4">
+			<type>pctofcapacity/pctofbatt</type>
+			<sensorId>TLPUPS<rowIndex/>_BATT_CAPACITY_LEFT</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.1.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Capacity Remaining</label>
+			<sensorSet>UPS - Battery Summary</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBatteryVoltage" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<numSensor ruleid="tlpUpsBatteryDetailVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.1">
+			<type>voltage/battvoltage</type>
+			<sensorId>TLPUPS<rowIndex/>_BATT_VOLTAGE</sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.1</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Voltage</label>
+			<sensorSet>UPS - Battery Detail</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBatteryCurrent" suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+		<numSensor ruleid="tlpUpsBatteryDetailCurrent" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.2">
+			<type>amperage/battamps</type>
+			<sensorId>TLPUPS<rowIndex/>_BATT_AMPERAGE</sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Current</label>
+			<sensorSet>UPS - Battery Detail</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="tlpUpsBatteryDetailCharge-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryDetailCharge-em">
+			<label>Floating</label>
+			<label>Charging</label>
+			<label>Resting</label>
+			<label>Discharging</label>
+			<label>Normal</label>
+			<label>Standby</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryDetailCharge" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.4">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_CHARGE</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryDetailCharge-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Charge State</label>
+			<enum>tlpUpsBatteryDetailCharge-em</enum>
+			<sensorSet>UPS - Battery Detail</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tlpUpsBatteryDetailChargerStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryDetailChargerStatus-em">
+			<label>OK</label>
+			<label>In Fault Condition</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryDetailChargerStatus" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.5">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_CHARGER_STATUS</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryDetailCharge-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.2.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Battery Charger Status</label>
+			<enum>tlpUpsBatteryDetailCharge-em</enum>
+			<sensorSet>UPS - Battery Detail</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tlpUpsBatteryPackConfigChemistry-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryPackConfigChemistry-em">
+			<label>Unknown</label>
+			<label>Lead-Acid</label>
+			<label>Nickel-Cadmium</label>
+			<label>Lithium-Ion</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryPackConfigChemistry" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.1">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_CHEMISTRY</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryPackConfigChemistry-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Chemistry
+			</label>
+			<enum>tlpUpsBatteryPackConfigChemistry-em</enum>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tlpUpsBatteryPackConfigStyle-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryPackConfigStyle-em">
+			<label>Unknown</label>
+			<label>Non-Smart</label>
+			<label>Smart</label>
+			<label>BMS</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryPackConfigStyle" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.2">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_STYLE</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryPackConfigStyle-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Style
+			</label>
+			<enum>tlpUpsBatteryPackConfigStyle-em</enum>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="tlpUpsBatteryPackConfigLocation-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryPackConfigLocation-em">
+			<label>Unknown</label>
+			<label>Internal</label>
+			<label>External</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryPackConfigLocation" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.3">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_LOCATION</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryPackConfigLocation-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Location
+			</label>
+			<enum>tlpUpsBatteryPackConfigLocation-em</enum>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="tlpUpsBatteryPackConfigStrings" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.4">
+			<type>num</type>
+			<sensorId>TLPUPS<rowIndex/>_STRINGS</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Number of Strings
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigBatteriesPerString" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.5">
+			<type>num</type>
+			<sensorId>TLPUPS<rowIndex/>_BATTERIESPERSTRING</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.5</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Number of Batteries per String
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigCellsPerBattery" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.6">
+			<type>num</type>
+			<sensorId>TLPUPS<rowIndex/>_CELLSPERBATT</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.6</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Number of Cells per Battery
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigNumBatteries" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.7">
+			<type>num</type>
+			<sensorId>TLPUPS<rowIndex/>_NUMBATTERIES</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.7</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Total Number of Batteries
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="tlpUpsBatteryPackConfigCapacityUnits-vm">
+			<valueIn>0</valueIn><valueOut>amphours</valueOut>
+			<valueIn>1</valueIn><valueOut>watthours</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<numSensor ruleid="tlpUpsBatteryPackConfigDesignCapacity" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.9">
+			<type>num</type>
+			<units>
+				<mapValue mapid="tlpUpsBatteryPackConfigCapacityUnits-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.8</getRowOid>
+				</mapValue>
+			</units>
+			<sensorId>TLPUPS<rowIndex/>_DESIGN_CAPACITY</sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.9</getRowOid></op><op>0.001</op></mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Nominal Capacity
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigCellCapacity" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.10">
+			<type>num</type>
+			<units>
+				<mapValue mapid="tlpUpsBatteryPackConfigCapacityUnits-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.8</getRowOid>
+				</mapValue>
+			</units>
+			<sensorId>TLPUPS<rowIndex/>_CELL_CAPACITY</sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.10</getRowOid></op><op>0.001</op></mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Capacity per Cell
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigMinCellVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.11">
+			<type>voltage</type>
+			<sensorId>TLPUPS<rowIndex/>_MIN_CELL_VOLTAGE</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.11</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Minimum Cell Voltage
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackConfigMaxCellVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.12">
+			<type>voltage</type>
+			<sensorId>TLPUPS<rowIndex/>_MAX_CELL_VOLTAGE</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.12</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Maximum Cell Voltage
+			</label>
+			<sensorSet>UPS - Battery Pack Config</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="tlpUpsBatteryPackDetailCondition-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsBatteryPackDetailCondition-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Weak</label>
+			<label>Bad</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsBatteryPackDetailCondition" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.3">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_CONDITION</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsBatteryPackDetailCondition-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.4.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Condition
+			</label>
+			<enum>tlpUpsBatteryPackDetailCondition-em</enum>
+			<sensorSet>UPS - Battery Pack Detail</sensorSet>
+		</stateSensor>
+
+		<suppressRule ruleid="suppress-upsBatteryTemperature" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		<numSensor ruleid="tlpUpsBatteryPackDetailTemperatureC" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.2">
+			<type>temp/batttemp</type>
+			<sensorId>TLPUPS<rowIndex/>_BATT_TEMP</sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.2</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Temperature
+			</label>
+			<sensorSet>UPS - Battery Pack Detail</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tlpUpsBatteryPackDetailLastReplaceDate" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.5">
+			<type>timeindays</type>
+			<sensorId>TLPUPS<rowIndex/>_LAST_REPLACE</sensorId>
+			<value>
+				<div>
+					<op>
+						<sub>
+							<op><curUTCTime/></op>
+							<op>
+								<parseDate>
+									<regex>
+										<op>(\d\d\d\d)(\d\d)(\d\d)</op>
+										<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.5</getRowOid></op>
+										<op>%2$s-%3$s-%1$s</op>
+									</regex>
+								</parseDate>
+							</op>
+						</sub>
+					</op>
+					<op>86400</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Time Since Last Replaced
+			</label>
+			<sensorSet>UPS - Battery Pack Detail</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlpUpsBatteryPackDetailNextReplaceDate" index=".1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.6">
+			<type>timeindays</type>
+			<sensorId>TLPUPS<rowIndex/>_NEXT_REPLACE</sensorId>
+			<value>
+				<div>
+					<op>
+						<sub>
+							<op>
+								<parseDate>
+									<regex>
+										<op>(\d\d\d\d)(\d\d)(\d\d)</op>
+										<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.1.5.1.6</getRowOid></op>
+										<op>%2$s-%3$s-%1$s</op>
+									</regex>
+								</parseDate>
+							</op>
+							<op><curUTCTime/></op>
+						</sub>
+					</op>
+					<op>86400</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Battery Pack %2$s</op>
+				</regex><space/>
+				Time Until Next Replace
+			</label>
+			<sensorSet>UPS - Battery Pack Detail</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsInputFrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<numSensor ruleid="tlpUpsInputPhaseFrequency" index=".1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.2">
+			<type>frequency/inputfrequency</type>
+			<sensorId>TLPUPS<rowIndex/>_INPUT_FREQ_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.2</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Input Frequency - Phase <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Input Phase<space/><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<numSensor ruleid="tlpUpsInputPhaseVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.3">
+			<type>voltageAC/input/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_INPUT_VOLTAGE_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.3</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Input Voltage - Phase <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Input Phase<space/><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<numSensor ruleid="tlpUpsInputPhaseCurrent" index=".1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.6">
+			<type>amperage/input/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_INPUT_AMPS_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.6</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Input Current - Phase <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Input Phase<space/><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsInputTruePower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<numSensor ruleid="tlpUpsInputPhasePower" index=".1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.7">
+			<type>powerW/outputpower/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_INPUT_POWER_PHASE<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.7</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Input Power - Phase <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Input Phase<space/><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.2.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsOutputSource" suppressid="upsmib/upsmib/upsOutputSource"/>
+		<enumMap ruleid="upsOutputSource-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>None</label>
+			<label>Normal</label>
+			<label>Bypass</label>
+			<label>Battery</label>
+			<label>Boosting</label>
+			<label>Reducing</label>
+			<label>Second</label>
+			<label>Economy</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsOutputSource" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.1.1.1">
+			<type>state/outputsource</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_SOURCE</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.1.1.1</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Output Source</label>
+			<enum>upsOutputSource-em</enum>
+			<sensorSet>UPS - Output</sensorSet>
+		</stateSensor>
+
+		<suppressRule ruleid="suppress-upsOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<numSensor ruleid="tlpUpsOutputFrequency" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.1.1.3">
+			<type>frequency/outputfrequency</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_FREQ_0</sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.1.1.3</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Output Frequency</label>
+			<sensorSet>UPS - Output</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<numSensor ruleid="tlpUpsOutputLineVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.2">
+			<type>voltageAC/output/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_VAC_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.2</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Output Voltage - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Output Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<numSensor ruleid="tlpUpsOutputLineCurrent" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.3">
+			<type>amperage/output/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_AMPS_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<div>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.3</getRowOid></op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Output Current - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Output Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsOutputPower" suppressid="upsmib/upsmib/upsOutputPower"/>
+		<numSensor ruleid="tlpUpsOutputLinePower" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.4">
+			<type>powerW/inputpower/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_POWER_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Output Power - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Output Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsOutputPercentLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<numSensor ruleid="tlpUpsOutputLinePercentLoad" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.5">
+			<type>pctofcapacity/outputload/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_LOAD_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.5</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Output Load - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Output Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tlpUpsOutputLineFrequency" index=".1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.6">
+			<type>frequency</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTPUT_FREQ_<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.6</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Output Frequency - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Output Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.3.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBypassFrequency" suppressid="upsmib/upsmib/upsBypassFrequency"/>
+		<numSensor ruleid="tlpUpsBypassFrequency" index=".1.3.6.1.4.1.850.1.1.3.1.3.4.1.1.1">
+			<type>frequency/bypassfrequency</type>
+			<sensorId>TLPUPS<rowIndex/>_BYPASS_FREQUENCY</sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.1.1.1</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Bypass Frequency</label>
+			<sensorSet>UPS - Bypass</sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBypassVoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+		<numSensor ruleid="tlpUpsBypassLineVoltage" index=".1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.2">
+			<type>voltageAC/bypass/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_BYPASS_VOLTAGE_PHASE<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.2</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Bypass Voltage - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Bypass Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBypassCurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+		<numSensor ruleid="tlpUpsBypassLineCurrent" index=".1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.3">
+			<type>amperage/bypass/phase</type>
+			<sensorId>TLPUPS<rowIndex/>_BYPASS_CURRENT_PHASE<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.3</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Bypass Current - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Bypass Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<suppressRule ruleid="suppress-upsBypassPower" suppressid="upsmib/upsmib/upsBypassPower"/>
+		<numSensor ruleid="tlpUpsBypassLinePower" index=".1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.4">
+			<type>powerW</type>
+			<sensorId>TLPUPS<rowIndex/>_BYPASS_POWER_PHASE<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.4</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				Bypass Power - Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></label>
+			<sensorSet>UPS - Bypass Line <getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.4.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="tlpUpsOutletState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="tlpUpsOutletState-em">
+			<label>Unknown</label>
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		<stateSensor ruleid="tlpUpsOutletState" index=".1.3.6.1.4.1.850.1.1.3.1.3.5.1.1.4">
+			<type>state</type>
+			<sensorId>TLPUPS<rowIndex/>_OUTLET_STATE</sensorId>
+			<value>
+				<mapValue mapid="tlpUpsOutletState-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.5.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>
+				.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.1.3.5.1.1.2</getRowOid> State</label>
+			<enum>tlpUpsOutletState-em</enum>
+			<sensorSet>UPS - Outlets</sensorSet>
+		</stateSensor>
+
+	</device>
+
+	<device deviceid="tlpPdu">
+		<oidMustExist ruleid="exists-tlpPdu" istree="yes" oid=".1.3.6.1.4.1.850.1.1.3.2" />
+		<oidMustNotMatch ruleid="tlpIdentNumPdu" oid=".1.3.6.1.4.1.850.1.1.3.2.1.1.0">
+			<valueList>
+				<value>0</value>
+			</valueList>
+		</oidMustNotMatch>
+		
+		<!-- suppress upsmib alarms -->
+		<suppressRule ruleid="suppressupsMib_alarm" suppressid="upsmib/upsmib/upsMib_alarm"/>
+
+		<setProductData ruleid="tlpPduIdentNumPhases-in" field="inputphasecount">
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.3.2.1.2.1.3</getOid>
+		</setProductData>
+		<setProductData ruleid="tlpPduIdentNumPhases-out" field="outputphasecount">
+			<getOid usegetnext="yes">.1.3.6.1.4.1.850.1.1.3.2.1.2.1.3</getOid>
+		</setProductData>
+
+		<stateSensor ruleid="tlp_pdu_device_main_load_state" index=".1.3.6.1.4.1.850.1.1.3.2.2.1.1.1">
+			<type>state</type>
+			<sensorId>_TLP_PDU_DEVICE_MAIN_LOAD_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/onOff-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.2.1.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Main Load State</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/onOff-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_pdu_device_power_on_delay" index=".1.3.6.1.4.1.850.1.1.3.2.2.1.1.4">
+			<type>num</type>
+			<sensorId>_TLP_PDU_DEVICE_POWER_ON_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.850.1.1.3.2.2.1.1.4</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Power On Delay</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_nominal_voltage" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.1">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_NOMINAL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input Nominal Voltage</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_low_transfer_voltage" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.4">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_LOW_TRANSFER_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.4</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input Low Transfer Voltage</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_high_transfer_voltage" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.7">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_HIGH_TRANSFER_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.1.1.7</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input High Transfer Voltage</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tlp_pdu_input_phase_frequency" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.3">
+			<type>frequency</type>
+			<sensorId>_TLP_PDU_INPUT_PHASE_FREQUENCY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				Frequency
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_phase_voltage" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.4">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_PHASE_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				Voltage
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_phase_voltage_min" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.5">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_PHASE_VOLTAGE_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				Min Voltage
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_input_phase_voltage_max" index=".1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.6">
+			<type>voltage</type>
+			<sensorId>_TLP_PDU_INPUT_PHASE_VOLTAGE_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.1.2.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				Min Voltage
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tlp_pdu_output_current" index=".1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.5">
+			<type>amperage</type>
+			<sensorId>_TLP_PDU_OUTPUT_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.5</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current <getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.1</getRowOid>
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_output_current_min" index=".1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.6">
+			<type>amperage</type>
+			<sensorId>_TLP_PDU_OUTPUT_CURRENT_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.6</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current Min <getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.1</getRowOid>
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_output_current_max" index=".1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.7">
+			<type>amperage</type>
+			<sensorId>_TLP_PDU_OUTPUT_CURRENT_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.7</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current Max <getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.1</getRowOid>
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_output_active_power" index=".1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.8">
+			<type>powerW</type>
+			<sensorId>_TLP_PDU_OUTPUT_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.8</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Power <getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.2.1.1.1</getRowOid>
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+
+
+		<stateSensor ruleid="tlp_pdu_outlet_state" index=".1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.4">
+			<type>state</type>
+			<sensorId>_TLP_PDU_OUTLET_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/onOff-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>State
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/onOff-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="tlp_pdu_outlet_ramp_action" index=".1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.10">
+			<type>state</type>
+			<sensorId>_TLP_PDU_OUTLET_RAMP_ACTION_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/rampAction-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.10</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>Ramp Action
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/rampAction-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_pdu_outlet_ramp_delay" index=".1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.11">
+			<type>timeinsec</type>
+			<sensorId>_TLP_PDU_OUTLET_RAMP_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.11</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>Ramp Delay
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="tlp_pdu_outlet_shed_action" index=".1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.12">
+			<type>state</type>
+			<sensorId>_TLP_PDU_OUTLET_SHED_ACTION_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/shedAction-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.12</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>Shed Action
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/shedAction-em</enum>
+			<sensorSet>PDU</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_pdu_outlet_shed_delay" index=".1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.13">
+			<type>timeinsec</type>
+			<sensorId>_TLP_PDU_OUTLET_SHED_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.13</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>Shed Delay
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_pdu_circuit_total_current" index=".1.3.6.1.4.1.850.1.1.3.2.3.4.1.1.4">
+			<type>amperage</type>
+			<sensorId>_TLP_PDU_CIRCUIT_TOTAL_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.4.1.1.4</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Circuit %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.2.3.3.1.1.2</getRowOid><space/>Total Current
+			</label>
+			<sensorSet>PDU</sensorSet>
+		</numSensor>
+	</device>
+
+	<device deviceid="tlpEnvirosense">
+		<oidMustExist ruleid="exists-tlpEnv" istree="yes" oid=".1.3.6.1.4.1.850.1.1.3.3" />
+		<oidMustNotMatch ruleid="tlpEnvIdentNumEnvirosense" oid=".1.3.6.1.4.1.850.1.1.3.3.1.1.0">
+			<valueList>
+				<value>0</value>
+			</valueList>
+		</oidMustNotMatch>
+
+		<numSensor ruleid="tlp_env_temperature_c" index=".1.3.6.1.4.1.850.1.1.3.3.3.1.1.1">
+			<type>temp</type>
+			<sensorId>_TLP_ENV_TEMPERATURE_C_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.1.1.1</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Temperature</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+		<alarmFlags2 ruleid="tlp_env_temperature_in_alarm" index=".1.3.6.1.4.1.850.1.1.3.3.3.1.1.3">
+			<value><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.1.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Temperature Alarm</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid>: A Temperature Alarm is present.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid>: Temperature Alarm is no longer present.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="tlp_env_humidity_humidity" index=".1.3.6.1.4.1.850.1.1.3.3.3.2.1.1">
+			<type>humidity</type>
+			<sensorId>_TLP_ENV_HUMIDITY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.2.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Humidity</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+		<alarmFlags2 ruleid="tlp_env_humidity_in_alarm" index=".1.3.6.1.4.1.850.1.1.3.3.3.2.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.2.1.2</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Humidity Alarm</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid>: A Humidity Alarm is present.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid>: Humidity Alarm is no longer present.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<stateSensor ruleid="tlp_env_input_contact_normal_state" index="1.3.6.1.4.1.850.1.1.3.3.3.3.1.3">
+			<type>state</type>
+			<sensorId>_TLP_ENV_INPUT_CONTACT_NORMAL_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/openClosed-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.3.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.\d+</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+							<op>null</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.3.1.2</getRowOid><space/>Normal State
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/openClosed-em</enum>
+			<sensorSet>Envirosense</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="tlp_env_input_contact_current_state" index="1.3.6.1.4.1.850.1.1.3.3.3.3.1.4">
+			<type>state</type>
+			<sensorId>_TLP_ENV_INPUT_CONTACT_CURRENT_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/openClosed-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.3.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<formatNumber printffmt="%1.0f">
+						<regex>
+							<op>(\d+)\.\d+</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+							<op>null</op>
+						</regex>
+					</formatNumber>
+				</getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.3.1.2</getRowOid><space/>Current State
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/openClosed-em</enum>
+			<sensorSet>Envirosense</sensorSet>
+		</stateSensor>
+
+		<alarmFlags2 ruleid="tlp_env_input_contact_in_alarm" index=".1.3.6.1.4.1.850.1.1.3.3.3.3.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.3.3.1.5</getRowOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Tlp Env Input Contact In Alarm Condition Present</activeText>
+					<inactiveText>Tlp Env Input Contact In Alarm Condition Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>system</category>
+				<description>
+					<activeText>Tlp Env Input Contact In Alarm Condition Present</activeText>
+					<inactiveText>Tlp Env Input Contact In Alarm Condition Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="tlp_env_temperature_low_limit" index=".1.3.6.1.4.1.850.1.1.3.3.5.1.1.1">
+			<type>temp</type>
+			<sensorId>_TLP_ENV_TEMPERATURE_LOW_LIMIT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<sub>
+							<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.5.1.1.1</getRowOid></op>
+							<op>32</op>
+						</sub>
+					</op>
+					<op><div><op>5</op><op>9</op></div></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Temperature Low Limit</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_env_temperature_high_limit" index=".1.3.6.1.4.1.850.1.1.3.3.5.1.1.2">
+			<type>temp</type>
+			<sensorId>_TLP_ENV_TEMPERATURE_HIGH_LIMIT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>
+						<sub>
+							<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.3.5.1.1.2</getRowOid></op>
+							<op>32</op>
+						</sub>
+					</op>
+					<op><div><op>5</op><op>9</op></div></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Temperature High Limit</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_env_humidity_low_limit" index=".1.3.6.1.4.1.850.1.1.3.3.5.1.1.3">
+			<type>humidity</type>
+			<sensorId>_TLP_ENV_HUMIDITY_LOW_LIMIT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.5.1.1.3</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Humidity Low Limit</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_env_humidity_high_limit" index=".1.3.6.1.4.1.850.1.1.3.3.5.1.1.4">
+			<type>humidity</type>
+			<sensorId>_TLP_ENV_HUMIDITY_HIGH_LIMIT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.3.5.1.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Humidity High Limit</label>
+			<sensorSet>Envirosense</sensorSet>
+		</numSensor>
+	</device>
+
+	<device deviceid="tlpAts">
+		<oidMustExist ruleid="exists-tlpAts" istree="yes" oid=".1.3.6.1.4.1.850.1.1.3.4" />
+		<oidMustNotMatch ruleid="tlpUpsIdentNumAts" oid=".1.3.6.1.4.1.850.1.1.3.4.1.1.0">
+			<valueList>
+				<value>0</value>
+			</valueList>
+		</oidMustNotMatch>
+
+		<stateSensor ruleid="tlp_ats_device_main_load_state" index=".1.3.6.1.4.1.850.1.1.3.4.2.1.1.1">
+			<type>state</type>
+			<sensorId>_TLP_ATS_DEVICE_MAIN_LOAD_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/onOff-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.2.1.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Main Load State</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/onOff-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_ats_device_power_on_delay" index=".1.3.6.1.4.1.850.1.1.3.4.2.1.1.4">
+			<type>num</type>
+			<sensorId>_TLP_ATS_DEVICE_POWER_ON_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.850.1.1.3.4.2.1.1.4</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Power On Delay</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_nominal_voltage" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.1">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_NOMINAL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input Nominal Voltage</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_bad_transfer_voltage" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.4">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_BAD_TRANSFER_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.4</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input Bad Transfer Voltage</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_high_transfer_voltage" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.7">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_HIGH_TRANSFER_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.7</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input High Transfer Voltage</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="tlp_ats_input_source_availability" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.12">
+			<type>state</type>
+			<sensorId>_TLP_ATS_INPUT_SOURCE_AVAILABILITY</sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/inputSource-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.1.1.12</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.850.1.1.1.2.1.6</getRowOid> Input Sources Available</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/inputSource-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="tlp_ats_input_phase_frequency" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.4">
+			<type>frequency</type>
+			<sensorId>_TLP_ATS_INPUT_PHASE_FREQUENCY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>Input<space/>
+				<regex>
+					<op>(\d+)\.(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %3$s</op>
+					<op>null</op>
+				</regex><space/>
+				Frequency
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_phase_voltage" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.5">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_PHASE_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>Input<space/>
+				<regex>
+					<op>(\d+)\.(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %3$s</op>
+					<op>null</op>
+				</regex><space/>
+				Voltage
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_phase_voltage_min" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.6">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_PHASE_VOLTAGE_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>Input<space/>
+				<regex>
+					<op>(\d+)\.(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %3$s</op>
+					<op>null</op>
+				</regex><space/>
+				Min Voltage
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_input_phase_voltage_max" index=".1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.7">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_INPUT_PHASE_VOLTAGE_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.1.2.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>Input<space/>
+				<regex>
+					<op>(\d+)\.(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Phase %3$s</op>
+					<op>null</op>
+				</regex><space/>
+				Min Voltage
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tlp_ats_output_voltage" index=".1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.4">
+			<type>voltage</type>
+			<sensorId>_TLP_ATS_OUTPUT_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.4</getRowOid></op><op>0.1</op></mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Voltage
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_output_current" index=".1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.5">
+			<type>amperage</type>
+			<sensorId>_TLP_ATS_OUTPUT_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.5</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_output_current_min" index=".1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.6">
+			<type>amperage</type>
+			<sensorId>_TLP_ATS_OUTPUT_CURRENT_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.6</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current Min
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_output_current_max" index=".1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.7">
+			<type>amperage</type>
+			<sensorId>_TLP_ATS_OUTPUT_CURRENT_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.2.1.1.7</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				Output Current Max
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="tlp_ats_outlet_state" index=".1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.4">
+			<type>state</type>
+			<sensorId>_TLP_ATS_OUTLET_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/onOff-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>State
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/onOff-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="tlp_ats_outlet_ramp_action" index=".1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.10">
+			<type>state</type>
+			<sensorId>_TLP_ATS_OUTLET_RAMP_ACTION_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/rampAction-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.10</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>Ramp Action
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/rampAction-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_ats_outlet_ramp_delay" index=".1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.11">
+			<type>timeinsec</type>
+			<sensorId>_TLP_ATS_OUTLET_RAMP_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.11</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>Ramp Delay
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="tlp_ats_outlet_shed_action" index=".1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.12">
+			<type>state</type>
+			<sensorId>_TLP_ATS_OUTLET_SHED_ACTION_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="tripplite_webcardlx/tripplite_webcardlx/shedAction-vm">
+					<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.12</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>Shed Action
+			</label>
+			<enum>tripplite_webcardlx/tripplite_webcardlx/shedAction-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="tlp_ats_outlet_shed_delay" index=".1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.13">
+			<type>timeinsec</type>
+			<sensorId>_TLP_ATS_OUTLET_SHED_DELAY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.13</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>Shed Delay
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+		<numSensor ruleid="tlp_ats_circuit_total_current" index=".1.3.6.1.4.1.850.1.1.3.4.3.4.1.1.4">
+			<type>amperage</type>
+			<sensorId>_TLP_ATS_CIRCUIT_TOTAL_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.4.1.1.4</getRowOid></op><op>0.01</op></mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.850.1.1.1.2.1.6.
+					<regex>
+						<op>(\d+)\.(\d+)</op>
+						<op><rowIndex/></op>
+						<op>%1$s</op>
+						<op>null</op>
+					</regex></getOid><space/>
+				<regex>
+					<op>(\d+)\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>Circuit %2$s</op>
+					<op>null</op>
+				</regex><space/>
+				<getRowOid>.1.3.6.1.4.1.850.1.1.3.4.3.3.1.1.2</getRowOid><space/>Total Current
+			</label>
+			<sensorSet>ATS</sensorSet>
+		</numSensor>
+	</device>
+
+	<device deviceid="tlpCooling">
+		<oidMustExist ruleid="exists-tlpCool" istree="yes" oid=".1.3.6.1.4.1.850.1.1.3.4" />
+		<oidMustNotMatch ruleid="tlpCoolingIdentNumCooling" oid=".1.3.6.1.4.1.850.1.1.3.5.1.1.0">
+			<valueList>
+				<value>0</value>
+			</valueList>
+		</oidMustNotMatch>
+	</device>
+</APC_DDF>

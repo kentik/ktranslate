@@ -1,0 +1,345 @@
+<?xml version="1.0"?>
+<!--  APC Rack Access related information -->
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="apcaccpx"
+	ddfname="APC RackAccess PX"
+	ddfversion="10">
+  <schemaVersion>1.6</schemaVersion>
+  <!-- accPX specific functionality -->
+  <device deviceid="accPX">
+    <oidMustMatch ruleid="accPXsysid" oid=".1.3.6.1.2.1.1.2.0">
+      <valueList>
+        <value>.1.3.6.1.4.1.318.1.3.22</value>
+        <value>.1.3.6.1.4.1.318.1.3.22.*</value>
+        <value>.1.3.6.1.4.1.318.1.3.8.5</value>
+        <value>.1.3.6.1.4.1.318.1.3.8.5.*</value>
+      </valueList>
+    </oidMustMatch>
+
+		
+
+    <!-- Time (1 - 120) in minutes that the front door can be allowed to remain
+         open without generating an alarm condition -->
+    <numSensor ruleid="frontallowedopentime">
+      <type>timeinmin/allowedopentime</type>
+      <sensorId>FRONT_ALLOWED_OPEN_TIME</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.20.1.3.2.0</getOid>
+      </value>
+      <label>Door 1 Can be Open For</label>
+      <sensorSet>Door 1 Configuration</sensorSet>
+    </numSensor>
+
+    <!-- display the current state of the front door lock: unlocked, locked,
+         notinstalled or disconnected -->
+    <stateSensor ruleid="frontdoorlockstate">
+      <type>state/accpxlock</type>
+      <sensorId>FRONT_DOOR_LOCK_STATUS</sensorId>
+      <value>
+        <mapValue mapid="doorlockstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.4.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 1 Lock Status</label>
+      <enum>doorlockstate</enum>
+      <sensorSet>Door 1 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the front door: open, closed, not
+         installed or disconnected -->
+    <stateSensor ruleid="frontdoorstate">
+      <type>state/accpxdoor</type>
+      <sensorId>FRONT_DOOR_STATE</sensorId>
+      <value>
+        <mapValue mapid="doorstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.4.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 1 Status</label>
+      <enum>doorstate</enum>
+      <sensorSet>Door 1 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the front door handle: open, closed, not
+         installed, or disconnected -->
+    <stateSensor ruleid="frontdoorhandlestate">
+      <type>state/accpxdoor</type>
+      <sensorId>FRONT_DOOR_HANDLE_STATE</sensorId>
+      <value>
+        <mapValue mapid="doorstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.4.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 1 Handle Status</label>
+      <enum>doorstate</enum>
+      <sensorSet>Door 1 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the front door alarm: normal, warning,
+         critical, front door not installed -->
+    <stateSensor ruleid="frontdooralarmstate">
+      <type>state/frontdooralarmstate</type>
+      <sensorId>FRONT_DOOR_ALARM_STATE</sensorId>
+      <value>
+        <mapValue mapid="alarmmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.4.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 1 Alarm Status</label>
+      <enum>alarmstate</enum>
+      <sensorSet>Door 1 Configuration</sensorSet>
+    </stateSensor>
+
+		
+
+
+    <!-- Rear Configuration -->
+
+    <!-- Time (1 - 120) in minutes that the rear door can be allowed to remain
+         open without generating an alarm condition -->
+    <numSensor ruleid="rearallowedopentime">
+      <type>timeinmin/allowedopentime</type>
+      <sensorId>REAR_ALLOWED_OPEN_TIME</sensorId>
+      <value>
+        <round increment="0.1">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.6.4.0</getOid>
+        </round>
+      </value>
+      <label>Door 2 Can be Open For</label>
+      <sensorSet>Door 2 Configuration</sensorSet>
+    </numSensor>
+
+
+
+    <!-- display the current state of the rear door lock: unlocked, locked,
+         notinstalled or disconnected -->
+    <stateSensor ruleid="reardoorlockstate">
+      <type>state/accpxlock</type>
+      <sensorId>REAR_DOOR_LOCK_STATUS</sensorId>
+      <value>
+        <mapValue mapid="doorlockstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.6.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 2 Lock Status</label>
+      <enum>doorlockstate</enum>
+      <sensorSet>Door 2 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the rear door: open, closed, not
+         installed or disconnected -->
+    <stateSensor ruleid="reardoorstate">
+      <type>state/accpxdoor</type>
+      <sensorId>REAR_DOOR_STATE</sensorId>
+      <value>
+        <mapValue mapid="doorstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.6.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 2 Status</label>
+      <enum>doorstate</enum>
+      <sensorSet>Door 2 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the rear door handle: open, closed, not
+         installed, or disconnected -->
+    <stateSensor ruleid="reardoorhandlestate">
+      <type>state/accpxdoor</type>
+      <sensorId>REAR_DOOR_HANDLE_STATE</sensorId>
+      <value>
+        <mapValue mapid="doorstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.6.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 2 Handle Status</label>
+      <enum>doorstate</enum>
+      <sensorSet>Door 2 Configuration</sensorSet>
+    </stateSensor>
+
+    <!-- display the current state of the rear door alarm: normal, warning,
+         critical, front door not installed -->
+    <stateSensor ruleid="reardooralarmstate">
+      <type>state/reardooralarmstate</type>
+      <sensorId>REAR_DOOR_ALARM_STATE</sensorId>
+      <value>
+        <mapValue mapid="alarmmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.6.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Door 2 Alarm Status</label>
+      <enum>alarmstate</enum>
+      <sensorSet>Door 2 Configuration</sensorSet>
+    </stateSensor>
+
+		
+
+    <valueMap ruleid="doorlockstatemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="doorstatemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="alarmmap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="doorlockstate">
+      <label>Unknown</label>
+      <label>Unlocked</label>
+      <label>Locked</label>
+      <label>Not installed</label>
+      <label>Disconnected</label>
+    </enumMap>
+    
+    <enumMap ruleid="doorstate">
+      <label>Unknown</label>
+      <label>Open</label>
+      <label>Closed</label>
+      <label>Not installed</label>
+      <label>Disconnected</label>
+    </enumMap>
+    
+    <enumMap ruleid="alarmstate">
+      <label>Unknown</label>
+      <label>Normal</label>
+      <label>Warning</label>
+      <label>Critical</label>
+      <label>Door is not installed</label>
+    </enumMap>
+
+	
+    <valueMap ruleid="doorlockreadstatemap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>4</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="doorlockreadstate">
+      <label>Unlocked</label>
+      <label>Locked</label>
+      <label>Not installed</label>
+      <label>Disconnected</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+    <enumMap ruleid="doorlockwritestate">
+      <label>Unlock</label>
+      <label>Lock</label>
+    </enumMap>
+    
+    <valueMap ruleid="doorlockwritestatemap">
+      <valueIn>0</valueIn><valueOut>1</valueOut>
+      <valueIn>1</valueIn><valueOut>2</valueOut>
+    </valueMap>
+
+    <stateControl ruleid="rackaccesscontrolfrontlock">
+      <type>state/rackaccesslockcontrol</type>
+	  <controlId>RACK_ACCESS_CONTROL_FRONT_LOCK</controlId>
+	  <!-- referenced during scans -->
+	  <value>
+        <mapValue mapid="doorlockreadstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.3.1.0</getOid>
+        </mapValue>
+      </value>
+      <!-- referenced during control actions -->
+      <set_value>
+        <setOid>
+          <op>.1.3.6.1.4.1.318.1.1.20.1.3.1.0</op>
+          <op><mapValue mapid="doorlockwritestatemap"><setOidValue/></mapValue></op>
+        </setOid>
+      </set_value>
+      <label>Door 1 Lock</label>
+      <cntrl_enum>doorlockwritestate</cntrl_enum>
+      <val_enum>doorlockreadstate</val_enum>
+    </stateControl>
+		
+    <stateControl ruleid="rackaccesscontrolrearlock">
+      <type>state/rackaccesslockcontrol</type>
+	  <controlId>RACK_ACCESS_CONTROL_REAR_LOCK</controlId>
+	  <!-- referenced during scans -->
+	  <value>
+        <mapValue mapid="doorlockreadstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.5.1.0</getOid>
+        </mapValue>
+      </value>
+      <!-- referenced during control actions -->
+      <set_value>
+        <setOid>
+          <op>.1.3.6.1.4.1.318.1.1.20.1.5.1.0</op>
+          <op><mapValue mapid="doorlockwritestatemap"><setOidValue/></mapValue></op>
+        </setOid>
+      </set_value>
+      <label>Door 2 Lock</label>
+      <cntrl_enum>doorlockwritestate</cntrl_enum>
+      <val_enum>doorlockreadstate</val_enum>
+    </stateControl>
+		      
+  </device>
+    
+  <device deviceid="accpxbeacon">
+    <oidMustMatch ruleid="accPXsysid" oid=".1.3.6.1.2.1.1.2.0">
+      <valueList>
+        <value>.1.3.6.1.4.1.318.1.3.22</value>
+        <value>.1.3.6.1.4.1.318.1.3.22.*</value>
+      </valueList>
+    </oidMustMatch>
+    <!-- skip sensor if the beacon is not connected -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.20.1.8.3.0">
+      <valueList>
+        <value>3</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- The current state of the beacon: off, on, not installed, or
+         disconnected -->
+    <stateSensor ruleid="sensorstate">
+      <type>state/beaconstate</type>
+      <sensorId>ACCPX_BEACON_STATE</sensorId>
+      <value>
+        <mapValue mapid="beaconstatemap">
+          <getOid>.1.3.6.1.4.1.318.1.1.20.1.8.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Beacon:<space/><getOid>.1.3.6.1.4.1.318.1.1.20.1.8.1.0</getOid></label>
+      <enum>beaconstate</enum>
+      <sensorSet>Beacon Status</sensorSet>
+    </stateSensor>
+    
+    <valueMap ruleid="beaconstatemap">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>3</valueIn><valueOut>3</valueOut>
+      <valueIn>4</valueIn><valueOut>4</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="beaconstate">
+      <label>Unknown</label>
+      <label>Off</label>
+      <label>On</label>
+      <label>Not Installed</label>
+      <label>Disconnected</label>
+    </enumMap>
+    
+ </device>
+    
+  
+</APC_DDF>

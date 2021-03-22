@@ -1,0 +1,346 @@
+<APC_DDF
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid="proteco_sr30a"
+		ddfname="Proteco SR30A"
+		ddfversion="1"
+		canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="proteco_sr30a">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Proteco</setProductData>
+		<setProductData ruleid="modeldata" field="model">SR30A</setProductData>
+		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+
+		<oidMustExist ruleid="proteco_sr30a" oid=".1.3.6.1.4.1.36432.1.1.1.0"/> 
+
+		<numSensor ruleid="system-current-consumer">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_CONSUMER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Consumer Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-current-battery">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_BATTERY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.2.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-voltage-consumer">
+			<type>voltage</type>
+			<sensorId>SYSTEM_VOLTAGE_CONSUMER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.36432.1.2.3.0</getOid></op>
+				<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Float Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-voltage-battery">
+			<type>voltage</type>
+			<sensorId>SYSTEM_VOLTAGE_BATTERY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-current-ur-1">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_UR_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier Unit 1 Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-current-ur-2">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_UR_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier Unit 2 Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-current-ur-3">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_UR_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.7.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier Unit 3 Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-current-ur-4">
+			<type>amperage</type>
+			<sensorId>SYSTEM_CURRENT_UR_4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.8.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier Unit 4 Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-input-voltage">
+			<type>voltage</type>
+			<sensorId>SYSTEM_INPUT_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.36432.1.2.9.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Input Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="system-temperature">
+			<type>temp</type>
+			<sensorId>SYSTEM_TEMPERATURE</sensorId>
+			<value>
+				<div>
+					<op>
+						<sub>
+							<op><getOid>.1.3.6.1.4.1.36432.1.2.10.0</getOid></op>
+							<op>32</op>
+						</sub>
+					</op>
+					<op>1.8</op>
+				</div>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<alarmFlags ruleid="alarm-dcc">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>DCC Alarm</activeText>
+					<inactiveText>DCC Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A dcc alarm condition exists.</activeText>
+					<inactiveText>A dcc alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="abnormal-agent">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Agent Abnormal</activeText>
+					<inactiveText>Agent Abnormal Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>An agent abnormal condition exists.</activeText>
+					<inactiveText>An agent abnormal condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-battery-discharge">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Discharge Alarm</activeText>
+					<inactiveText>Battery Discharge Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Battery</category>
+				<description>
+					<activeText>A battery discharge alarm condition exists.</activeText>
+					<inactiveText>A battery discharge alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-battery-charge">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Charge Alarm</activeText>
+					<inactiveText>Battery Charge Alarm Cleared</inactiveText>
+				</name>
+				<severity>information</severity>
+				<category>Battery</category>
+				<description>
+					<activeText>A battery charge alarm condition exists.</activeText>
+					<inactiveText>A battery charge alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-fuse-interrupted">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Fuse Interrupted Alarm</activeText>
+					<inactiveText>Fuse Interrupted Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A fuse interrupted alarm condition exists.</activeText>
+					<inactiveText>A fuse interrupted alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="UR-abnormal">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>UR Abnormal</activeText>
+					<inactiveText>UR Abnormal Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A UR abnormal condition exists.</activeText>
+					<inactiveText>A UR abnormal condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="high-voltage-alarm">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.7.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Voltage Alarm</activeText>
+					<inactiveText>High Voltage Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A high voltage alarm condition exists.</activeText>
+					<inactiveText>A high voltage alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-udq-normal">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.8.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>UDQ Normal Alarm</activeText>
+					<inactiveText>UDQ Normal Alarm Cleared</inactiveText>
+				</name>
+				<severity>information</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A udq normal alarm condition exists.</activeText>
+					<inactiveText>A udq normal alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="earth-escape">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Earth Escape</activeText>
+					<inactiveText>Earth Escape Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A earth escape condition exists.</activeText>
+					<inactiveText>A earth escape condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-fault-ventilation">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Ventilation Fault Alarm</activeText>
+					<inactiveText>Ventilation Fault Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A ventilation fault alarm condition exists.</activeText>
+					<inactiveText>A ventilation fault alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-over-current">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Over Current Alarm</activeText>
+					<inactiveText>Over Current Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A nover current alarm condition exists.</activeText>
+					<inactiveText>A nover current alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-voltage-alarm">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Voltage Alarm</activeText>
+					<inactiveText>Low Voltage Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A low voltage alarm condition exists.</activeText>
+					<inactiveText>A low voltage alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarm-management">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.13.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Management Alarm</activeText>
+					<inactiveText>Management Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A management alarm condition exists.</activeText>
+					<inactiveText>A management alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="abnormal-fluctuation">
+			<value><getOid>.1.3.6.1.4.1.36432.1.5.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Abnormal Fluctuation</activeText>
+					<inactiveText>Abnormal Fluctuation Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A abnormal fluctuation condition exists.</activeText>
+					<inactiveText>A abnormal fluctuation condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+	</device>
+</APC_DDF>

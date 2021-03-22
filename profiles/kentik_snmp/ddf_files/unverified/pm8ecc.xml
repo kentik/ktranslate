@@ -1,0 +1,542 @@
+<?xml version="1.0"?>
+<!-- pm8ecc -->
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	ddfid="pm8ecc"
+	ddfname="Schneider PM8ECC"
+	ddfversion="2"
+	canremove="yes">
+    <schemaVersion>1.6</schemaVersion>
+
+    <device deviceid="pm8ecc_header">
+        <oidMustExist ruleid="pm8ecc_header_exist" oid=".1.3.6.1.4.1.3833.1.7.255.15.1.4.1.1.4.1"/>
+
+        <!-- App Version -->
+        <setProductData ruleid="appversiondata" field="appversion">
+            <getOid>.1.3.6.1.4.1.3833.1.7.255.15.1.4.1.1.3.1</getOid>
+        </setProductData>
+
+        <!-- Serial Number -->
+        <setProductData ruleid="serialdata" field="serial_num">
+            <getOid>.1.3.6.1.4.1.3833.1.7.255.15.1.4.1.1.2.1</getOid>
+        </setProductData>
+
+        <!-- Model -->
+        <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+        <setProductData ruleid="modeldata" field="model">
+            PM<getOid>.1.3.6.1.4.1.3833.1.7.255.15.1.4.1.1.4.1</getOid>
+        </setProductData>
+
+        <!-- Model -->
+        <suppressRule ruleid="stompmib2type" suppressid="core/mib2data/typedata"/>
+        <setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+    </device>
+
+    <device deviceid="pm8ecc_sensor">
+        <oidMustExist ruleid="pm8ecc_sensor_exist" oid=".1.3.6.1.4.1.3833.1.7.255.15.1.4.1.1.4.1"/>
+        
+        <!-- lcIaSensor -->
+        <numSensor ruleid="lcIaSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.2</getRowOid>
+            </value>
+            <label>Current, A</label>
+            <sensorSet>
+                Current Sensors
+            </sensorSet>
+        </numSensor>
+ 
+        <!-- lcIbSensor -->
+        <numSensor ruleid="lcIbSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_2
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.3</getRowOid>
+            </value>
+            <label>Current, B</label>
+            <sensorSet>
+                Current Sensors
+            </sensorSet>
+        </numSensor>
+ 
+        <!-- lcIcSensor -->
+        <numSensor ruleid="lcIcSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_3
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.4</getRowOid>
+            </value>
+            <label>Current, C</label>
+            <sensorSet>
+                Current Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- lcIAvgSensor -->
+        <numSensor ruleid="lcIAvgSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_AVERAGE_CURRENT_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.2.1.5</getRowOid>
+            </value>
+            <label>
+                Current, Average
+            </label>
+            <sensorSet>
+                Current Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pRealSensor -->
+        <numSensor ruleid="pRealSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.1">
+            <type>num/powerKW</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_POWER_KW_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.2</getRowOid>
+            </value>
+            <label>
+                Real Power
+            </label>
+            <sensorSet>
+                Power Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pReactiveSensor -->
+        <numSensor ruleid="pReactiveSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.1">
+            <type>num/powerKVAR</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_POWER_KVAR_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.3</getRowOid>
+            </value>
+            <label>
+                Reactive Power
+            </label>
+            <sensorSet>
+                Power Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pApparentSensor -->
+        <numSensor ruleid="pApparentSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.1">
+            <type>num/powerKVA</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_POWER_KVA_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.3.1.4</getRowOid>
+            </value>
+            <label>
+                Apparent Power
+            </label>
+            <sensorSet>
+                Power Sensors
+            </sensorSet>
+        </numSensor>
+ 
+        <!-- pfPowerFactorTotalSensor -->
+        <numSensor ruleid="pfPowerFactorTotalSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.4.1.1">
+            <type>num/powerfactor</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_POWER_FACTOR_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.4.1.2</getRowOid>
+            </value>
+            <label>
+                Power Factor
+            </label>
+            <sensorSet>
+                Power Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVabSensor -->
+        <numSensor ruleid="vVabSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LL_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.2</getRowOid>
+            </value>
+            <label>
+                Voltage, A-B
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVbcSensor -->
+        <numSensor ruleid="vVbcSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LL_2
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.3</getRowOid>
+            </value>
+            <label>
+                Voltage, B-C
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVcaSensor -->
+        <numSensor ruleid="vVcaSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LL_3
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.4</getRowOid>
+            </value>
+            <label>
+                Voltage, C-A
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVllAvgSensor -->
+        <numSensor ruleid="vVllAvgSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_AVERAGE_VOLTAGE_LL_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.5</getRowOid>
+            </value>
+            <label>
+                Voltage, L-L Average
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVanSensor -->
+        <numSensor ruleid="vVanSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LN_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.6</getRowOid>
+            </value>
+            <label>
+                Voltage, A-N
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVbnSensor -->
+        <numSensor ruleid="vVbnSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LN_2
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.7</getRowOid>
+            </value>
+            <label>
+                Voltage, B-N
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVcnSensor -->
+        <numSensor ruleid="vVcnSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_VOLTAGE_LN_3
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.8</getRowOid>
+            </value>
+            <label>
+                Voltage, C-N
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- vVlnAvgSensor -->
+        <numSensor ruleid="vVlnAvgSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.1">
+            <type>voltage</type>
+            <sensorId>
+                <rowIndex/>_AVERAGE_VOLTAGE_LN_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.5.1.9</getRowOid>
+            </value>
+            <label>
+                Voltage, L-N Average
+            </label>
+            <sensorSet>
+                Voltage Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- fFrequencySensor -->
+        <numSensor ruleid="fFrequencySensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.6.1.1">
+            <type>frequency</type>
+            <sensorId>
+                <rowIndex/>_FREQUENCY_1
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.6.1.2</getRowOid>
+            </value>
+            <label>
+                Frequency
+            </label>
+            <sensorSet>
+                Frequency Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- cdPresentCurrentDemandSensor -->
+        <numSensor ruleid="cdPresentCurrentDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_DEMAND_<getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.8</getRowOid>
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.3</getRowOid>
+            </value>
+            <label>
+                Current, <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.2</getRowOid>, Demand Present<space/>
+            </label>
+            <sensorSet>
+                Current Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- cdPeakCurrentDemandSensor -->
+        <numSensor ruleid="cdPeakCurrentDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_DEMAND_PK_<getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.8</getRowOid>
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.4</getRowOid>
+            </value>
+            <label>
+                Current, <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.2</getRowOid>, Demand Peak<space/>
+            </label>
+            <sensorSet>
+                Current Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- cdLastCurrentDemandSensor -->
+        <numSensor ruleid="cdLastCurrentDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.1">
+            <type>amperage</type>
+            <sensorId>
+                <rowIndex/>_CURRENT_DEMAND_LAST_<getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.8</getRowOid>
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.5</getRowOid>
+            </value>
+            <label>
+                Current, <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.7.1.2</getRowOid>, Demand Last<space/>
+            </label>
+            <sensorSet>
+                Current Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pdPresentPowerDemandSensor -->
+        <numSensor ruleid="pdPresentPowerDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.1">
+            <type>
+                <mapValue mapid="power_demand_type_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </type>
+            <sensorId>
+                <rowIndex/>_<mapValue mapid="power_demand_id_suffix_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.3</getRowOid>
+            </value>
+            <label>
+                <mapValue mapid="power_demand_label_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> Power, Demand Present<space/>
+            </label>
+            <sensorSet>
+                Power Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pdPeakPowerDemandSensor -->
+        <numSensor ruleid="pdPeakPowerDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.1">
+            <type>
+                <mapValue mapid="power_demand_type_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </type>
+            <sensorId>
+                <rowIndex/>_<mapValue mapid="power_demand_peak_id_suffix_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.4</getRowOid>
+            </value>
+            <label>
+                <mapValue mapid="power_demand_label_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> Power, Demand Peak<space/>
+            </label>
+            <sensorSet>
+                Power Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- pdLastPowerDemandSensor -->
+        <numSensor ruleid="pdLastPowerDemandSensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.1">
+            <type>
+                <mapValue mapid="power_demand_type_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </type>
+            <sensorId>
+                <rowIndex/>_<mapValue mapid="power_demand_last_id_suffix_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> 
+            </sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.5</getRowOid>
+            </value>
+            <label>
+                <mapValue mapid="power_demand_label_component_vm">
+                    <getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.8.1.8</getRowOid>
+                </mapValue> Power, Demand Last<space/>
+            </label>
+            <sensorSet>
+                Power Demand Sensors
+            </sensorSet>
+        </numSensor>
+
+        <valueMap ruleid="power_demand_label_component_vm">
+          <valueIn>1</valueIn><valueOut>Real</valueOut>
+          <valueIn>2</valueIn><valueOut>Reactive</valueOut>
+          <valueIn>3</valueIn><valueOut>Apparent</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="power_demand_type_component_vm">
+          <valueIn>1</valueIn><valueOut>num/powerKW</valueOut>
+          <valueIn>2</valueIn><valueOut>num/powerKVAR</valueOut>
+          <valueIn>3</valueIn><valueOut>num/powerKVA</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="power_demand_id_suffix_component_vm">
+          <valueIn>1</valueIn><valueOut>TOTAL_POWER_KW_2</valueOut>
+          <valueIn>2</valueIn><valueOut>TOTAL_POWER_KVAR_2</valueOut>
+          <valueIn>3</valueIn><valueOut>TOTAL_POWER_KVA_2</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="power_demand_peak_id_suffix_component_vm">
+          <valueIn>1</valueIn><valueOut>TOTAL_PEAK_POWER_KW_1</valueOut>
+          <valueIn>2</valueIn><valueOut>TOTAL_PEAK_POWER_KVAR_1</valueOut>
+          <valueIn>3</valueIn><valueOut>TOTAL_PEAK_POWER_KVA_1</valueOut>
+        </valueMap>
+
+        <valueMap ruleid="power_demand_last_id_suffix_component_vm">
+          <valueIn>1</valueIn><valueOut>TOTAL_LAST_POWER_KW_1</valueOut>
+          <valueIn>2</valueIn><valueOut>TOTAL_LAST_POWER_KVAR_1</valueOut>
+          <valueIn>3</valueIn><valueOut>TOTAL_LAST_POWER_KVA_1</valueOut>
+        </valueMap>
+
+        <!-- eRealEnergySensor -->
+        <numSensor ruleid="eRealEnergySensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_ENERGY_KWH_1
+            </sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.2</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+                Real Energy Total
+            </label>
+            <sensorSet>
+                Energy Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- eReactiveEnergySensor -->
+        <numSensor ruleid="eReactiveEnergySensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.1">
+            <type>num/KVARhr</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_ENERGY_KVARH_1
+            </sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.4</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+                Reactive Energy Total
+            </label>
+            <sensorSet>
+                Energy Sensors
+            </sensorSet>
+        </numSensor>
+
+        <!-- eApparentEnergySensor -->
+        <numSensor ruleid="eApparentEnergySensor" index=".1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.1">
+            <type>num/KVAhr</type>
+            <sensorId>
+                <rowIndex/>_TOTAL_ENERGY_KVAH_1
+            </sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.3833.1.7.255.15.1.1.9.1.6</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+                Apparent Energy Total
+            </label>
+            <sensorSet>
+                Energy Sensors
+            </sensorSet>
+        </numSensor>
+
+    </device>
+
+</APC_DDF>

@@ -1,0 +1,686 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid="minuteman_upsd"
+	ddfname="MinuteMan UPSD"
+	ddfversion="3"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <!-- UPS  MIB specific functionality -->
+
+  <!-- upsIdent -->
+  <device deviceid="upsddiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.2012.2.3.1.2.0"/>
+    
+    
+  <!-- Replace MIB2 Model with Model from upsd MIB -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.2012.2.3.1.4.0</getOid>
+    </setProductData>  
+    
+    
+    <!-- Set Software Version -->
+    <setProductData ruleid="appversion" field="appversion">
+      <getOid>.1.3.6.1.4.1.2012.2.3.1.5.0</getOid>
+    </setProductData>
+  
+      <!-- Set Firmware Version -->
+    <setProductData ruleid="bootversion" field="bootversion">
+      <getOid>.1.3.6.1.4.1.2012.2.3.1.6.0</getOid>
+    </setProductData>
+    </device>
+    
+    
+  <device deviceid="upsmib">
+    <oidMustExist ruleid="upsMibDetect" oid=".1.3.6.1.4.1.2012.2.3.1.7.0"/>
+
+
+   <!-- dupsRatingOutputVA -->
+    <numSensor ruleid="dupsRatingOutputVA">
+      <type>powerVA</type>
+      <sensorId>DUPS_RATING_OUTPUT_VA_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.9.0</getOid>
+      </value>
+      <label>Dups Rating Output Va</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsRatingOutputVoltage -->
+    <numSensor ruleid="dupsRatingOutputVoltage">
+      <type>voltage</type>
+      <sensorId>DUPS_RATING_OUTPUT_VOLTAGE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.10.0</getOid>
+      </value>
+      <label>Dups Rating Output Voltage</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsRatingOutputFrequency -->
+    <numSensor ruleid="dupsRatingOutputFrequency">
+      <type>frequency</type>
+      <sensorId>DUPS_RATING_OUTPUT_FREQUENCY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.11.0</getOid>
+      </value>
+      <label>Dups Rating Output Frequency</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsRatingInputVoltage -->
+    <numSensor ruleid="dupsRatingInputVoltage">
+      <type>voltage</type>
+      <sensorId>DUPS_RATING_INPUT_VOLTAGE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.12.0</getOid>
+      </value>
+      <label>Dups Rating Input Voltage</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsRatingInputFrequency -->
+    <numSensor ruleid="dupsRatingInputFrequency">
+      <type>frequency</type>
+      <sensorId>DUPS_RATING_INPUT_FREQUENCY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.13.0</getOid>
+      </value>
+      <label>Dups Rating Input Frequency</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsLowTransferVoltUpBound -->
+    <numSensor ruleid="dupsLowTransferVoltUpBound">
+      <type>voltage</type>
+      <sensorId>DUPS_LOW_TRANSFER_VOLT_UP_BOUND_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.14.0</getOid>
+      </value>
+      <label>Dups Low Transfer Volt Up Bound</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsLowTransferVoltLowBound -->
+    <numSensor ruleid="dupsLowTransferVoltLowBound">
+      <type>voltage</type>
+      <sensorId>DUPS_LOW_TRANSFER_VOLT_LOW_BOUND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.15.0</getOid>
+      </value>
+      <label>Dups Low Transfer Volt Low Bound</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsHighTransferVoltUpBound -->
+    <numSensor ruleid="dupsHighTransferVoltUpBound">
+      <type>voltage</type>
+      <sensorId>DUPS_HIGH_TRANSFER_VOLT_UP_BOUND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.16.0</getOid>
+      </value>
+      <label>Dups High Transfer Volt Up Bound</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsHighTransferVoltLowBound -->
+    <numSensor ruleid="dupsHighTransferVoltLowBound">
+      <type>voltage</type>
+      <sensorId>DUPS_HIGH_TRANSFER_VOLT_LOW_BOUND_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.17.0</getOid>
+      </value>
+      <label>Dups High Transfer Volt Low Bound</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsLowBattTime -->
+    <numSensor ruleid="dupsLowBattTime">
+      <type>timeinmin</type>
+      <sensorId>DUPS_LOW_BATT_TIME_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.18.0</getOid>
+      </value>
+      <label>Dups Low Battery Time</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsOutletRelays -->
+    <numSensor ruleid="dupsOutletRelays">
+      <type>num</type>
+      <sensorId>DUPS_OUTLET_RELAYS_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.19.0</getOid>
+      </value>
+      <label>Dups Outlet Relays</label>
+      <sensorSet>Dups Rating</sensorSet>
+    </numSensor>
+    
+   <!-- dupsEconomicMode -->
+	  <stateSensor ruleid="dupsEconomicMode">
+      <type>state</type>
+      <sensorId>DUPS_ECONOMIC_MODE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.1.20.0</getOid>
+      </value>
+      <label>Dups Economic Mode</label>
+      <enum>dupsEconomicMode-em</enum>
+      <sensorSet>dups Rating</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="dupsEconomicMode-em">
+      <label>off</label>
+      <label>on</label>
+    </enumMap>
+    
+   <!--dupsInputLineBads,1.3.6.1.4.1.2012.2.3.4.1,UPSD-MIB,OBJECT-TYPE-->
+   <!-- Counter -->
+   
+   <!--  dupsInputNumLines -->
+    <numSensor ruleid=" dupsInputNumLines">
+      <type>num</type>
+      <sensorId>DUPS_INPUT_NUMLINES_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.2.0</getOid>
+      </value>
+      <label>Dups Input Number of Lines</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+   
+   <!--  dupsInputFrequency1 -->
+    <numSensor ruleid=" dupsInputFrequency1">
+      <type>frequency</type>
+      <sensorId>DUPS_INPUT_FREQUENCY1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.3.0</getOid>
+      </value>
+      <label>Dups Input Frequency1</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputVoltage1 -->
+    <numSensor ruleid=" dupsInputVoltage1">
+      <type>voltage</type>
+      <sensorId>DUPS_INPUT_VOLTAGE1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.4.0</getOid>
+      </value>
+      <label>Dups Input Voltage1</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputCurrent1 -->
+    <numSensor ruleid=" dupsInputCurrent1">
+      <type>amperage</type>
+      <sensorId>DUPS_INPUT_CURRENT1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.5.0</getOid>
+      </value>
+      <label>Dups Input Current1</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputPower1 -->
+    <numSensor ruleid=" dupsInputPower1">
+      <type>powerW</type>
+      <sensorId>DUPS_INPUT_POWER1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.6.0</getOid>
+      </value>
+      <label>Dups Input Power1</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+    
+   <!--  dupsInputFrequency2 -->
+    <numSensor ruleid=" dupsInputFrequency2">
+      <type>frequency</type>
+      <sensorId>DUPS_INPUT_FREQUENCY2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.7.0</getOid>
+      </value>
+      <label>Dups Input Frequency2</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputVoltage2 -->
+    <numSensor ruleid=" dupsInputVoltage2">
+      <type>voltage</type>
+      <sensorId>DUPS_INPUT_VOLTAGE2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.8.0</getOid>
+      </value>
+      <label>Dups Input Voltage2</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputCurrent2 -->
+    <numSensor ruleid=" dupsInputCurrent2">
+      <type>amperage</type>
+      <sensorId>DUPS_INPUT_CURRENT2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.9.0</getOid>
+      </value>
+      <label>Dups Input Current2</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputPower2 -->
+    <numSensor ruleid=" dupsInputPower2">
+      <type>powerW</type>
+      <sensorId>DUPS_INPUT_POWER2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.10.0</getOid>
+      </value>
+      <label>Dups Input Power2</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+    
+   <!--  dupsInputFrequency3 -->
+    <numSensor ruleid=" dupsInputFrequency3">
+      <type>frequency</type>
+      <sensorId>DUPS_INPUT_FREQUENCY3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.11.0</getOid>
+      </value>
+      <label>Dups Input Frequency3</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputVoltage3 -->
+    <numSensor ruleid=" dupsInputVoltage3">
+      <type>voltage</type>
+      <sensorId>DUPS_INPUT_VOLTAGE3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.12.0</getOid>
+      </value>
+      <label>Dups Input Voltage3</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputCurrent3 -->
+    <numSensor ruleid=" dupsInputCurrent3">
+      <type>amperage</type>
+      <sensorId>DUPS_INPUT_CURRENT3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.13.0</getOid>
+      </value>
+      <label>Dups Input Current3</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+   <!--  dupsInputPower3 -->
+    <numSensor ruleid=" dupsInputPower3">
+      <type>powerW</type>
+      <sensorId>DUPS_INPUT_POWER3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.4.14.0</getOid>
+      </value>
+      <label>Dups Input Power3</label>
+      <sensorSet>Dups Input</sensorSet>
+    </numSensor>
+    
+  
+
+
+	 <!-- dupsOutputSource -->
+	  <stateSensor ruleid="dupsOutputSource">
+      <type>state</type>
+      <sensorId>DUPS_OUTPUT_SOURCE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.1.0</getOid>
+      </value>
+      <label>Dups Output Source</label>
+      <enum>dupsOutputSource-em</enum>
+      <sensorSet>Dups Output</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="dupsOutputSource-em">
+      <label>normal</label>
+      <label>battery</label>
+      <label>bypass</label>
+      <label>reducing</label>
+      <label>boosting</label>
+      <label>manual bypass</label>
+      <label>other</label>
+      <label>none</label>
+    </enumMap>
+    
+   <!-- dupsOutputFrequency -->
+    <numSensor ruleid=" dupsOutputFrequency">
+      <type>frequency</type>
+      <sensorId>DUPS_OUTPUT_FREQUENCY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.2.0</getOid>
+      </value>
+      <label>Dups Output Frequency</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+   <!--  dupsOutputNumLines -->
+    <numSensor ruleid=" dupsOutputNumLines">
+      <type>num</type>
+      <sensorId>DUPS_OUTPUT_NUMLINES_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.3.0</getOid>
+      </value>
+      <label>Dups Output Number of Lines</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+    
+
+   <!-- dupsOutputVoltage1 -->
+    <numSensor ruleid=" dupsOutputVoltage1">
+      <type>voltage</type>
+      <sensorId>DUPS_OUTPUT_VOLTAGE1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.4.0</getOid>
+      </value>
+      <label>Dups Output Voltage1</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+
+   <!-- dupsOutputCurrent1 -->
+    <numSensor ruleid=" dupsOutputCurrent1">
+      <type>amperage</type>
+      <sensorId>DUPS_OUTPUT_CURRENT1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.5.0</getOid>
+      </value>
+      <label>Dups Output Current1</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+   <!-- dupsOutputPower1 -->
+    <numSensor ruleid=" dupsOutputPower1">
+      <type>powerW</type>
+      <sensorId>OUTPUT_POWER_1</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.6.0</getOid>
+      </value>
+      <label>Dups Output Power1</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+    
+   <!-- dupsOutputLoad1 -->
+    <numSensor ruleid=" dupsOutputLoad1">
+      <type>pctofcapacity</type>
+      <sensorId>DUPS_OUTPUT_LOAD1_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.7.0</getOid>
+      </value>
+      <label>Dups Output Load1</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+    
+    
+    
+   <!-- dupsOutputVoltage2 -->
+    <numSensor ruleid=" dupsOutputVoltage2">
+      <type>voltage</type>
+      <sensorId>DUPS_OUTPUT_VOLTAGE2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.8.0</getOid>
+      </value>
+      <label>Dups Output Voltage2</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+ 
+   <!-- dupsOutputCurrent2 -->
+    <numSensor ruleid=" dupsOutputCurrent2">
+      <type>amperage</type>
+      <sensorId>DUPS_OUTPUT_CURRENT2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.9.0</getOid>
+      </value>
+      <label>Dups Output Current2</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+   <!-- dupsOutputPower2 -->
+    <numSensor ruleid=" dupsOutputPower2">
+      <type>powerW</type>
+      <sensorId>OUTPUT_POWER_2</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.10.0</getOid>
+      </value>
+      <label>Dups Output Power2</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+    
+   <!-- dupsOutputLoad2 -->
+    <numSensor ruleid=" dupsOutputLoad2">
+      <type>pctofcapacity</type>
+      <sensorId>DUPS_OUTPUT_LOAD2_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.11.0</getOid>
+      </value>
+      <label>Dups Output Load2</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+
+
+   <!-- dupsOutputVoltage3 -->
+    <numSensor ruleid=" dupsOutputVoltage3">
+      <type>voltage</type>
+      <sensorId>DUPS_OUTPUT_VOLTAGE3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.12.0</getOid>
+      </value>
+      <label>Dups Output Voltage3</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+
+   <!-- dupsOutputCurrent1 -->
+    <numSensor ruleid=" dupsOutputCurrent3">
+      <type>amperage</type>
+      <sensorId>DUPS_OUTPUT_CURRENT3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.13.0</getOid>
+      </value>
+      <label>Dups Output Current3</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+   <!-- dupsOutputPower3 -->
+    <numSensor ruleid=" dupsOutputPower3">
+      <type>powerW</type>
+      <sensorId>OUTPUT_POWER_3</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.14.0</getOid>
+      </value>
+      <label>Dups Output Power3</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+    
+   <!-- dupsOutputLoad3 -->
+    <numSensor ruleid=" dupsOutputLoad3">
+      <type>pctofcapacity</type>
+      <sensorId>DUPS_OUTPUT_LOAD3_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.5.15.0</getOid>
+      </value>
+      <label>Dups Output Load3</label>
+      <sensorSet>Dups Output</sensorSet>
+    </numSensor>
+
+
+   <!-- dupsBatteryCondiction -->
+	  <stateSensor ruleid="dupsBatteryCondiction">
+      <type>state</type>
+      <sensorId>DUPS_BATTERY_CONDITION_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.1.0</getOid>
+      </value>
+      <label>Dups Battery Condition</label>
+      <enum>dupsBatteryCondition-em</enum>
+      <sensorSet>Dups Battery</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="dupsBatteryCondition-em">
+      <label>good</label>
+      <label>weak</label>
+      <label>replace</label>
+    </enumMap>
+    
+    
+
+   <!-- dupsBatteryStatus -->
+	 <stateSensor ruleid="dupsBatteryStatus">
+      <type>state</type>
+      <sensorId>DUPS_BATTERY_STATUS_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.2.0</getOid>
+      </value>
+      <label>Dups Battery Status</label>
+      <enum>dupsBatteryStatus-em</enum>
+      <sensorSet>Dups Battery</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="dupsBatteryStatus-em">
+      <label>ok</label>
+      <label>low</label>
+      <label>depleated</label>
+    </enumMap>
+    
+   <!-- dupsBatteryCharge -->
+	  <stateSensor ruleid="dupsBatteryCharge">
+      <type>state</type>
+      <sensorId>DUPS_BATTERY_Charge_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.3.0</getOid>
+      </value>
+      <label>Dups Battery Charge</label>
+      <enum>dupsBatteryCharge-em</enum>
+      <sensorSet>Dups Battery</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="dupsBatteryCharge-em">
+      <label>floating</label>
+      <label>charging</label>
+      <label>resting</label>
+      <label>discharging</label>
+    </enumMap>
+    
+    
+   <!-- dupsSecondsOnBattery -->
+    <numSensor ruleid="dupsSecondsOnBattery">
+      <type>timeinsec</type>
+      <sensorId>DUPS_SECONDS_ON_BATTERY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.4.0</getOid>
+      </value>
+      <label>Dups Seconds On Battery</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsBatteryEstimatedTime-->
+    <numSensor ruleid=" dupsBatteryEstimatedTime">
+      <type>timeinmin</type>
+      <sensorId>DUPS_BATTERY_ESTIMATED_TIME_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.5.0</getOid>
+      </value>
+      <label>Dups Battery Estimated Time</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+    
+   <!--  dupsBatteryEstimatedCharge-->
+    <numSensor ruleid=" dupsBatteryEstimatedCharge">
+      <type>pctofcapacity</type>
+      <sensorId>DUPS_BATTERY_ESTIMATED_CHARGE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.6.0</getOid>
+      </value>
+      <label>Dups Battery Estimated Charge</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsBatteryVoltage-->
+    <numSensor ruleid=" dupsBatteryVoltage">
+      <type>voltageDC</type>
+      <sensorId>DUPS_BATTERY_VOLTAGE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.7.0</getOid>
+      </value>
+      <label>Dups Battery Voltage</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+
+	 <!--  dupsBatteryCurrent-->
+    <numSensor ruleid=" dupsBatteryCurrent">
+      <type>amperage</type>
+      <sensorId>DUPS_BATTERY_CURRENT_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.8.0</getOid>
+      </value>
+      <label>Dups Battery Current</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsBatteryCapacity-->
+    <numSensor ruleid=" dupsBatteryCapacity">
+      <type>pctofcapacity</type>
+      <sensorId>DUPS_BATTERY_CAPACITY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.9.0</getOid>
+      </value>
+      <label>Dups Battery Capacity</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsTemperature-->
+    <numSensor ruleid="dupsTemperature">
+      <type>temp</type>
+      <sensorId>DUPS_TEMPERATURE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.10.0</getOid>
+      </value>
+      <label>Dups Temperature</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsHumidity-->
+    <numSensor ruleid=" dupsHumidity">
+      <type>humidity</type>
+      <sensorId>DUPS_HUMIDITY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.6.11.0</getOid>
+      </value>
+      <label>Dups Humidity</label>
+      <sensorSet>Dups Battery</sensorSet>
+    </numSensor>
+    
+   <!--  dupsEnvTemperature-->
+    <numSensor ruleid=" dupsEnvTemperature">
+      <type>temp</type>
+      <sensorId>DUPS_ENV_TEMPERATURE_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.9.1.0</getOid>
+      </value>
+      <label>Dups Env Temperature</label>
+      <sensorSet>Dups Enviornment</sensorSet>
+    </numSensor>
+    
+   <!--  dupsEnvHumidity-->
+    <numSensor ruleid=" dupsEnvHumidity">
+      <type>humidity</type>
+      <sensorId>DUPS_ENV_HUMIDITY_</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.2012.2.3.9.2.0</getOid>
+      </value>
+      <label>Dups Env Humidity</label>
+      <sensorSet>Dups Enviornment</sensorSet>
+    </numSensor>
+    
+    
+    </device>  
+</APC_DDF>

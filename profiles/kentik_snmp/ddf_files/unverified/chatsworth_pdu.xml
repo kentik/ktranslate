@@ -1,0 +1,1125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="chatsworth_pdu"
+	ddfname="Chatsworth PDU"
+	ddfversion="9"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\chatsworth\Version 2.1.0\UnityMib.txt
+		
+		CPI-UNITY-MIB | 4 August 2020
+	-->
+	<device deviceid="chatsworth_pdu_discovery">
+		<oidMustExist ruleid="cpiPDU_exists" oid=".1.3.6.1.4.1.30932.1.1" istree="yes"/>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="stompmib2label" suppressid="core/mib2datalabel/labeldata"/>
+		<suppressRule ruleid="stompmib2location" suppressid="core/mib2data/locationdata"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Chatsworth</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.30932.1.1.1.2</getOid></setProductData>
+		<setProductData ruleid="mac_addrdata" field="mac_addr"><getOid>1.3.6.1.4.1.30932.1.1.1.3</getOid></setProductData>
+		<setProductData ruleid="software_version" field="appversion"><getOid>1.3.6.1.4.1.30932.1.1.1.1</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<!-- pduDescrip -->
+		<setLocationData ruleid="locationdata" field="LOCATION"><getOid>1.3.6.1.4.1.30932.1.1.2.41</getOid></setLocationData>
+		<!-- pduName -->
+		<setDefaultLabel ruleid="chatsworth_label"><getOid>1.3.6.1.4.1.30932.1.1.2.40</getOid></setDefaultLabel>
+		
+	</device>
+	
+	<device deviceid="phaseCount-1">
+		<oidMustNotExist ruleid="cpiLineTableCount_doesNotExist" oid=".1.3.6.1.4.1.30932.1.10.1.3.1.0"/>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount">3</setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount">3</setProductData>
+		<setProductData ruleid="bankcount" field="bankcount">6</setProductData>
+		
+	</device>
+	
+	<device deviceid="phaseCount-2">
+		<oidMustExist ruleid="cpiLineTableCount_exists" oid=".1.3.6.1.4.1.30932.1.10.1.3.1.0"/>
+		
+		<valueMap ruleid="phaseCount-vm">
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><mapValue mapid="phaseCount-vm"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></mapValue></setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><mapValue mapid="phaseCount-vm"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></mapValue></setProductData>
+		<setProductData ruleid="bankcount" field="bankcount"><getOid>.1.3.6.1.4.1.30932.1.10.1.3.1.0</getOid></setProductData>
+		
+	</device>
+	
+	<device deviceid="chatsworth_pdu_sensors">
+		<oidMustExist ruleid="cpiPDU_exists" oid=".1.3.6.1.4.1.30932.1.1" istree="yes"/>
+
+		<numSensor ruleid="current_branch_x_sensor">
+			<type>amperage</type>
+			<sensorId>_OUTPUT_CURRENT_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.1.1</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch X-Y Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="current_branch_y_sensor">
+			<type>amperage</type>
+			<sensorId>_OUTPUT_CURRENT_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.1.2</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Y-Z Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="current_branch_z_sensor">
+			<type>amperage</type>
+			<sensorId>_OUTPUT_CURRENT_3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.1.3</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Z-X Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="voltage_branch_x_sensor">
+			<type>voltage</type>
+			<sensorId>_OUTPUT_VOLTAGE_L2L_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.2.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch X-Y Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="voltage_branch_y_sensor">
+			<type>voltage</type>
+			<sensorId>_OUTPUT_VOLTAGE_L2L_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.2.2</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Y-Z Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="voltage_branch_z_sensor">
+			<type>voltage</type>
+			<sensorId>_OUTPUT_VOLTAGE_L2L_3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.2.3</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Z-X Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="power_branch_x_sensor">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_1</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.30932.1.1.3.3.1</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Branch X-Y Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="power_branch_y_sensor">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_2</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.30932.1.1.3.3.2</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Branch Y-Z Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="power_branch_z_sensor">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_3</sensorId>
+			<value>
+				<getOid>1.3.6.1.4.1.30932.1.1.3.3.3</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Branch Z-X Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="powerfactor_branch_x_sensor">
+			<type>num/powerfactor</type>
+			<sensorId>_OUTPUT_POWER_FACTOR_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.4.1</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch X-Y Powerfactor</label>
+			<sensorSet>Power Factor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="powerfactor_branch_y_sensor">
+			<type>num/powerfactor</type>
+			<sensorId>_OUTPUT_POWER_FACTOR_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.4.2</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Y-Z Powerfactor</label>
+			<sensorSet>Power Factor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="powerfactor_branch_z_sensor">
+			<type>num/powerfactor</type>
+			<sensorId>_OUTPUT_POWER_FACTOR_3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.4.3</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Z-X Powerfactor</label>
+			<sensorSet>Power Factor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="outletCurrent" index=".1.3.6.1.4.1.30932.1.1.3.5">
+			<type>amperage</type>
+			<sensorId>OUTLET_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.30932.1.1.3.5</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Outlet <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber> Current</label>
+			<sensorSet>Outlet Currents</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="notPresent-vm">
+			<valueIn>65535</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="probe_1_temperature_sensor">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getOid>1.3.6.1.4.1.30932.1.1.3.8.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_EM_TEMP_1</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op>
+						<mult>
+						<op><getOid>1.3.6.1.4.1.30932.1.1.3.8.1</getOid></op>
+						<op>0.01</op>
+						</mult>
+					</op>
+					<op>32</op>
+					</sub>
+				</op>
+				<op>1.8</op>
+				</div>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Probe 1 Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="probe_2_temperature_sensor">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getOid>1.3.6.1.4.1.30932.1.1.3.8.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_EM_TEMP_2</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op>
+						<mult>
+						<op><getOid>1.3.6.1.4.1.30932.1.1.3.8.2</getOid></op>
+						<op>0.01</op>
+						</mult>
+					</op>
+					<op>32</op>
+					</sub>
+				</op>
+				<op>1.8</op>
+				</div>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Probe 2 Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="probe_1_humidity_sensor">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getOid>1.3.6.1.4.1.30932.1.1.3.9.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_EM_HUMIDITY_1</sensorId>
+			<value>
+				<mult>
+				<op><getOid>1.3.6.1.4.1.30932.1.1.3.9.1</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Probe 1 Humidity</label>
+			<sensorSet>Humidity</sensorSet>
+		</numSensor>
+		<numSensor ruleid="probe_2_humidity_sensor">
+			<rowTest>
+				<mapValue mapid="notPresent-vm">
+				<getOid>1.3.6.1.4.1.30932.1.1.3.9.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_EM_HUMIDITY_2</sensorId>
+			<value>
+				<mult>
+				<op><getOid>1.3.6.1.4.1.30932.1.1.3.9.2</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Probe 2 Humidity</label>
+			<sensorSet>Humidity</sensorSet>
+		</numSensor>
+		<numSensor ruleid="energy_branch_x_sensor">
+			<type>num/kwatthr</type>
+			<sensorId>ENERGY_BRANCH_X</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.11.1</getOid>
+					</op>
+					<op>360000</op>
+				</div>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch X-Y Energy</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<numSensor ruleid="energy_branch_y_sensor">
+			<type>num/kwatthr</type>
+			<sensorId>ENERGY_BRANCH_Y</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.11.2</getOid>
+					</op>
+					<op>360000</op>
+				</div>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Y-Z Energy</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<numSensor ruleid="energy_branch_z_sensor">
+			<type>num/kwatthr</type>
+			<sensorId>ENERGY_BRANCH_Z</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.3.11.3</getOid>
+					</op>
+					<op>360000</op>
+				</div>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Z-X Energy</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="ignore-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="xy_crit_overload_threshold_1">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.19.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_XY_CRIT_OVERLOAD_THRESHOLD_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.19.1</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch X-Y Maximum Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="yz_critical_overload_threshold_2">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.19.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_YZ_CRITICAL_OVERLOAD_THRESHOLD_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.19.2</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Y-Z Maximum Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="zx_critical_overload_threshold_3">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.19.3</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_ZX_CRITICAL_OVERLOAD_THRESHOLD_3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.19.3</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Z-X Maximum Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="xy_warning_overload_threshold_4">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.21.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_XY_WARNING_OVERLOAD_THRESHOLD_4</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.21.1</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch X-Y Upper Current Limit Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="yz_warning_overload_threshold_5">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.21.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_YZ_WARNING_OVERLOAD_THRESHOLD_5</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.21.2</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Y-Z Upper Current Limit Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="zx_warning_overload_threshold_6">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.21.3</getOid>
+				</mapValue>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>_ZX_WARNING_OVERLOAD_THRESHOLD_6</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.21.3</getOid>
+					</op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Branch Z-X Upper Current Limit Warning</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="xy_high_volt_threshold_7">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.24.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_XY_HIGH_VOLT_THRESHOLD_7</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.24.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch X-Y Maximum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="yz_high_volt_threshold_8">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.24.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_YZ_HIGH_VOLT_THRESHOLD_8</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.24.2</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Y-Z Maximum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="xz_high_volt_threshold_9">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.24.3</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_XZ_HIGH_VOLT_THRESHOLD_9</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.24.3</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Z-X Maximum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="xy_low_voltage_threshold_10">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.25.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_XY_LOW_VOLTAGE_THRESHOLD_10</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.25.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch X-Y Minimum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="yz_low_voltage_threshold_11">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.25.2</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_YZ_LOW_VOLTAGE_THRESHOLD_11</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.25.2</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Y-Z Minimum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="zx_low_voltage_threshold_12">
+			<rowTest>
+				<mapValue mapid="ignore-vm">
+					<getOid>1.3.6.1.4.1.30932.1.1.2.25.3</getOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>_ZX_LOW_VOLTAGE_THRESHOLD_12</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>1.3.6.1.4.1.30932.1.1.2.25.3</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Branch Z-X Minimum Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+
+		<alarmFlags ruleid="value-above-max-threshold">
+			<value><getOid>.1.3.6.1.4.1.30932.1.1.3.10.1</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Branch X-Y Current Above Maximum Threshold</activeText>
+					<inactiveText>Branch X-Y Current Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Current Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch X-Y Current Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>Branch Y-Z Current Above Maximum Threshold</activeText>
+					<inactiveText>Branch Y-Z Current Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Current Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch Y-Z Current Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>Branch Z-X Current Above Maximum Threshold</activeText>
+					<inactiveText>Branch Z-X Current Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Current Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch Z-X Current Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Branch X-Y Voltage Above Maximum Threshold</activeText>
+					<inactiveText>Branch X-Y Voltage Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Voltage Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch X-Y Voltage Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Branch Y-Z Voltage Above Maximum Threshold</activeText>
+					<inactiveText>Branch Y-Z Voltage Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Voltage Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch Y-Z Voltage Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="100" match="100">
+				<name>
+					<activeText>Branch Z-X Voltage Above Maximum Threshold</activeText>
+					<inactiveText>Branch Z-X Voltage Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Voltage Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Branch Z-X Voltage Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="1000" match="1000">
+				<name>
+					<activeText>Temperature 1 Above Maximum Threshold</activeText>
+					<inactiveText>Temperature 1 Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 1 Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Temperature 1 Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2000" match="2000">
+				<name>
+					<activeText>Temperature 2 Above Maximum Threshold</activeText>
+					<inactiveText>Temperature 2 Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 2 Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Temperature 2 Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4000" match="4000">
+				<name>
+					<activeText>Humidity 1 Above Maximum Threshold</activeText>
+					<inactiveText>Humidity 1 Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 1 Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Humidity 1 Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8000" match="8000">
+				<name>
+					<activeText>Humidity 2 Above Maximum Threshold</activeText>
+					<inactiveText>Humidity 2 Above Maximum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 2 Above Maximum Threshold condition exists.</activeText>
+					<inactiveText>Humidity 2 Above Maximum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="value-below-min-threshold">
+			<value><getOid>.1.3.6.1.4.1.30932.1.1.3.10.2</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Branch X-Y Current Below Minimum Threshold</activeText>
+					<inactiveText>Branch X-Y Current Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Current Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch X-Y Current Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>Branch Y-Z Current Below Minimum Threshold</activeText>
+					<inactiveText>Branch Y-Z Current Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Current Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch Y-Z Current Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>Branch Z-X Current Below Minimum Threshold</activeText>
+					<inactiveText>Branch Z-X Current Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Current Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch Z-X Current Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Branch X-Y Voltage Below Minimum Threshold</activeText>
+					<inactiveText>Branch X-Y Voltage Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Voltage Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch X-Y Voltage Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Branch Y-Z Voltage Below Minimum Threshold</activeText>
+					<inactiveText>Branch Y-Z Voltage Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Voltage Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch Y-Z Voltage Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="100" match="100">
+				<name>
+					<activeText>Branch Z-X Voltage Below Minimum Threshold</activeText>
+					<inactiveText>Branch Z-X Voltage Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Voltage Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Branch Z-X Voltage Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="1000" match="1000">
+				<name>
+					<activeText>Temperature 1 Below Minimum Threshold</activeText>
+					<inactiveText>Temperature 1 Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 1 Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Temperature 1 Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2000" match="2000">
+				<name>
+					<activeText>Temperature 2 Below Minimum Threshold</activeText>
+					<inactiveText>Temperature 2 Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 2 Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Temperature 2 Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4000" match="4000">
+				<name>
+					<activeText>Humidity 1 Below Minimum Threshold</activeText>
+					<inactiveText>Humidity 1 Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 1 Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Humidity 1 Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8000" match="8000">
+				<name>
+					<activeText>Humidity 2 Below Minimum Threshold</activeText>
+					<inactiveText>Humidity 2 Below Minimum Threshold Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 2 Below Minimum Threshold condition exists.</activeText>
+					<inactiveText>Humidity 2 Below Minimum Threshold condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="value-high">
+			<value><getOid>.1.3.6.1.4.1.30932.1.1.3.10.3</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Branch X-Y Current High Threshold Warning</activeText>
+					<inactiveText>Branch X-Y Current High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Current High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch X-Y Current High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>Branch Y-Z Current High Threshold Warning</activeText>
+					<inactiveText>Branch Y-Z Current High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Current High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Y-Z Current High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>Branch Z-X Current High Threshold Warning</activeText>
+					<inactiveText>Branch Z-X Current High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Current High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Z-X Current High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Branch X-Y Voltage High Threshold Warning</activeText>
+					<inactiveText>Branch X-Y Voltage High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Voltage High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch X-Y Voltage High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Branch Y-Z Voltage High Threshold Warning</activeText>
+					<inactiveText>Branch Y-Z Voltage High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Voltage High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Y-Z Voltage High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="100" match="100">
+				<name>
+					<activeText>Branch Z-X Voltage High Threshold Warning</activeText>
+					<inactiveText>Branch Z-X Voltage High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Voltage High Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Z-X Voltage High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="1000" match="1000">
+				<name>
+					<activeText>Temperature 1 High Threshold Warning</activeText>
+					<inactiveText>Temperature 1 High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 1 High Threshold Warning condition exists.</activeText>
+					<inactiveText>Temperature 1 High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2000" match="2000">
+				<name>
+					<activeText>Temperature 2 High Threshold Warning</activeText>
+					<inactiveText>Temperature 2 High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 2 High Threshold Warning condition exists.</activeText>
+					<inactiveText>Temperature 2 High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4000" match="4000">
+				<name>
+					<activeText>Humidity 1 High Threshold Warning</activeText>
+					<inactiveText>Humidity 1 High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 1 High Threshold Warning condition exists.</activeText>
+					<inactiveText>Humidity 1 High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8000" match="8000">
+				<name>
+					<activeText>Humidity 2 High Threshold Warning</activeText>
+					<inactiveText>Humidity 2 High Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 2 High Threshold Warning condition exists.</activeText>
+					<inactiveText>Humidity 2 High Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="value-low">
+			<value><getOid>.1.3.6.1.4.1.30932.1.1.3.10.4</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Branch X-Y Current Low Threshold Warning</activeText>
+					<inactiveText>Branch X-Y Current Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Current Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch X-Y Current Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>Branch Y-Z Current Low Threshold Warning</activeText>
+					<inactiveText>Branch Y-Z Current Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Current Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Y-Z Current Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>Branch Z-X Current Low Threshold Warning</activeText>
+					<inactiveText>Branch Z-X Current Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Current Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Z-X Current Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Branch X-Y Voltage Low Threshold Warning</activeText>
+					<inactiveText>Branch X-Y Voltage Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch X-Y Voltage Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch X-Y Voltage Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Branch Y-Z Voltage Low Threshold Warning</activeText>
+					<inactiveText>Branch Y-Z Voltage Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Y-Z Voltage Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Y-Z Voltage Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="100" match="100">
+				<name>
+					<activeText>Branch Z-X Voltage Low Threshold Warning</activeText>
+					<inactiveText>Branch Z-X Voltage Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Branch Z-X Voltage Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Branch Z-X Voltage Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="1000" match="1000">
+				<name>
+					<activeText>Temperature 1 Low Threshold Warning</activeText>
+					<inactiveText>Temperature 1 Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 1 Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Temperature 1 Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2000" match="2000">
+				<name>
+					<activeText>Temperature 2 Low Threshold Warning</activeText>
+					<inactiveText>Temperature 2 Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Temperature 2 Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Temperature 2 Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4000" match="4000">
+				<name>
+					<activeText>Humidity 1 Low Threshold Warning</activeText>
+					<inactiveText>Humidity 1 Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 1 Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Humidity 1 Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8000" match="8000">
+				<name>
+					<activeText>Humidity 2 Low Threshold Warning</activeText>
+					<inactiveText>Humidity 2 Low Threshold Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Humidity 2 Low Threshold Warning condition exists.</activeText>
+					<inactiveText>Humidity 2 Low Threshold Warning condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	</device>
+</APC_DDF>

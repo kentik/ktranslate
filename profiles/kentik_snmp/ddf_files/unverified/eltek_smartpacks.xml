@@ -1,0 +1,2748 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="eltek_smartpacks"
+	ddfname="Eltek SmartPackS"
+	ddfversion="3"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="eltek_smartpacks">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Eltek</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.12148.10.2.6.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.12148.10.2.5.0</getOid>
+		</setDefaultLabel>
+		<setProductData ruleid="sernumdata" field="serial_num">
+			<getOid>.1.3.6.1.4.1.12148.10.2.7.0</getOid>
+		</setProductData>
+
+		<oidMustExist ruleid="eltek_smartpacks" oid=".1.3.6.1.4.1.12148.10" istree="yes"/>
+
+		<stateSensor ruleid="powerSystemStatus">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="powerSystemType">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_TYPE</sensorId>
+			<value>
+				<mapValue mapid="smartpacks-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Type</label>
+			<enum>smartpacks-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="powerSystemMode">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_NODE</sensorId>
+			<value>
+				<mapValue mapid="smartpacks-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Mode</label>
+			<enum>summaryStatus-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="powerSystemNominalVoltage">
+			<type>voltage</type>
+			<sensorId>POWER_SYSTEM_NOMINAL_VOLTAGE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.2.9.0</getOid></op>
+			</value>
+			<label>Power System Nominal Voltage</label>
+			<sensorSet>Power System</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="powerSystemCurrentDecimalSetting">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_CURRENT_DECIMAL_SETTING</sensorId>
+			<value>
+				<mapValue mapid="binaryDefefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.15.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Current Decimal Setting</label>
+			<enum>ampereDeciAmpere-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="powerSystemTemperatureScale">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_TEMPERATURE_SCALE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.16.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Temperature Scale</label>
+			<enum>temperatureType-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="powerSystemCapacityScale">
+			<type>state</type>
+			<sensorId>POWER_SYSTEM_CAPACITY_SCALE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.2.17.0</getOid>
+				</mapValue>
+			</value>
+			<label>Power System Capacity Scale</label>
+			<enum>temperatureFlag-em</enum>
+			<sensorSet>Power System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="mainsSttatus">
+			<type>state</type>
+			<sensorId>MAINS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Mains Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Mains</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="mainsMainsFailureStatus">
+			<type>state</type>
+			<sensorId>MAINS_MAINS_FAILURE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.3.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Mains Mains Failure Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Mains</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="mainsMainsFailureAlarmEnable">
+			<type>state</type>
+			<sensorId>MAINS_MAINS_FAILURE_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.3.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Mains Mains Failure Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Mains</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="mainsMainsFailureValue">
+			<type>num</type>
+			<sensorId>MAINS_MAINS_FAILURE_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.2.5.0</getOid></op>
+			</value>
+			<label>Mains Mains Failure Value</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMainsFailureMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>MAINS_MAINS_FAILURE_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.2.6.0</getOid></op>
+			</value>
+			<label>Mains Mains Failure Major Alarm Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMainsFailureMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>MAINS_MAINS_FAILURE_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.2.7.0</getOid></op>
+			</value>
+			<label>Mains Mains Failure Minor Alarm Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMainsNumberOfPhases">
+			<type>num</type>
+			<sensorId>MAINS_MAINS_NUMBER_OF_PHASES</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.3.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Mains Mains Number Of Phases</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="mainsVoltageStatus" index=".1.3.6.1.4.1.12148.10.3.4.1.2">
+			<type>state</type>
+			<sensorId>MAINS_VOLTAGE_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Voltage Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>mains</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="mainsVoltageAlarmEnable" index=".1.3.6.1.4.1.12148.10.3.4.1.5">
+			<type>state</type>
+			<sensorId>MAINS_VOLTAGE_ALARM_ENABLE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>mains</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="mainsVoltageValue" index=".1.3.6.1.4.1.12148.10.3.4.1.6">
+			<type>voltage</type>
+			<sensorId>MAINS_VOLTAGE_VALUE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.6</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Value</label>
+			<sensorSet>mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsVoltageMajorHighLevel" index=".1.3.6.1.4.1.12148.10.3.4.1.7">
+			<type>voltage</type>
+			<sensorId>MAINS_VOLTAGE_MAJOR_HIGH_LEVEL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.7</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Major High Level</label>
+			<sensorSet>mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsVoltageMinorHighLevel" index=".1.3.6.1.4.1.12148.10.3.4.1.8">
+			<type>voltage</type>
+			<sensorId>MAINS_VOLTAGE_MINOR_HIGH_LEVEL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.8</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Minor High Level</label>
+			<sensorSet>mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsVoltageMinorLowLevel" index=".1.3.6.1.4.1.12148.10.3.4.1.9">
+			<type>voltage</type>
+			<sensorId>MAINS_VOLTAGE_MINOR_LOW_LEVEL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.9</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Minor Low Level</label>
+			<sensorSet>mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsVoltageMajorLowLevel" index=".1.3.6.1.4.1.12148.10.3.4.1.10">
+			<type>voltage</type>
+			<sensorId>MAINS_VOLTAGE_MAJOR_LOW_LEVEL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.10</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.12148.10.3.4.1.3</getRowOid> Major Low Level</label>
+			<sensorSet>mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorsNumberOfUnits">
+			<type>num</type>
+			<sensorId>MAINS_MONITORS_NUMBER_OF_UNITS</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.1.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Mains Monitors Number Of Units</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorNumberOfVoltages">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_NUMBER_OF_VOLTAGES</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.2.1.2.1</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Mains Monitor Number Of Voltages</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorNumberOfCurrents">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_NUMBER_OF_CURRENTS</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.2.1.3.1</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Mains Monitor Number Of Currents</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorNumberOfFrequencies">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_NUMBER_OF_FREQUENCIES</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.2.1.4.1</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Mains Monitor Number Of Frequencies</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="mainsMonitorFrequencyStatus">
+			<type>state</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.1.1</getOid>
+				</mapValue>
+			</value>
+			<label>Mains Monitor Frequency Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Mains</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="mainsMonitorFrequencyAlarmEnable">
+			<type>state</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.4.1</getOid>
+				</mapValue>
+			</value>
+			<label>Mains Monitor Frequency Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Mains</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="mainsMonitorFrequencyValueMainsMonitor">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_VALUE_MAINS_MONITOR</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.5.1</getOid></op>
+			</value>
+			<label>Mains Monitor Frequency Value Mains Monitor</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorFrequencyMajorHighLevel">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.6.1</getOid></op>
+			</value>
+			<label>Mains Monitor Frequency Major High Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorFrequencyMinorHighLevel">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.7.1</getOid></op>
+			</value>
+			<label>Mains Monitor Frequency Minor High Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorFrequencyMajorLowLevel">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.8.1</getOid></op>
+			</value>
+			<label>Mains Monitor Frequency Major Low Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+		<numSensor ruleid="mainsMonitorFrequencyMinorLowLevel">
+			<type>num</type>
+			<sensorId>MAINS_MONITOR_FREQUENCY_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.5.5.1.9.1</getOid></op>
+			</value>
+			<label>Mains Monitor Frequency Minor Low Level</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="mainsOutageTotal">
+			<type>timeinhrs</type>
+			<sensorId>MAINS_OUTAGE_TOTAL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.3.6.1.0</getOid></op>
+			</value>
+			<label>Mains Outage Total</label>
+			<sensorSet>Mains</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="generatorStatus">
+			<type>state</type>
+			<sensorId>GENERATOR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>generator</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="generatorFailStatus">
+			<type>state</type>
+			<sensorId>GENERATOR_FAIL_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Fail Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Generator</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="generatorActivation">
+			<type>num</type>
+			<sensorId>GENERATOR_ACTIVATION</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Activation</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorDischargeValue">
+			<type>pctofcapacity</type>
+			<sensorId>GENERATOR_DISCHAGE_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Discharge Value</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorMainsDelay">
+			<type>num</type>
+			<sensorId>GENERATOR_MAINS_DELAY</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.5.0</getOid></op>
+			</value>
+			<label>Generator Mains Delay</label>
+			<sensorSet>Generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorChargeTime">
+			<type>num</type>
+			<sensorId>GENERATOR_CHARGE_TIME</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.6.0</getOid></op>
+			</value>
+			<label>Generator Charge Time</label>
+			<sensorSet>Generator</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="generatorCapacityControllerStartStopEnable">
+			<type>state</type>
+			<sensorId>GENERATOR_CAPACITY_CONTROLLER_START_STOP_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Capacity Controller Start Stop Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>generator</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="generatorCapacityStartOnDischargeLimit">
+			<type>pctofcapacity</type>
+			<sensorId>GENERATOR_CAPACITY_START_ON_DISCHARGE_LIMIT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.8.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Capacity Start On Discharge Limit</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorCapacityStopOnChargeLimit">
+			<type>pctofcapacity</type>
+			<sensorId>GENERATOR_CAPACITY_STOP_ON_CHARGE_LIMIT</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.9.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Capacity Stop On Charge Limit</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="generatorCurrentLimitControlledStopEnable">
+			<type>state</type>
+			<sensorId>GENERATOR_CURRENT_LIMIT_CONTROLLED_STOP_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.10.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Current Limit Controlled Stop Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>generator</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="generatorCurrentLimitControlledStopValue">
+			<type>pctofcapacity</type>
+			<sensorId>GENERATOR_CURRENT_LIMIT_CONTROLLED_STOP_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.11.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Current Limit Controlled Stop Value</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="generatorVoltageControlledStartEnable">
+			<type>state</type>
+			<sensorId>GENERATOR_VOLTAGE_CONTROLLED_START_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.12.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Voltage Controlled Start Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>generator</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="generatorVoltageControlStartVoltage">
+			<type>voltage</type>
+			<sensorId>GENERATOR_VOLTAGE_CONTROL_START_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.13.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Voltage Control Stage Voltage</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorVoltageControlStopAfter">
+			<type>num</type>
+			<sensorId>GENERATOR_VOLTAGE_CONTROL_STOP_AFTER</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.14.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Voltage Control Stop After</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="generatorDailyRunEnable">
+			<type>state</type>
+			<sensorId>GENERATOR_DAILY_RUN_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.4.15.0</getOid>
+				</mapValue>
+			</value>
+			<label>Generator Daily Run Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>generator</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="generatorTankNumberOfTanks">
+			<type>num</type>
+			<sensorId>GENERATOR_TANK_NUMBER_OF_TANKS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.21.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Generator Tank Numbers Of Tanks</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+		<numSensor ruleid="generatorRunHoursTotalRunHours">
+			<type>runhours</type>
+			<sensorId>GENERATOR_RUN_HOURS_TOTAL_RUN_HOURS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.4.24.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Generator Run Hours Total Run Hours</label>
+			<sensorSet>generator</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="rectifiersStatus">
+			<type>state</type>
+			<sensorId>RECTIFIERS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rectifiersCurrentStatus">
+			<type>state</type>
+			<sensorId>RECTIFIERS_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Current Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rectifiersCurrentAlarmEnable">
+			<type>state</type>
+			<sensorId>RECTIFIERS_CURRENT_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Current Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rectifiersCurrentValue">
+			<type>amperage</type>
+			<sensorId>RECTIFIERS_CURRENT_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.2.5.0</getOid></op>
+			</value>
+			<label>Rectifiers Current Value</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersCurrentMajorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>RECTIFIERS_CURRENT_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.2.6.0</getOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Rectifiers Current Major Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersCurrentMinorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>RECTIFIERS_CURRENT_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.2.7.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Rectifiers Current Minor Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rectifiersCapacityStatus">
+			<type>state</type>
+			<sensorId>RECTIFIERS_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rectifiersCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>RECTIFIERS_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.3.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Capacity Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rectifiersCapacityValue">
+			<type>pctofcapacity</type>
+			<sensorId>RECTIFIERS_CAPACITY_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.3.5.0</getOid></op>
+			</value>
+			<label>Rectifiers Capacity Value</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersCapacityMajorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>RECTIFIERS_CAPACITY_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.3.6.0</getOid></op>
+			</value>
+			<label>Rectifiers Capacity Major Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersCapacityMinorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>RECTIFIERS_CAPACITY_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.3.7.0</getOid></op>
+			</value>
+			<label>Rectifiers Capacity Minor Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="rectifiersErrorStatus">
+			<type>state</type>
+			<sensorId>RECTIFIERS_ERROR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Error Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="rectifiersErrorEnable">
+			<type>state</type>
+			<sensorId>RECTIFIERS_ERROR_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.5.4.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Rectifiers Error EnableRectifiers Error </label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rectifiersErrorValue">
+			<type>num</type>
+			<sensorId>RECTIFIERS_ERROR_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.4.5.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Failed Rectifiers</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersErrorMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>RECTIFIERS_ERROR_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.4.6.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifiers Error Major Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersErrorMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>RECTIFIERS_ERROR_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.4.7.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifiers Error Minor Alarm Level</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersNumberOfRectifiers">
+			<type>num</type>
+			<sensorId>RECTIFIERS_NUMBER_OF_RECTIFIERS</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.5.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number Of Rectifiers</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="rectifierStatus" index=".1.3.6.1.4.1.12148.10.5.6.1.2">
+			<type>state</type>
+			<sensorId>RECTIFIER_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.5.6.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Rectifier <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Rectifiers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="rectifierOutputCurrentValue" index=".1.3.6.1.4.1.12148.10.5.6.1.2">
+			<type>amperage</type>
+			<sensorId>RECTIFIER_OUTPUT_CURRENT_VALUE_<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.5.6.1.3</getRowOid></op>
+			</value>
+			<label>Rectifier <rowIndex/> Output Current Value</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifierInputVoltageValue" index=".1.3.6.1.4.1.12148.10.5.6.1.4">
+			<type>voltage</type>
+			<sensorId>RECTIFIER_INPUT_VOLTAGE_VALUE_<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.5.6.1.4</getRowOid></op>
+			</value>
+			<label>Rectifier <rowIndex/> Input Voltage Value</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="rectifiersEnergyLogAccumulated">
+			<type>num/kwatthr</type>
+			<sensorId>RECTIFIERS_ENERGY_LOG_ACCUMULATED</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.5.7.1.0</getOid></op>
+			</value>
+			<label>Rectifiers Energy Accumulated</label>
+			<sensorSet>Rectifiers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcNumberOfGroups">
+			<type>num</type>
+			<sensorId>DCDC_NUMBER_OF_GROUPS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.6.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>DCDC Number Of Groups</label>
+			<sensorSet>dcdc</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="dcdcGroupStatus" index=".1.3.6.1.4.1.12148.10.6.2.1.2">
+			<type>state</type>
+			<sensorId>DCDC_GROUP_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Group <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>dcdc</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="dcdcGroupNumberOfDcdcConverters" index=".1.3.6.1.4.1.12148.10.6.2.1.3">
+			<type>num</type>
+			<sensorId>DCDC_GROUP_NUMBER_OF_DCDC_CONVERTERS</sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.2.1.3</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DCDC Group Number Of DCDC Converters</label>
+			<sensorSet>dcdc</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcGroupOutputVoltage" index=".1.3.6.1.4.1.12148.10.6.2.1.4">
+			<type>voltage</type>
+			<sensorId>DCDC_GROUP_OUTPUT_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.2.1.4</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>DCDC Group Output Voltage</label>
+			<sensorSet>dcdc</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="dcdcCurrentStatus" index=".1.3.6.1.4.1.12148.10.6.3.1.1">
+			<type>state</type>
+			<sensorId>DCDC_CURRENT_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.3.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Current <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dcdcCurrentAlarmEnable">
+			<type>state</type>
+			<sensorId>DCDC_CURRENT_ALARM_ENABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm" index=".1.3.6.1.4.1.12148.10.6.3.1.4">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.3.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Current <rowIndex/> Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="dcdcCurrentValue" index=".1.3.6.1.4.1.12148.10.6.3.1.5">
+			<type>num</type>
+			<sensorId>DCDC_CURRENT_VALUE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.3.1.5</getRowOid></op>
+			</value>
+			<label>DCDC Current <rowIndex/> Value</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcCurrentMajorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.3.1.6">
+			<type>num</type>
+			<sensorId>DCDC_CURRENT_MAJOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.3.1.6</getRowOid></op>
+			</value>
+			<label>DCDC Current <rowIndex/> Major Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcCurrentMinorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.3.1.7">
+			<type>num</type>
+			<sensorId>DCDC_CURRENT_MINOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.3.1.7</getRowOid></op>
+			</value>
+			<label>DCDC Current <rowIndex/> Minor Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="dcdcCapacityStatus" index=".1.3.6.1.4.1.12148.10.6.4.1.1">
+			<type>state</type>
+			<sensorId>DCDC_CAPACITY_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.4.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Capacity <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dcdcCapacityAlarmEnable" index=".1.3.6.1.4.1.12148.10.6.4.1.4">
+			<type>state</type>
+			<sensorId>DCDC_CAPACITY_ALARM_ENABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.4.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Capacity <rowIndex/> Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="dcdcCapacityValue" index=".1.3.6.1.4.1.12148.10.6.4.1.5">
+			<type>num</type>
+			<sensorId>DCDC_CAPACITY_VALUE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.4.1.5</getRowOid></op>
+			</value>
+			<label>DCDC Capacity <rowIndex/> Value</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcCapacityMajorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.4.1.6">
+			<type>num</type>
+			<sensorId>DCDC_CAPACITY_MAJOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.4.1.6</getRowOid></op>
+			</value>
+			<label>DCDC Capacity <rowIndex/> Major Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcCapacityMinorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.4.1.7">
+			<type>num</type>
+			<sensorId>DCDC_CAPACITY_MINOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.4.1.7</getRowOid></op>
+			</value>
+			<label>DCDC Capacity <rowIndex/> Minor Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="dcdcErrorStatus" index=".1.3.6.1.4.1.12148.10.6.6.1.1">
+			<type>state</type>
+			<sensorId>DCDC_ERROR_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.6.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Error <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="dcdcErrorEnable" index=".1.3.6.1.4.1.12148.10.6.6.1.4">
+			<type>state</type>
+			<sensorId>DCDC_ERROR_ENABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.6.6.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>DCDC Error <rowIndex/> Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>DCDC</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="dcdcErrorValue" index=".1.3.6.1.4.1.12148.10.6.6.1.5">
+			<type>num</type>
+			<sensorId>DCDC_ERROR_VALUE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.6.1.5</getRowOid></op>
+			</value>
+			<label>DCDC Error <rowIndex/> Value</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcErrorMajorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.6.1.6">
+			<type>num</type>
+			<sensorId>DCDC_ERROR_MAJOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.6.1.6</getRowOid></op>
+			</value>
+			<label>DCDC Error <rowIndex/> Major Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dcdcErrorMinorAlarmLevel" index=".1.3.6.1.4.1.12148.10.6.6.1.7">
+			<type>num</type>
+			<sensorId>DCDC_ERROR_MINOR_ALARM_LEVEL<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.6.6.1.7</getRowOid></op>
+			</value>
+			<label>DCDC Error <rowIndex/> Minor Alarm Level</label>
+			<sensorSet>DCDC</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="solarChargersStatus">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>solarChargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="solarChargersCurrentStatus">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Current Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>solarChargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="solarChargersCurrentAlarmEnable">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_CURRENT_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Current Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>solarChargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="solarChargersCurrentValue">
+			<type>amperage</type>
+			<sensorId>SOLAR_CHARGERS_CURRENT_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.2.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Solar Chargers Current Value</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersCurrentMajorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>SOLAR_CHARGERS_CURRENT_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.2.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Solar Chargers Current Major Alarm Level</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersCurrentMinorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>SOLAR_CHARGERS_CURRENT_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.2.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Solar Chargers Current Minor Alarm Level</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="solarChargersCapacityStatus">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Solar Chargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="solarChargersCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.3.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Capacity Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Solar Chargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="solarChargersCapacityValue">
+			<type>pctofcapacity</type>
+			<sensorId>SOLAR_CHARGERS_CAPACITY_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.3.5.0</getOid></op>
+			</value>
+			<label>Solar Chargers Capacity Value</label>
+			<sensorSet>Solar Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersCapacityMajorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>SOLAR_CHARGERS_CAPACITY_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.3.6.0</getOid></op>
+			</value>
+			<label>Solar Chargers Capacity Major Alarm Level</label>
+			<sensorSet>Solar Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersCapacityMinorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>SOLAR_CHARGERS_CAPACITY_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.3.7.0</getOid></op>
+			</value>
+			<label>Solar Chargers Capacity Minor Alarm Level</label>
+			<sensorSet>Solar Chargers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="solarChargersErrorStatus">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_ERROR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Error Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>solarChargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="solarChargersErrorEnable">
+			<type>state</type>
+			<sensorId>SOLAR_CHARGERS_ERROR_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.7.4.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Solar Chargers Error Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>solarChargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="solarChargersErrorValue">
+			<type>num</type>
+			<sensorId>SOLAR_CHARGERS_ERROR_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.4.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Solar Chargers Error Value</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersErrorMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>SOLAR_CHARGERS_ERROR_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.4.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Solar Chargers Error Major Alarm Level</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersErrorMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>SOLAR_CHARGERS_ERROR_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.4.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Solar Chargers Error Minor Alarm Level</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersNumberOfSolarChargers">
+			<type>num</type>
+			<sensorId>SOLAR_CHARGERS_NUMBER_OF_SOLAR_CHARGERS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Solar Chargers Number Of Solar Chargers</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="solarChargersEnergyLogAccumulated">
+			<type>num/kwatthr</type>
+			<sensorId>SOLAR_CHARGERS_ENERGY_LOG_ACCUMULATED</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.7.7.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Solar Chargers Energy Log Accumulated</label>
+			<sensorSet>solarChargers</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="windChargersStatus">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>windChargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="windChargersCurrentStatus">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Current Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Wind Chargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="windChargersCurrentAlarmEnable">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_CURRENT_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Current Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Wind Chargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="windChargersCurrentValue">
+			<type>amperage</type>
+			<sensorId>WIND_CHARGERS_CURRENT_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.2.5.0</getOid></op>
+			</value>
+			<label>Wind Chargers Current Value</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersCurrentMajorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>WIND_CHARGERS_CURRENT_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.2.6.0</getOid></op>
+			</value>
+			<label>Wind Chargers Current Major Alarm Level</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersCurrentMinorAlarmLevel">
+			<type>amperage</type>
+			<sensorId>WIND_CHARGERS_CURRNET_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.2.7.0</getOid></op>
+			</value>
+			<label>Wind Chargers Current Minor Alarm Level</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="windChargersCapacityStatus">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Wind Chargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="windChargersCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.3.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Capacity Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Wind Chargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="windChargersCapacityValue">
+			<type>pctofcapacity</type>
+			<sensorId>WIND_CHARGERS_CAPACITY_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.3.5.0</getOid></op>
+			</value>
+			<label>Wind Chargers Capacity Value</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersCapacityMajorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>WIND_CHARGERS_CAPACITY_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.3.6.0</getOid></op>
+			</value>
+			<label>Wind Chargers Capacity Major Alarm Level</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersCapacityMinorAlarmLevel">
+			<type>pctofcapacity</type>
+			<sensorId>WIND_CHARGERS_CAPACITY_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.3.7.0</getOid></op>
+			</value>
+			<label>Wind Chargers Capacity Minor Alarm Level</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="windChargersErrorStatus">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_ERROR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.4.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Error Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>windChargers</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="windChargersErrorEnable">
+			<type>state</type>
+			<sensorId>WIND_CHARGERS_ERROR_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.8.4.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Wind Chargers Error Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Wind Chargers</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="windChargersErrorValue">
+			<type>num</type>
+			<sensorId>WIND_CHARGERS_ERROR_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.4.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Wind Chargers Error Value</label>
+			<sensorSet>windChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersErrorMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>WIND_CHARGERS_ERROR_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.4.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Wind Chargers Error Major Alarm Level</label>
+			<sensorSet>windChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersErrorMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>WIND_CHARGERS_ERROR_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.4.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Wind Chargers Error Minor Alarm Level</label>
+			<sensorSet>windChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersNumberOfWindChargers">
+			<type>num</type>
+			<sensorId>WIND_CHARGERS_NUMBER_OF_WIND_CHARGERS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Wind Chargers Number Of Wind Chargers</label>
+			<sensorSet>windChargers</sensorSet>
+		</numSensor>
+		<numSensor ruleid="windChargersEnergyLogAccumulated">
+			<type>num/kwatthr</type>
+			<sensorId>WIND_CHARGERS_ENERGY_LOG_ACCUMULATED</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.8.7.1.0</getOid></op>
+			</value>
+			<label>Wind Chargers Energy Log Accumulated</label>
+			<sensorSet>Wind Chargers</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="loadStatus">
+			<type>state</type>
+			<sensorId>LOAD_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.9.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Load Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>load</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="loadCurrentStatus">
+			<type>state</type>
+			<sensorId>LOAD_CURRENT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.9.2.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Load Current Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Load</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="loadCurrentAlarmEnable">
+			<type>state</type>
+			<sensorId>LOAD_CURRENT_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.9.2.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Load Current Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Load</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="loadCurrentValue">
+			<type>amperage</type>
+			<sensorId>LOAD_CURRENT_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.9.2.5.0</getOid></op>
+			</value>
+			<label>Load Current Value</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="loadCurrentMajorHighLevel">
+			<type>amperage</type>
+			<sensorId>LOAD_CURRENT_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.9.2.6.0</getOid></op>
+			</value>
+			<label>Load Current Major High Level</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="loadCurrentMinorHighLevel">
+			<type>amperage</type>
+			<sensorId>LOAD_CURRENT_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.9.2.7.0</getOid></op>
+			</value>
+			<label>Load Current Minor High Level</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="loadFusesStatus">
+			<type>state</type>
+			<sensorId>LOAD_FUSES_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.9.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Load Fuses Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>load</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="loadNumberOfGroups">
+			<type>num</type>
+			<sensorId>LOAD_NUMBER_OF_GROUPS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.9.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Load Number Of Groups</label>
+			<sensorSet>load</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="loadGroupStatus" index=".1.3.6.1.4.1.12148.10.9.5.1.2">
+			<type>state</type>
+			<sensorId>LOAD_GROUP_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.9.5.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Load Group <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>load</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="loadNumberOfLVLDs" index=".1.3.6.1.4.1.12148.10.9.5.1.3">
+			<type>num</type>
+			<sensorId>LOAD_NUMBER_OF_LVLDS<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.9.5.1.3</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Load Group <rowIndex/> Number Of LVLDS</label>
+			<sensorSet>load</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="loadLVLDStatus" index=".1.3.6.1.4.1.12148.10.9.6.1.2">
+			<type>state</type>
+			<sensorId>LOAD_LVLD_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.9.6.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Load LVLD <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Load</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="loadLVLDEnable" index=".1.3.6.1.4.1.12148.10.9.6.1.5">
+			<type>state</type>
+			<sensorId>LOAD_LVLD_ENABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.9.6.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>Load LVLD <rowIndex/> Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Load</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="loadLVLDValue" index=".1.3.6.1.4.1.12148.10.9.6.1.6">
+			<type>num</type>
+			<sensorId>LOAD_LVLD_VALUE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.9.6.1.6</getRowOid></op>
+			</value>
+			<label>Load LVLD <rowIndex/> Value</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="loadLVLDConnectVoltage" index=".1.3.6.1.4.1.12148.10.9.6.1.7">
+			<type>voltage</type>
+			<sensorId>LOAD_LVLD_CONNECT_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.9.6.1.7</getRowOid></op>
+			</value>
+			<label>Load LVLD <rowIndex/> Connect Voltage</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="loadLVLDDisconnectVoltage" index=".1.3.6.1.4.1.12148.10.9.6.1.8">
+			<type>voltage</type>
+			<sensorId>LOAD_LVLD_DISCONNECT_VOLTAGE<rowIndex/></sensorId>
+			<value>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.9.6.1.8</getRowOid></op>
+			</value>
+			<label>Load LVLD <rowIndex/> Disconnect Voltage</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="loadFuseStatus" index=".1.3.6.1.4.1.12148.10.9.7.1.1">
+			<type>state</type>
+			<sensorId>LOAD_FUSE_STATUS<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.9.7.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<label>Load Fuse <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>load</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="loadFuseAlarmEnable" index=".1.3.6.1.4.1.12148.10.9.7.1.4">
+			<type>state</type>
+			<sensorId>LOAD_FUSE_ALARM_ENABLE<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.9.7.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Load Fuse <rowIndex/> Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>load</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="loadFuseValue" index=".1.3.6.1.4.1.12148.10.9.7.1.5">
+			<type>num</type>
+			<sensorId>LOAD_FUSE_VALUE<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.9.7.1.5</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Load Fuse <rowIndex/> Value</label>
+			<sensorSet>load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="loadEnergylogAccumulated">
+			<type>num/kwatthr</type>
+			<sensorId>LOAD_ENERGY_LOG_ACCUMULATED</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.9.8.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Load Energy Log Accumulated</label>
+			<sensorSet>load</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="batteryStatus">
+			<type>state</type>
+			<sensorId>BATTERY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryReferenceVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_REFERENCE_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.3.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Reference Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryFusesStatus">
+			<type>state</type>
+			<sensorId>BATTERY_FUSES_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Fuses Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryVoltageStatus">
+			<type>state</type>
+			<sensorId>BATTERY_VOLTAGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.5.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Voltage Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryVoltageAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_VOLTAGE_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.5.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Voltage Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryVoltageValue">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.5.5.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Voltage Value</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryVoltageMajorHighLevel">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.5.6.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Voltage Major High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryVoltageMinorHighLevel">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.5.7.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Voltage Minor High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryVoltageMinorLowLevel">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.5.8.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Voltage Minor Low Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryVoltageMajorLowLevel">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.5.9.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery Voltage Major Low Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryCurrentsStatus">
+			<type>state</type>
+			<sensorId>BATTERY_CURRENTS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.6.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Currents Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryCurrentsAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_CURRENTS_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.6.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Currents Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryCurrentsValue">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENTS_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.6.5.0</getOid></op>
+			</value>
+			<label>Battery Currents Value</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCurrentsMajorHighLevel">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENTS_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.6.6.0</getOid></op>
+			</value>
+			<label>Battery Currents Major High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCurrentsMinorHighLevel">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENTS_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.6.7.0</getOid></op>
+			</value>
+			<label>Battery Currents Minor High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCurrentsMinorLowLevel">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENTS_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.6.8.0</getOid></op>
+			</value>
+			<label>Battery Currents Minor Low Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCurrentsMajorLowLevel">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENTS_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.6.9.0</getOid></op>
+			</value>
+			<label>Battery Currents Major Low Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryTemperaturesStatus">
+			<type>state</type>
+			<sensorId>BATTERY_TEMPERATURES_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.7.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Temperatures Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryTemperaturesAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_TEMPERATURES_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.7.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Temperatures Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryTemperaturesValue">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURES_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.7.5.0</getOid></op>
+			</value>
+			<label>Battery Temperatures Value</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperaturesMajorHighLevel">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURES_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.7.6.0</getOid></op>
+			</value>
+			<label>Battery Temperatures Major High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperaturesMinorHighLevel">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURES_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.7.7.0</getOid></op>
+			</value>
+			<label>Battery Temperatures Minor High Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperaturesMinorLowLevel">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURES_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.7.8.0</getOid></op>
+			</value>
+			<label>Battery Temperatures Minor Low Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperaturesMajorLowLevel">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURES_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.7.9.0</getOid></op>
+			</value>
+			<label>Battery Temperatures Major Low Level</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryTimeLeftStatus">
+			<type>state</type>
+			<sensorId>BATTERY_TIME_LEFT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.8.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Time Left Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryTimeLeftAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_TIME_LEFT_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.8.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Time Left Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryTimeLeftValue">
+			<type>num</type>
+			<sensorId>BATTERY_TIME_LEFT_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.8.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Time Left Value</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTimeLeftMajorHighLevel">
+			<type>num</type>
+			<sensorId>BATTERY_TIME_LEFT_MAJOR_HIGH_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.8.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Time Left Major High Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTimeLeftMinorHighLevel">
+			<type>num</type>
+			<sensorId>BATTERY_TIME_LEFT_MINOR_HIGH_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.8.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Time Left Minor High Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryRemainingCapacityStatus">
+			<type>state</type>
+			<sensorId>BATTERY_REMAINING_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.9.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Remaining Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryRemainingCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_REMAINING_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.9.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Remaining Capacity Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryRemainingCapacityValue">
+			<type>num</type>
+			<sensorId>BATTERY_REMAINING_CAPACITY_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.9.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Remaining Capacity Value</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryRemainingCapacityMinorLowLevel">
+			<type>num</type>
+			<sensorId>BATTERY_REMAINING_CAPACITY_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.9.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Remaining Capacity Minor Low Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryRemainingCapacityMajorLowLevel">
+			<type>num</type>
+			<sensorId>BATTERY_REMAINING_CAPACITY_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.9.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Remaining Capacity Major Low Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryUsedCapacityStatus">
+			<type>state</type>
+			<sensorId>BATTERY_USED_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.10.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Used Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryUsedCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_USED_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.10.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Used Capacity Alarm EnableBattery Used</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryUsedCapacityValue">
+			<type>num</type>
+			<sensorId>BATTERY_USED_CAPACITY_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.10.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Used Capacity Value</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryUsedCapacityMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>BATTERY_USED_CAPACITY_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.10.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Used Capacity Major Alarm Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryUsedCapacityMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>BATTERY_USED_CAPACITY_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.10.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Used Capacity Minor Alarm Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryTotalCapacityStatus">
+			<type>state</type>
+			<sensorId>BATTERY_TOTAL_CAPACITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.11.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Total Capacity Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryTotalCapacityAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_TOTAL_CAPACITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.11.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Total Capacity Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryTotalCapacityValue">
+			<type>num</type>
+			<sensorId>BATTERY_TOTAL_CAPACITY_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.11.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Total Capacity Value</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTotalCapacityMinorLowLevel">
+			<type>num</type>
+			<sensorId>BATTERY_TOTAL_CAPACITY_MINOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.11.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Total Capacity Minor Low Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTotalCapacityMajorLowLevel">
+			<type>num</type>
+			<sensorId>BATTERY_TOTAL_CAPACITY_MAJOR_LOW_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.11.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Total Capacity Major Low Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryQualityStatus">
+			<type>state</type>
+			<sensorId>BATTERY_QUALITY_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.12.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Quality Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryQualityAlarmEnable">
+			<type>state</type>
+			<sensorId>BATTERY_QUALITY_ALARM_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.12.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Quality Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryQualityValue">
+			<type>num</type>
+			<sensorId>BATTERY_QUALITY_VALUE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.12.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Quality Value</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryQualityMinorAlarmLevel">
+			<type>num</type>
+			<sensorId>BATTERY_QUALITY_MINOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.12.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Quality Minor Alarm Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryQualityMajorAlarmLevel">
+			<type>num</type>
+			<sensorId>BATTERY_QUALITY_MAJOR_ALARM_LEVEL</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.12.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Quality Major Alarm Level</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryLVBDStatus">
+			<type>state</type>
+			<sensorId>BATTERY_LVBD_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.13.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery LVBD Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="batteryLVBDEnable">
+			<type>state</type>
+			<sensorId>BATTERY_LVBD_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.13.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery LVBD Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryLVBDValue">
+			<type>num</type>
+			<sensorId>BATTERY_LVBD_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.13.5.0</getOid></op>
+			</value>
+			<label>Battery LVBD Value</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryLVBDConnectVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_LVBD_CONNECT_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.13.6.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery LVBD Connect Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryLVBDDisconnectVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_LVBD_DISCONNECT_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.13.7.0</getOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Battery LVBD Disconnect Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryChargeCurrentLimitEnable">
+			<type>state</type>
+			<sensorId>BATTERY_CHARGE_CURRENT_LIMIT_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.14.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Charge Current Limit Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryChargeCurrentLimitValue">
+			<type>num</type>
+			<sensorId>BATTERY_CHARGE_CURRENT_LIMIT_VALUE</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.14.2.0</getOid></op>
+			</value>
+			<label>Battery Charge Current Limit Value</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryBoostVoltage">
+			<type>num</type>
+			<sensorId>BATTERY_BOOST_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.15.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Boost Voltage</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryBoostCommand">
+			<type>state</type>
+			<sensorId>BATTERY_BOOST_COMMAND</sensorId>
+			<value>
+				<mapValue mapid="smartpacks-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.15.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Boost Command</label>
+			<enum>pushbutton-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryBoostCurrentThreshold">
+			<type>num</type>
+			<sensorId>BATTERY_BOOST_CURRENT_THRESHOLD</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.15.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Boost Current Threshold</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryBoostManualMaxDuration">
+			<type>num</type>
+			<sensorId>BATTERY_BOOST_MANUAL_MAX_DURATION</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.15.4.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Boost Manual Max Duration</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTestVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_TEST_VOLTAGE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.16.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Test Voltage</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryTestCommand">
+			<type>state</type>
+			<sensorId>BATTERY_TEST_COMMAND</sensorId>
+			<value>
+				<mapValue mapid="smartpacks-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.16.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Test Command</label>
+			<enum>pushbutton-em</enum>
+			<sensorSet>battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryTestNumberOfResults">
+			<type>num</type>
+			<sensorId>BATTERY_TEST_NUMBER_OF_RESULTS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.16.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Test Number Of Results</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="batteryTempCompEnable">
+			<type>state</type>
+			<sensorId>BATTERY_TEMP_COMP_ENABLE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.10.17.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery Temp Comp Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="batteryBankNumberofBanks">
+			<type>num</type>
+			<sensorId>BATTERY_BANK_NUMBER_OF_BANKS</sensorId>
+			<value>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.18.1.0</getOid></op>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Bank Number Of Banks</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryMonitorsNumberOfUnits">
+			<type>num</type>
+			<sensorId>BATTERY_MONITORS_NUMBER_OF_UNITS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.19.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Monitors Number Of Units</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryEnergyLogAccumulated">
+			<type>num/kwatthr</type>
+			<sensorId>BATTERY_ENERGY_LOG_ACCUMULATED</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.20.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Energy Log Accumulated</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCycleLogTotalCycles">
+			<type>num</type>
+			<sensorId>BATTERY_CYCLE_LOG_TOTAL_CYCLES</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.10.21.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Battery Cycle Log Total Cycles</label>
+			<sensorSet>battery</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="inputControlUnitNumberOfInputs" index=".1.3.6.1.4.1.12148.10.11.1.1.2">
+			<type>num</type>
+			<sensorId>INPUT_CONTROL_UNIT_NUMBER_OF_INPUTS<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.11.1.1.2</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Input Control Unit <rowIndex/> Number Of Inputs</label>
+			<sensorSet>inputs</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="inputControlUnitInputStatus" index=".1.3.6.1.4.1.12148.10.11.2.1.2">
+			<type>state</type>
+			<sensorId>INPUT_CONTROL_UNIT_INPUT_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.11.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Input Control Unit Input <rowIndex/> Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>inputs</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="inputControlUnitInputAlarmEnable" index=".1.3.6.1.4.1.12148.10.11.2.1.5">
+			<type>state</type>
+			<sensorId>INPUT_CONTROL_UNIT_INPUT_ALARM_ENABLE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.11.2.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>Input Control Unit Input <rowIndex/> Alarm Enable</label>
+			<enum>disableEnable-em</enum>
+			<sensorSet>inputs</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="inputControlUnitInputValue" index=".1.3.6.1.4.1.12148.10.11.2.1.6">
+			<type>num</type>
+			<sensorId>INPUT_CONTROL_UNIT_INPUT_VALUE<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.11.2.1.6</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Input Control Unit <rowIndex/> Input Value</label>
+			<sensorSet>inputs</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="inputControlUnitInputConfiguration" index=".1.3.6.1.4.1.12148.10.11.2.1.7">
+			<type>state</type>
+			<sensorId>INPUT_CONTROL_UNIT_INPUT_CONFIGURATION_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="inputTypeConfig-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.11.2.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<label>Input Control Unit <rowIndex/> Input Configuration</label>
+			<enum>inputConfigType-em</enum>
+			<sensorSet>inputs</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="outputControlUnitNumberOfOutputs" index=".1.3.6.1.4.1.12148.10.12.1.1.2">
+			<type>num</type>
+			<sensorId>OUTPUT_CONTROL_UNIT_NUMBER_OF_OUTPUTS<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.12148.10.12.1.1.2</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Output Control Unit <rowIndex/> Number Of Outputs</label>
+			<sensorSet>outputs</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="outputControlUnitOutputStatus" index=".1.3.6.1.4.1.12148.10.12.2.1.2">
+			<type>state</type>
+			<sensorId>OUTPUT_CONTROL_UNIT_OUTPUT_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="systemMode-vm">
+					<getRowOid>.1.3.6.1.4.1.12148.10.12.2.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Output Control Unit Output <rowIndex/> Status</label>
+			<enum>outputRelays-em</enum>
+			<sensorSet>outputs</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="controlSystemStatus">
+			<type>state</type>
+			<sensorId>CONTROL_SYSTEM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.13.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Control System Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>Control System</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="controlSystemNumberOfControlUnits">
+			<type>num</type>
+			<sensorId>CONTROL_SYSTEM_NUMBER_OF_CONTROL_UNITS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.13.3.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Control System Number Of Control Units</label>
+			<sensorSet>controlSystem</sensorSet>
+		</numSensor>
+		<numSensor ruleid="controlSystemIoUnitsNumberOfUnits">
+			<type>num</type>
+			<sensorId>CONTROL_SYSTEM_IO_UNITS_NUMBER_OF_UNITS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.13.7.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Control System IO Units Number Of Units</label>
+			<sensorSet>controlSystem</sensorSet>
+		</numSensor>
+		<numSensor ruleid="controlUnitNumberOfUnits">
+			<type>num</type>
+			<sensorId>CONTOL_UNIT_NUMBER_OF_UNITS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.13.8.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Control Unit Number Of Units</label>
+			<sensorSet>controlSystem</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="controlUnitStatus">
+			<type>state</type>
+			<sensorId>CONTROL_UNIT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="systemStatus-vm">
+					<getOid>.1.3.6.1.4.1.12148.10.13.8.2.1.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Control Unit Status</label>
+			<enum>systemStatus-em</enum>
+			<sensorSet>controlSystem</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="currentMonitorsNumberOfUnits">
+			<type>num</type>
+			<sensorId>CURRENT_MONITORS_NUMBER_OF_UNITS</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.12148.10.13.9.1.0</getOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<label>Current Monitors Number Of Units</label>
+			<sensorSet>controlSystem</sensorSet>
+		</numSensor>
+
+		<alarmFlags2 ruleid="alarmGroupStatus" index=".1.3.6.1.4.1.12148.10.14.1.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.12148.10.14.1.1.2</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.12148.10.14.1.1.3</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.12148.10.14.1.1.3</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A(n) <getRowOid>.1.3.6.1.4.1.12148.10.14.1.1.3</getRowOid> condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.12148.10.14.1.1.3</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="smartpacks-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<valueMap ruleid="systemMode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		<valueMap ruleid="inputTypeConfig-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<valueMap ruleid="systemStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>*</valueIn><valueOut>20</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		<enumMap ruleid="trueFalse-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+		<enumMap ruleid="disableEnable-em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+		<enumMap ruleid="temperatureType-em">
+			<label>Celsius</label>
+			<label>Fahrenheit</label>
+		</enumMap>
+		<enumMap ruleid="temperatureFlag-em">
+			<label>Amp-Hours</label>
+			<label>Percent</label>
+		</enumMap>
+		<enumMap ruleid="ampereDeciAmpere-em">
+			<label>Ampere</label>
+			<label>Deciampere</label>
+		</enumMap>
+		<enumMap ruleid="alarmGroupStatus-em">
+			<label>Normal</label>
+			<label>Alarm</label>
+		</enumMap>
+		<enumMap ruleid="resetNumber-em">
+			<label>Pushbutton</label>
+			<label>Reset Number</label>
+		</enumMap>
+		<enumMap ruleid="resetAlarm-em">
+			<label>Pushbutton</label>
+			<label>Reset Alarm</label>
+		</enumMap>
+		<enumMap ruleid="smartpacks-em">
+			<label>SmartPack2</label>
+			<label>SmartPackS</label>
+			<label>ComPack</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="pushbutton-em">
+			<label>Pushbutton</label>
+			<label>Start Boost</label>
+			<label>Stop Boost</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="outputRelays-em">
+			<label>Not Energized</label>
+			<label>Energized</label>
+			<label>Disconnected</label>
+			<label>Connected</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="summaryStatus-em">
+			<label>Off</label>
+			<label>Test</label>
+			<label>Boost</label>
+			<label>Float</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="inputConfigType-em">
+			<label>Normally Open</label>
+			<label>Normally Closed</label>
+			<label>Diode Matrix</label>
+			<label>Voltage</label>
+			<label>Clock</label>
+			<label>Virtual</label>
+			<label>Unknown</label>
+		</enumMap>
+		<enumMap ruleid="systemStatus-em">
+			<label>Error</label>
+			<label>Normal</label>
+			<label>Minor Alarm</label>
+			<label>Major Alarm</label>
+			<label>Disabled</label>
+			<label>Disconnected</label>
+			<label>Not Present</label>
+			<label>Minor and ajor</label>
+			<label>Major Low</label>
+			<label>Minor Low</label>
+			<label>Major High</label>
+			<label>Minor High</label>
+			<label>Event</label>
+			<label>Value Volt</label>
+			<label>Value Amp</label>
+			<label>Value Temp</label>
+			<label>Value Unit</label>
+			<label>Value Percent</label>
+			<label>Critical</label>
+			<label>Warning</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

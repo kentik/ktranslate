@@ -1,0 +1,628 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="apcats"
+	ddfname="APC ATS"
+	ddfversion="13">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="atsid">
+		<oidMustExist ruleid="atsmodel" oid=".1.3.6.1.4.1.318.1.1.8.1.5.0"/>
+		
+		<!-- Replace APC discovery model data with model from ATS MIB -->
+		<suppressRule ruleid="stompapcmodel" suppressid="core/apcdiscdata/modeldata"/>
+		<suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.318.1.1.8.1.5.0</getOid></setProductData>
+		<suppressRule ruleid="stompserialnum" suppressid="core/apcdiscdata/serialnum"/>
+		<setProductData ruleid="serialnum" field="apc_serial_num"><getOid>.1.3.6.1.4.1.318.1.1.8.1.6.0</getOid></setProductData>
+		<suppressRule ruleid="stompserialnum2" suppressid="core/apcdiscdata/serialnum2"/>
+		<setProductData ruleid="serialnum2" field="serial_num"><getOid>.1.3.6.1.4.1.318.1.1.8.1.6.0</getOid></setProductData>
+		<setProductData ruleid="inputphasecount" field="inputphasecount">
+		  <getOid>.1.3.6.1.4.1.318.1.1.8.2.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount">
+			<getOid>.1.3.6.1.4.1.318.1.1.8.2.3.2.0</getOid>
+		</setProductData>
+	</device>
+
+	<device deviceid="ats_type">
+		<oidMustMatch ruleid="atssysobjid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.318.1.3.11</value> <!-- ATS -->
+				<value>.1.3.6.1.4.1.318.1.3.11.*</value> <!-- Other ATS -->
+				<value>.1.3.6.1.4.1.318.1.3.32</value> <!-- ATS4G -->
+				<value>.1.3.6.1.4.1.318.1.3.32.*</value> <!-- Other ATS4G -->
+			</valueList>
+		</oidMustMatch>
+
+		<suppressRule ruleid="stompmib2type" suppressid="core/mib2data/typedata"/>
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>		
+	</device>
+
+	<!-- Basic ATS status -->
+	<device deviceid="atsstatus">	
+		<oidMustExist ruleid="atsstatus" oid=".1.3.6.1.4.1.318.1.1.8.5.1.2.0"/>
+		<!-- Selected source -->		
+		<stateSensor ruleid="selectedsource">
+			<type>state/selectesource</type>
+			<sensorId>ATS_SELECTED_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="ats-source-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Selected Source</label>
+			<enum>ats-source</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!-- Redundancy Status -->		
+		<stateSensor ruleid="redundstate">
+			<type>state/redundstate</type>
+			<sensorId>ATS_REDUNDANCY_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-redund-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Redundancy State</label>
+			<enum>ats-redund</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!-- 5V power supply State -->		
+		<stateSensor ruleid="5vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_5V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS 5V Power Supply State</label>
+			<enum>ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="ats-source-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-source">
+			<label>Source A</label>
+			<label>Source B</label>
+		</enumMap>
+		<valueMap ruleid="ats-redund-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-redund">
+			<label>Redundancy Lost</label>
+			<label>Fully Redundant</label>
+		</enumMap>
+		<valueMap ruleid="ats-ol-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-ol">
+			<label>Normal</label>
+			<label>Lowload</label>
+			<label>Near Overload</label>
+			<label>Overload</label>
+		</enumMap>
+		<valueMap ruleid="ats-supply-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-supply">
+			<label>Failure</label>
+			<label>OK</label>
+		</enumMap>
+		<valueMap ruleid="ats-type-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-type">
+			<label>Unknown</label>
+			<label>Main</label>
+			<label>Bypass</label>
+		</enumMap>
+		<valueMap ruleid="ats-oc-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-oc">
+			<label>Over Current</label>
+			<label>OK</label>
+		</enumMap>
+	</device>
+
+	<!-- OLD ATS status -->
+	<device deviceid="atsstatusold">
+		<oidMustMatch ruleid="atssysobjid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.318.1.3.11</value> <!-- ATS -->
+				<value>.1.3.6.1.4.1.318.1.3.11.*</value> <!-- Other ATS -->
+			</valueList>
+		</oidMustMatch>	
+		<oidMustNotExist ruleid="atssrcb24v" oid=".1.3.6.1.4.1.318.1.1.8.5.1.7.0"/>
+		<!-- Over Current State -->		
+		<stateSensor ruleid="overcurrentstate">
+			<type>state/overcurrentstate</type>
+			<sensorId>ATS_OVERCURRENT_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-oc-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Over Current State</label>
+			<enum>apcats/atsstatus/ats-oc</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--24V power supply State -->		
+		<stateSensor ruleid="24vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_24V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS 24V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+	</device>
+
+	<!-- new status for Next GEN ATS -->
+	<device deviceid="atsstatusnew">	
+		<oidMustExist ruleid="atssrcb24v" oid=".1.3.6.1.4.1.318.1.1.8.5.1.7.0"/>
+		<!--Source A 24V power supply State -->		
+		<stateSensor ruleid="SrcA24vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_SRCA_24V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source A 24V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--Source B 24V power supply State -->		
+		<stateSensor ruleid="SrcB24vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_SRCB_24V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source B 24V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+        <!-- (+)12V power supply State -->		
+		<stateSensor ruleid="+12vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_PLUS_12V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS +12V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+        <!-- (-)12V power supply State -->		
+		<stateSensor ruleid="-12vsupplystate">
+			<type>state/powersupply</type>
+			<sensorId>ATS_MINUS_12V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.9.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS -12V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--Source A State -->		
+		<stateSensor ruleid="sourceastate">
+			<type>state/sourcestate</type>
+			<sensorId>ATS_SOURCE_A_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-srcstate-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.12.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source A State</label>
+			<enum>ats-srcstate</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--Source B State -->		
+		<stateSensor ruleid="sourcebstate">
+			<type>state/sourcestate</type>
+			<sensorId>ATS_SOURCE_B_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-srcstate-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.13.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source B State</label>
+			<enum>ats-srcstate</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--Phase Sync State -->		
+		<stateSensor ruleid="phasesyncstate">
+			<type>state/phasesyncstate</type>
+			<sensorId>ATS_PHASE_SYNC_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-syncstate-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.14.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Phase Sync State</label>
+			<enum>ats-syncstate</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<!--Volatge Out State -->		
+		<stateSensor ruleid="voltageoutstate">
+			<type>state/voltageoutstate</type>
+			<sensorId>ATS_VOLTAGE_OUT_STATE</sensorId>
+			<value>
+				<mapValue mapid="ats-voloutstate-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.15.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Voltage Out State</label>
+			<enum>ats-voloutstate</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="atsStatus3dot3VPowerSupply">
+			<type>state/powersupply</type>
+			<sensorId>ATS_3_3V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.17.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS 3.3V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="atsStatus1dot0VPowerSupply">
+			<type>state/powersupply</type>
+			<sensorId>ATS_1_0V_SUPPLY_STATE</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.18.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS 1.0V Power Supply State</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="atsStatusVBoostSourceA">
+			<type>state/powersupply</type>
+			<sensorId>ATS_VBOOST_A</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.19.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source A Boost Voltage</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="atsStatusVBoostSourceB">
+			<type>state/powersupply</type>
+			<sensorId>ATS_VBOOST_B</sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-supply-to-index">
+					<getOid>.1.3.6.1.4.1.318.1.1.8.5.1.20.0</getOid>
+				</mapValue>
+			</value>
+			<label>ATS Source B Boost Voltage</label>
+			<enum>apcats/atsstatus/ats-supply</enum>
+			<sensorSet>ATS Status</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="ats-srcstate-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-srcstate">
+			<label>Failure</label>
+			<label>OK</label>
+		</enumMap>
+		<valueMap ruleid="ats-syncstate-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-syncstate">
+			<label>In sync</label>
+			<label>Out of sync</label>
+		</enumMap>
+		<valueMap ruleid="ats-voloutstate-to-index">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats-voloutstate">
+			<label>OFF</label>
+			<label>ON</label>
+		</enumMap>
+	</device>
+    
+	<!-- ATS single-phase -->
+	<device deviceid="ats1phaseinput">	
+		<oidMustExist ruleid="atsmodel" oid=".1.3.6.1.4.1.318.1.1.8.1.5.0"/>
+		<oidMustMatch ruleid="atsnumphase" oid=".1.3.6.1.4.1.318.1.1.8.2.1.2.0">
+			<valueList><value>1</value></valueList>
+		</oidMustMatch>
+		<oidMustNotMatch ruleid="atsnumbank" oid=".1.3.6.1.4.1.318.1.1.8.5.4.4.0">
+			<valueList><value>3</value></valueList>
+		</oidMustNotMatch>
+		<!-- Input voltage -->
+		<numSensor ruleid="inputvoltage" index=".1.3.6.1.4.1.318.1.1.8.5.3.3.1.1">
+			<type>voltage/atsinput</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid>_VOLTAGE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.2</getRowOid></sensorId>
+			<value><getOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.3.<rowIndex/></getOid></value>
+			<valueInc>1</valueInc>
+			<label>Voltage -<space/> <getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></label>
+			<sensorSet>ATS Status -<space/><getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></sensorSet>
+		</numSensor>
+		<!-- Input freqency -->
+		<numSensor ruleid="inputfrequency" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>frequency/atsinputfrequency</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_FREQ</sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.4</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Frequency -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</numSensor>
+		<!-- Input type -->
+		<stateSensor ruleid="inputtype" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>state/atsinputtype</type>
+			<sensorId>ATS_INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_TYPE</sensorId>
+			<value><mapValue mapid="apcats/atsstatus/ats-type-to-index"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.5</getRowOid></mapValue></value>
+			<label>Input Type -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<enum>apcats/atsstatus/ats-type</enum>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</stateSensor>
+		<!-- Output current -->
+		<numSensor ruleid="outputcurrent" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.1">
+			<type>amperage/atsoutput</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_CURRENT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value><mult><op>0.1</op><op><getOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.4.<rowIndex/></getOid></op></mult></value>
+			<label>Current - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</numSensor>
+	</device>
+
+	<!-- new for Next GEN ATS -->
+	<device deviceid="ats1phaseinputnew">	
+		<oidMustExist ruleid="atsmodel" oid=".1.3.6.1.4.1.318.1.1.8.1.5.0"/>
+		<oidMustExist ruleid="atssrcb24v" oid=".1.3.6.1.4.1.318.1.1.8.5.1.7.0"/>
+		<oidMustMatch ruleid="atsnumphase" oid=".1.3.6.1.4.1.318.1.1.8.2.1.2.0">
+			<valueList><value>1</value></valueList>
+		</oidMustMatch>
+		<oidMustNotMatch ruleid="atsnumbank" oid=".1.3.6.1.4.1.318.1.1.8.5.4.4.0">
+			<valueList><value>3</value></valueList>
+		</oidMustNotMatch>
+		<!-- Over Current State -->		
+		<stateSensor ruleid="overcurrentstate" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.19">
+			<type>state</type>
+			<sensorId>ATS_OVERCURRENT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_STATE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-ol-to-index">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.19</getRowOid>
+				</mapValue>
+			</value>
+			<label>ATS Over Current State - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></label>
+			<enum>apcats/atsstatus/ats-ol</enum>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</stateSensor>
+		<!-- Output power -->
+		<numSensor ruleid="outputpower" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.13">
+			<type>powerW</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_POWER_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.13</getRowOid></value>
+			<label>Power - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</numSensor>
+	</device>
+    
+	<!-- ATS 3-phase -->
+	<device deviceid="ats3phaseinput">	
+		<oidMustExist ruleid="atsmodel" oid=".1.3.6.1.4.1.318.1.1.8.1.5.0"/>
+		<oidMustMatch ruleid="atsnumphase" oid=".1.3.6.1.4.1.318.1.1.8.2.1.2.0">
+			<valueList><value>3</value></valueList>
+		</oidMustMatch>
+		<!-- Input voltage -->
+		<numSensor ruleid="inputvoltage" index=".1.3.6.1.4.1.318.1.1.8.5.3.3.1.1">
+			<type>voltage/atsinput</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid>_VOLTAGE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.2</getRowOid></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.3</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Voltage - Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.2</getRowOid> -  <getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></label>
+			<sensorSet>ATS Status -<space/><getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></sensorSet>
+		</numSensor>
+		<!-- Input freqency -->
+		<numSensor ruleid="inputfrequency" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>frequency/atsinputfrequency</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_FREQ</sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.4</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Frequency -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</numSensor>
+		<!-- Input type -->
+		<stateSensor ruleid="inputtype" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>state/atsinputtype</type>
+			<sensorId>ATS_INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_TYPE</sensorId>
+			<value><mapValue mapid="apcats/atsstatus/ats-type-to-index"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.5</getRowOid></mapValue></value>
+			<label>Input Type -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<enum>apcats/atsstatus/ats-type</enum>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</stateSensor>
+		<!-- Output voltage -->
+		<numSensor ruleid="outputvoltage" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.1">
+			<type>voltage/atsoutput</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_VOLTAGE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.3</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Voltage -<space/>
+				<mapValue mapid="ats-phase-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></mapValue>
+				<space/>- Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>
+			</label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<!-- Output current -->
+		<numSensor ruleid="outputcurrent" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.1">
+			<type>amperage/output</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_CURRENT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value><mult><op>0.1</op><op><getOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.4.<rowIndex/></getOid></op></mult></value>
+			<label>Current -<space/>
+				<mapValue mapid="ats-phase-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></mapValue>
+				<space/>- Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>
+			</label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<!-- Output freqency -->
+		<numSensor ruleid="outputfrequency" index=".1.3.6.1.4.1.318.1.1.8.5.4.2.1.1">
+			<type>frequency/atsinputfrequency</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.2.1.1</getRowOid>_FREQ</sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.2.1.4</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Frequency - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.2.1.1</getRowOid></label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.2.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<valueMap ruleid="ats-phase-map">
+			<valueIn>1</valueIn><valueOut>Phase 1</valueOut>
+			<valueIn>2</valueIn><valueOut>Phase 2</valueOut>
+			<valueIn>3</valueIn><valueOut>Phase 3</valueOut>
+			<valueIn>4</valueIn><valueOut>Neutral</valueOut>
+		</valueMap>
+	</device>
+	<!-- ATS Bank unit -->
+	<device deviceid="atsbankunit">	
+		<oidMustExist ruleid="atsmodel" oid=".1.3.6.1.4.1.318.1.1.8.1.5.0"/>
+		<oidMustMatch ruleid="atsnumbank" oid=".1.3.6.1.4.1.318.1.1.8.5.4.4.0">
+			<valueList><value>3</value></valueList>
+		</oidMustMatch>
+		<!-- Input voltage -->
+		<numSensor ruleid="inputvoltage" index=".1.3.6.1.4.1.318.1.1.8.5.3.3.1.1">
+			<type>voltage/atsinput</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid>_VOLTAGE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.2</getRowOid></sensorId>
+			<value><getOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.3.<rowIndex/></getOid></value>
+			<valueInc>1</valueInc>
+			<label>Voltage -<space/> <getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></label>
+			<sensorSet>ATS Status -<space/><getOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6.<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.3.1.1</getRowOid></getOid></sensorSet>
+		</numSensor>
+		<!-- Input freqency -->
+		<numSensor ruleid="inputfrequency" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>frequency/atsinputfrequency</type>
+			<sensorId>INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_FREQ</sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.4</getRowOid></value>
+			<valueInc>1</valueInc>
+			<label>Frequency -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</numSensor>
+		<!-- Input type -->
+		<stateSensor ruleid="inputtype" index=".1.3.6.1.4.1.318.1.1.8.5.3.2.1.1">
+			<type>state/atsinputtype</type>
+			<sensorId>ATS_INPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.1</getRowOid>_TYPE</sensorId>
+			<value><mapValue mapid="apcats/atsstatus/ats-type-to-index"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.5</getRowOid></mapValue></value>
+			<label>Input Type -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></label>
+			<enum>apcats/atsstatus/ats-type</enum>
+			<sensorSet>ATS Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.3.2.1.6</getRowOid></sensorSet>
+		</stateSensor>
+		<!-- Output current -->
+		<numSensor ruleid="outputcurrent" index=".1.3.6.1.4.1.318.1.1.8.5.4.5.1.1">
+			<type>amperage/atsoutput</type>
+            <sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.1</getRowOid>_CURRENT</sensorId>
+			<value><mult><op>0.1</op><op><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.4</getRowOid></op></mult></value>
+			<label>Current -<space/>
+				<mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </label>
+			<sensorSet>ATS Status -<space/>
+                <mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </sensorSet>
+		</numSensor>
+		<!-- Over Current State -->		
+		<stateSensor ruleid="overcurrentstate" index=".1.3.6.1.4.1.318.1.1.8.5.4.5.1.1">
+			<type>state/atsovercurrentstate</type>
+			<sensorId>ATS_OVERCURRENT_STATE_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.1</getRowOid></sensorId>
+			<value>
+				<mapValue mapid="apcats/atsstatus/ats-ol-to-index">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>ATS Over Current State -<space/>
+				<mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </label>
+			<enum>apcats/atsstatus/ats-ol</enum>
+			<sensorSet>ATS Status -<space/>
+                <mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </sensorSet>
+		</stateSensor>
+		<!-- Output power -->
+		<numSensor ruleid="outputpower" index=".1.3.6.1.4.1.318.1.1.8.5.4.5.1.1">
+			<type>powerW/atsoutputpower</type>
+            <sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.1</getRowOid>_POWER</sensorId>
+			<value><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.15</getRowOid></value>
+			<label>Power -<space/>
+				<mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </label>
+			<sensorSet>ATS Status -<space/>
+                <mapValue mapid="ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </sensorSet>
+		</numSensor>
+		<valueMap ruleid="ats-bank-map">
+			<valueIn>1</valueIn><valueOut>Total</valueOut>
+			<valueIn>2</valueIn><valueOut>Bank 1</valueOut>
+			<valueIn>3</valueIn><valueOut>Bank 2</valueOut>
+		</valueMap>
+	</device>
+
+	<device deviceid="ats4g_extra">
+
+		<oidMustMatch ruleid="atssysobjid" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.318.1.3.32</value> <!-- ATS4g -->
+				<value>.1.3.6.1.4.1.318.1.3.32.*</value> <!-- Other ATS4g -->
+			</valueList>
+		</oidMustMatch>	
+
+		<suppressRule ruleid="stompOtherOutputPowerPhase" suppressid="apcats/ats1phaseinputnew/outputpower"/>
+		<suppressRule ruleid="stompOtherOutputPowerBank" suppressid="apcats/atsbankunit/outputpower"/>
+		<numSensor ruleid="outputpowerphase" index=".1.3.6.1.4.1.318.1.1.8.5.4.3.1.13">
+			<type>num/powerKVA</type>
+			<sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid>_APPARENT_POWER_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.2</getRowOid></sensorId>
+			<value><div><op><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.13</getRowOid></op><op>1000</op></div></value>
+			<valueInc>0.001</valueInc>
+			<label>Power - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></label>
+			<sensorSet>ATS Status - Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.3.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="outputpowerbank" index=".1.3.6.1.4.1.318.1.1.8.5.4.5.1.1">
+			<type>num/powerKVA</type>
+            <sensorId>OUTPUT_<getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.1</getRowOid>_APPARENT_POWER</sensorId>
+			<value><div><op><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.15</getRowOid></op><op>1000</op></div></value>
+			<valueInc>0.001</valueInc>
+			<label>Power -<space/>
+				<mapValue mapid="apcats/atsbankunit/ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </label>
+			<sensorSet>ATS Status -<space/>
+                <mapValue mapid="apcats/atsbankunit/ats-bank-map"><getRowOid>.1.3.6.1.4.1.318.1.1.8.5.4.5.1.3</getRowOid></mapValue>
+            </sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>
+

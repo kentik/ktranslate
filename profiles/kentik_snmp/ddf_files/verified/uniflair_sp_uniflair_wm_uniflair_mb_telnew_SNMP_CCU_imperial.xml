@@ -1,0 +1,893 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="uniflair_sp_uniflair_wm_uniflair_mb_telnew_SNMP_CCU_imperial"
+	ddfname="Uniflair SP/WM/MB (Telnew) CCU [pcoWeb][SNMP][Imperial Units]"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="telnew_SNMP_ccu_imperial">
+	
+            <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+     <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+     <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>	
+	
+		<setProductData ruleid="vendordata" field="vendor">Uniflair/Schneider-Electric</setProductData>
+		<setProductData ruleid="modeldata" field="model">uniflair_sp_uniflair_wm_uniflair_mb_Telnew</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="telnew" oid=".1.3.6.1.4.1.9839" istree="yes" />
+		
+		<!-- Digital Sensors -->
+
+		<stateSensor ruleid="digital_system_on_fan_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_SYSTEM_ON_FAN</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+            </value>
+            <label>System On (Fan)</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_compressor_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_COMPRESSOR</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.2.0</getOid>
+            </value>
+            <label>Compressor</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_heater_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_HEATER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.3.0</getOid>
+            </value>
+            <label>Heater</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_free_cooling_condition_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_FREE_COOLING_CONDITION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.9839.2.1.1.4.0</getOid>
+            </value>
+            <label>Free-cooling Condition</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_local_area_network_running_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_LOCAL_AREA_NETWORK_RUNNING_ALARM</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.30.0</getOid>
+				</mapValue>
+            </value>
+            <label>Local Area Network running</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_no_lan_present_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_NO_LAN_PRESENT</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.31.0</getOid>
+				</mapValue>
+            </value>
+            <label>No LAN Present</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_cooling_mode_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_COOLING_MODE</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.32.0</getOid>
+				</mapValue>
+            </value>
+            <label>Cooling Mode</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+		
+		<stateSensor ruleid="digital_heating_mode_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_HEATING_MODE</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.33.0</getOid>
+				</mapValue>
+            </value>
+            <label>Heating Mode</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+		
+		<stateSensor ruleid="digital_reheating_mode_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_REHEATING_MODE</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.34.0</getOid>
+				</mapValue>
+            </value>
+            <label>Re-heating Mode</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_dehumidification_mode_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_DEHUMIDIFICATION_MODE</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.35.0</getOid>
+				</mapValue>
+            </value>
+            <label>Dehumidification Mode</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="digital_unit_in_manual_or_forced_mode_sensor">
+            <type>state</type>
+            <sensorId>DIGITAL_UNIT_IN_MANUAL_OR_FORCED_MODE</sensorId>
+            <value>
+				<mapValue mapid="digital_on_off_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.37.0</getOid>
+				</mapValue>
+            </value>
+            <label>Unit in Manual or Forced Mode</label>
+            <enum>digital_on_off_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+        
+             	<stateSensor ruleid="general_alarm">
+            <type>state</type>
+            <sensorId>GENERAL_ALARM</sensorId>
+            <value>
+				<mapValue mapid="normal_alarm_vm">
+					<getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid>
+				</mapValue>
+            </value>
+            <label>GENERAL ALARM</label>
+            <enum>normal_alarm_em</enum>
+            <sensorSet>Digital</sensorSet>
+        </stateSensor>
+        
+        	<alarmFlags ruleid="general_alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.23.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>General Alarm</activeText>
+					<inactiveText>General Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A General Alarm condition exists.</activeText>
+					<inactiveText>A General Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="high-pressure-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Pressure Alarm</activeText>
+					<inactiveText>High Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Pressure Alarm condition exists.</activeText>
+					<inactiveText>A High Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="low-pressure-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Pressure Alarm</activeText>
+					<inactiveText>Low Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Pressure Alarm condition exists.</activeText>
+					<inactiveText>A Low Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="wrong-phase-sequence-alarm-(no-gemini)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.8.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Wrong Phase Sequence Alarm (No GEMINI)</activeText>
+					<inactiveText>Wrong Phase Sequence Alarm (No GEMINI) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Wrong Phase Sequence Alarm (No GEMINI) condition exists.</activeText>
+					<inactiveText>A Wrong Phase Sequence Alarm (No GEMINI) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fan-thermal-protection-alarm-(klixon)-(no-gemini)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.9.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Fan Thermal Protection Alarm (Klixon) (No GEMINI)</activeText>
+					<inactiveText>Fan Thermal Protection Alarm (Klixon) (No GEMINI) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Fan Thermal Protection Alarm (Klixon) (No GEMINI) condition exists.</activeText>
+					<inactiveText>A Fan Thermal Protection Alarm (Klixon) (No GEMINI) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="loss-of-air-flow-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Loss of Air Flow Alarm</activeText>
+					<inactiveText>Loss of Air Flow Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Loss of Air Flow Alarm condition exists.</activeText>
+					<inactiveText>A Loss of Air Flow Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="heater-overheating-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.11.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Heater Overheating Alarm</activeText>
+					<inactiveText>Heater Overheating Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Heater Overheating Alarm condition exists.</activeText>
+					<inactiveText>A Heater Overheating Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="clogged-filter-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Clogged Filter Alarm</activeText>
+					<inactiveText>Clogged Filter Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Clogged Filter Alarm condition exists.</activeText>
+					<inactiveText>A Clogged Filter Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="room-high-temp-alarm-(1st-level-alarm)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.13.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Room High Temp Alarm (1st Level Alarm)</activeText>
+					<inactiveText>Room High Temp Alarm (1st Level Alarm) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Room High Temp Alarm (1st Level Alarm) condition exists.</activeText>
+					<inactiveText>A Room High Temp Alarm (1st Level Alarm) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="room-low-temp-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Room Low Temp Alarm</activeText>
+					<inactiveText>Room Low Temp Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Room Low Temp Alarm condition exists.</activeText>
+					<inactiveText>A Room Low Temp Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="main-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.15.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Main Sensor Failure/Disconnected</activeText>
+					<inactiveText>Main Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Main Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Main Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="auxiliary-sensor-failure/disconnected">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.16.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Auxiliary Sensor Failure/Disconnected</activeText>
+					<inactiveText>Auxiliary Sensor Failure/Disconnected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Auxiliary Sensor Failure/Disconnected condition exists.</activeText>
+					<inactiveText>A Auxiliary Sensor Failure/Disconnected condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="lan-connection-failure">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.17.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>LAN Connection Failure</activeText>
+					<inactiveText>LAN Connection Failure Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A LAN Connection Failure condition exists.</activeText>
+					<inactiveText>A LAN Connection Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="room-high-temp-alarm-(2nd-level-alarm)">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.18.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Room High Temp Alarm (2nd Level Alarm)</activeText>
+					<inactiveText>Room High Temp Alarm (2nd Level Alarm) Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Room High Temp Alarm (2nd Level Alarm) condition exists.</activeText>
+					<inactiveText>A Room High Temp Alarm (2nd Level Alarm) condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="air-filter:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.19.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Air Filter: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Air Filter: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Air Filter: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Air Filter: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="air-conditioning-unit:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.20.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Air Conditioning Unit: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Air Conditioning Unit: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Air Conditioning Unit: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Air Conditioning Unit: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="compressor:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.21.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Compressor: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Compressor: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Compressor: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="heater:-hour-counter-threshold-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.22.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Heater: Hour Counter Threshold Alarm</activeText>
+					<inactiveText>Heater: Hour Counter Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Heater: Hour Counter Threshold Alarm condition exists.</activeText>
+					<inactiveText>A Heater: Hour Counter Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="addressable-alarm-state">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.36.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Addressable Alarm State</activeText>
+					<inactiveText>Addressable Alarm State Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Addressable Alarm State condition exists.</activeText>
+					<inactiveText>A Addressable Alarm State condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fan-alarm">
+			<value><getOid>.1.3.6.1.4.1.9839.2.1.1.38.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Fan Alarm</activeText>
+					<inactiveText>Fan Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Fan Alarm condition exists.</activeText>
+					<inactiveText>A Fan Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<!-- Analog Sensors -->
+		
+		<numSensor ruleid="analog_room_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_ROOM_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.2.1.0</getOid></op>
+					<op>320</op>
+					</sub>
+				</op>
+				<op>18</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Room Temperature</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_outdoor_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_OUTDOOR_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.2.2.0</getOid></op>
+					<op>320</op>
+					</sub>
+				</op>
+				<op>18</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Outdoor Temperature</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_delivery_air_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_DELIVERY_AIR_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.2.3.0</getOid></op>
+					<op>320</op>
+					</sub>
+				</op>
+				<op>18</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Delivery Air Temperature</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_condensing_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_CONDENSING_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.2.4.0</getOid></op>
+					<op>320</op>
+					</sub>
+				</op>
+				<op>18</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>CondensingTemperature (if present)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_condensing_pressure_sensor">
+			<type>pressure</type>
+			<sensorId>ANALOG_CONDENSING_PRESSURE</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.9839.2.1.2.5.0</getOid></op>
+				<op>0.689475729</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+		    <label>Condensing Pressure (if present)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+
+<!-- R/W Registers (Unused) 
+
+		<numSensor ruleid="analog_cooling_set_point_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_COOLING_SET_POINT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_cooling_set_point</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Cooling Set Point</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_cooling_sensitivity_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_COOLING_SENSITIVITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_cooling_sensitivity</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Cooling Sensitivity</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_heating_set_point_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_HEATING_SET_POINT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_heating_set_point</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Heating Set Point</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_heating_sensitivity_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_HEATING_SENSITIVITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_heating_sensitivity</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Heating Sensitivity</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_room_high_temp_alarm_threshold_1st_level_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_ROOM_HIGH_TEMP_ALARM_THRESHOLD_1ST_LEVEL</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_room_high_temp_alarm_threshold_1st_level</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Room High Temp. Alarm Threshold (1st Level)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_room_low_temp_alarm_threshold_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_ROOM_LOW_TEMP_ALARM_THRESHOLD</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_room_low_temp_alarm_threshold</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Room Low Temp. Alarm Threshold</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_fc_fixed_point_mode_set_point_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_FC_FIXED_POINT_MODE_SET_POINT</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_fc_fixed_point_mode_set_point</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>FC fixed point mode Set Point</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_delta_fc_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_DELTA_FC</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_delta_fc</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Delta FC</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_delta_fc_in_standby_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_DELTA_FC_IN_STANDBY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_delta_fc_in_standby</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Delta FC in Standy-by</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_damper_limit_ext_max_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_DAMPER_LIMIT_EXT_MAX_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_damper_limit_ext_max_temperature</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Damper limit: Ext. Max. temperature</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_damper_limit_ext_min_temperature_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_DAMPER_LIMIT_EXT_MIN_TEMPERATURE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>analog_damper_limit_ext_min_temperature</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Damper limit: Ext. Min. temperature</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+		-->
+
+		<numSensor ruleid="analog_room_relative_humidity_sensor">
+			<type>humidity</type>
+			<sensorId>ANALOG_ROOM_RELATIVE_HUMIDITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.2.17.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Room relative Humidity (if present)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_ext_relative_humidity_sensor">
+			<type>humidity</type>
+			<sensorId>ANALOG_EXT_RELATIVE_HUMIDITY</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.2.18.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Ext. relative Humidity (if present)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="analog_room_high_temp_alarm_threshold_2nd_level_sensor">
+			<type>temp</type>
+			<sensorId>ANALOG_ROOM_HIGH_TEMP_ALARM_THRESHOLD_2ND_LEVEL</sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><getOid>.1.3.6.1.4.1.9839.2.1.2.20.0</getOid></op>
+					<op>320</op>
+					</sub>
+				</op>
+				<op>18</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Room High Temp. Alarm Threshold (2nd Level)</label>
+		    <sensorSet>Analog</sensorSet>
+		</numSensor>
+
+		<!-- Integer Sensors -->
+
+		<numSensor ruleid="integer_y0_ramp_sensor">
+			<type>fanspeed</type>
+			<sensorId>INTEGER_Y0_RAMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.1.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Y0 ramp (evap. fan speed 0-1000)</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="integer_y1_ramp_sensor">
+			<type>fanspeed</type>
+			<sensorId>INTEGER_Y1_RAMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.2.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Y1 ramp (cond. fan speed 0-1000)</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="integer_air_filter_hour_counter_sensor">
+			<type>timeinhrs</type>
+			<sensorId>INTEGER_AIR_FILTER_HOUR_COUNTER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.3.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Air filter hour counter</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="integer_unit_hour_counter_sensor">
+			<type>timeinhrs</type>
+			<sensorId>INTEGER_UNIT_HOUR_COUNTER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.4.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Unit hour counter</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="integer_compressor_hour_counter_sensor">
+			<type>timeinhrs</type>
+			<sensorId>INTEGER_COMPRESSOR_HOUR_COUNTER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.5.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Compressor hour counter</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="integer_heater_hour_counter_sensor">
+			<type>timeinhrs</type>
+			<sensorId>INTEGER_HEATER_HOUR_COUNTER</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.9839.2.1.3.6.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+		    <label>Heater hour counter</label>
+		    <sensorSet>Integer</sensorSet>
+		</numSensor>
+	
+		<!-- Enum and Value Maps -->
+
+		<valueMap ruleid="normal_alarm_vm">
+			<valueIn>0</valueIn>  <valueOut>0</valueOut>
+			<valueIn>1</valueIn>  <valueOut>1</valueOut>
+			<valueIn>*</valueIn>  <valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="normal_alarm_em">
+			<label>Normal</label>
+		    <label>Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="digital_on_off_vm">
+			<valueIn>0</valueIn>  <valueOut>0</valueOut>
+			<valueIn>1</valueIn>  <valueOut>1</valueOut>
+			<valueIn>*</valueIn>  <valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="digital_on_off_em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ezentis_dcm1000"
+	ddfname="Ezentis DCM1000"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\ezentis\THAUMAT_PCR-MIB.mib
+		
+		PCR-MIB | 21 August 2020
+	-->
+	<device deviceid="ezentis_dcm1000">
+		<oidMustExist ruleid="smartsite_exists" oid=".1.3.6.1.4.1.37232.48" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Ezentis</setProductData>
+		<setProductData ruleid="modeldata" field="model">DCM1000</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+        <alarmFlags ruleid="alarma1">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.1.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 1</activeText>
+                    <inactiveText>Alarm 1 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 1 exists - <getOid>.1.3.6.1.4.1.37232.48.2.1.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.1.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 1 exists - <getOid>.1.3.6.1.4.1.37232.48.2.1.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.1.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma2">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.2.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 2</activeText>
+                    <inactiveText>Alarm 2 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 2 exists - <getOid>.1.3.6.1.4.1.37232.48.2.2.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.2.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 2 exists - <getOid>.1.3.6.1.4.1.37232.48.2.2.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.2.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma3">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.3.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 3</activeText>
+                    <inactiveText>Alarm 3 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 3 exists - <getOid>.1.3.6.1.4.1.37232.48.2.3.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.3.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 3 exists - <getOid>.1.3.6.1.4.1.37232.48.2.3.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.3.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma4">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.4.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 4</activeText>
+                    <inactiveText>Alarm 4 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 4 exists - <getOid>.1.3.6.1.4.1.37232.48.2.4.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.4.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 4 exists - <getOid>.1.3.6.1.4.1.37232.48.2.4.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.4.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma5">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.5.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 5</activeText>
+                    <inactiveText>Alarm 5 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 5 exists - <getOid>.1.3.6.1.4.1.37232.48.2.5.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.5.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 5 exists - <getOid>.1.3.6.1.4.1.37232.48.2.5.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.5.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma6">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.6.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 6</activeText>
+                    <inactiveText>Alarm 6 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 6 exists - <getOid>.1.3.6.1.4.1.37232.48.2.6.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.6.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 6 exists - <getOid>.1.3.6.1.4.1.37232.48.2.6.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.6.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma7">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.7.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 7</activeText>
+                    <inactiveText>Alarm 7 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 7 exists - <getOid>.1.3.6.1.4.1.37232.48.2.7.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.7.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 7 exists - <getOid>.1.3.6.1.4.1.37232.48.2.7.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.7.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma8">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.8.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 8</activeText>
+                    <inactiveText>Alarm 8 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 8 exists - <getOid>.1.3.6.1.4.1.37232.48.2.8.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.8.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 8 exists - <getOid>.1.3.6.1.4.1.37232.48.2.8.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.8.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma9">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.9.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 9</activeText>
+                    <inactiveText>Alarm 9 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 9 exists - <getOid>.1.3.6.1.4.1.37232.48.2.9.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.9.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 9 exists - <getOid>.1.3.6.1.4.1.37232.48.2.9.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.9.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma10">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.10.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 10</activeText>
+                    <inactiveText>Alarm 10 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 10 exists - <getOid>.1.3.6.1.4.1.37232.48.2.10.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.10.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 10 exists - <getOid>.1.3.6.1.4.1.37232.48.2.10.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.10.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma11">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.11.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 11</activeText>
+                    <inactiveText>Alarm 11 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 11 exists - <getOid>.1.3.6.1.4.1.37232.48.2.11.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.11.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 11 exists - <getOid>.1.3.6.1.4.1.37232.48.2.11.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.11.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma12">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.12.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 12</activeText>
+                    <inactiveText>Alarm 12 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 12 exists - <getOid>.1.3.6.1.4.1.37232.48.2.12.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.12.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 12 exists - <getOid>.1.3.6.1.4.1.37232.48.2.12.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.12.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma13">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.13.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 13</activeText>
+                    <inactiveText>Alarm 13 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 13 exists - <getOid>.1.3.6.1.4.1.37232.48.2.13.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.13.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 13 exists - <getOid>.1.3.6.1.4.1.37232.48.2.13.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.13.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma14">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.14.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 14</activeText>
+                    <inactiveText>Alarm 14 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 14 exists - <getOid>.1.3.6.1.4.1.37232.48.2.14.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.14.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 14 exists - <getOid>.1.3.6.1.4.1.37232.48.2.14.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.14.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma15">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.15.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 15</activeText>
+                    <inactiveText>Alarm 15 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 15 exists - <getOid>.1.3.6.1.4.1.37232.48.2.15.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.15.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 15 exists - <getOid>.1.3.6.1.4.1.37232.48.2.15.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.15.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma16">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.16.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 16</activeText>
+                    <inactiveText>Alarm 16 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 16 exists - <getOid>.1.3.6.1.4.1.37232.48.2.16.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.16.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 16 exists - <getOid>.1.3.6.1.4.1.37232.48.2.16.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.16.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma17">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.17.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 17</activeText>
+                    <inactiveText>Alarm 17 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 17 exists - <getOid>.1.3.6.1.4.1.37232.48.2.17.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.17.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 17 exists - <getOid>.1.3.6.1.4.1.37232.48.2.17.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.17.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma18">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.18.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 18</activeText>
+                    <inactiveText>Alarm 18 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 18 exists - <getOid>.1.3.6.1.4.1.37232.48.2.18.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.18.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 18 exists - <getOid>.1.3.6.1.4.1.37232.48.2.18.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.18.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma19">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.19.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 19</activeText>
+                    <inactiveText>Alarm 19 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 19 exists - <getOid>.1.3.6.1.4.1.37232.48.2.19.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.19.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 19 exists - <getOid>.1.3.6.1.4.1.37232.48.2.19.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.19.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma20">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.20.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 20</activeText>
+                    <inactiveText>Alarm 20 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 20 exists - <getOid>.1.3.6.1.4.1.37232.48.2.20.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.20.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 20 exists - <getOid>.1.3.6.1.4.1.37232.48.2.20.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.20.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma21">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.21.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 21</activeText>
+                    <inactiveText>Alarm 21 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 21 exists - <getOid>.1.3.6.1.4.1.37232.48.2.21.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.21.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 21 exists - <getOid>.1.3.6.1.4.1.37232.48.2.21.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.21.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma22">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.22.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 22</activeText>
+                    <inactiveText>Alarm 22 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 22 exists - <getOid>.1.3.6.1.4.1.37232.48.2.22.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.22.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 22 exists - <getOid>.1.3.6.1.4.1.37232.48.2.22.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.22.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma23">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.23.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 23</activeText>
+                    <inactiveText>Alarm 23 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 23 exists - <getOid>.1.3.6.1.4.1.37232.48.2.23.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.23.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 23 exists - <getOid>.1.3.6.1.4.1.37232.48.2.23.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.23.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma24">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.24.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 24</activeText>
+                    <inactiveText>Alarm 24 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 24 exists - <getOid>.1.3.6.1.4.1.37232.48.2.24.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.24.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 24 exists - <getOid>.1.3.6.1.4.1.37232.48.2.24.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.24.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma25">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.25.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 25</activeText>
+                    <inactiveText>Alarm 25 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 25 exists - <getOid>.1.3.6.1.4.1.37232.48.2.25.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.25.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 25 exists - <getOid>.1.3.6.1.4.1.37232.48.2.25.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.25.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma26">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.26.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 26</activeText>
+                    <inactiveText>Alarm 26 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 26 exists - <getOid>.1.3.6.1.4.1.37232.48.2.26.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.26.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 26 exists - <getOid>.1.3.6.1.4.1.37232.48.2.26.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.26.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma27">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.27.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 27</activeText>
+                    <inactiveText>Alarm 27 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 27 exists - <getOid>.1.3.6.1.4.1.37232.48.2.27.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.27.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 27 exists - <getOid>.1.3.6.1.4.1.37232.48.2.27.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.27.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma28">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.28.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 28</activeText>
+                    <inactiveText>Alarm 28 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 28 exists - <getOid>.1.3.6.1.4.1.37232.48.2.28.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.28.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 28 exists - <getOid>.1.3.6.1.4.1.37232.48.2.28.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.28.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma29">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.29.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 29</activeText>
+                    <inactiveText>Alarm 29 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 29 exists - <getOid>.1.3.6.1.4.1.37232.48.2.29.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.29.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 29 exists - <getOid>.1.3.6.1.4.1.37232.48.2.29.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.29.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma30">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.30.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 30</activeText>
+                    <inactiveText>Alarm 30 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 30 exists - <getOid>.1.3.6.1.4.1.37232.48.2.30.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.30.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 30 exists - <getOid>.1.3.6.1.4.1.37232.48.2.30.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.30.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma31">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.31.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 31</activeText>
+                    <inactiveText>Alarm 31 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 31 exists - <getOid>.1.3.6.1.4.1.37232.48.2.31.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.31.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 31 exists - <getOid>.1.3.6.1.4.1.37232.48.2.31.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.31.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="alarma32">
+            <value><getOid>.1.3.6.1.4.1.37232.48.2.32.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Alarm 32</activeText>
+                    <inactiveText>Alarm 32 Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Alarm 32 exists - <getOid>.1.3.6.1.4.1.37232.48.2.32.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.32.1.0</getOid>.</activeText>
+                    <inactiveText>Alarm 32 exists - <getOid>.1.3.6.1.4.1.37232.48.2.32.3.0</getOid> - <getOid>.1.3.6.1.4.1.37232.48.2.32.1.0</getOid>.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+
+	</device>
+</APC_DDF>

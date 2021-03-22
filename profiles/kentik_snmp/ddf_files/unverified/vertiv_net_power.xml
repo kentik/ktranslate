@@ -1,0 +1,930 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="vertiv_net_power"
+	ddfname="Vertiv NET-POWER"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="vertiv_net_power">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Vertiv</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.44418.1.2.5.1.5.0</getOid>
+		</setProductData>
+		<setDefaultLabel ruleid="labeldata">
+			<getOid>.1.3.6.1.4.1.44418.1.2.5.1.3.0</getOid>
+		</setDefaultLabel>
+
+		<oidMustExist ruleid="vertiv_net_power_exists" istree="yes" oid=".1.3.6.1.4.1.44418"/> 
+		
+		<!-- Power 1 Outlets -->
+
+		<stateSensor ruleid="p1_outlet_status" index=".1.3.6.1.4.1.44418.1.2.1.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>P1_OUTLET_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.3</getRowOid> Outlet Status</label>
+			<enum>off_on-em</enum>
+			<sensorSet>Power 1 Outlets</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="off_on-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="off_on-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		
+		<numSensor ruleid="p1_outlet_load" index=".1.3.6.1.4.1.44418.1.2.1.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>P1_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.3</getRowOid> Current Load</label>
+            <sensorSet>Power 1 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p1_outlet_energy" index=".1.3.6.1.4.1.44418.1.2.1.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>P1_OUTLET_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.3</getRowOid> Energy</label>
+            <sensorSet>Power 1 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p1_outlet_power" index=".1.3.6.1.4.1.44418.1.2.1.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>P1_OUTLET_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.3</getRowOid> Power</label>
+            <sensorSet>Power 1 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p1_outlet_power_factor" index=".1.3.6.1.4.1.44418.1.2.1.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>P1_OUTLET_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.1.1.3</getRowOid> Power Factor</label>
+            <sensorSet>Power 1 Outlets</sensorSet>
+        </numSensor>
+		
+		<!-- Power 2 Outlets -->
+
+		<stateSensor ruleid="p2_outlet_status" index=".1.3.6.1.4.1.44418.1.2.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>P2_OUTLET_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.3</getRowOid> Outlet Status</label>
+			<enum>off_on-em</enum>
+			<sensorSet>Power 2 Outlets</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="p2_outlet_load" index=".1.3.6.1.4.1.44418.1.2.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>P2_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.3</getRowOid> Current Load</label>
+            <sensorSet>Power 2 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p2_outlet_energy" index=".1.3.6.1.4.1.44418.1.2.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>P2_OUTLET_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.3</getRowOid> Energy</label>
+            <sensorSet>Power 2 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p2_outlet_power" index=".1.3.6.1.4.1.44418.1.2.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>P2_OUTLET_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.3</getRowOid> Power</label>
+            <sensorSet>Power 2 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p2_outlet_power_factor" index=".1.3.6.1.4.1.44418.1.2.2.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>P2_OUTLET_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.2.1.3</getRowOid> Power Factor</label>
+            <sensorSet>Power 2 Outlets</sensorSet>
+        </numSensor>
+		
+		<!-- Power 3 Outlets -->
+
+		<stateSensor ruleid="p3_outlet_status" index=".1.3.6.1.4.1.44418.1.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>P3_OUTLET_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.3</getRowOid> Outlet Status</label>
+			<enum>off_on-em</enum>
+			<sensorSet>Power 3 Outlets</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="p3_outlet_load" index=".1.3.6.1.4.1.44418.1.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>P3_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.3</getRowOid> Current Load</label>
+            <sensorSet>Power 3 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p3_outlet_energy" index=".1.3.6.1.4.1.44418.1.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>P3_OUTLET_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.3</getRowOid> Energy</label>
+            <sensorSet>Power 3 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p3_outlet_power" index=".1.3.6.1.4.1.44418.1.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>P3_OUTLET_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.3</getRowOid> Power</label>
+            <sensorSet>Power 3 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p3_outlet_power_factor" index=".1.3.6.1.4.1.44418.1.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>P3_OUTLET_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.3.1.3</getRowOid> Power Factor</label>
+            <sensorSet>Power 3 Outlets</sensorSet>
+        </numSensor>
+		
+		<!-- Power 4 Outlets -->
+
+		<stateSensor ruleid="p4_outlet_status" index=".1.3.6.1.4.1.44418.1.2.4.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>P4_OUTLET_STATUS_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.3</getRowOid> Outlet Status</label>
+			<enum>off_on-em</enum>
+			<sensorSet>Power 4 Outlets</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="p4_outlet_load" index=".1.3.6.1.4.1.44418.1.2.4.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>P4_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.3</getRowOid> Current Load</label>
+            <sensorSet>Power 4 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p4_outlet_energy" index=".1.3.6.1.4.1.44418.1.2.4.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>P4_OUTLET_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.3</getRowOid> Energy</label>
+            <sensorSet>Power 4 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p4_outlet_power" index=".1.3.6.1.4.1.44418.1.2.4.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>P4_OUTLET_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.3</getRowOid> Power</label>
+            <sensorSet>Power 4 Outlets</sensorSet>
+        </numSensor>
+		<numSensor ruleid="p4_outlet_power_factor" index=".1.3.6.1.4.1.44418.1.2.4.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>P4_OUTLET_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.4.1.3</getRowOid> Power Factor</label>
+            <sensorSet>Power 4 Outlets</sensorSet>
+        </numSensor>
+		
+		<!-- Power Totals -->
+		
+		<numSensor ruleid="total_load_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>TOTAL_CURRENT_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Load Current
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.10</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_load_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>TOTAL_CURRENT_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.10</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Load Current B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_load_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.13</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>TOTAL_CURRENT_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.13</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Load Current C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_voltage_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.16</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>TOTAL_VOLTAGE_A_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.16</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Voltage
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.17</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_voltage_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.17</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>TOTAL_VOLTAGE_B_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.17</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Voltage B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_voltage_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.18</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>TOTAL_VOLTAGE_C_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.18</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Voltage C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_energy" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.19</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>TOTAL_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.19</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Energy</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_active_power_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.20</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_ACTIVE_POWER_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.20</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Active Power
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.25</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_rated_power_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.21</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_RATED_POWER_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.21</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Rated Power
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.26</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_remaining_power_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.22</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_REMAINING_POWER_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.22</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Remaining Power
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.27</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_apparent_power_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.23</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_APPARENT_POWER_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.23</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Apparent Power
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.28</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_power_factor_a" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.24</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>TOTAL_POWER_FACTOR_A_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.24</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Power Factor
+				<if>
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.29</getRowOid></op>
+							<op>-1</op>
+						</eq>
+					</op>
+					<op></op>
+					<op><space/>A</op>
+				</if>
+			</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_active_power_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.25</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_ACTIVE_POWER_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.25</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Active Power B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_rated_power_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.26</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_RATED_POWER_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.26</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Rated Power B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_remaining_power_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.27</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_REMAINING_POWER_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.27</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Remaining Power B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_apparent_power_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.28</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_APPARENT_POWER_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.28</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Apparent Power B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_power_factor_b" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.29</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>TOTAL_POWER_FACTOR_B_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.29</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Power Factor B</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_active_power_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.30</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_ACTIVE_POWER_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.30</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Active Power C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_rated_power_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.31</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_RATED_POWER_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.31</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Rated Power C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_remaining_power_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.32</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_REMAINING_POWER_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.32</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Remaining Power C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_apparent_power_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.33</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>TOTAL_APPARENT_POWER_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.33</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Apparent Power C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		<numSensor ruleid="total_power_factor_c" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.34</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>TOTAL_POWER_FACTOR_C_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.34</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> Total Power Factor C</label>
+            <sensorSet>Power Totals</sensorSet>
+        </numSensor>
+		
+		<!-- ATS Sensors -->
+		
+		<stateSensor ruleid="ats_power_input" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.35</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ATS_POWER_INPUT_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="ats_input_source-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.35</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> ATS Power Input</label>
+			<enum>ats_input_source-em</enum>
+			<sensorSet>ATS</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="ats_input_source-vm">
+			<valueIn>A</valueIn><valueOut>0</valueOut>
+			<valueIn>B</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats_input_source-em">
+			<label>Source A</label>
+			<label>Source B</label>
+		</enumMap>
+		
+		<numSensor ruleid="ats_a_voltage" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.37</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>ATS_A_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.37</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> ATS A Voltage</label>
+            <sensorSet>ATS</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats_b_voltage" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.38</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>ATS_B_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.38</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> ATS B Voltage</label>
+            <sensorSet>ATS</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats_a_energy" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.39</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>ATS_A_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.39</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> ATS A Energy</label>
+            <sensorSet>ATS</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats_b_energy" index=".1.3.6.1.4.1.44418.1.2.5.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.40</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>ATS_B_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.40</getRowOid>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.44418.1.2.5.1.3</getRowOid> ATS B Energy</label>
+            <sensorSet>ATS</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="delete_null-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>--</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+	</device>
+</APC_DDF>

@@ -1,0 +1,1311 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid="jema"
+	ddfname="JEMA-Compliant UPS"
+	ddfversion="4"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="jemamibdiscdata">
+    <oidMustExist ruleid="jema" oid=".1.3.6.1.4.1.4550" istree="yes" />
+
+    <!-- Replace MIB2 Model with Model from UPS MIB -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <suppressRule suppressid= "upsmib/upsmibdiscdata/modeldata"/> <!-- supress upsmib model -->
+    <setProductData ruleid="vendordata" field="vendor">
+      <getOid>.1.3.6.1.4.1.4550.1.1.1.1.0</getOid>
+    </setProductData>
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.4550.1.1.1.2.0</getOid>
+    </setProductData>
+    
+    <suppressRule ruleid="stompmib2type" suppressid="core/mib2data/typedata"/>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+    
+    <setProductData ruleid="appversiondata" field="appversion">
+      <getOid>.1.3.6.1.4.1.4550.1.1.1.3.0</getOid>
+    </setProductData>
+    <setProductData ruleid="bootversion" field="bootversion">
+      <getOid>.1.3.6.1.4.1.4550.1.1.1.4.0</getOid>
+    </setProductData>
+    <setDefaultLabel>
+      <getOid>.1.3.6.1.4.1.4550.1.1.1.5.0</getOid>
+    </setDefaultLabel>
+   </device>  
+    
+   
+  <device deviceid="jema">
+    <oidMustExist ruleid="jemaDetect" oid=".1.3.6.1.4.1.4550" istree="yes"/>
+ 
+  <suppressRule suppressid="upsmib/upsmib/upsBatteryStatus"/>
+  <suppressRule suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+  <suppressRule suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+  <suppressRule suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+  <suppressRule suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+  <suppressRule suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+  <suppressRule suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+
+    <stateSensor ruleid="jemaUpsBatteryStatus">
+      <type>state/battstatus</type>
+      <sensorId>BATTSTATUS</sensorId>
+      <value>
+        <mapValue mapid="upsBatteryStatus-vm">
+          <getOid>.1.3.6.1.4.1.4550.1.1.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Battery Status</label>
+      <enum>upsBatteryStatus-em</enum>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </stateSensor>
+    <valueMap ruleid="upsBatteryStatus-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    <enumMap ruleid="upsBatteryStatus-em">
+      <label>Unknown</label>
+      <label>Normal</label>
+      <label>Low</label>
+      <label>Depleted</label>
+    </enumMap>
+    <numSensor ruleid="jemaUpsSecondsOnBattery">
+      <type>timeinsec</type>
+      <sensorId>TIME_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.2.2.0</getOid>
+      </value>
+      <label>Time Running on Battery</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsEstimatedMinutesRemaining">
+      <type>timeinmin/timeremainingonbatt</type>
+      <sensorId>TIME_REMAINING_ON_BATT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.2.3.0</getOid>
+      </value>
+      <label>Battery Time Remaining</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsEstimatedChargeRemaining">
+      <type>pctofcapacity/pctofbatt</type>
+      <sensorId>BATT_CAPACITY_LEFT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.2.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Battery Capacity Remaining</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBatteryVoltage">
+      <type>voltageDC/battvoltage</type>
+      <sensorId>BATT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.4550.1.1.2.5.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Voltage</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBatteryCurrent">
+      <type>amperage/battamps</type>
+      <sensorId>BATT_AMPERAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.4550.1.1.2.6.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Battery Current</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBatteryTemperature">
+      <type>temp/batttemp</type>
+      <sensorId>BATT_TEMP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.2.7.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Battery Temperature</label>
+      <sensorSet>UPS Battery Status</sensorSet>
+    </numSensor>
+
+  <suppressRule suppressid="upsmib/upsmib/upsInputFrequency"/>
+  <suppressRule suppressid="upsmib/upsmib/upsInputVoltage"/>
+  <suppressRule suppressid="upsmib/upsmib/upsInputCurrent"/>
+  <suppressRule suppressid="upsmib/upsmib/upsInputTruePower"/>
+
+    <numSensor ruleid="jemaUpsInputFrequency" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+      <type>frequency/inputfrequency</type>
+      <sensorId>INPUT_FREQ_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.2</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Input Frequency <rowIndex/></label>
+      <sensorSet>Input <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputVoltage" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+      <type>voltageAC/input/phase</type>
+      <sensorId>INPUT_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.3</getRowOid>
+      </value>
+      <label>Input Voltage <rowIndex/></label>
+      <sensorSet>Input <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputCurrent" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.4</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Input Current <rowIndex/></label>
+      <sensorSet>Input <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputTruePower" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+      <type>powerW/outputpower/phase</type>
+      <sensorId>INPUT_POWER_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.5</getRowOid>
+      </value>
+      <label>Input Power <rowIndex/></label>
+      <sensorSet>Input <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <stateSensor ruleid="jemaUpsInputPhase" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+      <type>state/phase</type>
+      <sensorId>INPUT_PHASE<rowIndex/></sensorId>
+      <value>
+      <mapValue mapid="phaseState-vm">
+          <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.6</getRowOid>
+        </mapValue>
+      </value>
+      <label>Input Phase <rowIndex/></label>
+      <enum>phaseState-em</enum>
+      <sensorSet>Input <rowIndex/> - Phase </sensorSet>
+    </stateSensor>
+    <numSensor ruleid="jemaUpsInputVoltage1" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.7</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>INPUT_VOLTAGE_PHASE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.7</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Voltage - Phase 1</op>
+          <op>Input <rowIndex/> Voltage - Phase 1</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - Phase 1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputVoltage2" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.8</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>INPUT_VOLTAGE_PHASE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.8</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Voltage - Phase 2</op>
+          <op>Input <rowIndex/> Voltage - Phase 2</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - Phase 2</sensorSet>
+    </numSensor>
+    
+    <numSensor ruleid="jemaUpsInputVoltage3" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.9</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>INPUT_VOLTAGE_PHASE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.9</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Voltage - Phase 3</op>
+          <op>Input <rowIndex/> Voltage - Phase 3</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - Phase 3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputCurrent1" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.10</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_LINE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.10</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Current - L1</op>
+          <op>Input <rowIndex/> Current - L1</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - L1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputCurrent2" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.11</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_LINE2_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.11</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Current - L2</op>
+          <op>Input <rowIndex/> Current - L2</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - L2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputCurrent3" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.12</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_LINE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.12</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Current - L3</op>
+          <op>Input <rowIndex/> Current - L3</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - L3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputCurrent4" index=".1.3.6.1.4.1.4550.1.1.3.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.3.3.1.13</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>INPUT_CURRENT_LINE4_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.3.3.1.13</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.3.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Input Current - LN</op>
+          <op>Input <rowIndex/> Current - LN</op>
+        </if>
+      </label>
+      <sensorSet>Input <rowIndex/> - LN</sensorSet>
+    </numSensor>
+    
+	<suppressRule suppressid="upsmib/upsmib/upsOutputSource"/>
+	<suppressRule suppressid="upsmib/upsmib/upsOutputFrequency"/>
+	<suppressRule suppressid="upsmib/upsmib/upsOutputVoltage"/>
+	<suppressRule suppressid="upsmib/upsmib/upsOutputCurrent"/>
+	<suppressRule suppressid="upsmib/upsmib/upsOutputPower"/>
+	<suppressRule suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+
+    <stateSensor ruleid="jemaUpsOutputSource">
+      <type>state/outputsource</type>
+      <sensorId>OUTPUT_SOURCE</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.4.1.0</getOid>
+      </value>
+      <label>Output Source</label>
+      <enum>upsOutputSource-em</enum>
+      <sensorSet>UPS Output</sensorSet>
+    </stateSensor>
+    <enumMap ruleid="upsOutputSource-em">
+      <label>Unknown</label>
+      <label>Other</label>
+      <label>None</label>
+      <label>Normal</label>
+      <label>Bypass</label>
+      <label>Battery</label>
+      <label>Booster</label>
+      <label>Reducer</label>
+    </enumMap>
+    <numSensor ruleid="jemaUpsOutputFrequency">
+      <type>frequency/outputfrequency</type>
+      <sensorId>OUTPUT_FREQUENCY</sensorId>
+      <value>
+        <div>
+          <op>
+            <getOid>.1.3.6.1.4.1.4550.1.1.4.2.0</getOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputVoltage" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>voltageAC/output/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.2</getRowOid>
+      </value>
+      <label>Output Voltage <rowIndex/></label>
+      <sensorSet>Output <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputCurrent" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>amperage/output/phase</type>
+      <sensorId>OUTPUT_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.3</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Output Current <rowIndex/></label>
+      <sensorSet>Output <rowIndex/> - Phase</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputPower" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>powerW/outputpower/phase</type>
+      <sensorId>OUTPUT_POWER_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.4</getRowOid>
+      </value>
+      <label>Output Power <rowIndex/></label>
+      <sensorSet>Output <rowIndex/> - Phase</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputPercentLoad" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_LOAD_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Output Load <rowIndex/></label>
+      <sensorSet>Output <rowIndex/> - Phase</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="jemaUpsOutputStatus" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>state/outputstate</type>
+      <sensorId>OUTPUT_SOURCE<rowIndex/></sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.4550.1.1.4.4.1.6</getOid>
+      </value>
+      <label>Output status<rowIndex/></label>
+      <enum>upsOutputStatus-em</enum>
+      <sensorSet>Output <rowIndex/> - Phase</sensorSet>
+    </stateSensor>
+    <enumMap ruleid="upsOutputStatus-em">
+      <label>Unknown</label>
+      <label>Unknown</label>
+      <label>None</label>
+      <label>Normal</label>
+    </enumMap>
+    <stateSensor ruleid="jemaUpsOutputPhase" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+      <type>state/phase</type>
+      <sensorId>OUTPUT_PHASE<rowIndex/></sensorId>
+      <value>
+      <mapValue mapid="phaseState-vm">
+          <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.7</getRowOid>
+        </mapValue>
+      </value>
+      <label>Output Phase<rowIndex/></label>
+      <enum>phaseState-em</enum>
+      <sensorSet>Output <rowIndex/> - Phase</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="jemaUpsInputOutput1" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.8</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.8</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Voltage - Phase 1</op>
+          <op>Output <rowIndex/> Voltage - Phase 1</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputOutput2" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.9</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE2_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.9</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Voltage - Phase 2</op>
+          <op>Output <rowIndex/> Voltage - Phase 2</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsInputOutput3" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.10</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.10</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Voltage - Phase 3</op>
+          <op>Output <rowIndex/> Voltage - Phase 3</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputCurrent1" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.11</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>OUTPUT_CURRENT_LINE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.11</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Current - L1</op>
+          <op>Output <rowIndex/> Current - L1</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - L1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputCurrent2" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.12</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>OUTPUT_CURRENT_LINE2_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.12</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Current - L2</op>
+          <op>Output <rowIndex/> Current - L2</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - L2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputCurrent3" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.13</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>OUTPUT_CURRENT_LINE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.13</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Current - L3</op>
+          <op>Output <rowIndex/> Current - L3</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - L3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsOutputCurrent4" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.14</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>OUTPUT_CURRENT_LINE4_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.14</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Current - LN</op>
+          <op>Output <rowIndex/> Current - LN</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - LN</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaupsOutputPercentLoad1" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.15</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_PWERCENT_LOAD_PHASE1_<rowIndex/></sensorId>
+      <value>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.15</getRowOid>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Percent Load - Phase 1</op>
+          <op>Output <rowIndex/> Percent Load - Phase 1</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaupsOutputPercentLoad2" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.16</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_PWERCENT_LOAD_PHASE2_<rowIndex/></sensorId>
+      <value>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.16</getRowOid>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Percent Load - Phase 2</op>
+          <op>Output <rowIndex/> Percent Load - Phase 2</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaupsOutputPercentLoad3" index=".1.3.6.1.4.1.4550.1.1.4.4.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.4.4.1.17</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_PWERCENT_LOAD_PHASE3_<rowIndex/></sensorId>
+      <value>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.4.4.1.17</getRowOid>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.4.3.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Output Percent Load - Phase 3</op>
+          <op>Output <rowIndex/> Percent Load - Phase 3</op>
+        </if>
+      </label>
+      <sensorSet>Output <rowIndex/> - Phase 3</sensorSet>
+    </numSensor>
+    
+	<suppressRule suppressid="upsmib/upsmib/upsBypassFrequency"/>
+	<suppressRule suppressid="upsmib/upsmib/upsBypassVoltage"/>
+	<suppressRule suppressid="upsmib/upsmib/upsBypassCurrent"/>
+	<suppressRule suppressid="upsmib/upsmib/upsBypassPower"/>
+
+    <numSensor ruleid="jemaUpsBypassFrequency">
+      <type>frequency/bypassfrequency</type>
+      <sensorId>BYPASS_FREQUENCY</sensorId>
+      <value>
+        <div>
+          <op>
+            <getOid>.1.3.6.1.4.1.4550.1.1.5.1.0</getOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Bypass Frequency</label>
+      <sensorSet>UPS Bypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassVoltage" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+      <type>voltageAC/bypass/phase</type>
+      <sensorId>BYPASS_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.2</getRowOid>
+      </value>
+      <label>Bypass Voltage <rowIndex/></label>
+      <sensorSet>Bypass <rowIndex/> - Phase</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassCurrent" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+      <type>amperage/bypass/phase</type>
+      <sensorId>BYPASS_CURRENT_PHASE<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.3</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>Bypass Current <rowIndex/></label>
+      <sensorSet>Bypass <rowIndex/> - Phase </sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassPower" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+      <type>powerW/bypasspower/phase</type>
+      <sensorId>BYPASS_POWER_PHASE<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.4</getRowOid>
+      </value>
+      <label>Bypass Power <rowIndex/></label>
+      <sensorSet>Bypass <rowIndex/> - Phase</sensorSet>
+    </numSensor>  
+    <stateSensor ruleid="jemaUpsBypassPhase" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+      <type>state/phase</type>
+      <sensorId>BYPASS_PHASE<rowIndex/></sensorId>
+      <value>
+      <mapValue mapid="phaseState-vm">
+          <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.5</getRowOid>
+        </mapValue>
+      </value>
+      <label>Bypass Phase <rowIndex/></label>
+      <enum>phaseState-em</enum>
+      <sensorSet>Bypass <rowIndex/> - Phase</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="jemaUpsBypassVoltage1" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.6</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>BYPASS_VOLTAGE_PHASE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.6</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Voltage - Phase 1</op>
+          <op>Bypass <rowIndex/> Voltage - Phase 1</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - Phase 1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassVoltage2" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.7</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>BYPASS_VOLTAGE_PHASE2_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.7</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Voltage - Phase 2</op>
+          <op>Bypass <rowIndex/> Voltage - Phase 2</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - Phase 2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassVoltage3" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.8</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>voltageAC/input/phase</type>
+      <sensorId>BYPASS_VOLTAGE_PHASE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.8</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Voltage - Phase 3</op>
+          <op>Bypass <rowIndex/> Voltage - Phase 3</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - Phase 3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassCurrent1" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.9</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>BYPASS_CURRENT_LINE1_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.9</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Current - L1</op>
+          <op>Bypass <rowIndex/> Current - L1</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - L1</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassCurrent2" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.10</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>BYPASS_CURRENT_LINE2_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.10</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Current - L2</op>
+          <op>Bypass <rowIndex/> Current - L2</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - L2</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassCurrent3" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.11</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>BYPASS_CURRENT_LINE3_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.11</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Current - L3</op>
+          <op>Bypass <rowIndex/> Current - L3</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - L3</sensorSet>
+    </numSensor>
+    <numSensor ruleid="jemaUpsBypassCurrent4" index=".1.3.6.1.4.1.4550.1.1.5.3.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<getRowOid default="-1">.1.3.6.1.4.1.4550.1.1.5.3.1.12</getRowOid>
+		</mapValue>
+		</rowTest>
+      <type>amperage/input/phase</type>
+      <sensorId>BYPASS_CURRENT_LINE4_<rowIndex/></sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.4550.1.1.5.3.1.12</getRowOid>
+          </op>
+          <op>10</op>
+        </div>
+      </value>
+      <label>
+        <if>
+          <op>
+            <eq>
+              <op><getOid default="2">.1.3.6.1.4.1.4550.1.1.5.2.0</getOid></op>
+              <op>1</op>
+            </eq>
+          </op>
+          <op>Bypass Current - LN</op>
+          <op>Bypass <rowIndex/> Current - LN</op>
+        </if>
+      </label>
+      <sensorSet>Bypass <rowIndex/> - LN</sensorSet>
+    </numSensor>
+   
+	<valueMap ruleid="phaseState-vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+		<valueIn>3</valueIn><valueOut>2</valueOut>
+		<valueIn>4</valueIn><valueOut>3</valueOut>
+		<valueIn>5</valueIn><valueOut>4</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>      
+    </valueMap>
+	<enumMap ruleid="phaseState-em">
+		<label>Unknown</label>
+		<label>Single Phase, 2 Wire</label>
+		<label>Single Phase, 3 Wire</label>
+     	<label>Three Phase, 3 Wire</label>
+     	<label>Three Phase, 4 Wire</label>
+    </enumMap>
+
+	<valueMap ruleid="deleteNull-vm">
+		<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+		<valueIn>*</valueIn><valueOut>[true]</valueOut>      
+    </valueMap>
+
+	<alarmFlags2 ruleid="jemaUpsAlarmFatalFaultStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.1.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Abnormal Output</activeText>
+				<inactiveText>Abnormal Output Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Output detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Output has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="2">
+			<name>
+				<activeText>Main Circuit Failure</activeText>
+				<inactiveText>Main Circuit Failure Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Main Circuit Failure detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Main Circuit has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="3">
+			<name>
+				<activeText>Fuse Blown</activeText>
+				<inactiveText>Fuse Blown Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Blown Fuse detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Fuse has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="4">
+			<name>
+				<activeText>Fan Fault</activeText>
+				<inactiveText>Fan Fault Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Fan Fault detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Fan has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="5">
+			<name>
+				<activeText>Abnormal Control</activeText>
+				<inactiveText>Abnormal Control Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Control detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Control has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="6">
+			<name>
+				<activeText>Abnormal Battery</activeText>
+				<inactiveText>Abnormal Battery Cleared</inactiveText>
+			</name>
+			<severity>failure</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Battery detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.2.0</getOid></activeText>
+				<inactiveText>Battery has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsAlarmFaultStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.3.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Abnormal Input</activeText>
+				<inactiveText>Abnormal Input Cleared</inactiveText>
+			</name>
+			<severity>critical</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Input detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.4.0</getOid></activeText>
+				<inactiveText>Input has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="2">
+			<name>
+				<activeText>Abnormal Bypass</activeText>
+				<inactiveText>Abnormal Bypass Cleared</inactiveText>
+			</name>
+			<severity>critical</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Bypass detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.4.0</getOid></activeText>
+				<inactiveText>Bypass has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+		<alarmFlagsTest match="3">
+			<name>
+				<activeText>Abnormal Battery</activeText>
+				<inactiveText>Abnormal Battery Cleared</inactiveText>
+			</name>
+			<severity>critical</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Battery detected: <getOid>.1.3.6.1.4.1.4550.1.1.6.4.0</getOid></activeText>
+				<inactiveText>Battery has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsAlarmWarningStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.5.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Warning</activeText>
+				<inactiveText>Warning Cleared</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category></category>
+			<description>
+				<activeText>Warning: <getOid>.1.3.6.1.4.1.4550.1.1.6.6.0</getOid></activeText>
+				<inactiveText>Warning has cleared.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsAlarmInputBadStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.8.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Input Bad</activeText>
+				<inactiveText>Input Bad Cleared</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category></category>
+			<description>
+				<activeText>Input Bad: <getOid>.1.3.6.1.4.1.4550.1.1.6.9.0</getOid></activeText>
+				<inactiveText>Input has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsOutputOverloadStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.10.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Output Overload</activeText>
+				<inactiveText>Output Overload Cleared</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category></category>
+			<description>
+				<activeText>An Output Overload condition has been detected.</activeText>
+				<inactiveText>Output has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsAlarmBatteryBadStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.11.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Battery Bad</activeText>
+				<inactiveText>Battery Bad Cleared</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category></category>
+			<description>
+				<activeText>Battery Bad: <getOid>.1.3.6.1.4.1.4550.1.1.6.12.0</getOid></activeText>
+				<inactiveText>Battery has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+	<alarmFlags2 ruleid="jemaUpsAlarmTempBadStatus">
+		<value><getOid>.1.3.6.1.4.1.4550.1.1.6.13.0</getOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText>Abnormal Temperature</activeText>
+				<inactiveText>Abnormal Temperature Cleared</inactiveText>
+			</name>
+			<severity>warning</severity>
+			<category></category>
+			<description>
+				<activeText>Abnormal Temperature: <getOid>.1.3.6.1.4.1.4550.1.1.6.14.0</getOid></activeText>
+				<inactiveText>Temperature has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+    
+	</device>
+</APC_DDF>
+
+    
+    
+    
+    
+
+
+
+    
+    
+    

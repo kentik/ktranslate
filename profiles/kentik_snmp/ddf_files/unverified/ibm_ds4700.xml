@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ibm_ds4700"
+	ddfname="IBM DS4700"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="ibm_ds4700">
+		<oidMustMatch ruleid="ciscoIGESM" oid=".1.3.6.1.2.1.1.2.0"> 
+			<valueList>
+				<value>.1.3.6.1.4.1.9.1.592</value>
+			</valueList>
+		</oidMustMatch>
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Cisco</setProductData>
+		<setProductData ruleid="modeldata" field="model">IBM DS4700</setProductData>
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+
+	</device>
+
+	<device deviceid="ciscoCdpMib">
+		<oidMustExist ruleid="ciscoCdpMib" oid=".1.3.6.1.4.1.9.9.23" istree="yes"/>
+
+		<enumMap ruleid="cdpInterfaceEnable-em">
+			<label>Unknown</label>
+			<label>True</label>
+			<label>False</label>
+		</enumMap>
+		<stateSensor ruleid="cdpInterfaceEnable" index=".1.3.6.1.4.1.9.9.23.1.1.1.1.2">
+            <type>state</type>
+            <sensorId>IF_CDP_ENABLED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.23.1.1.1.1.2</getRowOid>
+            </value>
+            <label>Interface <rowIndex/> CDP Enabled</label>
+            <enum>cdpInterfaceEnable-em</enum>
+            <sensorSet>CDP</sensorSet>
+        </stateSensor>
+	</device>
+
+	<device deviceid="ciscoVtpMib">
+		<oidMustExist ruleid="ciscoVtpMib" oid=".1.3.6.1.4.1.9.9.46" istree="yes"/>
+
+		<enumMap ruleid="vtpVlanState-em">
+			<label>Unknown</label>
+			<label>Operational</label>
+			<label>Suspended</label>
+			<label>MTU Too Big for Device</label>
+			<label>MTU Too Big for Trunk</label>
+		</enumMap>
+		<stateSensor ruleid="vtpVlanState" index=".1.3.6.1.4.1.9.9.46.1.3.1.1.2">
+            <type>state</type>
+            <sensorId>VLAN_STATE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.2</getRowOid>
+            </value>
+            <label>VLAN <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid> State</label>
+            <enum>vtpVlanState-em</enum>
+            <sensorSet>VLAN: <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid></sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="vtpVlanType-em">
+			<label>Unknown</label>
+			<label>Ethernet</label>
+			<label>FDDI</label>
+			<label>Token Ring</label>
+			<label>FDDINet</label>
+			<label>TRNet</label>
+			<label>Deprecated</label>
+		</enumMap>
+		<stateSensor ruleid="vtpVlanType" index=".1.3.6.1.4.1.9.9.46.1.3.1.1.3">
+            <type>state</type>
+            <sensorId>VLAN_TYPE_<rowIndex/></sensorId>
+            <value>
+				<formatNumber printffmt="%1.0f">
+                <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.3</getRowOid>
+				</formatNumber>
+            </value>
+            <label>VLAN <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid> Type</label>
+            <enum>vtpVlanType-em</enum>
+            <sensorSet>VLAN: <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="vtpVlanMtu" index=".1.3.6.1.4.1.9.9.46.1.3.1.1.5">
+            <type>num</type>
+            <sensorId>VLAN_MTU_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>VLAN <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid> MTU Size</label>
+            <sensorSet>VLAN: <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid></sensorSet>
+        </numSensor>
+
+		<enumMap ruleid="cpvlanVlanPrivateVlanType-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Primary</label>
+			<label>Isolated</label>
+			<label>Community</label>
+			<label>Two-Way Community</label>
+		</enumMap>
+		<stateSensor ruleid="cpvlanVlanPrivateVlanType" index=".1.3.6.1.4.1.9.9.173.1.1.1.1.1">
+            <type>state</type>
+            <sensorId>VLAN_PRIVATE_TYPE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.173.1.1.1.1.1</getRowOid>
+            </value>
+            <label>VLAN <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid> Private VLAN Type</label>
+            <enum>cpvlanVlanPrivateVlanType-em</enum>
+            <sensorSet>VLAN: <getRowOid>.1.3.6.1.4.1.9.9.46.1.3.1.1.4</getRowOid></sensorSet>
+        </stateSensor>
+	</device>
+
+	<device deviceid="ciscoMemoryPoolMib">
+		<oidMustExist ruleid="ciscoMemoryPoolMib" oid=".1.3.6.1.4.1.9.9.48" istree="yes"/>
+
+		<numSensor ruleid="ciscoMemoryPoolUsed" index=".1.3.6.1.4.1.9.9.48.1.1.1.5">
+            <type>num</type>
+            <sensorId>MEMORY_POOL_USED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.2</getRowOid> Memory Used (Bytes)</label>
+            <sensorSet>Memory Pool</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoMemoryPoolFree" index=".1.3.6.1.4.1.9.9.48.1.1.1.6">
+            <type>num</type>
+            <sensorId>MEMORY_POOL_FREE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.2</getRowOid> Memory Free (Bytes)</label>
+            <sensorSet>Memory Pool</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoMemoryPoolLargestFree" index=".1.3.6.1.4.1.9.9.48.1.1.1.7">
+            <type>num</type>
+            <sensorId>MEMORY_POOL_LARGEST_FREE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.48.1.1.1.2</getRowOid> Largest Memory Free (Bytes)</label>
+            <sensorSet>Memory Pool</sensorSet>
+        </numSensor>
+	</device>
+
+	<device deviceid="ciscoProcessMib">
+		<oidMustExist ruleid="ciscoProcessMib" oid=".1.3.6.1.4.1.9.9.109" istree="yes"/>
+
+		<numSensor ruleid="ciscoProcessAverageUSecs" index=".1.3.6.1.4.1.9.9.109.1.2.1.1.6">
+            <type>timeinsec</type>
+            <sensorId>PROCESS_AVERAGE_USECS_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.6</getRowOid></op><op>0.000001</op></mult>
+            </value>
+			<valueInc>0.000001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Average CPU Time</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoProcExtMemAllocatedRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.1">
+            <type>num</type>
+            <sensorId>PROCEXT_MEM_ALLOCATED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.1</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Memory Allocated (Bytes)</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoProcExtMemFreedRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.2">
+            <type>num</type>
+            <sensorId>PROCEXT_MEM_FREED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Memory Freed (Bytes)</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoProcExtInvokedRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.3">
+            <type>num</type>
+            <sensorId>PROCEXT_INVOKED_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Times Invoked</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoProcExtRuntimeRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.4">
+            <type>timeinsec</type>
+            <sensorId>PROCEXT_RUNTIME_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.4</getRowOid></op><op>0.000001</op></mult>
+            </value>
+			<valueInc>0.000001</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Average CPU Time</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="ciscoProcExtUtil5MinRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.7">
+            <type>pctofcapacity</type>
+            <sensorId>PROCEXT_UTIL5MIN_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Utilization Last 5 Minutes</label>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </numSensor>
+
+		<enumMap ruleid="ciscoProcExtPriorityRev-em">
+			<label>Unknown</label>
+			<label>Critical</label>
+			<label>High</label>
+			<label>Normal</label>
+			<label>Low</label>
+			<label>Not Assigned</label>
+		</enumMap>
+		<stateSensor ruleid="ciscoProcExtPriorityRev" index=".1.3.6.1.4.1.9.9.109.1.2.3.1.8">
+            <type>state</type>
+            <sensorId>PROCEXT_PRIORITY_<rowIndex/></sensorId>
+            <value>
+				<formatNumber printffmt="%1.0f">
+                <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.3.1.8</getRowOid>
+				</formatNumber>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid> Priority</label>
+            <enum>ciscoProcExtPriorityRev-em</enum>
+            <sensorSet>Process: <getRowOid>.1.3.6.1.4.1.9.9.109.1.2.1.1.2</getRowOid></sensorSet>
+        </stateSensor>
+
+
+	</device>
+</APC_DDF>

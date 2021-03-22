@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<!-- rle_ld1500 -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid ="jacarta_imeter" ddfname="Jacarta iMeter" ddfversion="4" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+    <!-- senosrIDs constructed for ISX Operations compatibility --> 
+	<device deviceid="jacarta_imeter_header">
+		<oidMustExist istree="yes" ruleid="jacarta_imeter_header_exists" oid=".1.3.6.1.4.1.19011"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Jacarta</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		<setProductData ruleid="modeldata" field="model">iMeter</setProductData>
+
+		<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.19011.1.2.2.1.108.0</getOid>
+		</setProductData>
+		
+		<!-- MAC Address -->
+		<setProductData ruleid="macaddr" field="macaddr">
+			<getOid>.1.3.6.1.4.1.19011.1.2.2.1.3.0</getOid>
+		</setProductData>
+	</device>
+	
+	<device deviceid="jacarta_imeter_sensors">
+		<oidMustExist istree="yes" ruleid="sensorexists" oid=".1.3.6.1.4.1.19011"/>
+
+        <stateSensor ruleid="sensorType" index=".1.3.6.1.4.1.19011.2.3.1.1.3">
+            <type>state</type>
+			<sensorId>SENSOR_TYPE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+            <value>
+                <mapValue mapid="sensorType-vm">
+                    <getRowOid>.1.3.6.1.4.1.19011.2.3.1.1.3</getRowOid>
+                </mapValue>
+            </value>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Type</label>
+            <enum>sensorType-em</enum>
+			<sensorSet>iMeter Sensors</sensorSet>
+        </stateSensor>
+	
+        <stateSensor ruleid="sensorStatus" index=".1.3.6.1.4.1.19011.2.3.1.1.6">
+            <type>state</type>
+			<sensorId>SENSOR_STATUS_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+            <value>
+                <mapValue mapid="sensorStatus-vm">
+                    <getRowOid>.1.3.6.1.4.1.19011.2.3.1.1.6</getRowOid>
+                </mapValue>
+            </value>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Status</label>
+            <enum>sensorStatus-em</enum>
+			<sensorSet>iMeter Sensors</sensorSet>
+        </stateSensor>
+	
+		<numSensor ruleid="sensorTemperatureDegree" index=".1.3.6.1.4.1.19011.2.3.2.1.4">
+			<type>temp</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_EXTERNAL_TEMPERATURE_[123]$ -->
+			<sensorId>EXTERNAL_TEMPERATURE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+            <value>
+                <if>
+                    <op><mapValue mapid="isCelsius-vm">
+                            <getRowOid>.1.3.6.1.4.1.19011.1.2.2.1.16.1.12</getRowOid>
+                        </mapValue></op>     
+                    <op><mult>
+                            <op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.4</getRowOid></op>  <!--celsius -->
+                            <op>0.1</op>
+                        </mult></op>
+                    <op><div>
+                            <op><mult>
+                                    <op><sub>
+                                            <op><mult>
+                                                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.4</getRowOid></op>  <!--fahrenheit -->
+                                                    <op>0.1</op>
+                                                </mult></op>
+                                            <op>32</op>
+                                        </sub></op>
+                                    <op>5</op>
+                                </mult></op>
+                            <op>9</op>
+                        </div></op>
+                </if>
+            </value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.35</getRowOid></op><op>1</op></add></formatNumber> Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="sensorTemperatureRaw" index=".1.3.6.1.4.1.19011.2.3.2.1.20">
+			<type>temp</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_EXTERNAL_TEMPERATURE_[123]$ -->
+			<sensorId>RAW_EXTERNAL_TEMPERATURE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <if>
+                    <op><mapValue mapid="isCelsius-vm">
+                            <getRowOid>.1.3.6.1.4.1.19011.1.2.2.1.16.1.12</getRowOid>
+                        </mapValue></op>     
+                    <op><mult>
+                           <op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.20</getRowOid></op>  <!--celsius -->
+                           <op>0.1</op>
+                        </mult></op>
+                    <op><div>
+                            <op><mult>
+                                    <op><sub>
+                                            <op><mult>
+                                                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.20</getRowOid></op>  <!--fahrenheit -->
+                                                    <op>0.1</op>
+                                                </mult></op>
+                                            <op>32</op>
+                                        </sub></op>
+                                    <op>5</op>
+                                </mult></op>
+                            <op>9</op>
+                        </div></op>
+                </if>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.2.1.35</getRowOid></op><op>1</op></add></formatNumber> Raw Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="sensorHumidityPercent" index=".1.3.6.1.4.1.19011.2.3.3.1.4">
+			<type>humidity</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_EXTERNAL_HUMIDITY_[123]$ -->
+			<sensorId>EXTERNAL_HUMIDITY_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.3.1.4</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.3.1.35</getRowOid></op><op>1</op></add></formatNumber> Humidity</label>
+			<sensorSet>Humidity</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="sensorHumidityRaw" index=".1.3.6.1.4.1.19011.2.3.3.1.20">
+			<type>humidity</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_EXTERNAL_HUMIDITY_[123]$ -->
+			<sensorId>RAW_EXTERNAL_HUMIDITY_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.3.1.20</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.3.1.35</getRowOid></op><op>1</op></add></formatNumber> Raw Humidity</label>
+			<sensorSet>Humidity</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="sensorIntelliVoltValue" index=".1.3.6.1.4.1.19011.2.3.5.1.4">
+			<type>voltage</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_OUTPUT_VOLTAGE_[123]$ -->
+			<sensorId>INTELLIVOLT_OUTPUT_VOLTAGE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.5.1.4</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.5.1.35</getRowOid></op><op>1</op></add></formatNumber> Voltage</label>
+			<sensorSet>IntelliVolt</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="sensorIntelliVoltRaw" index=".1.3.6.1.4.1.19011.2.3.5.1.20">
+			<type>voltage</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_OUTPUT_VOLTAGE_[123]$ -->
+			<sensorId>RAW_INTELLIVOLT_OUTPUT_VOLTAGE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.5.1.20</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.5.1.35</getRowOid></op><op>1</op></add></formatNumber> Raw Voltage</label>
+			<sensorSet>IntelliVolt</sensorSet>
+		</numSensor>
+			
+            
+		<numSensor ruleid="sensorIntelliAmpValue" index=".1.3.6.1.4.1.19011.2.3.6.1.4">
+			<type>amperage</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_OUTPUT_CURRENT_[123]$ -->
+			<sensorId>INTELLIAMP_OUTPUT_CURRENT_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.6.1.4</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.6.1.35</getRowOid></op><op>1</op></add></formatNumber> Current</label>
+			<sensorSet>IntelliAmp</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="sensorIntelliAmpRaw" index=".1.3.6.1.4.1.19011.2.3.6.1.20">
+			<type>amperage</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_OUTPUT_CURRENT_[123]$ -->
+			<sensorId>RAW_INTELLIAMP_OUTPUT_CURRENT_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.6.1.20</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.6.1.35</getRowOid></op><op>1</op></add></formatNumber> Raw Current</label>
+			<sensorSet>IntelliAmp</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="sensorAirflowValue" index=".1.3.6.1.4.1.19011.2.3.7.1.4">
+			<type>airflow</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_AIRFLOW_[123]$ -->
+			<sensorId>SENSOR_VALUE_AIRFLOW_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                   <op><getRowOid>.1.3.6.1.4.1.19011.2.3.7.1.4</getRowOid></op>
+                   <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.7.1.35</getRowOid></op><op>1</op></add></formatNumber> Airflow</label>
+			<sensorSet>Airflow</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="sensorAirflowRaw" index=".1.3.6.1.4.1.19011.2.3.7.1.20">
+			<type>airflow</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_AIRFLOW_[123]$ -->
+			<sensorId>SENSOR_RAW_AIRFLOW_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <mult>
+                   <op><getRowOid>.1.3.6.1.4.1.19011.2.3.7.1.20</getRowOid></op>
+                   <op>0.1</op>
+                </mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.7.1.35</getRowOid></op><op>1</op></add></formatNumber> Raw Airflow</label>
+			<sensorSet>Airflow</sensorSet>
+		</numSensor>
+        
+		<numSensor ruleid="sensorThermostatDegree" index=".1.3.6.1.4.1.19011.2.3.20.1.4">
+			<type>temp</type>
+			<!-- operations support: ^[a-zA-Z0-9]+_[a-zA-Z0-9]+_EXTERNAL_TEMPERATURE_[123]$ -->
+			<sensorId>THERMOSTAT_EXTERNAL_TEMPERATURE_<formatNumber><add><op>1</op><op><rowNumber/></op></add></formatNumber></sensorId>
+			<value>
+                <if>
+                    <op><mapValue mapid="isCelsius-vm">
+                            <getRowOid>.1.3.6.1.4.1.19011.1.2.2.1.16.1.12</getRowOid>
+                        </mapValue></op>     
+                    <op><mult>
+                            <op><getRowOid>.1.3.6.1.4.1.19011.2.3.20.1.4</getRowOid></op>  <!--celsius -->
+                            <op>0.1</op>
+                        </mult></op>
+                    <op><div>
+                            <op><mult>
+                                    <op><sub>
+                                            <op><mult>
+                                                    <op><getRowOid>.1.3.6.1.4.1.19011.2.3.20.1.4</getRowOid></op>  <!--fahrenheit -->
+                                                    <op>0.1</op>
+                                                </mult></op>
+                                            <op>32</op>
+                                        </sub></op>
+                                    <op>5</op>
+                                </mult></op>
+                            <op>9</op>
+                        </div></op>
+                </if>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor <formatNumber printffmt="%02.0f"><add><op>1</op><op><rowNumber/></op></add></formatNumber> Port <formatNumber printffmt="%02.0f"><add><op><getRowOid>.1.3.6.1.4.1.19011.2.3.20.1.35</getRowOid></op><op>1</op></add></formatNumber> Thermostat Temperature</label>
+			<sensorSet>Thermostat</sensorSet>
+		</numSensor>
+       
+        <valueMap ruleid="sensorType-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+            <valueIn>6</valueIn><valueOut>6</valueOut>
+            <valueIn>7</valueIn><valueOut>7</valueOut>
+            <valueIn>8</valueIn><valueOut>8</valueOut>
+            <valueIn>9</valueIn><valueOut>9</valueOut>
+            <valueIn>10</valueIn><valueOut>10</valueOut>
+            <valueIn>11</valueIn><valueOut>11</valueOut>
+            <valueIn>12</valueIn><valueOut>12</valueOut>
+            <valueIn>13</valueIn><valueOut>13</valueOut>
+            <valueIn>14</valueIn><valueOut>14</valueOut>
+            <valueIn>20</valueIn><valueOut>20</valueOut>
+            <valueIn>21</valueIn><valueOut>21</valueOut>
+            <valueIn>129</valueIn><valueOut>129</valueOut>
+            <valueIn>*</valueIn><valueOut>0</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="sensorType-em">
+            <label>Unknown</label>
+            <label>Temperature</label>
+            <label>Dual Humidity</label>
+            <label>Dual Temperature</label>
+            <label>IntelliVolt</label>
+            <label>IntelliAmp</label>
+            <label>Airflow</label>
+            <label>I/O</label>
+            <label>Dry Contact</label>
+            <label>Motion</label>
+            <label>Water</label>
+            <label>Security</label>
+            <label>Siren</label>
+            <label>Relay</label>
+            <label>AC Voltage</label>
+            <label>Thermocouple</label>
+            <label>Smoke</label>
+            <label>Virtual</label>
+        </enumMap>
+        
+        <valueMap ruleid="sensorStatus-vm">
+            <valueIn>0</valueIn><valueOut>0</valueOut>
+            <valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+            <valueIn>6</valueIn><valueOut>6</valueOut>
+            <valueIn>7</valueIn><valueOut>7</valueOut>
+            <valueIn>*</valueIn><valueOut>0</valueOut>
+        </valueMap>
+
+        <enumMap ruleid="sensorStatus-em">
+            <label>Unknown</label>
+            <label>No Status</label>
+            <label>Normal</label>
+            <label>High Warning</label>
+            <label>High Critical</label>
+            <label>Low Warning</label>
+            <label>Low Critical</label>
+            <label>Sensor Error</label>
+        </enumMap>
+
+        <valueMap ruleid="isCelsius-vm">
+            <valueIn>0</valueIn>   <valueOut>[false]</valueOut>
+            <valueIn>*</valueIn>  <valueOut>[true]</valueOut>
+        </valueMap>
+
+	</device>
+
+</APC_DDF>

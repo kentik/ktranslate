@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<!-- Alcatel DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="alcatel" ddfname="Alcatel" ddfversion="2">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!-- chasInfo -->
+  <device deviceid="alcateldiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.800.2.1.1.1"/>
+
+    <!-- Replace MIB2 model data with model from Alcatel MIB -->
+    <setProductData ruleid="vendordata" field="vendor">
+      <getOid>.1.3.6.1.4.1.800.2.1.1.1.0</getOid>
+    </setProductData>
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+      <mapEnum enumid="chasType"><getOid>.1.3.6.1.4.1.800.2.1.1.2.0</getOid></mapEnum>
+    </setProductData>
+    <!-- Put serial number in product field -->
+    <setProductData ruleid="serialnum" field="serial_num">
+      <getOid>.1.3.6.1.4.1.800.2.1.1.7.0</getOid>
+    </setProductData>
+    
+    <enumMap ruleid="chasType">
+      <label>Unknown</label>
+      <label>Invalid</label>
+      <label>Other</label>
+      <label>Omni5</label>
+      <label>Omni9</label>
+      <label>PizzaSwitch</label>
+      <label>MicroSwitch</label>
+      <label>Omni5Cell</label>
+      <label>Omni9Cell</label>
+      <label>Omni5e</label>
+      <label>Omni9e</label>
+      <label>Pizza Port</label>
+      <label>Omni5wx</label>
+      <label>Omni9wx</label>
+      <label>Omni3wx</label>
+      <label>OmniStack 5024</label>
+      <label>OmniStack 4016</label>
+      <label>OmniStack 3032</label>
+      <label>OmniStack 2032</label>
+      <label>OmniStack 2016</label>
+      <label>OmniStack 1032</label>
+      <label>OmniStack 6032</label>
+      <label>OmniStack 5032</label>
+      <label>xframe5</label>
+      <label>xframe9</label>
+      <label>xframe3</label>
+      <label>OmniStack 4024</label>
+      <label>OmniCore 13</label>
+      <label>OmniAccess 408</label>
+      <label>OmniAccess 512</label>
+    </enumMap>
+  </device>
+  
+  <!-- Alcatel switch objects -->
+  <device deviceid="alcatelswitch">
+    <oidMustExist ruleid="xylanChassis" oid=".1.3.6.1.4.1.800.2.1.1.1.0"/>
+    
+    <!-- xylanChassis -->
+    
+    <!-- chasPowerSupply1State -->
+    <stateSensor ruleid="chasPowerSupply1State">
+      <type>alcatelPowerSupplyState</type>
+      <sensorId>POWER_SUPPLY_1_STATE</sensorId>
+      <value>
+        <mapValue mapid="XylanPSStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.4.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Power Supply 1</label>
+      <enum>XylanPSStateType</enum>
+      <sensorSet>Power</sensorSet>
+    </stateSensor>
+
+    <!-- chasPowerSupply2State -->
+    <stateSensor ruleid="chasPowerSupply2State">
+      <type>alcatelPowerSupplyState</type>
+      <sensorId>POWER_SUPPLY_2_STATE</sensorId>
+      <value>
+        <mapValue mapid="XylanPSStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.4.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Power Supply 2</label>
+      <enum>XylanPSStateType</enum>
+      <sensorSet>Power</sensorSet>
+    </stateSensor>
+    
+    <!-- chasEnvrmnt1TempRange1 -->
+    <stateSensor ruleid="chasEnvrmnt1TempRange1">
+      <type>alcatelTemperatureState</type>
+      <sensorId>chasEnvrmnt1TempRange1</sensorId>
+      <value>
+        <mapValue mapid="XylanTempStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.5.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Primary MPM Temp Sensor 0</label>
+      <enum>XylanTempStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+
+    <!-- chasEnvrmnt1TempRange2 -->
+    <stateSensor ruleid="chasEnvrmnt1TempRange2">
+      <type>alcatelTemperatureState</type>
+      <sensorId>chasEnvrmnt1TempRange2</sensorId>
+      <value>
+        <mapValue mapid="XylanTempStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.5.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Primary MPM Temp Sensor 1</label>
+      <enum>XylanTempStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+
+    <!-- chasEnvrmnt2TempRange1 -->
+    <stateSensor ruleid="chasEnvrmnt2TempRange1">
+      <type>alcatelTemperatureState</type>
+      <sensorId>chasEnvrmnt2TempRange1</sensorId>
+      <value>
+        <mapValue mapid="XylanTempStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.5.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Secondary MPM Temp Sensor 0</label>
+      <enum>XylanTempStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+
+    <!-- chasEnvrmnt2TempRange2 -->
+    <stateSensor ruleid="chasEnvrmnt2TempRange2">
+      <type>alcatelTemperatureState</type>
+      <sensorId>chasEnvrmnt2TempRange2</sensorId>
+      <value>
+        <mapValue mapid="XylanTempStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.5.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>Secondary MPM Temp Sensor 1</label>
+      <enum>XylanTempStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+
+    <!-- chasFanTray1State -->
+    <stateSensor ruleid="chasFanTray1State">
+      <type>alcatelFanState</type>
+      <sensorId>chasFanTray1State</sensorId>
+      <value>
+        <mapValue mapid="XylanFTStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.8.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Fan Tray 1</label>
+      <enum>XylanFTStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+
+    <!-- chasFanTray2State -->
+    <stateSensor ruleid="chasFanTray2State">
+      <type>alcatelFanState</type>
+      <sensorId>chasFanTray2State</sensorId>
+      <value>
+        <mapValue mapid="XylanFTStateType-map">
+          <getOid>.1.3.6.1.4.1.800.2.1.8.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Fan Tray 2</label>
+      <enum>XylanFTStateType</enum>
+      <sensorSet>Thermal</sensorSet>
+    </stateSensor>
+    
+    <valueMap ruleid="XylanPSStateType-map">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <valueMap ruleid="XylanTempStateType-map">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="XylanFTStateType-map">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="XylanPSStateType">
+      <label>Unknown</label>
+      <label>Not Present</label>
+      <label>OK</label>
+      <label>Bad</label>
+    </enumMap>
+
+    <enumMap ruleid="XylanTempStateType">
+      <label>Unknown</label>
+      <label>Not Present</label>
+      <label>Over Threshold</label>
+      <label>Under Threshold</label>
+    </enumMap>
+
+    <enumMap ruleid="XylanFTStateType">
+      <label>Unknown</label>
+      <label>Not Present</label>
+      <label>OK</label>
+      <label>Bad</label>
+    </enumMap>
+    
+  </device>
+  
+</APC_DDF>

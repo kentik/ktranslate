@@ -1,0 +1,160 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="nti_enviromux_sems_16"
+	ddfname="NTI Enviromux-sems-16"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="nti_enviromux_sems_16">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">NTI</setProductData>
+		<setProductData ruleid="modeldata" field="model">Enviromux-sems-16</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<oidMustExist ruleid="nti_enviromux_sems_16" oid=".1.3.6.1.4.1.3699.1.1.2" istree="yes" /> 
+
+		<valueMap ruleid="unitType-vm">
+			<valueIn>C</valueIn><valueOut>degreeC</valueOut>
+			<valueIn>%</valueIn><valueOut>percentRH</valueOut>
+			<valueIn>V</valueIn><valueOut>volts</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="openClosed-em">
+			<label>Closed</label>
+			<label>Open</label>
+		</enumMap>
+		<enumMap ruleid="okFailure-em">
+			<label>Failure</label>
+			<label>Ok</label>
+		</enumMap>
+
+		<numSensor ruleid="intSensors" index=".1.3.6.1.4.1.3699.1.1.2.1.4.1.1.1">
+			<type>num</type>
+			<units>
+			<mapValue mapid="unitType-vm">
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.8</getRowOid>
+			</mapValue>
+			</units>
+			<sensorId>INT_SENSOR_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eqString>
+					<op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.8</getRowOid></op>
+					<op>%</op>
+					</eqString>
+				</op>
+                <op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.6</getRowOid></op>
+                <op>
+					<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.6</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.3</getRowOid>
+			</label>
+            <sensorSet>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.4.1.1.5</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="extSensors" index=".1.3.6.1.4.1.3699.1.1.2.1.5.1.1.1">
+			<type>num</type>
+			<units>
+			<mapValue mapid="unitType-vm">
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.9</getRowOid>
+			</mapValue>
+			</units>
+			<sensorId>EXT_SENSOR_<rowNumber/></sensorId>
+            <value>
+				<if>
+				<op>
+					<eqString>
+					<op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.9</getRowOid></op>
+					<op>%</op>
+					</eqString>
+				</op>
+                <op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.7</getRowOid></op>
+                <op>
+					<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.7</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				</if>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.3</getRowOid>
+			</label>
+            <sensorSet>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.5.1.1.6</getRowOid>
+			</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="digInputs" index=".1.3.6.1.4.1.3699.1.1.2.1.6.1.1.1">
+			<type>state</type>
+			<sensorId>DIG_INPUT_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.6.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.6.1.1.2</getRowOid>
+			</label>
+			<enum>openClosed-em</enum>
+            <sensorSet>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.6.1.1.4</getRowOid>
+			</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="rlyOutputs" index=".1.3.6.1.4.1.3699.1.1.2.1.7.1.1.1">
+			<type>state</type>
+			<sensorId>RLY_OUTPUT_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.7.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.7.1.1.2</getRowOid>
+			</label>
+			<enum>openClosed-em</enum>
+            <sensorSet>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.7.1.1.4</getRowOid>
+			</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="powerSupplies" index=".1.3.6.1.4.1.3699.1.1.2.1.10.1.1.1">
+			<type>state</type>
+			<sensorId>POWER_SUPPLY_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+					<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.10.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.10.1.1.2</getRowOid>
+			</label>
+			<enum>okFailure-em</enum>
+            <sensorSet>
+				<getRowOid>.1.3.6.1.4.1.3699.1.1.2.1.10.1.1.4</getRowOid>
+			</sensorSet>
+        </stateSensor>
+
+	</device>
+</APC_DDF>

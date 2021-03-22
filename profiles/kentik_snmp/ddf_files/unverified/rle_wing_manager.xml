@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="rle_wing_manager"
+	ddfname="RLE Wing Manager"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<!--
+		SOURCE
+		/snmp/resources/mibs/rle/wing-mgr.mib
+		/snmp/resources/mibs/rle/WiNGSensorDataReferenceGuide-02-19.pdf
+		WiNG Manager MIB | 5 March 2020
+	-->
+	
+	<!-- 
+		This DDF currently supports WiNG-T, WiNG-TH, WiNG-THRM, WiNG-RTD
+		Future updates will require new device sections for remaining WiNG sensors as follows:
+		
+		<device...
+			WiNG-ANLG
+		
+		<device...
+			WiNG-LD
+			WiNG-DI
+		
+		<device...
+			WiNG-AIR3
+			WiNG-AIR4
+			WiNG-AIR10
+			
+		<device...
+			WiNG-DAP
+	-->
+
+	<device deviceid="rle_wing_manager">
+		<oidMustExist ruleid="rle_wing_manager_exists" oid=".1.3.6.1.4.1.3184.1.15" istree="yes"/>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">RLE Technologies</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.3184.1.15.1.2.0</getOid></setProductData>
+		<setProductData ruleid="software_version" field="appversion"><getOid>.1.3.6.1.4.1.3184.1.15.1.3.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<numSensor ruleid="numberOfSensors">
+            <type>num</type>
+            <sensorId>NUM_OF_SENSORS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3184.1.15.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of Sensors</label>
+            <sensorSet>General</sensorSet>
+        </numSensor>
+		
+		<stringSensor ruleid="sensorSerialNumber" index=".1.3.6.1.4.1.3184.1.15.2.3.1.1">
+            <type>string</type>
+            <sensorId>SENSOR_SERIAL_NUMBER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.3</getRowOid>
+            </value>
+            <label>
+				<!-- sensorModel -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid><space/>
+				<!-- sensorName -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.4</getRowOid><space/>
+				Sensor Serial Number
+			</label>
+            <sensorSet>
+				<!-- sensorLocation -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.5</getRowOid>
+			</sensorSet>
+        </stringSensor>
+		
+	</device>
+	
+	<device deviceid="wing_temperature_sensors">
+		<oidMustExist ruleid="wing_temperature_sensor_exists" oid=".1.3.6.1.4.1.3184.1.15.2.3.1" istree="yes"/>
+		
+		<valueMap ruleid="deleteNonTemperatureSensors-vm">
+			<valueIn>*</valueIn>        <valueOut>[false]</valueOut>
+			<valueIn>WiNG-TH</valueIn>  <valueOut>[true]</valueOut>
+			<valueIn>WiNG-T</valueIn>   <valueOut>[true]</valueOut>
+			<valueIn>WiNG-THRM</valueIn><valueOut>[true]</valueOut>
+			<valueIn>WiNG-RTD</valueIn> <valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="WiNG-TH_only-vm">
+			<valueIn>*</valueIn>      <valueOut>[false]</valueOut>
+			<valueIn>WiNG-TH</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="sensorReading1" index=".1.3.6.1.4.1.3184.1.15.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="deleteNonTemperatureSensors-vm">
+					<!-- sensorModel -->
+					<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SENSOR_READING_1_<rowIndex/></sensorId>
+            <value>
+				<if>
+					<op>
+						<eq>    
+							<!-- sensorsTemperatureUnits -->
+							<op><getOid>.1.3.6.1.4.1.3184.1.15.2.2.0</getOid></op>
+							<op>0</op>
+						</eq>
+					</op>
+					<op>
+						<!-- Convert fahrenheit to celcius -->
+						<mult>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<!-- sensorReading1 -->
+											<op><getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.6</getRowOid></op>
+											<op>0.1</op>
+										</mult>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>
+								<div>
+									<op>5</op>
+									<op>9</op>
+								</div>
+							</op>
+						</mult>
+					</op>
+					<op>
+						<mult>
+							<!-- sensorReading1 -->
+							<op><getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.6</getRowOid></op>
+							<op>0.1</op>
+						</mult>
+					</op>
+				</if>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<!-- sensorModel -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid><space/>
+				<!-- sensorName -->
+				(<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.4</getRowOid>)<space/>
+				Temperature
+			</label>
+            <sensorSet>
+				<!-- sensorLocation -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.5</getRowOid>
+			</sensorSet>
+        </numSensor>
+		
+		<numSensor ruleid="sensorReading2" index=".1.3.6.1.4.1.3184.1.15.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="WiNG-TH_only-vm">
+					<!-- sensorModel -->
+					<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>SENSOR_READING_2_<rowIndex/></sensorId>
+            <value>
+				<!-- sensorReading2 -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<!-- sensorModel -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid><space/>
+				<!-- sensorName -->
+				(<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.4</getRowOid>)<space/>
+				Relative Humidity
+			</label>
+            <sensorSet>
+				<!-- sensorLocation -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.5</getRowOid>
+			</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="calculatedDewPoint_decimal-vm">
+			<valueIn>0</valueIn><valueOut>0.1</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="sensorReading3" index=".1.3.6.1.4.1.3184.1.15.2.3.1.1">
+			<rowTest>
+				<mapValue mapid="WiNG-TH_only-vm">
+					<!-- sensorModel -->
+					<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SENSOR_READING_3_<rowIndex/></sensorId>
+            <value>
+				<if>
+					<op>
+						<eq>    
+							<!-- sensorsTemperatureUnits -->
+							<op><getOid>.1.3.6.1.4.1.3184.1.15.2.2.0</getOid></op>
+							<op>0</op>
+						</eq>
+					</op>
+					<op>
+						<!-- Convert fahrenheit to celcius -->
+						<mult>
+							<op>
+								<sub>
+									<op>
+										<!-- sensorReading3 -->
+										<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.8</getRowOid>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>
+								<div>
+									<op>5</op>
+									<op>9</op>
+								</div>
+							</op>
+						</mult>
+					</op>
+					<op>
+						<!-- sensorReading1 -->
+						<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.8</getRowOid>
+					</op>
+				</if>
+            </value>
+			<valueInc>
+				<mapValue mapid="calculatedDewPoint_decimal-vm">
+					<!-- sensorsTemperatureUnits -->
+					<getOid>.1.3.6.1.4.1.3184.1.15.2.2.0</getOid>
+				</mapValue>
+			</valueInc>
+            <label>
+				<!-- sensorModel -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.2</getRowOid><space/>
+				<!-- sensorName -->
+				(<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.4</getRowOid>)<space/>
+				Calculated Dew Point
+			</label>
+            <sensorSet>
+				<!-- sensorLocation -->
+				<getRowOid>.1.3.6.1.4.1.3184.1.15.2.3.1.5</getRowOid>
+			</sensorSet>
+        </numSensor>
+		
+	</device>
+</APC_DDF>

@@ -1,0 +1,573 @@
+<?xml version="1.0"?>
+<APC_DDF
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid="dbpower_3ph_ups"
+		ddfname="DB Power 3PH UPS"
+		ddfversion="2"
+		canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<!-- 
+		SOURCE
+		/snmp/resources/mibs/dbpower/Dbpemib.mib
+		DB Power 3ph UPS | 13 February 2020
+	-->
+
+
+	<device deviceid="dbpower_3ph_ups">
+		<oidMustExist ruleid="dbpower_3ph_ups" oid=".1.3.6.1.4.1.5763.1" istree="yes"/> 
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.4.1.5763.1.1.1.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.5763.1.1.2.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		<setProductData ruleid="inputphasecount" field="inputphasecount">3</setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount">3</setProductData>
+
+		<!-- upsBattery section -->
+
+		<!-- upsBatteryVoltage -->
+		<numSensor ruleid="upsBatteryVoltage-1">
+			<type>voltage/battvoltage</type>
+			<sensorId>_BATT_VOLTAGE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.2.7.0</getOid>
+			</value>
+			<label>Battery Voltage 1</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+
+		<!-- upsBatteryCurrent -->
+		<numSensor ruleid="upsBatteryCurrent-1">
+			<type>amperage/battamps</type>
+			<sensorId>BATT_AMPERAGE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.2.8.0</getOid>
+			</value>
+			<label>Battery Current 1</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+
+		<!-- upsBatteryVoltage -->
+		<numSensor ruleid="upsBatteryVoltage-2">
+			<type>voltage/battvoltage</type>
+			<sensorId>_BATT_VOLTAGE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.2.10.0</getOid>
+			</value>
+			<label>Battery Voltage 2</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsBatteryTemperature">
+			<rowTest>
+				<mapValue mapid="deletenullsensor">
+					<getRowOid>.1.3.6.1.4.1.5763.1.2.9.0</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp/batttemp</type>
+			<sensorId>BATT_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.2.9.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery Temperature</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+
+		<!-- upsBatteryCurrent -->
+		<numSensor ruleid="upsBatteryCurrent-2">
+			<type>amperage/battamps</type>
+			<sensorId>BATT_AMPERAGE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.2.11.0</getOid>
+			</value>
+			<label>Battery Current 2</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+
+		<!-- upsInput -->
+		<!-- upsInputFrequency -->
+		<numSensor ruleid="upsInputFrequency-1">
+			<type>frequency/inputfrequency</type>
+			<sensorId>_INPUT_FREQ_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.4.0</getOid>
+			</value>	  
+			<label>Input Frequency - Phase L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputFrequency-2">
+			<rowTest>
+				<mapValue mapid="deletenullsensor">
+					<getOid>.1.3.6.1.4.1.5763.1.3.5.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>frequency/inputfrequency</type>
+			<sensorId>_INPUT_FREQ_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.5.0</getOid>
+			</value>	  
+			<label>Input Frequency - Phase L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputFrequency-3">
+			<rowTest>
+				<mapValue mapid="deletenullsensor">
+					<getOid>.1.3.6.1.4.1.5763.1.3.6.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>frequency/inputfrequency</type>
+			<sensorId>_INPUT_FREQ_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.6.0</getOid>
+			</value>	  
+			<label>Input Frequency - Phase L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+
+		<numSensor ruleid="upsInputCurrent-1">
+			<type>amperage/input/phase</type>
+			<sensorId>_INPUT_AMPS_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.10.0</getOid>
+			</value>
+			<label>Input Current - Phase L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputCurrent-2">
+			<type>amperage/input/phase</type>
+			<sensorId>_INPUT_AMPS_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.11.0</getOid>
+			</value>
+			<label>Input Current - Phase L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputCurrent-3">
+			<type>amperage/input/phase</type>
+			<sensorId>_INPUT_AMPS_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.12.0</getOid>
+			</value>
+			<label>Input Current - Phase L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputTruePower-1">
+			<type>powerKW</type>
+			<sensorId>INPUT_POWER_PHASE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.13.0</getOid>
+			</value>
+			<label>Input True Power - Phase L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputTruePower-2">
+			<type>powerKW</type>
+			<sensorId>INPUT_POWER_PHASE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.14.0</getOid>
+			</value>
+			<label>Input True Power - Phase L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputTruePower-3">
+			<type>powerKW</type>
+			<sensorId>INPUT_POWER_PHASE_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.15.0</getOid>
+			</value>
+			<label>Input True Power - Phase L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputApparentPower-1">
+			<type>powerKVA</type>
+			<sensorId>INPUT_APPARENT_POWER_PHASE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.13.0</getOid>
+			</value>
+			<label>Input Apparent Power - Phase L1</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputApparentPower-2">
+			<type>powerKVA</type>
+			<sensorId>INPUT_APPARENT_POWER_PHASE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.14.0</getOid>
+			</value>
+			<label>Input Apparent Power - Phase L2</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputApparentPower-3">
+			<type>powerKVA</type>
+			<sensorId>INPUT_APPARENT_POWER_PHASE_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.15.0</getOid>
+			</value>
+			<label>Input Apparent Power - Phase L3</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputVoltage1">
+			<type>voltageAC/input/phase</type>
+			<sensorId>_INPUT_VOLTAGE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.19.0</getOid>
+			</value>
+			<label>Input Voltage - L1-N</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputVoltage2">
+			<type>voltageAC/input/phase</type>
+			<sensorId>_INPUT_VOLTAGE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.20.0</getOid>
+			</value>
+			<label>Input Voltage - L2-N</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsInputVoltage3">
+			<type>voltageAC/input/phase</type>
+			<sensorId>_INPUT_VOLTAGE_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.3.21.0</getOid>
+			</value>
+			<label>Input Voltage - L3-N</label>
+			<sensorSet>UPS Input</sensorSet>
+		</numSensor>
+
+		<!-- upsOutput -->
+
+
+		<!-- upsOutputFrequency -->
+		<numSensor ruleid="upsOutputFrequency">
+			<type>frequency/outputfrequency</type>
+			<sensorId>_UPS_PHASE_OUTPUT_FREQ_0</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.2.0</getOid>
+			</value>
+			<label>Output Frequency</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsPowerFactor">
+			<type>num/powerfactor</type>
+			<sensorId>OUTPUT_POWER_FACTOR</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.4.0</getOid>
+			</value>
+			<label>Output Power Factor</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<!-- upsOutputCurrent -->
+		<numSensor ruleid="upsOutputCurrent-1">
+			<type>amperage/output/phase</type>
+			<sensorId>_OUTPUT_AMPS_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.8.0</getOid>
+			</value>
+			<label>Output Current - Phase L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputCurrent-2">
+			<type>amperage/output/phase</type>
+			<sensorId>_OUTPUT_AMPS_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.9.0</getOid>
+			</value>
+			<label>Output Current - Phase L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputCurrent-3">
+			<type>amperage/output/phase</type>
+			<sensorId>_OUTPUT_AMPS_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.10.0</getOid>
+			</value>
+			<label>Output Current - Phase L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<!-- upsOutputPower -->
+		<numSensor ruleid="upsOutputPower-1">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.11.0</getOid>
+			</value>
+			<label>Output True Power - Phase L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputPower-2">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.12.0</getOid>
+			</value>
+			<label>Output True Power - Phase L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputPower-3">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.13.0</getOid>
+			</value>
+			<label>Output True Power - Phase L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputPercentLoad-1">
+			<type>pctofcapacity</type>
+			<sensorId>_OUTPUT_LOAD_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.14.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Load - Phase L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputPercentLoad-2">
+			<type>pctofcapacity</type>
+			<sensorId>_OUTPUT_LOAD_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.15.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Load - Phase L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputPercentLoad-3">
+			<type>pctofcapacity</type>
+			<sensorId>_OUTPUT_LOAD_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.16.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Output Load - Phase L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputApparentPower-1">
+			<type>powerVA</type>
+			<sensorId>_OUTPUT_APPARENT_POWER_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.17.0</getOid>
+			</value>
+			<label>Output Apparent Power - Phase L1</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputApparentPower-2">
+			<type>powerVA</type>
+			<sensorId>_OUTPUT_APPARENT_POWER_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.18.0</getOid>
+			</value>
+			<label>Output Apparent Power - Phase L2</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputApparentPower-3">
+			<type>powerVA</type>
+			<sensorId>_OUTPUT_APPARENT_POWER_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.4.19.0</getOid>
+			</value>
+			<label>Output Apparent Power - Phase L3</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>	
+
+		<!-- upsOutputVoltage -->
+		<numSensor ruleid="upsOutputVoltage-1">
+			<type>voltageAC/output/phase</type>
+			<sensorId>_OUTPUT_VAC_1</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.5763.1.4.20.0</getOid>
+					</op>
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>.1</valueInc>
+			<label>Output Voltage - L1-N</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputVoltage-2">
+			<type>voltageAC/output/phase</type>
+			<sensorId>_OUTPUT_VAC_2</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.5763.1.4.21.0</getOid>
+					</op>  
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>.1</valueInc>
+			<label>Output Voltage - L2-N</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsOutputVoltage-3">
+			<type>voltageAC/output/phase</type>
+			<sensorId>_OUTPUT_VAC_3</sensorId>
+			<value>
+				<div>
+					<op>
+						<getOid>.1.3.6.1.4.1.5763.1.4.22.0</getOid>
+					</op>	 
+					<op>10</op>
+				</div>
+			</value>
+			<valueInc>.1</valueInc>
+			<label>Output Voltage - L3-N</label>
+			<sensorSet>UPS Output</sensorSet>
+		</numSensor>
+
+
+		<!-- upsBypass -->
+		<!-- upsBypassFrequency -->
+		<numSensor ruleid="upsBypassFrequency">
+			<type>frequency/bypassfrequency</type>
+			<sensorId>_INPUT1_HZ_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.1.0</getOid>
+			</value>
+			<label>Bypass Frequency</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<!-- upsBypassVoltage -->
+		<numSensor ruleid="upsBypassVoltage-1">
+			<type>voltageAC/bypass/phase</type>
+			<sensorId>_INPUT1_VAC_2_1_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.3.0</getOid>
+			</value>
+			<label>Bypass Voltage - Phase L1</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsBypassVoltage-2">
+			<type>voltageAC/bypass/phase</type>
+			<sensorId>_INPUT1_VAC_2_1_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.4.0</getOid>
+			</value>
+			<label>Bypass Voltage - Phase L2</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsBypassVoltage-3">
+			<type>voltageAC/bypass/phase</type>
+			<sensorId>_INPUT1_VAC_2_1_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.5.0</getOid>
+			</value>
+			<label>Bypass Voltage - Phase L3</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<!-- upsBypassCurrent -->
+		<numSensor ruleid="upsBypassCurrent-1">
+			<type>amperage/bypass/phase</type>
+			<sensorId>_INPUT_CURRENT_2_1_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.6.0</getOid>
+			</value>
+			<label>Bypass Current - Phase L1</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsBypassCurrent-2">
+			<type>amperage/bypass/phase</type>
+			<sensorId>_INPUT_CURRENT_2_1_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.7.0</getOid>
+			</value>
+			<label>Bypass Current - Phase L2</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="upsBypassCurrent-3">
+			<type>amperage/bypass/phase</type>
+			<sensorId>_INPUT_CURRENT_2_1_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.8.0</getOid>
+			</value>
+			<label>Bypass Current - Phase L3</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>
+
+		<!-- upsBypassPower -->
+		<numSensor ruleid="upsBypassPower-1">
+			<type>powerW/bypasspower/phase</type>
+			<sensorId>BYPASS_POWER_PHASE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.9.0</getOid>
+			</value>
+			<label>Bypass Power - Phase L1</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor>  
+
+		<numSensor ruleid="upsBypassPower-2">
+			<type>powerW/bypasspower/phase</type>
+			<sensorId>BYPASS_POWER_PHASE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.10.0</getOid>
+			</value>
+			<label>Bypass Power - Phase L2</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor> 
+
+		<numSensor ruleid="upsBypassPower-3">
+			<type>powerW/bypasspower/phase</type>
+			<sensorId>BYPASS_POWER_PHASE_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.5763.1.5.11.0</getOid>
+			</value>
+			<label>Bypass Power - Phase L3</label>
+			<sensorSet>UPS Bypass</sensorSet>
+		</numSensor> 
+
+
+		<!-- skip sensors returning 00 -->
+		<valueMap ruleid="deletenullsensor">
+			<valueIn>00</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+	</device>
+</APC_DDF>

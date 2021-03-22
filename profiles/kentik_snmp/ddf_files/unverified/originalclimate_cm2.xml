@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<APC_DDF ddfid ="originalclimate_cm2" ddfname="Original Climate CM2" ddfversion="2" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<!--DDF Sensors -->
+	<device deviceid="originalclimate_cm2">
+		<oidMustExist istree="yes" ruleid="originalclimate_cm2_exist" oid="1.3.6.1.4.1.17373.2"/>
+
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<suppressRule ruleid="stompmib2mac" suppressid="mib2if/setmacaddr1/mac_addr"/>
+		<setProductData ruleid="mac_addr" field="mac_addr">
+			<getOid>.1.3.6.1.4.1.17373.2.1.4.0</getOid>
+		</setProductData>
+
+		<numSensor ruleid="airFlowSensorHumidity" index=".1.3.6.1.4.1.17373.2.5.1.7">
+			<type>humidity</type>
+			<sensorId>AIRFLOW_SENSOR_HUMIDITY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.5.1.7</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Airflow Sensor Humidity<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="powerRealPower" index=".1.3.6.1.4.1.17373.2.6.1.7">
+			<type>powerW</type>
+			<sensorId>REAL_POWER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.6.1.7</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Real Power<space/><rowIndex/></label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="tempSensorTempC" index=".1.3.6.1.4.1.17373.2.4.1.5">
+			<type>temp</type>
+			<sensorId>SENSOR_TEMP_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.4.1.5</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Sensor Temperature<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="climateHumidity" index=".1.3.6.1.4.1.17373.2.2.1.6">
+			<type>num</type>
+			<units>percent</units>
+			<sensorId>CLIMATE_HUMIDITY_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.6</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Climate Humidity<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="climateLight" index=".1.3.6.1.4.1.17373.2.2.1.8">
+			<type>num</type>
+			<sensorId>CLIMATE_LIGHT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.8</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Climate Light<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="climateTempC" index=".1.3.6.1.4.1.17373.2.2.1.5">
+			<type>temp</type>
+			<sensorId>CLIMATE_TEMP_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.5</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Climate Temperature<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="climateAvail" index=".1.3.6.1.4.1.17373.2.2.1.4">
+			<type>state</type>
+			<sensorId>CLIMATE_AVAIL_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="false_true-vm">
+					<getRowOid>.1.3.6.1.4.1.17373.2.2.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<enum>false_true-em</enum>
+			<label>Climate Sensor Available<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="false_true-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="false_true-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+
+		<numSensor ruleid="climateIO1" index=".1.3.6.1.4.1.17373.2.2.1.10">
+			<type>num</type>
+			<sensorId>CLIMATE_IO_1_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.10</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Climate IO 1.<rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="climateIO2" index=".1.3.6.1.4.1.17373.2.2.1.11">
+			<type>num</type>
+			<sensorId>CLIMATE_IO_2_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.11</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Climate IO 2.<rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="climateIO3" index=".1.3.6.1.4.1.17373.2.2.1.12">
+			<type>num</type>
+			<sensorId>CLIMATE_IO_3_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.12</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Climate IO 3.<rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="airflow" index=".1.3.6.1.4.1.17373.2.2.1.7">
+			<type>airflow</type>
+			<sensorId>AIRFLOW_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.7</getRowOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Airflow<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="sound_level" index=".1.3.6.1.4.1.17373.2.2.1.9">
+			<type>num</type>
+			<sensorId>SOUND_LEVEL_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.17373.2.2.1.9</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Sound Level<space/><rowIndex/></label>
+			<sensorSet>Environmental</sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>

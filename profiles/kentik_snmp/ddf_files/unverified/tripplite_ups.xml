@@ -1,0 +1,342 @@
+<?xml version="1.0"?>
+<!-- Tripp Lite UPS -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid ="tripplite_ups"
+		ddfname="Tripp Lite UPS"
+		ddfversion="6"
+		canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <!-- This DDF is the same as tripplite_pdu.xml just with a UPS typedata -->
+  <device deviceid="trippdiscdata">
+    <oidMustExist ruleid="trippOutletsDetect" oid=".1.3.6.1.4.1.850.100.1.10" istree="yes"/>
+
+    <suppressRule ruleid="suppressCoreType" suppressid="core/mib2data/typedata"/>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+    <setProductData ruleid="serialnumata" field="serial_num"><getOid>.1.3.6.1.4.1.850.100.1.1.2.0</getOid></setProductData>
+	<setProductData ruleid="macaddrdata" field="mac_addr">
+		<getOid>.1.3.6.1.4.1.850.10.1.2.6.0</getOid>
+	</setProductData>
+	
+	<setLocationData field="LOCATION">
+		<getOid>.1.3.6.1.2.1.1.6.0</getOid>
+	</setLocationData> 
+	
+	<setLocationData field="CONTACT">
+		<getOid>.1.3.6.1.2.1.1.4.0</getOid>
+	</setLocationData> 
+	
+	<setLocationData field="SYSNAME">
+		<getOid>.1.3.6.1.2.1.33.1.1.5.0</getOid>
+	</setLocationData> 
+	
+	
+  </device>
+
+  <device deviceid="trippUpsData">
+    <oidMustExist ruleid="trippOutletsDetect" oid=".1.3.6.1.4.1.850.100.1.10" istree="yes"/>
+    <oidMustExist ruleid="trippUpsMibDetect" oid=".1.3.6.1.2.1.33.1.3.3.1.2" istree="yes"/>
+    <!-- <oidMustNotExist ruleid="trippUpsBattery" oid=".1.3.6.1.4.1.850.100.1.2.1.0"/> -->
+
+  <!-- upsInput -->
+    <!-- upsInputFrequency -->
+    <suppressRule ruleid="suppressUPSMIB_in_freq" suppressid="upsmib/upsmib/upsInputFrequency"/>
+    <numSensor ruleid="upsInputFrequency" index=".1.3.6.1.2.1.33.1.3.3.1.2">
+      <type>frequency/inputfrequency</type>
+      <sensorId>PHASE<rowIndex/>_INPUT_FREQ</sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.3.3.1.2</getRowOid></op><op>0.01</op></mult>
+      </value>
+      <label>Input Frequency - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+    
+    <!-- upsInputVoltage -->
+    <suppressRule ruleid="suppressUPSMIB_in_volt" suppressid="upsmib/upsmib/upsInputVoltage"/>
+    <numSensor ruleid="upsInputVoltage" index=".1.3.6.1.2.1.33.1.3.3.1.3">
+      <type>voltageAC/input/phase</type>
+      <sensorId>PHASE<rowIndex/>_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.3.3.1.3</getRowOid></op><op>0.1</op></mult>
+      </value>
+      <label>Input Voltage - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsInputCurrent -->
+    <suppressRule ruleid="suppressUPSMIB_in_curr" suppressid="upsmib/upsmib/upsInputCurrent"/>
+    <numSensor ruleid="upsInputCurrent" index=".1.3.6.1.2.1.33.1.3.3.1.4">
+      <type>amperage/input/phase</type>
+      <sensorId>PHASE_INPUT_CURRENT_1_1_<rowIndex/></sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.3.3.1.4</getRowOid></op><op>0.1</op></mult>
+      </value>
+      <label>Input Current - Phase <rowIndex/></label>
+      <sensorSet>Input - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+  <!-- upsOutput -->
+    <!-- upsOutputSource -->
+    <suppressRule ruleid="suppressUPSMIB_out_src" suppressid="upsmib/upsmib/upsOutputSource"/>
+    <stateSensor ruleid="upsOutputSource">
+      <type>state/outputsource</type>
+      <sensorId>OUTPUT_SOURCE_MODDIST_MODULE_OUTPUT_STATUS0</sensorId>
+      <value>
+        <getOid>.1.3.6.1.2.1.33.1.4.1.0</getOid>
+      </value>
+      <label>Output Source</label>
+      <enum>upsOutputSource-em</enum>
+      <sensorSet>Output</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="upsOutputSource-em">
+      <label>Unknown</label>
+      <label>Other</label>
+      <label>None</label>
+      <label>Normal</label>
+      <label>Bypass</label>
+      <label>Battery</label>
+      <label>Booster</label>
+      <label>Reducer</label>
+    </enumMap>
+
+    <!-- upsOutputFrequency -->
+    <suppressRule ruleid="suppressUPSMIB_out_freq" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+    <numSensor ruleid="upsOutputFrequency">
+      <type>frequency/outputfrequency</type>
+      <sensorId>OUTPUT_FREQ</sensorId>
+      <value>
+        <mult><op><getOid>.1.3.6.1.2.1.33.1.4.2.0</getOid></op><op>0.1</op></mult>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>UPS Output</sensorSet>
+    </numSensor>
+    
+    <!-- upsOutputVoltage -->
+    <suppressRule ruleid="suppressUPSMIB_out_volt" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+    <numSensor ruleid="upsOutputVoltage" index=".1.3.6.1.2.1.33.1.4.4.1.2">
+      <type>voltageAC/output/phase</type>
+      <sensorId>OUTPUT_VOLTAGE_PHASE<rowIndex/></sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.4.4.1.2</getRowOid></op><op>0.1</op></mult>
+      </value>
+      <label>Output Voltage - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsOutputCurrent -->
+    <suppressRule ruleid="suppressUPSMIB_out_curr" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+    <numSensor ruleid="upsOutputCurrent" index=".1.3.6.1.2.1.33.1.4.4.1.3">
+      <type>amperage/output/phase</type>
+      <sensorId>PHASE<rowIndex/>_OUTPUT_VOLTAGE</sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.4.4.1.3</getRowOid></op><op>0.1</op></mult>
+      </value>
+      <label>Output Current - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+    <!-- upsOutputPercentLoad -->
+	<!--
+		suppress the rule in upsmib.xml - this one requires
+		that the output percent load be scaled down by 10
+	-->
+    <suppressRule ruleid="suppressUnscaledOPL" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+    <numSensor ruleid="upsOutputPercentLoad" index=".1.3.6.1.2.1.33.1.4.4.1.5">
+      <type>pctofcapacity/outputload/phase</type>
+      <sensorId>OUTPUT_LOAD_PHASE<rowIndex/></sensorId>
+      <value>
+        <mult><op><getRowOid>.1.3.6.1.2.1.33.1.4.4.1.5</getRowOid></op><op>0.1</op></mult>
+      </value>
+      <label>Output Percent Load - Phase <rowIndex/></label>
+      <sensorSet>Output - Phase <rowIndex/></sensorSet>
+    </numSensor>
+
+	<numSensor ruleid="ambient_humidity">
+		<type>humidity</type>
+		<sensorId>_AMBIENT_HUMIDITY</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>.1.3.6.1.4.1.850.101.1.2.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Ambient Humidity</label>
+		<sensorSet>Humidity</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="ambient_temperature">
+		<type>temp</type>
+		<sensorId>_AMBIENT_TEMPERATURE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>.1.3.6.1.4.1.850.101.1.1.1.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Ambient Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+    <suppressRule ruleid="suppressUPSMIBBatteryTemp" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+	<numSensor ruleid="tlUpsTemperatureF">
+		<type>temp</type>
+		<sensorId>_BATT_TEMP</sensorId>
+		<value>
+			<mult>
+			<op>
+				<sub>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.850.100.1.2.2.0</getOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				<op>32</op>
+				</sub>
+			</op>
+			<op><div><op>5</op><op>9</op></div></op>
+			</mult>
+		</value>
+		<label>Battery Temperature</label>
+		<sensorSet>Temperature</sensorSet>
+	</numSensor>
+	
+	<numSensor ruleid="battage">
+	  <type>num</type>
+		<units>years</units>
+	  <sensorId>BATT_AGE</sensorId>
+	  <value>
+		<getOid>.1.3.6.1.4.1.850.100.1.2.1.0</getOid>
+	  </value>
+	  <minValue>0</minValue>
+	  <label>Battery Age</label>
+	  <sensorSet>UPS Battery Status</sensorSet>
+	</numSensor>
+	
+	<stateSensor ruleid="config_audible_status">
+		<type>state</type>
+		<sensorId>_CONFIG_AUDIBLE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="threestate_vm">
+				<getOid>.1.3.6.1.2.1.33.1.9.8.0</getOid>
+				</mapValue>
+			</value>
+			<label>Config Audible Status</label>
+			<enum>threestate_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="threestate_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+	</valueMap>
+	<enumMap ruleid="threestate_enum">
+		<label>Disabled</label>
+		<label>Enabled</label>
+		<label>Muted</label>
+		<label>Unknown</label>
+	</enumMap>
+	
+	<numSensor ruleid="firmware">
+		<type>num</type>
+		<units></units>
+		<sensorId>_FIRMWARE</sensorId>
+		<value>
+			<mult>
+				<op>
+					<getOid>.1.3.6.1.2.1.33.1.1.4.0</getOid>
+				</op>
+				<op>1</op>
+			</mult>
+		</value>
+		<label>Firmware</label>
+		<sensorSet>General</sensorSet>
+	</numSensor>
+	
+	<stateSensor ruleid="state_of_the_main_output">
+		<type>state</type>
+		<sensorId>_STATE_OF_THE_MAIN_OUTPUT</sensorId>
+			<value>
+				<mapValue mapid="mainout-vm">
+				<getOid>.1.3.6.1.4.1.850.100.1.12.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>State of the Main Output</label>
+			<enum>mainout_enum</enum>
+		<sensorSet>State Sensor</sensorSet>
+	</stateSensor>
+	
+	<valueMap ruleid="mainout-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+	</valueMap>
+	<enumMap ruleid="mainout_enum">
+		<label>Unknown</label>
+		<label>Off</label>
+		<label>On</label>
+		<label>Mixed</label>
+	</enumMap>
+
+	<valueMap ruleid="severity-vm">
+			<valueIn>1</valueIn><valueOut>critical</valueOut>
+			<valueIn>*</valueIn><valueOut>warning</valueOut>
+	</valueMap>
+		<alarmFlags2 ruleid="tlAlarms" index=".1.3.6.1.4.1.850.10.2.3.2.1.6">
+			<value><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.6</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.4</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.5</getRowOid></inactiveText>
+				</name>
+				<severity><mapValue mapid="severity-vm"><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.3</getRowOid></mapValue></severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.4</getRowOid> - <getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.23</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.850.10.2.3.2.1.5</getRowOid></inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+  </device>
+
+  <device deviceid="trippOutlets">
+    <oidMustExist ruleid="trippOutletsDetect" oid=".1.3.6.1.4.1.850.100.1.10.2.1.1" istree="yes"/>
+    <oidMustNotExist ruleid="trippUpsBattery" oid=".1.3.6.1.4.1.850.100.1.2.1.0"/>
+
+    <stateSensor ruleid="outletStateSensor" index=".1.3.6.1.4.1.850.100.1.10.2.1.1">
+      <type>state</type>
+      <sensorId>OUTLET_STATE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="outletState-vm">
+          <getRowOid>.1.3.6.1.4.1.850.100.1.10.2.1.2</getRowOid>
+        </mapValue>
+          </value>
+      <label>Outlet <rowIndex/> State</label>
+      <enum>outletState-em</enum>
+      <sensorSet>Outlet <rowIndex/></sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="outletState-em">
+      <label>Unknown</label>
+      <label>Off</label>
+      <label>On</label>
+    </enumMap>
+
+    <valueMap ruleid="outletState-vm">
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>*</valueIn>  <valueOut>0</valueOut>
+    </valueMap>
+
+  </device>
+  
+</APC_DDF>

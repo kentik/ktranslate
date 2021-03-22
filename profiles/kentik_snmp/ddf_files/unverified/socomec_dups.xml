@@ -1,0 +1,654 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="socomec_dups"
+	ddfname="Socomec UPS"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="socomec_ups">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Socomec</setProductData>
+		<setProductData ruleid="modeldata" field="model">UPS</setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+		<oidMustExist ruleid="ddf_template" oid="1.3.6.1.4.1.4555.2.4.4.3.0"/> 
+
+        <numSensor ruleid="INPUT_VOLTAGE_L1_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>input_voltage_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.3.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Voltage L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_CURRENT_L1_SENSOR">
+            <type>amperage</type>
+            <sensorId>input_current_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.4.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Current L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_FREQUENCY_L1_SENSOR">
+            <type>frequency</type>
+            <sensorId>input_frequency_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.5.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Frequency L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_VOLTAGE_L2_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>input_voltage_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.6.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Voltage L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_CURRENT_L2_SENSOR">
+            <type>amperage</type>
+            <sensorId>input_current_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.7.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Current L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_FREQUENCY_L2_SENSOR">
+            <type>frequency</type>
+            <sensorId>input_frequency_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.8.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Frequency L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_VOLTAGE_L3_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>input_voltage_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.9.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Voltage L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_CURRENT_L3_SENSOR">
+            <type>amperage</type>
+            <sensorId>input_current_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.4.10.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Current L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="INPUT_FREQUENCY_L3_SENSOR">
+            <type>frequency</type>
+            <sensorId>input_frequency_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.2.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Frequency L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_VOLTAGE_L1_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>output_voltage_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.4.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Voltage L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_CURRENT_L1_SENSOR">
+            <type>amperage</type>
+            <sensorId>output_current_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.5.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_POWER_L1_SENSOR">
+            <type>powerW</type>
+            <sensorId>output_power_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.6.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Power L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_LOAD_L1_SENSOR">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>output_load_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.7.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Load L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_VOLTAGE_L2_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>output_voltage_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.8.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Voltage L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_CURRENT_L2_SENSOR">
+            <type>amperage</type>
+            <sensorId>output_current_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.9.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_POWER_L2_SENSOR">
+            <type>powerW</type>
+            <sensorId>output_power_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.10.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Power L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_LOAD_L2_SENSOR">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>output_load_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.11.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Load L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_VOLTAGE_L3_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>output_voltage_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.12.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Voltage L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_CURRENT_L3_SENSOR">
+            <type>amperage</type>
+            <sensorId>output_current_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.13.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_POWER_L3_SENSOR">
+            <type>powerW</type>
+            <sensorId>output_power_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.14.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Power L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_LOAD_L3_SENSOR">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>output_load_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.5.15.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Output Load L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="OUTPUT_FREQUENCY_SENSOR">
+            <type>frequency</type>
+            <sensorId>output_frequency</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.6.1.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Frequency</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="BYPASS_VOLTAGE_L1_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>bypass_voltage_l1</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.6.3.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage L1</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="BYPASS_VOLTAGE_L2_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>bypass_voltage_l2</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.6.6.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage L2</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="BYPASS_VOLTAGE_L3_SENSOR">
+            <type>voltageAC</type>
+            <sensorId>bypass_voltage_l3</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.6.9.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage L3</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="BATTERY_VOLTAGE_SENSOR">
+            <type>voltageDC</type>
+            <sensorId>battery_voltage</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.7.6.0</getOid>
+                    </op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Battery Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="BATTERY_CAPACITY_SENSOR">
+            <type>num</type>
+			<units>percent</units>
+            <sensorId>battery_capacity</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.7.8.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Battery Capacity</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+
+		<enumMap ruleid="off_on_em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+
+
+        <stateSensor ruleid="ALARM_POWER_FAIL_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_power_fail</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.2.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Power Fail</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_LOW_BATTERY_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_low_battery</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.3.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Low Battery</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_UPS_OVERLOAD_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_ups_overload</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.4.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm UPS Overload</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_UPS_OVERLOAD_THRESHOLD_SENSOR">
+            <type>state</type>
+			<units>percent</units>
+            <sensorId>alarm_ups_overload_threshold</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.5.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm UPS Overload Threshold</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_UPS_IN_BYPASS_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_ups_in_bypass</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.6.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm UPS In Bypass</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_UPS_COMMON_FAULT_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_ups_common_fault</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.7.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm UPS Common Fault</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_BATTERY_GROUND_FAULT_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_battery_ground_fault</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.8.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Battery Ground Fault</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_UPS_TEST_IN_PROGRESS_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_ups_test_in_progress</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.9.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm UPS Test in Progress</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_BATTERY_TEST_FAILED_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_battery_test_failed</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.10.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Battery Test Failed</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_FUSE_FAILUER_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_fuse_failuer</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.11.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Fuse Failuer</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_OUTPUT_OVERLOADED_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_output_overloaded</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.12.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Output Overloaded</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_OUTPUT_OVERCURRENT_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_output_overcurrent</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.13.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Output Overcurrent</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_INVERTER_FAULT_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_inverter_fault</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.14.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Inverter Fault</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_RECTIFIER_FAULT_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_rectifier_fault</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.15.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Rectifier Fault</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_HIGH_TEMPERATURE_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_high_temperature</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.18.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm High Temperature</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_CHARGER_FAIL_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_charger_fail</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.22.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Charger Fail</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="ALARM_FAN_FAILURE_SENSOR">
+            <type>state</type>
+            <sensorId>alarm_fan_failure</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>1.3.6.1.4.1.4555.2.4.9.23.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm Fan Failure</label><enum>off_on_em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+
+		</device>
+</APC_DDF>

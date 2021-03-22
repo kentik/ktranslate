@@ -1,0 +1,5608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="socomec_diris_digiware_d70"
+	ddfname="DIRIS Digiware D-70"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\socomec\mib_diris_d70
+		
+		SOCOMEC-DIRIS-PRODUCTS-MIB | 18 September 2020
+	-->
+	<device deviceid="diris_digiware_d70_header">
+		<oidMustExist ruleid="socomecProducts_exists" oid=".1.3.6.1.4.1.4555.10" istree="yes"/>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Socomec</setProductData>
+		<setProductData ruleid="modeldata" field="model">DIRIS Digiware D-70</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+		
+	</device>
+	
+	<device deviceid="productMetrology">
+		<oidMustExist ruleid="productMetrology_exists" oid=".1.3.6.1.4.1.4555.10.20" istree="yes"/>
+		<!--
+		
+			loadCurvesTable
+			
+		-->
+		<numSensor ruleid="loadCurvesActivePowerPos" index=".1.3.6.1.4.1.4555.10.20.10.1.30100">
+			<rowTest>
+				<eq>
+					<op><!-- loadCurvesLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_LOAD_CURVES_ACTIVE_POWER_POS<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.30100</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.6</getRowOid><space/>
+				Last Measured P10 Active Power
+			</label>
+            <sensorSet>Load Curves</sensorSet>
+        </numSensor>
+		<numSensor ruleid="loadCurvesReactivePowerPos" index=".1.3.6.1.4.1.4555.10.20.10.1.30102">
+			<rowTest>
+				<eq>
+					<op><!-- loadCurvesLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_LOAD_CURVES_REACTIVE_POWER_POS<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.30102</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.6</getRowOid><space/>
+				Last Measured P10 Reactive Power
+			</label>
+            <sensorSet>Load Curves</sensorSet>
+        </numSensor>
+		<numSensor ruleid="loadCurvesApparentPower" index=".1.3.6.1.4.1.4555.10.20.10.1.30104">
+			<rowTest>
+				<eq>
+					<op><!-- loadCurvesLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_LOAD_CURVES_APPARENT_POWER_POS<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.30104</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.10.1.6</getRowOid><space/>
+				Last Measured P10 Apparent Power
+			</label>
+            <sensorSet>Load Curves</sensorSet>
+        </numSensor>
+		<!--
+		
+			energyTable
+		
+		-->
+		<numSensor ruleid="engTotalEnergyActivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30000">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_ACTIVE_POS<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30000</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyActiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30001">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_ACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30001</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyActiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30002">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_ACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30002</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyActiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30003">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_ACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30003</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30004">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30004</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30005">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30005</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30006">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30006</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30007">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30007</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLaggingPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30008">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LAGGING_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30008</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Reactive Lagging Positive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLaggingResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30009">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LAGGING_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30009</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Reactive Lagging Positive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLaggingNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30010">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LAGGING_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30010</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Reactive Lagging Negative Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLaggingResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30011">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LAGGING_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30011</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Reactive Lagging Negative Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLeadingPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30012">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LEADING_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30012</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Reactive Leading Positive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLeadingResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30013">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LEADING_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30013</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Reactive Leading Positive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLeadingNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30014">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LEADING_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30014</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Reactive Leading Negative Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyReactiveLeadingResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30015">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_REACTIVE_LEADING_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30015</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Reactive Leading Negative Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyApparent" index=".1.3.6.1.4.1.4555.10.20.12.1.30016">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>_ENG_TOTAL_ENERGY_APPARENT<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30016</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalEnergyApparentResidual" index=".1.3.6.1.4.1.4555.10.20.12.1.30017">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>voltamphours</units>
+            <sensorId>_ENG_TOTAL_ENERGY_APPARENT_RESIDUAL<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30017</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Residual Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyActivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30018">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_PARTIAL_ENERGY_ACTIVE_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30018</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyActiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30019">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_PARTIAL_ENERGY_ACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30019</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Residual Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyActiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30020">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_PARTIAL_ENERGY_ACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30020</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyActiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30021">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_PARTIAL_ENERGY_ACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30021</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Residual Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyReactivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30022">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_PARTIAL_ENERGY_REACTIVE_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30022</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyReactiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30023">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_PARTIAL_ENERGY_REACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30023</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Residual Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyReactiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30024">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_PARTIAL_ENERGY_REACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30024</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyReactiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30025">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_PARTIAL_ENERGY_REACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30025</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Residual Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyApparent" index=".1.3.6.1.4.1.4555.10.20.12.1.30034">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>_ENG_PARTIAL_ENERGY_APPARENT<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30024</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialEnergyApparentResidual" index=".1.3.6.1.4.1.4555.10.20.12.1.30035">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>voltamphours</units>
+            <sensorId>_ENG_PARTIAL_ENERGY_APPARENT_RESIDUAL<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30035</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Residual Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialResetDate" index=".1.3.6.1.4.1.4555.10.20.12.1.30042">
+			<type>timeindays</type>
+			<sensorId>_ENG_LAST_PARTIAL_RESET_DATE<rowIndex/></sensorId>
+			<value>
+				<div>
+				<op>
+					<sub>
+					<op><curUTCTime/></op>
+					<op>
+						<sub>
+						<op><parseDate><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30042</getRowOid></parseDate></op>
+						<op>43200</op><!-- parseDate assumes Noon, so offset -12h -->
+						</sub>
+					</op>
+					</sub>
+				</op>
+				<op>86400</op>
+				</div>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Days Since Last Partial Reset</label>
+			<sensorSet>Energy</sensorSet>
+		</numSensor>
+		<numSensor ruleid="engLastPartialEnergyActivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30043">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_ACTIVE_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30043</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyActiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30044">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_ACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30044</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyReactivePos" index=".1.3.6.1.4.1.4555.10.20.12.1.30045">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_REACTIVE_POS<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30045</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyReactiveNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30046">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVARhr</type>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_REACTIVE_NEG<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30046</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyApparent" index=".1.3.6.1.4.1.4555.10.20.12.1.30047">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_APPARENT<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30047</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyActiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30076">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_ACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30076</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Residual Positive Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyActiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30077">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>watthours</units>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_ACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30077</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Residual Negative Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyReactiveResidualPos" index=".1.3.6.1.4.1.4555.10.20.12.1.30078">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_REACTIVE_RESIDUAL_POS<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30078</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Residual Positive Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyReactiveResidualNeg" index=".1.3.6.1.4.1.4555.10.20.12.1.30079">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>varhours</units>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_REACTIVE_RESIDUAL_NEG<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30079</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Residual Negative Reactive Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engLastPartialEnergyApparentResidual" index=".1.3.6.1.4.1.4555.10.20.12.1.30080">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num</type>
+			<units>voltamphours</units>
+            <sensorId>_ENG_LAST_PARTIAL_ENERGY_APPARENT_RESIDUAL<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.30080</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Last Partial Residual Apparent Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engTotalHourMeter" index=".1.3.6.1.4.1.4555.10.20.12.1.105000">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>timeinsec</type>
+            <sensorId>_ENG_TOTAL_HOUR_METER<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.105000</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Total Hour Meter For Engines (sec)
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="engPartialHourMeter" index=".1.3.6.1.4.1.4555.10.20.12.1.105001">
+			<rowTest>
+				<eq>
+					<op><!-- engLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>timeinsec</type>
+            <sensorId>_ENG_PARTIAL_HOUR_METER<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.105001</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.12.1.6</getRowOid><space/>
+				Partial Hour Meter For Engines (sec)
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousTable
+			
+		-->
+		<numSensor ruleid="instCurrentI1" index=".1.3.6.1.4.1.4555.10.20.20.1.10000">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10000</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current L1
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentI2" index=".1.3.6.1.4.1.4555.10.20.20.1.10001">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10001</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current L2
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentI3" index=".1.3.6.1.4.1.4555.10.20.20.1.10002">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10002</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current L3
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIn" index=".1.3.6.1.4.1.4555.10.20.20.1.10003">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_L2N_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10003</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current L-N
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentSyst" index=".1.3.6.1.4.1.4555.10.20.20.1.10004">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_SYSTEM_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10004</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				System Current
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIdn" index=".1.3.6.1.4.1.4555.10.20.20.1.10005">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_IDN_A80_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10005</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Idn A80
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIpe" index=".1.3.6.1.4.1.4555.10.20.20.1.10006">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_IPE_A80_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10006</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Ipe A80
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIdir" index=".1.3.6.1.4.1.4555.10.20.20.1.10007">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_IDIR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10007</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Idir
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIinv" index=".1.3.6.1.4.1.4555.10.20.20.1.10008">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_IINV_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10008</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Iinv
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentIhom" index=".1.3.6.1.4.1.4555.10.20.20.1.10009">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_IHOM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10009</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Ihom
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentInb" index=".1.3.6.1.4.1.4555.10.20.20.1.10010">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_OUTPUT_AMPS_INB_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10010</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Inb
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instCurrentInba" index=".1.3.6.1.4.1.4555.10.20.20.1.10174">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_OUTPUT_AMPS_INBA_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10174</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Current Inba
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instFrequency" index=".1.3.6.1.4.1.4555.10.20.20.1.40000">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>_PM_OUTPUT_FREQ_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.40000</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				System Frequency
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerFactorPF1" index=".1.3.6.1.4.1.4555.10.20.20.1.75000">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_INST_PF1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75000</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L1 Power Factor
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerFactorPF2" index=".1.3.6.1.4.1.4555.10.20.20.1.75001">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_INST_PF2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75001</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L2 Power Factor
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerFactorPF3" index=".1.3.6.1.4.1.4555.10.20.20.1.75002">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_INST_PF3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75002</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L3 Power Factor
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTotalPowerFactor" index=".1.3.6.1.4.1.4555.10.20.20.1.75003">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_INST_PF_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75003</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Power Factor Total
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="1-2state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="powerfactorType-em">
+			<label>Leading</label>
+			<label>Lagging</label>
+		</enumMap>
+		
+		<stateSensor ruleid="instPowerFactorTypeSPF1" index=".1.3.6.1.4.1.4555.10.20.20.1.75004">
+            <type>state</type>
+            <sensorId>_INST_PF_TYPE_SPF1_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75004</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L1 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Instantaneous</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="instPowerFactorTypeSPF2" index=".1.3.6.1.4.1.4555.10.20.20.1.75005">
+            <type>state</type>
+            <sensorId>_INST_PF_TYPE_SPF2_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75005</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L2 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Instantaneous</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="instPowerFactorTypeSPF3" index=".1.3.6.1.4.1.4555.10.20.20.1.75006">
+            <type>state</type>
+            <sensorId>_INST_PF_TYPE_SPF3_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75006</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L3 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Instantaneous</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="instTotalPowerFactorType" index=".1.3.6.1.4.1.4555.10.20.20.1.75007">
+            <type>state</type>
+            <sensorId>_INST_PF_TYPE_TOTAL_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.75007</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Total Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Instantaneous</sensorSet>
+        </stateSensor>
+		
+		<numSensor ruleid="instPowerActiveP1" index=".1.3.6.1.4.1.4555.10.20.20.1.80000">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INST_POWER_ACTIVE_P1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80000</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				P1 Active Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerActiveP2" index=".1.3.6.1.4.1.4555.10.20.20.1.80001">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INST_POWER_ACTIVE_P2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80001</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				P2 Active Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerActiveP3" index=".1.3.6.1.4.1.4555.10.20.20.1.80002">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INST_POWER_ACTIVE_P3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80002</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				P3 Active Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTotalPowerActive" index=".1.3.6.1.4.1.4555.10.20.20.1.80003">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INST_POWER_ACTIVE_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80003</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Total Active Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerReactiveQ1" index=".1.3.6.1.4.1.4555.10.20.20.1.80004">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_INST_POWER_REACTIVE_Q1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80004</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Q1 Reactive Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerReactiveQ2" index=".1.3.6.1.4.1.4555.10.20.20.1.80005">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_INST_POWER_REACTIVE_Q2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80005</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Q2 Reactive Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerReactiveQ3" index=".1.3.6.1.4.1.4555.10.20.20.1.80006">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_INST_POWER_REACTIVE_Q3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80006</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Q3 Reactive Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTotalPowerReactive" index=".1.3.6.1.4.1.4555.10.20.20.1.80007">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_INST_POWER_REACTIVE_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80007</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Total Reactive Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerApparentS1" index=".1.3.6.1.4.1.4555.10.20.20.1.80016">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_INST_POWER_APPARENT_S1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80016</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				S1 Apparent Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerApparentS2" index=".1.3.6.1.4.1.4555.10.20.20.1.80017">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_INST_POWER_APPARENT_S2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80017</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				S2 Apparent Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerApparentS3" index=".1.3.6.1.4.1.4555.10.20.20.1.80018">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_INST_POWER_APPARENT_S3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80018</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				S3 Apparent Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTotalPowerApparent" index=".1.3.6.1.4.1.4555.10.20.20.1.80019">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_INST_POWER_APPARENT_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.80019</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Total Apparent Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instPowerApparentNom" index=".1.3.6.1.4.1.4555.10.20.20.1.85017">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_INST_POWER_APPARENT_NOMINAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.85017</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				Nominal Apparent Power
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhNV1" index=".1.3.6.1.4.1.4555.10.20.20.1.110000">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_NV1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110000</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L1-N Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhNV2" index=".1.3.6.1.4.1.4555.10.20.20.1.110001">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_NV2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110001</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L2-N Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhNV3" index=".1.3.6.1.4.1.4555.10.20.20.1.110002">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_NV3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110002</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L3-N Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhNVn" index=".1.3.6.1.4.1.4555.10.20.20.1.110003">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_N_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110003</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L-N Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltSystPhN" index=".1.3.6.1.4.1.4555.10.20.20.1.110004">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_NSYSTEM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110004</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				System L-N Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhPhU12" index=".1.3.6.1.4.1.4555.10.20.20.1.110005">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_PH_U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110005</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L1-L2 Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhPhU23" index=".1.3.6.1.4.1.4555.10.20.20.1.110006">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_PH_U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110006</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L2-L3 Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltPhPhU31" index=".1.3.6.1.4.1.4555.10.20.20.1.110007">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_PH_U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110007</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				L3-L1 Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instVoltSystPhPh" index=".1.3.6.1.4.1.4555.10.20.20.1.110008">
+			<rowTest>
+				<eq>
+					<op><!-- instLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_INST_VOLT_PH_PH_SYSTEM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.110008</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.20.1.6</getRowOid><space/>
+				System L-L Voltage
+			</label>
+            <sensorSet>Instantaneous</sensorSet>
+        </numSensor>
+		<!--
+		
+			averagesTable
+		
+		-->
+		<numSensor ruleid="avgCurrentI1" index=".1.3.6.1.4.1.4555.10.20.30.1.10023">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_L1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10023</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentI2" index=".1.3.6.1.4.1.4555.10.20.30.1.10024">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_L2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10024</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentI3" index=".1.3.6.1.4.1.4555.10.20.30.1.10025">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_L3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10025</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentIn" index=".1.3.6.1.4.1.4555.10.20.30.1.10026">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_LN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10026</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L-N Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentSyst" index=".1.3.6.1.4.1.4555.10.20.30.1.10027">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_SYSTEM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10027</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				System Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentIdir" index=".1.3.6.1.4.1.4555.10.20.30.1.10030">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_IDIR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10030</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Idir Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentIinv" index=".1.3.6.1.4.1.4555.10.20.30.1.10031">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_IINV_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10031</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Iinv Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentIhom" index=".1.3.6.1.4.1.4555.10.20.30.1.10032">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>_AVG_CURRENT_IHOM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10032</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Ihom Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentInb" index=".1.3.6.1.4.1.4555.10.20.30.1.10033">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_AVG_CURRENT_INB_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10033</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Inb Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgCurrentInba" index=".1.3.6.1.4.1.4555.10.20.30.1.10175">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_AVG_CURRENT_INBA_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10175</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Inba Current
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgFrequency" index=".1.3.6.1.4.1.4555.10.20.30.1.40001">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>_AVG_FREQ_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.40001</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				System Frequency
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		
+		<!-- .1.3.6.1.4.1.4555.10.20.30.1.45004 | avgDateLastInstance -->
+		
+		<numSensor ruleid="avgPowerFactorPF1" index=".1.3.6.1.4.1.4555.10.20.30.1.75008">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_AVG_PF_PF1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75008</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Power Factor
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerFactorPF2" index=".1.3.6.1.4.1.4555.10.20.30.1.75009">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_AVG_PF_PF2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75009</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Power Factor
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerFactorPF3" index=".1.3.6.1.4.1.4555.10.20.30.1.75010">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_AVG_PF_PF3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75010</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Power Factor
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgTotalPowerFactor" index=".1.3.6.1.4.1.4555.10.20.30.1.75011">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_AVG_PF_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75011</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Total Power Factor
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="avgPowerFactorTypeSPF1" index=".1.3.6.1.4.1.4555.10.20.30.1.75012">
+            <type>state</type>
+            <sensorId>_AVG_PF_TYPE_SPF1_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75012</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Averages</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="avgPowerFactorTypeSPF2" index=".1.3.6.1.4.1.4555.10.20.30.1.75013">
+            <type>state</type>
+            <sensorId>_AVG_PF_TYPE_SPF2_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75013</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Averages</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="avgPowerFactorTypeSPF3" index=".1.3.6.1.4.1.4555.10.20.30.1.75014">
+            <type>state</type>
+            <sensorId>_AVG_PF_TYPE_SPF3_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75014</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Averages</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="avgTotalPowerFactorType" index=".1.3.6.1.4.1.4555.10.20.30.1.75015">
+            <type>state</type>
+            <sensorId>_AVG_PF_TYPE_TOTAL_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="1-2state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.75015</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Total Power Factor Type
+			</label>
+            <enum>powerfactorType-em</enum>
+            <sensorSet>Averages</sensorSet>
+        </stateSensor>
+		
+		<numSensor ruleid="avgPowerActiveP1" index=".1.3.6.1.4.1.4555.10.20.30.1.80028">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_AVG_POWER_ACTIVE_P1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80028</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Active Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerActiveP2" index=".1.3.6.1.4.1.4555.10.20.30.1.80029">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_AVG_POWER_ACTIVE_P2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80029</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Active Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerActiveP3" index=".1.3.6.1.4.1.4555.10.20.30.1.80030">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_AVG_POWER_ACTIVE_P3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80030</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Active Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgTotalPowerActive" index=".1.3.6.1.4.1.4555.10.20.30.1.80031">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_AVG_POWER_ACTIVE_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80031</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Total Active Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerReactiveQ1" index=".1.3.6.1.4.1.4555.10.20.30.1.80032">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_AVG_POWER_REACTIVE_Q1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80032</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Reactive Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerReactiveQ2" index=".1.3.6.1.4.1.4555.10.20.30.1.80033">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_AVG_POWER_REACTIVE_Q2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80033</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Reactive Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerReactiveQ3" index=".1.3.6.1.4.1.4555.10.20.30.1.80034">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_AVG_POWER_REACTIVE_Q3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80034</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Reactive Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgTotalPowerReactive" index=".1.3.6.1.4.1.4555.10.20.30.1.80035">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA/powerVAR</type>
+            <sensorId>_AVG_POWER_REACTIVE_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80035</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Total Reactive Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerApparentS1" index=".1.3.6.1.4.1.4555.10.20.30.1.80044">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_AVG_POWER_APPARENT_S1_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80044</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1 Apparent Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerApparentS2" index=".1.3.6.1.4.1.4555.10.20.30.1.80045">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_AVG_POWER_APPARENT_S2_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80045</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2 Apparent Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgPowerApparentS3" index=".1.3.6.1.4.1.4555.10.20.30.1.80046">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_AVG_POWER_APPARENT_S3_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80046</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3 Apparent Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgTotalPowerApparent" index=".1.3.6.1.4.1.4555.10.20.30.1.80047">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_AVG_POWER_APPARENT_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.80047</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				Total Apparent Power
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhNV1" index=".1.3.6.1.4.1.4555.10.20.30.1.110030">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_NV1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110030</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1-N Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhNV2" index=".1.3.6.1.4.1.4555.10.20.30.1.110031">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_NV2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110031</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2-N Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhNV3" index=".1.3.6.1.4.1.4555.10.20.30.1.110032">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_NV3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110032</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3-N Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhNVn" index=".1.3.6.1.4.1.4555.10.20.30.1.110033">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_N_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110033</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L-N Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltSystPhN" index=".1.3.6.1.4.1.4555.10.20.30.1.110034">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_SYSTEM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110034</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				System L-N Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhPhU12" index=".1.3.6.1.4.1.4555.10.20.30.1.110035">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_PH_U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110035</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L1-L2 Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhPhU23" index=".1.3.6.1.4.1.4555.10.20.30.1.110036">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_PH_U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110036</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L2-L3 Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltPhPhU31" index=".1.3.6.1.4.1.4555.10.20.30.1.110037">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_PH_U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110037</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				L3-L1 Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<numSensor ruleid="avgVoltSystPhPh" index=".1.3.6.1.4.1.4555.10.20.30.1.110038">
+			<rowTest>
+				<eq>
+					<op><!-- avgLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_AVG_VOLT_PH_PH_SYSTEM_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.110038</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.30.1.6</getRowOid><space/>
+				System L-L Voltage
+			</label>
+            <sensorSet>Averages</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousCurrentTHDTable
+		
+		-->
+		<numSensor ruleid="instTHDI1" index=".1.3.6.1.4.1.4555.10.20.81.1.100006">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.100006</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.6</getRowOid><space/>
+				L1 Instantaneous Current THD
+			</label>
+            <sensorSet>Instantaneous Current THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDI2" index=".1.3.6.1.4.1.4555.10.20.81.1.100007">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.100007</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.6</getRowOid><space/>
+				L2 Instantaneous Current THD
+			</label>
+            <sensorSet>Instantaneous Current THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDI3" index=".1.3.6.1.4.1.4555.10.20.81.1.100008">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.100008</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.6</getRowOid><space/>
+				L3 Instantaneous Current THD
+			</label>
+            <sensorSet>Instantaneous Current THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDIn" index=".1.3.6.1.4.1.4555.10.20.81.1.100009">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_N_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.100009</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.81.1.6</getRowOid><space/>
+				L-N Instantaneous Current THD
+			</label>
+            <sensorSet>Instantaneous Current THD</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousVoltageTHDTable
+		
+		-->
+		<numSensor ruleid="instTHDV1" index=".1.3.6.1.4.1.4555.10.20.82.1.100000">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100000</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L1 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDV2" index=".1.3.6.1.4.1.4555.10.20.82.1.100001">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100001</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L2 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDV3" index=".1.3.6.1.4.1.4555.10.20.82.1.100002">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100002</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L3 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDU12" index=".1.3.6.1.4.1.4555.10.20.82.1.100003">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100003</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L1-L2 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDU23" index=".1.3.6.1.4.1.4555.10.20.82.1.100004">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100004</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L2-L3 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instTHDU31" index=".1.3.6.1.4.1.4555.10.20.82.1.100005">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltageTHDLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_THD_U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.100005</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.82.1.1</getRowOid><space/>
+				L3-L1 Instantaneous Voltage THD
+			</label>
+            <sensorSet>Instantaneous Voltage THD</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousCurrentHarmonicsTable
+		
+		-->
+		<numSensor ruleid="instHarmonicsRow02I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50172">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50172</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50173">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50173</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50174">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50174</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50175">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50175</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50176">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50176</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50177">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50177</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50178">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50178</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50179">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50179</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10I1" index=".1.3.6.1.4.1.4555.10.20.83.1.50180">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10I1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50180</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L1 Current Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50199">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50199</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50200">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50200</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50201">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50201</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50202">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50202</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50203">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50203</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50204">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50204</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50205">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50205</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50206">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50206</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10I2" index=".1.3.6.1.4.1.4555.10.20.83.1.50207">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10I2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50207</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L2 Current Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50226">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50226</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50227">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50227</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50228">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50228</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50229">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50229</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50230">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50230</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50231">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50231</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50232">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50232</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50233">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50233</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10I3" index=".1.3.6.1.4.1.4555.10.20.83.1.50234">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10I3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50234</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L3 Current Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02In" index=".1.3.6.1.4.1.4555.10.20.83.1.50253">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50253</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03In" index=".1.3.6.1.4.1.4555.10.20.83.1.50254">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50254</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04In" index=".1.3.6.1.4.1.4555.10.20.83.1.50255">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50255</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05In" index=".1.3.6.1.4.1.4555.10.20.83.1.50256">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50256</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06In" index=".1.3.6.1.4.1.4555.10.20.83.1.50257">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50257</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07In" index=".1.3.6.1.4.1.4555.10.20.83.1.50258">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50258</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08In" index=".1.3.6.1.4.1.4555.10.20.83.1.50259">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50259</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09In" index=".1.3.6.1.4.1.4555.10.20.83.1.50260">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50260</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10In" index=".1.3.6.1.4.1.4555.10.20.83.1.50261">
+			<rowTest>
+				<eq>
+					<op><!-- instCurrentHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.50261</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.1</getRowOid><space/>
+				Load <getRowOid>.1.3.6.1.4.1.4555.10.20.83.1.6</getRowOid><space/>
+				L-N Current Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Current Harmonics</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousVoltagePhNHarmonicsTable
+		
+		-->
+		<numSensor ruleid="instHarmonicsRow02V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50010">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50010</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50011">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50011</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50012">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50012</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50013">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50013</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50014">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50014</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50015">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50015</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50016">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50016</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50017">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50017</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10V1" index=".1.3.6.1.4.1.4555.10.20.84.1.50018">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10V1_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50018</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L1-N Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50037">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50037</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50038">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50038</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50039">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50039</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50040">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50040</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50041">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50041</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50042">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50042</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50043">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50043</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50044">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50044</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10V2" index=".1.3.6.1.4.1.4555.10.20.84.1.50045">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10V2_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50045</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L2-N Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50064">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50064</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50065">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50065</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50066">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50066</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50067">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50067</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50068">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50068</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50069">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50069</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50070">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50070</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50071">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50071</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10V3" index=".1.3.6.1.4.1.4555.10.20.84.1.50072">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhNHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10V3_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.50072</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.84.1.1</getRowOid><space/>
+				L3-N Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-N Harmonics</sensorSet>
+        </numSensor>
+		<!--
+		
+			instantaneousVoltagePhPhHarmonicsTable
+		
+		-->
+		<numSensor ruleid="instHarmonicsRow02U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50091">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50091</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50092">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50092</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50093">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50093</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50094">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50094</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50095">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50095</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50096">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50096</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50097">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50097</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50098">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50098</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10U12" index=".1.3.6.1.4.1.4555.10.20.85.1.50099">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10U12_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50099</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L1-L2 Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50118">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50118</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50119">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50119</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50120">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50120</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50121">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50121</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50122">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50122</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50123">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50123</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50124">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50124</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50125">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50125</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10U23" index=".1.3.6.1.4.1.4555.10.20.85.1.50126">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10U23_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50126</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L2-L3 Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow02U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50145">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_02U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50145</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 02
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow03U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50146">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_03U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50146</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 03
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow04U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50147">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_04U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50147</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 04
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow05U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50148">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_05U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50148</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 05
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow06U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50149">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_06U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50149</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 06
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow07U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50150">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_07U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50150</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 07
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow08U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50151">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_08U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50151</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 08
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow09U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50152">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_09U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50152</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 09
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="instHarmonicsRow10U31" index=".1.3.6.1.4.1.4555.10.20.85.1.50153">
+			<rowTest>
+				<eq>
+					<op><!-- instVoltagePhPhHarmonicsLoadRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_INST_HARMONICS_ROW_10U31_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.50153</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.20.85.1.1</getRowOid><space/>
+				L3-L1 Voltage Harmonic Row 10
+			</label>
+            <sensorSet>Instantaneous Voltage L-L Harmonics</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="productStates">
+		<oidMustExist ruleid="productStates_exists" oid=".1.3.6.1.4.1.4555.10.30" istree="yes"/>
+		<!--
+		
+			inputDigitalTable
+		
+		-->
+		<valueMap ruleid="5state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="inputDigitalFunction-em">
+			<label>None</label>
+			<label>Alarm Acknowledge</label>
+			<label>Alarm Input</label>
+			<label>Multi Fluid Feeder</label>
+			<label>Top Synchro</label>
+			<label>Tariff</label>
+		</enumMap>
+		
+		<stateSensor ruleid="inputDigitalFunction" index=".1.3.6.1.4.1.4555.10.30.1.1.85086">
+			<rowTest>
+				<eq>
+					<op><!-- inputDigitalRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_INPUT_DIGITAL_FUNCTION_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="5state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.85086</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.1</getRowOid><space/>
+				Line Index <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.7</getRowOid><space/>
+				Digital Input Function
+			</label>
+			<enum>inputDigitalFunction-em</enum>
+            <sensorSet>Digital Input</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="1state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="lineState-em">
+			<label>Activated</label>
+			<label>Deactivated</label>
+		</enumMap>
+		
+		<stateSensor ruleid="inputDigitalActivated" index=".1.3.6.1.4.1.4555.10.30.1.1.90002">
+			<rowTest>
+				<eq>
+					<op><!-- inputDigitalRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_INPUT_DIGITAL_ACTIVATED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="1state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.90002</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.1</getRowOid><space/>
+				Line Index <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.7</getRowOid><space/>
+				Digital Input Status
+			</label>
+			<enum>lineState-em</enum>
+            <sensorSet>Digital Input</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="inputNormalState-em">
+			<label>NO</label>
+			<label>NC</label>
+		</enumMap>
+		
+		<stateSensor ruleid="inputDigitalMode" index=".1.3.6.1.4.1.4555.10.30.1.1.90003">
+			<rowTest>
+				<eq>
+					<op><!-- inputDigitalRowStatus -->
+						<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.10</getRowOid>
+					</op>
+					<op>1</op>
+				</eq>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_INPUT_DIGITAL_MODE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="1state-vm">
+					<getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.90003</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				Modbus Address <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.1</getRowOid><space/>
+				Line Index <getRowOid>.1.3.6.1.4.1.4555.10.30.1.1.7</getRowOid><space/>
+				Input Normal State
+			</label>
+			<enum>inputNormalState-em</enum>
+            <sensorSet>Digital Input</sensorSet>
+        </stateSensor>
+		
+	</device>
+</APC_DDF>

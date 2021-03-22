@@ -1,0 +1,935 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="lineagepower_infinityd"
+	ddfname="Lineage Power Infinity D"
+	ddfversion="8"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="lineagepower_infinityd">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Lineage Power</setProductData>
+		<setProductData ruleid="modeldata" field="model">Infinity D</setProductData>
+		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+
+		<oidMustExist ruleid="lineagepower_infinityd" oid=".1.3.6.1.4.1.10520.2.1.3" istree="yes"/> 
+
+		<numSensor ruleid="dc1Vdc">
+            <type>voltage</type>
+            <sensorId>DC1_VDC</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.4.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Voltage</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dc1Adc">
+            <type>amperage</type>
+            <sensorId>DC1_ADC</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Current</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dc1Cap">
+            <type>amperage</type>
+            <sensorId>DC1_CAP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Total Installed Rectifier Capacity</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dc1OlCap">
+            <type>amperage</type>
+            <sensorId>DC1_OLCAP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Total Online Rectifier Capacity</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dc1Trd">
+            <type>amperage</type>
+            <sensorId>DC1_TRD</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.8.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Total Rectifier Drain</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="dc1power">
+            <type>powerW</type>
+            <sensorId>DC1_POWER</sensorId>
+            <value>
+				<mult>
+				<op>
+					<mult>
+					<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.8.0</getOid></op>
+					<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.4.0</getOid></op>
+					</mult>
+				</op>
+				<op>-0.001</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Power</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="dc1Sht-vm">
+			<valueIn>NONE</valueIn><valueOut>0</valueOut>
+			<valueIn>BATTERY</valueIn><valueOut>1</valueOut>
+			<valueIn>LOAD</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="dc1Sht-em">
+			<label>None</label>
+			<label>Battery</label>
+			<label>Load</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="dc1Sht">
+            <type>state</type>
+            <sensorId>DC1_SHT</sensorId>
+            <value>
+				<mapValue mapid="dc1Sht-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.9.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Centralized Plant Shunt Type</label>
+			<enum>dc1Sht-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="dc1Sha">
+            <type>amperage</type>
+            <sensorId>DC1_SHA</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.10.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Centralized Plant Shunt Size</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="dc1Stt-vm">
+			<valueIn>FLOAT</valueIn><valueOut>0</valueOut>
+			<valueIn>BOOST</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="dc1Stt-em">
+			<label>Float</label>
+			<label>Boost</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="dc1Stt">
+            <type>state</type>
+            <sensorId>DC1_STT</sensorId>
+            <value>
+				<mapValue mapid="dc1Stt-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.11.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> State</label>
+			<enum>dc1Sht-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="dc1Rss">
+            <type>state</type>
+            <sensorId>DC1_RSS</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.13.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Rectifier Restart</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dc1Rsq">
+            <type>state</type>
+            <sensorId>DC1_RSQ</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.14.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Rectifier Resequencing</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="dc1Rot">
+            <type>voltage</type>
+            <sensorId>DC1_ROT</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.16.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Rectifier On Threshold</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Nst">
+            <type>num</type>
+            <sensorId>DC1_NST</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.17.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Number of Strings</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Cps">
+            <type>num</type>
+            <sensorId>DC1_CPS</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.18.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Cells per String</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="dc1Isd">
+            <type>state</type>
+            <sensorId>DC1_ISD</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.20.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Imminent Low Voltage Shutdown</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="dc1Scap">
+            <type>num</type>
+            <sensorId>DC1_SCAP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.22.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> String Capacity</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="dc1Mls">
+            <type>state</type>
+            <sensorId>DC1_MLS</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.23.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> All Shunts Monitored</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dc1Eme">
+            <type>state</type>
+            <sensorId>DC1_EME</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.1.52.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Energy Management Enable</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="dc1Emt">
+            <type>pctofcapacity</type>
+            <sensorId>DC1_EMT</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.53.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Efficiency Target</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Emo">
+            <type>pctofcapacity</type>
+            <sensorId>DC1_EMO</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.54.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Efficiency Rectifier Turn On Threshold</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Poc">
+            <type>pctofcapacity</type>
+            <sensorId>DC1_POC</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.55.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Percent of Charge</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Emi">
+            <type>timeinmin</type>
+            <sensorId>DC1_EMI</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.60.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Efficiency Initial Delay</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc1Emw">
+            <type>timeinmin</type>
+            <sensorId>DC1_EMW</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.1.61.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.1.2.0</getOid> Efficiency Turn Off Delay</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.1.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="gm1Lse">
+            <type>state</type>
+            <sensorId>GM1_LSE</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.6.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Load Share Enable</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="gm1Rme">
+            <type>state</type>
+            <sensorId>GM1_RME</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.6.4.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Redundancy Monitor</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </stateSensor>
+		<numSensor ruleid="gm1Fsd">
+            <type>voltage</type>
+            <sensorId>GM1_FSD</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.5.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Float High Voltage Shutdown</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="gm1Bsd">
+            <type>voltage</type>
+            <sensorId>GM1_BSD</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.6.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Boost High Voltage Shutdown</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="gm1Fsp">
+            <type>voltage</type>
+            <sensorId>GM1_FSP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.7.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Float Setpoint</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="gm1Bsp">
+            <type>voltage</type>
+            <sensorId>GM1_BSP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.8.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Boost Setpoint</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="gm1Fcl">
+            <type>pctofcapacity</type>
+            <sensorId>GM1_FCL</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.9.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Float Current Limit</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="gm1Bcl">
+            <type>pctofcapacity</type>
+            <sensorId>GM1_BCL</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.6.10.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.6.2.0</getOid> Boost Current Limit</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.6.1.0</getOid></sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="CP1Vdc">
+            <type>voltage</type>
+            <sensorId>CP1_VDC</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.4.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> DC Voltage</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Adc">
+            <type>amperage</type>
+            <sensorId>CP1_ADC</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.5.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> DC Current</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Cap">
+            <type>amperage</type>
+            <sensorId>CP1_CAP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.6.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Capacity</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Olcap">
+            <type>amperage</type>
+            <sensorId>CP1_OLCAP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.7.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Online Capacity</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Vsp">
+            <type>voltage</type>
+            <sensorId>CP1_VSP</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.8.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Voltage Setpoint</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Vsd">
+            <type>voltage</type>
+            <sensorId>CP1_VSD</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.9.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Internal High Voltage Shutdown</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Clm">
+            <type>pctofcapacity</type>
+            <sensorId>CP1_CLM</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.10.0</getOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Current Limit</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Dth">
+            <type>voltage</type>
+            <sensorId>CP1_DTH</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.11.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Low Voltage Disconnect</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<numSensor ruleid="CP1Rth">
+            <type>voltage</type>
+            <sensorId>CP1_RTH</sensorId>
+            <value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.10520.2.1.3.8.12.0</getOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Low Voltage Reconnect</label>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </numSensor>
+		<stateSensor ruleid="CP1Lvd">
+            <type>state</type>
+            <sensorId>CP1_LVD</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.8.13.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Low Voltage Disconnect Enable</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="CP1Rss">
+            <type>state</type>
+            <sensorId>CP1_RSS</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.8.14.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Converter Restart</label>
+			<enum>onOff-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="CP1Rme">
+            <type>state</type>
+            <sensorId>CP1_RME</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.8.15.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Redundancy Monitor Enable</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="CP1Rof">
+            <type>state</type>
+            <sensorId>CP1_ROF</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getOid>.1.3.6.1.4.1.10520.2.1.3.8.16.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.10520.2.1.3.8.2.0</getOid> Remote Standby Enable</label>
+			<enum>enabled-em</enum>
+            <sensorSet><getOid>.1.3.6.1.4.1.10520.2.1.3.8.1.0</getOid></sensorSet>
+        </stateSensor>
+
+
+		<valueMap ruleid="alarmSeverity-vm">
+			<valueIn>MIN</valueIn><valueOut>warning</valueOut>
+			<valueIn>WRN</valueIn><valueOut>warning</valueOut>
+			<valueIn>RO</valueIn><valueOut>warning</valueOut>
+			<valueIn>MAJ</valueIn><valueOut>critical</valueOut>
+			<valueIn>CRIT</valueIn><valueOut>critical</valueOut>
+			<valueIn>*</valueIn><valueOut>warning</valueOut>
+		</valueMap>
+
+		<alarmFlags2 ruleid="acFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.11</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>AC Failure</activeText>
+					<inactiveText>AC Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>An AC Failure condition exists.</activeText>
+					<inactiveText>AC Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="multiACFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.22</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Multiple AC Failure</activeText>
+					<inactiveText>Multiple AC Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A Multiple AC Failure condition exists.</activeText>
+					<inactiveText>Multiple AC Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="rectFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.10</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Rectifier Failure</activeText>
+					<inactiveText>Rectifier Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A Rectifier Failure condition exists.</activeText>
+					<inactiveText>Rectifier Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="rectFanFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.15</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Rectifier Fan Failure</activeText>
+					<inactiveText>Rectifier Fan Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A Rectifier Fan Failure condition exists.</activeText>
+					<inactiveText>Rectifier Fan Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="rectInternalFault">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.86</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Rectifier Internal Fault</activeText>
+					<inactiveText>Rectifier Internal Fault Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A Rectifier Internal Fault condition exists.</activeText>
+					<inactiveText>Rectifier Internal Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="emergencyPowerOff">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.8</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Emergency Power Off</activeText>
+					<inactiveText>Emergency Power Off Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System Alarms</category>
+				<description>
+					<activeText>An Emergency Power Off condition exists.</activeText>
+					<inactiveText>Emergency Power Off condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="imminentShutdown">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.61</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Imminent Low Voltage Shutdown</activeText>
+					<inactiveText>Imminent Low Voltage Shutdown Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System Alarms</category>
+				<description>
+					<activeText>An Imminent Low Voltage Shutdown condition exists.</activeText>
+					<inactiveText>Imminent Low Voltage Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="batteryOnDischarge">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.23</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery on Discharge</activeText>
+					<inactiveText>Battery on Discharge Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Reserve Alarms</category>
+				<description>
+					<activeText>A Battery on Discharge condition exists.</activeText>
+					<inactiveText>Battery on Discharge condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="thermalProbeFailSafe">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.85</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Thermal Probe Fail Safe</activeText>
+					<inactiveText>Thermal Probe Fail Safe Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Reserve Alarms</category>
+				<description>
+					<activeText>A Thermal Probe Fail Safe condition exists.</activeText>
+					<inactiveText>Thermal Probe Fail Safe condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="veryLowVoltage">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.16</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Very Low Voltage</activeText>
+					<inactiveText>Very Low Voltage Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Reserve Alarms</category>
+				<description>
+					<activeText>A Very Low Voltage condition exists.</activeText>
+					<inactiveText>Very Low Voltage condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="highVoltage">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.25</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Voltage</activeText>
+					<inactiveText>High Voltage Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A High Voltage condition exists.</activeText>
+					<inactiveText>High Voltage condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="veryHighVoltage">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.24</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Very High Voltage</activeText>
+					<inactiveText>Very High Voltage Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Power Alarms</category>
+				<description>
+					<activeText>A Very High Voltage condition exists.</activeText>
+					<inactiveText>Very High Voltage condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="extFuseMaj24V">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.43</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Fuse Major 24V</activeText>
+					<inactiveText>External Fuse Major 24V Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Distribution Alarms</category>
+				<description>
+					<activeText>An External Fuse Major 24V condition exists.</activeText>
+					<inactiveText>External Fuse Major 24V condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="extFuseMin24V">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.41</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Fuse Minor 24V</activeText>
+					<inactiveText>External Fuse Minor 24V Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Distribution Alarms</category>
+				<description>
+					<activeText>An External Fuse Minor 24V condition exists.</activeText>
+					<inactiveText>External Fuse Minor 24V condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="extFuseMaj48V">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.44</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Fuse Major 48V</activeText>
+					<inactiveText>External Fuse Major 48V Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Distribution Alarms</category>
+				<description>
+					<activeText>An External Fuse Major 48V condition exists.</activeText>
+					<inactiveText>External Fuse Major 48V condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="extFuseMin48V">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.42</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>External Fuse Minor 48V</activeText>
+					<inactiveText>External Fuse Minor 48V Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Distribution Alarms</category>
+				<description>
+					<activeText>An External Fuse Minor 48V condition exists.</activeText>
+					<inactiveText>External Fuse Minor 48V condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="minorCommFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.6</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Minor Communication Failure</activeText>
+					<inactiveText>Minor Communication Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Communication Alarms</category>
+				<description>
+					<activeText>A Minor Communication Failure condition exists.</activeText>
+					<inactiveText>Minor Communication Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="majorCommFail">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.7</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Major Communication Failure</activeText>
+					<inactiveText>Major Communication Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Communication Alarms</category>
+				<description>
+					<activeText>A Major Communication Failure condition exists.</activeText>
+					<inactiveText>Major Communication Failure condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="redundancyLoss">
+			<value><getOid>.1.3.6.1.4.1.10520.2.1.3.34.1.3.20</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Redundancy Loss Alarm</activeText>
+					<inactiveText>Redundancy Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System Alarms</category>
+				<description>
+					<activeText>A Redundancy Loss Alarm condition exists.</activeText>
+					<inactiveText>Redundancy Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="enabled-em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+		<enumMap ruleid="onOff-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

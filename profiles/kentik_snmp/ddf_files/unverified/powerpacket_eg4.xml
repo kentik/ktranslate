@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" 
+	ddfid="powerpacket_eg4" 
+	ddfname="PowerPacket eg4" 
+	ddfversion="5" 
+	canremove="yes">
+	
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="powerpacket_eg4">
+		<setProductData ruleid="vendordata" field="vendor">PowerPacket</setProductData>
+		<setProductData ruleid="modeldata" field="model">EG4</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<oidMustExist ruleid="power_packet_eg4_exists" oid=".1.3.6.1.4.1.33688" istree="yes"/> 
+
+		<numSensor ruleid="powerpacketeg4" index=".1.3.6.1.4.1.33688.4.1.1.12">
+			<type>
+				<mapValue mapid="sensor_type_vm">
+					<getRowOid>.1.3.6.1.4.1.33688.4.1.1.13</getRowOid>
+				</mapValue>
+			</type>
+			<units>
+				<mapValue mapid="units_type_vm">
+					<getRowOid>.1.3.6.1.4.1.33688.4.1.1.13</getRowOid>
+				</mapValue>
+			</units>
+			<sensorId>_ROOM_TEMPERATURE_<rowIndex />
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.33688.4.1.1.12</getRowOid>
+					</op>
+					<op>				
+						<mapValue mapid="scaling_value_vm">
+							<getRowOid>.1.3.6.1.4.1.33688.4.1.1.13</getRowOid>
+						</mapValue>
+					</op>
+				</mult>
+			</value>	
+			<label>Node <getRowOid>.1.3.6.1.4.1.33688.4.1.1.6</getRowOid>
+				<space/>
+				<getRowOid>.1.3.6.1.4.1.33688.4.1.1.8</getRowOid>
+				
+			</label>
+			<sensorSet>Node <substring start="0" end="4">
+					<rowIndex/>
+				</substring>
+			</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="sensor_type_vm">
+			<valueIn>Wh</valueIn>
+			<valueOut>num/kdisprealenergy</valueOut>
+			<valueIn>W</valueIn>
+			<valueOut>powerW</valueOut> 
+			<valueIn>mA</valueIn>
+			<valueOut>num</valueOut>
+			<valueIn>mV</valueIn>
+			<valueOut>voltage</valueOut>
+			<valueIn>mHz</valueIn>
+			<valueOut>frequency</valueOut>
+			<valueIn>deg</valueIn>
+			<valueOut>num</valueOut> 
+			<valueIn>ddegC</valueIn>
+			<valueOut>temp</valueOut>
+			<valueIn>VA</valueIn>
+			<valueOut>powerVA/powerVAR</valueOut>		
+			<valueIn>*</valueIn>
+			<valueOut>num</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="units_type_vm"> 
+			<valueIn>mA</valueIn>
+			<valueOut>milliamps</valueOut>	
+			<valueIn>*</valueIn>
+			<valueOut/>
+		</valueMap>	
+		
+		<valueMap ruleid="scaling_value_vm"> 
+			<valueIn>mHz</valueIn>
+			<valueOut>0.001</valueOut>	
+			<valueIn>mV</valueIn>
+			<valueOut>0.001</valueOut>
+			<valueIn>ddegC</valueIn>
+			<valueOut>0.1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>1</valueOut>	
+		</valueMap>		
+	</device>
+</APC_DDF>

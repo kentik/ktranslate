@@ -1,0 +1,2098 @@
+<?xml version="1.0"?>
+<!-- APC NetworkAir FM Series Computer Room Air Conditioner (CRAC) DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="apcacfm" ddfname="APC NetworkAIR FM" ddfversion="12">
+  <schemaVersion>1.6</schemaVersion>
+  
+  <!-- APC NetworkAir FM Series CRAC specific functionality -->
+  <device deviceid="nairfmstatus">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.2.1.0"/>
+    
+    <!-- FM Status Module Info -->
+    <stateSensor ruleid="grpsystemstatus">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.1.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>state/fmsystemstatus</type>
+      <sensorId>GRP_SYSSTATUS</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/nairfmstatusmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>System State</label>
+      <enum>apcacfm/fmseries_typemap/onoffswitchstate</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- average return temperature in degrees C -->
+    <numSensor ruleid="avgrtntemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.2.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>APCACFM_SYSAVGRTN_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.2.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Return Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- Average Return Humidity_percent -->
+    <numSensor ruleid="avgrtnhum">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.4.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>FM_AVG_RETURN_HUM</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op><getOid>.1.3.6.1.4.1.318.1.1.13.1.2.4.0</getOid></op>
+        </mult>
+      </value>
+      <label>Average Return Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- System Control Temperature in degrees C -->
+    <numSensor ruleid="sysctrltemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.5.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>APCACFM_SYSCTRL_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.5.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>System Control Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- System Control Humidity in percent -->
+    <numSensor ruleid="sysctrlhum">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.7.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>APCACFM_SYSCTRL_HUM</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op><getOid>.1.3.6.1.4.1.318.1.1.13.1.2.7.0</getOid></op>
+        </mult>
+      </value>
+      <label>System Control Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- High Remote Temperature in degrees C -->
+    <!-- DEPENDENCY_DD140.18 -->
+    <numSensor ruleid="highremtemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.8.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSHIGHREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.8.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>High Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- Average Remote Temperature in degrees C -->
+    <!-- DEPENDENCY_DD140_5 -->
+    <numSensor ruleid="avgremtemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.10.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSAVGREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.10.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- Average Remote Humidity in percent -->
+    <!-- DEPENDENCY_DD140_6 -->
+    <numSensor ruleid="avgremhum">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.12.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>APCACFM_SYSAVGREM_HUM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.12.0</getOid>
+      </value>
+      <label>Average Remote Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- Low Remote Temperature in degrees C -->
+    <!-- ADD DEPENDENCY_DD140.19 -->
+    <numSensor ruleid="lowremtemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.13.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSLOWREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.13.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Low Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+    <!-- System Cooling Enabled State -->
+    <stateSensor ruleid="coolingenabled">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.15.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>state/coolingenabled</type>
+      <sensorId>COOLING_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/yesnomap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>Cooling Enabled</label>
+      <enum>apcacfm/fmseries_typemap/yesnostate</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- System Reheat Enabled State -->
+    <!-- DEPENDENCY_DD40.1 -->
+    <stateSensor ruleid="reheatenabled">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.16.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>state/reheatenabled</type>
+      <sensorId>REHEAT_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/yesnomap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>Reheat Enabled</label>
+      <enum>apcacfm/fmseries_typemap/yesnostate</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- System Humidify Enabled State -->
+    <!-- DEPENDENCY_DD50_1 -->
+    <stateSensor ruleid="humidifyenabled">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.17.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>state/humidifynabled</type>
+      <sensorId>HUMIDIFY_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/yesnomap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidify Enabled</label>
+      <enum>apcacfm/fmseries_typemap/yesnostate</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- System Dehumidify Enabled State -->
+    <stateSensor ruleid="dehumidifyenabled">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.18.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>state/dehumidifyenabled</type>
+      <sensorId>DEHUMIDIFY_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/yesnomap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.2.18.0</getOid>
+        </mapValue>
+      </value>
+      <label>Dehumidify Enabled</label>
+      <enum>apcacfm/fmseries_typemap/yesnostate</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <device deviceid="nairfmstatusmodule">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.2.20.1.1.1"/>
+    
+    <!-- module supply temperature -->
+    <numSensor ruleid="modsupplytemp" index=".1.3.6.1.4.1.318.1.1.13.1.2.20.1.1">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.3</getRowOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>APCACFM_SYSMODSTATUS_SUPPLYTEMP_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.3</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Supply Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- module supply humidity -->
+    <numSensor ruleid="modsupplyhum" index=".1.3.6.1.4.1.318.1.1.13.1.2.20.1.1">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.5</getRowOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>APCACFM_SYSMODSTATUS_SUPPLYHUM_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.5</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Supply Humidity - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- module return temperature -->
+    <numSensor ruleid="modreturntemp" index=".1.3.6.1.4.1.318.1.1.13.1.2.20.1.1">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.6</getRowOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>APCACFM_SYSMODSTATUS_RETURNTEMP_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.6</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Return Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- module Return humidity -->
+    <numSensor ruleid="modreturnhum" index=".1.3.6.1.4.1.318.1.1.13.1.2.20.1.1">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.8</getRowOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>APCACFM_SYSMODSTATUS_RETURNHUM_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.8</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>Return Humidity - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.2.20.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- FM Series_Group Section -->
+  <device deviceid="group_fmseries">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.1.1"/>
+    
+    <!-- group system status -->
+    <suppressRule suppressid="apcacfm/nairfmstatus/grpsystemstatus"/>
+    <stateSensor ruleid="groupsystemstatus" index=".1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.1">
+      <type>state/groupsystemstatus</type>
+      <sensorId>GROUP_STATUS_SYSTEM_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/group-system-status-to-index">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.2</getRowOid>
+        </mapValue>
+      </value>
+      <label>Status - System <rowIndex/></label>
+      <enum>apcacfm/fmseries_typemap/sysstatus</enum>
+      <sensorSet>Group Status</sensorSet>
+    </stateSensor>
+    
+    <!-- group system runtime (returned as # of hours) -->
+    <numSensor ruleid="system-runtime" index=".1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.1">
+      <type>timeinhrs</type>
+      <sensorId>RUNTIME_SYSTEM_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Runtime - System<space/><rowIndex/></label>
+      <sensorSet>Group Status</sensorSet>
+    </numSensor>
+    
+    <!-- group system role status -->
+    <stateSensor ruleid="grpsysrole" index=".1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.1">
+      <type>state/systemrole</type>
+      <sensorId>GRP_ROLE_SYSTEM_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/role-to-index-map">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.3</getRowOid>
+        </mapValue>
+      </value>
+      <label>Role - System<space/><rowIndex/></label>
+      <enum>apcacfm/fmseries_typemap/systemrole</enum>
+      <sensorSet>Group Status</sensorSet>
+    </stateSensor>
+    
+    <!-- group system role comm status -->
+    <stateSensor ruleid="grpsysrolecommstatus" index=".1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.1">
+      <type>state/grpsyscommstatus</type>
+      <sensorId>GRP_SYS_ROLE_COMMSTATUS_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/nairfmcommstatusmap">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.3.4.2.1.6</getRowOid>
+        </mapValue>
+      </value>
+      <label>Comm Status - System<space/><rowIndex/></label>
+      <enum>apcacfm/fmseries_typemap/commstatus</enum>
+      <sensorSet>Group Status</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <!-- AirFMSysStatus -->
+  <device deviceid="nairfmsysstatus">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.1.0"/>
+    
+    <!-- system present status -->
+    <stateSensor ruleid="nairfmsyspresentstatus">
+      <type>state/grpsysstatus</type>
+      <enumid>acunitstate</enumid>
+      <sensorId>NAIRFM_SYS_PRES_STATUS</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/nairfmsysstatusmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Present Status</label>
+      <!-- the enumMap will implicitly define enuminc -->
+      <enum>apcacfm/fmseries_typemap/sysstatus</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- system role -->
+    <stateSensor ruleid="nairfmsysrole">
+      <type>state/systemrole</type>
+      <sensorId>NAIRFM_SYS_ROLE</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/system-role-to-index-map">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Present Role</label>
+      <enum>apcacfm/fmseries_typemap/systemrole</enum>
+      <sensorSet>System Status</sensorSet>
+    </stateSensor>
+    
+    <!-- system runtime -->
+    <numSensor ruleid="nairfmsysruntime">
+      <type>timeinhrs</type>
+      <sensorId>NAIRFM_SYS_RUNTIME</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.4.0</getOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>System Runtime</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="airFMSysStatus">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.1.0"/>
+    
+    <!-- System Coil Fluid Temperature in degrees C  -->
+    <!--  DEPENDENCY_DD140.11 -->
+    <numSensor ruleid="nairfmsyscoilfluidtempc">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.5.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSCOILFLUID_TEMP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.5.0</getOid>
+      </value>
+      <label>Coil Fluid Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+
+    <!-- Avergage Return Temperature in degrees C -->
+    <suppressRule ruleid="replaceavgrtntemp" suppressid="apcacfm/nairfmstatus/avgrtntemp"/>
+    <numSensor ruleid="avgrtntemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.9.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSAVGRTN_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.9.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Return Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    <!-- Average Return Humidity(%) -->
+    <suppressRule ruleid="replaceavgrtnhum" suppressid="apcacfm/nairfmstatus/avgrtnhum"/>
+    <numSensor ruleid="avgrtnhum">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.11.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>APCACFM_AVG_RETURN_HUM</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.11.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Return Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor> 
+    <!-- System Control Temperature in degrees C -->
+    <suppressRule ruleid="replacesysctrltemp" suppressid="apcacfm/nairfmstatus/sysctrltemp"/>
+    <numSensor ruleid="nairfmsysctrltemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.23.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSCTRL_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.23.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>System Control Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    <!-- System Control Humidity(%) -->
+    <suppressRule ruleid="replacesysctrlhum" suppressid="apcacfm/nairfmstatus/sysctrlhum"/>
+    <numSensor ruleid="nairfmsysctrlhum">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.25.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>humidity</type>
+      <sensorId>NAIRFM_SYSCTRL_HUM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.25.0</getOid>
+      </value>
+      <label>System Control Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+  </device>
+
+  
+  <device deviceid="system-hot-water-temp">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.7.0"/>
+    
+    <!-- System Hot Water Temperature in degrees C -->
+    <!--  DEPENDENCY_DD140.12  -->
+    <numSensor ruleid="nairfmsyshotwatertemp">
+	  <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.7.0</getOid>
+	    </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSHOTWATER_TEMP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.7.0</getOid>
+      </value>
+      <label>Hot Water Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- Avergage Remote Temperature in degrees C -->
+  <!--  DEPENDENCY_ DD140.5 -->
+  <device deviceid="module-remote-avg-temp">
+    <!-- number of remote sensors exists-->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0"/>
+    <!-- number of remote sensors is non-zero -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0">
+      <valueList>
+        <value>0</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- oid is defined -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.12.0">
+      <valueList>
+        <value>-2147483648</value>
+      </valueList>
+    </oidMustNotMatch>
+    <suppressRule ruleid="replaceavgremtemp" suppressid="apcacfm/nairfmstatus/avgremtemp"/>
+    <numSensor ruleid="nairfmsysavgremtemp">
+      <type>temp</type>
+      <sensorId>APCACFM_SYSAVGREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.12.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- Average Remote Humidity(%) -->
+  <!--  DEPENDENCY_ DD140.6 -->
+  <device deviceid="module-remote-avg-hum">
+    <!-- number of remote sensors exists-->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0"/>
+    <!-- number of remote sensors is non-zero -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0">
+      <valueList>
+        <value>0</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- oid is defined -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.14.0">
+      <valueList>
+        <value>-2147483648</value>
+      </valueList>
+    </oidMustNotMatch>
+    <suppressRule ruleid="replaceavgremhum" suppressid="apcacfm/nairfmstatus/avgremhum"/>
+    <numSensor ruleid="nairfmavgremhum">
+      <type>humidity</type>
+      <sensorId>NAIRFM_SYSAVGREM_HUM</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.14.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Average Remote Humidity</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- Maximum Remote Temperature in degrees C -->
+  <!--  DEPENDENCY_ DD140.18 -->
+  <device deviceid="module-remote-max-temp">
+    <!-- number of remote sensors exists-->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0"/>
+    <!-- number of remote sensors is non-zero -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0">
+      <valueList>
+        <value>0</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- oid is defined -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.15.0">
+      <valueList>
+        <value>-2147483648</value>
+      </valueList>
+    </oidMustNotMatch>
+    <suppressRule ruleid="replacehighremtemp" suppressid="apcacfm/nairfmstatus/highremtemp"/>
+    <numSensor ruleid="nairfmsysmaxremtemp">
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMAXREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.15.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Maximum Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- Minimum Remote Temperature in degrees C -->
+  <!--  DEPENDENCY_ DD140.19 -->
+  <device deviceid="module-remote-min-temp">
+    <!-- number of remote sensors exists-->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0"/>
+    <!-- number of remote sensors is non-zero -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.16.0">
+      <valueList>
+        <value>0</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- oid is defined -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.1.17.0">
+      <valueList>
+        <value>-2147483648</value>
+      </valueList>
+    </oidMustNotMatch>
+    <suppressRule ruleid="replacelowremtemp" suppressid="apcacfm/nairfmstatus/lowremtemp"/>
+    <numSensor ruleid="nairfmsysminremtemp">
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMINREM_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.1.17.0</getOid>
+          </op>
+        </mult>
+      </value>
+      <label>Minimum Remote Temperature</label>
+      <sensorSet>System Status</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <!-- AirFMSysDemands -->
+  <device deviceid="nairfmsysdemands">
+    <!--  <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.2.1.0"/> -->
+    <!-- coil config must be dx, econ, or multi-cool -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0">
+      <valueList>
+        <value>2</value>
+        <value>3</value>
+        <value>4</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Direct Expansion Cooling Demand(%) -->
+    <!-- DEPENDENCY_  DD150.1 -->
+    <numSensor ruleid="nairfmsysdxcooldemand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_DXCOOLDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.1.0</getOid>
+      </value>
+      <label>DX Cooling Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+    <!-- Direct Expansion dehumidification Demand(%) -->
+    <!-- DEPENDENCY_  DD150.5 -->
+    <numSensor ruleid="nairfmsysdxdehumdemand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_DXDEHUMDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.2.0</getOid>
+      </value>
+      <label>DX Dehumidification Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+    <!-- Direct Expansion Actual Cooling/Dehumidification(%) -->
+    <!-- DEPENDENCY DD150.10 -->
+    <numSensor ruleid="nairfmsysdxactcooldehum">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_DXACTCOOLDEHUM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.3.0</getOid>
+      </value>
+      <label>Actual DX Cool/Dehumid</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="coil-fluid-demand">
+    <!-- coil config must be dx, econ, or multi-cool -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0">
+      <valueList>
+        <value>3</value>
+        <value>4</value>
+        <value>5</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Coil Fluid Cooling Demand(%) -->
+    <!-- DEPENDENCY DD150.2 -->
+    <numSensor ruleid="nairfmsyscoilfluidcooldemand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_COILFLUIDCOOLDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.4.0</getOid>
+      </value>
+      <label>Coil Fluid Cooling Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+    <!-- Coil Fluid Dehumidification Demand(%) -->
+    <!-- DEPENDENCY DD150.6 -->
+    <numSensor ruleid="coilflddehumdemand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_COILFLUIDDEHUMDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.5.0</getOid>
+      </value>
+      <label>Coil Fluid Dehumidification Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+    <!-- Coil Fluid Actual Cool/Dehum Demand(%) -->
+    <!-- DEPENDENCY DD150.11 -->
+    <numSensor ruleid="nairfmsyscoilfluidactdehum">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_COILFLUIDACTDEHUM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.6.0</getOid>
+      </value>
+      <label>Actual Coil Fluid Cooling/Dehumidification</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="heating-demand">
+    <!-- heater type must be electric scr, hot gas & electric, or hot water prop -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.4.1">
+      <valueList>
+        <value>3</value>
+        <value>7</value>
+        <value>8</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Electric Reheat Demand(%) -->
+    <!-- DEPENDENCY_  DD150.3 -->
+    <numSensor ruleid="nairfmsyselecreheatdemand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_ELECREHEATDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.7.0</getOid>
+      </value>
+      <label>Electric Reheat Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+    <!-- Actual Electric Reheat(%) -->
+    <!-- DEPENDENCY_  DD150.14 -->
+    <numSensor ruleid="nairfmsysactelecreheat">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_ACTELECREHEAT</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.8.0</getOid>
+      </value>
+      <label>Actual Electric Reheating</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="steat-hot-gas-demand">
+    <!-- heater type must be steam, hot water on off, hot gas reheat, or hot gas & electric -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.4.1">
+      <valueList>
+        <value>4</value>
+        <value>5</value>
+        <value>6</value>
+        <value>7</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Steam Hot Gas Reheat Demand(%) -->
+    <!-- DEPENDENCY_  DD150.4 -->
+    <stateSensor ruleid="nairfmsyssteamhotgasdemand">
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_SYSDEMAND_STEAMHOTGASDEMAND</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/demandswitchmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>Hot Gas Reheating Demand</label>
+      <enum>apcacfm/fmseries_typemap/onoffswitchstate</enum>
+      <sensorSet>System Demands</sensorSet>
+    </stateSensor>
+    
+    <!-- Actual Steam Hot Gas Reheat(%) -->
+    <!-- DEPENDENCY_  DD150.15 -->
+    <stateSensor ruleid="nairfmsysactsteamhotgas">
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_SYSDEMAND_ACTSTEAMHOTGAS</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/demandswitchmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>Actual Hot Gas Reheating</label>
+      <enum>apcacfm/fmseries_typemap/onoffswitchstate</enum>
+      <sensorSet>System Demands</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <device deviceid="steam-electrode-demand">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.6.1"/>
+    <!-- humidifier type must not be N/A or None -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.6.1">
+      <valueList>
+        <value>1</value>
+        <value>2</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- Steam Electrode Humidification Demand(%) -->
+    <!-- DEPENDENCY DD150.7 -->
+    <numSensor ruleid="nairfmsyssteamelechumdemand">
+    <rowTest>
+	    <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.11.0</getOid>
+	    </mapValue>
+    </rowTest>
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_STEAMELECHUMDEMAND</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.11.0</getOid>
+      </value>
+      <label>Humidification Demand</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="actual-steam-electrode-humidification">
+    <!-- humidifier type must be steam electrode -->
+    <!-- not sure if this oid is always going to be populated -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.6.1">
+      <valueList>
+        <value>3</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Actual Steam Electrode Humidification(%) -->
+    <!-- DEPENDENCY DD150.12 -->
+    <numSensor ruleid="actual-humidification-demand">
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSDEMAND_ACTSTEAMELECHUM</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.12.0</getOid>
+      </value>
+      <label>Actual Humidification</label>
+      <sensorSet>System Demands</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="steam-humidification-demand">
+    <!-- humidifier type must be steam -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.6.1">
+      <valueList>
+        <value>4</value>
+      </valueList>
+    </oidMustMatch>
+    
+    <!-- Steam Humidification Demand -->
+    <!-- DEPENDENCY_  DD150.16 -->
+    <stateSensor ruleid="steamhumdemand">
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_SYSDEMAND_STEAMHUMDEMAND</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/demandswitchmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidification Demand</label>
+      <enum>apcacfm/fmseries_typemap/onoffswitchstate</enum>
+      <sensorSet>System Demands</sensorSet>
+    </stateSensor>
+    
+    <!-- Actual Steam Humification -->
+    <!-- DEPENDENCY DD150.17 -->
+    <stateSensor ruleid="nairfmsysactsteamhum">
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_SYSDEMAND_ACTSTEAMHUM</sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/demandswitchmap">
+          <getOid>.1.3.6.1.4.1.318.1.1.13.1.4.2.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>Actual Humidification</label>
+      <enum>apcacfm/fmseries_typemap/onoffswitchstate</enum>
+      <sensorSet>System Demands</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <!-- FMSysInputs -->
+  <!-- DEPENDENCY DD110.5 -->
+  <device deviceid="nairfmsysinputs">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.10.2.1.1.1"/>
+    
+    <stateSensor ruleid="nairfmsysinputstatus" index=".1.3.6.1.4.1.318.1.1.13.1.4.10.2.1.1">
+      <type>state/drycontact</type>
+      <sensorId>NAIRFMSYS_INPUTSTATE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/fm-contactrelay-state-map">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.4.10.2.1.3</getRowOid>
+        </mapValue>
+      </value>
+      <label>Input Status -<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.4.10.2.1.2</getRowOid></label>
+      <enum>apcacfm/fmseries_typemap/drycontact</enum>
+      <sensorSet>Input Status</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <!-- FMSysOutputs -->
+  <!-- DEPENDENCY DD120.2 -->
+  <device deviceid="nairfmsysoutputs">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.11.2.1.1.1"/>
+    
+    <stateSensor ruleid="nairfmsysoutputstatus" index=".1.3.6.1.4.1.318.1.1.13.1.4.11.2.1.1">
+      <type>state/drycontact</type>
+      <sensorId>NAIRFMSYS_OUTPUTSTATE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/fm-contactrelay-state-map">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.4.11.2.1.2</getRowOid>
+        </mapValue>
+      </value>
+      <label>Output Status - Relay<space/><rowIndex/></label>
+       <enum>apcacfm/fmseries_typemap/drycontact</enum>
+      <sensorSet>Output Status</sensorSet>
+    </stateSensor>
+    
+  </device>
+
+  
+  <!-- airFMModStatus -->
+  <device deviceid="nairfmmodstatus">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1.1"/>
+    <suppressRule ruleid="replacemodsupplytemp" suppressid="apcacfm/nairfmstatusmodule/modsupplytemp"/>
+    
+    <!-- module supply temperature -->
+    <numSensor ruleid="nairfmmodsupplytemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1">
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_SUPPLYTEMP_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.2</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Supply Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- module return temperature in degrees C -->
+    <suppressRule ruleid="replacemodreturntemp" suppressid="apcacfm/nairfmstatusmodule/modreturntemp"/>
+    <numSensor ruleid="nairfmmodreturntemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1">
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_RETURNTEMP_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.5</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Return Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- module return humidity -->
+    <suppressRule ruleid="replacemodreturnhum" suppressid="apcacfm/nairfmstatusmodule/modreturnhum"/>
+    <numSensor ruleid="nairfmmodreturnhum" index=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1">
+      <type>humidity</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_RETURNHUM_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.7</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Return Humidity - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- filter differential pressure in inches WC -->
+    <numSensor ruleid="modfilterdiffpressureiwc" index=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>airdiffpressure</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_FILTERDIFFPRESIWC_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.9</getRowOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Filter DP - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+    <!-- coil differential pressure in inches WC -->
+    <numSensor ruleid="modcoildiffpressureiwc" index=".1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.11</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>airdiffpressure</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_COILDIFFPRESIWC_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.01</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.11</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Coil DP - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.2.2.1.1</getRowOid></label>
+      <sensorSet>Module Overview</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="compressor-status">
+    <!-- coil config must not be chilled water -->
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0"/>
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0">
+      <valueList>
+        <value>5</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- compressor 1 status by module -->
+    <!-- DEPENDENCY DD150.8 -->
+    <stateSensor ruleid="compressor1status" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_MODCOOL_COMPRESS1_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/compressorstatus-to-index">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.2</getRowOid>
+        </mapValue>
+      </value>
+      <label>Compressor 1 Status - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <enum>apcacfm/fmseries_typemap/compressorstatusenum</enum>
+      <sensorSet>Module Cooling</sensorSet>
+    </stateSensor>
+    
+    <!-- Module Compressor1 runtime (returned as # of hours) -->
+    <!-- DEPENDENCY DD180.1 -->
+    <numSensor ruleid="compressor1runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid readings -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.2</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_COMPRESSOR1_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.2</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 1 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- compressor 2 status by module -->
+    <!-- DEPENDENCY DD150.9 -->
+    <stateSensor ruleid="compressor2status" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <!-- capacity control must be tandem -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/tandem-compressor-only">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.3.2.1.3</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>state/switchstate</type>
+      <sensorId>NAIRFM_MODCOOL_COMPRESS2_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="apcacfm/fmseries_typemap/compressorstatus-to-index">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.3</getRowOid>
+        </mapValue>
+      </value>
+      <label>Compressor 2 Status - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <enum>apcacfm/fmseries_typemap/compressorstatusenum</enum>
+      <sensorSet>Module Cooling</sensorSet>
+    </stateSensor>
+    
+    <!-- Module Compressor2 runtime (returned as # of hours) -->
+    <!-- DEPENDENCY DD180.2 -->
+    <numSensor ruleid="compressor2runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid responses -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.3</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_COMPRESSOR2_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.3</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Compressor 2 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- inlet suction pressure in kPa -->
+    <!-- DEPENDENCY DD140.7 -->
+    <numSensor ruleid="modinletsuckpressurekpa" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>suctiondiffpress</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_INLETSUCKPRESKPA_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.4</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Inlet Suction Pressure - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <sensorSet>Module Cooling</sensorSet>
+    </numSensor>
+    
+    <!-- discharge pressure in kPa -->
+    <!-- DEPENDENCY DD140.8 -->
+    <numSensor ruleid="moddischpressurekpa" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.6</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>suctiondiffpress</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_DISCHPRESKPA_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.6</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Discharge Pressure - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <sensorSet>Module Cooling</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  <device deviceid="condensor-valve-position">
+    <!-- coil config must be dx -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0">
+      <valueList>
+        <value>2</value>
+      </valueList>
+    </oidMustMatch>
+    <!-- heat of rejection method is not air -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.7.0">
+      <valueList>
+        <value>2</value>
+      </valueList>
+    </oidMustNotMatch>
+    <!-- condensor actuator is not equal to none -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.13.0">
+      <valueList>
+        <value>2</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- condensor fluid valve position (%) -->
+    <!-- DEPENDENCY DD140.13 -->
+    <numSensor ruleid="modconfluidvlvpos" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.8</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/pctopen</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_CONFLUVLVPOS_<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.8</getRowOid>
+      </value>
+      <label>Condensor Fluid Valve Position - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <sensorSet>Module Cooling</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="coil-valve-position">
+    <!-- coil config must be multicool, econ, or chilled water -->
+    <oidMustMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.5.0">
+      <valueList>
+        <value>3</value>
+        <value>4</value>
+        <value>5</value>
+      </valueList>
+    </oidMustMatch>
+    <!-- coil fluid valve actuator not equal to none -->
+    <oidMustNotMatch oid=".1.3.6.1.4.1.318.1.1.13.1.4.3.11.0">
+      <valueList>
+        <value>2</value>
+      </valueList>
+    </oidMustNotMatch>
+    
+    <!-- coil fluid valve position (%) -->
+    <!-- DEPENDENCY DD140.14 -->
+    <numSensor ruleid="modcoilfluidvlvpos" index=".1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/pctopen</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_COILFLUVLVPOS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.9</getRowOid>
+      </value>
+      <label>Coil Fluid Valve Position - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.4.2.1.1</getRowOid></label>
+      <sensorSet>Module Cooling</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="module-humidifier">
+	  <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.2.1.0"/>
+	  
+    <!-- Humidifier Electrode Current (Amps) -->
+    <!-- DEPENDENCY DD170.1 -->
+    <numSensor ruleid="humelectrodecurrent" index=".1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1">
+      <rowTest>
+        <!-- remove invalid readings -->
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.3</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>amperage/humelectrodecurrent</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HUMELECTRODECURRENT_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.3</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Humidifier Electrode Current - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1</getRowOid></label>
+      <sensorSet>Module Humidification</sensorSet>
+    </numSensor>
+    
+    <!-- Humidifier Actual Output (%) -->
+    <!-- DEPENDENCY DD150.13 -->
+    <numSensor ruleid="humactoutput" index=".1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/pctcoolingcap</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HUMACTOUTPUT_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.4</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidifier Actual Output - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1</getRowOid></label>
+      <sensorSet>Module Humidification</sensorSet>
+    </numSensor>
+    
+    <!-- Humidifier Water Conductivity (Micro_Siemens/cm) -->
+    <!-- DEPENDENCY DD170.2 -->
+    <numSensor ruleid="humwaterconduct" index=".1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.5</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>h2oconduct/humh2oconduct</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HUMH2OCONDUCT_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidifier Water Conductivity - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1</getRowOid></label>
+      <sensorSet>Module Humidification</sensorSet>
+    </numSensor>
+    
+    <!-- Humidity Hot Water Valve Position (%) -->
+    <!-- DEPENDENCY DD140.15 -->
+    <numSensor ruleid="humhotwatervlvposition" index=".1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.6</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/valveposition</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HUMH2OVLVPOSITION_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.6</getRowOid>
+      </value>
+      <label>Humidifier Hot Water Valve Position - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.5.2.1.1</getRowOid></label>
+      <sensorSet>Module Humidification</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="blower1-status">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1.1"/>
+    
+    <!-- Module Blower 1 Actual Frequency (Hz) -->
+    <!-- DEPENDENCY DD160.2 -->
+    <numSensor ruleid="blow1actfreq" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- remove invalid readings -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>frequency</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1ACTFREQ_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.4</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Blower 1 Actual Frequency - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 Actual Torque (%)-->
+    <!-- DEPENDENCY DD160.3 -->
+    <numSensor ruleid="blow1acttorq" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+            <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+              <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.8</getRowOid>
+            </mapValue>
+      </rowTest>
+      <type>pctofcapacity</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1ACTTORQ_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.01</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.8</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Blower 1 Actual Torque - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 Current (%)-->
+    <!-- DEPENDENCY DD160.4 -->
+    <numSensor ruleid="blow1current" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1CURRENT_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.01</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.9</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Blower 1 Current - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+	<!-- Module Blower 1 Actual Current (derived from rated and percent current -->
+	<numSensor ruleid="blower1_actual_current" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+	  <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+	  <type>amperage</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1ACTUALCURRENT_<rowIndex/></sensorId>
+	  <value>
+		<div>
+		  <op>
+			<mult>
+			  <op><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.9</getRowOid></op>
+			  <op><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.7</getRowOid></op>
+			</mult>
+		  </op>
+		  <op>1000000</op>
+		</div>
+      </value>
+	  <label>Blower 1 Actual Current - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+	</numSensor>
+    
+    <!-- Module Blower 1 Volts (Volts RMS)-->
+    <!-- DEPENDENCY DD160.5 -->
+    <numSensor ruleid="blow1voltage" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.10</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>voltage</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.10</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Blower 1 Voltage - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 DC Link Voltage (Volts DC)-->
+    <!-- DEPENDENCY_  DD160.6 -->
+    <numSensor ruleid="blow1dclinkvoltage" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.11</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>voltageDC</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1DCLINKVOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.11</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower 1 DC Link Voltage - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 Heat Sink Temperature (degrees C)-->
+    <!-- DEPENDENCY DD160.17 -->
+    <numSensor ruleid="blow1heatsinktemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is EC Controller -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.20</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1HEATSINKTEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.20</getRowOid>
+      </value>
+      <label>Blower 1 Heat Sink Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 Choke Temperature (degrees C)-->
+    <!-- DEPENDENCY DD160.18 -->
+    <numSensor ruleid="blow1choketemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is EC Controller -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.22</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1CHOKETEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.22</getRowOid>
+      </value>
+      <label>Blower 1 Choke Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 1 Inverter Temperature (degrees C)-->
+    <!-- DEPENDENCY DD160.19 -->
+    <numSensor ruleid="blow1invertertemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1">
+      <!-- valid if blower controller type is danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.24</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1INVERTERTEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.24</getRowOid>
+      </value>
+      <label>Blower 1 Inverter Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.6.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="blower2-status">
+	  <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1.1"/>    
+    <!-- Module Blower 2 Actual Frequency (Hz) -->
+    <numSensor ruleid="blow2actfreq" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- remove invalid readings -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>frequency/blowerfreq</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2ACTFREQ_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.4</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Blower 2 Actual Frequency - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 Actual Torque (%)-->
+    <!-- DEPENDENCY DD160.3 -->
+    <numSensor ruleid="blow2acttorq" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.8</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/blowertorq</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2ACTTORQ_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.01</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.8</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Blower 2 Actual Torque - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 Current (%)-->
+    <!-- DEPENDENCY DD160.4 -->
+    <numSensor ruleid="blow2current" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>pctofcapacity/blowercurrent</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2CURRENT_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.01</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.9</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <valueInc>0.01</valueInc>
+      <label>Blower 2 Current - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    <!-- Module Blower 1 Actual Current (derived from rated and percent current -->
+	<numSensor ruleid="blower2_actual_current" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+	  <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+	  <type>amperage</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2ACTUALCURRENT_<rowIndex/></sensorId>
+	  <value>
+		<div>
+		  <op>
+			<mult>
+			  <op><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.9</getRowOid></op>
+			  <op><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.7</getRowOid></op>
+			</mult>
+		  </op>
+		  <op>1000000</op>
+		</div>
+      </value>
+	  <label>Blower 2 Actual Current - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+	</numSensor>
+    <!-- Module Blower 2 Volts (Volts RMS)-->
+    <!-- DEPENDENCY DD160.5 -->
+    <numSensor ruleid="blow2voltage" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.10</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>voltage</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2VOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <mult>
+          <op>0.1</op>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.10</getRowOid>
+          </op>
+        </mult>
+      </value>
+      <label>Blower 2 Voltage - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 DC Link Voltage (Volts DC)-->
+    <!-- DEPENDENCY_  DD160.6 -->
+    <numSensor ruleid="blow2dclinkvoltage" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is fuji or danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.11</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>voltageDC</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2DCLINKVOLTAGE_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.11</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower 2 DC Link Voltage - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 Heat Sink Temperature (degrees C)-->
+    <!-- DEPENDENCY DD160.17 -->
+    <numSensor ruleid="blow2heatsinktemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is EC Controller -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.20</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp/blowerheatsinktemp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2HEATSINKTEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.20</getRowOid>
+      </value>
+      <label>Blower 2 Heat Sink Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 Choke Temperature (degrees C)-->
+    <!-- DEPENDENCY_  DD160.18 -->
+    <numSensor ruleid="blow2choketemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is EC Controller -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.22</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp/blowerchoketemp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2CHOKETEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.22</getRowOid>
+      </value>
+      <label>Blower 2 Choke Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower 2 Inverter Temperature (degrees C)-->
+    <!-- DEPENDENCY_  DD160.19 -->
+    <numSensor ruleid="blow2invertertemp" index=".1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1">
+      <!-- valid if blower controller type is danfoss -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.24</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>temp/blowerinvertertemp</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2INVERTERTEMP_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.24</getRowOid>
+      </value>
+      <label>Blower 2 Inverter Temperature - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.7.2.1.1</getRowOid></label>
+      <sensorSet>Module Blowers</sensorSet>
+    </numSensor>
+    
+  </device>
+
+  
+  <device deviceid="module-runtimes">
+	  <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.2.1.0"/>    
+    <!-- Module Heater runtime (returned as # of hours) -->
+    <!-- DEPENDENCY DD180.3 -->
+    <numSensor ruleid="heaterrunhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!--include only for electric scr and hot gas electric heater types -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.4</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HEATER_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.4</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Heater Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- Module Humidifier runtime (returned as # of hours) -->
+    <numSensor ruleid="humidifierrunhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!--include only for steam electrode humidifiers -->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.5</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_HUMIDIFIER_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.5</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Humidifier Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower1 runtime (returned as # of hours) -->
+    <numSensor ruleid="blower1runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid responses-->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.6</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER1_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.6</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower 1 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower2 runtime (returned as # of hours) -->
+    <numSensor ruleid="blower2runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid responses-->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.7</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWER2_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.7</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower 2 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower Controller 1 runtime (returned as # of hours) -->
+    <numSensor ruleid="blowerctrl1runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid responses-->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.8</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWERCTRL1_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.8</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower Controller 1 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+    <!-- Module Blower Controller2 runtime (returned as # of hours) -->
+    <numSensor ruleid="blowerctrl2runhours" index=".1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1">
+      <!-- remove invalid responses-->
+      <rowTest>
+        <mapValue mapid="apcacfm/fmseries_typemap/dropinvalidreading">
+          <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.9</getRowOid>
+        </mapValue>
+      </rowTest>
+      <type>runhours</type>
+      <sensorId>NAIRFM_SYSMODSTATUS_BLOWERCTRL2_RUNHOURS_<rowIndex/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.9</getRowOid>
+      </value>
+      <valueInc>1</valueInc>
+      <label>Blower Controller 2 Runhours - Module<space/><getRowOid>.1.3.6.1.4.1.318.1.1.13.1.5.8.2.1.1</getRowOid></label>
+      <sensorSet>Module Runhours</sensorSet>
+    </numSensor>
+    
+  </device>
+
+
+  <device deviceid="fmseries_typemap">
+    <oidMustExist oid=".1.3.6.1.4.1.318.1.1.13.1.2.1.0"/>    
+    <valueMap ruleid="dropinvalidreading">
+      <valueIn>-2147483648</valueIn><valueOut>[false]</valueOut>
+      <valueIn>*</valueIn><valueOut>[true]</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="tandem-compressor-only">
+      <valueIn>2</valueIn><valueOut>[true]</valueOut>
+      <valueIn>*</valueIn><valueOut>[false]</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="steam-electrode-only">
+      <valueIn>3</valueIn><valueOut>[true]</valueOut>
+      <valueIn>*</valueIn><valueOut>[false]</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="nairfmstatusmap">
+      <valueIn>1</valueIn><valueOut>2</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="grpsysstatusmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>5</valueIn><valueOut>4</valueOut>
+      <valueIn>6</valueIn><valueOut>5</valueOut>
+      <valueIn>7</valueIn><valueOut>6</valueOut>
+      <valueIn>*</valueIn><valueOut>7</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="role-to-index-map">
+      <valueIn>1</valueIn><valueOut>1</valueOut>
+      <valueIn>2</valueIn><valueOut>2</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="system-role-to-index-map">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="nairfmsysstatusmap">
+      <valueIn>1</valueIn><valueOut>7</valueOut>
+      <valueIn>2</valueIn><valueOut>7</valueOut>
+      <valueIn>3</valueIn><valueOut>7</valueOut>
+      <valueIn>4</valueIn><valueOut>0</valueOut>
+      <valueIn>5</valueIn><valueOut>1</valueOut>
+      <valueIn>6</valueIn><valueOut>2</valueOut>
+      <valueIn>7</valueIn><valueOut>4</valueOut>
+      <valueIn>8</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>7</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="nairfmcommstatusmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="demandswitchmap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="fm-contactrelay-state-map">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="compressorstatus-to-index">
+      <valueIn>1</valueIn><valueOut>2</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>0</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="yesnomap">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>*</valueIn><valueOut>2</valueOut>
+    </valueMap>
+    
+    <valueMap ruleid="group-system-status-to-index">
+      <valueIn>3</valueIn><valueOut>0</valueOut>
+      <valueIn>4</valueIn><valueOut>1</valueOut>
+      <valueIn>5</valueIn><valueOut>2</valueOut>
+      <valueIn>6</valueIn><valueOut>4</valueOut>
+      <valueIn>7</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>7</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="sysstatus">
+      <!-- correction attributes indicate which state they match up with in the acunitstate stateenum -->
+      <label correction="1">Online</label>
+      <label correction="3">Idle</label>
+      <label correction="4">Load Share</label>
+      <label correction="0">Offline</label>
+      <label correction="5">Failed</label>
+      <label correction="6">Disabled</label>
+      <label correction="2">Undefined</label>
+      <label correction="7">Not Applicable</label>
+    </enumMap>
+    
+    <enumMap ruleid="commstatus">
+      <label>Lost</label>
+      <label>Established</label>
+    </enumMap>
+    
+    <enumMap ruleid="systemrole">
+      <label>Not Applicable</label>
+      <label>Primary</label>
+      <label>Backup</label>
+    </enumMap>
+    
+    <enumMap ruleid="onoffswitchstate">
+      <label>N/A</label>
+      <label>Off</label>
+      <label>On</label>
+    </enumMap>
+    
+    <enumMap ruleid="yesnostate">
+      <label>Yes</label>
+      <label>No</label>
+      <label>Unknown</label>
+    </enumMap>
+    
+    <enumMap ruleid="drycontact">
+      <label>Open</label>
+      <label>Closed</label>
+    </enumMap>
+
+    <enumMap ruleid="compressorstatusenum">
+      <label>Off</label>
+      <label>On</label>
+      <label>N/A</label>
+    </enumMap>
+
+  </device>
+</APC_DDF>

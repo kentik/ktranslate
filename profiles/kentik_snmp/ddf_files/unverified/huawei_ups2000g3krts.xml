@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="huawei_ups2000g3krts"
+	ddfname="Huawei UPS2000G3KRTS"
+	ddfversion="2"
+	canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="huawei_ups2000g3krts">
+    <oidMustExist ruleid="snmpdevicetest" oid="1.3.6.1.4.1.2011.6.174.1" istree="yes" />
+
+    <setProductData ruleid="vendordata" field="vendor">Huawei</setProductData>
+    <setProductData ruleid="modeldata" field="model">
+		<getOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2.1</getOid>
+	</setProductData>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+    <setProductData ruleid="hwUpsSystemMainDeviceESN" field="serial_num">
+		<getOid>1.3.6.1.4.1.2011.6.174.1.1.1.1.0</getOid>
+	</setProductData>
+
+    <setDefaultLabel>
+		<getOid>1.3.6.1.4.1.2011.6.174.1.1.1.2.0</getOid>
+	</setDefaultLabel>
+
+	<valueMap ruleid="phasecount-vm">
+		<valueIn>2</valueIn><valueOut>3</valueOut>
+		<valueIn>*</valueIn><valueOut>1</valueOut>
+	</valueMap>
+    <setProductData ruleid="hwUpsCtrlInputStandard" field="inputphasecount">
+		<getOid>.1.3.6.1.4.1.2011.6.174.1.102.100.1.8.1</getOid>
+	</setProductData>
+    <setProductData ruleid="hwUpsCtrlOutputStandard" field="outputphasecount">
+		<getOid>.1.3.6.1.4.1.2011.6.174.1.102.100.1.9.1</getOid>
+	</setProductData>
+
+	<valueMap ruleid="deleteNull-vm">
+		<valueIn>2147483647</valueIn><valueOut>[false]</valueOut>
+		<valueIn>4294967295</valueIn><valueOut>[false]</valueOut>
+		<valueIn>*</valueIn><valueOut>[true]</valueOut>
+	</valueMap>
+
+    <numSensor ruleid="hwupssysdevicenum">
+      <type>num</type>
+      <sensorId>_HWUPSSYSDEVICENUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.2011.6.174.1.1.1.4.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Number of Devices in System</label>
+      <sensorSet>System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparallelsysnum">
+      <type>num</type>
+      <sensorId>_HWUPSPARALLELSYSNUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.2011.6.174.1.1.1.5.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Number of Parallel Systems</label>
+      <sensorSet>System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsenvtemper">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<formatNumber printffmt="%1.0f">
+		<getOid>1.3.6.1.4.1.2011.6.174.1.1.1.6.0</getOid>
+		</formatNumber>
+		</mapValue>
+		</rowTest>
+      <type>temp</type>
+      <sensorId>AMBIENT_EM_TEMP_99</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.2011.6.174.1.1.1.6.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ambient Temperature</label>
+      <sensorSet>System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsenvhumidity">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<formatNumber printffmt="%1.0f">
+		<getOid>1.3.6.1.4.1.2011.6.174.1.1.1.7.0</getOid>
+		</formatNumber>
+		</mapValue>
+		</rowTest>
+      <type>humidity</type>
+      <sensorId>_EM_HUMIDITY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.2011.6.174.1.1.1.7.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Ambient Humidity</label>
+      <sensorSet>System</sensorSet>
+    </numSensor>
+
+    <stateSensor ruleid="hwupsdevicepowersupplymethod" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.1">
+      <type>state</type>
+      <sensorId>DEVICE_POWER_SUPPLY_METHOD_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="power_supply_method_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.1</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Power Supply Method</label>
+      <enum>power_supply_method_em</enum>
+      <sensorSet>Device</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsdeviceDeviceRunningStatus" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.2">
+      <type>state</type>
+      <sensorId>RUNNING_STATUS_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="power_supply_method_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.2</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Running Status</label>
+      <enum>power_supply_method_em</enum>
+      <sensorSet>Device</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsdevicebatterystate" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.3">
+      <type>state</type>
+      <sensorId>BATTERY_STATE_<rowIndex/></sensorId>
+      <value>
+        <mapValue mapid="battery_state_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.3</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery State</label>
+      <enum>battery_state_em</enum>
+      <sensorSet>Device</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="hwupsdevicetemperature" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.4">
+      <type>temp</type>
+      <sensorId>DEVICE_EM_TEMP_<rowNumber/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.4</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Temperature</label>
+      <sensorSet>Device</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsdeviceenergyfloatstate" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.5">
+      <type>num</type>
+      <sensorId>ENERGY_FLOAT_STATE_<rowIndex/></sensorId>
+      <value>
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.5</getRowOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Energy Float State</label>
+      <sensorSet>Device</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsdeviceredundantnumber" index="1.3.6.1.4.1.2011.6.174.1.2.101.1.6">
+      <type>num</type>
+      <sensorId>DEVICE_REDUNDANT_NUMBER<rowIndex/></sensorId>
+      <value>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.2.101.1.6</getRowOid>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Redundant Number</label>
+      <sensorSet>Device</sensorSet>
+    </numSensor>
+
+	<suppressRule ruleid="stompUPSMibInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage" />
+	<suppressRule ruleid="stompUPSMibInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent" />
+	<suppressRule ruleid="stompUPSMibInputFreq" suppressid="upsmib/upsmib/upsInputFrequency" />
+
+    <numSensor ruleid="hwupsinputvoltagea" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.1">
+      <type>voltage</type>
+      <sensorId><rowNumber/>_1_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.1</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Voltage A</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsinputvoltageb" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.2">
+      <type>voltage</type>
+      <sensorId><rowNumber/>_2_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.2</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Voltage B</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsinputvoltagec" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.3">
+      <type>voltage</type>
+      <sensorId><rowNumber/>_3_INPUT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.3</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Voltage C</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsinputfrequency" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.4">
+      <type>frequency</type>
+      <sensorId>INPUT_FREQ_<rowNumber/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.4</getRowOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+		<valueInc>0.01</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Frequency</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputCurrentA" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.5">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_INPUT_CURRENT_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.5</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Current A</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputCurrentB" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.6">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_INPUT_CURRENT_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.6</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Current B</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputCurrentC" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.7">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_INPUT_CURRENT_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.7</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Current C</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputPowerFactorA" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.8">
+      <type>num/powerfactor</type>
+      <sensorId><rowIndex/>_POWER_FACTOR_IN_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.8</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Power Factor A</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputPowerFactorB" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.9">
+      <type>num/powerfactor</type>
+      <sensorId><rowIndex/>_POWER_FACTOR_IN_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.9</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Power Factor B</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwUpsInputPowerFactorC" index="1.3.6.1.4.1.2011.6.174.1.3.100.1.10">
+      <type>num/powerfactor</type>
+      <sensorId><rowIndex/>_POWER_FACTOR_IN_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.3.100.1.10</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Input Power Factor C</label>
+      <sensorSet>Input</sensorSet>
+    </numSensor>
+
+	<suppressRule ruleid="stompUPSMibOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage" />
+	<suppressRule ruleid="stompUPSMibOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent" />
+	<suppressRule ruleid="stompUPSMibOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency" />
+	<suppressRule ruleid="stompUPSMibOutputLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad" />
+	<suppressRule ruleid="stompUPSMibOutputPower" suppressid="upsmib/upsmib/upsOutputPower" />
+
+    <numSensor ruleid="hwupsoutputvoltagea" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.1">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_OUTPUT_VOLTAGE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.1</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Voltage A</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputvoltageb" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.2">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_OUTPUT_VOLTAGE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.2</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Voltage B</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputvoltagec" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.3">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_OUTPUT_VOLTAGE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.3</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Voltage C</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="hwupsoutputcurrenta" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.4">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_OUTPUT_AMPS_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.4</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Current A</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputcurrentb" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.5">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_OUTPUT_AMPS_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.5</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Current B</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputcurrentc" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.6">
+      <type>amperage</type>
+      <sensorId><rowIndex/>_OUTPUT_AMPS_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.6</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Current C</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputfrequency" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.7">
+      <type>frequency</type>
+      <sensorId><rowIndex/>_OUTPUT_FREQ_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.7</getRowOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+		<valueInc>0.01</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Frequency</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputactivepowera" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.8">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_OUTPUT_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.8</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Active Power A</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputactivepowerb" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.9">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_OUTPUT_POWER_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.9</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Active Power B</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputactivepowerc" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.10">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_OUTPUT_POWER_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.10</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Active Power C</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputappearancepowera" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.11">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_OUTPUT_APPARENT_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.11</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Apparent Power A</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputappearancepowerb" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.12">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_OUTPUT_APPARENT_POWER_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.12</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Apparent Power B</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputappearancepowerc" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.13">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_OUTPUT_APPARENT_POWER_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.13</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Apparent Power C</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputloada" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.14">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_OUTPUT_LOAD_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.14</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Load A</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputloadb" index="1.3.6.1.4.1.2011.6.174.1.4.100.1.15">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_OUTPUT_LOAD_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.15</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Load B</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsoutputloadc"  index="1.3.6.1.4.1.2011.6.174.1.4.100.1.16">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_OUTPUT_LOAD_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.4.100.1.16</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Output Load C</label>
+      <sensorSet>Output</sensorSet>
+    </numSensor>
+
+	<suppressRule ruleid="stompUPSMibBypassVoltage" suppressid="upsmib/upsmib/upsBypassVoltage" />
+	<suppressRule ruleid="stompUPSMibBypassCurrent" suppressid="upsmib/upsmib/upsBypassCurrent" />
+	<suppressRule ruleid="stompUPSMibBypassFrequency" suppressid="upsmib/upsmib/upsBypassFrequency" />
+	<suppressRule ruleid="stompUPSMibBypassPower" suppressid="upsmib/upsmib/upsBypassPower" />
+
+    <numSensor ruleid="hwupsbypassinputvoltagea" index="1.3.6.1.4.1.2011.6.174.1.5.100.1.1">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_INPUT1_VAC_2_1_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.5.100.1.1</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Bypass Input Voltage A</label>
+      <sensorSet>Bypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbypassinputvoltageb" index="1.3.6.1.4.1.2011.6.174.1.5.100.1.2">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_INPUT1_VAC_2_1_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.5.100.1.2</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Bypass Input Voltage B</label>
+      <sensorSet>Bypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbypassinputvoltagec" index="1.3.6.1.4.1.2011.6.174.1.5.100.1.3">
+      <type>voltageAC</type>
+      <sensorId><rowIndex/>_INPUT1_VAC_2_1_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.5.100.1.3</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Bypass Input Voltage C</label>
+      <sensorSet>Bypass</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbypassinputfrequency" index="1.3.6.1.4.1.2011.6.174.1.5.100.1.4">
+      <type>frequency</type>
+      <sensorId><rowIndex/>_INPUT1_HZ_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.5.100.1.4</getRowOid>
+          </op>
+          <op>0.01</op>
+        </mult>
+      </value>
+		<valueInc>0.01</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Bypass Input Frequency</label>
+      <sensorSet>Bypass</sensorSet>
+    </numSensor>
+
+	<suppressRule ruleid="stompUPSMibBatteryVoltage" suppressid="upsmib/upsmib/upsBatteryVoltage" />
+	<suppressRule ruleid="stompUPSMibBatteryCurrent" suppressid="upsmib/upsmib/upsBatteryCurrent" />
+	<suppressRule ruleid="stompUPSMibBatteryTemperature" suppressid="upsmib/upsmib/upsBatteryTemperature" />
+	<suppressRule ruleid="stompUPSMibBatteryTime" suppressid="upsmib/upsmib/upsSecondsOnBattery" />
+	<suppressRule ruleid="stompUPSMibBatteryTimeRemain" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining" />
+	<suppressRule ruleid="stompUPSMibBatteryChargeRemain" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining" />
+
+    <numSensor ruleid="hwupsbatteryvoltage" index="1.3.6.1.4.1.2011.6.174.1.6.100.1.1">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<formatNumber printffmt="%1.0f">
+		<getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.1</getRowOid>
+		</formatNumber>
+		</mapValue>
+		</rowTest>
+      <type>voltage</type>
+      <sensorId><rowIndex/>_BATT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.1</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Voltage</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbatterycurrent" index="1.3.6.1.4.1.2011.6.174.1.6.100.1.2">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<formatNumber printffmt="%1.0f">
+		<getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.2</getRowOid>
+		</formatNumber>
+		</mapValue>
+		</rowTest>
+      <type>amperage</type>
+      <sensorId><rowIndex/>_BATT_AMPERAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.2</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Current</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbatterycapacityleft" index="1.3.6.1.4.1.2011.6.174.1.6.100.1.3">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_BATT_CAPACITY_LEFT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.3</getRowOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Capacity Left</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbatterybackuptime" index="1.3.6.1.4.1.2011.6.174.1.6.100.1.4">
+      <type>timeinmin</type>
+      <sensorId><rowIndex/>_TIME_REMAINING_ON_BATT</sensorId>
+      <value>
+        <div>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.4</getRowOid>
+          </op>
+          <op>60</op>
+        </div>
+      </value>
+		<valueInc>0.01</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Backup Time</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsbatterytemperature" index="1.3.6.1.4.1.2011.6.174.1.6.100.1.6">
+		<rowTest>
+		<mapValue mapid="deleteNull-vm">
+		<formatNumber printffmt="%1.0f">
+		<getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.6</getRowOid>
+		</formatNumber>
+		</mapValue>
+		</rowTest>
+      <type>temp</type>
+      <sensorId><rowIndex/>BATT_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.6.100.1.6</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Temperature</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="hwupsparasysactivepowera" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.2">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.2</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Active Power A</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysactivepowerb" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.3">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_POWER_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.3</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Active Power B</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysactivepowerc" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.4">
+      <type>powerW</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_POWER_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.4</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Active Power C</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysappearancepowera" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.5">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_APPARENT_POWER_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.5</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Apparent Power A</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysappearancepowerb" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.6">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_APPARENT_POWER_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.6</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Apparent Power B</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysappearancepowerc" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.7">
+      <type>powerVA</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_APPARENT_POWER_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.7</getRowOid>
+          </op>
+          <op>100</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Apparent Power C</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysloada" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.8">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_LOAD_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.8</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Load A</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysloadb" index="1.3.6.1.4.1.2011.6.174.1.10.1.1.9">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_LOAD_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.9</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Load B</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+    <numSensor ruleid="hwupsparasysloadc"  index="1.3.6.1.4.1.2011.6.174.1.10.1.1.10">
+      <type>pctofcapacity</type>
+      <sensorId><rowIndex/>_PARALLEL_SYS_OUTPUT_LOAD_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.10.1.1.10</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Parallel System Load C</label>
+      <sensorSet>Parallel System</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="hwupsalarmcurractivenum">
+      <type>num</type>
+      <sensorId>_HWUPSALARMCURRACTIVENUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.2011.6.174.1.12.2.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+		<valueInc>1</valueInc>
+      <label>Number of Active Alarms</label>
+      <sensorSet>Alarm</sensorSet>
+    </numSensor>
+
+	<valueMap ruleid="severity-vm">
+		<valueIn>1</valueIn><valueOut>critical</valueOut>
+		<valueIn>2</valueIn><valueOut>critical</valueOut>
+		<valueIn>3</valueIn><valueOut>warning</valueOut>
+		<valueIn>4</valueIn><valueOut>warning</valueOut>
+		<valueIn>*</valueIn><valueOut>information</valueOut>
+	</valueMap>
+	<alarmFlags2 ruleid="hwUpsActiveAlarmFlag" index=".1.3.6.1.4.1.2011.6.174.1.13.1.1.8">
+		<value><getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.8</getRowOid></value>
+		<alarmFlagsTest match="1">
+			<name>
+				<activeText><getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.6</getRowOid></activeText>
+				<inactiveText><getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.6</getRowOid> Cleared</inactiveText>
+			</name>
+			<severity>
+				<mapValue mapid="severity-vm">
+				<getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.7</getRowOid>
+				</mapValue>
+			</severity>
+			<category>Alarm</category>
+			<description>
+				<activeText>A(n) <getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.6</getRowOid> condition has been detected.</activeText>
+				<inactiveText><getRowOid>.1.3.6.1.4.1.2011.6.174.1.13.1.1.6</getRowOid> condition has returned to normal.</inactiveText>
+			</description>
+		</alarmFlagsTest>
+	</alarmFlags2>
+
+    <numSensor ruleid="hwupsctrlmodelcapacity" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.20">
+      <type>num/powerKVA</type>
+      <sensorId><rowIndex/>_HWUPSCTRLMODELCAPACITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.20</getRowOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+		<valueInc>0.1</valueInc>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Model Capacity</label>
+      <sensorSet>Control</sensorSet>
+    </numSensor>
+
+    <stateSensor ruleid="hwupsctrlecoswitch" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.1">
+      <type>state</type>
+      <sensorId><rowIndex/>_ECO_SWITCH</sensorId>
+      <value>
+        <mapValue mapid="eco_switch_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.1</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> ECO Switch</label>
+      <enum>eco_switch_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsctrlmodeltype" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.7">
+      <type>state</type>
+      <sensorId><rowIndex/>_MODEL_TYPE</sensorId>
+      <value>
+        <mapValue mapid="model_type_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.7</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Model Type</label>
+      <enum>model_type_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="hwupsctrlpoweronstate" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.10">
+      <type>state</type>
+      <sensorId><rowIndex/>_POWER_ON</sensorId>
+      <value>
+        <mapValue mapid="ctrl_power_on_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.10</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Power On</label>
+      <enum>ctrl_power_on_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsctrlbatterytobooststate" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.11">
+      <type>state</type>
+      <sensorId><rowIndex/>_BATT_TO_BOOST</sensorId>
+      <value>
+        <mapValue mapid="battery_boost_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.11</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery to Boost</label>
+      <enum>battery_boost_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsctrlbatterytofloatstate" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.12">
+      <type>state</type>
+      <sensorId><rowIndex/>_BATT_TO_FLOAT</sensorId>
+      <value>
+        <mapValue mapid="battery_float_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.12</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery to Float</label>
+      <enum>battery_float_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsctrlbatterytoteststate" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.13">
+      <type>state</type>
+      <sensorId><rowIndex/>_BATT_TO_TEST</sensorId>
+      <value>
+        <mapValue mapid="battery_test_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.13</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery to Test</label>
+      <enum>battery_test_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="hwupsctrlbatterystopteststate" index="1.3.6.1.4.1.2011.6.174.1.102.100.1.14">
+      <type>state</type>
+      <sensorId><rowIndex/>_BATT_TO_STOP</sensorId>
+      <value>
+        <mapValue mapid="battery_stop_vm">
+          <getRowOid>1.3.6.1.4.1.2011.6.174.1.102.100.1.14</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>1.3.6.1.4.1.2011.6.174.1.2.100.1.2</getRowOid> Battery Stop Test</label>
+      <enum>battery_stop_em</enum>
+      <sensorSet>Control</sensorSet>
+    </stateSensor>
+	
+		<valueMap ruleid="true_false_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="true_false_em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>	
+
+
+		<valueMap ruleid="power_supply_method_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="power_supply_method_em">
+			<label>No Output</label>
+			<label>Bypass</label>
+			<label>Normal</label>
+			<label>Nattery</label>
+			<label>Combined</label>
+			<label>Normal ECO</label>
+			<label>Battery ECO</label>
+		</enumMap>	
+		
+		<valueMap ruleid="battery_state_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_state_em">
+			<label>Not Connected</label>
+			<label>Temporary Mode</label>
+			<label>Sleep Mode</label>
+			<label>Float Charge</label>
+			<label>Boost Charge</label>
+			<label>Discharge</label>
+		</enumMap>		
+
+		<valueMap ruleid="alarm_level_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="alarm_level_em">
+			<label>Critical</label>
+			<label>Major</label>
+			<label>Minor</label>
+			<label>Warning</label>
+		</enumMap>	
+		
+		<valueMap ruleid="eco_switch_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="eco_switch_em">
+			<label>No ECO</label>
+			<label>ECO</label>
+		</enumMap>
+		
+		<valueMap ruleid="model_type_vm">
+			<valueIn>17</valueIn><valueOut>1</valueOut>
+			<valueIn>33</valueIn><valueOut>2</valueOut>
+			<valueIn>65</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="model_type_em">
+			<label>Unknown</label>
+			<label>6K</label>
+			<label>10K</label>
+			<label>20K</label>
+		</enumMap>		
+
+		<valueMap ruleid="ctrl_power_on_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ctrl_power_on_em">
+			<label>Power Off</label>
+			<label>Power On</label>
+			<label>Power On Fail</label>
+			<label>Power On Complete</label>
+		</enumMap>			
+		<valueMap ruleid="battery_boost_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_boost_em">
+			<label>Enabled</label>
+			<label>Disabled</label>
+		</enumMap>			
+		<valueMap ruleid="battery_float_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_float_em">
+			<label>Enabled</label>
+			<label>Disabled</label>
+		</enumMap>	
+		<valueMap ruleid="battery_test_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_test_em">
+			<label>Enabled</label>
+			<label>Disabled</label>
+		</enumMap>	
+		<valueMap ruleid="battery_stop_vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_stop_em">
+			<label>Enabled</label>
+			<label>Disabled</label>
+		</enumMap>	
+
+  </device>
+</APC_DDF>

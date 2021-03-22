@@ -1,0 +1,596 @@
+<?xml version="1.0"?>
+<!-- bachmann_pdu -->
+<APC_DDF ddfid ="bachmann_bluenet_nettrack" ddfname="Bachmann BlueNet (NetTrack)" ddfversion="2" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="bachmann_bluenet_nettrack_header">
+		<oidMustExist ruleid="bachmann_bluenet_nettrack_header_exist" oid=".1.3.6.1.4.1.21695.1.10.7.2.1.2.0"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Bachmann</setProductData>
+
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.21695.1.10.7.1.2.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="serialdata" field="serial_num">
+			<getOid>.1.3.6.1.4.1.21695.1.10.7.1.1.0</getOid>
+		</setProductData>
+		
+		<setProductData ruleid="revisiondata" field="revision">
+			<getOid>.1.3.6.1.4.1.21695.1.10.7.1.3.0</getOid>
+		</setProductData>
+		
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.21695.1.10.7.1.4.0</getOid>
+		</setProductData>
+		
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<numSensor ruleid="energy-P">
+			<type>num/kwatthr</type>
+			<sensorId>_OUTPUT_ENERGY_TOTAL_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.2.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Energie P</label>
+			<sensorSet>Energie</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="energy-Q">
+			<type>num/kwatthr</type>
+			<sensorId>_OUTPUT_ENERGY_TOTAL_2</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.3.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Energie Q</label>
+			<sensorSet>Energie</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="energy-S">
+			<type>num/kwatthr</type>
+			<sensorId>_OUTPUT_ENERGY_TOTAL_3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.4.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Energie S</label>
+			<sensorSet>Energie</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="voltage">
+			<type>voltage</type>
+			<sensorId>_OUTPUT_VOLTAGE_L2L_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.8.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Spannung</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="load-Current">
+			<type>amperage</type>
+			<sensorId>_OUTLET_CURRENT_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.9.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Strom</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="frequency">
+			<type>frequency</type>
+			<sensorId>_OUTPUT_FREQ</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.10.0</getOid>
+					</op>
+					<op>.001</op>
+				</mult>
+			</value>
+			<label>Frequenz</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="temperature">
+			<type>temp</type>
+			<sensorId>_EM_TEMP_1</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.21695.1.10.7.3.1.4.0</getOid>
+					</op>
+					<op>.1</op>
+				</mult>
+			</value>
+			<label>Temperatur intern</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="powerw">
+			<type>powerW</type>
+			<sensorId>_OUTPUT_POWER_TOTAL</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.5.0</getOid>
+			</value>
+			<label>Wirkleistung</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+
+		<numSensor ruleid="powerva">
+			<type>powerVA/powerVAR </type>
+			<sensorId>POWER_VAR</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.6.0</getOid>
+			</value>
+			<label>Blindleistung</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="energy">
+			<type>powerVA</type>
+			<sensorId>_OUTPUT_APPARENT_POWER_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.7.0</getOid>
+			</value>
+			<label>Scheinleistung</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+
+    <numSensor ruleid="e3ipminfometers">
+      <type>num</type>
+      <units />
+      <sensorId>_E3IPMINFOMETERS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.1.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipminfometers</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmmeter">
+      <type>num</type>
+      <units />
+      <sensorId>_E3IPMMETER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmmeter</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmsensor">
+      <type>num</type>
+      <units />
+      <sensorId>_E3IPMSENSOR</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.3.1.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmsensor</label>
+      <sensorSet>num</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmsensorhumidity">
+      <type>humidity</type>
+      <units />
+      <sensorId>_E3IPMSENSORHUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.3.1.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmsensorhumidity</label>
+      <sensorSet>Humidity</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgroup">
+      <type>num</type>
+      <units />
+      <sensorId>_E3IPMPGROUP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgroup</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgenergyp">
+      <type>num/kwatthr</type>
+      <units>watthours</units>
+      <sensorId>_E3IPMPGENERGYP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.4</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgenergyp</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgenergyq">
+      <type>num/kVARhr</type>
+      <units />
+      <sensorId>_E3IPMPGENERGYQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgenergyq</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgenergys">
+      <type>num/kVAhr</type>
+      <units />
+      <sensorId>_E3IPMPGENERGYS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.6</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgenergys</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgpowerp">
+      <type>num/kVAhr</type>
+      <units />
+      <sensorId>_E3IPMPGPOWERP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.7</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgpowerp</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgpowerq">
+      <type>num/kVARhr</type>
+      <units />
+      <sensorId>_E3IPMPGPOWERQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.8</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgpowerq</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgpowers">
+      <type>powerVA</type>
+      <units />
+      <sensorId>_E3IPMPGPOWERS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.9</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgpowers</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmpgirms">
+      <type>amperage</type>
+      <units>milliamps</units>
+      <sensorId>_E3IPMPGIRMS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.10</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmpgirms</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugroup">
+      <type>num</type>
+      <units />
+      <sensorId>_E3IPMUGROUP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugroup</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugenergyp">
+      <type>num/kwatthr</type>
+      <units>watthours</units>
+      <sensorId>_E3IPMUGENERGYP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.4</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugenergyp</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugenergyq">
+      <type>num/kVARhr</type>
+      <units />
+      <sensorId>_E3IPMUGENERGYQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugenergyq</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugenergys">
+      <type>num/kVAhr</type>
+      <units />
+      <sensorId>_E3IPMUGENERGYS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.6</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugenergys</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugpowerp">
+      <type>num/kVAhr</type>
+      <units />
+      <sensorId>_E3IPMUGPOWERP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.7</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugpowerp</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugpowerq">
+      <type>num/kVARhr</type>
+      <units />
+      <sensorId>_E3IPMUGPOWERQ</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.8</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugpowerq</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugpowers">
+      <type>powerVA</type>
+      <units />
+      <sensorId>_E3IPMUGPOWERS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.9</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugpowers</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+    <numSensor ruleid="e3ipmugirms">
+      <type>amperage</type>
+      <units>milliamps</units>
+      <sensorId>_E3IPMUGIRMS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.10</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>E3ipmugirms</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="e3ipmchanneltype">
+      <type>state</type>
+      <sensorId>_E3IPMCHANNELTYPE</sensorId>
+      <value>
+        <mapValue mapid="channel_type_vm">
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.12</getOid>
+        </mapValue>
+      </value>
+      <label>E3ipmchanneltype</label>
+      <enum>channel_type_em</enum>
+      <sensorSet>state Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="e3ipmsensortype">
+      <type>state</type>
+      <sensorId>_E3IPMSENSORTYPE</sensorId>
+      <value>
+        <mapValue mapid="sensor_type_vm">
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.3.1.2</getOid>
+        </mapValue>
+      </value>
+      <label>E3ipmsensortype</label>
+      <enum>sensor_type_em</enum>
+      <sensorSet>state Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="e3ipmpgmembers">
+      <type>state</type>
+      <sensorId>_E3IPMPGMEMBERS</sensorId>
+      <value>
+        <mapValue mapid="ch1_ch2_vm">
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.3</getOid>
+        </mapValue>
+      </value>
+      <label>E3ipmpgmembers</label>
+      <enum>ch1_ch2_em</enum>
+      <sensorSet>state Sensors</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="e3ipmugmembers">
+      <type>state</type>
+      <sensorId>_E3IPMUGMEMBERS</sensorId>
+      <value>
+        <mapValue mapid="ch1_ch2_vm">
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.3</getOid>
+        </mapValue>
+      </value>
+      <label>E3ipmugmembers</label>
+      <enum>ch1_ch2_em</enum>
+      <sensorSet>state Sensors</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="e3ipmchannelname">
+      <type>ascii</type>
+      <units />
+      <sensorId>_E3IPMCHANNELNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.2.1.11</getOid>
+        </op>
+      </value>
+      <label>E3ipmchannelname</label>
+      <sensorSet>String Sensors</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="e3ipmsensorversion">
+      <type>ascii</type>
+      <units />
+      <sensorId>_E3IPMSENSORVERSION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.3.1.3</getOid>
+        </op>
+      </value>
+      <label>E3ipmsensorversion</label>
+      <sensorSet>String Sensors</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="e3ipmpgname">
+      <type>ascii</type>
+      <units />
+      <sensorId>_E3IPMPGNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.4.1.2</getOid>
+        </op>
+      </value>
+      <label>E3ipmpgname</label>
+      <sensorSet>String Sensors</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="e3ipmugname">
+      <type>ascii</type>
+      <units />
+      <sensorId>_E3IPMUGNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.21695.1.10.7.5.1.2</getOid>
+        </op>
+      </value>
+      <label>E3ipmugname</label>
+      <sensorSet>String Sensors</sensorSet>
+    </stringSensor>
+
+		<valueMap ruleid="ch1_ch2_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ch1_ch2_em">
+			<label>CH1</label>
+			<label>CH2</label>
+		</enumMap>	
+		
+		
+		<valueMap ruleid="channel_type_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="channel_type_em">
+			<label>Live Wire</label>
+			<label>Neutral Wire</label>
+		</enumMap>			
+		
+		<valueMap ruleid="sensor_type_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="sensor_type_vm">
+			<label>None</label>
+			<label>Temp</label>
+			<label>Temp Humidity</label>
+		</enumMap>			
+		
+	</device>
+</APC_DDF>

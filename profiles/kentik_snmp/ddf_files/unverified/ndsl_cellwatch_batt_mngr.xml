@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ndsl_cellwatch_batt_mngr"
+	ddfname="NDSL Cell Watch Battery Manager"
+	ddfversion="3"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\ndsl\NDSL-BATTERY-MONITOR-SMI1
+		NDSL-BATTERY-MONITOR-SMI1 | 21 May 2020
+	-->
+	<device deviceid="batt_mngr_header">
+		<oidMustExist ruleid="cell_watch_oid_tree" oid=".1.3.6.1.4.1.11504.1.1" istree="yes"/>
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">NDSL</setProductData>
+		<setProductData ruleid="modeldata" field="model">Cell Watch</setProductData>
+		<setProductData ruleid="typedata" field="type">Battery Manager</setProductData>
+		
+	</device>
+	
+	<device deviceid="vars">
+		<oidMustExist ruleid="vars_exists" oid=".1.3.6.1.4.1.11504.1.1" istree="yes"/>
+		
+		<alarmFlags ruleid="monSysStatus_alarms">
+			<value>
+				<getOid>.1.3.6.1.4.1.11504.1.1.3.0</getOid>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>System Hardware Communication Error</activeText>
+					<inactiveText>System Hardware Communication Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A system hardware communication error condition exists.</activeText>
+					<inactiveText>A system hardware communication error condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>System General Fault: Cellwatch Running, Not Scanning</activeText>
+					<inactiveText>System General Fault Alarm Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Device</category>
+				<description>
+					<activeText>System General Fault: cellwatch running, not scanning.</activeText>
+					<inactiveText>A System General Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>System Temperature Alarm</activeText>
+					<inactiveText>System Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A system temperature alarm condition exists.</activeText>
+					<inactiveText>A system temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8" match="8">
+				<name>
+					<activeText>System Current Alarm</activeText>
+					<inactiveText>System Current Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A system current alarm condition exists.</activeText>
+					<inactiveText>A system current alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="10" match="10">
+				<name>
+					<activeText>Battery Ohmic Alarm</activeText>
+					<inactiveText>Battery Ohmic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Battery</category>
+				<description>
+					<activeText>A battery ohmic alarm condition exists.</activeText>
+					<inactiveText>A battery ohmic alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="20" match="20">
+				<name>
+					<activeText>System Voltage Alarm</activeText>
+					<inactiveText>System Voltage Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A system voltage alarm condition exists.</activeText>
+					<inactiveText>A system voltage alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Thermal Run Away Alarm</activeText>
+					<inactiveText>Thermal Run Away Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A thermal run away alarm condition exists.</activeText>
+					<inactiveText>A thermal run away alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="100" match="100">
+				<name>
+					<activeText>String Disconnected Alarm</activeText>
+					<inactiveText>String Disconnected Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Battery</category>
+				<description>
+					<activeText>A string has been disconnected.</activeText>
+					<inactiveText>A string disconnected alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="200" match="200">
+				<name>
+					<activeText>String Voltage Alarm</activeText>
+					<inactiveText>String Voltage Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Battery</category>
+				<description>
+					<activeText>A string voltage alarm condition exists.</activeText>
+					<inactiveText>A string voltage alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		
+		<numSensor ruleid="monSysBatteryCount">
+			<type>num</type>
+			<sensorId>BATTERY_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.11504.1.1.4.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid><space/>Total Number of Batteries</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysAvgBatteryTemp">
+			<type>temp</type>
+			<sensorId>AVG_BATTERY_TEMP</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Average Battery Temperatures</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMinBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_MIN</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.9.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Minimum Battery Current</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMinBatteryVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MIN</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.10.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Minimum Battery Voltage</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMinBatteryTemp">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMP_MIN</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.11.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Minimum Battery Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMaxBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_MAX</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.12.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Maximum Battery Current</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMaxBatteryVoltage">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_MAX</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.13.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Maximum Battery Voltage</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monSysMaxBatteryTemp">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMP_MAX</sensorId>
+			<value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.11504.1.1.14.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getOid>.1.3.6.1.4.1.11504.1.1.1.0</getOid> Latest Maximum Battery Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		
+	</device>
+
+	<device deviceid="monBatteryTable">
+		<oidMustExist ruleid="monBatteryTable_exists" oid=".1.3.6.1.4.1.11504.1.1.1024" istree="yes"/>
+		
+		<numSensor ruleid="monStringCount" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>num</type>
+			<sensorId>STRING_COUNT_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.4</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) Number of Strings on Battery
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monBatteryCurrent" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) Battery Current
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monBatteryVoltage-Sensor" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) Battery Voltage
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringAvgCurrent-Sensor" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>amperage</type>
+			<sensorId>STRING_AVG_CURRENT_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.8</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Average Current
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringAvgVoltage-Sensor" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_AVG_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.9</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Average Voltage
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringavgTemp-Sensor" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>temp</type>
+			<sensorId>STRING_AVG_TEMP_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.10</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Average Temperature
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMinCurrent" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>amperage</type>
+			<sensorId>STRING_CURRENT_MIN_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.11</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Minimum Current
+			</label>
+			<sensorSet>Battery<space/><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMinVoltage" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_VOLTAGE_MIN_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.12</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Minimum Voltage
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMinTemp" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>temp</type>
+			<sensorId>STRING_TEMP_MIN_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.13</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Minimum Temperature
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMaxCurrent" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>amperage</type>
+			<sensorId>STRING_CURRENT_MAX_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.14</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Maximum Current
+			</label>
+			<sensorSet>Battery<space/><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMaxVoltage" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_VOLTAGE_MAX_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.15</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Maximum Voltage
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringMaxTemp" index=".1.3.6.1.4.1.11504.1.1.1024.1.1">
+			<type>temp</type>
+			<sensorId>STRING_TEMP_MAX_<rowIndex/></sensorId>
+			<value> 
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.16</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.2</getRowOid>) String Maximum Temperature
+			</label>
+			<sensorSet>Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1024.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="monStringTable">
+		<oidMustExist ruleid="monStringTable_exists" oid=".1.3.6.1.4.1.11504.1.1.1408" istree="yes"/>
+		
+		<numSensor ruleid="monStringVoltage" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Voltage</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monStringCurrent" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>amperage</type>
+			<sensorId>STRING_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Current</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellAvgVoltage" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_AVG_CELL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Average Cell Voltage</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellAvgVoltage" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>voltage</type>
+			<sensorId>STRING_AVG_CELL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Average Cell Voltage</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellAvgOhmic-Sensor" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>num</type>
+			<sensorId>CELL_AVG_OHMIC_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.7</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Average Cell Ohmic Value</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellMinVoltage" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>voltage</type>
+			<sensorId>CELL_VOLTAGE_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.8</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Cell Minimum Voltage</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellMinOhmic" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>num</type>
+			<sensorId>CELL_OHMIC_MIN_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.9</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Cell Minimum Ohmic Value</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellMaxVoltage" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>voltage</type>
+			<sensorId>CELL_VOLTAGE_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.10</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Cell Maximum Voltage</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		<numSensor ruleid="monCellMaxOhmic" index=".1.3.6.1.4.1.11504.1.1.1408.1.1">
+			<type>num</type>
+			<sensorId>CELL_OHMIC_MAX_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.11</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid> Cell Maximum Ohmic Value</label>
+			<sensorSet>String <getRowOid>.1.3.6.1.4.1.11504.1.1.1408.1.1</getRowOid></sensorSet>
+		</numSensor>
+		
+	</device>
+		
+	<device deviceid="monJarTable">
+		<oidMustExist ruleid="monJarTable_exists" oid=".1.3.6.1.4.1.11504.1.1.1792" istree="yes"/>
+		
+		<valueMap ruleid="jarIndex-vm">
+			<valueIn>1</valueIn><valueOut>01</valueOut>
+			<valueIn>2</valueIn><valueOut>02</valueOut>
+			<valueIn>3</valueIn><valueOut>03</valueOut>
+			<valueIn>4</valueIn><valueOut>04</valueOut>
+			<valueIn>5</valueIn><valueOut>05</valueOut>
+			<valueIn>6</valueIn><valueOut>06</valueOut>
+			<valueIn>7</valueIn><valueOut>07</valueOut>
+			<valueIn>8</valueIn><valueOut>08</valueOut>
+			<valueIn>9</valueIn><valueOut>09</valueOut>
+			<valueIn>*</valueIn><valueOut>*</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="monJarVoltage" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>voltage</type>
+			<sensorId>JAR_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.9</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue> Voltage
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monJarOhmic" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>num</type>
+			<sensorId>JAR_OHMIC_VALUE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.10</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue> Ohmic Value
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monJarHVAlarm" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>voltage</type>
+			<sensorId>JAR_HIGH_VOLTS_THRESHOLD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.11</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue><space/>
+				Voltage High Threshold
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monJarLVAlarm" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>voltage</type>
+			<sensorId>JAR_LOW_VOLTS_THRESHOLD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.12</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue><space/>
+				Voltage Low Threshold
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monJarHZAlarm" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>num</type>
+			<sensorId>JAR_HIGH_OHMIC_THRESHOLD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.13</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue><space/>
+				Ohmic Value High Threshold
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="monJarLZAlarm" index=".1.3.6.1.4.1.11504.1.1.1792.1.1">
+			<type>num</type>
+			<sensorId>JAR_LOW_OHMIC_THRESHOLD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.14</getRowOid></op>
+					<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>
+				Battery <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.2</getRowOid><space/>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue><space/>
+				Ohmic Value Low Threshold
+			</label>
+			<sensorSet>
+				String <getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.4</getRowOid><space/>
+				Jar/Block <mapValue mapid="jarIndex-vm"><getRowOid>.1.3.6.1.4.1.11504.1.1.1792.1.6</getRowOid></mapValue>
+			</sensorSet>
+		</numSensor>
+		
+	</device>
+</APC_DDF>

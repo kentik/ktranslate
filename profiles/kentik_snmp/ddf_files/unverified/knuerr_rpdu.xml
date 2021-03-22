@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<APC_DDF
+	ddfid="knuerr_rpdu"
+	ddfname="Knuerr rPDU"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+    <!--DDF Sensors -->
+    <device deviceid="knuerr_rpdu">
+        <oidMustExist istree="yes" ruleid="knuerr_rpdu_exist" oid="1.3.6.1.4.1.2769.1.2"/>
+
+        <setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.2.1.1.1.0</getOid></setProductData>
+        <setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+		<setProductLabel><getOid>.1.3.6.1.2.1.1.5.0</getOid></setProductLabel>
+
+        <!-- pdu-M1Values -->
+        <numSensor ruleid="pdu-M1Values" index=".1.3.6.1.4.1.2769.1.2.3.1.1">
+            <type>amperage</type>
+            <sensorId>M1_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2769.1.2.3.1.1</getRowOid></op><op>0.1</op></mult>
+            </value>
+            <label><regex><op>(\d+)\.\d+</op><op><rowIndex/></op><op>Module 1 Current, Phase %s</op></regex></label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+        <!-- pdu-M2Values -->
+        <numSensor ruleid="pdu-M1Values" index=".1.3.6.1.4.1.2769.1.2.3.2.1">
+            <type>amperage</type>
+            <sensorId>M2_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2769.1.2.3.2.1</getRowOid></op><op>0.1</op></mult>
+            </value>
+            <label><regex><op>(\d+)\.\d+</op><op><rowIndex/></op><op>Module 2 Current, Phase %s</op></regex></label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+        <!-- pdu-M3Values -->
+        <numSensor ruleid="pdu-M3Values" index=".1.3.6.1.4.1.2769.1.2.3.3.1">
+            <type>amperage</type>
+            <sensorId>M3_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2769.1.2.3.3.1</getRowOid></op><op>0.1</op></mult>
+            </value>
+            <label><regex><op>(\d+)\.\d+</op><op><rowIndex/></op><op>Module 3 Current, Phase %s</op></regex></label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+        <!-- pdu-M4Values -->
+        <numSensor ruleid="pdu-M4Values" index=".1.3.6.1.4.1.2769.1.2.3.4.1">
+            <type>amperage</type>
+            <sensorId>M4_OUTLET_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.2769.1.2.3.4.1</getRowOid></op><op>0.1</op></mult>
+            </value>
+            <label><regex><op>(\d+)\.\d+</op><op><rowIndex/></op><op>Module 4 Current, Phase %s</op></regex></label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,5174 @@
+<?xml version="1.0"?>
+<APC_DDF ddfid ="rittal_npm_pdu" ddfname="Rittal NPM PDU" ddfversion="2" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<device deviceid="rittal_npm_pdu">
+		<oidMustExist istree="yes" ruleid="rittal_npm_pdu_exist" oid=".1.3.6.1.4.1.30966.4"/>
+		
+		<setProductData ruleid="vendordata" field="vendor">Rittal</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+		<setProductData ruleid="modeldata" field="model">NPM</setProductData>
+ 
+	
+<!-- NPM 1 -->
+
+        <numSensor ruleid="npm1OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.1.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM1_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.5</getRowOid>
+            </value>
+            <label>NPM01 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 1 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm1OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.1.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM1_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM01 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.1.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 1 Outlet Sensors</sensorSet>
+        </numSensor>
+        
+		<numSensor ruleid="npm1TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM1_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Load Value A</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM1_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Load Value B</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM1_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Load Value C</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM1_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Voltage A</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM1_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Voltage B</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM1_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Voltage C</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM1_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM01 Total Power A</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM1_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM01 Total Power B</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM1_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM01 Total Power C</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM1_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM1_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.1.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM1_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM1_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Powerfactor A</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM1_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Powerfactor B</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM1_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Powerfactor C</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature1">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 1</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 1</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature2">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 2</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 2</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature3">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 3</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 3</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature4">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 4</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 4</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature5">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 5</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 5</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature6">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 6</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 6</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Temperature7">
+			<type>temp</type>
+			<sensorId>NPM1_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Temperature 7</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm1Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM1_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.1.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM01 Humidity 7</label>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm1Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.1.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM1_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.1.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM01 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm1Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.1.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM1_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.1.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM01 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm1Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.1.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM1_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.1.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM01 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm1WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.1.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<sensorId>NPM1_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.1.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM01 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 1 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 2 -->
+
+        <numSensor ruleid="npm2OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.2.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM2_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.5</getRowOid>
+            </value>
+            <label>NPM02 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 2 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm2OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.2.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM2_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM02 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.2.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 2 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm2TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM2_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Load Value A</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM2_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Load Value B</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM2_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Load Value C</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM2_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Voltage A</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM2_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Voltage B</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM2_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Voltage C</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM2_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM02 Total Power A</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM2_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM02 Total Power B</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM2_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM02 Total Power C</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM2_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM2_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.2.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM2_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM2_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Powerfactor A</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM2_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Powerfactor B</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM2_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Powerfactor C</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature1">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 1</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 1</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature2">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 2</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 2</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature3">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 3</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 3</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature4">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 4</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 4</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature5">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 5</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 5</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature6">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 6</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 6</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Temperature7">
+			<type>temp</type>
+			<sensorId>NPM2_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Temperature 7</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm2Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM2_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.2.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM02 Humidity 7</label>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm2Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.2.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM2_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.2.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM02 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm2Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.2.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM2_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.2.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM02 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm2Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.2.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM2_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.2.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM02 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm2WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.2.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM2_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.2.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM02 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 2 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 3 -->
+
+        <numSensor ruleid="npm3OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.3.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM3_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.5</getRowOid>
+            </value>
+            <label>NPM03 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 3 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm3OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.3.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM3_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM03 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.3.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 3 Outlet Sensors</sensorSet>
+        </numSensor>
+      
+		<numSensor ruleid="npm3TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM3_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Load Value A</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM3_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Load Value B</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM3_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Load Value C</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM3_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Voltage A</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM3_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Voltage B</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM3_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Voltage C</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM3_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM03 Total Power A</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM3_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM03 Total Power B</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM3_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM03 Total Power C</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM3_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM3_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.3.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM3_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM3_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Powerfactor A</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM3_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Powerfactor B</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM3_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Powerfactor C</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature1">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 1</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 1</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature2">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 2</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 2</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature3">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 3</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 3</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature4">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 4</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 4</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature5">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 5</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 5</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature6">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 6</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 6</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Temperature7">
+			<type>temp</type>
+			<sensorId>NPM3_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Temperature 7</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm3Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM3_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.3.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM03 Humidity 7</label>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm3Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.3.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM3_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.3.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM03 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm3Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.3.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM3_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.3.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM03 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm3Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.3.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM3_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.3.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM03 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm3WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.3.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM3_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.3.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM03 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 3 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 4 -->
+	
+        <numSensor ruleid="npm4OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.4.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM4_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.5</getRowOid>
+            </value>
+            <label>NPM04 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 4 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm4OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.4.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM4_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM04 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.4.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 4 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm4TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM4_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Load Value A</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM4_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Load Value B</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM4_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Load Value C</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM4_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Voltage A</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM4_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Voltage B</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM4_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Voltage C</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM4_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM04 Total Power A</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM4_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM04 Total Power B</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM4_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM04 Total Power C</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM4_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM4_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.4.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM4_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM4_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Powerfactor A</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM4_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Powerfactor B</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM4_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Powerfactor C</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature1">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 1</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 1</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature2">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 2</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 2</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature3">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 3</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 3</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature4">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 4</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 4</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature5">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 5</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 5</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature6">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 6</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 6</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Temperature7">
+			<type>temp</type>
+			<sensorId>NPM4_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Temperature 7</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm4Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM4_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.4.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM04 Humidity 7</label>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm4Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.4.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM4_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.4.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM04 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm4Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.4.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM4_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.4.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM04 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm4Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.4.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM4_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.4.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM04 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm4WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.4.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM4_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.4.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM04 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 4 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 5 -->
+	
+        <numSensor ruleid="npm5OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.5.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM5_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.5</getRowOid>
+            </value>
+            <label>NPM05 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 5 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm5OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.5.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM5_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM05 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.5.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 5 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm5TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM5_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Load Value A</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM5_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Load Value B</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM5_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Load Value C</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM5_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Voltage A</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM5_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Voltage B</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM5_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Voltage C</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM5_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM05 Total Power A</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM5_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM05 Total Power B</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM5_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM05 Total Power C</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM5_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM5_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.5.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM5_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM5_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Powerfactor A</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM5_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Powerfactor B</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM5_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Powerfactor C</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature1">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 1</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 1</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature2">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 2</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 2</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature3">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 3</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 3</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature4">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 4</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 4</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature5">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 5</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 5</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature6">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 6</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 6</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Temperature7">
+			<type>temp</type>
+			<sensorId>NPM5_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Temperature 7</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm5Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM5_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.5.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM05 Humidity 7</label>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm5Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.5.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM5_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.5.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM05 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm5Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.5.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM5_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.5.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM05 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm5Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.5.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM5_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.5.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM05 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm5WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.5.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM5_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.5.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM05 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 5 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 6 -->
+	
+        <numSensor ruleid="npm6OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.6.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM6_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.5</getRowOid>
+            </value>
+            <label>NPM06 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 6 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm6OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.6.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM6_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM06 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.6.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 6 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm6TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM6_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Load Value A</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM6_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Load Value B</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM6_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Load Value C</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM6_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Voltage A</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM6_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Voltage B</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM6_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Voltage C</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM6_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM06 Total Power A</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM6_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM06 Total Power B</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM6_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM06 Total Power C</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM6_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM6_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.6.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM6_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM6_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Powerfactor A</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM6_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Powerfactor B</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM6_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Powerfactor C</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature1">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 1</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 1</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature2">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 2</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 2</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature3">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 3</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 3</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature4">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 4</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 4</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature5">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 5</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 5</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature6">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 6</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 6</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Temperature7">
+			<type>temp</type>
+			<sensorId>NPM6_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Temperature 7</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm6Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM6_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.6.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM06 Humidity 7</label>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm6Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.6.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM6_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.6.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM06 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm6Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.6.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM6_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.6.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM06 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm6Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.6.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM6_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.6.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM06 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm6WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.6.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM6_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.6.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM06 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 6 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 7 -->
+	
+        <numSensor ruleid="npm7OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.7.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM7_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.5</getRowOid>
+            </value>
+            <label>NPM07 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 7 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm7OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.7.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM7_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM07 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.7.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 7 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm7TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM7_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Load Value A</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM7_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Load Value B</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM7_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Load Value C</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM7_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Voltage A</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM7_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Voltage B</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM7_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Voltage C</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM7_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM07 Total Power A</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM7_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM07 Total Power B</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM7_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM07 Total Power C</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM7_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM7_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.7.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM7_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM7_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Powerfactor A</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM7_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Powerfactor B</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM7_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Powerfactor C</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature1">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 1</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 1</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature2">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 2</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 2</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature3">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 3</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 3</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature4">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 4</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 4</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature5">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 5</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 5</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature6">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 6</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 6</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Temperature7">
+			<type>temp</type>
+			<sensorId>NPM7_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Temperature 7</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm7Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM7_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.7.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM07 Humidity 7</label>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm7Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.7.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM7_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.7.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM07 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm7Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.7.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM7_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.7.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM07 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm7Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.7.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM7_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.7.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM07 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm7WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.7.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM7_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.7.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM07 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 7 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 8 -->
+	
+        <numSensor ruleid="npm8OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.8.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM8_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.5</getRowOid>
+            </value>
+            <label>NPM08 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 8 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm8OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.8.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM8_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM08 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.8.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 8 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm8TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM8_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Load Value A</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM8_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Load Value B</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM8_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Load Value C</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM8_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Voltage A</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM8_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Voltage B</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM8_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Voltage C</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM8_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM08 Total Power A</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM8_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM08 Total Power B</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM8_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM08 Total Power C</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM8_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM8_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.8.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM8_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM8_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Powerfactor A</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM8_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Powerfactor B</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM8_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Powerfactor C</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature1">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 1</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 1</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature2">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 2</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 2</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature3">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 3</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 3</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature4">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 4</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 4</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature5">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 5</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 5</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature6">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 6</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 6</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Temperature7">
+			<type>temp</type>
+			<sensorId>NPM8_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Temperature 7</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm8Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM8_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.8.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM08 Humidity 7</label>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm8Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.8.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM8_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.8.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM08 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm8Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.8.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM8_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.8.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM08 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm8Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.8.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM8_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.8.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM08 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm8WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.8.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM8_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.8.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM08 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 8 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 9 -->
+	
+        <numSensor ruleid="npm9OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.9.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM9_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.5</getRowOid>
+            </value>
+            <label>NPM09 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 9 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm9OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.9.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM9_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM09 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.9.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 9 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm9TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM9_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Load Value A</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM9_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Load Value B</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM9_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Load Value C</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM9_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Voltage A</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM9_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Voltage B</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM9_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Voltage C</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM9_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM09 Total Power A</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM9_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM09 Total Power B</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM9_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM09 Total Power C</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM9_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM9_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.9.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM9_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM9_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Powerfactor A</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM9_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Powerfactor B</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM9_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Powerfactor C</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature1">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 1</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 1</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature2">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 2</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 2</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature3">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 3</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 3</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature4">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 4</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 4</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature5">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 5</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 5</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature6">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 6</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 6</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Temperature7">
+			<type>temp</type>
+			<sensorId>NPM9_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Temperature 7</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm9Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM9_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.9.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM09 Humidity 7</label>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm9Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.9.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM9_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.9.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM09 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm9Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.9.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM9_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.9.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM09 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm9Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.9.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM9_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.9.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM09 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm9WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.9.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM9_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.9.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM09 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 9 Sensors</sensorSet>
+		</stateSensor>
+	
+	
+<!-- NPM 10 -->
+	
+        <numSensor ruleid="npm10OutputLoadValueOutlets" index=".1.3.6.1.4.1.30966.4.2.10.1.1.5">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.5</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>NPM10_OUTPUT_LOAD_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.5</getRowOid>
+            </value>
+            <label>NPM10 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.1</getRowOid></formatNumber> - Output Load Value</label>
+            <sensorSet>NPM 10 Outlet Sensors</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="npm10OutputPowerValueOutlets" index=".1.3.6.1.4.1.30966.4.2.10.1.1.6">
+			<rowTest>
+                <if>
+                    <op><ge><op><getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.6</getRowOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>NPM10_OUTPUT_POWER_VALUE_OUTLET_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.6</getRowOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>NPM10 Outlet <formatNumber printffmt="%02.0f"><getRowOid>.1.3.6.1.4.1.30966.4.2.10.1.1.1</getRowOid></formatNumber> - Output Power Value</label>
+            <sensorSet>NPM 10 Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="npm10TotalLoadValueA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.7.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM10_TOTAL_LOAD_VALUE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.7.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Load Value A</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalLoadValueB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.8.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM10_TOTAL_LOAD_VALUE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.8.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Load Value B</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalLoadValueC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.9.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>amperage</type>
+			<sensorId>NPM10_TOTAL_LOAD_VALUE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.9.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Load Value C</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalVoltageA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.10.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM10_TOTAL_VOLTAGE_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.10.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Voltage A</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalVoltageB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.11.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM10_TOTAL_VOLTAGE_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.11.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Voltage B</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalVoltageC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.12.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>voltage</type>
+			<sensorId>NPM10_TOTAL_VOLTAGE_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.12.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Voltage C</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalPowerA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.13.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM10_TOTAL_POWER_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.13.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM10 Total Power A</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalPowerB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.14.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM10_TOTAL_POWER_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.14.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM10 Total Power B</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalPowerC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.15.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>powerW</type>
+			<sensorId>NPM10_TOTAL_POWER_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.15.0</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>NPM10 Total Power C</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalEnergyMeter1OrA">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.16.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM10_TOTAL_ENERGY_METER1_OR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.16.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Energy Meter 1 or Line A</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalEnergyMeter2OrB">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.17.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM10_TOTAL_ENERGY_METER2_OR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.17.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Energy Meter 2 or Line B</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10TotalEnergyMeter3OrC">
+			<rowTest>
+                <if>
+                    <op><ge><op><getOid>.1.3.6.1.4.1.30966.4.2.10.18.0</getOid></op><op>0</op></ge></op>
+                    <op>[true]</op>
+                    <op>[false]</op>
+                </if>
+			</rowTest>
+			<type>num/kwatthr</type>
+			<sensorId>NPM10_TOTAL_ENERGY_METER3_OR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.18.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Total Energy Meter 3 or Line C</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10PowerFactorA">
+			<type>num/powerfactor</type>
+			<sensorId>NPM10_POWERFACTOR_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.19.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Powerfactor A</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10PowerFactorB">
+			<type>num/powerfactor</type>
+			<sensorId>NPM10_POWERFACTOR_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.20.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Powerfactor B</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10PowerFactorC">
+			<type>num/powerfactor</type>
+			<sensorId>NPM10_POWERFACTOR_C</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.21.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Powerfactor C</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature1">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.22.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 1</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity1">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.23.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 1</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature2">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.24.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 2</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity2">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.25.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 2</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature3">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.26.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 3</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity3">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.27.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 3</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature4">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.28.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 4</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity4">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY4</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.29.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 4</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature5">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.30.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 5</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity5">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY5</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.31.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 5</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature6">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.32.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 6</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity6">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY6</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.33.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 6</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Temperature7">
+			<type>temp</type>
+			<sensorId>NPM10_TEMPERATURE7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.34.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Temperature 7</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<numSensor ruleid="npm10Humidity7">
+			<type>humidity</type>
+			<sensorId>NPM10_HUMIDITY7</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30966.4.2.10.35.0</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>NPM10 Humidity 7</label>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</numSensor>
+	
+		<stateSensor ruleid="npm10Door1">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.10.36.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM10_DOOR1</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.10.36.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM10 Door 1</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm10Door2">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.10.37.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM10_DOOR2</sensorId>
+			<value>
+				<mapValue mapid="open_close-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.10.37.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM10 Door 2</label>
+			<enum>open_close-em</enum>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm10Smoke">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.10.38.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM10_SMOKE</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.10.38.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM10 Smoke</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</stateSensor>
+	
+		<stateSensor ruleid="npm10WaterLogging">
+			<rowTest>
+				<mapValue mapid="sensor_exists-vm">
+					<getOid default="[false]">.1.3.6.1.4.1.30966.4.2.10.39.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>NPM10_WATERLOGGING</sensorId>
+			<value>
+				<mapValue mapid="yes_no-vm">
+					<getOid>.1.3.6.1.4.1.30966.4.2.10.39.0</getOid>
+				</mapValue>
+			</value>
+			<label>NPM10 Waterlogging</label>
+			<enum>yes_no-em</enum>
+			<sensorSet>NPM 10 Sensors</sensorSet>
+		</stateSensor>
+	
+
+  		<valueMap ruleid="sensor_exists-vm">
+			<valueIn>Not found</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="open_close-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>Not found</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="open_close-em">
+			<label>Open</label>
+			<label>Close</label>
+			<label>Not Found</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<valueMap ruleid="yes_no-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="yes_no-em">
+			<label>Open</label>
+			<label>Close</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

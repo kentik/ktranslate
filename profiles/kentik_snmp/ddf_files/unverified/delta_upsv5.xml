@@ -1,0 +1,2881 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="delta_upsv5"
+	ddfname="Delta UPSv5"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\delta\UPSv5.mib
+		DeltaUPSv5-MIB | 13 May 2020
+	-->
+	<device deviceid="dupsIdent">
+		<oidMustExist ruleid="dupsIdent_exists" oid=".1.3.6.1.4.1.2254.2.5.1" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+		<suppressRule ruleid="suppressupsmibvendordata" suppressid="upsmib/upsmibdiscdata/vendordata"/>
+        <suppressRule ruleid="suppressupsmibmodeldata" suppressid="upsmib/upsmibdiscdata/modeldata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Delta</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.2254.2.5.1.2.0</getOid></setProductData>
+		<setProductData ruleid="software_version" field="appversion"><getOid>.1.3.6.1.4.1.2254.2.5.1.3.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		
+	</device>
+	
+	<device deviceid="dupsInput">
+		<oidMustExist ruleid="dupsInput_exists" oid=".1.3.6.1.4.1.2254.2.5.4" istree="yes"/>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><getOid>.1.3.6.1.4.1.2254.2.5.4.1.0</getOid></setProductData>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<suppressRule ruleid="suppressupsmibinputfrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+        <numSensor ruleid="dupsInputFrequency1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>INPUT_FREQ_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Frequency L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibinputvoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+        <numSensor ruleid="dupsInputVoltage1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.3.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>INPUT_VOLTAGE_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputVoltage12">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.4.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_MAIN_INPUT_VOLTAGE_L2L_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L1-L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibinputcurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+        <numSensor ruleid="dupsInputCurrent1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>INPUT_CURRENT_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Current L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibinputtruepower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+        <numSensor ruleid="dupsInputPower1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.6.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INPUT_POWER1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Power L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputFrequency2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>INPUT_FREQ_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Frequency L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputVoltage2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>INPUT_VOLTAGE_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputVoltage23">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_MAIN_INPUT_VOLTAGE_L2L_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L2-L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputCurrent2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.10.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>INPUT_CURRENT_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.10.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Current L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputPower2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.11.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INPUT_POWER2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Power L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputFrequency3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.12.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>INPUT_FREQ_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.12.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Frequency L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputVoltage3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.13.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>INPUT_VOLTAGE_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.13.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputVoltage31">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.14.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_MAIN_INPUT_VOLTAGE_L2L_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.14.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Voltage L3-L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputCurrent3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.15.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>INPUT_CURRENT_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.4.15.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Input Current L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputPower3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.16.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_INPUT_POWER3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.16.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Power L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputEnergy1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.17.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_PHASE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Energy L1</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputEnergy2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.18.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_PHASE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Energy L2</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputEnergy3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.19.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_PHASE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.19.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Input Energy L3</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsInputEnergyTotal">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.4.20.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>INPUT_ENERGY_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.4.20.0</getOid>
+			</value>
+            <valueInc>1</valueInc>
+            <label>Input Energy Total</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+
+	</device>
+	
+	<device deviceid="dupsOutput">
+		<oidMustExist ruleid="dupsOutput_exists" oid=".1.3.6.1.4.1.2254.2.5.5" istree="yes"/>
+		
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><getOid>.1.3.6.1.4.1.2254.2.5.5.3.0</getOid></setProductData>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<suppressRule ruleid="suppressupsmiboutputsource" suppressid="upsmib/upsmib/upsOutputSource"/>
+		<stateSensor ruleid="dupsOutputSource">
+            <type>state</type>
+            <sensorId>OUTPUT_SOURCE</sensorId>
+            <value>
+				<mapValue mapid="9state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.5.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Source</label>
+            <enum>outputSource-em</enum>
+            <sensorSet>Output</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="9state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="outputSource-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Battery</label>
+			<label>Bypass</label>
+			<label>Reducing</label>
+			<label>Boosting</label>
+			<label>Manual Bypass</label>
+			<label>Other</label>
+			<label>No Output</label>
+			<label>On Eco</label>
+		</enumMap>
+
+		<suppressRule ruleid="suppressupsmiboutputfrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+        <numSensor ruleid="dupsOutputFrequency">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.2.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>frequency</type>
+            <sensorId>OUTPUT_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Frequency</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmiboutputvoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+        <numSensor ruleid="dupsOutputVoltage1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.4.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>OUTPUT_VOLTAGE_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputVoltage12">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.5.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>_OUTPUT_VOLTAGE_L2L_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L1-L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmiboutputcurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+        <numSensor ruleid="dupsOutputCurrent1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.6.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.6.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Current L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmiboutputpower" suppressid="upsmib/upsmib/upsOutputPower"/>
+        <numSensor ruleid="dupsOutputPower1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.7.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>OUTPUT_POWER_PHASE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Power L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmiboutputpercentload" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+        <numSensor ruleid="dupsOutputLoad1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.8.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_PHASE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.8.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Load L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputVoltage2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.9.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>OUTPUT_VOLTAGE_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputVoltage23">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.10.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>_OUTPUT_VOLTAGE_L2L_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.10.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L2-L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputCurrent2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.11.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.11.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Current L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputPower2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.12.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>OUTPUT_POWER_PHASE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Power L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputLoad2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.13.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_PHASE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.13.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Load L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputVoltage3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.14.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>OUTPUT_VOLTAGE_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.14.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputVoltage31">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.15.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>_OUTPUT_VOLTAGE_L2L_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.15.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Voltage L3-L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputCurrent3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.16.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.16.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Current L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputPower3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.17.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>OUTPUT_POWER_PHASE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Power L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputLoad3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.18.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_PHASE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Load L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibtotaloutputpowerloadpercentsensor" suppressid="upsmib/upsmib/totalOutputPowerLoadPercentSensor"/>
+		
+		<suppressRule ruleid="suppressupsmibtotalpoweroutputsensor" suppressid="upsmib/upsmib/totalPowerOutputSensor"/>
+        <numSensor ruleid="dupsOutputTotalActivePower">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.19.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/powerKW</type>
+            <sensorId>_OUTPUT_POWER_TOTAL</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.19.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Total Active Power</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputTotalApparentPower">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.20.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/powerKVA</type>
+            <sensorId>_OUTPUT_APPARENT_POWER_TOTAL</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.5.20.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Output Total Apparent Power</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputTotalPowerFactor">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.21.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>_OUTPUT_POWER_FACTOR_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.21.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Total Power Factor</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputEnergy1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.22.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_PHASE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.22.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Energy L1</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputEnergy2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.23.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_PHASE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.23.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Energy L2</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputEnergy3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.24.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_PHASE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.24.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Energy L3</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsOutputEnergyTotal">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.5.25.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>OUTPUT_ENERGY_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.5.25.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Output Energy Total</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="dupsBypass">
+		<oidMustExist ruleid="dupsBypass_exists" oid=".1.3.6.1.4.1.2254.2.5.6" istree="yes"/>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<suppressRule ruleid="suppressupsmibbypassfrequency" suppressid="upsmib/upsmib/upsBypassFrequency"/>
+        <numSensor ruleid="dupsBypassFrequency">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.1.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>frequency</type>
+            <sensorId>BYPASS_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Frequency</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibbypassvoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+        <numSensor ruleid="dupsBypassVoltage1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.3.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L1</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassVoltage12">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.4.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_LL_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L1-L2</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibbypasscurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+        <numSensor ruleid="dupsBypassCurrent1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.5.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>BYPASS_CURRENT_PHASE1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Current L1</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibbypasspower" suppressid="upsmib/upsmib/upsBypassPower"/>
+        <numSensor ruleid="dupsBypassPower1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.6.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>BYPASS_POWER_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.6.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bypass Power L1</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassVoltage2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.7.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L2</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassVoltage23">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.8.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_LL_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L2-L3</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassCurrent2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.9.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>BYPASS_CURRENT_PHASE2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Current L2</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassPower2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.10.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>BYPASS_POWER_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.6.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bypass Power L2</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassVoltage3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.11.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.11.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L3</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassVoltage31">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.12.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_LL_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.12.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Voltage L3-L1</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassCurrent3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.13.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>BYPASS_CURRENT_PHASE3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.6.13.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Bypass Current L3</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassPower3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.14.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>BYPASS_POWER_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.6.14.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bypass Power L3</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBypassSTSTemperature">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.6.15.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>temp</type>
+            <sensorId>BYPASS_TEMP</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.6.15.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Bypass STS Temperature</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="dupsBattery">
+		<oidMustExist ruleid="dupsBattery_exists" oid=".1.3.6.1.4.1.2254.2.5.7" istree="yes"/>
+		
+		<stateSensor ruleid="dupsBatteryCondition">
+            <type>state</type>
+            <sensorId>BATT_CONDITION</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.7.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Condition</label>
+            <enum>batteryCondition-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="3state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="batteryCondition-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Weak</label>
+			<label>Replace</label>
+		</enumMap>
+		
+		<suppressRule ruleid="suppressupsmibbatterystatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<stateSensor ruleid="dupsBatteryStatus">
+            <type>state</type>
+            <sensorId>BATT_STATUS</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.7.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Status</label>
+            <enum>batteryStatus-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="batteryStatus-em">
+			<label>Unknown</label>
+			<label>OK</label>
+			<label>Low</label>
+			<label>Depleted</label>
+		</enumMap>
+		
+		<stateSensor ruleid="dupsBatteryCharge">
+            <type>state</type>
+            <sensorId>BATT_CHARGE</sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.7.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Charge Status</label>
+            <enum>batteryCharge-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="4state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="batteryCharge-em">
+			<label>Unknown</label>
+			<label>Floating</label>
+			<label>Charging</label>
+			<label>Resting</label>
+			<label>Discharging</label>
+		</enumMap>
+		
+		<suppressRule ruleid="suppressupsmibsecondsonbattery" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+        <numSensor ruleid="dupsSecondsOnBattery">
+            <type>timeinmin</type>
+            <sensorId>TIME_ON_BATT</sensorId>
+            <value>
+				<div>
+					<op><getOid>.1.3.6.1.4.1.2254.2.5.7.4.0</getOid></op>
+					<op>60</op>
+				</div>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Time Running On Battery</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppressupsmibestimatedminutesremaining" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+        <numSensor ruleid="dupsBatteryEstimatedTime">
+            <type>timeinmin</type>
+            <sensorId>TIME_RUNNING_ON_BATT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Estimated Time Remaining On Battery</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryPosVoltage">
+            <type>voltage</type>
+            <sensorId>BATT_VOLTAGE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.7.6.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Positive Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dupsBatteryNegVoltage">
+            <type>voltage</type>
+            <sensorId>BATT_NEG_VOLTAGE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.7.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Negative Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryPosCurrent">
+            <type>amperage</type>
+            <sensorId>BATT_POS_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.7.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Positive Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dupsBatteryNegCurrent">
+            <type>amperage</type>
+            <sensorId>BATT_NEG_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.7.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Battery Negative Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryPosCapacity">
+            <type>pctofcapacity</type>
+            <sensorId>BATT_POS_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Estimated Positive Battery Charge Remaining</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dupsBatteryNegCapacity">
+            <type>pctofcapacity</type>
+            <sensorId>BATT_NEG_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Estimated Negative Battery Charge Remaining</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsTemperature">
+            <type>temp</type>
+            <sensorId>_BATT_TEMP</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>UPS Internal Temperature</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		
+        <stringSensor ruleid="dupsLastReplaceDate">
+            <type>string</type>
+            <sensorId>BATT_LAST_REPLACE_DATE</sensorId>
+            <value>
+				<regex>
+					<op>([0-9][0-9][0-9][0-9])([0-9][0-9])([0-9][0-9])</op>
+					<op><getOid>.1.3.6.1.4.1.2254.2.5.7.13.0</getOid></op>
+					<op>%2$s/%3$s/%1$s</op>
+				</regex>
+            </value>
+            <label>Battery Last Replacement Date</label>
+            <sensorSet>Battery</sensorSet>
+        </stringSensor>
+        <stringSensor ruleid="dupsNextReplaceDate">
+            <type>string</type>
+            <sensorId>BATT_NEXT_REPLACE_DATE</sensorId>
+            <value>
+				<regex>
+					<op>([0-9][0-9][0-9][0-9])([0-9][0-9])([0-9][0-9])</op>
+					<op><getOid>.1.3.6.1.4.1.2254.2.5.7.14.0</getOid></op>
+					<op>%2$s/%3$s/%1$s</op>
+				</regex>
+            </value>
+            <label>Battery Next Replacement Date</label>
+            <sensorSet>Battery</sensorSet>
+        </stringSensor>
+		
+		<stateSensor ruleid="dupsBatteryBreaker">
+            <type>state</type>
+            <sensorId>BATT_BREAKER</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.7.15.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Breaker Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>Battery</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="open_close-em">
+			<label>Unknown</label>
+			<label>Open</label>
+			<label>Close</label>
+		</enumMap>
+
+        <numSensor ruleid="dupsBatteryCab1Tempurature">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP1_1_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.16.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Temperature Battery Cabinet 1</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryCab2Tempurature">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP1_2_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Temperature Battery Cabinet 2</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryCab3Tempurature">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP1_3_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Temperature Battery Cabinet 3</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsBatteryCab4Tempurature">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP1_4_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.7.19.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Temperature Battery Cabinet 4</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="dupsAlarm">
+		<oidMustExist ruleid="dupsAlarm_exists" oid=".1.3.6.1.4.1.2254.2.5.9" istree="yes"/>
+		
+        <alarmFlags ruleid="dupsAlarmDisconnect">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.1.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Communication Disconnected</activeText>
+                    <inactiveText>UPS Communication Disconnected Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>UPS communication disconnected.</activeText>
+                    <inactiveText>A UPS communication disconnected alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmInputOutOfRange">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Input Power Out Of Tolerance</activeText>
+                    <inactiveText>Input Power Out Of Tolerance Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Input</category>
+                <description>
+                    <activeText>Input power out of tolerance.</activeText>
+                    <inactiveText>An input power out of tolerance alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmBatteryLow">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.3.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Battery Low</activeText>
+                    <inactiveText>UPS Battery Low Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>UPS battery low.</activeText>
+                    <inactiveText>A UPS battery low alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmLoadOnBypass">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.4.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Load On Bypass</activeText>
+                    <inactiveText>UPS Load On Bypass Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>UPS load on bypass.</activeText>
+                    <inactiveText>A UPS load on bypass alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOther">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.5.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Undefined Alarm Detected</activeText>
+                    <inactiveText>UPS Undefined Alarm Detected Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>UPS undefined alarm detected.</activeText>
+                    <inactiveText>A UPS undefined alarm detected alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmBatteryGroundFault">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.6.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Battery Ground Fault Detected</activeText>
+                    <inactiveText>Battery Ground Fault Detected Alarm Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>Battery ground fault detected.</activeText>
+                    <inactiveText>A battery ground fault detected alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmTestInProgress">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.7.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Test In Progress</activeText>
+                    <inactiveText>UPS Test In Progress Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>UPS test in progress.</activeText>
+                    <inactiveText>A UPS test in progress alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmBatteryTestFail">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.8.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Test Failure</activeText>
+                    <inactiveText>UPS Test Failure Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Battery</category>
+                <description>
+                    <activeText>UPS test failure.</activeText>
+                    <inactiveText>A UPS test failure alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmFuseFailure">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.9.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Fuse Failure</activeText>
+                    <inactiveText>UPS Fuse Failure Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>UPS fuse failure.</activeText>
+                    <inactiveText>A UPS fuse failure alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutputOverload">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.10.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Load Exceeds UPS Output Capacity</activeText>
+                    <inactiveText>Output Load Exceeds UPS Output Capacity Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>Output load exceeds UPS output capacity.</activeText>
+                    <inactiveText>An output load exceeds UPS output capacity alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmInverterAbnormal">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.11.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Inverter Failure Alarm</activeText>
+                    <inactiveText>Inverter Failure Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>An inverter failure condition exists.</activeText>
+                    <inactiveText>An inverter failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmLoadOnReserve">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.12.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Load On Reserve</activeText>
+                    <inactiveText>UPS Load On Reserve Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>UPS load on reserve.</activeText>
+                    <inactiveText>A UPS load on reserve condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmTemperature">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.13.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Temperature Sensor Out of Limits</activeText>
+                    <inactiveText>Temperature Sensor Out of Limits Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>Temperature sensor out of limits.</activeText>
+                    <inactiveText>A temperature sensor out of limits alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmBypassOutOfRange">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.14.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass Power Out Of Range</activeText>
+                    <inactiveText>Bypass Power Out Of Range Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass power out of range.</activeText>
+                    <inactiveText>A bypass power out of range alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmStandby">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.15.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS On Standby</activeText>
+                    <inactiveText>UPS On Standby Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>UPS on standby.</activeText>
+                    <inactiveText>A UPS on standby alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmChargerFail">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.16.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Charger Subsystem Incorrected Problem Detected</activeText>
+                    <inactiveText>UPS Charger Subsystem Incorrected Problem Detected Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A UPS charger subsystem incorrected problem detected.</activeText>
+                    <inactiveText>A UPS charger subsystem incorrected problem detected alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmFanFail">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.17.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Fan Failure Detected</activeText>
+                    <inactiveText>UPS Fan Failure Detected Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>UPS fan failure detected.</activeText>
+                    <inactiveText>A UPS fan failure detected alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmEconomicMode">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.18.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Working In Economic Mode</activeText>
+                    <inactiveText>UPS Working In Economic Mode Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>UPS working in economic mode.</activeText>
+                    <inactiveText>A UPS working in economic mode alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutputOff">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.19.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Output Off</activeText>
+                    <inactiveText>UPS Output Off Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>UPS output off.</activeText>
+                    <inactiveText>A UPS output off alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmSmartShutdown">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.20.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Smart Shutdown In Progress</activeText>
+                    <inactiveText>Smart Shutdown In Progress Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A smart shutdown is in progress.</activeText>
+                    <inactiveText>A smart shutdown is no longer in progress.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmEmergencyPowerOff">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.21.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Shutdown Due To Emergency Power Off Pressed (1)</activeText>
+                    <inactiveText>Shutdown Due To Emergency Power Off Pressed (1) Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Shutdown due to emergency power off pressed (1).</activeText>
+                    <inactiveText>Shutdown due to emergency power off pressed (1) alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmUPSShutdown">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.22.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>UPS Remote and Fault Shutdown</activeText>
+                    <inactiveText>UPS Remote and Fault Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>UPS remote and fault shutdown.</activeText>
+                    <inactiveText>A UPS remote and fault shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmEPO">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.23.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Shutdown Due To Emergency Power Off Pressed (2)</activeText>
+                    <inactiveText>Shutdown Due To Emergency Power Off Pressed (2) Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Shutdown due to emergency power off pressed (2).</activeText>
+                    <inactiveText>Shutdown due to emergency power off pressed (2) alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutVoltOverLimit">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.24.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Voltage Over Limit</activeText>
+                    <inactiveText>Output Voltage Over Limit Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Output voltage over limit.</activeText>
+                    <inactiveText>An output voltage over limit alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutVoltUnderLimit">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.25.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Voltage Under Limit</activeText>
+                    <inactiveText>Output Voltage Under Limit Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Output voltage under limit.</activeText>
+                    <inactiveText>An output voltage under limit alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmPowerModule">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.26.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Alarm Present</activeText>
+                    <inactiveText>Power Module Alarm Present Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power module alarm present.</activeText>
+                    <inactiveText>A power module alarm present condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutputBreaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.27.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Output Breaker Open</activeText>
+                    <inactiveText>Output Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Output</category>
+                <description>
+                    <activeText>Output breaker open.</activeText>
+                    <inactiveText>An output breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutletBank1Breaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.28.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Outlet Bank 1 Breaker Open</activeText>
+                    <inactiveText>Outlet Bank 1 Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Outlet bank 1 breaker open.</activeText>
+                    <inactiveText>An outlet bank 1 breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutletBank2Breaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.29.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Outlet Bank 2 Breaker Open</activeText>
+                    <inactiveText>Outlet Bank 2 Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Outlet bank 2 breaker open.</activeText>
+                    <inactiveText>An outlet bank 2 breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutletBank3Breaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.30.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Outlet Bank 3 Breaker Open</activeText>
+                    <inactiveText>Outlet Bank 3 Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Outlet bank 3 breaker open.</activeText>
+                    <inactiveText>An outlet bank 3 breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmOutletBank4Breaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.31.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Outlet Bank 4 Breaker Open</activeText>
+                    <inactiveText>Outlet Bank 4 Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Outlet bank 4 breaker open.</activeText>
+                    <inactiveText>An outlet bank 4 breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+		
+		<stateSensor ruleid="dupsAlarmSummary">
+            <type>state</type>
+            <sensorId>ALARM_SUMMARY</sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+					<getOid>.1.3.6.1.4.1.2254.2.5.9.32.0</getOid>
+				</mapValue>
+            </value>
+            <label>UPS Alarm Level</label>
+            <enum>alarmLevel-em</enum>
+            <sensorSet>Alarm</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="4state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="alarmLevel-em">
+			<label>Unknown</label>
+			<label>None</label>
+			<label>Informational</label>
+			<label>Warning</label>
+			<label>Alarm</label>
+		</enumMap>
+
+        <alarmFlags ruleid="dupsAlarmRedundancyLoss">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.33.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Redundancy Capacity Lost In Modular UPS</activeText>
+                    <inactiveText>Redundancy Capacity Lost In Modular UPS Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Redundancy capacity lost in modular UPS.</activeText>
+                    <inactiveText>Redundancy capacity lost in modular UPS alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsAlarmManualBypassBreaker">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.9.34.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Manual Bypass Breaker Open</activeText>
+                    <inactiveText>Manual Bypass Breaker Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Manual bypass breaker open.</activeText>
+                    <inactiveText>A manual bypass breaker open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+		
+	</device>
+	
+	<device deviceid="dupsPowerModule">
+		<oidMustExist ruleid="dupsPowerModule_exists" oid=".1.3.6.1.4.1.2254.2.5.10" istree="yes"/>
+		
+        <alarmFlags ruleid="dupsPMBypassInputAlarm">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.10.1.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass Voltage/Frequency Abnormal</activeText>
+                    <inactiveText>Bypass Voltage/Frequency Abnormal Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass voltage/frequency abnormal.</activeText>
+                    <inactiveText>A bypass voltage/frequency abnormal alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsPMBypassPhaseAlarm">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.10.2.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass Phase Sequence Abnormal</activeText>
+                    <inactiveText>Bypass Phase Sequence Abnormal Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass phase sequence abnormal.</activeText>
+                    <inactiveText>A bypass phase sequence abnormal alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsPMBypassSTSOverloadAlarm">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.10.3.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass STS Overload</activeText>
+                    <inactiveText>Bypass STS Overload Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass STS overload.</activeText>
+                    <inactiveText>A bypass STS overload alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsPMBypassSTSOverTempAlarm">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.10.4.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass STS Over Temperature</activeText>
+                    <inactiveText>Bypass STS Over Temperature Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass STS over temperature.</activeText>
+                    <inactiveText>A bypass STS over temperature alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+        <alarmFlags ruleid="dupsPMBypassSTSFailAlarm">
+            <value><getOid>.1.3.6.1.4.1.2254.2.5.10.5.0</getOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Bypass STS Failure</activeText>
+                    <inactiveText>Bypass STS Failure Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Bypass</category>
+                <description>
+                    <activeText>Bypass STS failure.</activeText>
+                    <inactiveText>A bypass STS failure alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags>
+		
+	</device>
+	
+	<device deviceid="dupsPMTable">
+		<oidMustExist ruleid="dupsPMTable_exists" oid=".1.3.6.1.4.1.2254.2.5.10.6" istree="yes"/>
+
+        <numSensor ruleid="dupsPMPFCTemp" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP2_1_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.2</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC Temperature</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVTemp" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP2_1_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.3</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter Temperature</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVTempR" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP2_1_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.4</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter -R Temperature</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVTempS" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP2_1_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.5</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter -S Temperature</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVTempT" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>temp</type>
+            <sensorId>IGP_PDU_AUX_MEAS_SENSOR_TEMP2_1_5</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.6</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter -T Temperature</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVVolt1" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>voltage</type>
+            <sensorId>_INVERTER_VOLTAGE_LN_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.7</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter Voltage L1</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVVolt2" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>voltage</type>
+            <sensorId>_INVERTER_VOLTAGE_LN_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.8</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter Voltage L2</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsPMINVVolt3" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>voltage</type>
+            <sensorId>_INVERTER_VOLTAGE_LN_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.10.6.1.9</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter Voltage L3</label>
+            <sensorSet>Power Module</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="dupsPMStsNotExist" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>state</type>
+            <sensorId>PM_EXISTED_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Existed Status</label>
+            <enum>pmExistedStatus-em</enum>
+            <sensorSet>Power Module</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pmExistedStatus-em">
+			<label>Unknown</label>
+			<label>Does Not Exist</label>
+			<label>Existed</label>
+		</enumMap>
+		
+		<stateSensor ruleid="dupsPMStsOff" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <type>state</type>
+            <sensorId>PM_ON_OFF_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> On/Off Status</label>
+            <enum>pmOnOff-em</enum>
+            <sensorSet>Power Module</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="pmOnOff-em">
+			<label>Unknown</label>
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+        <alarmFlags2 ruleid="dupsPMStsRepair" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.12</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module In Repair Mode</activeText>
+                    <inactiveText>Power Module In Repair Mode Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> in repair mode.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> in repair mode alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsFaultShutdown" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.13</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Fault Shutdown</activeText>
+                    <inactiveText>Power Module Fault Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> fault shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> fault shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCFuseFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.14</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Fuse Open</activeText>
+                    <inactiveText>Power Module PFC Fuse Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> fuse open.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> fuse open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCOverTempWarning" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.15</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Over Temperature Warning</activeText>
+                    <inactiveText>Power Module PFC Over Temperature Warning Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over temperature warning.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over temperature warning condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCOverTempShutdown" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.16</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Over Temperature Shutdown</activeText>
+                    <inactiveText>Power Module PFC Over Temperature Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over temperature shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over temperature shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCOverVoltWarning" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.17</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Over Voltage Warning</activeText>
+                    <inactiveText>Power Module PFC Over Voltage Warning Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over voltage warning.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over voltage warning condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCOverVoltShutdown" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.18</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Over Voltage Shutdown</activeText>
+                    <inactiveText>Power Module PFC Over Voltage Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over voltage shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC over voltage shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCUnderVoltWarning" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.19</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Under Voltage Warning</activeText>
+                    <inactiveText>Power Module PFC Under Voltage Warning Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC under voltage warning.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC under voltage warning condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCUnderVoltShutdown" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.20</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Under Voltage Shutdown</activeText>
+                    <inactiveText>Power Module PFC Under Voltage Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC under voltage shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC under voltage shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCGeneralFault" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.21</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC General Fault</activeText>
+                    <inactiveText>Power Module PFC General Fault Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC general fault.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC general fault condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCFanFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.22</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Fan Failure</activeText>
+                    <inactiveText>Power Module PFC Fan Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC fan failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC fan failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCCurrentLimit" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.23</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Output Current Limit</activeText>
+                    <inactiveText>Power Module PFC Output Current Limit Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC output current limit.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC output current limit alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCOff" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.24</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Off</activeText>
+                    <inactiveText>Power Module PFC Off Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC off.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC off alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCInnerCommFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.25</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Inner Communication Failure</activeText>
+                    <inactiveText>Power Module PFC Inner Communication Failure Cleared</inactiveText>
+                </name>
+                <severity>error</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC inner communication failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC inner communication failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsPFCNotCalibrated" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.26</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module PFC Not Calibrated</activeText>
+                    <inactiveText>Power Module PFC Not Calibrated Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC not calibrated.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> PFC not calibrated alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVFuseFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.27</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Fuse Open</activeText>
+                    <inactiveText>Power Module Inverter Fuse Open Alarm Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter fuse open.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter fuse open alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVOverTempWarning" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.28</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Over Temperature Warning</activeText>
+                    <inactiveText>Power Module Inverter Over Temperature Warning Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over temperature warning.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over temperature warning condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVOverTempShutdown" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.29</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Over Temperature Shutdown</activeText>
+                    <inactiveText>Power Module Inverter Over Temperature Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>critical</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over temperature shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over temperature shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVFanFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.30</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Fan Failure</activeText>
+                    <inactiveText>Power Module Inverter Fan Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter fan failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter fan failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVShortCircuit" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.31</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Short Circuit</activeText>
+                    <inactiveText>Power Module Inverter Short Circuit Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter short circuit.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter short circuit alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVSTSFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.32</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter STS Failure</activeText>
+                    <inactiveText>Power Module Inverter STS Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter STS failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter STS failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVCircuitFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.33</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Circuit Failure Shutdown</activeText>
+                    <inactiveText>Power Module Inverter Circuit Failure Shutdown Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter circuit failure shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter circuit failure shutdown condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVOverVolt" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.34</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Over Voltage Shutdown</activeText>
+                    <inactiveText>Power Module Inverter Over Voltage Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over voltage shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter over voltage shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVOverload" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.35</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Overload</activeText>
+                    <inactiveText>Power Module Inverter Overload Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Power</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter overload.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter overload alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVInnerCommFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.36</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Inner Communication Failure</activeText>
+                    <inactiveText>Power Module Inverter Inner Communication Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter inner communication failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter inner communication failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVEPO" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.37</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter EPO Shutdown</activeText>
+                    <inactiveText>Power Module Inverter EPO Shutdown Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter EPO shutdown.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter EPO shutdown alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVParallelCommFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.38</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Parallel Communication Failure</activeText>
+                    <inactiveText>Power Module Inverter Parallel Communication Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Communication</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter parallel communication failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter parallel communication failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsINVParallelFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.39</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Parallel Failure</activeText>
+                    <inactiveText>Power Module Inverter Parallel Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter parallel failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter parallel failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+		
+		<stateSensor ruleid="dupsPMStsINVSTSOn" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+			<type>state</type>
+			<sensorId>PM_INVERTER_ON_OFF_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="2state-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.40</getRowOid>
+				</mapValue>
+			</value>
+			<label>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> Inverter State</label>
+			<enum>on_off-em</enum>
+			<sensorSet>Power Module</sensorSet>
+		</stateSensor>
+		
+		<enumMap ruleid="on_off-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+		
+        <alarmFlags2 ruleid="dupsPMStsINVNotCalibrated" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.41</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Inverter Not Calibrated</activeText>
+                    <inactiveText>Power Module Inverter Not Calibrated Alarm Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter not calibrated.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> inverter not calibrated alarm condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="dupsPMStsChargerFail" index=".1.3.6.1.4.1.2254.2.5.10.6.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.42</getRowOid></value>
+            <alarmFlagsTest match="1">
+                <name>
+                    <activeText>Power Module Charger Failure</activeText>
+                    <inactiveText>Power Module Charger Failure Cleared</inactiveText>
+                </name>
+                <severity>failure</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> charger failure.</activeText>
+                    <inactiveText>Power Module <getRowOid>.1.3.6.1.4.1.2254.2.5.10.6.1.1</getRowOid> charger failure condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+		
+	</device>
+	
+	<device deviceid="dupsParallel">
+		<oidMustExist ruleid="dupsParallel_exists" oid=".1.3.6.1.4.1.2254.2.5.12" istree="yes"/>
+				
+        <numSensor ruleid="dupsParallelRatingVA">
+            <type>powerVA</type>
+            <sensorId>_RATED_VA</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.1.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Rated Apparent Power</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelRatingPower">
+            <type>powerW</type>
+            <sensorId>_RATED_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.2.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Rated Power</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInCurrent1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.3.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_INPUT_AMPS_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Input Current L1</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInCurrent2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.4.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_INPUT_AMPS_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Input Current L2</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInCurrent3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.5.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_INPUT_AMPS_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Input Current L3</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutCurrent1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.6.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.6.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Output Current L1</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutCurrent2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.7.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Output Current L2</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutCurrent3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.8.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>amperage</type>
+            <sensorId>_OUTPUT_AMPS_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.2254.2.5.12.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Parallel UPS Output Current L3</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutPower1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.9.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.9.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Power L1</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutPower2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.10.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Power L2</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutPower3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.11.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>powerW</type>
+            <sensorId>_OUTPUT_POWER_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Power L3</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInEnergy1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.12.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Input Energy L1</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInEnergy2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.13.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.13.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Input Energy L2</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInEnergy3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.14.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.14.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Input Energy L3</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelInEnergyTotal">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.15.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_INPUT_ENERGY_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.15.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Input Energy Total</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutEnergy1">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.16.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.16.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Energy L1</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutEnergy2">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.17.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Energy L2</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutEnergy3">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.18.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Energy L3</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+        <numSensor ruleid="dupsParallelOutEnergyTotal">
+            <rowTest>
+                <mapValue mapid="delete_null_sensor-vm">
+                    <getOid>.1.3.6.1.4.1.2254.2.5.12.19.0</getOid>
+                </mapValue>
+            </rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>_OUTPUT_ENERGY_TOTAL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.5.12.19.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Parallel UPS Output Energy Total</label>
+            <sensorSet>Parallel</sensorSet>
+        </numSensor>
+		
+	</device>
+</APC_DDF>

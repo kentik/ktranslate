@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="shtil_psc200"
+	ddfname="Shtil PSC200"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="shtyl">
+		<oidMustExist ruleid="shtyl" oid=".1.3.6.1.4.1.34498" istree="yes" />
+
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.4.1.34498.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.34498.1.2.0</getOid>		
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<numSensor ruleid="uDC">
+			<type>voltageDC</type>
+			<sensorId>UDC</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) V</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.1.1.2.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>uDC</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<numSensor ruleid="iDC">
+			<type>amperage</type>
+			<sensorId>IDC</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.1.1.3.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>iDC</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<numSensor ruleid="contollerTemperature">
+			<type>temp</type>
+			<sensorId>CONTOLLER_TEMPERATURE</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) C</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.1.1.4.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Controller Temperature</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<numSensor ruleid="iACCount">
+			<type>num</type>
+			<sensorId>IAC_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.1.5.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of AC Group</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<numSensor ruleid="alarmCount">
+			<type>num</type>
+			<sensorId>ALARM_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.1.6.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Alarms</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<enumMap ruleid="aCFlag-em">
+			<label>AC Absent</label>
+			<label>AC Present</label>
+		</enumMap>
+		<stateSensor ruleid="aCFlag">
+			<type>state</type>
+			<sensorId>ACFLAG</sensorId>
+			<value>
+				<formatNumber printffmt="%1.0f">
+					<getOid>.1.3.6.1.4.1.34498.2.1.1.1.7.0</getOid>
+				</formatNumber>
+			</value>
+			<enum>aCFlag-em</enum>
+			<label>AC Present</label>
+			<sensorSet>Status - Param</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="dCPower">
+			<type>num/powerKW</type>
+			<sensorId>DC_POWER</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) kW</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.1.1.8.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>DC Power</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+		<numSensor ruleid="dCLoadPercent">
+			<type>pctofcapacity</type>
+			<sensorId>DC_LOAD_PCT</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) %</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.1.1.9.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>DC Load</label>
+			<sensorSet>Status - Param</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="aCOutCurrent" index=".1.3.6.1.4.1.34498.2.1.1.2.1.2">
+			<type>amperage</type>
+			<sensorId>AC_OUT_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.2</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Current Out</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCOutVoltage" index=".1.3.6.1.4.1.34498.2.1.1.2.1.3">
+			<type>voltageAC</type>
+			<sensorId>AC_OUT_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) V</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.3</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Voltage Out</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCInCurrent" index=".1.3.6.1.4.1.34498.2.1.1.2.1.4">
+			<type>amperage</type>
+			<sensorId>AC_IN_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.4</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Current In</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCInVoltage" index=".1.3.6.1.4.1.34498.2.1.1.2.1.5">
+			<type>voltageAC</type>
+			<sensorId>AC_IN_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) V</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.5</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Voltage In</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCOutPower" index=".1.3.6.1.4.1.34498.2.1.1.2.1.6">
+			<type>powerW</type>
+			<sensorId>AC_OUT_POWER_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) W</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.6</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Power Out</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCLoadPercent" index=".1.3.6.1.4.1.34498.2.1.1.2.1.7">
+			<type>pctofcapacity</type>
+			<sensorId>AC_LOAD_PCT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) %</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.7</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Load</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+
+		<enumMap ruleid="aCBypassStFl-em">
+			<label>Main Power Supply</label>
+			<label>Redundant Power Supply</label>
+		</enumMap>
+		<stateSensor ruleid="aCBypassStFl" index=".1.3.6.1.4.1.34498.2.1.1.2.1.8">
+			<type>state</type>
+			<sensorId>AC_BYPASS_ST_FL_<rowIndex/>
+			</sensorId>
+			<value>
+				<formatNumber printffmt="%1.0f">
+					<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.8</getRowOid>
+				</formatNumber>
+			</value>
+			<enum>aCBypassStFl-em</enum>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Bypass Status</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="aCInvertVoltage" index=".1.3.6.1.4.1.34498.2.1.1.2.1.9">
+			<type>voltage</type>
+			<sensorId>AC_INVERT_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.9</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Inverter Voltage</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="aCGridVoltage" index=".1.3.6.1.4.1.34498.2.1.1.2.1.10">
+			<type>voltage</type>
+			<sensorId>AC_GRID_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.10</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid> - Grid Voltage</label>
+			<sensorSet>Status - AC Group <getRowOid>.1.3.6.1.4.1.34498.2.1.1.2.1.1</getRowOid>
+			</sensorSet>
+		</numSensor>
+
+		<alarmFlags ruleid="mainAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.1.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Main Alarm</activeText>
+					<inactiveText>Main Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Main Alarm condition exists.</activeText>
+					<inactiveText>A Main Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="acAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.2.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>AC Alarm</activeText>
+					<inactiveText>AC Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An AC Alarm condition exists.</activeText>
+					<inactiveText>An AC Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="recAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.3.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Rectifier Alarm</activeText>
+					<inactiveText>Rectifier Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Rectifier Alarm condition exists.</activeText>
+					<inactiveText>A Rectifier Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="invAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.4.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Inverter Alarm</activeText>
+					<inactiveText>Inverter Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An Inverter Alarm condition exists.</activeText>
+					<inactiveText>An Inverter Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battDischargeAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.5.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Discharge Alarm</activeText>
+					<inactiveText>Battery Discharge Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Battery Discharge Alarm condition exists.</activeText>
+					<inactiveText>A Battery Discharge Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battLowAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.6.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Deep Discharge Battery Alarm</activeText>
+					<inactiveText>Deep Discharge Battery Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Deep Discharge Battery Alarm condition exists.</activeText>
+					<inactiveText>A Deep Discharge Battery Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battDischargeAlarmFlag">
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.1.4.1.7.0</getOid>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Battery Disbalance Alarm</activeText>
+					<inactiveText>Battery Disbalance Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Battery Disbalance Alarm condition exists.</activeText>
+					<inactiveText>A Battery Disbalance Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<numSensor ruleid="batteryCount">
+			<type>num</type>
+			<sensorId>BATTERY_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.3.1.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Batteries</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryCurrentt">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.3.1.2.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="batteryCurrent" index=".1.3.6.1.4.1.34498.2.1.3.2.1.2">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+)</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.2</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery <getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.1</getRowOid> - Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryVoltage" index=".1.3.6.1.4.1.34498.2.1.3.2.1.3">
+			<type>voltage</type>
+			<sensorId>BATTERY_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+)</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.3</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery <getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.1</getRowOid> - Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="batteryTemperature" index=".1.3.6.1.4.1.34498.2.1.3.2.1.4">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMP_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+)</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.4</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Battery <getRowOid>.1.3.6.1.4.1.34498.2.1.3.2.1.1</getRowOid> - Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="recCount">
+			<type>num</type>
+			<sensorId>REC_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.4.1.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Batteries</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="recCurrentt">
+			<type>amperage</type>
+			<sensorId>REC_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getOid>.1.3.6.1.4.1.34498.2.1.4.1.2.0</getOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Rectifier Current</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="recCurrent" index=".1.3.6.1.4.1.34498.2.1.4.2.1.2">
+			<type>amperage</type>
+			<sensorId>REC_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+)</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.4.2.1.2</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier <getRowOid>.1.3.6.1.4.1.34498.2.1.4.2.1.1</getRowOid> - Current</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+		<numSensor ruleid="recTemperature" index=".1.3.6.1.4.1.34498.2.1.4.2.1.3">
+			<type>temp</type>
+			<sensorId>REC_TEMP_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+)</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.4.2.1.3</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Rectifier <getRowOid>.1.3.6.1.4.1.34498.2.1.4.2.1.1</getRowOid> - Temperature</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="invCount">
+			<type>num</type>
+			<sensorId>INV_COUNT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.34498.2.1.5.1.1.0</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Inverters</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invOutputCurrent" index=".1.3.6.1.4.1.34498.2.1.5.2.1.2">
+			<type>amperage</type>
+			<sensorId>INV_OUT_CURRENT_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) A</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.2</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Output Current</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invOutputVoltage" index=".1.3.6.1.4.1.34498.2.1.5.2.1.3">
+			<type>voltage</type>
+			<sensorId>INV_OUT_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) V</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.3</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Output Voltage</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invInputVoltage" index=".1.3.6.1.4.1.34498.2.1.5.2.1.4">
+			<type>voltage</type>
+			<sensorId>INV_IN_VOLTAGE_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) V</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.4</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Input Voltage</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invFrequency" index=".1.3.6.1.4.1.34498.2.1.5.2.1.5">
+			<type>frequency</type>
+			<sensorId>INV_FREQUENCY_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) Hz</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.5</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Frequency</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invInputFrequency" index=".1.3.6.1.4.1.34498.2.1.5.2.1.6">
+			<type>frequency</type>
+			<sensorId>INV_INPUT_FREQUENCY_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+\.\d+) Hz</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.6</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Input Frequency</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+		<numSensor ruleid="invTemperature" index=".1.3.6.1.4.1.34498.2.1.5.2.1.9">
+			<type>temp</type>
+			<sensorId>INV_TEMP_<rowIndex/>
+			</sensorId>
+			<value>
+				<regex>
+					<op>(\d+) C</op>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.9</getRowOid>
+					</op>
+					<op>%1$s</op>
+				</regex>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Inverter <getRowOid>.1.3.6.1.4.1.34498.2.1.5.2.1.1</getRowOid> - Temperature</label>
+			<sensorSet>Inverter</sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>
+
+<!--
+    <numSensor ruleid="termorelayparam">
+      <type>num</type>
+      <units />
+      <sensorId>_TERMORELAYPARAM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.8.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Termorelayparam</label>
+      <sensorSet>termoRelay</sensorSet>
+    </numSensor>
+    <numSensor ruleid="termorelaycount">
+      <type>num</type>
+      <units />
+      <sensorId>_TERMORELAYCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.8.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Termorelaycount</label>
+      <sensorSet>termoRelayParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="termorelaystatus">
+      <type>num</type>
+      <units />
+      <sensorId>_TERMORELAYSTATUS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.8.2.1.6</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Termorelaystatus</label>
+      <sensorSet>termoRelayEntry</sensorSet>
+    </numSensor>
+    <numSensor ruleid="timerparam">
+      <type>num</type>
+      <units />
+      <sensorId>_TIMERPARAM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.9.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Timerparam</label>
+      <sensorSet>timer</sensorSet>
+    </numSensor>
+    <numSensor ruleid="timercount">
+      <type>num</type>
+      <units />
+      <sensorId>_TIMERCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.9.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Timercount</label>
+      <sensorSet>timerParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="timerperiod">
+      <type>num</type>
+      <units />
+      <sensorId>_TIMERPERIOD</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.3</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Timerperiod</label>
+      <sensorSet>timerEntry</sensorSet>
+    </numSensor>
+    <numSensor ruleid="timerduration">
+      <type>num</type>
+      <units />
+      <sensorId>_TIMERDURATION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.5</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Timerduration</label>
+      <sensorSet>timerEntry</sensorSet>
+    </numSensor>
+    <numSensor ruleid="timertime">
+      <type>num</type>
+      <units />
+      <sensorId>_TIMERTIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.7</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Timertime</label>
+      <sensorSet>timerEntry</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svacparam">
+      <type>num</type>
+      <units />
+      <sensorId>_SVACPARAM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.10.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svacparam</label>
+      <sensorSet>svAc</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svaccount">
+      <type>num</type>
+      <units />
+      <sensorId>_SVACCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.10.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svaccount</label>
+      <sensorSet>svAcParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svacconnection">
+      <type>num</type>
+      <units />
+      <sensorId>_SVACCONNECTION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.2</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svacconnection</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </numSensor>
+    <numSensor ruleid="conparam">
+      <type>num</type>
+      <units />
+      <sensorId>_CONPARAM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.11.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Conparam</label>
+      <sensorSet>controlContact</sensorSet>
+    </numSensor>
+    <numSensor ruleid="concount">
+      <type>num</type>
+      <units />
+      <sensorId>_CONCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.11.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Concount</label>
+      <sensorSet>conParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="emetertariffnumber">
+      <type>num</type>
+      <units />
+      <sensorId>_EMETERTARIFFNUMBER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.12.1.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Emetertariffnumber</label>
+      <sensorSet>eMeterParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="emeterconnection">
+      <type>num</type>
+      <units />
+      <sensorId>_EMETERCONNECTION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.12.1.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Emeterconnection</label>
+      <sensorSet>eMeterParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="emeterserialnumber">
+      <type>num</type>
+      <units />
+      <sensorId>_EMETERSERIALNUMBER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.12.1.4.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Emeterserialnumber</label>
+      <sensorSet>eMeterParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="emetersummomentpower">
+      <type>num</type>
+      <units />
+      <sensorId>_EMETERSUMMOMENTPOWER</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.12.1.5.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Emetersummomentpower</label>
+      <sensorSet>eMeterParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svbatcount">
+      <type>num</type>
+      <units />
+      <sensorId>_SVBATCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.13.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svbatcount</label>
+      <sensorSet>svBatParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svsectioncount">
+      <type>num</type>
+      <units />
+      <sensorId>_SVSECTIONCOUNT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.13.1.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svsectioncount</label>
+      <sensorSet>svBatParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svbatmode">
+      <type>num</type>
+      <units />
+      <sensorId>_SVBATMODE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.13.1.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svbatmode</label>
+      <sensorSet>svBatParam</sensorSet>
+    </numSensor>
+    <numSensor ruleid="svbatconnection">
+      <type>num</type>
+      <units />
+      <sensorId>_SVBATCONNECTION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.2</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Svbatconnection</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </numSensor>
+    
+    <stringSensor ruleid="svostatus">
+      <type>string</type>
+      <units />
+      <sensorId>_SVOSTATUS</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.6.1.1.0</getOid>
+        </op>
+      </value>
+      <label>Svostatus</label>
+      <sensorSet>svoParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svohumidity">
+      <type>string</type>
+      <units />
+      <sensorId>_SVOHUMIDITY</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.6.1.2.0</getOid>
+        </op>
+      </value>
+      <label>Svohumidity</label>
+      <sensorSet>svoParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="termorelaymode">
+      <type>string</type>
+      <units />
+      <sensorId>_TERMORELAYMODE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.8.2.1.2</getOid>
+        </op>
+      </value>
+      <label>Termorelaymode</label>
+      <sensorSet>termoRelayEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="termorelayhightemperature">
+      <type>string</type>
+      <units />
+      <sensorId>_TERMORELAYHIGHTEMPERATURE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.8.2.1.3</getOid>
+        </op>
+      </value>
+      <label>Termorelayhightemperature</label>
+      <sensorSet>termoRelayEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="termorelaylowtemperature">
+      <type>string</type>
+      <units />
+      <sensorId>_TERMORELAYLOWTEMPERATURE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.8.2.1.4</getOid>
+        </op>
+      </value>
+      <label>Termorelaylowtemperature</label>
+      <sensorSet>termoRelayEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="termorelaymeasuredtemperature">
+      <type>string</type>
+      <units />
+      <sensorId>_TERMORELAYMEASUREDTEMPERATURE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.8.2.1.5</getOid>
+        </op>
+      </value>
+      <label>Termorelaymeasuredtemperature</label>
+      <sensorSet>termoRelayEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="timermode">
+      <type>string</type>
+      <units />
+      <sensorId>_TIMERMODE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.2</getOid>
+        </op>
+      </value>
+      <label>Timermode</label>
+      <sensorSet>timerEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="timerperiodunit">
+      <type>string</type>
+      <units />
+      <sensorId>_TIMERPERIODUNIT</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.4</getOid>
+        </op>
+      </value>
+      <label>Timerperiodunit</label>
+      <sensorSet>timerEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="timerdurationunit">
+      <type>string</type>
+      <units />
+      <sensorId>_TIMERDURATIONUNIT</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.6</getOid>
+        </op>
+      </value>
+      <label>Timerdurationunit</label>
+      <sensorSet>timerEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="timerrelaystatus">
+      <type>string</type>
+      <units />
+      <sensorId>_TIMERRELAYSTATUS</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.9.2.1.8</getOid>
+        </op>
+      </value>
+      <label>Timerrelaystatus</label>
+      <sensorSet>timerEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svacvoltagea">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACVOLTAGEA</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.3</getOid>
+        </op>
+      </value>
+      <label>Svacvoltagea</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svacvoltageb">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACVOLTAGEB</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.4</getOid>
+        </op>
+      </value>
+      <label>Svacvoltageb</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svacvoltagec">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACVOLTAGEC</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.5</getOid>
+        </op>
+      </value>
+      <label>Svacvoltagec</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svaccurrenta">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACCURRENTA</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.6</getOid>
+        </op>
+      </value>
+      <label>Svaccurrenta</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svaccurrentb">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACCURRENTB</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.7</getOid>
+        </op>
+      </value>
+      <label>Svaccurrentb</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svaccurrentc">
+      <type>string</type>
+      <units />
+      <sensorId>_SVACCURRENTC</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.10.2.1.8</getOid>
+        </op>
+      </value>
+      <label>Svaccurrentc</label>
+      <sensorSet>svAcEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="emetername">
+      <type>string</type>
+      <units />
+      <sensorId>_EMETERNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.12.1.1.0</getOid>
+        </op>
+      </value>
+      <label>Emetername</label>
+      <sensorSet>eMeterParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="emeterpower">
+      <type>string</type>
+      <units />
+      <sensorId>_EMETERPOWER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.12.2.1.2</getOid>
+        </op>
+      </value>
+      <label>Emeterpower</label>
+      <sensorSet>eMeterEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="emetercurrent">
+      <type>string</type>
+      <units />
+      <sensorId>_EMETERCURRENT</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.12.3.1.2</getOid>
+        </op>
+      </value>
+      <label>Emetercurrent</label>
+      <sensorSet>eMeterEntryUI</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="emetervoltage">
+      <type>string</type>
+      <units />
+      <sensorId>_EMETERVOLTAGE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.12.3.1.3</getOid>
+        </op>
+      </value>
+      <label>Emetervoltage</label>
+      <sensorSet>eMeterEntryUI</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="emetermomentpower">
+      <type>string</type>
+      <units />
+      <sensorId>_EMETERMOMENTPOWER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.12.3.1.4</getOid>
+        </op>
+      </value>
+      <label>Emetermomentpower</label>
+      <sensorSet>eMeterEntryUI</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltagei">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEI</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.3</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltagei</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltageii">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEII</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.4</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltageii</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltageiii">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEIII</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.5</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltageiii</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltageiv">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEIV</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.6</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltageiv</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltagev">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEV</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.7</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltagev</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatvoltagevi">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATVOLTAGEVI</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.8</getOid>
+        </op>
+      </value>
+      <label>Svbatvoltagevi</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbatfullvoltage">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATFULLVOLTAGE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.9</getOid>
+        </op>
+      </value>
+      <label>Svbatfullvoltage</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="svbattemperature">
+      <type>string</type>
+      <units />
+      <sensorId>_SVBATTEMPERATURE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.13.2.1.10</getOid>
+        </op>
+      </value>
+      <label>Svbattemperature</label>
+      <sensorSet>svBatEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecstatustext">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECSTATUSTEXT</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.4</getOid>
+        </op>
+      </value>
+      <label>Modtecstatustext</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modteccoolingpower">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECCOOLINGPOWER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.5</getOid>
+        </op>
+      </value>
+      <label>Modteccoolingpower</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecheatingpower">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECHEATINGPOWER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.6</getOid>
+        </op>
+      </value>
+      <label>Modtecheatingpower</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecinttemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECINTTEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.7</getOid>
+        </op>
+      </value>
+      <label>Modtecinttemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecexttemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECEXTTEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.8</getOid>
+        </op>
+      </value>
+      <label>Modtecexttemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecintraditemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECINTRADITEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.9</getOid>
+        </op>
+      </value>
+      <label>Modtecintraditemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecextraditemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECEXTRADITEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.10</getOid>
+        </op>
+      </value>
+      <label>Modtecextraditemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecintradiitemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECINTRADIITEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.11</getOid>
+        </op>
+      </value>
+      <label>Modtecintradiitemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="modtecextradiitemper">
+      <type>string</type>
+      <units />
+      <sensorId>_MODTECEXTRADIITEMPER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.14.2.1.12</getOid>
+        </op>
+      </value>
+      <label>Modtecextradiitemper</label>
+      <sensorSet>modTECEntry</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="ipadress">
+      <type>string</type>
+      <units />
+      <sensorId>_IPADRESS</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.1.1.0</getOid>
+        </op>
+      </value>
+      <label>Ipadress</label>
+      <sensorSet>tcpipParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="mask">
+      <type>string</type>
+      <units />
+      <sensorId>_MASK</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.1.2.0</getOid>
+        </op>
+      </value>
+      <label>Mask</label>
+      <sensorSet>tcpipParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="gateway">
+      <type>string</type>
+      <units />
+      <sensorId>_GATEWAY</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.1.3.0</getOid>
+        </op>
+      </value>
+      <label>Gateway</label>
+      <sensorSet>tcpipParam</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="language">
+      <type>string</type>
+      <units />
+      <sensorId>_LANGUAGE</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.2.1.1.0</getOid>
+        </op>
+      </value>
+      <label>Language</label>
+      <sensorSet>snmpSetting</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="trapadrnumber">
+      <type>string</type>
+      <units />
+      <sensorId>_TRAPADRNUMBER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.2.1.2.0</getOid>
+        </op>
+      </value>
+      <label>Trapadrnumber</label>
+      <sensorSet>snmpSetting</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="readcommunityname">
+      <type>string</type>
+      <units />
+      <sensorId>_READCOMMUNITYNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.2.1.3.0</getOid>
+        </op>
+      </value>
+      <label>Readcommunityname</label>
+      <sensorSet>snmpSetting</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="writecommunityname">
+      <type>string</type>
+      <units />
+      <sensorId>_WRITECOMMUNITYNAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.34498.2.1.100.2.1.4.0</getOid>
+        </op>
+      </value>
+      <label>Writecommunityname</label>
+      <sensorSet>snmpSetting</sensorSet>
+    </stringSensor>
+  </device>
+</APC_DDF>
+-->

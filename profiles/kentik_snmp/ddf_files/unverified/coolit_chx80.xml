@@ -1,0 +1,1294 @@
+<APC_DDF
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+		ddfid="coolit_chx80"
+		ddfname="CoolIT CHx80"
+		ddfversion="4"
+		canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+
+	<!-- 
+		SOURCE
+		/snmp/resources/mibs/coolit/CIS-SENSORS-MIB.MIB
+		 CoolIT CHx80| March 19 2020
+	-->
+
+	<device deviceid="coolit_chx80">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">CoolIT</setProductData>
+		<setProductData ruleid="modeldata" field="model">CHx80</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="coolit_chx80" oid=".1.3.6.1.4.1.30518.16" istree="yes"/> 
+
+		<numSensor ruleid="pri-supply-temp">
+			<type>temp</type>
+			<sensorId>PRI_SUPPLY_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.1</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Primary Supply Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-return-temp">
+			<type>temp</type>
+			<sensorId>PRI_RETURN_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.2</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Primary Return Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-delta-temp">
+			<type>num</type>
+			<sensorId>PRI_DELTA_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.3</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Primary Delta Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-supply-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>PRI_SUPPLY_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.4</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Primary Supply Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-return-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>PRI_RETURN_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.5</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Primary Return Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-delta-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>PRI_DELTA_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.6</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Primary Delta Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-flow">
+			<type>fluidflow</type>
+			<sensorId>PRI_FLOW</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.7</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Primary Flow</label>
+			<sensorSet>Flow</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-heat-load">
+			<type>num/powerKW</type>
+			<sensorId>PRI_HEAT_LOAD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.8</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Primary Heat Load</label>
+			<sensorSet>Heat Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-control">
+			<type>pctofcapacity</type>
+			<sensorId>PRI_CONTROL</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.9</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Control</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-setpoint">
+			<type>temp</type>
+			<sensorId>PRI_SETPOINT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.10</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Setpoint</label>
+			<sensorSet>Setpoint</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-valve-feedback">
+			<type>pctofcapacity</type>
+			<sensorId>PRI_VALVE_FEEDBACK</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.11</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Valve Feedback</label>
+			<sensorSet>Valve</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-fan-feedback">
+			<type>voltage</type>
+			<sensorId>PRI_FAN_FEEDBACK</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.12</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Fan Feedback</label>
+			<sensorSet>Fan</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-fan-current">
+			<type>amperage</type>
+			<sensorId>PRI_FAN_CURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.13</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Fan Current</label>
+			<sensorSet>Fan</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pri-fan-tach">
+			<type>fanspeed</type>
+			<sensorId>PRI_FAN_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.14</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Primary Fan Tach</label>
+			<sensorSet>Fan</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-supply-temp">
+			<type>temp</type>
+			<sensorId>SEC_SUPPLY_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.15</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Secondary Supply Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-return-temp">
+			<type>temp</type>
+			<sensorId>SEC_RETURN_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.16</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Secondary Return Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-delta-temp">
+			<type>num</type>
+			<sensorId>SEC_DELTA_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.17</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Secondary Delta Temperature</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-supply-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>SEC_SUPPLY_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.18</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Supply Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-return-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>SEC_RETURN_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.19</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Return Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-delta-pressure">
+			<type>num</type>
+			<units>psi</units>
+			<sensorId>SEC_DELTA_PRESSURE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.20</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Delta Pressure</label>
+			<sensorSet>Pressure</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-flow">
+			<type>fluidflow</type>
+			<sensorId>SEC_FLOW</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.21</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Flow</label>
+			<sensorSet>Flow</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-heat-load">
+			<type>num/powerKW</type>
+			<sensorId>SEC_HEAT_LOAD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.22</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Heat Load</label>
+			<sensorSet>Heat Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-control">
+			<type>pctofcapacity</type>
+			<sensorId>SEC_PUMP_CONTROL</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.23</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump Control</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-setpoint">
+			<type>temp</type>
+			<sensorId>SEC_SETPOINT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.24</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>Secondary Setpoint</label>
+			<sensorSet>Setpoint</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-0-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_0_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.25</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 0 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-1-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_1_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.26</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 1 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-2-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_2_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.27</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 2 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-3-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_3_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.28</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 3 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-4-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_4_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.29</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 4 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-5-tach">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_5_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.30</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump 5 Tach</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sec-pump-tach-avg">
+			<type>num</type>
+			<units>rpm</units>
+			<sensorId>SEC_PUMP_TACH_AVG</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.31</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Secondary Pump Tach Avg</label>
+			<sensorSet>Pump</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-ambient-temp">
+			<type>temp</type>
+			<sensorId>SYS_AMBIENT_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.32</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System Ambient Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-relative-humidity">
+			<type>humidity</type>
+			<sensorId>SYS_RELATIVE_HUMIDITY</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.33</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System Relative Humidity</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-24v-supply-a">
+			<type>voltage</type>
+			<sensorId>SYS_24V_SUPPLY_A</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.34</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System 24V Supply A</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-24v-supply-b">
+			<type>voltage</type>
+			<sensorId>SYS_24V_SUPPLY_B</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.35</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System 24V Supply B</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-dew-point-temp">
+			<type>temp</type>
+			<sensorId>SYS_DEW_POINT_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.36</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System Dew Point Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-misc-flow">
+			<type>fluidflow</type>
+			<sensorId>SYS_MISC_FLOW</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.37</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>System Misc Flow</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="sys-leak-external">
+			<type>state</type>
+			<sensorId>SYS_LEAK_EXTERNAL</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.38</getOid>
+				</mapValue>
+			</value>
+			<label>System Leak External</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sys-leak-main">
+			<type>state</type>
+			<sensorId>SYS_LEAK_MAIN</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.39</getOid>
+				</mapValue>
+			</value>
+			<label>System Leak Main</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sys-leak-reservoir">
+			<type>state</type>
+			<sensorId>SYS_LEAK_RESERVOIR</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.40</getOid>
+				</mapValue>
+			</value>
+			<label>System Leak Reservoir</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sys-level-low">
+			<type>state</type>
+			<sensorId>SYS_LEVEL_LOW</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.41</getOid>
+				</mapValue>
+			</value>
+			<label>System Level Low</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sys-level-high">
+			<type>state</type>
+			<sensorId>SYS_LEVEL_HIGH</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.42</getOid>
+				</mapValue>
+			</value>
+			<label>System Level High</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sys-facility-in">
+			<type>state</type>
+			<sensorId>SYS_FACILITY_IN</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.43</getOid>
+				</mapValue>
+			</value>
+			<label>System Facility In</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="sys-battery-voltage">
+			<type>voltage</type>
+			<sensorId>SYS_BATTERY_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.44</getOid>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>System Battery Voltage</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-mcu-temp">
+			<type>temp</type>
+			<sensorId>SYS_MCU_TEMP</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.45</getOid>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>System MCU Temperature</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-mcu-voltage">
+			<type>voltage</type>
+			<sensorId>SYS_MCU_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.46</getOid>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label>System MCU Voltage</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sys-fan-tach">
+			<type>fanspeed</type>
+			<sensorId>SYS_FAN_TACH</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.47</getOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label>System Fan Tach</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="sys-aux-power-good">
+			<type>state</type>
+			<sensorId>SYS_AUX_POWER_GOOD</sensorId>
+			<value>
+				<mapValue mapid="falsetrue-vm">
+					<getOid>.1.3.6.1.4.1.30518.16.2.1.3.48</getOid>
+				</mapValue>
+			</value>
+			<label>System Aux Power Good</label>
+			<enum>falsetrue-em</enum>
+			<sensorSet>System</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="sys-heat-load">
+			<type>num/powerKW</type>
+			<sensorId>SYS_HEAT_LOAD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.30518.16.2.1.3.49</getOid>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>System Heat Load</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="falsetrue-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="falsetrue-em">
+			<label>False</label>
+			<label>True</label>
+		</enumMap>
+
+		<alarmFlags ruleid="pri-supply-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.1</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Supply Temperature Alarm</activeText>
+					<inactiveText>Primary Supply Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A primary supply temperature alarm condition exists.</activeText>
+					<inactiveText>A primary supply temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-return-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.2</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Return Temperature Alarm</activeText>
+					<inactiveText>Primary Return Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A primary return temperature alarm condition exists.</activeText>
+					<inactiveText>A primary return temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-delta-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.3</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Delta Temperature Alarm</activeText>
+					<inactiveText>Primary Delta Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A primary delta temperature alarm condition exists.</activeText>
+					<inactiveText>A primary delta temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-supply-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.4</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Supply Pressure Alarm</activeText>
+					<inactiveText>Primary Supply Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary supply pressure alarm condition exists.</activeText>
+					<inactiveText>A primary supply pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-return-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.5</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Return Pressure Alarm</activeText>
+					<inactiveText>Primary Return Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary return pressure alarm condition exists.</activeText>
+					<inactiveText>A primary return pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-delta-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.6</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Delta Pressure Alarm</activeText>
+					<inactiveText>Primary Delta Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary delta pressure alarm condition exists.</activeText>
+					<inactiveText>A primary delta pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-flow-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.7</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Flow Alarm</activeText>
+					<inactiveText>Primary Flow Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary flow alarm condition exists.</activeText>
+					<inactiveText>A primary flow alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-heat-load-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.8</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Heat Load Alarm</activeText>
+					<inactiveText>Primary Heat Load Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary heat load alarm condition exists.</activeText>
+					<inactiveText>A primary heat load alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-control-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.9</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Control Alarm</activeText>
+					<inactiveText>Primary Control Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary control alarm condition exists.</activeText>
+					<inactiveText>A primary control alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-setpoint-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.10</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Setpoint Alarm</activeText>
+					<inactiveText>Primary Setpoint Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A primary setpoint alarm condition exists.</activeText>
+					<inactiveText>A primary setpoint alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-valve-feedback-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.11</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Valve Feedback Alarm</activeText>
+					<inactiveText>Primary Valve Feedback Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary valve feedback alarm condition exists.</activeText>
+					<inactiveText>A primary valve feedback alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-fan-feedback-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.12</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Fan Feedback Alarm</activeText>
+					<inactiveText>Primary Fan Feedback Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary fan feedback alarm condition exists.</activeText>
+					<inactiveText>A primary fan feedback alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-fan-current-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.13</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Fan Current Alarm</activeText>
+					<inactiveText>Primary Fan Current Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>power</category>
+				<description>
+					<activeText>A primary fan current alarm condition exists.</activeText>
+					<inactiveText>A primary fan current alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="pri-fan-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.14</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Primary Fan Tach Alarm</activeText>
+					<inactiveText>Primary Fan Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A primary fan tach alarm condition exists.</activeText>
+					<inactiveText>A primary fan tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-supply-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.15</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Supply Temperature Alarm</activeText>
+					<inactiveText>Secondary Supply Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A secondary supply temperature alarm condition exists.</activeText>
+					<inactiveText>A secondary supply temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-return-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.16</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Return Temperature Alarm</activeText>
+					<inactiveText>Secondary Return Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A secondary return temperature alarm condition exists.</activeText>
+					<inactiveText>A secondary return temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-delta-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.17</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Delta Temperature Alarm</activeText>
+					<inactiveText>Secondary Delta Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A secondary delta temperature alarm condition exists.</activeText>
+					<inactiveText>A secondary delta temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-supply-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.18</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Supply Pressure Alarm</activeText>
+					<inactiveText>Secondary Supply Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary supply pressure alarm condition exists.</activeText>
+					<inactiveText>A secondary supply pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-return-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.19</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Return Pressure Alarm</activeText>
+					<inactiveText>Secondary Return Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary return pressure alarm condition exists.</activeText>
+					<inactiveText>A secondary return pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-delta-pressure-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.20</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Delta Pressure Alarm</activeText>
+					<inactiveText>Secondary Delta Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary delta pressure alarm condition exists.</activeText>
+					<inactiveText>A secondary delta pressure alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-flow-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.21</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Flow Alarm</activeText>
+					<inactiveText>Secondary Flow Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary flow alarm condition exists.</activeText>
+					<inactiveText>A secondary flow alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-heat-load-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.22</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Heat Load Alarm</activeText>
+					<inactiveText>Secondary Heat Load Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary heat load alarm condition exists.</activeText>
+					<inactiveText>A secondary heat load alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-control-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.23</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump Control Alarm</activeText>
+					<inactiveText>Secondary Pump Control Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump control alarm condition exists.</activeText>
+					<inactiveText>A secondary pump control alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-setpoint-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.24</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Setpoint Alarm</activeText>
+					<inactiveText>Secondary Setpoint Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A secondary setpoint alarm condition exists.</activeText>
+					<inactiveText>A secondary setpoint alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-0-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.25</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 0 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 0 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 0 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 0 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-1-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.26</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 1 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 1 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 1 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 1 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-2-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.27</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 2 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 2 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 2 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 2 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-3-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.28</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 3 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 3 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 3 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 3 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-4-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.29</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 4 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 4 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 4 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 4 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-5-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.30</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump 5 Tach Alarm</activeText>
+					<inactiveText>Secondary Pump 5 Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump 5 tach alarm condition exists.</activeText>
+					<inactiveText>A secondary pump 5 tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sec-pump-tach-avg-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.31</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Secondary Pump Tach Avg Alarm</activeText>
+					<inactiveText>Secondary Pump Tach Avg Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A secondary pump tach avg alarm condition exists.</activeText>
+					<inactiveText>A secondary pump tach avg alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-ambient-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.32</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Ambient Temperature Alarm</activeText>
+					<inactiveText>System Ambient Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A system ambient temperature alarm condition exists.</activeText>
+					<inactiveText>A system ambient temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-relative-humidity-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.33</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Relative Humidity Alarm</activeText>
+					<inactiveText>System Relative Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>humidity</category>
+				<description>
+					<activeText>A system relative humidity alarm condition exists.</activeText>
+					<inactiveText>A system relative humidity alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-24v-supply-a-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.34</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System 24V Supply A Alarm</activeText>
+					<inactiveText>System 24V Supply A Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>power</category>
+				<description>
+					<activeText>A system 24v supply A alarm condition exists.</activeText>
+					<inactiveText>A system 24v supply A alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-24v-supply-b-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.35</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System 24V Supply B Alarm</activeText>
+					<inactiveText>System 24V Supply B Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>power</category>
+				<description>
+					<activeText>A system 24v supply B alarm condition exists.</activeText>
+					<inactiveText>A system 24v supply B alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-dew-point-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.36</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Dew Point Temperature Alarm</activeText>
+					<inactiveText>System Dew Point Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A system dew point temperature alarm condition exists.</activeText>
+					<inactiveText>A system dew point temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-misc-flow-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.37</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Misc Flow Alarm</activeText>
+					<inactiveText>System Misc Flow Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system misc flow alarm condition exists.</activeText>
+					<inactiveText>A system misc flow alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-leak-external-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.38</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Leak External Alarm</activeText>
+					<inactiveText>System Leak External Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system leak external alarm condition exists.</activeText>
+					<inactiveText>A system leak external alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-leak-main-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.39</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Leak Main Alarm</activeText>
+					<inactiveText>System Leak Main Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system leak main alarm condition exists.</activeText>
+					<inactiveText>A system leak main alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-leak-reservoir-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.40</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Leak Reservoir Alarm</activeText>
+					<inactiveText>System Leak Reservoir Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system leak reservoir alarm condition exists.</activeText>
+					<inactiveText>A system leak reservoir alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-level-low-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.41</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Level Low Alarm</activeText>
+					<inactiveText>System Level Low Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system level low alarm condition exists.</activeText>
+					<inactiveText>A system level low alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-level-high-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.42</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Level High Alarm</activeText>
+					<inactiveText>System Level High Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system level high alarm condition exists.</activeText>
+					<inactiveText>A system level high alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-facility-in-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.43</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Facility In Alarm</activeText>
+					<inactiveText>System Facility In Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system facility in alarm condition exists.</activeText>
+					<inactiveText>A system facility in alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-battery-voltage-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.44</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Battery Voltage Alarm Alarm</activeText>
+					<inactiveText>System Battery Voltage Alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>battery</category>
+				<description>
+					<activeText>A system battery voltage alarm alarm condition exists.</activeText>
+					<inactiveText>A system battery voltage alarm alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-mcu-temp-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.45</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System MCU Temperature Alarm Alarm</activeText>
+					<inactiveText>System MCU Temperature Alarm Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>temperature</category>
+				<description>
+					<activeText>A system MCU temperature alarm alarm condition exists.</activeText>
+					<inactiveText>A system MCU temperature alarm alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-mcu-voltage-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.46</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System MCU Voltage Alarm</activeText>
+					<inactiveText>System MCU Voltage Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>power</category>
+				<description>
+					<activeText>A system MCU voltage alarm condition exists.</activeText>
+					<inactiveText>A system MCU voltage alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-fan-tach-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.47</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Fan Tach Alarm</activeText>
+					<inactiveText>System Fan Tach Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system fan tach alarm condition exists.</activeText>
+					<inactiveText>A system fan tach alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-aux-power-good-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.48</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Aux Power Alarm</activeText>
+					<inactiveText>System Aux Power Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>power</category>
+				<description>
+					<activeText>A system aux power alarm condition exists.</activeText>
+					<inactiveText>A system aux power alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="sys-heat-load-alert">
+			<value><getOid>.1.3.6.1.4.1.30518.16.2.1.8.49</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Heat Load Alarm</activeText>
+					<inactiveText>System Heat Load Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>cooling</category>
+				<description>
+					<activeText>A system heat load alarm condition exists.</activeText>
+					<inactiveText>A system heat load alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+	</device>
+</APC_DDF>

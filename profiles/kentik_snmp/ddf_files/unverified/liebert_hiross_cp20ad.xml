@@ -1,0 +1,1163 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="liebert_hiross_cp20ad"
+	ddfname="Liebert-Hiross CP20AD"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="liebert_hiross_cp20ad">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Liebert-Hiross</setProductData>
+		<setProductData ruleid="modeldata" field="model">CP20AD</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+		<oidMustExist ruleid="liebert_hiross_oid_must_exist" oid=".1.3.6.1.4.1.476.1.42.3.4.1.2.1.0"/> 
+
+		<numSensor ruleid="lgp_environment_temperature_setting_degree_farenheit_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_SETTING_DEGREE_FARENHEIT</sensorId>
+            <value>
+				<mult>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getOid>1.3.6.1.4.1.476.1.42.3.4.1.2.1.0</getOid></op>
+											<op>.1</op>
+										</mult>
+									</op>
+									<op>32</op>	
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>.1</op>
+				</mult>				
+            </value>
+            <label>Temperature Setting Farenheit</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_tolerance_degree_farenheit_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_TOLERANCE_DEGREE_FARENHEIT</sensorId>
+            <value>
+				<mult>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.2.2.0</getOid></op>
+											<op>.1</op>
+										</mult>
+									</op>
+									<op>32</op>	
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>.1</op>
+				</mult>				
+            </value>
+            <label>Acceptable Temperature Variance Farenheit</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_measurement_degree_farenheit_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_MEASUREMENT_DEGREE_FARENHEIT</sensorId>
+            <value>
+				<mult>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.2.3.1.3.0</getOid></op>
+											<op>1</op>
+										</mult>
+									</op>
+									<op>32</op>	
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>.1</op>
+				</mult>				
+            </value>
+            <label>Temperature Measurement Farenheit</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_high_threshold_degree_farenheit_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_HIGH_THRESHOLD_DEGREE_FARENHEIT</sensorId>
+            <value>
+				<mult>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.2.3.1.4.0</getOid></op>
+											<op>1</op>
+										</mult>
+									</op>
+									<op>32</op>	
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>.1</op>
+				</mult>				
+            </value>
+            <label>Temperature Measurement High Threshold Farenheit</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+
+		<numSensor ruleid="lgp_environment_temperature_low_threshold_degree_farenheit_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_LOW_THRESHOLD_DEGREE_FARENHEIT</sensorId>
+            <value>
+				<mult>
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.2.3.1.5.0</getOid></op>
+											<op>1</op>
+										</mult>
+									</op>
+									<op>32</op>	
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<op>.1</op>
+				</mult>				
+            </value>
+            <label>Temperature Measurement Low Threshold Farenheit</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_setting_degree_celcius_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_SETTING_DEGREE_CELCIUS</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.3.1.0</getOid></op>	
+					<op>.1</op>
+				</mult>
+			</value>
+            <label>Temperature Setting Celcius</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_tolerance_degree_celcius_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_TOLERANCE_DEGREE_CELCIUS</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.476.1.42.3.4.1.3.2.0</getOid>
+			</value>
+            <label>Temperature Variance Celcius</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_measurement_degree_celcius_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_MEASUREMENT_DEGREE_CELCIUS</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.3.3.1.3.0</getOid></op>
+					<op>.1</op>
+				</mult>
+			</value>
+            <label>Temperature Measurement Celcius</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		
+		<numSensor ruleid="lgp_environment_temperature_high_threshold_degree_celcius_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_HIGH_THRESHOLD_DEGREE_CELCIUS</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.3.3.1.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Temperature High Threshold Celcius</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_temperature_low_threshold_degree_celcius_sensor">
+            <type>temp</type>
+            <sensorId>LGP_ENVIRONMENT_TEMPERATURE_LOW_THRESHOLD_DEGREE_CELCIUS</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.1.3.3.1.5.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Temperature Low Threshold Celcius</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_humidity_setting_relative_sensor">
+            <type>humidity</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDITY_SETTING_RELATIVE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.2.2.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Humidity Setting Used to Control the Humidity Point</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_humidity_variance_relative_sensor">
+            <type>humidity</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDITY_VARIANCE_RELATIVE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.2.2.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Acceptable Humidity Variance</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_humidity_measurement_relative_sensor">
+            <type>humidity</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDITY_MEASUREMENT_RELATIVE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.2.2.3.1.3.0</getOid></op>
+					<op>.1</op>
+				</mult>
+			</value>
+            <label>Humidity Measurement</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_humidity_high_threshold_relative_sensor">
+            <type>humidity</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDITY_HIGH_THRESHOLD_RELATIVE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.2.2.3.1.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Humidity High Threshold</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="lgp_environment_humidity_low_threshold_relative_sensor">
+            <type>humidity</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDITY_LOW_THRESHOLD_RELATIVE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.476.1.42.3.4.2.2.3.1.5.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+            <label>Humidity Low Threshold</label>
+            <sensorSet>LGP Environmental</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="lgp_environment_state_system_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_STATE_SYSTEM</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the system</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_environment_state_cooling_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_COOLING_STATE</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the cooling subsystem</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_environment_state_heating_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_HEATING_STATE</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the heating subsystem</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_environment_state_humidifier_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_HUMIDIFIER_STATE</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the humidifier subsystem</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_environment_state_dehumidifier_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_DEHUMIDIFIER_STATE</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the dehumidifier subsystem</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_environment_state_econocycle_sensor">
+            <type>state</type>
+            <sensorId>LGP_ENVIRONMENT_ECONOCYCLE_STATE</sensorId>
+            <value>
+				<mapValue mapid="on-off-standby-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.4.3.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>The present state of the Econ-o-cycle subsystem</label>
+            <enum>on-off-standby-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_high_temperature_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_HIGH_TEMPERATURE_STATE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>High Temperature Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_low_temperature_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_LOW_TEMPERATURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Low Temperature Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_compressor_low_suction_pressure_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_LOW_SUCTION_PRESSURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor Low Suction Pressure Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_manual_override_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_MANUAL_OVERRIDE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.12.0</getOid>
+				</mapValue>
+            </value>
+            <label>Manual Override Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_water_under_floor_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_WATER_UNDER_FLOOR</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.14.0</getOid>
+				</mapValue>
+            </value>
+            <label>Water Under Floor Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_humidifier_problem_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_HUMIDIFIER_PROBLEM</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.15.0</getOid>
+				</mapValue>
+            </value>
+            <label>Humidifier Problem Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_smoke_detected_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SMOKE_DETECTED</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.17.0</getOid>
+				</mapValue>
+            </value>
+            <label>Smoke Detected Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_water_low_flow_rate_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_WATER_LOW_FLOW_RATE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.18.0</getOid>
+				</mapValue>
+            </value>
+            <label>Water Low Flow Rate Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_system_power_loss_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SYSTEM_POWER_LOSS</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.19.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Power Loss Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_customer_alarm_1_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_CUSTOMER_ALARM_1</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Customer Alarm 1 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_customer_alarm_2_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_CUSTOMER_ALARM_2</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Customer Alarm 2 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_customer_alarm_3_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_CUSTOMER_ALARM_3</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Customer Alarm 3 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_customer_alarm_4_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_CUSTOMER_ALARM_4</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Customer Alarm 4 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_humidity_high_threshold_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_HUMIDITY_HIGH_THRESHOLD</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>High Humidity Threshold Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_humidity_low_threshold_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_HUMIDITY_LOW_THRESHOLD</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Low Humidity Threshold Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_system_air_loss_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SYSTEM_AIR_LOSS</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Air Loss Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_system_air_loss_sensor_1_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SYSTEM_AIR_LOSS_SENSOR_1</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Air Loss at Sensor 1 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_system_air_loss_sensor_2_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SYSTEM_AIR_LOSS_SENSOR_2</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Air Loss at Sensor 2 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_system_air_loss_blower_1_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_SYSTEM_AIR_LOSS_BLOWER_1</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Air Loss at Blower 1 Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_airfilter_change_required_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_AIRFLOW_CHANGE_REQUIRED</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Air Filter Requires Changing Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_compressor_1_excessive_head_pressure_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_1_EXCESSIVE_HEAD_PRESSURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 1 Excessive Head Pressure Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_compressor_2_excessive_head_pressure_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_2_EXCESSIVE_HEAD_PRESSURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 2 Excessive Head Pressure Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_compressor_3_excessive_head_pressure_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_3_EXCESSIVE_HEAD_PRESSURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 3 Excessive Head Pressure Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_compressor_4_excessive_head_pressure_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_4_EXCESSIVE_HEAD_PRESSURE</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 4 Excessive Head Pressure Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+
+		<stateSensor ruleid="lgp_condition_compressor_1_overload_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_1_OVERLOAD</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.8.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 1 Overload Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="lgp_condition_compressor_2_overload_sensor">
+            <type>state</type>
+            <sensorId>LGP_CONDITION_COMPRESSOR_2_OVERLOAD</sensorId>
+            <value>
+				<mapValue mapid="event-vm">	
+                	<getOid>.1.3.6.1.4.1.476.1.42.3.2.1.8.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Compressor 2 Overload Condition</label>
+            <enum>event-em</enum>
+            <sensorSet>Conditions</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="event-em">
+			<label>No Event</label>
+			<label>Event Exists</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<valueMap ruleid="event-vm" >
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>				
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="on-off-standby-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+			<label>Standby</label>
+		</enumMap>
+
+		<valueMap ruleid="on-off-standby-vm" >
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>				
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>		
+			<valueIn>*</valueIn><valueOut>0</valueOut>		
+		</valueMap>
+
+
+		<alarmFlags ruleid="high_temperature_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Temperature Alarm</activeText>
+					<inactiveText>High Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A High Temperature Alarm condition exists.</activeText>
+					<inactiveText>A High Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+
+		<alarmFlags ruleid="low_temperature_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Temperature Alarm</activeText>
+					<inactiveText>Low Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Low Temperature Alarm condition exists.</activeText>
+					<inactiveText>A Low Temperature Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_low_suction_pressure_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.10.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor Low Suction Pressure Alarm</activeText>
+					<inactiveText>Compressor Low Suction Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor Low Suction Pressure Alarm condition exists.</activeText>
+					<inactiveText>Compressor Low Suction Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="manual_override_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.12.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Manual Override Alarm</activeText>
+					<inactiveText>Manual Override Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Manual Override Alarm condition exists.</activeText>
+					<inactiveText>Manual Override Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="water_under_floor_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.14.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Under Floor Alarm</activeText>
+					<inactiveText>Water Under Floor Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Water Under Floor Alarm condition exists.</activeText>
+					<inactiveText>Water Under Floor Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="humidifier_problem_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.15.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Humidifier Problem Alarm</activeText>
+					<inactiveText>Humidifier Problem Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Humidifier Problem Alarm condition exists.</activeText>
+					<inactiveText>Humidifier Problem Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="smoke_detected_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.17.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Smoke Detected Alarm</activeText>
+					<inactiveText>Smoke Detected Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Smoke Detected Alarm condition exists.</activeText>
+					<inactiveText>Smoke Detected Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="water_low_flow_rate_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.18.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Water Low Flow Rate Alarm</activeText>
+					<inactiveText>Water Low Flow Rate Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Water Low Flow Rate Alarm condition exists.</activeText>
+					<inactiveText>Water Low Flow Rate Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="system_power_loss_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.19.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Power Loss Alarm</activeText>
+					<inactiveText>System Power Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>System Power Loss Alarm condition exists.</activeText>
+					<inactiveText>System Power Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="customer_alarm_1_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Customer Alarm 1 Alarm</activeText>
+					<inactiveText>Customer Alarm 1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Customer Alarm 1 Alarm condition exists.</activeText>
+					<inactiveText>Customer Alarm 1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="customer_alarm_2_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Customer Alarm 2 Alarm</activeText>
+					<inactiveText>Customer Alarm 2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Customer Alarm 2 Alarm condition exists.</activeText>
+					<inactiveText>Customer Alarm 2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="customer_alarm_3_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Customer Alarm 3 Alarm</activeText>
+					<inactiveText>Customer Alarm 3 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Customer Alarm 3 Alarm condition exists.</activeText>
+					<inactiveText>Customer Alarm 3 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="customer_alarm_4_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.21.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Customer Alarm 4 Alarm</activeText>
+					<inactiveText>Customer Alarm 4 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Customer Alarm 4 Alarm condition exists.</activeText>
+					<inactiveText>Customer Alarm 4 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="humidity_high_threshold_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>High Humidity Threshold Alarm</activeText>
+					<inactiveText>High Humidity Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>High Humidity Threshold Alarm condition exists.</activeText>
+					<inactiveText>High Humidity Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="humidity_low_threshold_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Low Humidity Threshold Alarm</activeText>
+					<inactiveText>Low Humidity Threshold Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Low Humidity Threshold Alarm condition exists.</activeText>
+					<inactiveText>Low Humidity Threshold Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="system_air_loss_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>System Air Loss Alarm</activeText>
+					<inactiveText>System Air Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>System Air Loss Alarm condition exists.</activeText>
+					<inactiveText>System Air Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="system_air_loss_sensor_1_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Sensor 1 Air Loss Alarm</activeText>
+					<inactiveText>Sensor 1 Air Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Sensor 1 Air Loss Alarm condition exists.</activeText>
+					<inactiveText>Sensor 1 Air Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="system_air_loss_sensor_2_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Sensor 2 Air Loss Alarm</activeText>
+					<inactiveText>Sensor 2 Air Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Sensor 2 Air Loss Alarm condition exists.</activeText>
+					<inactiveText>Sensor 2 Air Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="system_air_loss_blower_1_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.5.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Blower 1 Air Loss Alarm</activeText>
+					<inactiveText>Blower 1 Air Loss Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Blower 1 Air Loss Alarm condition exists.</activeText>
+					<inactiveText>Blower 1 Air Loss Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		
+		<alarmFlags ruleid="airfilter_change_required_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.6.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Airfilter Change Required Alarm</activeText>
+					<inactiveText>Airfilter Change Required Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Airfilter Change Required Alarm condition exists.</activeText>
+					<inactiveText>Airfilter Change Required Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_1_excessive_head_pressure_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 1 Excessive Head Pressure Alarm</activeText>
+					<inactiveText>Compressor 1 Excessive Head Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 1 Excessive Head Pressure Alarm condition exists.</activeText>
+					<inactiveText>Compressor 1 Excessive Head Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_2_excessive_head_pressure_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 2 Excessive Head Pressure Alarm</activeText>
+					<inactiveText>Compressor 2 Excessive Head Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 2 Excessive Head Pressure Alarm condition exists.</activeText>
+					<inactiveText>Compressor 2 Excessive Head Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_3_excessive_head_pressure_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.3.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 3 Excessive Head Pressure Alarm</activeText>
+					<inactiveText>Compressor 3 Excessive Head Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 3 Excessive Head Pressure Alarm condition exists.</activeText>
+					<inactiveText>Compressor 3 Excessive Head Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_4_excessive_head_pressure_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.7.4.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 4 Excessive Head Pressure Alarm</activeText>
+					<inactiveText>Compressor 4 Excessive Head Pressure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 4 Excessive Head Pressure Alarm condition exists.</activeText>
+					<inactiveText>Compressor 4 Excessive Head Pressure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_1_overload_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.8.1.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 1 Overload Alarm</activeText>
+					<inactiveText>Compressor 1 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 1 Overload Alarm condition exists.</activeText>
+					<inactiveText>Compressor 1 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+		<alarmFlags ruleid="compressor_2_overload_alarm">
+			<value><getOid>.1.3.6.1.4.1.476.1.42.3.2.1.8.2.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Compressor 2 Overload Alarm</activeText>
+					<inactiveText>Compressor 2 Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Compressor 2 Overload Alarm condition exists.</activeText>
+					<inactiveText>Compressor 2 Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,609 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="liebert_sitenet_integrator"
+	ddfname="Liebert SiteNet Integrator"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="liebert_sitenet_integrator">
+		<oidMustExist ruleid="liebert_sitenet_integrator" oid=".1.3.6.1.4.1.476.1.2.1.1" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.4.1.476.1.2.1.1.1.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.476.1.2.1.1.1.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">
+			Environmental Monitor
+		</setProductData>
+		<setProductData ruleid="versiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.476.1.2.1.1.1.1.3.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="3state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="diState-em">
+			<label>Unknown</label>
+			<label>True</label>
+			<label>False</label>
+			<label>Not Installed</label>
+		</enumMap>
+		<enumMap ruleid="diPolarity-em">
+			<label>Unknown</label>
+			<label>Active High</label>
+			<label>Active Low</label>
+			<label>Not Defined</label>
+		</enumMap>
+
+		<stateSensor ruleid="envDigInput1State">
+            <type>state</type>
+            <sensorId>DI1_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.1.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput1Polarity">
+            <type>state</type>
+            <sensorId>DI1_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.1.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.1.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput2State">
+            <type>state</type>
+            <sensorId>DI2_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.2.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput2Polarity">
+            <type>state</type>
+            <sensorId>DI2_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.2.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.2.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput3State">
+            <type>state</type>
+            <sensorId>DI3_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.3.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput3Polarity">
+            <type>state</type>
+            <sensorId>DI3_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.3.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput4State">
+            <type>state</type>
+            <sensorId>DI4_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.4.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.4.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput4Polarity">
+            <type>state</type>
+            <sensorId>DI4_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.4.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.4.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput5State">
+            <type>state</type>
+            <sensorId>DI5_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.5.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.5.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput5Polarity">
+            <type>state</type>
+            <sensorId>DI5_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.5.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.5.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput6State">
+            <type>state</type>
+            <sensorId>DI6_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.6.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.6.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput6Polarity">
+            <type>state</type>
+            <sensorId>DI6_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.6.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.6.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput7State">
+            <type>state</type>
+            <sensorId>DI7_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.7.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.7.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput7Polarity">
+            <type>state</type>
+            <sensorId>DI7_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.7.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.7.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput8State">
+            <type>state</type>
+            <sensorId>DI8_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.8.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.8.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput8Polarity">
+            <type>state</type>
+            <sensorId>DI8_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.8.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.8.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput9State">
+            <type>state</type>
+            <sensorId>DI9_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.9.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.9.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput9Polarity">
+            <type>state</type>
+            <sensorId>DI9_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.9.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.9.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envDigInput10State">
+            <type>state</type>
+            <sensorId>DI10_STATE</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.10.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.10.2.0</getOid> State</label>
+            <enum>diState-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envDigInput10Polarity">
+            <type>state</type>
+            <sensorId>DI10_POLARITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.10.3.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.2.10.2.0</getOid> Polarity</label>
+            <enum>diPolarity-em</enum>
+            <sensorSet>Digital Inputs</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="onOff-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+		<stateSensor ruleid="envRelay1State">
+            <type>state</type>
+            <sensorId>RELAY1_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.3.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.3.1.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Relays</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envRelay2State">
+            <type>state</type>
+            <sensorId>RELAY2_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.3.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.3.2.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Relays</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="relay-em">
+			<label>Unknown</label>
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+		<stateSensor ruleid="envAudibleState">
+            <type>state</type>
+            <sensorId>AUDIBLE_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Audible State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Outputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envLED1State">
+            <type>state</type>
+            <sensorId>LED1_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.2.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Outputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envLED2State">
+            <type>state</type>
+            <sensorId>LED2_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.3.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Outputs</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envLED3State">
+            <type>state</type>
+            <sensorId>LED3_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.4.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.4.4.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Outputs</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="envReceptacle1State">
+            <type>state</type>
+            <sensorId>RECEPTACLE1_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.1.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Receptacles</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envReceptacle2State">
+            <type>state</type>
+            <sensorId>RECEPTACLE2_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.2.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Receptacles</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envReceptacle3State">
+            <type>state</type>
+            <sensorId>RECEPTACLE3_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.3.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Receptacles</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="envReceptacle4State">
+            <type>state</type>
+            <sensorId>RECEPTACLE4_STATE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.4.1.0</getOid>
+				</mapValue>
+            </value>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.5.4.2.0</getOid> State</label>
+            <enum>onOff-em</enum>
+            <sensorSet>Receptacles</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="envTemperature1Value">
+            <type>temp</type>
+            <sensorId>TEMP1_VALUE</sensorId>
+            <value>
+				<add>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.3.0</getOid></op>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.6.0</getOid></op>
+				</add>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.4.0</getOid> Value</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp1HighLimitC">
+            <type>temp</type>
+            <sensorId>TEMP1_HIGHLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.4.0</getOid> High Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp1LowLimitC">
+            <type>temp</type>
+            <sensorId>TEMP1_LOWLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.1.4.0</getOid> Low Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="envTemperature2Value">
+            <type>temp</type>
+            <sensorId>TEMP2_VALUE</sensorId>
+            <value>
+				<add>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.3.0</getOid></op>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.6.0</getOid></op>
+				</add>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.4.0</getOid> Value</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp2HighLimitC">
+            <type>temp</type>
+            <sensorId>TEMP2_HIGHLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.4.0</getOid> High Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp2LowLimitC">
+            <type>temp</type>
+            <sensorId>TEMP2_LOWLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.2.4.0</getOid> Low Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="envTemperature3Value">
+            <type>temp</type>
+            <sensorId>TEMP3_VALUE</sensorId>
+            <value>
+				<add>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.3.0</getOid></op>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.6.0</getOid></op>
+				</add>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.4.0</getOid> Value</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp3HighLimitC">
+            <type>temp</type>
+            <sensorId>TEMP3_HIGHLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.4.0</getOid> High Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envTemp3LowLimitC">
+            <type>temp</type>
+            <sensorId>TEMP3_LOWLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.7.3.4.0</getOid> Low Limit</label>
+            <sensorSet>Temperature</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="envHumidity1Value">
+            <type>humidity</type>
+            <sensorId>HUM1_VALUE</sensorId>
+            <value>
+				<add>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.2.0</getOid></op>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.4.0</getOid></op>
+				</add>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.3.0</getOid> Value</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envHumidity1HighLimit">
+            <type>humidity</type>
+            <sensorId>HUM1_HIGHLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.3.0</getOid> High Limit</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envHumidity1LowLimit">
+            <type>humidity</type>
+            <sensorId>HUM1_LOWLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.1.3.0</getOid> Low Limit</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="envHumidity2Value">
+            <type>humidity</type>
+            <sensorId>HUM2_VALUE</sensorId>
+            <value>
+				<add>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.2.0</getOid></op>
+                <op><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.4.0</getOid></op>
+				</add>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.3.0</getOid> Value</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envHumidity2HighLimit">
+            <type>humidity</type>
+            <sensorId>HUM2_HIGHLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.3.0</getOid> High Limit</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+		<numSensor ruleid="envHumidity2LowLimit">
+            <type>humidity</type>
+            <sensorId>HUM2_LOWLIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getOid>.1.3.6.1.4.1.476.1.2.1.1.1.8.2.3.0</getOid> Low Limit</label>
+            <sensorSet>Humidity</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid ="eaton_epdu" ddfname="Eaton ePDU" ddfversion="2" canremove="yes">
+
+  <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="eaton_epdu_header">
+    <oidMustExist istree="yes" ruleid="epduTreeMustExist" oid=".1.3.6.1.4.1.534.6.6.6.1" />
+
+    <setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.534.6.6.6.1.1.12.0</getOid></setProductData>
+    <setProductData ruleid="vendordata" field="vendor">Eaton Powerware</setProductData>
+    <setProductData ruleid="appversiondata" field="appversion"><getOid>.1.3.6.1.4.1.534.6.6.6.1.1.1.0</getOid></setProductData>
+    <setProductData ruleid="serialnumdata" field="serial_num"><getOid>.1.3.6.1.4.1.534.6.6.6.1.1.2.0</getOid></setProductData>
+    <setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+  </device>
+
+  <device deviceid="eaton_epdu_outlets">
+    <oidMustExist istree="yes" ruleid="outletTableMustExist" oid=".1.3.6.1.4.1.534.6.6.6.1.2.2.1" />
+
+    <numSensor ruleid="outletcurrent" index=".1.3.6.1.4.1.534.6.6.6.1.2.2.1.1">
+      <type>amperage</type>
+      <sensorId>CURRENT_OUTLET_<rowNumber/></sensorId>
+      <value>
+        <mult>
+          <op>
+            <getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.4</getRowOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.001</valueInc>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Current</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outletvoltage" index=".1.3.6.1.4.1.534.6.6.6.1.2.2.1.1">
+    <!-- MIB says value is in millivolts.  But based on values in walk file, this is in volts -->
+      <type>voltageAC</type>
+      <sensorId>VOLTAGE_OUTLET_<rowNumber/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.6</getRowOid>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Voltage</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outletactivepower" index=".1.3.6.1.4.1.534.6.6.6.1.2.2.1.1">
+      <type>powerW</type>
+      <sensorId>ACTIVE_POWER_OUTLET_<rowNumber/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.7</getRowOid>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Active Power</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="outletapparentpower" index=".1.3.6.1.4.1.534.6.6.6.1.2.2.1.1">
+      <type>powerVA</type>
+      <sensorId>APPARENT_POWER_OUTLET_<rowNumber/></sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.8</getRowOid>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid> Apparent Power</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+    <stateSensor ruleid="outletoperationalstatusSensor" index=".1.3.6.1.4.1.534.6.6.6.1.2.2.1.1">
+      <type>state</type>
+      <sensorId>OUTLET_STATUS_<rowNumber/></sensorId>
+      <value>
+        <mapValue mapid="outletoperationalstatus-vm">
+          <getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.3</getRowOid>
+        </mapValue>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid> Operational Status</label>
+      <enum>outletoperationalstatus-em</enum>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.1.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </stateSensor>
+    
+    <valueMap ruleid="outletoperationalstatus-vm">
+      <valueIn>0</valueIn>  <valueOut>0</valueOut>
+      <valueIn>1</valueIn>  <valueOut>1</valueOut>
+      <valueIn>2</valueIn>  <valueOut>2</valueOut>
+      <valueIn>-1</valueIn>  <valueOut>3</valueOut>
+      <valueIn>*</valueIn>  <valueOut>4</valueOut>
+    </valueMap>
+    
+    <enumMap ruleid="outletoperationalstatus-em">
+      <label>Off</label>
+      <label>On</label>
+      <label>Cycling</label>
+      <label>Error</label>
+      <label>Unknown</label>
+    </enumMap>
+
+  </device>
+  
+  <device deviceid="eaton_epdu_unit">
+    <oidMustExist istree="yes" ruleid="outletTableMustExist" oid=".1.3.6.1.4.1.534.6.6.6.1.3.1" />
+
+    <numSensor ruleid="unitCurrentSensor">
+      <type>amperage</type>
+      <sensorId>UNIT_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.534.6.6.6.1.3.1.1.0</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.001</valueInc>
+      <label>Unit Current</label>
+      <sensorSet>Unit Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="unitVoltageSensor">
+      <type>voltageAC</type>
+      <sensorId>UNIT_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.534.6.6.6.1.3.1.2.0</getOid>
+          </op>
+          <op>0.001</op>
+        </mult>
+      </value>
+      <valueInc>0.001</valueInc>
+      <label>Unit Voltage</label>
+      <sensorSet>Unit Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="unitActivePowerSensor">
+      <type>powerW</type>
+      <sensorId>UNIT_ACTIVE_POWER</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.534.6.6.6.1.3.1.3.0</getOid>
+      </value>
+      <label>Unit Active Power</label>
+      <sensorSet>Unit Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="unitApparentPowerSensor">
+      <type>powerVA</type>
+      <sensorId>UNIT_APPARENT_POWER</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.534.6.6.6.1.3.1.4.0</getOid>
+      </value>
+      <label>Unit Apparent Power</label>
+      <sensorSet>Unit Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="unitCPUTempSensor">
+      <type>temp</type>
+      <sensorId>UNIT_CPU_TEMP</sensorId>
+      <value>
+        <getOid>.1.3.6.1.4.1.534.6.6.6.1.3.1.5.0</getOid>
+      </value>
+      <label>Unit CPU Temperature</label>
+      <sensorSet>Unit Sensors</sensorSet>
+    </numSensor>
+    
+  </device>
+    
+  <device deviceid="eaton_epdu_environmental">
+    <oidMustExist istree="yes" ruleid="outletTableMustExist" oid=".1.3.6.1.4.1.534.6.6.6.2" />
+    
+    <numSensor ruleid="probeTempSensor" index=".1.3.6.1.4.1.534.6.6.6.2.2.1.1">
+      <type>temp</type>
+      <sensorId>PROBE_<rowNumber/>_TEMP</sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.534.6.6.6.2.2.1.3</getRowOid>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.2.2.1.2</getRowOid> Temperature</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.2.2.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+    <numSensor ruleid="probeHumiditySensor" index=".1.3.6.1.4.1.534.6.6.6.2.4.1.1">
+      <type>humidity</type>
+      <sensorId>PROBE_<rowNumber/>_HUMIDITY</sensorId>
+      <value>
+        <getRowOid>.1.3.6.1.4.1.534.6.6.6.2.4.1.3</getRowOid>
+      </value>
+      <label><getRowOid>.1.3.6.1.4.1.534.6.6.6.2.4.1.2</getRowOid> Humidity</label>
+      <sensorSet><getRowOid>.1.3.6.1.4.1.534.6.6.6.2.4.1.2</getRowOid><space/>Sensors</sensorSet>
+    </numSensor>
+
+  </device>
+
+
+</APC_DDF>

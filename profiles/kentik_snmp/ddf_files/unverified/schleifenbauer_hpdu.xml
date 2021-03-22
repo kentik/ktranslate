@@ -1,0 +1,1321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="schleifenbauer_hpdu"
+	ddfname="Schleifenbauer hPDU"
+	ddfversion="6"
+	canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="Schleifenbauer_hPDU">
+		<oidMustExist ruleid="schleifenbauerDatabusMIB" oid=".1.3.6.1.4.1.31034.12" istree="yes" />
+
+		<setProductData ruleid="vendordata" field="vendor">Schleifenbauer</setProductData>
+		<setProductData ruleid="modeldata" field="model">hPDU</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.<getOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.2.1</getOid></getOid>
+		</setDefaultLabel>
+		<setLocationData ruleid="typedata" field="LOCATION">
+			<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.11.<getOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.2.1</getOid></getOid>
+		</setLocationData>
+		<setLocationData ruleid="typedata" field="CONTACT">
+			<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.12.<getOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.2.1</getOid></getOid>
+		</setLocationData>
+		
+		
+
+		<numSensor ruleid="sdbMgmtStsDevices">
+			<type>num</type>
+			<sensorId>_SDB_MGMT_STS_DEVICES</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.31034.12.1.1.1.1.1.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Devices</label>
+			<sensorSet>Devices</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbMgmtStsAddressableDevices">
+			<type>num</type>
+			<sensorId>_SDB_MGMT_STS_ADDRESSABLE_DEVICES</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.31034.12.1.1.1.1.2.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Addressable Devices</label>
+			<sensorSet>Devices</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbMgmtStsNewDevices">
+			<type>num</type>
+			<sensorId>_SDB_MGMT_STS_NEW_DEVICES</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.31034.12.1.1.1.1.3.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of New Devices</label>
+			<sensorSet>Devices</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbMgmtStsDuplicateDevices">
+			<type>num</type>
+			<sensorId>_SDB_MGMT_STS_DUPLICATE_DEVICES</sensorId>
+			<value>
+				<mult>
+				<op><getOid>.1.3.6.1.4.1.31034.12.1.1.1.1.4.0</getOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>Number of Duplicate Devices</label>
+			<sensorSet>Devices</sensorSet>
+		</numSensor>
+
+		<stateSensor ruleid="sdbMgmtCtrlDevIsNew" index=".1.3.6.1.4.1.31034.12.1.1.1.2.4.1.4">
+			<type>state</type>
+			<sensorId>_SDB_MGMT_CTRL_DEV_IS_NEW</sensorId>
+			<value>
+				<mapValue mapid="noYes_vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				Device <getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.3</getRowOid>)<space/>
+				is New
+			</label>
+			<enum>noYes_em</enum>
+			<sensorSet>Devices</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sdbMgmtCtrlDevIsDuplicate" index=".1.3.6.1.4.1.31034.12.1.1.1.2.4.1.5">
+			<type>state</type>
+			<sensorId>_SDB_MGMT_CTRL_DEV_IS_DUPLICATE</sensorId>
+			<value>
+				<mapValue mapid="noYes_vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>
+				Device <getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.2</getRowOid><space/>
+				(<getRowOid>.1.3.6.1.4.1.31034.12.1.1.1.2.4.1.3</getRowOid>)<space/>
+				is Duplicate
+			</label>
+			<enum>noYes_em</enum>
+			<sensorSet>Devices</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="sdbDevIdSPDMVersion" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.1">
+			<type>num</type>
+			<sensorId>_SDB_DEV_ID_SPDM_VERSION_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.1</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - SPDM Version</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevIdFirmwareVersion" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.2">
+			<type>num</type>
+			<sensorId>_SDB_DEV_ID_FIRMWARE_VERSION_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.2</getRowOid>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Firmware Version</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</numSensor>
+		<stringSensor ruleid="sdbDevIdBuildNumber" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.3">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_BUILD_NUMBER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.3</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Build Number</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="sdbDevIdSalesOrderNumber" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.4">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_SALES_ORDER_NUMBER_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.4</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sales Order Number</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="sdbDevIdProductId" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.5">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_PRODUCT_ID_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.5</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Product ID</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="sdbDevIdSerialNumber" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.6">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_SERNUM_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.6</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Serial Number</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="sdbDevIdHardwareAddress" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.7">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_HW_ADDR_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.7</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Hardware Address</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="sdbDevIdMacAddress" index=".1.3.6.1.4.1.31034.12.1.1.2.1.1.1.8">
+			<type>string</type>
+			<sensorId>_SDB_DEV_ID_MAC_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.8</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - MAC Address</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Identification</sensorSet>
+		</stringSensor>
+
+		<numSensor ruleid="sdbDevCfPhases" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.1">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_PHASES_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.1</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Phases</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevCfOutletsTotal" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.2">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_OUTLETS_TOTAL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.2</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Total Outlets</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevCfOutletsSwitched" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.3">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_OUTLETS_SWITCHED_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.3</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Switched Outlets</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevCfOutletsMetered" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.4">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_OUTLETS_METERED_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.4</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Metered Outlets</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid><space/>- Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevCfSensors" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.5">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_SENSORS_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.5</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sensors</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Config</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevCfMaximumLoad" index=".1.3.6.1.4.1.31034.12.1.1.2.2.1.1.6">
+			<type>num</type>
+			<sensorId>_SDB_DEV_CF_MAXLOAD_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.2.1.1.6</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Maximum Load</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Config</sensorSet>
+		</numSensor>
+
+		<alarmFlags2 ruleid="sdbDevSsDeviceStatusCode" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.1">
+			<value><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.1</getRowOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Alert Flagged</activeText>
+					<inactiveText>Alert Flagged Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An Alert Flagged condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Alert Flagged condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="2" match="2">
+				<name>
+					<activeText>Settings Initialized</activeText>
+					<inactiveText>Settings Initialized Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Settings Initialized condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Settings Initialized condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="4" match="4">
+				<name>
+					<activeText>Power-On Reset</activeText>
+					<inactiveText>Power-On Reset Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Power-On Reset condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Power-On Reset condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="8" match="8">
+				<name>
+					<activeText>External Reset</activeText>
+					<inactiveText>External Reset Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An External Reset condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>External Reset condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="10" match="10">
+				<name>
+					<activeText>Watchdog Timer Caused Reset</activeText>
+					<inactiveText>Watchdog Timer Caused Reset Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Watchdog Timer Caused Reset condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Watchdog Timer Caused Reset condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="20" match="20">
+				<name>
+					<activeText>Brownout Detected</activeText>
+					<inactiveText>Brownout Detected Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Brownout Detected condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Brownout Detected condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="40" match="40">
+				<name>
+					<activeText>Controller Error</activeText>
+					<inactiveText>Controller Error Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Controller Error condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Controller Error condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest mask="80" match="80">
+				<name>
+					<activeText>Slave Module Reset</activeText>
+					<inactiveText>Slave Module Reset Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Slave Module Reset condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Slave Module Reset condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<alarmFlags2 ruleid="sdbDevSsTemperatureAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.2</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Internal Temperature Exceeds Threshold</activeText>
+					<inactiveText>Internal Temperature Exceeds Threshold Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An Internal Temperature Exceeds Threshold condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Internal Temperature Exceeds Threshold condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>External Temperature Exceeds Threshold</activeText>
+					<inactiveText>External Temperature Exceeds Threshold Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>An External Temperature Exceeds Threshold condition exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>External Temperature Exceeds Threshold condition no longer exists on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="alarmNotZero-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="sdbDevSsInputCurrentAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.3">
+			<value>
+				<mapValue mapid="alarmNotZero-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Input Current Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.3</getRowOid> Exceeds Threshold</activeText>
+					<inactiveText>Input Current Exceeds Threshold Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Current on Input Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.3</getRowOid> has exceeded a threshold on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Input Current has returned to normal on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="sdbDevSsOutletCurrentAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.4">
+			<value>
+				<mapValue mapid="alarmNotZero-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.4</getRowOid> Current Exceeds Threshold</activeText>
+					<inactiveText>Outlet Current Exceeds Threshold Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Current on Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.4</getRowOid> has exceeded a threshold on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Outlet Current has returned to normal on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="sdbDevSsInputVoltageAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.5">
+			<value>
+				<mapValue mapid="alarmNotZero-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Input Voltage Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.5</getRowOid> Dip</activeText>
+					<inactiveText>Input Voltage Dip Threshold Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Voltage on Input Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.5</getRowOid> has dipped on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Input Voltage has returned to normal on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="sdbDevSsOutletCurrentDropAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.6">
+			<value>
+				<mapValue mapid="alarmNotZero-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.6</getRowOid> Current Drop</activeText>
+					<inactiveText>Outlet Current Drop Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Current on Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.6</getRowOid> has dropped to near zero on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Outlet Current Drop has returned to normal on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		<alarmFlags2 ruleid="sdbDevSsInputCurrentDropAlert" index=".1.3.6.1.4.1.31034.12.1.1.2.3.1.1.7">
+			<value>
+				<mapValue mapid="alarmNotZero-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.7</getRowOid> Current Drop</activeText>
+					<inactiveText>Input Current Drop Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Current on Input <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.3.1.1.7</getRowOid> has dropped to near zero on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</activeText>
+					<inactiveText>Input Current Drop has returned to normal on <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid>.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="sdbDevStPeakDuration" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.4">
+			<type>timeinsec</type>
+			<sensorId>_SDB_DEV_ST_PEAK_DURATION_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.4</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Peak Duration</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevStFixedOutletDelay" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.5">
+			<type>timeinsec</type>
+			<sensorId>_SDB_DEV_ST_FIXED_OUTLET_DELAY_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+			</value>
+			<valueInc>0.001</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Delay between Relay Switches</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="sdbDevStPowerSaveMode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>10</valueIn><valueOut>1</valueOut>
+			<valueIn>60</valueIn><valueOut>2</valueOut>
+			<valueIn>120</valueIn><valueOut>3</valueOut>
+			<valueIn>240</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		<enumMap ruleid="sdbDevStPowerSaveMode-em">
+			<label>Always On</label>
+			<label>10 seconds</label>
+			<label>60 seconds</label>
+			<label>120 seconds</label>
+			<label>240 seconds</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="sdbDevStPowerSaveMode" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.6">
+			<type>state</type>
+			<sensorId>_SDB_DEV_ST_FIXED_OUTLET_DELAY_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="sdbDevStPowerSaveMode-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>sdbDevStPowerSaveMode-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Backlight On Time</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="sdbDevStOutletPowerUpMode" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.7">
+			<type>state</type>
+			<sensorId>_SDB_DEV_ST_OUTLET_POWER_UP_MODE</sensorId>
+			<value>
+				<mapValue mapid="powerUpMode_vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<enum>powerUpMode_em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Outlet Power-Up Mode</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="sdbDevStMaximumTemperature" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.8">
+			<type>temp</type>
+			<sensorId>_SDB_DEV_ST_MAX_TEMP_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.8</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Maximum Temperature</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="sdbDevStDisplayOrientation" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.9">
+			<type>state</type>
+			<sensorId>_SDB_DEV_ST_DISPLAY_ORIENTATION</sensorId>
+			<value>
+				<mapValue mapid="orientation_vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.9</getRowOid>
+				</mapValue>
+			</value>
+			<enum>orientation_em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Display Orientation</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="sdbDevStCurrentDropDetection" index=".1.3.6.1.4.1.31034.12.1.1.2.5.1.1.11">
+			<type>state</type>
+			<sensorId>_SDB_DEV_ST_CURRENT_DROP_DETECTION</sensorId>
+			<value>
+				<mapValue mapid="dropDetection_vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.5.1.1.11</getRowOid>
+				</mapValue>
+			</value>
+			<enum>dropDetection_em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Current Drop Detection</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Settings</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="sdbDevInKWhTotal" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.2">
+			<type>num/kwatthr</type>
+			<sensorId>_SDB_DEV_IN_KWH_TOTAL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.2</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Energy Total
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInKWhSubtotal" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.3">
+			<type>num/kwatthr</type>
+			<sensorId>_SDB_DEV_IN_KWH_SUBTOTAL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.3</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Energy Subtotal
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInPowerFactor" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.4">
+			<type>num/powerfactor</type>
+			<sensorId>_SDB_DEV_IN_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.4</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+			</value>
+			<valueInc>0.0001</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Power Factor
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInActualCurrent" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.5">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_IN_ACTUAL_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.5</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Actual Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInPeakCurrent" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.6">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_IN_PEAK_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.6</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Peak Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInActualVoltage" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.7">
+			<type>voltage</type>
+			<sensorId>_SDB_DEV_IN_ACTUAL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.7</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Actual Voltage
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInMinVoltage" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.8">
+			<type>voltage</type>
+			<sensorId>_SDB_DEV_IN_MIN_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.8</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Actual Voltage
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInPowerVoltAmpere" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.9">
+			<type>powerVA</type>
+			<sensorId>_SDB_DEV_IN_POWER_VA_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.9</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Apparent Power
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInPowerWatt" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.10">
+			<type>powerW</type>
+			<sensorId>_SDB_DEV_IN_POWER_W_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.10</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Active Power
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevInMaxAmps" index=".1.3.6.1.4.1.31034.12.1.1.2.6.1.1.11">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_IN_MAX_AMPS_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.11</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Phase <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.6.1.1.1</getRowOid> Max Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Input
+			</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="sdbDevOutMtKWhTotal" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.2">
+			<type>num/kwatthr</type>
+			<sensorId>_SDB_DEV_OUT_MT_KWH_TOTAL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.2</getRowOid></op>
+					<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Energy Total
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtKWhSubtotal" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.3">
+			<type>num/kwatthr</type>
+			<sensorId>_SDB_DEV_OUT_MT_KWH_SUBTOTAL_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.3</getRowOid></op>
+				<op>1</op>
+				</mult>
+			</value>
+			<valueInc>1</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Energy Subtotal
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtPowerFactor" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.4">
+			<type>num/powerfactor</type>
+			<sensorId>_SDB_DEV_OUT_MT_POWER_FACTOR_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.4</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+			</value>
+			<valueInc>0.0001</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Power Factor
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtActualCurrent" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.5">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_OUT_MT_ACTUAL_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.5</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Actual Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtPeakCurrent" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.6">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_OUT_MT_PEAK_CURRENT_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.6</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Peak Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtActualVoltage" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.7">
+			<type>voltage</type>
+			<sensorId>_SDB_DEV_OUT_MT_ACTUAL_VOLTAGE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.7</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Actual Voltage
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevOutMtMaxAmps" index=".1.3.6.1.4.1.31034.12.1.1.2.7.2.1.8">
+			<type>amperage</type>
+			<sensorId>_SDB_DEV_OUT_MT_MAX_AMPS_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.8</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> Max Current
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="sdbDevOutSwCurrentState-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="sdbDevOutSwCurrentState-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+		<stateSensor ruleid="sdbDevOutSwCurrentState" index=".1.3.6.1.4.1.31034.12.1.1.2.7.3.1.2">
+			<type>state</type>
+			<sensorId>_SDB_DEV_OUT_SW_CURRENT_STATE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="sdbDevOutSwCurrentState-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.3.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<enum>sdbDevOutSwCurrentState-em</enum>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlet <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.7.2.1.1</getRowOid> State
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Outlets
+			</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="sdbDevMsIntTemperature" index=".1.3.6.1.4.1.31034.12.1.1.2.8.1.1.1">
+			<type>temp</type>
+			<sensorId>_SDB_DEV_MS_INT_TEMPERATURE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.1.1.1</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Internal Temperature</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevMsExtTemperature" index=".1.3.6.1.4.1.31034.12.1.1.2.8.1.1.2">
+			<type>temp</type>
+			<sensorId>_SDB_DEV_MS_EXT_TEMPERATURE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.1.1.2</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - External Temperature</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevMsIntTemperaturePeak" index=".1.3.6.1.4.1.31034.12.1.1.2.8.1.1.3">
+			<type>temp</type>
+			<sensorId>_SDB_DEV_MS_INT_TEMPERATURE_PEAK_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.1.1.3</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Peak Internal Temperature</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="sdbDevMsExtTemperaturePeak" index=".1.3.6.1.4.1.31034.12.1.1.2.8.1.1.4">
+			<type>temp</type>
+			<sensorId>_SDB_DEV_MS_EXT_TEMPERATURE_PEAK_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.1.1.4</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Peak External Temperature</label>
+			<sensorSet><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10</getRowOid> - Sensors</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="sdbDevSnsValue-isNumType-vm" >
+			<valueIn>T</valueIn><valueOut>[true]</valueOut>
+			<valueIn>H</valueIn><valueOut>[true]</valueOut>
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		<valueMap ruleid="sdbDevSnsValue-type-vm" >
+			<valueIn>T</valueIn><valueOut>temp</valueOut>
+			<valueIn>H</valueIn><valueOut>humidity</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		<valueMap ruleid="sdbDevSnsValue-typeLabel-vm" >
+			<valueIn>T</valueIn><valueOut>Temperature</valueOut>
+			<valueIn>H</valueIn><valueOut>Humidity</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown Unit</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="sdbDevSnsValue" index=".1.3.6.1.4.1.31034.12.1.1.2.8.2.1.3">
+			<rowTest>
+				<mapValue mapid="sdbDevSnsValue-isNumType-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>
+				<mapValue mapid="sdbDevSnsValue-type-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.2.1.2</getRowOid>
+				</mapValue>
+			</type>
+			<sensorId>_SDB_DEV_SNS_VALUE_<rowIndex/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.2.1.3</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+			</value>
+			<valueInc>0.01</valueInc>
+			<label>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Sensor <getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.2.1.1</getRowOid><space/>
+				(<mapValue mapid="sdbDevSnsValue-typeLabel-vm">
+				<getRowOid>.1.3.6.1.4.1.31034.12.1.1.2.8.2.1.2</getRowOid>
+				</mapValue>)<space/>
+				Reading
+			</label>
+			<sensorSet>
+				<getOid>.1.3.6.1.4.1.31034.12.1.1.2.1.1.1.10.
+				<regex>
+				<op>(\d+)\.(\d+)</op>
+				<op><rowIndex/></op>
+				<op>%1$s</op>
+				</regex>
+				</getOid> - Sensors
+			</sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="noYes_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="noYes_em">
+			<label>No</label>
+			<label>Yes</label>
+		</enumMap>
+
+		<valueMap ruleid="orientation_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>4</valueIn>
+			<valueOut>4</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="orientation_em">
+			<label>noDisplay</label>
+			<label>Vertical, Display On Top</label>
+			<label>Vertical, Display Upside Down</label>
+			<label>Horizontal, Display at Left</label>
+			<label>Horizontal, Display at Right</label>
+		</enumMap>
+
+		<valueMap ruleid="powerUpMode_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="powerUpMode_em">
+			<label>off</label>
+			<label>sameState</label>
+			<label>Same State, Delayed</label>
+		</enumMap>
+
+		<valueMap ruleid="dropDetection_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>3</valueIn>
+			<valueOut>3</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="dropDetection_em">
+			<label>off</label>
+			<label>inputsOnly</label>
+			<label>outletsOnly</label>
+			<label>inputsAndOutlets</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

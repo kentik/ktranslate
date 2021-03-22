@@ -1,0 +1,1823 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="emerson_rdu-a_g2"
+	ddfname="Emerson RDU-A G2"
+	ddfversion="4"
+	canremove="yes">
+
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="emerson_rdu-a_g2">
+		<oidMustExist ruleid="emerson_rdu-a_g2" oid=".1.3.6.1.4.1.13400.3.5" istree="yes" /> 
+
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Emerson</setProductData>
+		<setProductData ruleid="modeldata" field="model">RDU-A G2</setProductData>
+		<setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+
+		<setLocationData ruleid="loc" field="LOCATION">
+			<getOid>.1.3.6.1.4.1.13400.3.1.1.0</getOid>
+		</setLocationData>
+
+		<valueMap ruleid="sensorNotPresent-vm">
+			<valueIn>-9999</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>		
+		</valueMap>
+
+		<valueMap ruleid="diSensor-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		<enumMap ruleid="diSensor-em">
+			<label>Normal</label>
+			<label>Alarm</label>
+			<label>Uninstalled</label>
+			<label>Leave</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="env4diSensor2" index=".1.3.6.1.4.1.13400.3.5.502.1.1.2">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_2_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.2</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI01 DI1 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor3" index=".1.3.6.1.4.1.13400.3.5.502.1.1.3">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_3_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI01 DI2 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor4" index=".1.3.6.1.4.1.13400.3.5.502.1.1.4">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_4_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI01 DI3 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor5" index=".1.3.6.1.4.1.13400.3.5.502.1.1.5">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_5_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI01 DI4 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor6" index=".1.3.6.1.4.1.13400.3.5.502.1.1.6">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_6_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI10 DI1 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor7" index=".1.3.6.1.4.1.13400.3.5.502.1.1.7">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_7_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.7</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI10 DI2 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor8" index=".1.3.6.1.4.1.13400.3.5.502.1.1.8">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_8_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.8</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI10 DI3 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor9" index=".1.3.6.1.4.1.13400.3.5.502.1.1.9">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_9_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.9</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: User4 DI10 DI4 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor10" index=".1.3.6.1.4.1.13400.3.5.502.1.1.10">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_10_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.10</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI01 Door 1 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor11" index=".1.3.6.1.4.1.13400.3.5.502.1.1.11">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.11</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_11_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.11</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI01 Door 2 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor12" index=".1.3.6.1.4.1.13400.3.5.502.1.1.12">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_12_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.12</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI01 Water Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor13" index=".1.3.6.1.4.1.13400.3.5.502.1.1.13">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.13</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_13_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.13</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI01 Smoke Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor14" index=".1.3.6.1.4.1.13400.3.5.502.1.1.14">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.14</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_14_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.14</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI10 Door 1 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor15" index=".1.3.6.1.4.1.13400.3.5.502.1.1.15">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.15</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_15_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.15</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI10 Door 2 Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor16" index=".1.3.6.1.4.1.13400.3.5.502.1.1.16">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.16</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_16_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.16</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI10 Water Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor17" index=".1.3.6.1.4.1.13400.3.5.502.1.1.17">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.17</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_17_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.17</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Fixed4 DI10 Smoke Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+
+		<stateSensor ruleid="env4diSensor28" index=".1.3.6.1.4.1.13400.3.5.502.1.1.28">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.28</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_28_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.28</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Leak Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor29" index=".1.3.6.1.4.1.13400.3.5.502.1.1.29">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.29</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_29_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.29</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Smoke Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor30" index=".1.3.6.1.4.1.13400.3.5.502.1.1.30">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.30</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_30_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.30</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Front Door Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="env4diSensor31" index=".1.3.6.1.4.1.13400.3.5.502.1.1.31">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.31</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>ENV4_DI_SENSOR_31_<rowNumber/>
+			</sensorId>
+			<value>
+				<mapValue mapid="diSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.31</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input <getRowOid>.1.3.6.1.4.1.13400.3.5.502.1.1.1</getRowOid>: Rear Door Status</label>
+			<enum>diSensor-em</enum>
+			<sensorSet>DI Sensors</sensorSet>
+		</stateSensor>
+
+		<numSensor ruleid="envTh1Sensor2" index=".1.3.6.1.4.1.13400.3.5.531.1.1.2">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>ENV_TH1_SENSOR2_<rowNumber/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.2</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 <getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.1</getRowOid> Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_3">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.3.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP3</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.3.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 2 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_4">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.4.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP4</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.4.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 3 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_5">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.5.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP5</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.5.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 4 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_6">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.6.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP6</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.6.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 5 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_7">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.7.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP7</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.7.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 6 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_8">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.8.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP8</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.8.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 7 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_9">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.9.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP9</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.9.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 8 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_10">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.10.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP10</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.10.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 9 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_11">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.11.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP11</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.11.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 10 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_12">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.12.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP12</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.12.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 11 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_13">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.13.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP13</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.13.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 12 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_14">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.14.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP14</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.14.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 13 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_15">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.15.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP15</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.15.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 14 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_16">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.16.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP16</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.16.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 15 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_17">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.17.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP17</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.17.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 16 Temperature</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envTh1Sensor18" index=".1.3.6.1.4.1.13400.3.5.531.1.1.18">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.18</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>ENV_TH1_SENSOR18_<rowNumber/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.18</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 <getRowOid>.1.3.6.1.4.1.13400.3.5.531.1.1.1</getRowOid> Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_175">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.19.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_18</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.19.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 2 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_19">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.20.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_19</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.20.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 3 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_20">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.21.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_20</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.21.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 4 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_21">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.21.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_21</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.22.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 5 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_22">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.23.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_22</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.23.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 6 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_23">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.24.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_23</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.24.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 7 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_24">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.25.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_24</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.25.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 8 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_25">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.26.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_25</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.26.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 9 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_26">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.27.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_26</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.27.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 10 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_27">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.28.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_27</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.28.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 11 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_28">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.29.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_28</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.29.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 12 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_29">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.30.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_29</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.30.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 13 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_30">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.31.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_30</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.31.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 14 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_31">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.32.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_31</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.32.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 15 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th1sensor_32">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.33.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_32</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.33.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid1 16 Humidity</label>
+			<sensorSet>Temp/Humid1 Sensors</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="envth1sensor_34_temp01alarmstatus">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.34.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>_ENVTH1SENSOR_34_TEMP01ALARMSTATUS</sensorId>
+			<value>
+				<mapValue mapid="normalhigh_vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.34.1</getOid>
+				</mapValue>
+			</value>
+			<label>Temp/Humid1 1 Temperature Alarm Status</label>
+			<enum>normalhigh_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="envth1sensor_50_hum01alarmstatus">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.50.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>_ENVTH1SENSOR_50_HUM01ALARMSTATUS</sensorId>
+			<value>
+				<mapValue mapid="normalhigh_vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.50.1</getOid>
+				</mapValue>
+			</value>
+			<label>Temp/Humid1 1 Humidity Alarm Status</label>
+			<enum>normalhigh_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="envth1sensor_82_communicationstatus">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.82.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>_ENVTH1SENSOR_82_COMMUNICATIONSTATUS</sensorId>
+			<value>
+				<mapValue mapid="normalfail_vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.82.1</getOid>
+				</mapValue>
+			</value>
+			<label>Temp/Humid1 Communication Status</label>
+			<enum>normalfail_em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<numSensor ruleid="envth1sensor_100_hightemp01alarmlimit">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.100.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_ENVTH1SENSOR_100_HIGHTEMP01ALARMLIMIT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.100.1</getOid>
+			</value>
+			<label>Temp/Humid1 High Temperature Alarm Limit</label>
+			<sensorSet>Status</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envth1sensor_116_lowtemp01alarmlimit">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.116.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_ENVTH1SENSOR_116_LOWTEMP01ALARMLIMIT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.116.1</getOid>
+			</value>
+			<label>Temp/Humid1 1 Low Temperature Alarm Limit</label>
+			<sensorSet>Status</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envth1sensor_148_highhum01alarmlimit">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.147.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_ENVTH1SENSOR_148_HIGHHUM01ALARMLIMIT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.148.1</getOid>
+			</value>
+			<label>Temp/Humid1 1 High Humidity Alarm Limit</label>
+			<sensorSet>Status</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envth1sensor_164_lowhum01alarmlimit">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.164.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_ENVTH1SENSOR_164_LOWHUM01ALARMLIMIT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.13400.3.5.531.1.1.164.1</getOid>
+			</value>
+			<label>Temp/Humid1 1 Low Humidity Alarm Limit</label>
+			<sensorSet>Status</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envTh2Sensor2" index=".1.3.6.1.4.1.13400.3.5.532.1.1.2">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>ENV_TH2_SENSOR2_<rowNumber/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.2</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 <getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.1</getRowOid> Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_3">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.3.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP18</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.3.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 2 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_4">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.4.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP19</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.4.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 3 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_5">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.5.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP20</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.5.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 4 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_6">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.6.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP21</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.6.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 5 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_7">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.7.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP22</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.7.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 6 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_8">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.8.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP23</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.8.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 7 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_9">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.9.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP24</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.9.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 8 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_10">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.10.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP25</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.10.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 9 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_11">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.11.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP26</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.11.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 10 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_12">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.12.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP27</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.12.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 11 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_13">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.13.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP28</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.13.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 12 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_14">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.14.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP29</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.14.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 13 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_15">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.15.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP30</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.15.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 14 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_16">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.16.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP31</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.16.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 15 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_17">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.17.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>_PROBE_TEMP32</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.17.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 16 Temperature</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="envTh2Sensor18" index=".1.3.6.1.4.1.13400.3.5.532.1.1.18">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.18</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>ENV_TH2_SENSOR18_<rowNumber/>
+			</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.18</getRowOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 <getRowOid>.1.3.6.1.4.1.13400.3.5.532.1.1.1</getRowOid> Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_181">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.19.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_33</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.19.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 2 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_19">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.20.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_34</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.20.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 3 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_20">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.21.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_35</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.21.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 4 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_21">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.22.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_36</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.22.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 5 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_22">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.23.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_37</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.23.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 6 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_23">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.24.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_38</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.24.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 7 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_24">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.25.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_39</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.25.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 8 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_25">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.26.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_40</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.26.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 9 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_26">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.27.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_41</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.27.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 10 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_27">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.28.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_42</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.28.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 11 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_28">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.29.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_43</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.29.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 12 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_29">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.30.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_44</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.30.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 13 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_30">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.31.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_45</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.31.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 14 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_31">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.32.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_46</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.32.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 15 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		<numSensor ruleid="env_th2sensor_32">
+			<rowTest>
+				<mapValue mapid="sensorNotPresent-vm">
+					<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.33.1</getOid>
+				</mapValue>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>_PROBE_HUMIDITY_PERCENTAGE_47</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.13400.3.5.532.1.1.33.1</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>Temp/Humid2 16 Humidity</label>
+			<sensorSet>Temp/Humid2 Sensors</sensorSet>
+		</numSensor>
+		
+		<valueMap ruleid="normalhigh_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="normalhigh_em">
+			<label>Normal</label>
+			<label>High</label>
+			<label>Invalid</label>
+		</enumMap>
+		
+		<valueMap ruleid="normalfail_vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="normalfail_em">
+			<label>Normal</label>
+			<label>Failure</label>
+		</enumMap>
+		
+	</device>
+</APC_DDF>

@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="questcontrols_telsec_mini_pro"
+	ddfname="Quest Controls Telsec Mini-Pro"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	
+	<!--
+		SOURCE
+		\snmp\resources\mibs\quest_controls\QuestMiniProMib_011717.mib
+		QUEST-MINI-MIB | 26 March 2020
+		
+		User Manual used for reference
+		\modbus\register_maps\quest_controls\TELSEC_MINIPro_Manual.pdf
+	-->
+
+	<device deviceid="questcontrols_telsec_mini_pro">
+		<oidMustExist ruleid="mini_pro_exists" oid=".1.3.6.1.4.1.11476.5" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Quest Controls</setProductData>
+		<setProductData ruleid="modeldata" field="model">Telsec Mini-Pro</setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<valueMap ruleid="voltageSensor-vm">
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+			<valueIn>4</valueIn><valueOut>[false]</valueOut>
+			<valueIn>5</valueIn><valueOut>[false]</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="tempSensor-vm">
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+			<valueIn>4</valueIn><valueOut>[true]</valueOut>
+			<valueIn>5</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="miniInputExtendedStringValue-voltage" index=".1.3.6.1.4.1.11476.5.2.1.1">
+            <rowTest>
+				<mapValue mapid="voltageSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.11476.5.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>voltage</type>
+            <sensorId>MINI_INPUT_EXTENDED_VOLTS_VALUE_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.11476.5.2.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<!-- miniInputExtendedName -->
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid> Value
+			</label>
+            <sensorSet>Input Value</sensorSet>
+        </numSensor>
+		
+		<numSensor ruleid="miniInputExtendedStringValue-temp" index=".1.3.6.1.4.1.11476.5.2.1.1">
+            <rowTest>
+				<mapValue mapid="tempSensor-vm">
+					<getRowOid>.1.3.6.1.4.1.11476.5.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>temp</type>
+            <sensorId>MINI_INPUT_EXTENDED_TEMP_VALUE_<rowIndex/></sensorId>
+            <value>
+				<if>
+					<op>
+						<eq>	<!-- miniInputExtendedType -->
+							<op><getRowOid>.1.3.6.1.4.1.11476.5.2.1.6</getRowOid></op>
+							<op>4</op>
+						</eq>
+					</op>
+					<op>
+						<!-- convert fahrenheit to celcius -->
+						<mult>
+							<op>
+								<sub>
+									<op><getRowOid>.1.3.6.1.4.1.11476.5.2.1.5</getRowOid></op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>
+								<div>
+									<op>5</op>
+									<op>9</op>
+								</div>
+							</op>
+						</mult>
+					</op>
+					<op><getRowOid>.1.3.6.1.4.1.11476.5.2.1.5</getRowOid></op>
+				</if>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<!-- miniInputExtendedName -->
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid> Value
+			</label>
+            <sensorSet>Input Value</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="miniInputExtendedType" index=".1.3.6.1.4.1.11476.5.2.1.1">
+            <type>state</type>
+            <sensorId>MINI_INPUT_EXTENDED_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="miniInputExtendedType-vm">
+					<getRowOid>.1.3.6.1.4.1.11476.5.2.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- miniInputExtendedName -->
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid> Type
+			</label>
+            <enum>miniInputExtendedType-em</enum>
+            <sensorSet>Input Type</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="miniInputExtendedType-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>2</valueIn><valueOut>3</valueOut>
+			<valueIn>3</valueIn><valueOut>4</valueOut>
+			<valueIn>4</valueIn><valueOut>5</valueOut>
+			<valueIn>5</valueIn><valueOut>6</valueOut>
+			<valueIn>6</valueIn><valueOut>7</valueOut>
+			<valueIn>7</valueIn><valueOut>8</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="miniInputExtendedType-em">
+			<label>Unknown</label>
+			<label>Dry - Normally Open</label>
+			<label>Dry - Normally Closed</label>
+			<label>Wet - Normally Open</label>
+			<label>Wet - Normally Closed</label>
+			<label>Temperature</label>
+			<label>Temperature</label>
+			<label>Custom</label>
+			<label>Voltage</label>
+		</enumMap>
+		
+		<stateSensor ruleid="miniInputExtendedLogType" index=".1.3.6.1.4.1.11476.5.2.1.1">
+            <type>state</type>
+            <sensorId>MINI_INPUT_EXTENDED_LOG_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="miniInputExtendedLogType-vm">
+					<getRowOid>.1.3.6.1.4.1.11476.5.2.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<!-- miniInputExtendedName -->
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid> Log Type
+			</label>
+            <enum>miniInputExtendedLogType-em</enum>
+            <sensorSet>Input Log Type</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="miniInputExtendedLogType-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="miniInputExtendedLogType-em">
+			<label>Not Logged</label>
+			<label>Time Logged</label>
+			<label>Change of State Logged</label>
+		</enumMap>
+		
+		<numSensor ruleid="miniInputExtendedLogInterval" index=".1.3.6.1.4.1.11476.5.2.1.1">
+			<type>timeinmin</type>
+            <sensorId>MINI_INPUT_EXTENDED_LOG_INTERVAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<!-- miniInputExtendedName -->
+				<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid> Log Interval
+			</label>
+            <sensorSet>Input Log Interval</sensorSet>
+        </numSensor>
+		
+		<alarmFlags2 ruleid="miniInputExtendedCausingAlarm" index=".1.3.6.1.4.1.11476.5.2.1.1">
+			<value><getRowOid>.1.3.6.1.4.1.11476.5.2.1.4</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Mini-Pro Inputs Active Alarm</activeText>
+					<inactiveText>Mini-Pro Inputs Active Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<!-- miniInputExtendedName -->
+						<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid><space/>
+						is causing an active alarm.
+					</activeText>
+					<inactiveText>
+						<!-- miniInputExtendedName -->
+						<getRowOid>.1.3.6.1.4.1.11476.5.2.1.2</getRowOid><space/>
+						active alarm no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+</APC_DDF>

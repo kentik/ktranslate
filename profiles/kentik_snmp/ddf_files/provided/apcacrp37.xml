@@ -1,0 +1,1481 @@
+<?xml version="1.0"?>
+<!-- APC NetworkAir In Row ACRP37 Cooling product DDF -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="apcacrp37"
+	ddfname="APC NetworkAIR RP37"
+		ddfversion="16">
+    <schemaVersion>1.6</schemaVersion>
+    <!-- APC NetworkAir In Row ACRP 37kW Cooling product specific functionality -->
+
+    <!-- ACRP37_Group Section -->
+
+    <device deviceid="group_acrp37">
+	   <oidMustExist ruleid="groupcooloutputoid" oid=".1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.8.0"/>
+	   
+	   <!-- Group Cool Output in Watts (originally in 1/10th of kW) -->
+	   <numSensor ruleid="cooloutput">
+		  <type>powerW/cooloutput</type>
+		  <sensorId>ACRP37_GRP_COOL_OUTPUT</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.8.0</getOid>
+				    </op>
+				    <op>100.0</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Group Cool Output</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Cool Demand in Watts (originally in 1/10ths of kW) -->
+	   <numSensor ruleid="cooldemand">
+		  <type>powerW</type>
+		  <sensorId>ACRP37_GRP_COOL_DEMAND</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.7.0</getOid>
+				    </op>
+				    <op>100</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Group Cool Demand</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Volume Airflow in liters/min (Originally in liters/sec) -->
+	   <numSensor ruleid="groupvolumeairflow">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.2.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>volairflow</type>
+		  <sensorId>ACRP37_GRP_VOLUME_AIR_FLOW</sensorId>
+		  <value>
+			 <mult>
+				<op>
+				    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.2.0</getOid>
+				</op>
+				<op>60</op>
+			 </mult>
+		  </value>
+		  <label>Group Volume Air Flow</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+		<!--
+	   <numSensor ruleid="groupvolumeairflowsec">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.2.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>volairflowsec</type>
+		  <sensorId>ACRP37_GRP_VOLUME_AIR_FLOW_SEC</sensorId>
+		  <value>
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.2.0</getOid>
+		  </value>
+		  <label>Group Volume Air Flow (per second)</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+		-->
+	   
+	   <!-- Group Maximum Rack Inlet Temperature in degrees C -->
+	   <numSensor ruleid="grpmaxtempofrackinlet">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.3.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.4.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>MAX_RACK_INLET_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.4.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Group Rack Inlet Temperature (Max)</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Minimum Rack Inlet Temperature in degrees C -->
+	   <numSensor ruleid="grpmintempofrackinlet">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.5.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.6.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>MIN_RACK_INLET_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.6.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Group Rack Inlet Temperature (Min)</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Humidify Demand in % -->
+	   <numSensor ruleid="grphumidifydemand">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.9.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap/humdemand</type>
+		  <sensorId>HUMIDIFY_DEMAND</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.9.0</getOid>
+		  </value>
+		  <label>Group Humidify Demand</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Humidify Output in % -->
+	   <numSensor ruleid="grphumidifyoutput">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.10.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>HUMIDIFY_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.10.0</getOid>
+		  </value>
+		  <label>Group Humidify Output</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Dehumidify Demand in % -->
+	   <numSensor ruleid="groupdehumidifydemand">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.11.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_GRP_DEHUMIDIFY_DEMAND</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.11.0</getOid>
+		  </value>
+		  <label>Group Dehumidify Demand</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Dehumidify Output in % -->
+	   <numSensor ruleid="groupdehumidifyoutput">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.12.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_GRP_DEHUMIDIFY_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.12.0</getOid>
+		  </value>
+		  <label>Group Dehumidify Output</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Reheat Demand in % -->
+	   <numSensor ruleid="groupreheatdemand">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.13.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_GRP_REHEAT_DEMAND</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.13.0</getOid>
+		  </value>
+		  <label>Group Reheat Demand</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Group Reheat Output in % -->
+	   <numSensor ruleid="grpreheatoutput">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.14.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_GRP_REHEAT_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.14.0</getOid>
+		  </value>
+		  <label>Group Reheat Output</label>
+		  <sensorSet>Group Status</sensorSet>
+	   </numSensor>
+
+	<stateSensor ruleid="activeFlowcontrolStatus">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.15.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>state</type>
+	    <sensorId>ACRP25_GRP_FLOW_CONTROL</sensorId>
+	    <value>
+			<mapValue mapid="flowControlStatus-vm">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.15.0</getOid>
+			</mapValue>
+	    </value>
+		<enum>flowControlStatus-em</enum>
+	    <label>Active Flow Control Status</label>
+	    <sensorSet>Group Status</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="flowControlStatus-vm">
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>4</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="flowControlStatus-em">
+		<label>Unknown</label>
+		<label>Under</label>
+		<label>OK</label>
+		<label>Over</label>
+		<label>N/A</label>
+	</enumMap>
+
+	<numSensor ruleid="dewPointTempMetric">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.17.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>temp</type>
+	    <sensorId>ACRP25_GRP_DEWPOINT</sensorId>
+	    <value>
+			<mult>
+			<op><getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.1.17.0</getOid></op>
+			<op>0.1</op>
+			</mult>
+	    </value>
+		<valueInc>0.1</valueInc>
+	    <label>Dew Point Temperature</label>
+	    <sensorSet>Group Status</sensorSet>
+	</numSensor>
+
+	<stateSensor ruleid="activeFlowControlBias">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.2.12.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>state</type>
+	    <sensorId>ACRP25_GRP_FLOW_CONTROL_BIAS</sensorId>
+	    <value>
+			<mapValue mapid="flowControlBias-vm">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.2.12.0</getOid>
+			</mapValue>
+	    </value>
+		<enum>flowControlBias-em</enum>
+	    <label>Active Flow Control Bias</label>
+	    <sensorSet>Group Status</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="flowControlBias-vm">
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>4</valueOut>
+		<valueIn>5</valueIn><valueOut>5</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="flowControlBias-em">
+		<label>Unknown</label>
+		<label>Positive</label>
+		<label>Slightly Positive</label>
+		<label>Zero</label>
+		<label>Slightly Negative</label>
+		<label>Negative</label>
+	</enumMap>
+
+	<stateSensor ruleid="configurationType">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.2.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>state</type>
+	    <sensorId>ACRP25_GRP_CONFIG_TYPE</sensorId>
+	    <value>
+			<mapValue mapid="configType-vm">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.2.0</getOid>
+			</mapValue>
+	    </value>
+		<enum>configType-em</enum>
+	    <label>Configuration Type</label>
+	    <sensorSet>Group Status</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="configType-vm">
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>3</valueIn><valueOut>3</valueOut>
+		<valueIn>4</valueIn><valueOut>4</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="configType-em">
+		<label>Unknown</label>
+		<label>RACS</label>
+		<label>HACS</label>
+		<label>InRow</label>
+		<label>CACS</label>
+	</enumMap>
+
+	<numSensor ruleid="numActiveFlowControllers">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.16.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>num</type>
+	    <sensorId>ACRP25_GRP_NUM_ACTIVE_FLOW_CTRLRS</sensorId>
+	    <value>
+			<mult>
+			<op><getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.16.0</getOid></op>
+			<op>1</op>
+			</mult>
+	    </value>
+		<valueInc>1</valueInc>
+	    <label>Number of Active Flow Controllers</label>
+	    <sensorSet>Group Status</sensorSet>
+	</numSensor>
+
+	<stateSensor ruleid="lampTest">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.17.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>state</type>
+	    <sensorId>ACRP25_GRP_LAMP_TEST</sensorId>
+	    <value>
+			<mapValue mapid="lampTest-vm">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.17.0</getOid>
+			</mapValue>
+	    </value>
+		<enum>lampTest-em</enum>
+	    <label>Active Flow Controller Lamp Test</label>
+	    <sensorSet>Group Status</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="lampTest-vm">
+		<valueIn>1</valueIn><valueOut>1</valueOut>
+		<valueIn>2</valueIn><valueOut>2</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="lampTest-em">
+		<label>Unknown</label>
+		<label>Off</label>
+		<label>On</label>
+	</enumMap>
+
+	<numSensor ruleid="altitudeMetric">
+	    <rowTest>
+		  <mapValue mapid="delete_null_sensor">
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.19.0</getOid>
+		  </mapValue>
+	   </rowTest>
+	    <type>num</type>
+		<units>meters</units>
+	    <sensorId>ACRP25_GRP_ALTITUDE</sensorId>
+	    <value>
+			<mult>
+			<op><getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.1.3.19.0</getOid></op>
+			<op>1</op>
+			</mult>
+	    </value>
+		<valueInc>1</valueInc>
+	    <label>Altitude</label>
+	    <sensorSet>Group Status</sensorSet>
+	</numSensor>
+
+	   <valueMap ruleid="delete_null_sensor">
+		  <!-- omit sensors returning -1 -->
+		  <valueIn>-1</valueIn><valueOut>[false]</valueOut>
+		  <!-- include the rest -->
+		  <valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   </valueMap>
+    </device>
+    
+    
+    <!-- ACRP37_Unit Section -->
+
+    <device deviceid="unit_acrp37">
+	   <oidMustExist ruleid="unitcooloutputoid" oid=".1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.14.0"/>
+	   
+	   <!-- Unit Cool Output in Watts (Originally in 1/10th of kW)-->
+	   <numSensor ruleid="cooloutput">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.14.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>powerW/unitcooloutput</type>
+		  <sensorId>ACRP37_UNIT_COOL_OUTPUT</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.14.0</getOid>
+				    </op>
+				    <op>100.0</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Cool Output</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Operate Mode -->
+	   <stateSensor ruleid="operatemode">
+		  <type>state/operatemode</type>
+		  <enumid>acopmode</enumid>
+		  <sensorId>OPERATE_MODE</sensorId>
+		  <value>
+			 <mapValue mapid="operatemodemap">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.1.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Unit Operating Mode</label>
+		  <!-- the enumMap will implicitly define enuminc -->
+		  <enum>operatemode-enum</enum>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </stateSensor>
+	   
+	   <!-- Unit Rack Inlet Temperature in degrees C -->
+	   <numSensor ruleid="unitmaxtempofrackinlet">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.2.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.3.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>RACK_INLET_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.3.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Rack Inlet Temperature (Max)</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Supply Air Temperature in degrees C -->
+	   <numSensor ruleid="tempofsupplyair">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.4.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.5.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>SUPPLY_AIR_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.5.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Supply Air Temperature</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Return Air Temperature in degrees C -->
+	   <numSensor ruleid="tempofreturnair">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.6.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.7.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>RETURN_AIR_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.7.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Return Air Temperature</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Supply Humidity -->
+	   <numSensor ruleid="supplyhum">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.8.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>SUPPLY_HUMIDITY</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.8.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Supply Humidity</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Return Humidity -->
+	   <numSensor ruleid="returnhum">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.9.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>RETURN_HUMIDITY</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.9.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Return Humidity</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Volume Airflow in liters/min (Originally in 1/100th of liters/sec)-->
+	   <numSensor ruleid="unitvolumeairflow">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.11.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>volairflow</type>
+		  <sensorId>ACRP37_UNIT_VOLUME_AIR_FLOW</sensorId>
+		  <value>
+			 <round increment="0.01">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.11.0</getOid>
+				    </op>
+				    <op>60</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Volume Air Flow</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+		<!--
+	   <numSensor ruleid="unitvolumeairflowsec">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.11.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>volairflowsec</type>
+		  <sensorId>ACRP37_UNIT_VOLUME_AIR_FLOW_SEC</sensorId>
+		  <value>
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.11.0</getOid>
+		  </value>
+		  <label>Unit Volume Air Flow (per second)</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+		-->
+	   
+	   <!-- Unit Fan Speed (originally in 1/10ths of percent -->
+	   <numSensor ruleid="unitfanspeed">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.12.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity</type>
+		  <sensorId>UNIT_FAN_SPEED</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.12.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Fan Speed</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Cool Demand in Watts (Originally in 1/10th of kW) -->
+	   <numSensor ruleid="cooldemand">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.13.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>powerW</type>
+		  <sensorId>ACRP37_UNIT_COOL_DEMAND</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.13.0</getOid>
+				    </op>
+				    <op>100.0</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Cool Demand</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Humidity Demand -->
+	   <numSensor ruleid="unithumiditydemand">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.15.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>HUMIDITY_DEMAND</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.15.0</getOid>
+		  </value>
+		  <label>Unit Humidity Demand</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Humidity Output -->
+	   <numSensor ruleid="unithumidityoutput">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.16.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>HUMIDITY_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.16.0</getOid>
+		  </value>
+		  <label>Unit Humidity Output</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Dehumidify Demand -->
+	   <numSensor ruleid="unitdehumidifydemand">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.17.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_UNIT_DEHUMIDIFY_DEMAND</sensorId>
+		  <value>
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.17.0</getOid>
+		  </value>
+		  <label>Unit Dehumidify Demand</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Dehumidify Output -->
+	   <numSensor ruleid="unitdehumidifyoutput">
+		   <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.18.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_UNIT_DEHUMIDIFY_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.18.0</getOid>
+		  </value>
+		  <label>Unit Dehumidify Output</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Reheat Demand -->
+	   <numSensor ruleid="unitreheatdemand">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.19.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_UNIT_REHEAT_DEMAND</sensorId>
+		  <value>
+			<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.19.0</getOid>
+		  </value>
+		  <label>Unit Reheat Demand</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Reheat Output -->
+	   <numSensor ruleid="unitreheatoutput">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.20.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity/pctcoolingcap</type>
+		  <sensorId>ACRP37_UNIT_REHEAT_OUTPUT</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.20.0</getOid>
+		  </value>
+		  <label>Unit Reheat Output</label>
+		  <sensorSet>Unit Status Overview</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Input Contact -->
+	   <stateSensor ruleid="input_contact">
+		  <type>state/inputcontact</type>
+		  <sensorId>INPUT_CONTACT</sensorId>
+		  <value>
+			 <mapValue mapid="inputcontactmap">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.21.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Input Contact State</label>
+		  <enum>input_contact-enum</enum>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </stateSensor>
+	   
+	   <!-- Unit Output Relay -->
+	   <stateSensor ruleid="output_relay">
+		  <type>state/outputrelay</type>
+		  <sensorId>OUTPUT_RELAY</sensorId>
+		  <value>
+			 <mapValue mapid="relaycontactmap">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.22.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Output Relay State</label>
+		  <enum>contact_relay</enum>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </stateSensor>
+	   
+	   <!-- Unit Rack Inlet Temperature #1 in degrees C -->
+	   <numSensor ruleid="tempofrackinlet1">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.23.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.24.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>RACK_INLET_TEMP1</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.24.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Rack Inlet Temperature 1</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Rack Inlet Temperature #2 in degrees C -->
+	   <numSensor ruleid="tempofrackinlet2">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.25.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.26.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>RACK_INLET_TEMP2</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.26.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Rack Inlet Temperature 2</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Rack Inlet Temperature #3 in degrees C -->
+	   <numSensor ruleid="tempofrackinlet3">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.27.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.28.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>RACK_INLET_TEMP3</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.28.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Rack Inlet Temperature 3</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Filter Differential Pressure in inches of W.C. -->
+		<!--
+	   <numSensor ruleid="filterdiffpresswc">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.31.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>airdiffpressure</type>
+		  <sensorId>FILTER_DIFF_PRESS_WC</sensorId>
+		  <value>
+			 <mult>
+				<op>0.01</op>
+				<op>
+				    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.31.0</getOid>
+				</op>
+			 </mult>
+		  </value>
+		  <valueInc>0.01</valueInc>
+		  <label>Unit Water Column Filter Differential Pressure</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>	   
+		-->
+	   
+	   <!-- Unit Filter Differential Pressure in kPascals -->
+	   <numSensor ruleid="filterdiffpress">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.32.0</getOid>
+			 </mapValue>
+		  </rowTest>
+      <type>pressure/filterdiffpress</type>
+      <sensorId>FILTER_DIFF_PRESS</sensorId>
+      <value><mult><op>0.001</op><op>
+        <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.32.0</getOid></op></mult>
+      </value>
+      <valueInc>0.001</valueInc>
+		  <label>Unit Filter Differential Pressure</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Containment Differential Pressure in inches of W.C. -->
+	   <numSensor ruleid="contdiffpresswc">
+		  <rowTest>
+	 		 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.29.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>airdiffpressure</type>
+		  <sensorId>CONTAINMENT_DIFF_PRESS_WC</sensorId>
+		  <value>
+			 <mult>
+				<op>0.01</op>
+				<op>
+				    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.29.0</getOid>
+				</op>
+			 </mult>
+		  </value>
+		  <valueInc>0.01</valueInc>
+		  <label>Unit Water Column Containment Differential Pressure</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>	   
+	   
+	   <!-- Unit Containment Differential Pressure in kPascals -->
+	   <numSensor ruleid="contdiffpress">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.30.0</getOid>
+			 </mapValue>
+		  </rowTest>
+      <type>pressure/containmentdiffpress</type>
+		  <sensorId>CONTAINMENT_DIFF_PRESS</sensorId>
+		  <value>
+			 <mult>
+				<op>0.001</op>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.30.0</getOid></op>
+			 </mult>
+		  </value>
+		  <valueInc>0.001</valueInc>
+		  <label>Unit Containment Differential Pressure</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Humdifier Current in Amps -->
+	   <numSensor ruleid="humidifiercurrent">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.33.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>amperage</type>
+		  <sensorId>HUMIDIFIER_CURRENT</sensorId>
+		  <value>
+			<mult>
+			<op><getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.33.0</getOid></op>
+			<op>0.1</op>
+			</mult>
+		  </value>
+			<valueInc>0.1</valueInc>
+		  <label>Unit Humidifier Current</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Humdifier Water Conductivity in microSiemens/cm -->
+	   <numSensor ruleid="unith2oconductivity">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.34.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>h2oconduct</type>
+		  <sensorId>HUMIDIFIER_WATER_CONDUCTIVITY</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.34.0</getOid>
+		  </value>
+		  <label>Unit Humidifier Water Conductivity</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Active Power Source -->
+	   <stateSensor ruleid="powersource">
+		  <type>powersource</type>
+		  <sensorId>POWER_SOURCE</sensorId>
+		  <value>
+			 <mapValue mapid="powersourcemap">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.35.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Unit Active Power Source</label>
+		  <enum>powersource-enum</enum>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </stateSensor>
+	   
+	   <!-- Unit Fluid Valve Percent Open -->
+	   <numSensor ruleid="valvepctopen">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.36.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>pctofcapacity</type>
+		  <sensorId>FLUID_VALVE_PCT_OPEN</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.36.0</getOid>
+		  </value>
+		  <label>Unit Fluid Valve Position</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Fluid Flow in liters/min (Originally in liters/sec)-->
+	   <numSensor ruleid="unitfluidflow">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.38.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>fluidflow</type>
+		  <sensorId>FLUID_FLOW</sensorId>
+		  <value>
+			 <round increment="0.01">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.38.0</getOid>
+				    </op>
+				    <op>0.60</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Fluid Flow</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Entering Fluid Temperature in Degrees C-->
+	   <numSensor ruleid="unitenteringfluidtemp">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.39.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.40.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>ENTERING_FLUID_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.40.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Entering Fluid Temperature</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Leaving Fluid Temperature in Degrees C-->
+	   <numSensor ruleid="leavingfluidtemp">
+		 <rowTest>
+		   <or>
+			 <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.41.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+			  <op>
+			   <neq>
+				 <op><getOid default="-1">.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.42.0</getOid></op>
+				 <op>-1</op>
+			   </neq>
+			 </op>
+		   </or>
+		 </rowTest>
+		  <type>temp</type>
+		  <sensorId>LEAVING_FLUID_TEMP</sensorId>
+		  <value>
+			 <round increment="0.1">
+				<mult>
+				    <op>
+					   <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.42.0</getOid>
+				    </op>
+				    <op>0.1</op>
+				</mult>
+			 </round>
+		  </value>
+		  <label>Unit Leaving Fluid Temperature</label>
+		  <sensorSet>Unit Detailed Status</sensorSet>
+	   </numSensor>
+	   
+		<stateSensor ruleid="statusLeakSensor">
+		    <type>state</type>
+		    <sensorId>LEAK_SENSOR_STATUS</sensorId>
+		    <value>
+			<mapValue mapid="leakStatus-vm">
+			    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.2.43.0</getOid>
+			</mapValue>
+	    	</value>
+		    <label>Leak Sensor Status</label>
+		    <enum>leakStatus-em</enum>
+		    <sensorSet>Unit Detailed Status</sensorSet>
+		</stateSensor>
+		<valueMap ruleid="leakStatus-vm">
+		    <valueIn>1</valueIn><valueOut>1</valueOut>
+		    <valueIn>2</valueIn><valueOut>2</valueOut>
+		    <valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="leakStatus-em">
+		    <label>Unknown</label>
+		    <label>No Leak</label>
+		    <label>Leak Detected</label>
+		</enumMap>
+
+	   
+	   <!-- Unit Air Filter Run Hours -->
+	   <numSensor ruleid="airfilterrunhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>AIR_FILTER_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.1.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Air Filter Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Condensate Pump Run Hours -->
+	   <numSensor ruleid="condpumprunhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.2.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>CONDENSATE_PUMP_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.2.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Condensate Pump Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Humidifier Run Hours -->
+	   <numSensor ruleid="humidifierrunhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.3.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>HUMIDIFIER_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.3.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Humidifier Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Fan1 Run Hours -->
+	   <numSensor ruleid="fan1runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.4.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>FAN1_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.4.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Fan1 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Heater1 Run Hours -->
+	   <numSensor ruleid="heater1runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.5.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>HEATER1_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.5.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Heater1 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Fan2 Run Hours -->
+	   <numSensor ruleid="fan2runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.6.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>FAN2_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.6.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Fan2 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Heater2 Run Hours -->
+	   <numSensor ruleid="heater2runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.7.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>HEATER2_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.7.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Heater2 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Fan3 Run Hours -->
+	   <numSensor ruleid="fan3runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.8.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>FAN3_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.8.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Fan3 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <!-- Unit Heater3 Run Hours -->
+	   <numSensor ruleid="heater3runhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.9.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>HEATER3_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.9.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit Heater3 Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+
+	   <numSensor ruleid="systemrunhours">
+		  <rowTest>
+			 <mapValue mapid="apcacrp37/group_acrp37/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.10.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>runhours</type>
+		  <sensorId>SYSTEM_RUNHOURS</sensorId>
+		  <value>
+			 <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.3.10.0</getOid>
+		  </value>
+		  <valueInc>1</valueInc>
+		  <label>Unit System Run Hours</label>
+		  <sensorSet>Unit Run Hours</sensorSet>
+	   </numSensor>
+	   
+	   <valueMap ruleid="operatemodemap">
+		  <valueIn>1</valueIn><valueOut>0</valueOut>
+		  <valueIn>2</valueIn><valueOut>1</valueOut>
+		  <valueIn>3</valueIn><valueOut>2</valueOut>
+		  <valueIn>*</valueIn><valueOut>3</valueOut>
+	   </valueMap>
+	   
+	   <enumMap ruleid="operatemode-enum">
+		  <!-- correction attributes indicate which state they match up with in the acopmode stateenum -->
+		  <label correction="1">Standby</label>
+		  <label correction="2">On</label>
+		  <label correction="5">Idle</label>
+		  <label correction="0">Unknown</label>
+	   </enumMap>
+	   
+	   <valueMap ruleid="inputcontactmap">
+		  <valueIn>1</valueIn><valueOut>0</valueOut>
+		  <valueIn>2</valueIn><valueOut>1</valueOut>
+		  <valueIn>*</valueIn><valueOut>2</valueOut>
+	   </valueMap>
+	   
+	   <enumMap ruleid="input_contact-enum">
+		  <label>Open</label>
+		  <label>Closed</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   
+	   <valueMap ruleid="relaycontactmap">
+		  <valueIn>1</valueIn><valueOut>0</valueOut>
+		  <valueIn>2</valueIn><valueOut>1</valueOut>
+		  <valueIn>*</valueIn><valueOut>2</valueOut>
+	   </valueMap>
+	   
+	   <enumMap ruleid="contact_relay">
+		  <label>Open</label>
+		  <label>Closed</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   
+	   <valueMap ruleid="powersourcemap">
+		  <valueIn>1</valueIn><valueOut>0</valueOut>
+		  <valueIn>2</valueIn><valueOut>1</valueOut>
+		  <valueIn>*</valueIn><valueOut>2</valueOut>
+	   </valueMap>
+	   
+	   <enumMap ruleid="powersource-enum">
+		  <label>Source A</label>
+		  <label>Source B</label>
+		  <label>Unknown</label>
+	   </enumMap>
+
+	<stateSensor ruleid="secondaryPowerFeedCapability">
+	    <type>state</type>
+	    <sensorId>SECONDARY_POWERFEED_CAPABILITY</sensorId>
+	    <value>
+		<mapValue mapid="powerFeed-vm">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.6.14.0</getOid>
+		</mapValue>
+	    </value>
+	    <label>Secondary Power Feed Capability</label>
+	    <enum>powerFeed-em</enum>
+	    <sensorSet>Unit Configuration</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="powerFeed-vm">
+	    <valueIn>1</valueIn><valueOut>1</valueOut>
+	    <valueIn>2</valueIn><valueOut>2</valueOut>
+	    <valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="powerFeed-em">
+	    <label>Unknown</label>
+	    <label>Full</label>
+	    <label>Reduced</label>
+	</enumMap>
+
+	<stateSensor ruleid="idleOnCoolFail">
+	    <type>state</type>
+	    <sensorId>IDLE_ON_COOL_FAIL</sensorId>
+	    <value>
+		<mapValue mapid="idleOnCoolFail-vm">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.3.3.2.2.6.15.0</getOid>
+		</mapValue>
+	    </value>
+	    <label>Idle on Cool Fail</label>
+	    <enum>idleOnCoolFail-em</enum>
+	    <sensorSet>Unit Configuration</sensorSet>
+	</stateSensor>
+	<valueMap ruleid="idleOnCoolFail-vm">
+	    <valueIn>1</valueIn><valueOut>1</valueOut>
+	    <valueIn>2</valueIn><valueOut>2</valueOut>
+	    <valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+	<enumMap ruleid="idleOnCoolFail-em">
+	    <label>Unknown</label>
+	    <label>Enable</label>
+	    <label>Disable</label>
+	</enumMap>
+	   
+    </device>  
+    
+</APC_DDF>

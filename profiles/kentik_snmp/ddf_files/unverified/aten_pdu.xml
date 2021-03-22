@@ -1,0 +1,989 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="aten_pdu"
+	ddfname="ATEN PDU"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="aten_pdu">
+<!--        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+-->
+		<setProductData ruleid="vendordata" field="vendor">ATEN</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<oidMustExist ruleid="aten_pdu" oid=".1.3.6.1.4.1.21317" istree="yes" />
+
+		<numSensor ruleid="deviceCurrent" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>amperage</type>
+            <sensorId>DEVICE_CURRENT_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.2</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Current</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="deviceVoltage" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>voltage</type>
+            <sensorId>DEVICE_VOLTAGE_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Voltage</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="devicePower" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>powerW</type>
+            <sensorId>DEVICE_POWER_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="devicePowerDissipation" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>DEVICE_POWER_DISSIPATION_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power Dissipation</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="inputMaxVoltage" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>voltage</type>
+            <sensorId>INPUT_MAX_VOLTAGE_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.6</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Input Max Voltage</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="inputMaxCurrent" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>amperage</type>
+            <sensorId>INPUT_MAX_CURRENT_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Input Max Current</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="powerCapacity" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>powerVA</type>
+            <sensorId>POWER_CAPACITY_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.8</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power Capacity</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="devicePowerFactor" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.1">
+            <type>num/powerFactor</type>
+            <sensorId>DEVICE_POWER_FACTOR_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.3.1.9</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Device <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power Factor</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="sensorTemperature" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.1">
+            <type>temp</type>
+            <sensorId>SENSOR_TEMP_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.2</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Sensor <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Temperature</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sensorHumidity" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.1">
+            <type>humidity</type>
+            <sensorId>SENSOR_HUMIDITY_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Sensor <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Humidity</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="sensorPressure" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.1">
+            <type>pressure</type>
+            <sensorId>SENSOR_PRESSURE_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Sensor <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Pressure</label>
+            <sensorSet>General Sensors</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="sensorProperty" index=".1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.1">
+            <type>state</type>
+            <sensorId>SENSOR_PROPERTY_<rowNumber/></sensorId>
+            <value>
+				<mapValue mapid="sensorProperty-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.1.4.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>Sensor <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Property</label>
+			<enum>sensorProperty-em</enum>
+            <sensorSet>General Sensors</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="sensorProperty-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="sensorProperty-em">
+			<label>Unknown</label>
+			<label>Intake</label>
+			<label>Exhaust</label>
+			<label>Floor</label>
+		</enumMap>
+
+		<numSensor ruleid="outletCurrent" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>OUTLET_CURRENT_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.2</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Current</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletVoltage" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>OUTLET_VOLTAGE_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.3</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Voltage</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletPower" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>OUTLET_POWER_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.4</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletPowerDissipation" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>OUTLET_POWER_DISSIPATION_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.5</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power Dissipation</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletMaxCurrent" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>OUTLET_MAX_CURRENT_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.6</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Max Current</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+		<numSensor ruleid="outletPowerFactor" index=".1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.1">
+            <type>num/powerfactor</type>
+            <sensorId>OUTLET_POWER_FACTOR_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.2.2.1.1.7</getRowOid>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Outlet <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Power Factor</label>
+            <sensorSet>Outlet Sensors</sensorSet>
+        </numSensor>
+
+		<stateSensor ruleid="usrType" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_TYPE</sensorId>
+            <value>
+				<mapValue mapid="usrType-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>User <rowNumber/> Type</label>
+			<enum>usrType-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort1Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT1AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 1 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 1 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort2Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT2AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 2 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 2 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort3Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT3AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 3 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 3 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort4Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT4AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 4 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 4 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort5Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT5AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 5 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 5 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort6Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT6AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 6 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 6 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort7Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT7AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 7 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 7 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort8Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT8AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 8 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 8 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort9Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT9AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.13</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 9 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 9 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort10Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT10AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 10 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 10 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort11Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT11AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.15</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 11 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 11 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort12Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT12AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.16</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 12 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 12 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort13Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT13AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.17</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 13 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 13 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort14Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT14AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.18</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 14 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 14 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort15Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT15AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.19</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 15 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 15 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort16Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT16AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.20</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 16 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 16 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort17Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT17AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.21</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 17 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 17 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort18Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT18AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.22</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 18 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 18 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort19Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT19AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.23</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 19 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 19 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort20Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT20AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.24</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 20 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 20 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort21Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT21AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.25</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 21 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 21 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort22Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT22AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.26</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 22 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 22 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort23Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT23AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.27</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 23 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 23 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort24Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT24AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.28</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 24 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 24 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort25Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT25AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.29</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 25 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 25 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort26Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT26AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.30</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 26 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 26 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort27Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT27AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.31</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 27 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 27 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort28Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT28AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.32</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 28 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 28 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort29Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT29AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.33</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 29 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 29 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="usrPort30Auth" index=".1.3.6.1.4.1.21317.1.3.2.2.1.1.1.1">
+            <type>state</type>
+            <sensorId>USER_<rowNumber/>_PORT30AUTH</sensorId>
+            <value>
+				<mapValue mapid="usrPortAuth-vm">
+                <getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.34</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				<if>
+				<op>
+					<neqString>
+					<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid></op>
+					<op></op>
+					</neqString>
+				</op>
+				<op><getRowOid>.1.3.6.1.4.1.21317.1.3.2.2.1.1.1.3</getRowOid> Port 30 Auth</op>
+				<op>User <formatNumber><add><op><rowNumber/></op><op>1</op></add></formatNumber> Port 30 Auth</op>
+				</if>
+			</label>
+			<enum>usrPortAuth-em</enum>
+            <sensorSet>User Information</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="usrType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="usrType-em">
+			<label>Unknown</label>
+			<label>Administrator</label>
+			<label>User</label>
+		</enumMap>
+
+		<valueMap ruleid="usrPortAuth-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="usrPortAuth-em">
+			<label>Unknown</label>
+			<label>Disable</label>
+			<label>View</label>
+			<label>Modify</label>
+		</enumMap>
+
+		<!--
+		<stateSensor ruleid="stSensTemplate">
+            <type>state</type>
+            <sensorId>ST_SENS_TEMPLATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1....</getOid>
+            </value>
+            <label>State Sensor</label>
+            <enum>state-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		-->
+
+		<valueMap ruleid="state-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="state-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+
+		<alarmFlags ruleid="alarmTemplate">
+			<value><getOid>.1.3.6.1.4.1....</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Generic Alarm</activeText>
+					<inactiveText>Generic Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Generic Alarm condition exists.</activeText>
+					<inactiveText>A Generic Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+	</device>
+</APC_DDF>

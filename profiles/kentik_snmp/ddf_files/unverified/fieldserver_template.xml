@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="fieldserver_template"
+	ddfname="Fieldserver"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="fieldserver_binaryInputs">
+		<oidMustExist ruleid="binaryInputs" oid=".1.3.6.1.4.1.6347.2.5" istree="yes"/>
+
+		<valueMap ruleid="deleteNull-vm">
+			<valueIn>-</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="alarm-em">
+			<label>Normal</label>
+			<label>Alarm</label>
+		</enumMap>
+
+		<stateSensor ruleid="biValue-ss" index=".1.3.6.1.4.1.6347.2.5.1.1">
+			<rowTest>
+ 				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid>
+	 			</mapValue>
+	  		</rowTest>
+			<type>num</type>
+			<sensorId>BI_VALUE_<rowIndex/></sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				<getRowOid>.1.3.6.1.4.1.6347.2.5.1.1</getRowOid>
+				</mapValue>
+			</value>
+			<enum></enum>
+			<label><getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid></label>
+			<sensorSet>Binary Inputs</sensorSet>
+		</stateSensor>
+		<alarmFlags ruleid="biValue-af">
+			<value><getRowOid>.1.3.6.1.4.1.6347.2.5.1.1</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A(n) <getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid> condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.6347.2.5.1.2</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+				
+		</device>
+</APC_DDF>
+
+
+
+
+
+
+
+
+
+
+

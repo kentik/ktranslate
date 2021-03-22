@@ -1,0 +1,1467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="lexmark_printer"
+	ddfname="Lexmark Printer"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\lexmark\lexmark1.mib
+		\snmp\resources\mibs\lexmark\LEXMARK-MPS-MIB.mib
+		
+		LEXMARK-PVT-MIB, LEXMARK-MPS-MIB | 02 November 2020
+	-->
+	<device deviceid="lexmark_printer">
+		<oidMustExist ruleid="printer_exists" oid=".1.3.6.1.4.1.641.2" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Lexmark</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.641.2.1.2.1.2.1</getOid></setProductData>
+		<setProductData ruleid="code_revision" field="appversion"><getOid>.1.3.6.1.4.1.641.2.1.2.1.4.1</getOid></setProductData>
+		<setProductData ruleid="serial_number" field="serial_num"><getOid>.1.3.6.1.4.1.641.2.1.2.1.6.1</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Generic Device</setProductData>
+
+		<valueMap ruleid="3state-vm">
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<stateSensor ruleid="prtgenStatusOutHopFull">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_OUT_HOP_FULL</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.3.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Output Hopper Status</label>
+            <enum>prtgenStatusOutHopFull-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusOutHopFull-em">
+			<label>Not Full</label>
+			<label>Full</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusInputEmpty">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_INPUT_EMPTY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.4.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Active Input Paper Tray Status</label>
+            <enum>prtgenStatusInputEmpty-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusInputEmpty-em">
+			<label>Not Empty</label>
+			<label>Empty</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusPaperJam">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_PAPER_JAM</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.5.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Paper Path Status</label>
+            <enum>prtgenStatusPaperJam-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusPaperJam-em">
+			<label>Not Jammed</label>
+			<label>Jammed</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusTonerError">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_TONE_ERROR</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.6.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Toner Supply Status</label>
+            <enum>prtgenStatusTonerError-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusTonerError-em">
+			<label>No Tone Error</label>
+			<label>Tone Error</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusSrvcReqd">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_SERVICE_REQUIRED</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.7.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Service Required Status</label>
+            <enum>prtgenStatusSrvcReqd-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusSrvcReqd-em">
+			<label>No Service Required</label>
+			<label>Service Required</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusDiskError">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_DISK_ERROR</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.8.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Disk Sub-System Status</label>
+            <enum>prtgenStatusDiskError-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusDiskError-em">
+			<label>No Disk Error</label>
+			<label>Disk Error</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusCoverOpen">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_COVER_OPEN</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.9.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Cover Status</label>
+            <enum>prtgenStatusCoverOpen-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusCoverOpen-em">
+			<label>No Cover Open</label>
+			<label>Cover Open</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusPageComplex">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_PAGE_COMPLEX</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.10.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Complex Page Status</label>
+            <enum>prtgenStatusPageComplex-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusPageComplex-em">
+			<label>No Complex Page</label>
+			<label>Complex Page</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusLineStatus">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_LINE_STATUS</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.11.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Online/Offline Status</label>
+            <enum>prtgenStatusLineStatus-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusLineStatus-em">
+			<label>Online</label>
+			<label>Offline</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusBusy">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_BUSY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.12.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Busy Status</label>
+            <enum>prtgenStatusBusy-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusBusy-em">
+			<label>Not Busy</label>
+			<label>Busy</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusWaiting">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_WAITING</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.13.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Waiting Status</label>
+            <enum>prtgenStatusWaiting-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusWaiting-em">
+			<label>Not Waiting</label>
+			<label>Waiting</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusWarming">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_WARMING</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.14.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printer Warming Status</label>
+            <enum>prtgenStatusWarming-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusWarming-em">
+			<label>Not Warming</label>
+			<label>Warming</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<stateSensor ruleid="prtgenStatusPrinting">
+            <type>state</type>
+            <sensorId>_PRINTER_GEN_STATUS_PRINTING</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+					<getOid>.1.3.6.1.4.1.641.2.1.3.1.15.1</getOid>
+				</mapValue>
+            </value>
+            <label>Printing Status</label>
+            <enum>prtgenStatusPrinting-em</enum>
+            <sensorSet>Printer Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="prtgenStatusPrinting-em">
+			<label>Not Printing</label>
+			<label>Printing</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+	</device>
+	
+	<device deviceid="lexmark_mps">
+		<oidMustExist ruleid="mps_exists" oid=".1.3.6.1.4.1.641.6" istree="yes"/> 
+		
+		<valueMap ruleid="hwInventoryType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>14</valueIn><valueOut>13</valueOut>
+			<valueIn>15</valueIn><valueOut>14</valueOut>
+			<valueIn>16</valueIn><valueOut>15</valueOut>
+			<valueIn>17</valueIn><valueOut>16</valueOut>
+			<valueIn>257</valueIn><valueOut>17</valueOut>
+			<valueIn>258</valueIn><valueOut>18</valueOut>
+			<valueIn>261</valueIn><valueOut>19</valueOut>
+			<valueIn>262</valueIn><valueOut>20</valueOut>
+			<valueIn>263</valueIn><valueOut>21</valueOut>
+			<valueIn>264</valueIn><valueOut>22</valueOut>
+			<valueIn>265</valueIn><valueOut>23</valueOut>
+			<valueIn>266</valueIn><valueOut>24</valueOut>
+			<valueIn>267</valueIn><valueOut>25</valueOut>
+			<valueIn>268</valueIn><valueOut>26</valueOut>
+			<valueIn>269</valueIn><valueOut>27</valueOut>
+			<valueIn>270</valueIn><valueOut>28</valueOut>
+			<valueIn>271</valueIn><valueOut>29</valueOut>
+			<valueIn>272</valueIn><valueOut>30</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="hwInventoryStatus-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>17</valueIn><valueOut>6</valueOut>
+			<valueIn>18</valueIn><valueOut>7</valueOut>
+			<valueIn>19</valueIn><valueOut>8</valueOut>
+			<valueIn>20</valueIn><valueOut>9</valueOut>
+			<valueIn>21</valueIn><valueOut>10</valueOut>
+			<valueIn>22</valueIn><valueOut>11</valueOut>
+			<valueIn>33</valueIn><valueOut>12</valueOut>
+			<valueIn>34</valueIn><valueOut>13</valueOut>
+			<valueIn>35</valueIn><valueOut>14</valueOut>
+			<valueIn>36</valueIn><valueOut>15</valueOut>
+			<valueIn>37</valueIn><valueOut>16</valueOut>
+			<valueIn>38</valueIn><valueOut>17</valueOut>
+			<valueIn>97</valueIn><valueOut>18</valueOut>
+			<valueIn>98</valueIn><valueOut>19</valueOut>
+			<valueIn>99</valueIn><valueOut>20</valueOut>
+			<valueIn>100</valueIn><valueOut>21</valueOut>
+			<valueIn>101</valueIn><valueOut>22</valueOut>
+			<valueIn>102</valueIn><valueOut>23</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="supplyInventoryType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>13</valueIn><valueOut>12</valueOut>
+			<valueIn>14</valueIn><valueOut>13</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="supplyInventoryColorantValue-vm">
+			<valueIn>unknown</valueIn><valueOut>0</valueOut>
+			<valueIn>other</valueIn>  <valueOut>1</valueOut>
+			<valueIn>white</valueIn>  <valueOut>2</valueOut>
+			<valueIn>red</valueIn>    <valueOut>3</valueOut>
+			<valueIn>green</valueIn>  <valueOut>4</valueOut>
+			<valueIn>blue</valueIn>   <valueOut>5</valueOut>
+			<valueIn>cyan</valueIn>   <valueOut>6</valueOut>
+			<valueIn>magenta</valueIn><valueOut>7</valueOut>
+			<valueIn>yellow</valueIn> <valueOut>8</valueOut>
+			<valueIn>black</valueIn>  <valueOut>9</valueOut>
+			<valueIn>*</valueIn>      <valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="swInventoryType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="2state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="currentSupplyCartridgeType-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>21</valueIn><valueOut>11</valueOut>
+			<valueIn>22</valueIn><valueOut>12</valueOut>
+			<valueIn>23</valueIn><valueOut>13</valueOut>
+			<valueIn>24</valueIn><valueOut>14</valueOut>
+			<valueIn>25</valueIn><valueOut>15</valueOut>
+			<valueIn>26</valueIn><valueOut>16</valueOut>
+			<valueIn>27</valueIn><valueOut>17</valueOut>
+			<valueIn>37</valueIn><valueOut>18</valueOut>
+			<valueIn>38</valueIn><valueOut>19</valueOut>
+			<valueIn>39</valueIn><valueOut>20</valueOut>
+			<valueIn>53</valueIn><valueOut>21</valueOut>
+			<valueIn>54</valueIn><valueOut>22</valueOut>
+			<valueIn>55</valueIn><valueOut>23</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="6state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		
+		<stateSensor ruleid="hwInventoryType" index=".1.3.6.1.4.1.641.6.3.1.1.3">
+            <type>state</type>
+            <sensorId>_HW_INVENTORY_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="hwInventoryType-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.1.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.1.1.8</getRowOid> Hardware Type</label>
+            <enum>hwInventoryType-em</enum>
+            <sensorSet>Hardware Inventory</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="hwInventoryType-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>Print Engine</label>
+			<label>Electronic Card</label>
+			<label>Duplexer</label>
+			<label>Input Tray</label>
+			<label>Output Tray</label>
+			<label>Finishing Device</label>
+			<label>Scanner</label>
+			<label>Fax Card</label>
+			<label>Memory</label>
+			<label>Non Volitile Memory</label>
+			<label>Keyboard</label>
+			<label>Panel</label>
+			<label>Card Swipe</label>
+			<label>Transfer Unit</label>
+			<label>Connectivity Module</label>
+			<label>Option Unknown</label>
+			<label>Option Other</label>
+			<label>Option Duplexer</label>
+			<label>Option Input Tray</label>
+			<label>Option Output Tray</label>
+			<label>Option Finishing Device</label>
+			<label>Option Scanner</label>
+			<label>Option Fax Card</label>
+			<label>Option Memory</label>
+			<label>Option Non Volitile Memory</label>
+			<label>Option Keyboard</label>
+			<label>Option Panel</label>
+			<label>Option Card Swipe</label>
+			<label>Option Transfer Unit</label>
+		</enumMap>
+		
+		<stateSensor ruleid="hwInventoryStatus" index=".1.3.6.1.4.1.641.6.3.1.1.5">
+            <type>state</type>
+            <sensorId>_HW_INVENTORY_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="hwInventoryStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.1.1.8</getRowOid> Hardware Status</label>
+            <enum>hwInventoryStatus-em</enum>
+            <sensorSet>Hardware Inventory</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="hwInventoryStatus-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>OK</label>
+			<label>Offline</label>
+			<label>Warning</label>
+			<label>Broken</label>
+			<label>Disabled Unknown</label>
+			<label>Disabled Other</label>
+			<label>Disabled OK</label>
+			<label>Disabled Offline</label>
+			<label>Disabled Warning</label>
+			<label>Disabled Broken</label>
+			<label>Unlicensed Unknown</label>
+			<label>Unlicensed Other</label>
+			<label>Unlicensed OK</label>
+			<label>Unlicensed Offline</label>
+			<label>Unlicensed Warning</label>
+			<label>Unlicensed Broken</label>
+			<label>Licensed Unknown</label>
+			<label>Licensed Other</label>
+			<label>Licensed OK</label>
+			<label>Licensed Offline</label>
+			<label>Licensed Warning</label>
+			<label>Licensed Broken</label>
+		</enumMap>
+		
+		<stateSensor ruleid="supplyInventoryType" index=".1.3.6.1.4.1.641.6.3.2.1.2">
+            <type>state</type>
+            <sensorId>_SUPPLY_INVENTORY_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="supplyInventoryType-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.2.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.2.1.4</getRowOid> Supply Status</label>
+            <enum>supplyInventoryType-em</enum>
+            <sensorSet>Supply Inventory</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="supplyInventoryType-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>Ink Cartridge</label>
+			<label>Ink Bottle</label>
+			<label>Ink Printer Head</label>
+			<label>Toner</label>
+			<label>Photo Conductor</label>
+			<label>Transfer Module</label>
+			<label>Fuser</label>
+			<label>Waste Toner Box</label>
+			<label>Staples</label>
+			<label>Hole Punch Box</label>
+			<label>Toner Micr</label>
+			<label>Photo Conductor Micr</label>
+		</enumMap>
+		
+		<stateSensor ruleid="supplyInventoryColorantValue" index=".1.3.6.1.4.1.641.6.3.2.1.3">
+            <type>state</type>
+            <sensorId>_SUPPLY_INVENTORY_COLORANT_VALUE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="supplyInventoryColorantValue-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.2.1.4</getRowOid> Supply Colorant Value</label>
+            <enum>supplyInventoryColorantValue-em</enum>
+            <sensorSet>Supply Inventory</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="supplyInventoryColorantValue-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>White</label>
+			<label>Red</label>
+			<label>Green</label>
+			<label>Blue</label>
+			<label>Cyan</label>
+			<label>Magenta</label>
+			<label>Yellow</label>
+			<label>Black</label>
+		</enumMap>
+		
+		<stateSensor ruleid="swInventoryType" index=".1.3.6.1.4.1.641.6.3.3.1.3">
+            <type>state</type>
+            <sensorId>_SW_INVENTORY_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="swInventoryType-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.3.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.3.1.6</getRowOid> Software Type</label>
+            <enum>swInventoryType-em</enum>
+            <sensorSet>Software Inventory</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="swInventoryType-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>Operating System</label>
+			<label>Hardware</label>
+			<label>Application</label>
+		</enumMap>
+		
+		<stateSensor ruleid="swInventoryStatus" index=".1.3.6.1.4.1.641.6.3.3.1.5">
+            <type>state</type>
+            <sensorId>_SW_INVENTORY_STATUS_<rowIndex/></sensorId>
+            <value><!-- same valueMap/enumMap as hwInventoryStatus -->
+				<mapValue mapid="hwInventoryStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.3.3.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.3.3.1.6</getRowOid> Software Status</label>
+            <enum>hwInventoryStatus-em</enum>
+            <sensorSet>Software Inventory</sensorSet>
+        </stateSensor>
+		
+		<valueMap ruleid="genCountUnits-vm">
+			<valueIn>35</valueIn><valueOut>timeinsec</valueOut>
+			<valueIn>36</valueIn><valueOut>timeinmin</valueOut>
+			<valueIn>37</valueIn><valueOut>timeinhrs</valueOut>
+			<valueIn>38</valueIn><valueOut>timeindays</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="genCountUnits_labels-vm">
+			<valueIn>3</valueIn><valueOut>(items)</valueOut>
+			<valueIn>4</valueIn><valueOut>(sides)</valueOut>
+			<valueIn>5</valueIn><valueOut>(sheets)</valueOut>
+			<valueIn>16</valueIn><valueOut>(mm)</valueOut>
+			<valueIn>17</valueIn><valueOut>(cm)</valueOut>
+			<valueIn>18</valueIn><valueOut>(meters)</valueOut>
+			<valueIn>19</valueIn><valueOut>(inches)</valueOut>
+			<valueIn>20</valueIn><valueOut>(feet)</valueOut>
+			<valueIn>21</valueIn><valueOut>(grams)</valueOut>
+			<valueIn>22</valueIn><valueOut>(oz)</valueOut>
+			<valueIn>32</valueIn><valueOut>(nanoseconds)</valueOut>
+			<valueIn>33</valueIn><valueOut>(microseconds)</valueOut>
+			<valueIn>34</valueIn><valueOut>(milliseconds)</valueOut>
+			<valueIn>39</valueIn><valueOut>(weeks)</valueOut>
+			<valueIn>40</valueIn><valueOut>(months)</valueOut>
+			<valueIn>41</valueIn><valueOut>(years)</valueOut>
+			<valueIn>42</valueIn><valueOut>(tenths of other units)</valueOut>
+			<valueIn>*</valueIn><valueOut></valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="genCountType-vm">
+			<valueIn>1</valueIn><valueOut>Por Count</valueOut>
+			<valueIn>2</valueIn><valueOut>Sleep Count</valueOut>
+			<valueIn>3</valueIn><valueOut>Hibernate Count</valueOut>
+			<valueIn>4</valueIn><valueOut>Print Calibrate Count</valueOut>
+			<valueIn>32</valueIn><valueOut>Power On Time</valueOut>
+			<valueIn>33</valueIn><valueOut>Power Active Time</valueOut>
+			<valueIn>34</valueIn><valueOut>Power Idle Time</valueOut>
+			<valueIn>35</valueIn><valueOut>Power Sleep Time</valueOut>
+			<valueIn>36</valueIn><valueOut>Power Hibernate Time</valueOut>
+			<valueIn>37</valueIn><valueOut>Power Off Time</valueOut>
+			<valueIn>38</valueIn><valueOut>Warmup Total Time</valueOut>
+			<valueIn>64</valueIn><valueOut>Lifetime Black Coverage</valueOut>
+			<valueIn>65</valueIn><valueOut>Lifetime Cyan Coverage</valueOut>
+			<valueIn>66</valueIn><valueOut>Lifetime Yellow Coverage</valueOut>
+			<valueIn>67</valueIn><valueOut>Lifetime Magenta Coverage</valueOut>
+			<valueIn>68</valueIn><valueOut>Raw Lifetime Black Coverage</valueOut>
+			<valueIn>69</valueIn><valueOut>Raw Lifetime Cyan Coverage</valueOut>
+			<valueIn>70</valueIn><valueOut>Raw Lifetime Yellow Coverage</valueOut>
+			<valueIn>71</valueIn><valueOut>Raw Lifetime Magenta Coverage</valueOut>
+			<valueIn>96</valueIn><valueOut>Faxes Sent</valueOut>
+			<valueIn>97</valueIn><valueOut>Paper Jams</valueOut>
+			<valueIn>98</valueIn><valueOut>Scanner Jams</valueOut>
+			<valueIn>99</valueIn><valueOut>Load Paper Prompts</valueOut>
+			<valueIn>100</valueIn><valueOut>Change Paper Prompts</valueOut>
+			<valueIn>101</valueIn><valueOut>Cover Opens</valueOut>
+			<valueIn>102</valueIn><valueOut>Printer IR Time</valueOut>
+			<valueIn>128</valueIn><valueOut>USB Insertions</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="genCountValue" index=".1.3.6.1.4.1.641.6.4.1.1.1.4">
+            <type><mapValue mapid="genCountUnits-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.1.1.1.3</getRowOid></mapValue></type>
+            <sensorId>_GEN_COUNT_VALUE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.1.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="genCountType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.1.1.1.2</getRowOid></mapValue><space/>
+				<mapValue mapid="genCountUnits_labels-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.1.1.1.3</getRowOid></mapValue>
+			</label>
+            <sensorSet>General Statistics</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="paperGeneralCountType-vm">
+			<valueIn>1</valueIn><valueOut>Total Picked</valueOut>
+			<valueIn>2</valueIn><valueOut>Total Safe</valueOut>
+			<valueIn>3</valueIn><valueOut>Total Mono Safe</valueOut>
+			<valueIn>4</valueIn><valueOut>Total Color Safe</valueOut>
+			<valueIn>5</valueIn><valueOut>Print N Hold</valueOut>
+			<valueIn>6</valueIn><valueOut>USB Direct</valueOut>
+			<valueIn>7</valueIn><valueOut>Continuous Print</valueOut>
+			<valueIn>16</valueIn><valueOut>Print Total</valueOut>
+			<valueIn>17</valueIn><valueOut>Print Mono</valueOut>
+			<valueIn>18</valueIn><valueOut>Print Color</valueOut>
+			<valueIn>32</valueIn><valueOut>Copy Total</valueOut>
+			<valueIn>33</valueIn><valueOut>Copy Mono</valueOut>
+			<valueIn>34</valueIn><valueOut>Copy Color</valueOut>
+			<valueIn>48</valueIn><valueOut>Fax Total</valueOut>
+			<valueIn>49</valueIn><valueOut>Fax Mono</valueOut>
+			<valueIn>50</valueIn><valueOut>Fax Color</valueOut>
+			<valueIn>64</valueIn><valueOut>Blank Total</valueOut>
+			<valueIn>65</valueIn><valueOut>Blank Print</valueOut>
+			<valueIn>66</valueIn><valueOut>Blank Copy</valueOut>
+			<valueIn>67</valueIn><valueOut>Blank Fax</valueOut>
+			<valueIn>80</valueIn><valueOut>Printer Page Count</valueOut>
+			<valueIn>81</valueIn><valueOut>Modular Page Count</valueOut>
+			<valueIn>90</valueIn><valueOut>Highlight Color</valueOut>
+			<valueIn>91</valueIn><valueOut>Business Color</valueOut>
+			<valueIn>92</valueIn><valueOut>Graphics Color</valueOut>
+			<valueIn>100</valueIn><valueOut>Toner Darkness 1</valueOut>
+			<valueIn>101</valueIn><valueOut>Toner Darkness 2</valueOut>
+			<valueIn>102</valueIn><valueOut>Toner Darkness 3</valueOut>
+			<valueIn>103</valueIn><valueOut>Toner Darkness 4</valueOut>
+			<valueIn>104</valueIn><valueOut>Toner Darkness 5</valueOut>
+			<valueIn>105</valueIn><valueOut>Toner Darkness 6</valueOut>
+			<valueIn>106</valueIn><valueOut>Toner Darkness 7</valueOut>
+			<valueIn>107</valueIn><valueOut>Toner Darkness 8</valueOut>
+			<valueIn>108</valueIn><valueOut>Toner Darkness 9</valueOut>
+			<valueIn>109</valueIn><valueOut>Toner Darkness 10</valueOut>
+			<valueIn>120</valueIn><valueOut>Staple Empty 1</valueOut>
+			<valueIn>121</valueIn><valueOut>Staple Empty 2</valueOut>
+			<valueIn>122</valueIn><valueOut>Staple Empty 3</valueOut>
+			<valueIn>130</valueIn><valueOut>Click Count Print Mono</valueOut>
+			<valueIn>131</valueIn><valueOut>Click Count Print Color</valueOut>
+			<valueIn>132</valueIn><valueOut>Click Count Scan</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="paperGeneralCountValue" index=".1.3.6.1.4.1.641.6.4.2.1.1.4">
+            <type><mapValue mapid="genCountUnits-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.1.1.3</getRowOid></mapValue></type>
+            <sensorId>_PAPER_GEN_COUNT_VALUE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperGeneralCountType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.1.1.2</getRowOid></mapValue><space/>
+				<mapValue mapid="genCountUnits_labels-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.1.1.3</getRowOid></mapValue>
+			</label>
+            <sensorSet>Paper Statistics (General)</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="paperSidesPaperSize-vm">
+			<valueIn>1</valueIn><valueOut>Unknown</valueOut>
+			<valueIn>2</valueIn><valueOut>Other</valueOut>
+			<valueIn>3</valueIn><valueOut>Universal</valueOut>
+			<valueIn>4</valueIn><valueOut>Custom</valueOut>
+			<valueIn>8</valueIn><valueOut>Letter</valueOut>
+			<valueIn>9</valueIn><valueOut>Legal</valueOut>
+			<valueIn>10</valueIn><valueOut>Executive</valueOut>
+			<valueIn>11</valueIn><valueOut>Folio</valueOut>
+			<valueIn>12</valueIn><valueOut>Statement</valueOut>
+			<valueIn>13</valueIn><valueOut>Oficio</valueOut>
+			<valueIn>14</valueIn><valueOut>Tabloid</valueOut>
+			<valueIn>15</valueIn><valueOut>Business Card</valueOut>
+			<valueIn>16</valueIn><valueOut>ID Card</valueOut>
+			<valueIn>17</valueIn><valueOut>Card 3x5</valueOut>
+			<valueIn>18</valueIn><valueOut>Card 4x6</valueOut>
+			<valueIn>19</valueIn><valueOut>Book Original</valueOut>
+			<valueIn>20</valueIn><valueOut>Hagaki</valueOut>
+			<valueIn>21</valueIn><valueOut>Card 3-1/2x5</valueOut>
+			<valueIn>22</valueIn><valueOut>Card 4x8</valueOut>
+			<valueIn>23</valueIn><valueOut>Card 5x7</valueOut>
+			<valueIn>24</valueIn><valueOut>Card 10x15</valueOut>
+			<valueIn>25</valueIn><valueOut>Card 10x20</valueOut>
+			<valueIn>26</valueIn><valueOut>Card 13x18</valueOut>
+			<valueIn>27</valueIn><valueOut>Paper 12x18</valueOut>
+			<valueIn>28</valueIn><valueOut>SRA3</valueOut>
+			<valueIn>32</valueIn><valueOut>Envelope 7-3/4</valueOut>
+			<valueIn>33</valueIn><valueOut>Envelope 9</valueOut>
+			<valueIn>34</valueIn><valueOut>Envelope 10</valueOut>
+			<valueIn>35</valueIn><valueOut>Envelope DL</valueOut>
+			<valueIn>36</valueIn><valueOut>Envelope Other</valueOut>
+			<valueIn>64</valueIn><valueOut>ISOA0</valueOut>
+			<valueIn>65</valueIn><valueOut>ISOA1</valueOut>
+			<valueIn>66</valueIn><valueOut>ISOA2</valueOut>
+			<valueIn>67</valueIn><valueOut>ISOA3</valueOut>
+			<valueIn>68</valueIn><valueOut>ISOA4</valueOut>
+			<valueIn>69</valueIn><valueOut>ISOA5</valueOut>
+			<valueIn>70</valueIn><valueOut>ISOA6</valueOut>
+			<valueIn>72</valueIn><valueOut>ISOB0</valueOut>
+			<valueIn>73</valueIn><valueOut>ISOB1</valueOut>
+			<valueIn>74</valueIn><valueOut>ISOB2</valueOut>
+			<valueIn>75</valueIn><valueOut>ISOB3</valueOut>
+			<valueIn>76</valueIn><valueOut>ISOB4</valueOut>
+			<valueIn>77</valueIn><valueOut>ISOB5</valueOut>
+			<valueIn>78</valueIn><valueOut>ISOB6</valueOut>
+			<valueIn>80</valueIn><valueOut>ISOC0</valueOut>
+			<valueIn>81</valueIn><valueOut>ISOC1</valueOut>
+			<valueIn>82</valueIn><valueOut>ISOC2</valueOut>
+			<valueIn>83</valueIn><valueOut>ISOC3</valueOut>
+			<valueIn>84</valueIn><valueOut>ISOC4</valueOut>
+			<valueIn>85</valueIn><valueOut>ISOC5</valueOut>
+			<valueIn>86</valueIn><valueOut>ISOC6</valueOut>
+			<valueIn>96</valueIn><valueOut>ISO Envelope A0</valueOut>
+			<valueIn>97</valueIn><valueOut>ISO Envelope A1</valueOut>
+			<valueIn>98</valueIn><valueOut>ISO Envelope A2</valueOut>
+			<valueIn>99</valueIn><valueOut>ISO Envelope A3</valueOut>
+			<valueIn>100</valueIn><valueOut>ISO Envelope A4</valueOut>
+			<valueIn>101</valueIn><valueOut>ISO Envelope A5</valueOut>
+			<valueIn>102</valueIn><valueOut>ISO Envelope A6</valueOut>
+			<valueIn>104</valueIn><valueOut>ISO Envelope B0</valueOut>
+			<valueIn>105</valueIn><valueOut>ISO Envelope B1</valueOut>
+			<valueIn>106</valueIn><valueOut>ISO Envelope B2</valueOut>
+			<valueIn>107</valueIn><valueOut>ISO Envelope B3</valueOut>
+			<valueIn>108</valueIn><valueOut>ISO Envelope B4</valueOut>
+			<valueIn>109</valueIn><valueOut>ISO Envelope B5</valueOut>
+			<valueIn>110</valueIn><valueOut>ISO Envelope B6</valueOut>
+			<valueIn>112</valueIn><valueOut>ISO Envelope C0</valueOut>
+			<valueIn>113</valueIn><valueOut>ISO Envelope C1</valueOut>
+			<valueIn>114</valueIn><valueOut>ISO Envelope C2</valueOut>
+			<valueIn>115</valueIn><valueOut>ISO Envelope C3</valueOut>
+			<valueIn>116</valueIn><valueOut>ISO Envelope C4</valueOut>
+			<valueIn>117</valueIn><valueOut>ISO Envelope C5</valueOut>
+			<valueIn>118</valueIn><valueOut>ISO Envelope C6</valueOut>
+			<valueIn>136</valueIn><valueOut>JISB0</valueOut>
+			<valueIn>137</valueIn><valueOut>JISB1</valueOut>
+			<valueIn>138</valueIn><valueOut>JISB2</valueOut>
+			<valueIn>139</valueIn><valueOut>JISB3</valueOut>
+			<valueIn>140</valueIn><valueOut>JISB4</valueOut>
+			<valueIn>141</valueIn><valueOut>JISB5</valueOut>
+			<valueIn>142</valueIn><valueOut>JISB6</valueOut>
+			<valueIn>143</valueIn><valueOut>Paper 11x17</valueOut>
+			<valueIn>144</valueIn><valueOut>A3 Plus</valueOut>
+			<valueIn>145</valueIn><valueOut>Banner Letter</valueOut>
+			<valueIn>146</valueIn><valueOut>Banner A4</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="paperSidesPaperType-vm">
+			<valueIn>1</valueIn><valueOut>Unknown</valueOut>
+			<valueIn>2</valueIn><valueOut>Other</valueOut>
+			<valueIn>3</valueIn><valueOut>Plain</valueOut>
+			<valueIn>4</valueIn><valueOut>Cardstock</valueOut>
+			<valueIn>5</valueIn><valueOut>Transparency</valueOut>
+			<valueIn>6</valueIn><valueOut>Recycled</valueOut>
+			<valueIn>7</valueIn><valueOut>Labels</valueOut>
+			<valueIn>8</valueIn><valueOut>Vinyl Labels</valueOut>
+			<valueIn>9</valueIn><valueOut>Bond</valueOut>
+			<valueIn>10</valueIn><valueOut>Letterhead</valueOut>
+			<valueIn>11</valueIn><valueOut>Pre-printed</valueOut>
+			<valueIn>12</valueIn><valueOut>Colored</valueOut>
+			<valueIn>13</valueIn><valueOut>Light</valueOut>
+			<valueIn>14</valueIn><valueOut>Heavy</valueOut>
+			<valueIn>15</valueIn><valueOut>Rough Or Cotton</valueOut>
+			<valueIn>16</valueIn><valueOut>Envelope</valueOut>
+			<valueIn>17</valueIn><valueOut>Premium Plain</valueOut>
+			<valueIn>18</valueIn><valueOut>Color Lok Certified Plain</valueOut>
+			<valueIn>19</valueIn><valueOut>Lexmark Perfect Finsih Photo</valueOut>
+			<valueIn>20</valueIn><valueOut>Lexmark Photo</valueOut>
+			<valueIn>21</valueIn><valueOut>Glossy Photo</valueOut>
+			<valueIn>22</valueIn><valueOut>Matte Photo</valueOut>
+			<valueIn>23</valueIn><valueOut>Inkjet Matte Brochure</valueOut>
+			<valueIn>24</valueIn><valueOut>Inkjet Glossy Brochure</valueOut>
+			<valueIn>25</valueIn><valueOut>Iron On Transfer</valueOut>
+			<valueIn>32</valueIn><valueOut>Custom Type 1</valueOut>
+			<valueIn>33</valueIn><valueOut>Custom Type 2</valueOut>
+			<valueIn>34</valueIn><valueOut>Custom Type 3</valueOut>
+			<valueIn>35</valueIn><valueOut>Custom Type 4</valueOut>
+			<valueIn>36</valueIn><valueOut>Custom Type 5</valueOut>
+			<valueIn>37</valueIn><valueOut>Custom Type 6</valueOut>
+			<valueIn>38</valueIn><valueOut>Coated Paper</valueOut>
+			<valueIn>39</valueIn><valueOut>Glossy</valueOut>
+			<valueIn>40</valueIn><valueOut>Photo Paper</valueOut>
+			<valueIn>41</valueIn><valueOut>Greeting Card</valueOut>
+			<valueIn>42</valueIn><valueOut>Heavy Card</valueOut>
+			<valueIn>43</valueIn><valueOut>Rough Envelope</valueOut>
+			<valueIn>44</valueIn><valueOut>Heavy Cotton Paper</valueOut>
+			<valueIn>45</valueIn><valueOut>Very Heavy Paper</valueOut>
+			<valueIn>46</valueIn><valueOut>Heavy Gloss</valueOut>
+			<valueIn>47</valueIn><valueOut>RFID Labels</valueOut>
+			<valueIn>48</valueIn><valueOut>Business Card</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="paperSidesMonoPicked" index=".1.3.6.1.4.1.641.6.4.2.2.1.4">
+            <type>num</type>
+            <sensorId>_PAPER_SIDES_MONO_PICKED_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.3</getRowOid></mapValue><space/>
+				Sides Of Mono Pages Picked
+			</label>
+            <sensorSet>Paper Statistics (Sides)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperSidesColorPicked" index=".1.3.6.1.4.1.641.6.4.2.2.1.5">
+            <type>num</type>
+            <sensorId>_PAPER_SIDES_COLOR_PICKED_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.3</getRowOid></mapValue><space/>
+				Sides Of Color Pages Picked
+			</label>
+            <sensorSet>Paper Statistics (Sides)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperSidesMonoSafe" index=".1.3.6.1.4.1.641.6.4.2.2.1.6">
+            <type>num</type>
+            <sensorId>_PAPER_SIDES_MONO_SAFE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.6</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.3</getRowOid></mapValue><space/>
+				Sides Of Mono Pages Printed and Delivered to Output Bin
+			</label>
+            <sensorSet>Paper Statistics (Sides)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperSidesColorSafe" index=".1.3.6.1.4.1.641.6.4.2.2.1.7">
+            <type>num</type>
+            <sensorId>_PAPER_SIDES_COLOR_SAFE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.7</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.2.1.3</getRowOid></mapValue><space/>
+				Sides Of Color Pages Printed and Delivered to Output Bin
+			</label>
+            <sensorSet>Paper Statistics (Sides)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperSheetsPicked" index=".1.3.6.1.4.1.641.6.4.2.3.1.4">
+            <type>num</type>
+            <sensorId>_PAPER_SHEETS_PICKED_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.3</getRowOid></mapValue><space/>
+				Sheets Picked
+			</label>
+            <sensorSet>Paper Statistics (Sheets)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperSheetsSafe" index=".1.3.6.1.4.1.641.6.4.2.3.1.5">
+            <type>num</type>
+            <sensorId>_PAPER_SHEETS_SAFE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.3.1.3</getRowOid></mapValue><space/>
+				Sheets Printed and Delivered to Output Bin
+			</label>
+            <sensorSet>Paper Statistics (Sheets)</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="paperNupNumber-vm">
+			<valueIn>1</valueIn><valueOut>Off</valueOut>
+			<valueIn>2</valueIn><valueOut>2-Up</valueOut>
+			<valueIn>3</valueIn><valueOut>3-Up</valueOut>
+			<valueIn>4</valueIn><valueOut>4-Up</valueOut>
+			<valueIn>6</valueIn><valueOut>6-Up</valueOut>
+			<valueIn>9</valueIn><valueOut>9-Up</valueOut>
+			<valueIn>12</valueIn><valueOut>12-Up</valueOut>
+			<valueIn>16</valueIn><valueOut>16-Up</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="paperNupSides" index=".1.3.6.1.4.1.641.6.4.2.4.1.3">
+            <type>num</type>
+            <sensorId>_PAPER_NUP_SIDES_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.4.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperNupNumber-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.4.1.2</getRowOid></mapValue><space/>
+				Physical Sides Printed
+			</label>
+            <sensorSet>Paper Statistics (Nup)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperNupLogicalSides" index=".1.3.6.1.4.1.641.6.4.2.4.1.4">
+            <type>num</type>
+            <sensorId>_PAPER_NUP_LOGICAL_SIDES_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.4.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="paperNupNumber-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.2.4.1.2</getRowOid></mapValue><space/>
+				Logical Sides Printed
+			</label>
+            <sensorSet>Paper Statistics (Nup)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperJobSizeMinimum" index=".1.3.6.1.4.1.641.6.4.2.5.1.2">
+            <type>num</type>
+            <sensorId>_PAPER_JOB_SIZE_MINIMUM_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.5.1.2</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Row <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber> Minimum Printed Sides</label>
+            <sensorSet>Paper Statistics (Job Size)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperJobSizeMaximum" index=".1.3.6.1.4.1.641.6.4.2.5.1.3">
+            <type>num</type>
+            <sensorId>_PAPER_JOB_SIZE_MAXIMUM_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.5.1.3</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Row <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber> Maximum Printed Sides</label>
+            <sensorSet>Paper Statistics (Job Size)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperJobSizeSideCount" index=".1.3.6.1.4.1.641.6.4.2.5.1.4">
+            <type>num</type>
+            <sensorId>_PAPER_JOB_SIZE_SIDE_COUNT_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.5.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Row <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber> Total Printed Sides For Jobs Between Min and Max</label>
+            <sensorSet>Paper Statistics (Job Size)</sensorSet>
+        </numSensor>
+		<numSensor ruleid="paperJobSizeJobCount" index=".1.3.6.1.4.1.641.6.4.2.5.1.5">
+            <type>num</type>
+            <sensorId>_PAPER_JOB_SIZE_JOB_COUNT_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.2.5.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Row <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber> Total Printed Jobs For Sides Between Min and Max</label>
+            <sensorSet>Paper Statistics (Job Size)</sensorSet>
+        </numSensor>
+		
+		<valueMap ruleid="scanCountType-vm">
+			<valueIn>1</valueIn><valueOut>Copy ADF</valueOut>
+			<valueIn>2</valueIn><valueOut>Fax ADF</valueOut>
+			<valueIn>3</valueIn><valueOut>Scan To Email ADF</valueOut>
+			<valueIn>4</valueIn><valueOut>Scan To Net ADF</valueOut>
+			<valueIn>5</valueIn><valueOut>Scan To Local Host ADF</valueOut>
+			<valueIn>6</valueIn><valueOut>Scan To USB ADF</valueOut>
+			<valueIn>7</valueIn><valueOut>Scan To FTP ADF</valueOut>
+			<valueIn>257</valueIn><valueOut>Copy Flatbed</valueOut>
+			<valueIn>258</valueIn><valueOut>Fax Flatbed</valueOut>
+			<valueIn>259</valueIn><valueOut>Scan To Email Flatbed</valueOut>
+			<valueIn>260</valueIn><valueOut>Scan To Net Flatbed</valueOut>
+			<valueIn>261</valueIn><valueOut>Scan To Local Host Flatbed</valueOut>
+			<valueIn>262</valueIn><valueOut>Scan To USB Flatbed</valueOut>
+			<valueIn>263</valueIn><valueOut>Scan To FTP Flatbed</valueOut>
+			<valueIn>769</valueIn><valueOut>Copy Duplex</valueOut>
+			<valueIn>770</valueIn><valueOut>Fax Duplex</valueOut>
+			<valueIn>771</valueIn><valueOut>Scan To Email Duplex</valueOut>
+			<valueIn>772</valueIn><valueOut>Scan To Net Duplex</valueOut>
+			<valueIn>773</valueIn><valueOut>Scan To Localhost Duplex</valueOut>
+			<valueIn>774</valueIn><valueOut>Scan To USB Duplex</valueOut>
+			<valueIn>775</valueIn><valueOut>Scan To FTP Duplex</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<numSensor ruleid="scanCountSides" index=".1.3.6.1.4.1.641.6.4.3.1.1.4">
+            <type>num</type>
+            <sensorId>_SCAN_COUNT_SIDES_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.4</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="scanCountType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.3</getRowOid></mapValue><space/>
+				Sides of Paper Scanned
+			</label>
+            <sensorSet>Scan Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="scanCountSheets" index=".1.3.6.1.4.1.641.6.4.3.1.1.5">
+            <type>num</type>
+            <sensorId>_SCAN_COUNT_SHEETS_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.5</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<mapValue mapid="scanCountType-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.2</getRowOid></mapValue>/
+				<mapValue mapid="paperSidesPaperSize-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.3.1.1.3</getRowOid></mapValue><space/>
+				Sheets of Paper Scanned
+			</label>
+            <sensorSet>Scan Statistics</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="currentSupplyType" index=".1.3.6.1.4.1.641.6.4.4.1.1.3">
+            <type>state</type>
+            <sensorId>_CURRENT_SUPPLY_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="supplyInventoryType-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Type</label>
+            <enum>supplyInventoryType-em</enum>
+            <sensorSet>Supply Statistics</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="currentSupplyClass" index=".1.3.6.1.4.1.641.6.4.4.1.1.8">
+            <type>state</type>
+            <sensorId>_CURRENT_SUPPLY_CLASS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Class</label>
+            <enum>currentSupplyClass-em</enum>
+            <sensorSet>Supply Statistics</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="currentSupplyClass-em">
+			<label>Filled</label>
+			<label>Consumed</label>
+		</enumMap>
+		
+		<stateSensor ruleid="currentSupplyCartridgeType" index=".1.3.6.1.4.1.641.6.4.4.1.1.9">
+            <type>state</type>
+            <sensorId>_CURRENT_SUPPLY_CARTRIDGE_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Cartridge Type</label>
+            <enum>currentSupplyClass-em</enum>
+            <sensorSet>Supply Statistics</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="currentSupplyCartridgeType-em">
+			<label>Unknown</label>
+			<label>Other</label>
+			<label>Invalid</label>
+			<label>Ship With</label>
+			<label>Standard</label>
+			<label>High Yield Standard</label>
+			<label>Extra High Yield Standard</label>
+			<label>Other Genuine</label>
+			<label>Standard Genuine</label>
+			<label>Other Non Genuine</label>
+			<label>Standard Non Genuine</label>
+			<label>Return Program</label>
+			<label>High Yield Return Program</label>
+			<label>Extra High Yield Return Program</label>
+			<label>Standard Return Program Genuine</label>
+			<label>Other Return Program Genuine</label>
+			<label>Standard Non Return Program</label>
+			<label>Other Non Return Program</label>
+			<label>Refilled Standard</label>
+			<label>Refilled High Yield Standard</label>
+			<label>Refilled Extra High Yield Standard</label>
+			<label>Refilled Return Program</label>
+			<label>Refilled High Yield Return Program</label>
+			<label>Refilled Extra High Yield Return Program</label>
+		</enumMap>
+		
+		<numSensor ruleid="currentSupplyPageCountAtInstall" index=".1.3.6.1.4.1.641.6.4.4.1.1.11">
+            <type>num</type>
+            <sensorId>_CURRENT_SUPPLY_PAGE_COUNT_AT_INSTALL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.11</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Page Count At Install</label>
+            <sensorSet>Supply Statistics</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="currentSupplyCurrentStatus" index=".1.3.6.1.4.1.641.6.4.4.1.1.12">
+            <type>state</type>
+            <sensorId>_CURRENT_SUPPLY_CURRENT_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="6state-vm">
+					<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Current Status</label>
+            <enum>currentSupplyCurrentStatus-em</enum>
+            <sensorSet>Supply Statistics</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="currentSupplyCurrentStatus-em">
+			<label>Other</label>
+			<label>Unknown</label>
+			<label>OK</label>
+			<label>Low</label>
+			<label>Empty</label>
+			<label>Invalid</label>
+		</enumMap>
+		
+		<numSensor ruleid="currentSupplyCapacity" index=".1.3.6.1.4.1.641.6.4.4.1.1.14">
+            <type><mapValue mapid="genCountUnits-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue></type>
+            <sensorId>_CURRENT_SUPPLY_CAPACITY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Capacity<space/>
+				<mapValue mapid="genCountUnits_labels-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue>
+			</label>
+            <sensorSet>Supply Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentSupplyCurrentLevel" index=".1.3.6.1.4.1.641.6.4.4.1.1.16">
+            <type><mapValue mapid="genCountUnits-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue></type>
+            <sensorId>_CURRENT_SUPPLY_CURRENT_LEVEL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Remaining<space/>
+				<mapValue mapid="genCountUnits_labels-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue>
+			</label>
+            <sensorSet>Supply Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentSupplyUsage" index=".1.3.6.1.4.1.641.6.4.4.1.1.17">
+            <type><mapValue mapid="genCountUnits-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue></type>
+            <sensorId>_CURRENT_SUPPLY_USAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Usage<space/>
+				<mapValue mapid="genCountUnits_labels-vm"><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.13</getRowOid></mapValue>
+			</label>
+            <sensorSet>Supply Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="currentSupplyDaysRemaining" index=".1.3.6.1.4.1.641.6.4.4.1.1.20">
+			<rowTest>
+				<neq>
+					<op><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.20</getRowOid></op>
+					<op>-1</op>
+				</neq>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_CURRENT_SUPPLY_DAYS_REMAINING_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label><getRowOid>.1.3.6.1.4.1.641.6.4.4.1.1.5</getRowOid> Supply Days Remaining</label>
+            <sensorSet>Supply Statistics</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="alerts">
+		<oidMustExist ruleid="deviceAlertTable_exists" oid=".1.3.6.1.4.1.641.6.5.1" istree="yes"/>
+		
+		<valueMap ruleid="deviceAlertCode-vm">
+			<valueIn>1</valueIn><valueOut>Unknown</valueOut>
+			<valueIn>2</valueIn><valueOut>Other</valueOut>
+			<valueIn>3</valueIn><valueOut>Cover Open</valueOut>
+			<valueIn>4</valueIn><valueOut>Cover Closed</valueOut>
+			<valueIn>5</valueIn><valueOut>Interlock Open</valueOut>
+			<valueIn>6</valueIn><valueOut>Interlock Closed</valueOut>
+			<valueIn>7</valueIn><valueOut>Door Open</valueOut>
+			<valueIn>8</valueIn><valueOut>Door Closed</valueOut>
+			<valueIn>9</valueIn><valueOut>Calibrating</valueOut>
+			<valueIn>10</valueIn><valueOut>Alignment Failed</valueOut>
+			<valueIn>11</valueIn><valueOut>Warranty Override Required</valueOut>
+			<valueIn>12</valueIn><valueOut>Printhead Carrier Path Obstructed</valueOut>
+			<valueIn>13</valueIn><valueOut>Held Jobs May Not Be Restored</valueOut>
+			<valueIn>14</valueIn><valueOut>Busy</valueOut>
+			<valueIn>15</valueIn><valueOut>Waiting</valueOut>
+			<valueIn>100</valueIn><valueOut>Sub Unit Error Other</valueOut>
+			<valueIn>101</valueIn><valueOut>Sub Unit Life Almost Over</valueOut>
+			<valueIn>102</valueIn><valueOut>Sub Unit Life Over</valueOut>
+			<valueIn>103</valueIn><valueOut>Sub Unit Jammed</valueOut>
+			<valueIn>104</valueIn><valueOut>Sub Unit Under Temperature</valueOut>
+			<valueIn>105</valueIn><valueOut>Sub Unit Over Temperature</valueOut>
+			<valueIn>106</valueIn><valueOut>Sub Unit Insufficient Memory</valueOut>
+			<valueIn>107</valueIn><valueOut>Sub Unit Memory Full</valueOut>
+			<valueIn>108</valueIn><valueOut>Sub Unit NV Failure</valueOut>
+			<valueIn>109</valueIn><valueOut>Sub Unit Disabled</valueOut>
+			<valueIn>110</valueIn><valueOut>Sub Unit Communication Error</valueOut>
+			<valueIn>200</valueIn><valueOut>Supply Error Other</valueOut>
+			<valueIn>201</valueIn><valueOut>Supply OK</valueOut>
+			<valueIn>202</valueIn><valueOut>Supply Early Warning</valueOut>
+			<valueIn>203</valueIn><valueOut>Supply Near Full</valueOut>
+			<valueIn>205</valueIn><valueOut>Supply Full</valueOut>
+			<valueIn>206</valueIn><valueOut>Supply Near Low</valueOut>
+			<valueIn>207</valueIn><valueOut>Supply Low</valueOut>
+			<valueIn>208</valueIn><valueOut>Supply Near Empty</valueOut>
+			<valueIn>209</valueIn><valueOut>Supply Empty</valueOut>
+			<valueIn>210</valueIn><valueOut>Supply Life Almost Over</valueOut>
+			<valueIn>211</valueIn><valueOut>Supply Life Over</valueOut>
+			<valueIn>212</valueIn><valueOut>Supply Near Replace</valueOut>
+			<valueIn>213</valueIn><valueOut>Supply Replace</valueOut>
+			<valueIn>214</valueIn><valueOut>Supply Missing</valueOut>
+			<valueIn>215</valueIn><valueOut>Supply Invalid</valueOut>
+			<valueIn>216</valueIn><valueOut>Supply Defective</valueOut>
+			<valueIn>217</valueIn><valueOut>Supply Improper Install</valueOut>
+			<valueIn>218</valueIn><valueOut>Supply Unsupported</valueOut>
+			<valueIn>219</valueIn><valueOut>Supply Uncalibrated</valueOut>
+			<valueIn>300</valueIn><valueOut>Input Media Error Other</valueOut>
+			<valueIn>301</valueIn><valueOut>Input Media Tray Missing</valueOut>
+			<valueIn>302</valueIn><valueOut>Input Media Supply Low</valueOut>
+			<valueIn>303</valueIn><valueOut>Input Media Supply Empty</valueOut>
+			<valueIn>304</valueIn><valueOut>Input Media Change Request</valueOut>
+			<valueIn>305</valueIn><valueOut>Input Media Load Request</valueOut>
+			<valueIn>400</valueIn><valueOut>Output Media Error Other</valueOut>
+			<valueIn>401</valueIn><valueOut>Output Media Tray Missing</valueOut>
+			<valueIn>402</valueIn><valueOut>Output Media Near Full</valueOut>
+			<valueIn>403</valueIn><valueOut>Output Media Full</valueOut>
+			<valueIn>404</valueIn><valueOut>Output Media Empty Request</valueOut>
+			<valueIn>500</valueIn><valueOut>Media Path Error Other</valueOut>
+			<valueIn>501</valueIn><valueOut>Media Path Paper Jam</valueOut>
+			<valueIn>600</valueIn><valueOut>Scanner Error Other</valueOut>
+			<valueIn>601</valueIn><valueOut>Scanner Lamp Warning</valueOut>
+			<valueIn>602</valueIn><valueOut>Scanner Lamp Life Warning</valueOut>
+			<valueIn>603</valueIn><valueOut>Scanner Lamp Error</valueOut>
+			<valueIn>604</valueIn><valueOut>Scanner ADF Jam</valueOut>
+			<valueIn>605</valueIn><valueOut>Scanner Stalled</valueOut>
+			<valueIn>606</valueIn><valueOut>Scanner Locked</valueOut>
+			<valueIn>607</valueIn><valueOut>Scanner Disabled</valueOut>
+			<valueIn>700</valueIn><valueOut>Fax Error Other</valueOut>
+			<valueIn>701</valueIn><valueOut>Fax Storage Near Full</valueOut>
+			<valueIn>702</valueIn><valueOut>Fax Storage Full</valueOut>
+			<valueIn>703</valueIn><valueOut>Fax Storage Send Near Full</valueOut>
+			<valueIn>704</valueIn><valueOut>Fax Storage Send Full</valueOut>
+			<valueIn>705</valueIn><valueOut>Fax Storage Receive Near Full</valueOut>
+			<valueIn>706</valueIn><valueOut>Fax Storage Receive Full</valueOut>
+			<valueIn>707</valueIn><valueOut>Fax Phone Line Disconnected</valueOut>
+			<valueIn>708</valueIn><valueOut>Fax Disabled</valueOut>
+			<valueIn>709</valueIn><valueOut>Fax Configuration Error</valueOut>
+			<valueIn>800</valueIn><valueOut>Interpreter Error Other</valueOut>
+			<valueIn>801</valueIn><valueOut>Interpreter Insufficient Memory</valueOut>
+			<valueIn>802</valueIn><valueOut>Interpreter Out Of Memory</valueOut>
+			<valueIn>803</valueIn><valueOut>Interpreter Complex Page</valueOut>
+			<valueIn>804</valueIn><valueOut>Interpreter Job Hardware Mismatch</valueOut>
+			<valueIn>805</valueIn><valueOut>Interpreter Print Data Exceeds Media Size</valueOut>
+			<valueIn>900</valueIn><valueOut>Email Error Other</valueOut>
+			<valueIn>901</valueIn><valueOut>Email Configuration Error</valueOut>
+			<valueIn>1000</valueIn><valueOut>Storage Error Other</valueOut>
+			<valueIn>1001</valueIn><valueOut>Storage Unformatted</valueOut>
+			<valueIn>1002</valueIn><valueOut>Storage Full</valueOut>
+			<valueIn>20000</valueIn><valueOut>Never Error</valueOut>
+			<valueIn>*</valueIn><valueOut>Unknown</valueOut>
+		</valueMap>
+		
+		<alarmFlags2 ruleid="deviceAlertTable" index=".1.3.6.1.4.1.641.6.5.1.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.4</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Device Alert Unknown Alarm</activeText>
+					<inactiveText>Device Alert Unknown Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> unknown alarm.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> unknown alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Device Alert Other Alarm</activeText>
+					<inactiveText>Device Alert Other Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> other alarm.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> other alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Device Alert Informational</activeText>
+					<inactiveText>Device Alert Informational Cleared</inactiveText>
+				</name>
+				<severity>informational</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid>.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Device Alert Warning</activeText>
+					<inactiveText>Device Alert Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> warning exists.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> warning condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>Device Alert Critical Alarm</activeText>
+					<inactiveText>Device Alert Critical Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> critical alarm exists.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> critical alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>Device Alert Service Required</activeText>
+					<inactiveText>Device Alert Service Required Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Device</category>
+				<description>
+					<activeText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> service required.
+					</activeText>
+					<inactiveText>
+						<mapValue mapid="deviceAlertCode-vm"><getRowOid>.1.3.6.1.4.1.641.6.5.1.1.5</getRowOid></mapValue>:<space/>
+						<getRowOid>.1.3.6.1.4.1.641.6.5.1.1.6</getRowOid> service required condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+	</device>
+</APC_DDF>

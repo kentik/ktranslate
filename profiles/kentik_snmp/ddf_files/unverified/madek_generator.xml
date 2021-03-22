@@ -1,0 +1,201 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="madek_generator"
+	ddfname="Madek Generator"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="madek_generator">
+		<oidMustExist ruleid="madek" oid=".1.3.6.1.4.1.29730" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Madek</setProductData>
+		<setProductData ruleid="modeldata" field="model">Generator</setProductData>
+		<setProductData ruleid="typedata" field="type">Generator</setProductData>
+
+		<stateSensor ruleid="enabled" index=".1.3.6.1.4.1.29730.1.2.1">
+            <type>state</type>
+            <sensorId>ENABLED_<rowNumber/></sensorId>
+            <value>
+				<valueMap mapid="enabled-vm">
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.1</getRowOid>
+				</valueMap>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Device Enabled
+			</label>
+            <enum>enabled-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="qual" index=".1.3.6.1.4.1.29730.1.2.2">
+            <type>state</type>
+            <sensorId>QUAL_<rowNumber/></sensorId>
+            <value>
+				<valueMap mapid="enabled-vm">
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.2</getRowOid>
+				</valueMap>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Device Status Query
+			</label>
+            <enum>enabled-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="enabled-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="enabled-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<numSensor ruleid="iA" index=".1.3.6.1.4.1.29730.1.2.8">
+            <type>amperage</type>
+            <sensorId>IA_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.8</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Current Phase A
+			</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="iB" index=".1.3.6.1.4.1.29730.1.2.9">
+            <type>amperage</type>
+            <sensorId>IB_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.9</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Current Phase B
+			</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="iC" index=".1.3.6.1.4.1.29730.1.2.10">
+            <type>amperage</type>
+            <sensorId>IC_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.10</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Current Phase C
+			</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="uA" index=".1.3.6.1.4.1.29730.1.2.11">
+            <type>voltage</type>
+            <sensorId>UA_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.11</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Voltage Phase A
+			</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="uB" index=".1.3.6.1.4.1.29730.1.2.12">
+            <type>voltage</type>
+            <sensorId>UB_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.12</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Voltage Phase B
+			</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="uC" index=".1.3.6.1.4.1.29730.1.2.13">
+            <type>voltage</type>
+            <sensorId>UC_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.13</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Voltage Phase C
+			</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="energy" index=".1.3.6.1.4.1.29730.1.2.14">
+            <type>num/kwatthr</type>
+            <sensorId>ENERGY_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.14</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Active Energy
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+		<numSensor ruleid="servDays" index=".1.3.6.1.4.1.29730.1.2.21">
+            <type>timeindays</type>
+            <sensorId>SERV_DAYS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.21</getRowOid>
+            </value>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Service Interval
+			</label>
+            <sensorSet>Operation Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="startAttempts" index=".1.3.6.1.4.1.29730.1.2.22">
+            <type>num</type>
+            <sensorId>START_ATTEMPTS_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Start Attempts
+			</label>
+            <sensorSet>Operation Statistics</sensorSet>
+        </numSensor>
+		<numSensor ruleid="startSuccesses" index=".1.3.6.1.4.1.29730.1.2.34">
+            <type>num</type>
+            <sensorId>START_SUCCESSES_<rowNumber/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.29730.1.2.34</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Generator #
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber><space/>
+				Successful Starts
+			</label>
+            <sensorSet>Operation Statistics</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

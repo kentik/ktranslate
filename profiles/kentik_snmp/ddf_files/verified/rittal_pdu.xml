@@ -1,0 +1,675 @@
+<?xml version="1.0"?>
+<APC_DDF 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-Instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="rittal_pdu" 
+	ddfname="Rittal PDU" 
+	ddfversion="4" 
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\rittal\RittalPDU.MIB
+		RittalPDU-MIB | 18 May 2020
+	-->
+	<device deviceid="rittal_pdu_discovery">
+		<oidMustExist ruleid="rittal_pdu_exist" oid=".1.3.6.1.4.1.2606.100.1" istree="yes"/>
+		
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Rittal</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.2606.100.1.1.1.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+		
+		<setProductData ruleid="serialnum" field="serial_num"><getOid>.1.3.6.1.4.1.2606.100.1.1.2.0</getOid></setProductData>
+		<setProductData ruleid="location" field="LOCATION"><getOid>.1.3.6.1.4.1.2606.100.1.1.3.0</getOid></setProductData>
+		
+	</device>
+	
+	<device deviceid="rittal_1phase_pdu">
+		<oidMustNotExist ruleid="is_1phase_pdu" oid=".1.3.6.1.4.1.2606.100.1.2.2.1.3.1.3" istree="no"/>
+
+		<setProductData ruleid="inputphasecount" field="inputphasecount">1</setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount">1</setProductData>
+	</device>
+	<device deviceid="rittal_3phase_pdu">
+		<oidMustExist ruleid="is_3phase_pdu" oid=".1.3.6.1.4.1.2606.100.1.2.2.1.3.1.3" istree="no"/>
+
+		<setProductData ruleid="inputphasecount" field="inputphasecount">3</setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount">3</setProductData>
+	</device>
+		
+	<device deviceid="pduSystemGroup">
+		<oidMustExist ruleid="pduSystemGroup_exists" oid=".1.3.6.1.4.1.2606.100.1.1" istree="yes"/>
+
+		<numSensor ruleid="pduSystemTotalPower">
+			<type>powerW</type>
+			<sensorId>PDU_TOTAL_POWER</sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getOid>.1.3.6.1.4.1.2606.100.1.1.6.0</getOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<getOid>.1.3.6.1.4.1.2606.100.1.1.6.0</getOid>
+			</value>
+			<label>Total Power</label>
+			<sensorSet>System</sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="pduTowerTable">
+		<oidMustExist ruleid="pduTowerTable_exists" oid=".1.3.6.1.4.1.2606.100.1.2.1" istree="yes"/>
+
+		<stateSensor ruleid="pduTowerStatus" index=".1.3.6.1.4.1.2606.100.1.2.1.1.4">
+			<type>state</type>
+			<sensorId>PDU_TOWER_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="pduTowerStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.4</getRowOid>
+				</mapValue>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid><space/>Status</label>
+			<enum>pduTowerStatus-em</enum>
+			<sensorSet>PDU Tower</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="pduTowerStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>4</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pduTowerStatus-em">
+			<label>Normal</label>
+			<label>No Communication</label>
+			<label>Fan Fail</label>
+			<label>Over Temperature</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<alarmFlags2 ruleid="pduTowerStatus_alarm" index=".1.3.6.1.4.1.2606.100.1.2.1.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.4</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>PDU Tower No Communication Alarm</activeText>
+					<inactiveText>PDU Tower No Communication Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> no communication alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> no communication alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>PDU Tower Fan Fail Alarm</activeText>
+					<inactiveText>PDU Tower Fan Fail Alarm Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>Device</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> fan fail alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> fan fail alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>PDU Tower Over Temperature Alarm</activeText>
+					<inactiveText>PDU Tower Over Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> over temperature alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.1.1.3</getRowOid> over temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+	</device>
+	
+	<device deviceid="pduInfeedTable">
+		<oidMustExist ruleid="pduInfeedTable_exists" oid=".1.3.6.1.4.1.2606.100.1.2.2" istree="yes"/>
+		
+		<stateSensor ruleid="pduInfeedStatus" index=".1.3.6.1.4.1.2606.100.1.2.2.1.5">
+			<type>state</type>
+			<sensorId>PDU_INFEED_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="pduInfeedStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>pduInfeedStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid><space/>Status</label>
+			<sensorSet>PDU Infeed</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="pduInfeedStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>7</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pduInfeedStatus-em">
+			<label>Off</label>
+			<label>On</label>
+			<label>Off Wait</label>
+			<label>On Wait</label>
+			<label>Off Error</label>
+			<label>On Error</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<alarmFlags2 ruleid="pduInfeedStatus_alarm" index=".1.3.6.1.4.1.2606.100.1.2.2.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.5</getRowOid></value>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>PDU Infeed Off Error</activeText>
+					<inactiveText>PDU Infeed Off Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Input</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Off - Error' condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Off - Error' condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>PDU Infeed On Error</activeText>
+					<inactiveText>PDU Infeed On Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Input</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'On - Error' condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'On - Error' condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>PDU Infeed No Communication Alarm</activeText>
+					<inactiveText>PDU Infeed No Communication Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> no communication alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> no communication alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<stateSensor ruleid="pduInfeedLoadStatus" index=".1.3.6.1.4.1.2606.100.1.2.2.1.6">
+			<type>state</type>
+			<sensorId>PDU_INFEED_LOAD_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="pduInfeedLoadStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<enum>pduInfeedLoadStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid><space/>Load Status</label>
+			<sensorSet>PDU Infeed</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="pduInfeedLoadStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>8</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pduInfeedLoadStatus-em">
+			<label>Normal</label>
+			<label>Not On</label>
+			<label>Reading</label>
+			<label>Low Load</label>
+			<label>High Load</label>
+			<label>Over Load</label>
+			<label>Read Error</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<alarmFlags2 ruleid="pduInfeedLoadStatus_alarm" index=".1.3.6.1.4.1.2606.100.1.2.2.1.6">
+			<value><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.6</getRowOid></value>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>PDU Infeed Load Low Alarm</activeText>
+					<inactiveText>PDU Infeed Load Low Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load low alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load low alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>PDU Infeed Load High Alarm</activeText>
+					<inactiveText>PDU Infeed Load High Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load high alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load high alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>PDU Infeed Overload Alarm</activeText>
+					<inactiveText>PDU Infeed Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> overload alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> overload alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>PDU Infeed Read Error</activeText>
+					<inactiveText>PDU Infeed Read Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Input</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Read Error' condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Read Error' condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>PDU Infeed Load No Communication Alarm</activeText>
+					<inactiveText>PDU Infeed Load No Communication Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load no communication alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> load no communication alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="pduInfeedLoadValue" index=".1.3.6.1.4.1.2606.100.1.2.2.1.7">
+			<type>amperage</type>
+			<sensorId>PDU_INFEED_LOAD_VALUE_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.7</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.7</getRowOid></op>
+					<op>0.01</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid><space/>Load Value</label>
+			<sensorSet>PDU Infeed</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pduInfeedVoltage" index=".1.3.6.1.4.1.2606.100.1.2.2.1.11">
+			<type>voltage</type>
+			<sensorId>PDU_INFEED_VOLTAGE_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.11</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.11</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid><space/>Voltage</label>
+			<sensorSet>PDU Infeed</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pduInfeedPower" index=".1.3.6.1.4.1.2606.100.1.2.2.1.12">
+			<type>powerW</type>
+			<sensorId>PDU_INFEED_POWER_<rowIndex/></sensorId>
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.12</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.12</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid><space/>Power</label>
+			<sensorSet>PDU Infeed</sensorSet>
+		</numSensor>
+		
+	</device>
+	
+	<device deviceid="pduTempHumidSensorTable">
+		<oidMustExist ruleid="pduTempHumidSensorTable_exists" oid=".1.3.6.1.4.1.2606.100.1.2.5" istree="yes"/>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<stateSensor ruleid="pduTempHumidSensorTempStatus" index=".1.3.6.1.4.1.2606.100.1.2.5.1.5">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>PDU_TEMP_HUMID_SENSOR_TEMP_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="pduTempHumidSensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.5</getRowOid>
+				</mapValue>
+			</value>
+			<enum>pduTempHumidSensorStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> Temperature Status</label>
+			<sensorSet>PDU Temperature</sensorSet>
+		</stateSensor>
+		
+		<alarmFlags2 ruleid="pduTempHumidSensorTempStatus_alarm" index=".1.3.6.1.4.1.2606.100.1.2.5.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.5</getRowOid></value>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>PDU Temperature Sensor - Low Temperature Alarm</activeText>
+					<inactiveText>PDU Temperature Sensor - Low Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> low temperature alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> low temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>PDU Temperature Sensor - High Temperature Alarm</activeText>
+					<inactiveText>PDU Temperature Sensor - High Temperature Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Temperature</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> high temperature alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> high temperature alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>PDU Temperature Sensor Read Error</activeText>
+					<inactiveText>PDU Temperature Sensor Read Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> 'Read Error' condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Read Error' condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>PDU Temperature Sensor Lost Alarm</activeText>
+					<inactiveText>PDU Temperature Sensor Lost Alarm Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> lost alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> lost alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>PDU Temperature Sensor No Communication Alarm</activeText>
+					<inactiveText>PDU Temperature Sensor No Communication Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> no communication alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> no communication alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="pduTempHumidSensorTempValue" index=".1.3.6.1.4.1.2606.100.1.2.5.1.6">
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.6</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<type>temp</type>
+			<sensorId>PDU_TEMP_HUMID_SENSOR_TEMP_<rowIndex/></sensorId>
+			<value>
+				<if>
+					<!-- if pduTempHumidSensorScaleTemp has a fahrenheit value -->
+					<op>
+						<eq>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.13</getRowOid></op>
+							<op>1</op>
+						</eq>
+					</op>
+					<!-- convert from fahrenheit to celsius -->
+					<op>
+						<div>
+							<op>
+								<sub>
+									<op>
+										<mult>
+											<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.6</getRowOid></op>
+											<op>0.1</op>
+										</mult>
+									</op>
+									<op>32</op>
+								</sub>
+							</op>
+							<op>1.8</op>
+						</div>
+					</op>
+					<!-- value is in celsius, just return it -->
+					<op>
+						<mult>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.6</getRowOid></op>
+							<op>0.1</op>
+						</mult>
+					</op>
+				</if>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> Temperature</label>
+			<sensorSet>PDU Temperature</sensorSet>
+		</numSensor>
+		
+		<stateSensor ruleid="pduTempHumidSensorHumidStatus" index=".1.3.6.1.4.1.2606.100.1.2.5.1.9">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>PDU_TEMP_HUMID_SENSOR_HUMID_STATUS_<rowIndex/></sensorId>
+			<value> 
+				<mapValue mapid="pduTempHumidSensorStatus-vm">
+					<getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.9</getRowOid>
+				</mapValue>
+			</value>
+			<enum>pduTempHumidSensorStatus-em</enum>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> Humidity Status</label>
+			<sensorSet>PDU Humidity</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="pduTempHumidSensorStatus-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>8</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="pduTempHumidSensorStatus-em">
+			<label>Normal</label>
+			<label>Not Found</label>
+			<label>Reading</label>
+			<label>Low Value</label>
+			<label>High Value</label>
+			<label>Read Error</label>
+			<label>Lost</label>
+			<label>No Communication</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<alarmFlags2 ruleid="pduTempHumidSensorHumidStatus_alarm" index=".1.3.6.1.4.1.2606.100.1.2.5.1.9">
+			<value><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.9</getRowOid></value>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>PDU Humidity Sensor - Low Humidity Alarm</activeText>
+					<inactiveText>PDU Humidity Sensor - Low Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Humidity</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> low humidity alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> low humidity alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>PDU Humidity Sensor - High Humidity Alarm</activeText>
+					<inactiveText>PDU Humidity Sensor - High Humidity Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Humidity</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> high humidity alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> high humidity alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText>PDU Humidity Sensor Read Error</activeText>
+					<inactiveText>PDU Humidity Sensor Read Error Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> 'Read Error' condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> 'Read Error' condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="6">
+				<name>
+					<activeText>PDU Humidity Sensor Lost Alarm</activeText>
+					<inactiveText>PDU Humidity Sensor Lost Alarm Cleared</inactiveText>
+				</name>
+				<severity>error</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> lost alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> lost alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="7">
+				<name>
+					<activeText>PDU Humidity Sensor No Communication Alarm</activeText>
+					<inactiveText>PDU Humidity Sensor No Communication Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> no communication alarm condition exists.</activeText>
+					<inactiveText>A <getRowOid>.1.3.6.1.4.1.2606.100.1.2.2.1.3</getRowOid> no communication alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="pduTempHumidSensorHumidValue" index=".1.3.6.1.4.1.2606.100.1.2.5.1.10">
+			<rowTest>
+				<!-- sensor is available if value is not negative -->
+				<if>
+					<op>
+						<ge>
+							<op><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.10</getRowOid></op>
+							<op>0</op>
+						</ge>
+					</op>
+					<op>[true]</op>
+					<op>[false]</op>
+				</if>
+			</rowTest>
+			<type>humidity</type>
+			<sensorId>PDU_TEMP_HUMID_SENSOR_HUMID_<rowIndex/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.10</getRowOid>
+			</value>
+			<label><getRowOid>.1.3.6.1.4.1.2606.100.1.2.5.1.3</getRowOid> Humidity</label>
+			<sensorSet>PDU Humidity</sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <!-- Enerson UL33 DDF -->
+    <APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+    ddfid ="emerson_liebert_ac_cm" ddfname="Emerson_Liebert_AC_CM" ddfversion="2" canremove="yes">
+
+  <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="emerson_liebert_ac_cm_header">
+	<oidMustExist ruleid="emerson_liebert_exists" oid=".1.3.6.1.4.1.13400" istree="yes" />
+
+  <!-- Disble type and model from oids.properties. -->
+  <suppressRule ruleid="stompcoremodel" suppressid="core/mib2data/modeldata"/>
+  <suppressRule ruleid="stompcoretype" suppressid="core/mib2data/typedata"/>
+
+    <!-- Override the type -->
+    <setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.13400.2.1.2.1.1.1.0</getOid>
+    </setProductData>
+
+    <!-- Set Firmware Version -->
+    <setProductData ruleid="bootversion" field="bootversion">
+      <getOid>.1.3.6.1.4.1.13400.2.1.2.1.2.1.0</getOid>
+    </setProductData>
+
+  </device>
+ 
+  <device deviceid="ul33_cm_condition_sensors">
+	<oidMustExist istree="yes" ruleid="ul33_cm_condition_exist" oid=".1.3.6.1.4.1.13400.2.9"/>
+
+    <stateSensor ruleid="AirConditionerState-Sensor">
+      <type>state</type>
+      <sensorId>AIR_CONDITIONER_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Air Conditioner State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="RemoteShutdownEnabled-Sensor">
+      <type>state</type>
+      <sensorId>REMOTE_SHUTDOWN_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="enable_disable_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Remote Shutdown Enabled</label>
+      <enum>enable_disable_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="Compressor1State-Sensor">
+      <type>state</type>
+      <sensorId>COMPRESSOR_1_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 1 State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="Compressor2State-Sensor">
+      <type>state</type>
+      <sensorId>COMPRESSOR_2_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>Compressor 2 State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="Heater1State-Sensor">
+      <type>state</type>
+      <sensorId>HEATER_1_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 1 State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="Heater2State-Sensor">
+      <type>state</type>
+      <sensorId>HEATER_2_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.6.0</getOid>
+        </mapValue>
+      </value>
+      <label>Heater 2 State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="HotGasBypass-Sensor">
+      <type>state</type>
+      <sensorId>HOT_GAS_BYPASS</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>Hot Gas Bypass</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="FlushValveState-Sensor">
+      <type>state</type>
+      <sensorId>FLUSH_VALVE_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.8.0</getOid>
+        </mapValue>
+      </value>
+      <label>Flush Valve State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="HumidifierState-Sensor">
+      <type>state</type>
+      <sensorId>HUMIDIFIER_STATE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidifier State</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="DehumidifyFanMode-Sensor">
+      <type>state</type>
+      <sensorId>DEHUMIDIFY_FAN_MODE</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>Dehumidify Fan Mode</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="MainFan-Sensor">
+      <type>state</type>
+      <sensorId>MAIN_FAN</sensorId>
+      <value>
+        <mapValue mapid="on_off_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>Main Fan</label>
+      <enum>on_off_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="SecondUnitEnabled-Sensor">
+      <type>state</type>
+      <sensorId>SECOND_UNIT_ENABLED</sensorId>
+      <value>
+        <mapValue mapid="enable_disable_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.12.0</getOid>
+        </mapValue>
+      </value>
+      <label>Second Unit Enabled</label>
+      <enum>enable_disable_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="FlushTime-Sensor">
+      <type>state</type>
+      <sensorId>FLUSH_TIME</sensorId>
+      <value>
+        <mapValue mapid="flush_time_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>Flush Time</label>
+      <enum>flush_time_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="HighTemperatureStatus-Sensor">
+      <type>state</type>
+      <sensorId>HIGH_TEMPERATURE_STATUS</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>High Temperature Status</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="LowTemperatureStatus-Sensor">
+      <type>state</type>
+      <sensorId>LOW_TEMPERATURE_STATUS</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>Low Temperature Status</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="HighHumidify-Sensor">
+      <type>state</type>
+      <sensorId>HIGH_HUMIDIFY</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>High Humidify</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="LowHumidify-Sensor">
+      <type>state</type>
+      <sensorId>LOW_HUMIDIFY</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Low Humidify</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="SensorBoardFailure-Sensor">
+      <type>state</type>
+      <sensorId>SENSOR_BOARD_FAILURE</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.18.0</getOid>
+        </mapValue>
+      </value>
+      <label>Sensor Board Failure</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+    <stateSensor ruleid="AirLoss-Sensor">
+      <type>state</type>
+      <sensorId>AIR_LOSS</sensorId>
+      <value>
+        <mapValue mapid="yes_no_status-vm">
+          <getOid>.1.3.6.1.4.1.13400.2.9.1.3.2.19.0</getOid>
+        </mapValue>
+      </value>
+      <label>Air Loss</label>
+      <enum>yes_no_status-em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+
+	<valueMap ruleid="on_off_status-vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+		<valueIn>3</valueIn><valueOut>2</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+
+	<valueMap ruleid="enable_disable_status-vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+		<valueIn>3</valueIn><valueOut>2</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+
+	<valueMap ruleid="flush_time_status-vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+		<valueIn>3</valueIn><valueOut>2</valueOut>
+		<valueIn>4</valueIn><valueOut>3</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+
+	<valueMap ruleid="yes_no_status-vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+		<valueIn>3</valueIn><valueOut>2</valueOut>
+		<valueIn>*</valueIn><valueOut>0</valueOut>
+	</valueMap>
+
+	<enumMap ruleid="on_off_status-em">
+		<label>Unknown</label>
+		<label>On</label>
+		<label>Off</label>
+	</enumMap>
+
+	<enumMap ruleid="enable_disable_status-em">
+		<label>Unknown</label>
+		<label>Enabled</label>
+		<label>Disabled</label>
+	</enumMap>
+
+	<enumMap ruleid="flush_time_status-em">
+		<label>Unknown</label>
+		<label>Five</label>
+		<label>Ten</label>
+		<label>Twenty</label>
+	</enumMap>
+
+	<enumMap ruleid="yes_no_status-em">
+		<label>Unknown</label>
+		<label>No</label>
+		<label>Yes</label>
+	</enumMap>
+  </device>
+  
+</APC_DDF>

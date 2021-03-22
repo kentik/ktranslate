@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="enlogic_en1111" ddfname="enlogic EN1111" ddfversion="5" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="enlogic_en1111">
+		<oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.38446.1.5.6.0" />
+		<setProductData ruleid="vendordata" field="vendor">enlogic</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.4.1.38446.1.1.2.1.2.1</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+		<setLocationData ruleid="locationdata" field="Location">
+			<getOid>.1.3.6.1.4.1.38446.1.1.2.1.3.1</getOid>
+		</setLocationData>
+		<numSensor ruleid="pdu_outlet_metered_table_size">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_OUTLET_METERED_TABLE_SIZE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.5.6.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu Outlet Metered Table Size</label>
+			<sensorSet>pdu Outlet</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_external_sensor_table_size">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_EXTERNAL_SENSOR_TABLE_SIZE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.6.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu External Sensor Table Size</label>
+			<sensorSet>pdu ExternalSensor</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_server_ping">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_SERVER_PING</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.7</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu Server Ping</label>
+			<sensorSet>pdu</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_server_ping_table_size">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_SERVER_PING_TABLE_SIZE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.7.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu Server Ping Table Size</label>
+			<sensorSet>pdu Server Ping</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_unit_smart_rack_table_size">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_UNIT_SMART_RACK_TABLE_SIZE</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.8.1.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu Unit Smart Rack Table Size</label>
+			<sensorSet>pdu Smart Rack</sensorSet>
+		</numSensor>
+		<numSensor ruleid="pdu_unit_smart_rack_control_card_id">
+			<type>num</type>
+			<units />
+			<sensorId>_PDU_UNIT_SMART_RACK_CONTROL_CARD_ID</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.38446.1.8.3.2.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>pdu Unit Smart Rack Control Card ID</label>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="pdu_unit_smart_rack_control_door">
+			<type>state</type>
+			<sensorId>_PDU_UNIT_SMART_RACK_CONTROL_DOOR</sensorId>
+			<value>
+				<mapValue mapid="status1_vm">
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.4.0</getOid>
+				</mapValue>
+			</value>
+			<label>pdu Unit Smart Rack Control Door</label>
+			<enum>status1_em</enum>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pdu_unit_smart_rack_card_id_edit">
+			<type>state</type>
+			<sensorId>_PDU_UNIT_SMART_RACK_CARD_ID_EDIT</sensorId>
+			<value>
+				<mapValue mapid="status2_vm">
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.5.0</getOid>
+				</mapValue>
+			</value>
+			<label>pdu Unit Smart Rack Card ID Edit</label>
+			<enum>status2_em</enum>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pdu_unit_smart_rack_front_lock_state">
+			<type>state</type>
+			<sensorId>_PDU_UNIT_SMART_RACK_FRONT_LOCK_STATE</sensorId>
+			<value>
+				<mapValue mapid="status3_vm">
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.6.0</getOid>
+				</mapValue>
+			</value>
+			<label>pdu Unit Smart Rack Front Lock State</label>
+			<enum>status3_em</enum>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stateSensor>
+		<stateSensor ruleid="pdu_unit_smart_rack_rear_lock_state">
+			<type>state</type>
+			<sensorId>_PDU_UNIT_SMART_RACK_REAR_LOCK_STATE</sensorId>
+			<value>
+				<mapValue mapid="status3_vm">
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.7.0</getOid>
+				</mapValue>
+			</value>
+			<label>pdu Unit Smart Rack Rear Lock State</label>
+			<enum>status3_em</enum>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stateSensor>
+		<stringSensor ruleid="pdu_unit_smart_rack_control_user_name">
+			<type>string</type>
+			<units />
+			<sensorId>_PDU_UNIT_SMART_RACK_CONTROL_USER_NAME</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.1.0</getOid>
+				</op>
+			</value>
+			<label>pdu Unit Smart Rack Control User Name</label>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stringSensor>
+		<stringSensor ruleid="pdu_unit_smart_rack_control_time_stamp">
+			<type>string</type>
+			<units />
+			<sensorId>_PDU_UNIT_SMART_RACK_CONTROL_TIME_STAMP</sensorId>
+			<value>
+				<op>
+					<getOid>.1.3.6.1.4.1.38446.1.8.3.3.0</getOid>
+				</op>
+			</value>
+			<label>pdu Unit Smart Rack Control Time stamp</label>
+			<sensorSet>pdu Unit Smart Rack Control</sensorSet>
+		</stringSensor>
+		
+		<valueMap ruleid="status1_vm">
+			<valueIn>1</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status1_em">
+			<label>rear</label>
+			<label>front</label>
+		</enumMap>
+
+		<valueMap ruleid="status2_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status2_em">
+			<label>grant</label>
+			<label>remove</label>
+		</enumMap>
+
+		<valueMap ruleid="status3_vm">
+			<valueIn>0</valueIn>
+			<valueOut>0</valueOut>
+			<valueIn>1</valueIn>
+			<valueOut>1</valueOut>
+			<valueIn>2</valueIn>
+			<valueOut>2</valueOut>
+			<valueIn>*</valueIn>
+			<valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="status3_em">
+			<label>unlock</label>
+			<label>lock</label>
+			<label>not Present</label>
+		</enumMap>
+	</device>
+</APC_DDF>

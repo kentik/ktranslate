@@ -1,0 +1,589 @@
+<?xml version="1.0"?>
+<!-- Eaton -->
+<APC_DDF
+	ddfid="eaton_lite"
+	ddfname="Eaton Lite"
+	ddfversion="2"
+	canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+<!--
+		For at least 1 customer, there were 170 sensors, 140 of which had 
+		the value of "Unknown" or "Disabled".  Customer requested these sensors be removed.
+		In order to not effect other customers with eaton.xml, changing the
+		ddf id, ddf name, and file name.  
+        This file is based on version 1 of eaton.xml.  
+-->
+
+
+
+<!--DDF Headers -->
+	<device deviceid="eaton_header">
+		<oidMustExist ruleid="eaton_header_exist" oid=".1.3.6.1.4.1.1918.2.13.10.20.30.0"/>
+
+		<!-- Manufacturer -->
+		<setProductData ruleid="manufacturerdata" field="manufacturer">
+			<getOid>.1.3.6.1.4.1.1918.2.13.10.20.10.0</getOid>
+		</setProductData>
+
+		<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.1918.2.13.10.20.30.0</getOid>
+		</setProductData>
+
+		<!-- Boot Version -->
+		<setProductData ruleid="bootversiondata" field="bootversion">
+			<getOid>.1.3.6.1.4.1.1918.2.13.10.20.80.0</getOid>
+		</setProductData>
+
+		<!-- Serial Number -->
+		<setProductData ruleid="serialdata" field="serial_num">
+			<getOid>.1.3.6.1.4.1.1918.2.13.10.20.90.0</getOid>
+		</setProductData>
+
+		<!-- Device Type -->
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+	</device>
+
+<!--DDF Sensors -->
+	<device deviceid="eaton_sensor">
+	<oidMustExist ruleid="eaton_sensor_exist" oid=".1.3.6.1.4.1.1918.2.13.10.20.30.0"/>
+
+		<!-- ac-Voltage -->
+		<numSensor ruleid="ac-Voltage">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_TOTAL</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.40.10.0</getOid>
+			</value>
+			<label>AC Voltage Total</label>
+			<sensorSet>AC Input</sensorSet>
+		</numSensor>
+
+		<!-- phase-1 -->
+		<numSensor ruleid="phase-1">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.40.20.0</getOid>
+			</value>
+			<label>AC Voltage Phase 1</label>
+			<sensorSet>AC Input</sensorSet>
+		</numSensor>
+
+		<!-- phase-2 -->
+		<numSensor ruleid="phase-2">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.40.30.0</getOid>
+			</value>
+			<label>AC Voltage Phase 2</label>
+			<sensorSet>AC Input</sensorSet>
+		</numSensor>
+
+		<!-- phase-3 -->
+		<numSensor ruleid="phase-3">
+			<type>voltage</type>
+			<sensorId>AC_VOLTAGE_PHASE_3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.40.40.0</getOid>
+			</value>
+			<label>AC Voltage Phase 3</label>
+			<sensorSet>AC Input</sensorSet>
+		</numSensor>
+
+		<!-- load-Current -->
+		<numSensor ruleid="load-Current">
+			<type>amperage</type>
+			<sensorId>DC Output Total</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.50.10.0</getOid>
+			</value>
+			<label>DC Output Total</label>
+			<sensorSet>DC Output</sensorSet>
+		</numSensor>
+
+		<!-- system-Power -->
+		<numSensor ruleid="system-Power">
+			<type>pctofcapacity</type>
+			<sensorId>DC System Power</sensorId>
+			<value>
+				<!--<getOid>.1.3.6.1.4.1.1918.2.13.10.50.20.0</getOid>-->
+				<mult><op><getOid>.1.3.6.1.4.1.1918.2.13.10.50.20.0</getOid></op><op>100</op></mult>
+			</value>
+			<label>DC System Power</label>
+			<sensorSet>DC Output</sensorSet>
+		</numSensor>
+
+		<!-- load-Power -->
+		<numSensor ruleid="load-Power">
+			<type>powerW</type>
+			<sensorId>DC Load Power</sensorId>
+			<value>
+				<mult><op><getOid>.1.3.6.1.4.1.1918.2.13.10.50.30.0</getOid></op><op>10</op></mult>
+			</value>
+			<label>DC Load Power</label>
+			<sensorSet>DC Output</sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Current -->
+		<numSensor ruleid="rectifier-Current">
+			<type>amperage</type>
+			<sensorId>RECTIFIER_TOTAL_CURRENT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.60.20.0</getOid>
+			</value>
+			<label>Rectifier Total Current</label>
+			<sensorSet>Rectifier</sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported- AC Voltage -->
+		<numSensor ruleid="rectifier-Reported-AC-Voltage" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.90</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIER_REPORTED_AC_VOLTAGE_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.90</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>AC Voltage</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported- Voltage -->
+		<numSensor ruleid="rectifier-Reported-Voltage" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.95</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIER_REPORTED_OUTPUT_VOLTAGE_<rowNumber/></sensorId>
+			<value>
+				<!-- Convert .01 of units to units.-->
+				<mult><op><getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.95</getRowOid></op><op>.01</op></mult>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Output Voltage</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported- Current -->
+		<numSensor ruleid="rectifier-Reported-Current" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.100</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>amperage</type>
+			<sensorId>RECTIFIER_REPORTED_CURRENT_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.100</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Current</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported- Output Power -->
+		<numSensor ruleid="rectifier-Reported-Output-Power" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.105</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>pctofcapacity</type>
+			<sensorId>RECTIFIER_REPORTED_OUTPUT_POWER_<rowNumber/></sensorId>
+			<value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.105</getRowOid></op><op>10</op></mult>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Output Power Percange</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported-Heatsink Temp-->
+		<numSensor ruleid="rectifier-Reported-HeatSink-Temperature" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.110</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>temp</type>
+			<sensorId>RECTIFIER_REPORTED_HEATSINK_TEMPERATURE_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.110</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Heatsink Temperature</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported-Phase1-->
+		<numSensor ruleid="rectifier-Reported-Phase1" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.170</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIER_REPORTED_PHASE1_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.170</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Phase 1 AC Voltage</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported-Phase1-->
+		<numSensor ruleid="rectifier-Reported-Phase2" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.180</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIER_REPORTED_PHASE2_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.180</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Phase 2 AC Voltage</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- rectifier-Reported-Phase1-->
+		<numSensor ruleid="rectifier-Reported-Phase3" index=".1.3.6.1.4.1.1918.2.13.10.60.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.60.30.1.190</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>voltage</type>
+			<sensorId>RECTIFIER_REPORTED_PHASE3_<rowNumber/></sensorId>
+			<value>
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.60.30.1.190</getRowOid>
+			</value>
+			<label>Rectifier<space/><rowNumber/><space/>Phase 3 AC Voltage</label>
+			<sensorSet>Rectifier<space/><rowNumber/></sensorSet>
+		</numSensor>
+
+		<!-- Analog Input Value-->
+		<numSensor ruleid="Analog_Input_Value" index=".1.3.6.1.4.1.1918.2.13.10.90.10.30.1.1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor">
+		  		<getRowOid default="0">.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.40</getRowOid>
+				</mapValue>
+	  	</rowTest>
+			<type>
+				<mapValue mapid="Type-vm">
+			  		<getRowOid default="30">.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.70</getRowOid>
+					</mapValue>
+				</type>
+			<sensorId>ANALOG_INPUT_VALUE_<rowNumber/></sensorId>
+			<value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.40</getRowOid></op>
+				<op><mapValue mapid="Conversion-vm"><getRowOid default="30">.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.70</getRowOid></mapValue></op>
+				</mult>
+			</value>
+			<label>Analog Input-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.60</getRowOid><space/>Value</label>
+			<sensorSet>Analog Input-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.10.30.1.60</getRowOid></sensorSet>
+		</numSensor>
+
+		<valueMap ruleid="Type-vm">
+			<valueIn>30</valueIn><valueOut>num</valueOut>
+			<valueIn>31</valueIn><valueOut>voltage</valueOut>
+			<valueIn>32</valueIn><valueOut>amperage</valueOut>
+			<valueIn>33</valueIn><valueOut>amperage</valueOut>
+			<valueIn>34</valueIn><valueOut>amperage</valueOut>
+			<valueIn>35</valueIn><valueOut>temp</valueOut>
+			<valueIn>36</valueIn><valueOut>powerw</valueOut>
+			<valueIn>37</valueIn><valueOut>pctofcapacity</valueOut>
+			<valueIn>38</valueIn><valueOut>voltageAC</valueOut>
+			<valueIn>39</valueIn><valueOut>VoltageDC</valueOut>
+			<valueIn>40</valueIn><valueOut>amperage</valueOut>
+			<valueIn>41</valueIn><valueOut>amperage</valueOut>
+			<valueIn>42</valueIn><valueOut>num/liters</valueOut>
+			<valueIn>43</valueIn><valueOut>fluidflow</valueOut>
+			<valueIn>44</valueIn><valueOut>num/feet3permin</valueOut>
+			<valueIn>45</valueIn><valueOut>pressure</valueOut>
+			<valueIn>46</valueIn><valueOut>pressure</valueOut>
+			<valueIn>47</valueIn><valueOut>num</valueOut>
+			<valueIn>48</valueIn><valueOut>humidity</valueOut>
+			<valueIn>49</valueIn><valueOut>fanspeed</valueOut>
+			<valueIn>50</valueIn><valueOut>frequency</valueOut>
+			<valueIn>51</valueIn><valueOut>num/kilovoltamps</valueOut>
+			<valueIn>52</valueIn><valueOut>num/kwatthr</valueOut>
+		</valueMap>
+
+
+		<valueMap ruleid="Conversion-vm">
+			<valueIn>30</valueIn><valueOut>1</valueOut>
+			<valueIn>31</valueIn><valueOut>1</valueOut>
+			<valueIn>32</valueIn><valueOut>.001</valueOut>
+			<valueIn>33</valueIn><valueOut>1</valueOut>
+			<valueIn>34</valueIn><valueOut>1000</valueOut>
+			<valueIn>35</valueIn><valueOut>.01</valueOut>
+			<valueIn>36</valueIn><valueOut>1000</valueOut>
+			<valueIn>37</valueIn><valueOut>100</valueOut>
+			<valueIn>38</valueIn><valueOut>1</valueOut>
+			<valueIn>39</valueIn><valueOut>1</valueOut>
+			<valueIn>40</valueIn><valueOut>1</valueOut>
+			<valueIn>41</valueIn><valueOut>1</valueOut>
+			<valueIn>42</valueIn><valueOut>1</valueOut>
+			<valueIn>43</valueIn><valueOut>60</valueOut>
+			<valueIn>44</valueIn><valueOut>.02</valueOut>
+			<valueIn>45</valueIn><valueOut>.001</valueOut>
+			<valueIn>46</valueIn><valueOut>1</valueOut>
+			<valueIn>47</valueIn><valueOut>1</valueOut>
+			<valueIn>48</valueIn><valueOut>1</valueOut>
+			<valueIn>49</valueIn><valueOut>1</valueOut>
+			<valueIn>50</valueIn><valueOut>1</valueOut>
+			<valueIn>51</valueIn><valueOut>1</valueOut>
+			<valueIn>52</valueIn><valueOut>1</valueOut>
+		</valueMap>
+
+		<!-- Digital Input Value
+
+		<stateSensor ruleid="Digital_Input_Value" index=".1.3.6.1.4.1.1918.2.13.10.90.40.1.1">
+			<type>state</type>
+			<sensorId>DIGITAL_INPUT_VALUE_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="DigitalValue-vm">
+					<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.40.1.30</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Input-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.40.1.50</getRowOid><space/>Value</label>
+			<enum>DigitalValue-em</enum>
+			<sensorSet>Digital Input-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.40.1.50</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="DigitalValue-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="DigitalValue-em">
+			<label>Unknown</label>
+			<label>Closed</label>
+			<label>Open</label>
+		</enumMap>
+    -->
+
+		<!-- Digital Output do State
+		<stateSensor ruleid="Digital_Output_State" index=".1.3.6.1.4.1.1918.2.13.10.90.50.1.1">
+			<type>state</type>
+			<sensorId>DIGITAL_OUTPUT_STATE_<rowNumber/></sensorId>
+			<value>
+				<mapValue mapid="DigitalOutputState-vm">
+					<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.50.1.20</getRowOid>
+				</mapValue>
+			</value>
+			<label>Digital Output-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.50.1.60</getRowOid><space/>State</label>
+			<enum>DigitalOutputState-em</enum>
+			<sensorSet>Digital Output-<getRowOid>.1.3.6.1.4.1.1918.2.13.10.90.50.1.60</getRowOid></sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="DigitalOutputState-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="DigitalOutputState-em">
+			<label>Active</label>
+			<label>Inactive</label>
+			<label>Missing</label>
+			<label>Disabled</label>
+		</enumMap>
+    -->
+
+
+		<!-- battery-Capacity -->
+		<numSensor ruleid="battery-Capacity">
+			<type>num/amphours</type>
+			<sensorId>BATTERY_CAPACITY_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.100.10.0</getOid>
+			</value>
+			<label>Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- battery-Temperature -->
+		<numSensor ruleid="battery-Temperature">
+			<type>temp</type>
+			<sensorId>BATTERY_TEMPERATURE_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.100.30.0</getOid>
+			</value>
+			<label>Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+		<!-- battery-Current -->
+		<numSensor ruleid="battery-Current">
+			<type>amperage</type>
+			<sensorId>BATTERY_CURRENT_</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.1918.2.13.10.100.40.0</getOid>
+			</value>
+			<label>Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+
+
+		<!-- battery-State -->
+		<stateSensor ruleid="battery-State">
+			<type>state</type>
+			<sensorId>BATTERY_STATE</sensorId>
+			<value>
+				<mapValue mapid="battery-State-vm">
+					<getOid>.1.3.6.1.4.1.1918.2.13.10.100.45.0</getOid>
+				</mapValue>
+			</value>
+			<label>Battery State</label>
+			<enum>battery-State-em</enum>
+			<sensorSet>Battery</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="battery-State-vm">
+			<valueIn>100</valueIn><valueOut>0</valueOut>
+			<valueIn>101</valueIn><valueOut>1</valueOut>
+			<valueIn>102</valueIn><valueOut>2</valueOut>
+			<valueIn>103</valueIn><valueOut>3</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="battery-State-em">
+			<label>Float</label>
+			<label>Discharged</label>
+			<label>Charge</label>
+			<label>Unavailable</label>
+		</enumMap>
+
+
+		<valueMap ruleid="delete_null_sensor">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<alarmFlags2 ruleid="alarm-Table" index=".1.3.6.1.4.1.1918.2.13.10.110.10.1.40">
+			<value><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.40</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition exists. (Severity: Warning)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition exists. (Severity: Minor)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition exists. (Severity: Major)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition exists. (Severity: Critical)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.10.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<valueMap ruleid="smart-Alarm-disabled-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="smart-Alarm-Table" index=".1.3.6.1.4.1.1918.2.13.10.110.20.1.100">
+			<rowTest>
+				<mapValue mapid="smart-Alarm-disabled-vm">
+				<getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.30</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.100</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition exists. (Severity: Warning)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition exists. (Severity: Minor)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition exists. (Severity: Major)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="5">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A <getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition exists. (Severity: Critical)</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.1918.2.13.10.110.20.1.20</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+
+	</device>
+
+</APC_DDF>

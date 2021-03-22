@@ -1,0 +1,74 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="digipower_mfg_pdu_ats"
+	ddfname="DigiPower MFG PDU ATS"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="digipower_mfg_pdu_ats">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">DigiPower MFG</setProductData>
+		<setProductData ruleid="modeldata" field="model">PDU ATS</setProductData>
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+		<oidMustExist ruleid="ddf_template" oid=".1.3.6.1.4.1.17420.1.2.1.0"/> 
+
+		<numSensor ruleid="DEVICE_ID_SENSOR">
+            <type>num</type>
+            <sensorId>device_id</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.17420.1.2.1.0</getOid>
+            </value>
+            <label>Device ID</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="DEVICE_TEMPERATURE_SENSOR">
+            <type>temp</type>
+            <sensorId>device_temperature</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.17420.1.2.7.0</getOid>
+            </value>
+            <label>Device Temperature</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="DEVICE_HUMIDITY_SENSOR">
+            <type>humidity</type>
+            <sensorId>device_humidity</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.17420.1.2.8.0</getOid>
+            </value>
+            <label>Device Humidity</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="DEVICE_HUMIDITY_SENSOR">
+            <type>humidity</type>
+            <sensorId>device_humidity</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.17420.1.2.8.0</getOid>
+            </value>
+            <label>Device Humidity</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ENV_TEMP_LOWER_SENSOR">
+            <type>humidity</type>
+            <sensorId>device_humidity</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.17420.1.2.8.0</getOid>
+            </value>
+            <label>Device Humidity</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+
+		</device>
+</APC_DDF>

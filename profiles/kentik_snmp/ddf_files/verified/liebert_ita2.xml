@@ -1,0 +1,575 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="liebert_ita2"
+	ddfname="Liebert ITA2"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="liebert_ita2">
+		<oidMustExist ruleid="liebert_ita2_exists" oid=".1.3.6.1.4.1.13400.2.54.2" istree="yes" />
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<!-- Device Vendor -->
+		<setProductData ruleid="vendordata" field="vendor"><getOid>.1.3.6.1.4.1.13400.2.54.1.1.0</getOid></setProductData>
+		<!-- Device Model -->
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.13400.2.54.1.2.0</getOid></setProductData>
+		<!-- Device Type -->
+		<setProductData ruleid="typedata" field="type">UPS</setProductData> 
+
+        <numSensor ruleid="inputPhaseVoltageA">
+            <type>voltage</type>
+            <sensorId>INPUT_PHASE_VOLTAGE_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.2.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Phase Voltage A</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="inputPhaseVoltageB">
+            <type>voltage</type>
+            <sensorId>INPUT_PHASE_VOLTAGE_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.2.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Phase Voltage B</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="inputPhaseVoltageC">
+            <type>voltage</type>
+            <sensorId>INPUT_PHASE_VOLTAGE_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.2.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Input Phase Voltage C</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="inputFrequency">
+            <type>frequency</type>
+            <sensorId>INPUT_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.2.4.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Input Frequency</label>
+            <sensorSet>Input</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPhaseVoltageA">
+            <type>voltage</type>
+            <sensorId>OUTPUT_PHASE_VOLTAGE_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Phase  Voltage A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPhaseVoltageB">
+            <type>voltage</type>
+            <sensorId>OUTPUT_PHASE_VOLTAGE_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Phase Voltage B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPhaseVoltageC">
+            <type>voltage</type>
+            <sensorId>OUTPUT_PHASE_VOLTAGE_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Phase Voltage C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputCurrentA">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.4.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputCurrentB">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.5.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputCurrentC">
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.6.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Current C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputFrequency">
+            <type>frequency</type>
+            <sensorId>OUTPUT_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.7.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Output Frequency</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputActivePowerA">
+            <type>powerW</type>
+            <sensorId>OUTPUT_ACTIVE_POWER_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.8.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Active Power A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputActivePowerB">
+            <type>powerW</type>
+            <sensorId>OUTPUT_ACTIVE_POWER_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.9.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Active Power B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputActivePowerC">
+            <type>powerW</type>
+            <sensorId>OUTPUT_ACTIVE_POWER_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.10.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Active Power C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputApparentPowerA">
+            <type>powerVA</type>
+            <sensorId>OUTPUT_APPARENT_POWER_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.11.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Apparent Power A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputApparentPowerB">
+            <type>powerVA</type>
+            <sensorId>OUTPUT_APPARENT_POWER_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.12.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Apparent Power B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputApparentPowerC">
+            <type>powerVA</type>
+            <sensorId>OUTPUT_APPARENT_POWER_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.13.0</getOid></op>
+                    <op>10</op>
+                </mult>
+            </value>
+            <label>Output Apparent Power C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputLoadA">
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.14.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Load A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputLoadB">
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.15.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Load B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputLoadC">
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.16.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Output Load C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPowerFactorA">
+            <type>num/powerfactor</type>
+            <sensorId>OUTPUT_POWER_FACTOR_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.17.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Output Power Factor A</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPowerFactorB">
+            <type>num/powerfactor</type>
+            <sensorId>OUTPUT_POWER_FACTOR_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.18.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Output Power Factor B</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="outputPowerFactorC">
+            <type>num/powerfactor</type>
+            <sensorId>OUTPUT_POWER_FACTOR_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.3.19.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Output Power Factor C</label>
+            <sensorSet>Output</sensorSet>
+        </numSensor>
+        <numSensor ruleid="bypassVoltageA">
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_A</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.4.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage A</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="bypassVoltageB">
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_B</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.4.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage B</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="bypassVoltageC">
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_C</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.4.3.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Bypass Voltage C</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="bypassFrequency">
+            <type>frequency</type>
+            <sensorId>BYPASS_FREQUENCY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.4.4.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Bypass Frequency</label>
+            <sensorSet>Bypass</sensorSet>
+        </numSensor>
+        <numSensor ruleid="positiveBatteryVoltage">
+            <type>voltage</type>
+            <sensorId>POSITIVE_BATTERY_VOLTAGE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.1.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Positive Battery Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="negativeBatteryVoltage">
+            <type>voltage</type>
+            <sensorId>NEGATIVE_BATTERY_VOLTAGE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.2.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Negative Battery Voltage</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="positiveBatteryChargingCurrent">
+            <type>amperage</type>
+            <sensorId>POSITIVE_BATTERY_CHARGING_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.3.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Positive Battery Charging Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="positiveBatteryDischargingCurrent">
+            <type>amperage</type>
+            <sensorId>POSITIVE_BATTERY_DISCHARGING_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.4.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Positive Battery Discharging Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="negativeBatteryChargingCurrent">
+            <type>amperage</type>
+            <sensorId>NEGATIVE_BATTERY_CHARGING_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.5.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Negative Battery Charging Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="negativeBatteryDischargingCurrent">
+            <type>amperage</type>
+            <sensorId>NEGATIVE_BATTERY_DISCHARGING_CURRENT</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.6.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Negative Battery Discharging Current</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryRemainsTime">
+            <type>timeinmins</type>
+            <sensorId>BATTERY_REMAINS_TIME</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.7.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Battery Remains Time</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryTemperature">
+            <type>temp</type>
+            <sensorId>BATTERY_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Temperature</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryEnvironmentTemperature">
+            <type>temp</type>
+            <sensorId>BATTERY_ENVIRONMENT_TEMPERATURE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.13400.2.54.2.5.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <label>Battery Environment Temperature</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryCapacity">
+            <type>pctofcapacity</type>
+            <sensorId>BATTERY_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.13400.2.54.2.5.10.0</getOid>
+            </value>
+            <label>Capacity</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+        <numSensor ruleid="batteryDischargeTimes">
+            <type>num</type>
+            <sensorId>BATTERY_DISCHARGE_TIMES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.13400.2.54.2.5.11.0</getOid>
+            </value>
+            <label>Battery Discharge Times</label>
+            <sensorSet>Battery</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="systemStatus">
+            <type>state</type>
+            <sensorId>SYSTEM_STATUS</sensorId>
+            <value>
+                <mapValue mapid="system_status-vm">
+                    <getOid>.1.3.6.1.4.1.13400.2.54.2.1.1.0</getOid>
+                </mapValue>
+            </value>
+            <label>System Status</label>
+            <enum>system_status-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="powerSupplyStatus">
+            <type>state</type>
+            <sensorId>POWER_SUPPLY_STATUS</sensorId>
+            <value>
+                <mapValue mapid="pwr_supply_status-vm">
+                    <getOid>.1.3.6.1.4.1.13400.2.54.2.1.2.0</getOid>
+                </mapValue>
+            </value>
+            <label>Power Supply Status</label>
+            <enum>pwr_supply_status-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="system_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="system_status-em">
+			<label>Normal</label>
+			<label>Warning</label>
+			<label>Critical</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<valueMap ruleid="pwr_supply_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		<enumMap ruleid="pwr_supply_status-em">
+			<label>No Output</label>
+			<label>UPS On Main</label>
+			<label>UPS On Battery</label>
+			<label>UPS On Bypass</label>
+			<label>UPS On Utility and Battery</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<valueMap ruleid="isAlarm-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="alarmSeverity-vm">
+			<valueIn>0</valueIn><valueOut>informational</valueOut>
+			<valueIn>2</valueIn><valueOut>critical</valueOut>
+			<valueIn>*</valueIn><valueOut>warning</valueOut>
+		</valueMap>
+		<alarmFlags2 ruleid="alarmDescription" index=".1.3.6.1.4.1.13400.2.54.3.1.1">
+			<value>
+				<mapValue mapid="isAlarm-vm">
+					<getRowOid default="1">.1.3.6.1.4.1.13400.2.54.3.1.3</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>Liebert ITA2 Alarm</activeText>
+					<inactiveText>Liebert ITA2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>
+					<mapValue mapid="alarmSeverity-vm">
+						<getRowOid default="1">.1.3.6.1.4.1.13400.2.54.3.1.4</getRowOid>
+					</mapValue>
+				</severity>
+				<category>Fault</category>
+				<description>
+					<activeText>
+						<!-- Alarm Id -->
+						<getRowOid>.1.3.6.1.4.1.13400.2.54.3.1.6</getRowOid>:<space/>
+						<!-- Alarm Description -->
+						<getRowOid>.1.3.6.1.4.1.13400.2.54.3.1.5</getRowOid>.
+					</activeText>
+					<inactiveText>
+						<!-- Alarm Id -->
+						<getRowOid>.1.3.6.1.4.1.13400.2.54.3.1.6</getRowOid>:<space/>
+						<!-- Alarm Description -->
+						<getRowOid>.1.3.6.1.4.1.13400.2.54.3.1.5</getRowOid><space/>
+						condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+	</device>
+</APC_DDF>

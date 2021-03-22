@@ -1,0 +1,283 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="m2c_em6"
+	ddfname="M2C I-EM6-IP"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="m2c_em6">
+		<oidMustExist ruleid="lwip" oid=".1.3.6.1.4.1.26381" istree="yes"/> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Machine2Cloud Solutions</setProductData>
+		<setProductData ruleid="modeldata" field="model">I-EM6-IP</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+
+		<numSensor ruleid="voltage" index=".1.3.6.1.4.1.26381.1.1.1">
+            <type>voltage</type>
+            <sensorId>VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.26381.1.1.1</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Voltage<space/>
+				<formatNumber printffmt="%1.0f">
+				<regex>
+					<op>([0-9]+)\.([0-9]+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</formatNumber>
+			</label>
+            <sensorSet>Voltage</sensorSet>
+        </numSensor>
+		<numSensor ruleid="current" index=".1.3.6.1.4.1.26381.1.1.2">
+            <type>amperage</type>
+            <sensorId>CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.26381.1.1.2</getRowOid></op><op>0.001</op></mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Current<space/>
+				<formatNumber printffmt="%1.0f">
+				<regex>
+					<op>([0-9]+)\.([0-9]+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</formatNumber>
+			</label>
+            <sensorSet>Current</sensorSet>
+        </numSensor>
+		<numSensor ruleid="power" index=".1.3.6.1.4.1.26381.1.1.3">
+            <type>powerW</type>
+            <sensorId>POWER_<rowIndex/></sensorId>
+            <value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.26381.1.1.3</getRowOid></op><op>0.001</op></mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Power<space/>
+				<formatNumber printffmt="%1.0f">
+				<regex>
+					<op>([0-9]+)\.([0-9]+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</formatNumber>
+			</label>
+            <sensorSet>Power</sensorSet>
+        </numSensor>
+		<numSensor ruleid="energy" index=".1.3.6.1.4.1.26381.1.1.4">
+            <type>num/kwatthr</type>
+            <sensorId>ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult><op><getRowOid>.1.3.6.1.4.1.26381.1.1.4</getRowOid></op><op>0.001</op></mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				Energy<space/>
+				<formatNumber printffmt="%1.0f">
+				<regex>
+					<op>([0-9]+)\.([0-9]+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>
+				</formatNumber>
+			</label>
+            <sensorSet>Energy</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="state-em">
+			<label>Not Active</label>
+			<label>Active</label>
+		</enumMap>
+		<stateSensor ruleid="state1">
+            <type>state</type>
+            <sensorId>STATE_1</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 1</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="state2">
+            <type>state</type>
+            <sensorId>STATE_2</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 2</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="state3">
+            <type>state</type>
+            <sensorId>STATE_3</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 3</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="state4">
+            <type>state</type>
+            <sensorId>STATE_4</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 4</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="state5">
+            <type>state</type>
+            <sensorId>STATE_5</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 5</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="state6">
+            <type>state</type>
+            <sensorId>STATE_6</sensorId>
+            <value>
+				<mapValue mapid="binaryDefaultZero-vm">
+                <getOid>.1.3.6.1.4.1.26381.1.3.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>State 6</label>
+            <enum>state-em</enum>
+            <sensorSet>Configuration</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="seg_delay">
+            <type>timeinsec</type>
+            <sensorId>SEG_DELAY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Delay Between Readings</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="vgain">
+            <type>num</type>
+            <sensorId>VGAIN</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.9.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>VGAIN</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="igain">
+            <type>num</type>
+            <sensorId>IGAIN</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>IGAIN</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="vlevel">
+            <type>num</type>
+            <sensorId>VLEVEL</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.11.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>VLEVEL</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="whtr0">
+            <type>num</type>
+            <sensorId>WHTR0</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.12.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>WHTR0</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="whtr1">
+            <type>num</type>
+            <sensorId>WHTR1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.13.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>WHTR1</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kv">
+            <type>num</type>
+            <sensorId>KV</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.14.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>kv</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ki">
+            <type>num</type>
+            <sensorId>KI</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.15.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>ki</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="kw">
+            <type>num</type>
+            <sensorId>KW</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.16.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>kw</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+		<numSensor ruleid="apnoload">
+            <type>num</type>
+            <sensorId>APNOLOAD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.26381.1.3.17.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>APNOLOAD</label>
+            <sensorSet>Configuration</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

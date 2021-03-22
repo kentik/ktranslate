@@ -1,0 +1,282 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="vce_vision_control"
+	ddfname="VCE Vision Control"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="vce_vision_control">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">VCE</setProductData>
+		<setProductData ruleid="modeldata" field="model">Vision Control</setProductData>
+		<setProductData ruleid="typedata" field="type">Workstation/Server</setProductData>
+
+		<oidMustExist ruleid="vce_vision_control" oid=".1.3.6.1.4.1.38819" istree="yes"/> 
+
+		<valueMap ruleid="class-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>*</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="class-em">
+			<label>Other</label>
+			<label>Unknown</label>
+			<label>Chassis</label>
+			<label>Backplane</label>
+			<label>Container</label>
+			<label>Power Supply</label>
+			<label>Fan</label>
+			<label>Sensor</label>
+			<label>Module</label>
+			<label>Port</label>
+			<label>Stack</label>
+			<label>CPU</label>
+		</enumMap>
+		<stateSensor ruleid="entPhysicalClass" index=".1.3.6.1.2.1.47.1.1.1.1.5">
+            <type>state</type>
+            <sensorId>ENT_PHYSICAL_CLASS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="class-vm">
+                <getRowOid>.1.3.6.1.2.1.47.1.1.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>) -- Physical Class</label>
+            <enum>class-em</enum>
+            <sensorSet>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>)</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="entPhysicalContainedIn" index=".1.3.6.1.2.1.47.1.1.1.1.4">
+            <type>num</type>
+            <sensorId>ENT_PHYSICAL_CONTAINED_IN_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.2.1.47.1.1.1.1.4</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>) -- Parent Entity</label>
+            <sensorSet>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>)</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="operability-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+			<valueIn>11</valueIn><valueOut>11</valueOut>
+			<valueIn>12</valueIn><valueOut>12</valueOut>
+			<valueIn>13</valueIn><valueOut>13</valueOut>
+			<valueIn>14</valueIn><valueOut>14</valueOut>
+			<valueIn>15</valueIn><valueOut>15</valueOut>
+			<valueIn>16</valueIn><valueOut>16</valueOut>
+			<valueIn>17</valueIn><valueOut>17</valueOut>
+			<valueIn>18</valueIn><valueOut>18</valueOut>
+			<valueIn>19</valueIn><valueOut>19</valueOut>
+			<valueIn>20</valueIn><valueOut>20</valueOut>
+			<valueIn>21</valueIn><valueOut>21</valueOut>
+			<valueIn>22</valueIn><valueOut>22</valueOut>
+			<valueIn>24</valueIn><valueOut>23</valueOut>
+			<valueIn>51</valueIn><valueOut>24</valueOut>
+			<valueIn>52</valueIn><valueOut>25</valueOut>
+			<valueIn>81</valueIn><valueOut>26</valueOut>
+			<valueIn>82</valueIn><valueOut>27</valueOut>
+			<valueIn>83</valueIn><valueOut>28</valueOut>
+			<valueIn>84</valueIn><valueOut>29</valueOut>
+			<valueIn>100</valueIn><valueOut>30</valueOut>
+			<valueIn>101</valueIn><valueOut>31</valueOut>
+			<valueIn>102</valueIn><valueOut>32</valueOut>
+			<valueIn>103</valueIn><valueOut>33</valueOut>
+			<valueIn>104</valueIn><valueOut>34</valueOut>
+			<valueIn>105</valueIn><valueOut>35</valueOut>
+			<valueIn>106</valueIn><valueOut>36</valueOut>
+			<valueIn>107</valueIn><valueOut>37</valueOut>
+			<valueIn>151</valueIn><valueOut>38</valueOut>
+			<valueIn>152</valueIn><valueOut>39</valueOut>
+			<valueIn>153</valueIn><valueOut>40</valueOut>
+			<valueIn>154</valueIn><valueOut>41</valueOut>
+			<valueIn>155</valueIn><valueOut>42</valueOut>
+			<valueIn>156</valueIn><valueOut>43</valueOut>
+			<valueIn>157</valueIn><valueOut>44</valueOut>
+			<valueIn>158</valueIn><valueOut>45</valueOut>
+			<valueIn>159</valueIn><valueOut>46</valueOut>
+			<valueIn>160</valueIn><valueOut>47</valueOut>
+			<valueIn>200</valueIn><valueOut>48</valueOut>
+			<valueIn>201</valueIn><valueOut>49</valueOut>
+			<valueIn>202</valueIn><valueOut>50</valueOut>
+			<valueIn>203</valueIn><valueOut>51</valueOut>
+			<valueIn>204</valueIn><valueOut>52</valueOut>
+			<valueIn>205</valueIn><valueOut>53</valueOut>
+			<valueIn>206</valueIn><valueOut>54</valueOut>
+			<valueIn>207</valueIn><valueOut>55</valueOut>
+			<valueIn>208</valueIn><valueOut>56</valueOut>
+			<valueIn>209</valueIn><valueOut>57</valueOut>
+			<valueIn>210</valueIn><valueOut>58</valueOut>
+			<valueIn>211</valueIn><valueOut>59</valueOut>
+			<valueIn>212</valueIn><valueOut>60</valueOut>
+			<valueIn>213</valueIn><valueOut>61</valueOut>
+			<valueIn>214</valueIn><valueOut>62</valueOut>
+			<valueIn>215</valueIn><valueOut>63</valueOut>
+			<valueIn>216</valueIn><valueOut>64</valueOut>
+			<valueIn>217</valueIn><valueOut>65</valueOut>
+			<valueIn>218</valueIn><valueOut>66</valueOut>
+			<valueIn>219</valueIn><valueOut>67</valueOut>
+			<valueIn>220</valueIn><valueOut>68</valueOut>
+			<valueIn>221</valueIn><valueOut>69</valueOut>
+			<valueIn>222</valueIn><valueOut>70</valueOut>
+			<valueIn>223</valueIn><valueOut>71</valueOut>
+			<valueIn>224</valueIn><valueOut>72</valueOut>
+			<valueIn>225</valueIn><valueOut>73</valueOut>
+			<valueIn>226</valueIn><valueOut>74</valueOut>
+			<valueIn>227</valueIn><valueOut>75</valueOut>
+			<valueIn>228</valueIn><valueOut>76</valueOut>
+			<valueIn>229</valueIn><valueOut>77</valueOut>
+			<valueIn>230</valueIn><valueOut>78</valueOut>
+			<valueIn>231</valueIn><valueOut>79</valueOut>
+			<valueIn>232</valueIn><valueOut>80</valueOut>
+			<valueIn>233</valueIn><valueOut>81</valueOut>
+			<valueIn>234</valueIn><valueOut>82</valueOut>
+			<valueIn>998</valueIn><valueOut>83</valueOut>
+			<valueIn>999</valueIn><valueOut>84</valueOut>
+			<valueIn>1000</valueIn><valueOut>85</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="operability-em">
+			<label>Unknown</label>
+			<label>Operable</label>
+			<label>Inoperable</label>
+			<label>Testing</label>
+			<label>Disabled</label>
+			<label>Dormant</label>
+			<label>Not Present</label>
+			<label>Lower Layer Down</label>
+			<label>Forced Down</label>
+			<label>OK, But...</label>
+			<label>Degraded</label>
+			<label>Minor</label>
+			<label>Major</label>
+			<label>Critical</label>
+			<label>Nonrecoverable</label>
+			<label>Powered Off</label>
+			<label>Power Problem</label>
+			<label>Voltage Problem</label>
+			<label>Thermal Problem</label>
+			<label>Performance Problem</label>
+			<label>Accessibility Problem</label>
+			<label>Identity Unestablishable</label>
+			<label>BIOS POST Timeout</label>
+			<label>Malformed FRU</label>
+			<label>Fabric Conn. Problem</label>
+			<label>Fabric Unsupported Conn.</label>
+			<label>Config</label>
+			<label>Equipment Problem</label>
+			<label>Decommissioning</label>
+			<label>Chassis Limit Exceeded</label>
+			<label>Not Supported</label>
+			<label>Discovery</label>
+			<label>Discovery Failed</label>
+			<label>Identify</label>
+			<label>Post Failure</label>
+			<label>Upgrade Problem</label>
+			<label>Peer Comm Problem</label>
+			<label>Auto Upgrade</label>
+			<label>Waiting</label>
+			<label>Progressing</label>
+			<label>Added</label>
+			<label>Ready</label>
+			<label>SDM Mismatch</label>
+			<label>Ver. Mismatch</label>
+			<label>Feature Mismatch</label>
+			<label>New Master Init</label>
+			<label>Provisioned</label>
+			<label>Invalid</label>
+			<label>Warning</label>
+			<label>Lost Communication</label>
+			<label>Aborted</label>
+			<label>Power Mode</label>
+			<label>Off - Env.Other</label>
+			<label>On</label>
+			<label>Off - Admin</label>
+			<label>Off - Denied</label>
+			<label>Off - Env.Power</label>
+			<label>Off - Env.Temp</label>
+			<label>Off - Env.Fan</label>
+			<label>Failed</label>
+			<label>On but Fan Fail</label>
+			<label>Off - Cooling</label>
+			<label>Off - Connector Rating</label>
+			<label>On but Inline Power Fail</label>
+			<label>OK</label>
+			<label>OK but Diagnostic Failed</label>
+			<label>Boot</label>
+			<label>Self-Test</label>
+			<label>Missing</label>
+			<label>Mismatch with Parent</label>
+			<label>Mismatch Config</label>
+			<label>Diag. Failed</label>
+			<label>Out of Service - Admin</label>
+			<label>Out of Service - Env.Temp</label>
+			<label>Powered Down</label>
+			<label>Powered Up</label>
+			<label>Power Denied</label>
+			<label>Power Cycled</label>
+			<label>Ok but Power Over Warning</label>
+			<label>Ok but Power Over Critical</label>
+			<label>Sync in Progress</label>
+			<label>Upgrading</label>
+			<label>OK but Auth. Failed</label>
+			<label>Not Applicable</label>
+			<label>Indeterminate</label>
+			<label>Other</label>
+		</enumMap>
+
+		<stateSensor ruleid="vceVbhPhysicalHealthState" index=".1.3.6.1.4.1.38819.3.4.1.1.1.1">
+            <type>state</type>
+            <sensorId>VCE_VBH_PHYSICAL_HEALTH_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="operability-vm">
+                <getRowOid>.1.3.6.1.4.1.38819.3.4.1.1.1.1</getRowOid>
+				</mapValue>
+            </value>
+            <label>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>) -- Physical Health State</label>
+            <enum>operability-em</enum>
+            <sensorSet>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>)</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="vceVbhPhysicalHealthStateLastChange" index=".1.3.6.1.4.1.38819.3.4.1.1.1.1">
+            <type>timeinsec</type>
+            <sensorId>VCE_VBH_PHYSICAL_HEALTH_STATE_LASTCHANGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+                <op><getRowOid>.1.3.6.1.4.1.38819.3.4.1.1.1.2</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>) -- Physical Health State Last Changed </label>
+            <sensorSet>Entity <rowIndex/> (<getRowOid>.1.3.6.1.2.1.47.1.1.1.1.2</getRowOid>)</sensorSet>
+        </numSensor>
+	</device>
+</APC_DDF>

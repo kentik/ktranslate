@@ -1,0 +1,1645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="apc_pmm"
+	ddfname="APC Power Management Module"
+	ddfversion="5"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="apc_pmm">
+		<oidMustExist ruleid="apc_pmm" oid=".1.3.6.1.4.1.318.1.1.28" istree="yes"/>
+		<oidMustMatch ruleid="pmm" oid=".1.3.6.1.2.1.1.2.0">
+			<valueList>
+				<value>.1.3.6.1.4.1.318.1.3.34</value>
+				<value>.1.3.6.1.4.1.318.1.3.34.*</value>
+				<value>.1.3.6.1.4.1.318.1.3.35</value>
+				<value>.1.3.6.1.4.1.318.1.3.35.*</value>
+			</valueList>
+		</oidMustMatch>
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">APC by Schneider Electric</setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData>
+
+		<setProductData ruleid="pmmIdentModelNumber" field="model">
+			<getOid>.1.3.6.1.4.1.318.1.1.28.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="pmmIdentSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.318.1.1.28.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="pmmIdentHMIFirmwareAppRev" field="appversion">
+			<getOid>.1.3.6.1.4.1.318.1.1.28.1.6.0</getOid>
+		</setProductData>
+
+		<valueMap ruleid="deleteNull-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>NA</valueIn><valueOut>[false]</valueOut>
+			<valueIn>Not Available</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="thresholdDisabled-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="pmmDeviceNominalInputVoltage">
+            <type>voltage</type>
+            <sensorId>PMM_NOMINAL_INPUT_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.318.1.1.28.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Input Voltage</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="pmmDeviceServiceType-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="pmmDeviceServiceType-em">
+			<label>Unknown</label>
+			<label>3-Wire</label>
+			<label>4-Wire</label>
+		</enumMap>
+		<stateSensor ruleid="pmmDeviceServiceType">
+            <type>state</type>
+            <sensorId>PMM_SERVICE_TYPE</sensorId>
+            <value>
+				<mapValue mapid="pmmDeviceServiceType-vm">
+                <getOid>.1.3.6.1.4.1.318.1.1.28.2.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Service Type</label>
+            <enum>pmmDeviceServiceType-em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="pmmDeviceNominalOutputVoltage">
+            <type>voltage</type>
+            <sensorId>PMM_NOMINAL_OUTPUT_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.318.1.1.28.2.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Output Voltage</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pmmInputFrequency" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>PMM_INPUT_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.2</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Frequency</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputTotalActivePower" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>PMM_INPUT_TOTAL_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.3</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Total Active Power</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputTotalApparentPower" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>PMM_INPUT_TOTAL_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.4</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Total Apparent Power</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputTotalPowerFactor" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_INPUT_TOTAL_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.5</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Total Power Factor</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputActiveEnergyDelivered" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.6">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PMM_INPUT_ACTIVE_ENERGY_DELIVERED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.6</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Active Energy Delivered</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputActiveEnergyReceived" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PMM_INPUT_ACTIVE_ENERGY_RECEIVED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.7</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Active Energy Received</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputApparentEnergyDelivered" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>PMM_INPUT_APPARENT_ENERGY_DELIVERED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.8</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Apparent Energy Delivered</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputApparentEnergyReceived" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.9">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>PMM_INPUT_APPARENT_ENERGY_RECEIVED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.9</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Apparent Energy Received</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pmmInputFrequencyDeviation" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.10">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<mapValue mapid="frequencyDeviation-vm">
+				<formatNumber printffmt="%1.0f">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.10</getRowOid>
+				</formatNumber>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>PMM_INPUT_FREQUENCY_DEVIATION_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="frequencyDeviation-vm">
+				<formatNumber printffmt="%1.0f">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.10</getRowOid>
+				</formatNumber>
+				</mapValue>
+            </value>
+	        <valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Frequency Deviation</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputPowerFactorDeviation" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.11">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.11</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.11</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_INPUT_POWER_FACTOR_DEVIATION_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.11</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Power Factor Deviation</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMinVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.12">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.12</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.12</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MIN_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Min Volt Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputLowVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.13">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.13</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.13</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_LOW_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Low Volt Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputHighVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.14">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.14</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.14</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_HIGH_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> High Volt Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMaxVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.15">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.15</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.15</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MAX_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Max Volt Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMinCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.16">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.16</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.16</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MIN_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Min Current Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputLowCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.17">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.17</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.17</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_LOW_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Low Current Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputHighCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.18">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.18</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.18</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_HIGH_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> High Current Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMaxCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.19">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.19</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.19</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MAX_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Max Current Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMinApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.20">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.20</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.20</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MIN_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Min Apparent Power Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputMaxApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.21">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.21</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.21</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_MAX_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Max Apparent Power Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputOverActivePowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.22">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.22</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.22</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_INPUT_OVER_ACTIVE_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Over Active Power Threshold</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pmmInputBreakerState" index=".1.3.6.1.4.1.318.1.1.28.3.1.2.1.23">
+            <type>state</type>
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.23</getRowOid>
+				</mapValue>
+			</rowTest>
+            <sensorId>PMM_INPUT_BREAKER_STATE</sensorId>
+            <value>
+				<mapValue mapid="breakerState-vm">
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.23</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.2.1.1</getRowOid> Breaker State</label>
+            <enum>breakerState-em</enum>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="voltageLL-vm">
+			<valueIn>1</valueIn><valueOut>1-2</valueOut>
+			<valueIn>2</valueIn><valueOut>2-3</valueOut>
+			<valueIn>3</valueIn><valueOut>3-1</valueOut>
+			<valueIn>*</valueIn><valueOut>?</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="pmmInputVoltageLtoL" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>PMM_INPUT_VOLTAGE_LL_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase Voltage <mapValue mapid="voltageLL-vm"><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid></mapValue>
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputVoltageLtoN" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>PMM_INPUT_VOLTAGE_LN_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.4</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid><space/>
+				Voltage L-N
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputPhaseCurrent" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>PMM_INPUT_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.5</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid><space/>
+				Current
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputActivePower" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.6">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>PMM_INPUT_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.6</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid><space/>
+				Active Power
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputApparentPower" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>PMM_INPUT_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.7</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid><space/>
+				Apparent Power
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmInputPowerFactor" index=".1.3.6.1.4.1.318.1.1.28.3.1.3.1.8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_INPUT_POWER_FACTOR<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.8</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Input<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.1.3.1.2</getRowOid><space/>
+				Power Factor
+			</label>
+            <sensorSet>Monitoring - Input</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pmmOutputFrequency" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.2">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>PMM_OUTPUT_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.2</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Frequency</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputTotalActivePower" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>PMM_OUTPUT_TOTAL_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.3</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Total Active Power</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputTotalApparentPower" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>PMM_OUTPUT_TOTAL_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.4</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Total Apparent Power</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputTotalPowerFactor" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_OUTPUT_TOTAL_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.5</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Total Power Factor</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputActiveEnergyDelivered" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.6">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PMM_OUTPUT_ACTIVE_ENERGY_DELIVERED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.6</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Active Energy Delivered</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputActiveEnergyReceived" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PMM_OUTPUT_ACTIVE_ENERGY_RECEIVED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.7</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Active Energy Received</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputApparentEnergyDelivered" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>PMM_OUTPUT_APPARENT_ENERGY_DELIVERED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.8</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Apparent Energy Delivered</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputApparentEnergyReceived" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.9">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kVAhr</type>
+            <sensorId>PMM_OUTPUT_APPARENT_ENERGY_RECEIVED_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.9</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Apparent Energy Received</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="pmmOutputFrequencyDeviation" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.10">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<mapValue mapid="frequencyDeviation-vm">
+				<formatNumber printffmt="%1.0f">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.10</getRowOid>
+				</formatNumber>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>PMM_OUTPUT_FREQUENCY_DEVIATION_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="frequencyDeviation-vm">
+				<formatNumber printffmt="%1.0f">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.10</getRowOid>
+				</formatNumber>
+				</mapValue>
+            </value>
+	        <valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Frequency Deviation</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputPowerFactorDeviation" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.11">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.11</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.11</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_OUTPUT_POWER_FACTOR_DEVIATION_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.11</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Power Factor Deviation</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMinVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.12">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.12</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.12</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MIN_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.12</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Min Volt Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputLowVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.13">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.13</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.13</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_LOW_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.13</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Low Volt Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputHighVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.14">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.14</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.14</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_HIGH_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.14</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> High Volt Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMaxVoltThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.15">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.15</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.15</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MAX_VOLT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Max Volt Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMinCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.16">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.16</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.16</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MIN_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Min Current Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputLowCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.17">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.17</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.17</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_LOW_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Low Current Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputHighCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.18">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.18</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.18</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_HIGH_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> High Current Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMaxCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.19">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.19</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.19</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MAX_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Max Current Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMinApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.20">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.20</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.20</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MIN_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Min Apparent Power Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputMaxApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.21">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.21</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.21</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_MAX_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.21</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Max Apparent Power Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputOverActivePowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.22">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.22</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.22</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_OVER_ACTIVE_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.22</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Over Active Power Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputPhaseLossThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.23">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.23</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.23</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_OUTPUT_PHASE_LOSS_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.23</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Phase Loss Threshold</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pmmOutputBreakerState" index=".1.3.6.1.4.1.318.1.1.28.3.2.2.1.24">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.24</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>PMM_OUTPUT_BREAKER_STATE</sensorId>
+            <value>
+				<mapValue mapid="breakerState-vm">
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.24</getRowOid>
+				</mapValue>
+            </value>
+            <label>Output <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.2.1.1</getRowOid> Breaker State</label>
+            <enum>breakerState-em</enum>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="pmmOutputVoltageLtoL" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.3">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>PMM_OUTPUT_VOLTAGE_LL_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Voltage L-L
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputVoltageLtoN" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.4">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>PMM_OUTPUT_VOLTAGE_LN_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.4</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Voltage L-N
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputPhaseCurrent" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.5">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>PMM_OUTPUT_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.5</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Current
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputActivePower" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.6">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>PMM_OUTPUT_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.6</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Active Power
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputApparentPower" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>PMM_OUTPUT_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.7</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Apparent Power
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmOutputPowerFactor" index=".1.3.6.1.4.1.318.1.1.28.3.2.3.1.8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_OUTPUT_POWER_FACTOR<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.8</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				Output<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.1</getRowOid><space/>
+				Phase<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.2.3.1.2</getRowOid><space/>
+				Power Factor
+			</label>
+            <sensorSet>Monitoring - Output</sensorSet>
+        </numSensor>
+
+		<stringSensor ruleid="pmmBranchCircuitBreakerIdentifier" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.5">
+            <type>string</type>
+            <sensorId>PMM_BCM_BREAKER_IDENTIFIER<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.5</getRowOid>
+            </value>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Breaker Identifier
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </stringSensor>
+		<stringSensor ruleid="pmmBranchCircuitLoadIdentifier" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.6">
+            <type>string</type>
+            <sensorId>PMM_BCM_LOAD_IDENTIFIER<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.6</getRowOid>
+            </value>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Load Identifier
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </stringSensor>
+		
+		<numSensor ruleid="pmmBranchCircuitCurrent" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.7">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>PMM_BCM_CURRENT_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.7</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Current
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitBreakerRating" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.8">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.8</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>PMM_BCM_BREAKER_RATING_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.8</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Breaker Rating
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitTotalActivePower" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.9">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.9</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>PMM_BCM_TOTAL_ACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.9</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Total Active Power
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitTotalApparentPower" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.10">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.10</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>PMM_BCM_TOTAL_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.10</getRowOid></op><op>100</op></mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Total Apparent Power
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitEnergyUsage" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.11">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/kwatthr</type>
+            <sensorId>PMM_BCM_ENERGY_USAGE_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.11</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Energy Usage
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitEnergyUsageResetDate" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.12">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.12</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>PMM_BCM_ENERGY_USAGE_RESET_<rowIndex/></sensorId>
+            <value>
+				<div>
+				<op>
+					<sub>
+					<op><curUTCTime/></op>
+					<op>
+						<parseDate>
+    	        	    <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.12</getRowOid>
+						</parseDate>
+					</op>
+					</sub>
+				</op>
+				<op>86400</op>
+				</div>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Time Since Last Energy Reset
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitTotalPowerFactor" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.13">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.13</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>PMM_BCM_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.13</getRowOid></op><op>0.01</op></mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Power Factor
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="pmmBranchCircuitBreakerState" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.14">
+			<rowTest>
+				<mapValue mapid="deleteNull-vm">
+				<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>PMM_OUTPUT_BREAKER_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="breakerState-vm">
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Breaker State
+			</label>
+            <enum>breakerState-em</enum>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="pmmBranchCircuitMinCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.15">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.15</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_MIN_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.15</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Min Current Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitLowCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.16">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.16</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_LOW_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.16</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Low Current Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitHighCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.17">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.17</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_HIGH_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.17</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				High Current Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitMaxCurrentThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.18">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.18</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_MAX_CURRENT_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.18</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Max Current Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitMinApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.19">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.19</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_MIN_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.19</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Min Apparent Power Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pmmBranchCircuitMaxApparentPowerThreshold" index=".1.3.6.1.4.1.318.1.1.28.3.3.3.1.20">
+			<rowTest>
+				<and>
+				<op>
+					<mapValue mapid="deleteNull-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.3</getRowOid>
+					</mapValue>
+				</op>
+				<op>
+					<mapValue mapid="thresholdDisabled-vm">
+					<getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.20</getRowOid>
+					</mapValue>
+				</op>
+				</and>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>PMM_BCM_MAX_APPARENT_POWER_THRESHOLD_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.20</getRowOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>
+				BCM<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.1</getRowOid><space/>
+				Circuit<space/><getRowOid>.1.3.6.1.4.1.318.1.1.28.3.3.3.1.2</getRowOid><space/>
+				Max Apparent Power Threshold
+			</label>
+            <sensorSet>Monitoring - Branch Circuit</sensorSet>
+        </numSensor>
+
+
+		<valueMap ruleid="frequencyDeviation-vm">
+			<valueIn>1</valueIn><valueOut>-1</valueOut>
+			<valueIn>2</valueIn><valueOut>0.2</valueOut>
+			<valueIn>3</valueIn><valueOut>0.5</valueOut>
+			<valueIn>4</valueIn><valueOut>1</valueOut>
+			<valueIn>5</valueIn><valueOut>1.5</valueOut>
+			<valueIn>6</valueIn><valueOut>2</valueOut>
+			<valueIn>7</valueIn><valueOut>3</valueOut>
+			<valueIn>8</valueIn><valueOut>4</valueOut>
+			<valueIn>9</valueIn><valueOut>5</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>*</valueIn><valueOut>-1</valueOut>
+		</valueMap>
+		<valueMap ruleid="breakerState-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="breakerState-em">
+			<label>Unknown</label>
+			<label>Open</label>
+			<label>Closed</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

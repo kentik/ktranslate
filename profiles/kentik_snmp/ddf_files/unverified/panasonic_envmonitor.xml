@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!-- raritan_pdu -->
+<APC_DDF ddfid ="panasonic_envmonitor" ddfname="Panasonic Environmental Monitor" ddfversion="1" canremove="yes">
+<schemaVersion>1.6</schemaVersion>
+
+    <!--DDF Headers -->
+    <device deviceid="panasonic_envmonitor">
+		<!-- pewRackGeneral-->
+        <oidMustExist ruleid="panasonic_envmonitor_exists" istree="yes" oid=".1.3.6.1.4.1.396.4.1"/>
+
+        <setProductData ruleid="typedata" field="type">Environmental Monitor</setProductData>
+		
+		<!-- Set Vendor -->
+		<setProductData ruleid="vendordata" field="vendor">Panasonic</setProductData>
+
+        <!-- App Version -->
+        <setProductData ruleid="appversiondata" field="appversion">Init<getOid>.1.3.6.1.4.1.396.4.1.6.1.0</getOid>-Agent<getOid>.1.3.6.1.4.1.396.4.1.6.2.0</getOid></setProductData>	
+		
+		<valueMap ruleid="off_on-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="off_on-em">
+			<label>On</label>
+			<label>Off</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="rmRackDigitalInputStatus" index=".1.3.6.1.4.1.396.4.2.1.3.1.1.3">
+			<type>state</type>
+			<sensorId>DIGITAL_INPUT_<rowIndex/>_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.3.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>Digital Input <rowIndex/> Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+
+		<valueMap ruleid="alarm_sensor_exists-vm">
+			<valueIn>1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="occurred_cleared-vm">
+			<valueIn>2</valueIn><valueOut>0</valueOut>
+			<valueIn>3</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="occurred_cleared-em">
+			<label>Occurred</label>
+			<label>Cleared</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<stateSensor ruleid="rmRackDigitalInputAlertValue" index=".1.3.6.1.4.1.396.4.2.1.3.1.1.7">
+			<rowTest>
+				<mapValue mapid="alarm_sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.3.1.1.7</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<type>state</type>
+			<sensorId>DIGITAL_INPUT_<rowIndex/>_ALARM_STATUS</sensorId>
+			<value>
+				<mapValue mapid="occurred_cleared-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.3.1.1.7</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>occurred_cleared-em</enum>
+			<label>Digital Input <rowIndex/> Alarm Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<stateSensor ruleid="rmRackDigitalOutputStatus" index=".1.3.6.1.4.1.396.4.2.1.4.1.1.3">
+			<type>state</type>
+			<sensorId>DIGITAL_OUTPUT_<rowIndex/>_STATUS</sensorId>
+			<value>
+				<mapValue mapid="off_on-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.4.1.1.3</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</value>
+			<enum>off_on-em</enum>
+			<label>Digital Output <rowIndex/> Status</label>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		
+		<valueMap ruleid="input_unit_sensor_type-vm">
+			<valueIn>1</valueIn><valueOut>temp</valueOut>
+			<valueIn>2</valueIn><valueOut>humidity</valueOut>
+			<valueIn>*</valueIn><valueOut>num</valueOut>
+		</valueMap>
+
+		<valueMap ruleid="input_unit_sensor_exists-vm">
+			<valueIn>0</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<numSensor ruleid="rmRackOneWireInputInfo" index=".1.3.6.1.4.1.396.4.2.1.13.1.1.6" >
+			<rowTest>
+				<mapValue mapid="input_unit_sensor_exists-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.13.1.1.5</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</rowTest>
+			<type>
+				<mapValue mapid="input_unit_sensor_type-vm">
+					<formatNumber>
+						<getRowOid>.1.3.6.1.4.1.396.4.2.1.13.1.1.5</getRowOid>
+					</formatNumber>
+				</mapValue>
+			</type>
+			<sensorId>ONE_WIRE_INPUT_INFO_<rowIndex/></sensorId>
+			<value>
+				<mult>
+					<op>0.1</op>
+					<op><getRowOid>.1.3.6.1.4.1.396.4.2.1.13.1.1.6</getRowOid></op>
+				</mult>
+			</value>
+			<valueInc>0.1</valueInc>
+			<label>One Wire Sensor <rowIndex/> - <getRowOid>.1.3.6.1.4.1.396.4.2.1.13.1.1.2</getRowOid></label>
+			<sensorSet>Measurements</sensorSet>
+		</numSensor>
+		
+    </device>
+
+</APC_DDF>

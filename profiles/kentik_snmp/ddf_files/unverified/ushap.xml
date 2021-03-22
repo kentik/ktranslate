@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<!-- DigiPower UPS -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid ="ushap" ddfname="USHAP" ddfversion="4" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  
+  <!-- upsIdentName -->
+  <device deviceid="ushapdiscdata">
+    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.2468.1.2.1.1.1.1.0"/>
+
+    <!-- upsIdentAgentFirmwareVersion-->
+    <setProductData ruleid="appversiondata" field="appversion">
+      <getOid>.1.3.6.1.4.1.2468.1.2.1.1.1.3.0</getOid>
+    </setProductData>
+
+    <!-- upsIdentModel -->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <setProductData ruleid="modeldata" field="model">
+      <getOid>.1.3.6.1.4.1.2468.1.2.1.1.1.2.0</getOid>
+    </setProductData>
+  </device>
+  
+    <device deviceid="ushap">
+    <oidMustExist ruleid="ushap" oid=".1.3.6.1.4.1.2468.1.2.1.1.1.1.0"/>
+    
+<!-- upsBattery Begin -->
+	<!-- upsBatteryStatus --> 
+		<stateSensor ruleid="upsBatteryStatus">
+      <type>state</type>
+      <sensorId>UPS_BATTERY_STATUS</sensorId>
+      <value>
+        <mapValue mapid="value6-vm">
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Battery Status</label>
+      <enum>BatteryStatus-em</enum>
+      <sensorSet>Battery</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="value6-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>5</valueIn><valueOut>4</valueOut>
+      <valueIn>6</valueIn><valueOut>5</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="BatteryStatus-em">
+      <label>unknown</label>
+      <label>normal</label>
+      <label>low</label>
+      <label>depleted</label>
+      <label>discharging</label>
+      <label>failure</label>
+    </enumMap>
+    
+	<!-- upsSecondsOnBattery -->
+		<numSensor ruleid="upsSecondsOnBattery">
+      <type>timeinsec</type>
+      <sensorId>SECONDS_ON_BATTERY</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.2.0</getOid>
+      </value>
+      <label>Seconds On Battery</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+	<!-- upsEstimatedMinutesRemaining -->
+		<numSensor ruleid="upsEstimatedMinutesRemaining">
+      <type>mininmin</type>
+      <sensorId>ESTIMATED_MINUTES_REMAINING</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.3.0</getOid>
+      </value>
+      <label>Estimated Minutes Remaining</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+	<!-- upsEstimatedChargeRemaining -->
+		<numSensor ruleid="upsEstimatedChargeRemaining">
+      <type>pctofcapacity</type>
+      <sensorId>ESTIMATED_CHARGE_REMAINING</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.4.0</getOid>
+      </value>
+      <label>Estimated Charge Remaining</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+	<!-- upsBatteryVoltage -->
+		<numSensor ruleid="v4dupsBatteryVoltage">
+      <type>voltageDC</type>
+      <sensorId>BATTERY_VOLTAGE_</sensorId>
+      <value>
+		<mult>
+			<op><getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.5.0</getOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Battery Voltage</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+	<!--upsBatterymandatory -->
+		<numSensor ruleid="upsBatterymandatory">
+      <type>num/mandatory</type>
+      <sensorId>BATTERY_MANDATORY_</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.6.0</getOid>
+      </value>
+      <label>Battery Mandatory</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+	<!-- upsBatteryTemperature -->
+		<numSensor ruleid="upsBatteryTemperature">
+      <type>temp</type>
+      <sensorId>BATTERY_TEMPERATURE</sensorId>
+      <value>
+		<mult>
+			<op><getOid>.1.3.6.1.4.1.2468.1.2.1.1.2.7.0</getOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Battery Temperature</label>
+      <sensorSet>Battery</sensorSet>
+    </numSensor>
+    
+    
+<!-- upsInput Begin -->
+	<!-- upsInputFrequency -->
+		<numSensor ruleid="upsInputFrequency" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>frequency</type>
+      <sensorId>INPUT_FREQUENCY<rowIndex/></sensorId>
+      <value>
+		<mult>
+			<op><getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.2</getRowOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Input Frequency<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsInputVoltage -->
+		<numSensor ruleid="upsInputVoltage" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>voltageDC</type>
+      <sensorId>INPUT_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.3</getRowOid>
+      </value>
+      <label>Input Voltage<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsInputCurrent -->
+		<numSensor ruleid="upsInputCurrent" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>amperage</type>
+      <sensorId>INPUT_CURRENT<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.4</getRowOid>
+      </value>
+      <label>Input Current<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsInputTruePower -->
+		<numSensor ruleid="upsInputTruePower" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>powerW</type>
+      <sensorId>INPUT_TRUE_POWER<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.5</getRowOid>
+      </value>
+      <label>Input True Power<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsInputVoltageMax -->
+		<numSensor ruleid="upsInputVoltageMax" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>voltageDC</type>
+      <sensorId>INPUT_VOLTAGE_MAX<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.6</getRowOid>
+      </value>
+      <label>Input Voltage Maximum<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsInputVoltageMin -->
+		<numSensor ruleid="upsInputVoltageMin" index=".1.3.6.1.4.1.2468.1.2.1.1.3.3.1.1">
+      <type>voltageDC</type>
+      <sensorId>INPUT_VOLTAGE_MAX<rowIndex/></sensorId>
+      <value>
+		<mult>
+			<op><getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.3.3.1.7</getRowOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Input Voltage Minimum<rowIndex/></label>
+      <sensorSet>Input<rowIndex/></sensorSet>
+    </numSensor>
+    
+    
+<!-- upsOutput Begin -->
+	<!-- upsOutputSource -->
+		<stateSensor ruleid="upsOutputSource">
+      <type>state</type>
+      <sensorId>UPS_OUTPUT_SOURCE</sensorId>
+      <value>
+        <mapValue mapid="value7-vm">
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.4.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>Output Source</label>
+      <enum>OutputSource-em</enum>
+      <sensorSet>Output1</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="value7-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>5</valueIn><valueOut>4</valueOut>
+      <valueIn>6</valueIn><valueOut>5</valueOut>
+      <valueIn>7</valueIn><valueOut>6</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="OutputSource-em">
+      <label>other</label>
+      <label>none</label>
+      <label>normal</label>
+      <label>bypass</label>
+      <label>battery</label>
+      <label>booster</label>
+      <label>reducer</label>
+    </enumMap>
+    
+	<!-- upsOutputFrequency -->
+		<numSensor ruleid="upsOutputFrequency">
+      <type>frequency</type>
+      <sensorId>OUTPUT_FREQUENCY</sensorId>
+      <value>
+		<mult>
+			<op><getOid>.1.3.6.1.4.1.2468.1.2.1.1.4.2.0</getOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Output Frequency</label>
+      <sensorSet>Output1</sensorSet>
+    </numSensor>
+
+	<!-- upsOutputVoltage -->
+		<numSensor ruleid="upsOutputVoltage" index=".1.3.6.1.4.1.2468.1.2.1.1.4.4.1.1">
+      <type>voltageDC</type>
+      <sensorId>INPUT_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+		<mult>
+			<op><getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.4.4.1.2</getRowOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Output Voltage<rowIndex/></label>
+      <sensorSet>Output<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsOutputCurrent -->
+		<numSensor ruleid="upsOutputCurrent" index=".1.3.6.1.4.1.2468.1.2.1.1.4.4.1.1">
+      <type>amperage</type>
+      <sensorId>OUTPUT_CURRENT<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.4.4.1.3</getRowOid>
+      </value>
+      <label>Output Current<rowIndex/></label>
+      <sensorSet>Output<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsOutputPower -->
+		<numSensor ruleid="upsOutputPower" index=".1.3.6.1.4.1.2468.1.2.1.1.4.4.1.1">
+      <type>powerW</type>
+      <sensorId>OUTPUT_POWER<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.4.4.1.4</getRowOid>
+      </value>
+      <label>Output Power<rowIndex/></label>
+      <sensorSet>Output<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsOutputPercentLoad -->
+		<numSensor ruleid="upsOutputPercentLoad" index=".1.3.6.1.4.1.2468.1.2.1.1.4.4.1.1">
+      <type>pctofcapacity</type>
+      <sensorId>OUTPUT_PERCENT_LOAD<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.4.4.1.5</getRowOid>
+      </value>
+      <label>Output Percent Load<rowIndex/></label>
+      <sensorSet>Output<rowIndex/></sensorSet>
+    </numSensor>
+
+
+<!-- upsBypass Begin -->
+	<!-- upsBypassFrequency -->
+		<numSensor ruleid="upsBypassFrequency">
+      <type>frequency</type>
+      <sensorId>BYPASS_FREQUENCY</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.5.1.0</getOid>
+      </value>
+      <label>Bypass Frequency</label>
+      <sensorSet>Bypass1</sensorSet>
+    </numSensor>
+
+	<!-- upsBypassVoltage -->
+			<numSensor ruleid="upsInputVoltage" index=".1.3.6.1.4.1.2468.1.2.1.1.5.3.1.1">
+      <type>voltageDC</type>
+      <sensorId>BYPASS_VOLTAGE_<rowIndex/></sensorId>
+      <value>
+		<mult>
+			<op><getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.5.3.1.2</getRowOid></op>
+			<op>0.1</op>
+		</mult>
+      </value>
+      <label>Output Voltage<rowIndex/></label>
+      <sensorSet>Bypass<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsBypassCurrent -->
+		<numSensor ruleid="upsBypassCurrent" index=".1.3.6.1.4.1.2468.1.2.1.1.5.3.1.1">
+      <type>amperage</type>
+      <sensorId>BYPASS_CURRENT<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.5.3.1.3</getRowOid>
+      </value>
+      <label>Bypass Current<rowIndex/></label>
+      <sensorSet>Bypass<rowIndex/></sensorSet>
+    </numSensor>
+    
+	<!-- upsBypassPower -->
+		<numSensor ruleid="upsBypassPower" index=".1.3.6.1.4.1.2468.1.2.1.1.5.3.1.1">
+      <type>powerW</type>
+      <sensorId>UPS_BYPASS_POWER<rowIndex/></sensorId>
+      <value>
+          <getRowOid>.1.3.6.1.4.1.2468.1.2.1.1.5.3.1.4</getRowOid>
+      </value>
+      <label>Bypass Power<rowIndex/></label>
+      <sensorSet>Bypass<rowIndex/></sensorSet>
+    </numSensor>
+
+<!-- emdStatus Begin -->
+	<!-- emdSatatusEmdType -->
+		<stateSensor ruleid="emdSatatusEmdType">
+      <type>state</type>
+      <sensorId>EMD_SATATUS_EMD_TYPE</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.11.1.0</getOid>
+        </mapValue>
+      </value>
+      <label>EMD Type</label>
+      <enum>EmdType-em</enum>
+      <sensorSet>EMD Satatus</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="value4-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="EmdType-em">
+      <label>unknown</label>
+      <label>disabled</label>
+      <label>eMD-HT</label>
+      <label>eMD-T</label>
+    </enumMap>
+    
+	<!-- emdSatatusTemperature -->
+		<numSensor ruleid="emdSatatusTemperature">
+      <type>temp</type>
+      <sensorId>SATATUS_TEMPERATURE</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.11.2.0</getOid>
+      </value>
+      <label>EMD Satatus Temperature</label>
+      <sensorSet>EMD Satatus</sensorSet>
+    </numSensor>
+    
+	<!-- emdSatatusHumidity -->
+		<numSensor ruleid="emdSatatusHumidity">
+      <type>humidity</type>
+      <sensorId>SATATUS_HUMIDITY</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.11.3.0</getOid>
+      </value>
+      <label>EMD Satatus Humidity</label>
+      <sensorSet>EMD Satatus</sensorSet>
+    </numSensor>
+    
+	<!-- emdSatatusAlarm1 -->
+		<stateSensor ruleid="emdSatatusAlarm1">
+      <type>state</type>
+      <sensorId>EMD_SATATUS_ALARM_1</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.11.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>Alarm 1 Status</label>
+      <enum>Alarm-em</enum>
+      <sensorSet>EMD Satatus</sensorSet>
+    </stateSensor>
+
+    <enumMap ruleid="Alarm-em">
+      <label>unknown</label>
+      <label>disabled</label>
+      <label>active</label>
+      <label>inactive</label>
+    </enumMap>
+    
+	<!-- emdSatatusAlarm2 -->
+		<stateSensor ruleid="emdSatatusAlarm2">
+      <type>state</type>
+      <sensorId>EMD_SATATUS_ALARM_2</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.2468.1.2.1.1.11.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Alarm 2 Status</label>
+      <enum>Alarm-em</enum>
+      <sensorSet>EMD Satatus</sensorSet>
+    </stateSensor>
+    
+    </device>  
+</APC_DDF>

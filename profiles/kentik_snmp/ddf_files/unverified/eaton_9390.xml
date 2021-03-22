@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="eaton_9390" ddfname="Eaton 9390" ddfversion="6" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="eaton_9390">
+    <oidMustExist ruleid="snmpdevicetest" oid="1.3.6.1.2.1.47.1.1.1.1.7.1" />
+    <setProductData ruleid="vendordata" field="vendor">Eaton</setProductData>
+    <setProductData ruleid="modeldata" field="model">9390</setProductData>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+	
+	<setDefaultLabel ruleid="labeldata">
+      <getOid>1.3.6.1.2.1.47.1.1.1.1.7.1</getOid> (
+	  <getOid>1.3.6.1.2.1.4.20.1.1.10.30.242.62</getOid>)
+    </setDefaultLabel>  
+   
+   <setProductData ruleid="macaddr" field="mac_addr">
+			<getOid>1.3.6.1.2.1.47.1.1.1.1.11.1</getOid>
+		</setProductData>
+   <setProductData ruleid="serialnum" field="serial_num">
+			<getOid>1.3.6.1.2.1.47.1.1.1.1.11.2</getOid>
+		</setProductData>
+		
+   <suppressRule ruleid="stop_input_frequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+    <numSensor ruleid="input_frequency">
+      <type>frequency</type>
+      <units />
+      <sensorId>_INPUT_FREQUENCY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.534.1.3.1.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <label>Input Frequency</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    
+	
+    <numSensor ruleid="output_load">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_OUTPUT_LOAD</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.534.1.4.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Output Load</label>
+      <sensorSet>Percent</sensorSet>
+    </numSensor>
+    <numSensor ruleid="remote_humidity">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_REMOTE_HUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.534.1.6.6.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Remote Humidity</label>
+      <sensorSet>Percent</sensorSet>
+    </numSensor>
+    
+   
+    <numSensor ruleid="remote_temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_REMOTE_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>1.3.6.1.4.1.534.1.6.5.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <label>Remote Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="stompupsSecondsOnBattery" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<numSensor ruleid="timeonbatt">
+			<rowTest>
+				<mapValue mapid="apcsmartups/smartupsphaseinput/delete-null-sensor">
+					<getOid>.1.3.6.1.4.1.318.1.1.1.2.1.2.0</getOid>
+				</mapValue>
+			</rowTest>
+			<type>timeinmin/timeonbatt</type>
+			<sensorId>TIME_ON_BATT</sensorId>
+			<value>
+				<round increment="0.1">
+					<div>
+						<op>
+							<getOid>.1.3.6.1.4.1.318.1.1.1.2.1.2.0</getOid>
+						</op>
+						<op>6000</op>
+					</div>
+				</round>
+			</value>
+			<minValue>0</minValue>
+			<label>Time Running on Battery</label>
+			<sensorSet>UPS Battery Status</sensorSet>
+		</numSensor>
+		
+	
+   
+   
+    <stringSensor ruleid="host_name">
+      <type>string</type>
+      <units />
+      <sensorId>_HOST_NAME</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.47.1.1.1.1.7.1</getOid>
+        </op>
+      </value>
+      <label>Host name</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="model">
+      <type>string</type>
+      <units />
+      <sensorId>_MODEL</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.47.1.1.1.1.7.2</getOid>
+        </op>
+      </value>
+      <label>Model</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+   
+    <stringSensor ruleid="application_version">
+      <type>string</type>
+      <units />
+      <sensorId>_APPLICATION_VERSION</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.47.1.1.1.1.10.1</getOid>
+        </op>
+      </value>
+      <label>Application version</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="ip_address">
+      <type>string</type>
+      <units />
+      <sensorId>_IP_ADDRESS</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.4.20.1.1.10.30.242.62</getOid>
+        </op>
+      </value>
+      <label>IP Address</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="contact_name">
+      <type>string</type>
+      <units />
+      <sensorId>_CONTACT_NAME</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.1.4.0</getOid>
+        </op>
+      </value>
+      <label>Contact Name</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="location">
+      <type>string</type>
+      <units />
+      <sensorId>_LOCATION</sensorId>
+      <value>
+        <op>
+          <getOid>1.3.6.1.2.1.1.6.0</getOid>
+        </op>
+      </value>
+      <label>Location</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+	<valueMap ruleid="status1_vm">
+<valueIn>3</valueIn>
+			<valueOut>0</valueOut>
+<valueIn>4</valueIn>
+			<valueOut>1</valueOut>
+<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+</valueMap>
+
+<enumMap ruleid="status1_em">
+<label>Charging</label>
+<label>Normal</label>
+</enumMap>
+
+<valueMap ruleid="status2_vm">
+<valueIn>2</valueIn>
+			<valueOut>0</valueOut>
+<valueIn>3</valueIn>
+			<valueOut>1</valueOut>
+<valueIn>*</valueIn>
+		<valueOut>0</valueOut>
+</valueMap>
+
+<enumMap ruleid="status2_em">
+<label>No output power</label>
+<label>Normal</label>
+</enumMap>
+  </device>
+</APC_DDF>

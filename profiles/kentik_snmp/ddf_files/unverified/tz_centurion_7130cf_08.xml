@@ -1,0 +1,175 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="tz_centurion_7130cf_08"
+	ddfname="TZ Centurion 7130CF-08"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="tz_centurion_7130cf_08">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">TZ</setProductData>
+		<setProductData ruleid="modeldata" field="model">Centurion 7130CF-08</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack Access Device</setProductData>
+
+		<oidMustExist ruleid="product_alarm_state_oid_must_exist" oid="..1.3.6.1.4.1.35356.1.4.0"/> 
+
+		<enumMap ruleid="lock_unlock_em">
+			<label>Locked</label>
+			<label>Unlocked</label>
+			<label>Unknown</label>
+		</enumMap>
+
+		<enumMap ruleid="open_closed_em">
+			<label>Closed</label>
+			<label>Open</label>
+			<label>Unknown</label>
+		</enumMap>
+
+        <numSensor ruleid="PRODUCT_ALARM_STATE_SENSOR">
+            <sensorId>product_alarm_state</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.35356.1.4.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Alarm State</label>
+            <sensorSet>Product</sensorSet>
+        </numSensor>
+
+        <numSensor ruleid="DEVICE_NUMBER_SENSOR">
+            <sensorId>device_number</sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getOid>.1.3.6.1.4.1.35356.3.1.0</getOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Number of Devices</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="DEVICE_UNLOCK_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceunlock<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.4</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Lock</label>
+			<enum>lock_unlock_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <numSensor ruleid="DEVICE_TIMEOUT_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>num</type>
+            <sensorId>devicetimeout<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.5</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Timeout</label>
+            <sensorSet>Device</sensorSet>
+        </numSensor>
+
+        <stateSensor ruleid="DEVICE_OPEN_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceopen<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.6</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Open</label>
+			<enum>open_closed_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="DEVICE_INPUT_1_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceinput1<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.7</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Input 1 State</label>
+			<enum>open_closed_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="DEVICE_INPUT_2_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceinput2<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.8</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Input 2 State</label>
+			<enum>open_closed_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="DEVICE_OUTPUT_1_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceoutput1<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.9</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Output 1 State</label>
+			<enum>open_closed_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+        <stateSensor ruleid="DEVICE_OUTPUT_2_SENSOR" index=".1.3.6.1.4.1.35356.3.2.1.1">
+            <type>state</type>
+            <sensorId>deviceoutput2<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op>
+                        <getRowOid>.1.3.6.1.4.1.35356.3.2.1.10</getRowOid>
+                    </op>
+                    <op>1.0</op>
+                </mult>
+            </value>
+            <label>Device <rowIndex/> Output 2 State</label>
+			<enum>open_closed_em</enum>
+            <sensorSet>Device</sensorSet>
+        </stateSensor>
+
+
+		</device>
+</APC_DDF>

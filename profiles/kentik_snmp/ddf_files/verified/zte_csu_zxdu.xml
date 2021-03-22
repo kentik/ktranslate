@@ -1,0 +1,2775 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="zte_csu_zxdu"
+	ddfname="ZTE CSU-ZXDU"
+	ddfversion="4"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="zte_csu_zxdu">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+			<getOid>.1.3.6.1.4.1.3902.2800.1.2.1.1.252.0</getOid>
+		</setProductData>
+		<setProductData ruleid="modeldata" field="model">CSU-ZXDU</setProductData>
+		<setProductData ruleid="typedata" field="type">DC Rectifier</setProductData>
+		<setProductData ruleid="serialnum" field="serial_num">
+			<getOid>.1.3.6.1.4.1.3902.2800.1.2.1.1.13.0</getOid>
+		</setProductData>
+
+		<oidMustExist ruleid="zte_csu_zxdu" oid=".1.3.6.1.4.1.3902.2800.1.2.1" istree="yes" /> 
+
+		<valueMap ruleid="delete_null-vm">
+			<valueIn>-2147483648</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<valueMap ruleid="delete_null_alarm-vm">
+			<valueIn>*</valueIn><valueOut>[false]</valueOut>
+			<valueIn>1</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<!-- System Data -->
+		
+		<numSensor ruleid="smr_total_output_current">
+            <type>amperage</type>
+            <sensorId>SMR_TOTAL_OUTPUT_CURRENT</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.3.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Total Output Current</label>
+            <sensorSet>System Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_total_current">
+            <type>amperage</type>
+            <sensorId>BATTERY_TOTAL_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.4.0</getOid>
+            </value>
+            <label>Battery Total Current</label>
+            <sensorSet>System Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_total_current">
+            <type>voltage</type>
+            <sensorId>BATTERY_TOTAL_CURRENT</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.6.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Setting Voltage</label>
+            <sensorSet>System Data</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="battery_status">
+            <type>state</type>
+            <sensorId>BATTERY_STATUS</sensorId>
+            <value>
+				<mapValue mapid="battery_status-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65537.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Status</label>
+            <enum>battery_status-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="battery_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="battery_status-em">
+			<label>Float</label>
+			<label>Equal</label>
+			<label>Test</label>
+			<label>Discharge</label>
+			<label>Detect</label>
+			<label>Transition</label>
+			<label>Charge</label>
+		</enumMap>
+		
+		<stateSensor ruleid="output_relay_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.1.65539.1.2">
+            <type>state</type>
+            <sensorId>OUTPUT_RELAY_STATUS</sensorId>
+            <value>
+				<mapValue mapid="realy_status-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65539.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Output Relay Status</label>
+            <enum>realy_status-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="realy_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="realy_status-em">
+			<label>Reset</label>
+			<label>Set</label>
+		</enumMap>
+		
+		<stateSensor ruleid="work_mode">
+            <type>state</type>
+            <sensorId>WORK_MODE</sensorId>
+            <value>
+				<mapValue mapid="work_mode-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65540.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Status</label>
+            <enum>work_mode-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="work_mode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+		</valueMap>
+		<enumMap ruleid="work_mode-em">
+			<label>Safe</label>
+			<label>Free Mode</label>
+			<label>Auto Nonsave</label>
+			<label>Auto Save</label>
+			<label>Temp Nonsave</label>
+			<label>Perm Nonsave</label>
+			<label>Manual Detect</label>
+		</enumMap>
+		
+		<stateSensor ruleid="camera_status">
+            <type>state</type>
+            <sensorId>CAMERA_STATUS</sensorId>
+            <value>
+				<mapValue mapid="camera_status-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65563.0</getOid>
+				</mapValue>
+            </value>
+            <label>Camera Status</label>
+            <enum>camera_status-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="camera_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="camera_status-em">
+			<label>Disconnected</label>
+			<label>Connected</label>
+		</enumMap>
+		
+		<stateSensor ruleid="output_relay_control_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.1.65784.1.2">
+            <type>state</type>
+            <sensorId>OUTPUT_RELAY_CONTROL_STATUS</sensorId>
+            <value>
+				<mapValue mapid="realy_status-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65784.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Output Relay Control Status</label>
+            <enum>realy_status-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		
+		<stateSensor ruleid="generator_status">
+            <type>state</type>
+            <sensorId>GENERATOR_STATUS</sensorId>
+            <value>
+				<mapValue mapid="off_on-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65787.0</getOid>
+				</mapValue>
+            </value>
+            <label>Generator Status</label>
+            <enum>off_on-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="off_on-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="off_on-em">
+			<label>Off</label>
+			<label>On</label>
+		</enumMap>
+		
+		<stateSensor ruleid="emergency_light_status">
+            <type>state</type>
+            <sensorId>EMERGENCY_LIGHT_STATUS</sensorId>
+            <value>
+				<mapValue mapid="off_on-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65790.0</getOid>
+				</mapValue>
+            </value>
+            <label>Emergency Light Status</label>
+            <enum>off_on-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		
+		<stateSensor ruleid="input_relay_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.1.65791.1.2">
+            <type>state</type>
+            <sensorId>INPUT_RELAY_STATUS</sensorId>
+            <value>
+				<mapValue mapid="close_break-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.1.65791.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input Relay Status</label>
+            <enum>close_break-em</enum>
+            <sensorSet>System Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="close_break-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="close_break-em">
+			<label>Close</label>
+			<label>Break</label>
+		</enumMap>
+		
+		<!-- AC Data -->
+		
+		<numSensor ruleid="ac_ln_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.2.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>AC_LN_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.2.1.2</getRowOid>
+            </value>
+            <label>AC Voltage L
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex>-N</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_ln_current" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.6.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.6.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>AC_LN_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.6.1.2</getRowOid>
+            </value>
+            <label>AC Current L
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_frequency">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>AC_FREQUENCY</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.9.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>AC Frequency</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_apparent_power" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.10.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.10.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKVA</type>
+            <sensorId>AC_APPARENT_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.10.1.2</getRowOid>
+            </value>
+            <label>AC Apparent Power<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_active_power" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.11.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.11.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>ac_active_power_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.11.1.2</getRowOid>
+            </value>
+            <label>AC Active Power<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_reactive_power" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.12.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.12.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKVAR</type>
+            <sensorId>AC_REACTIVE_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.12.1.2</getRowOid>
+            </value>
+            <label>AC Reactive Power<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_power_factor" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.13.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.13.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>AC_POWER_FACTOR_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.13.1.2</getRowOid>
+            </value>
+            <label>AC Power Factor<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.15.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.15.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>AC_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.15.1.2</getRowOid>
+            </value>
+            <label>AC Voltage<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_current" index=".1.3.6.1.4.1.3902.2800.1.2.3.2.16.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.16.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>AC_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.16.1.2</getRowOid>
+            </value>
+            <label>AC Current<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_total_apparent_power">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.17.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKVA</type>
+            <sensorId>AC_TOTAL_APPARNET_POWER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.17.0</getOid>
+            </value>
+            <label>AC Total Apparent Power</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_total_active_power">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.18.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKW</type>
+            <sensorId>AC_TOTAL_ACTIVE_POWER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.18.0</getOid>
+            </value>
+            <label>AC Total Active Power</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_total_reactive_power">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.19.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerKVAR</type>
+            <sensorId>AC_TOTAL_REACTIVE_POWER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.19.0</getOid>
+            </value>
+            <label>AC Total Reactive Power</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ac_total_power_factor">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.20.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num/powerfactor</type>
+            <sensorId>AC_TOTAL_POWER_FACTOR</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.20.0</getOid>
+            </value>
+            <label>AC Total Power Factor</label>
+            <sensorSet>AC Data</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="power_source">
+            <type>state</type>
+            <sensorId>POWER_SOURCE</sensorId>
+            <value>
+				<mapValue mapid="power_source-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.65537.0</getOid>
+				</mapValue>
+            </value>
+            <label>Power Source</label>
+            <enum>power_source-em</enum>
+            <sensorSet>AC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="power_source-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="power_source-em">
+			<label>AC1</label>
+			<label>AC2 Gen</label>
+			<label>Battery</label>
+		</enumMap>
+		
+		<stateSensor ruleid="ac_input_switch_status">
+            <type>state</type>
+            <sensorId>AC_INPUT_SWITCH_STATUS</sensorId>
+            <value>
+				<mapValue mapid="switch_status-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.65538.0</getOid>
+				</mapValue>
+            </value>
+            <label>AC Input Switch Status</label>
+            <enum>switch_status-em</enum>
+            <sensorSet>AC Data</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="ac_output_switch_status">
+            <type>state</type>
+            <sensorId>AC_OUTPUT_SWITCH_STATUS</sensorId>
+            <value>
+				<mapValue mapid="switch_status-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.65539.0</getOid>
+				</mapValue>
+            </value>
+            <label>AC Output Switch Status</label>
+            <enum>switch_status-em</enum>
+            <sensorSet>AC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="switch_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="switch_status-em">
+			<label>Close</label>
+			<label>Break</label>
+			<label>Not Configured</label>
+		</enumMap>
+		
+		<!-- SMR Data -->
+		
+		<numSensor ruleid="smr_output_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.1.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>SMR_OUTPUT_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.1.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Output Voltage<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="smr_output_current" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.2.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.2.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>SMR_OUTPUT_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.2.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Output Current<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="smr_internal_temperature" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.10.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.10.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SMR_INTERNAL_TEMPERATURE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.10.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Internal Temperature<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="smr_input_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.19.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.19.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>SMR_INPUT_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.19.1.2</getRowOid>
+            </value>
+            <label>SMR Input Voltage<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="smr_input_current" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.20.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.20.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>SMR_INPUT_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.20.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Input Current<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="smr_input_frequency" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.26.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.26.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>SMR_INPUT_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.26.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>SMR Input Frequency<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex></label>
+            <sensorSet>SMR Data</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="smr_fan_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.65556.1.2">
+            <type>state</type>
+            <sensorId>SMR_FAN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="smr_fan_status-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.65556.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>SMR Fan<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Status</label>
+            <enum>smr_fan_status-em</enum>
+            <sensorSet>SMR Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="smr_fan_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="smr_fan_status-em">
+			<label>Auto</label>
+			<label>Full Speed</label>
+		</enumMap>
+		
+		<!-- DC Data -->
+		
+		<numSensor ruleid="dc_total_voltage">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_TOTAL_VOLTAGE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.1.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>DC Total Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_total_current">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>DC_TOTAL_CURRENT</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.2.0</getOid>
+            </value>
+            <label>DC Total Current</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.4.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.4.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_BATTERY_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.4.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_current" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.5.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.5.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>DC_BATTERY_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.5.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Current</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_temperature" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.6.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.6.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>DC_BATTERY_TEMPERATURE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.6.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Temperature</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_middle_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.11.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.11.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_BATTERY_MIDDLE_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.11.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Middle Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_estimated_discharge_duration" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.12.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.12.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinmin</type>
+            <sensorId>DC_BATTERY_ESTIMATED_DISCHARGE_DURATION_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.12.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Estimated Discharge Duration</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_capacity" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.14.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.14.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>DC_BATTERY_CAPACITY_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.14.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Capacity</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_cell_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.20.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.20.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_BATTERY_CELL_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.20.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Cell Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_battery_block_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.21.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.21.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_BATTERY_BLOCK_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.21.1.2</getRowOid>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Block Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_cell_voltage" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.22.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.22.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>DC_CELL_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.22.1.2</getRowOid>
+            </value>
+            <label>DC Cell<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Voltage</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="dc_cell_temperature" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.23.1.2">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.23.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>DC_CELL_TEMPERATURE_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.23.1.2</getRowOid>
+            </value>
+            <label>DC Cell<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Temperature</label>
+            <sensorSet>DC Data</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="dc_battery_heater_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65552.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_HEATER_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="close_open-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65552.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Heater Status</label>
+            <enum>close_open-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="close_open-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="close_open-em">
+			<label>Close</label>
+			<label>Open</label>
+		</enumMap>
+		
+		<stateSensor ruleid="dc_battery_charge_protection_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65553.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_CHARGE_PROTECTION_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="no_yes-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65553.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Charge Protection Status</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dc_battery_discharge_protection_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65554.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_DISCHARGE_PROTECTION_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="no_yes-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65554.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Discharge Protection Status</label>
+            <enum>no_yes-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="no_yes-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="no_yes-em">
+			<label>No</label>
+			<label>Yes</label>
+		</enumMap>
+		
+		<stateSensor ruleid="dc_battery_charge_loop_switch_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65556.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_CHARGE_LOOP_SWITCH_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="break_close-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65556.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Charge Loop Switch Status</label>
+            <enum>break_close-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="dc_battery_discharge_loop_switch_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65557.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_DISCHARGE_LOOP_SWITCH_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="break_close-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65557.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Discharge Loop Switch Status</label>
+            <enum>break_close-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="break_close-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="break_close-em">
+			<label>Break</label>
+			<label>Close</label>
+		</enumMap>
+		
+		<stateSensor ruleid="dc_battery_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.4.65559.1.2">
+            <type>state</type>
+            <sensorId>DC_BATTERY_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="dc_battery_status-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.4.65559.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>DC Battery<space/>
+				<regex>
+					<op>\d+\.(\d+)</op>
+					<op><rowIndex/></op>
+					<op>%1$s</op>
+				</regex> Status</label>
+            <enum>dc_battery_status-em</enum>
+            <sensorSet>DC Data</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="dc_battery_status-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="dc_battery_status-em">
+			<label>Standby</label>
+			<label>Charging</label>
+			<label>Discharging</label>
+		</enumMap>
+		
+		<!-- Environmental Data -->
+		
+		<numSensor ruleid="environment_temperature">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.5.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>ENVIRONMENT_TEMPERATURE</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.5.1.0</getOid>
+            </value>
+            <label>Environment Temperature</label>
+            <sensorSet>Environmental Data</sensorSet>
+        </numSensor>
+		<numSensor ruleid="environment_humidity">
+			<rowTest>
+				<mapValue mapid="delete_null-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.5.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>ENVIRONMENT_HUMIDITY</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.3.5.2.0</getOid>
+            </value>
+            <label>Environment Humidity</label>
+            <sensorSet>Environmental Data</sensorSet>
+        </numSensor>
+		
+		<!--
+		<numSensor ruleid="float_charge_voltage">
+            <type>voltage</type>
+            <sensorId>FLOAT_CHARGE_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.5.0</getOid>
+            </value>
+            <label>Float Charge Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="equalized_charge_enabled">
+            <type>state</type>
+            <sensorId>EQUALIZED_CHARGE_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Equalized Charge Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="disable_enable-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="disable_enable-em">
+			<label>Disabled</label>
+			<label>Enabled</label>
+		</enumMap>
+		
+		<numSensor ruleid="equalized_charge_voltage">
+            <type>voltage</type>
+            <sensorId>EQUALIZED_CHARGE_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.7.0</getOid>
+            </value>
+            <label>Equalized Charge Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_period">
+            <type>num</type>
+            <sensorId>EQUALIZED_CHARGE_PERIOD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.9.0</getOid>
+            </value>
+            <label>Equalized Charge Period</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_max_duration">
+            <type>timeinhrs</type>
+            <sensorId>EQUALIZED_CHARGE_MAX_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.10.0</getOid>
+            </value>
+            <label>Equalized Charge Maximum Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_min_duration">
+            <type>timeinhrs</type>
+            <sensorId>EQUALIZED_CHARGE_MIN_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.11.0</getOid>
+            </value>
+            <label>Equalized Charge Minimum Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_end_duration">
+            <type>timeinhrs</type>
+            <sensorId>EQUALIZED_CHARGE_END_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.12.0</getOid>
+            </value>
+            <label>Equalized Charge End Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_threshold_voltage">
+            <type>voltage</type>
+            <sensorId>EQUALIZED_CHARGE_THRESHOLD_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.14.0</getOid>
+            </value>
+            <label>Equalized Charge Threshold Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_threshold_capacity">
+            <type>num</type>
+            <sensorId>EQUALIZED_CHARGE_THRESHOLD_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.15.0</getOid>
+            </value>
+            <label>Equalized Charge Threshold Capacity</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_threshold_current">
+            <type>amperage</type>
+            <sensorId>EQUALIZED_CHARGE_THRESHOLD_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.16.0</getOid>
+            </value>
+            <label>Equalized Charge Threshold Current</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="equalized_charge_threshold_duration">
+            <type>timeinhrs</type>
+            <sensorId>EQUALIZED_CHARGE_THRESHOLD_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.17.0</getOid>
+            </value>
+            <label>Equalized Charge Threshold Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_test_period">
+            <type>timeinhrs</type>
+            <sensorId>BATTERY_TEST_PERIOD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.19.0</getOid>
+            </value>
+            <label>Battery Test Period</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_test_start_time">
+            <type>timeinhrs</type>
+            <sensorId>BATTERY_TEST_START_TIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.20.0</getOid>
+            </value>
+            <label>Battery Test Start Time</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="test_stop_voltage">
+            <type>voltage</type>
+            <sensorId>TEST_STOP_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.21.0</getOid>
+            </value>
+            <label>Test Stop Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="test_stop_capacity">
+            <type>num</type>
+            <sensorId>TEST_STOP_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.22.0</getOid>
+            </value>
+            <label>Test Stop Capacity</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="test_maximum_duration">
+            <type>num</type>
+            <sensorId>TEST_MAXIMUM_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.23.0</getOid>
+            </value>
+            <label>Test Maximum Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_temperature_compensation_reference">
+            <type>temp</type>
+            <sensorId>BATTERY_TEMPERATURE_COMPENSATION_REFERENCE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.29.0</getOid>
+            </value>
+            <label>Battery Temperature Compensation Reference</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd1_voltage">
+            <type>voltage</type>
+            <sensorId>LLVD1_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.33.0</getOid>
+            </value>
+            <label>LLVD1 Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd1_duration">
+            <type>timeinhrs</type>
+            <sensorId>LLVD1_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.35.0</getOid>
+            </value>
+            <label>LLVD1 Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd2_voltage">
+            <type>voltage</type>
+            <sensorId>LLVD2_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.36.0</getOid>
+            </value>
+            <label>LLVD2 Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd2_duration">
+            <type>timeinhrs</type>
+            <sensorId>LLVD2_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.38.0</getOid>
+            </value>
+            <label>LLVD2 Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="lltd_enabled">
+            <type>state</type>
+            <sensorId>LLTD_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.39.0</getOid>
+				</mapValue>
+            </value>
+            <label>LLTD Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="llvd_environment_temperature">
+            <type>temp</type>
+            <sensorId>LLVD_ENVIRONMENT_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.40.0</getOid>
+            </value>
+            <label>LLTD Environment Temperature</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="start_voltage_deviation_in_transition">
+            <type>num</type>
+            <sensorId>START_VOLTAGE_DEVIATION_IN_TRANSITION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.45.0</getOid>
+            </value>
+            <label>Start Voltage Deviation In Transition</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="lltd_enabled">
+            <type>state</type>
+            <sensorId>LLTD_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="work_mode-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.46.0</getOid>
+				</mapValue>
+            </value>
+            <label>LLTD Enable Status</label>
+            <enum>work_mode-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="work_mode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="work_mode-em">
+			<label>Safe</label>
+			<label>Save</label>
+			<label>Free</label>
+		</enumMap>
+		
+		<numSensor ruleid="smr_rotated_period">
+            <type>num</type>
+            <sensorId>SMR_ROTATED_PERIOD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.47.0</getOid>
+            </value>
+            <label>SMR Rotated Period</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="blvd_enabled">
+            <type>state</type>
+            <sensorId>BLVD_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.55.0</getOid>
+				</mapValue>
+            </value>
+            <label>BLVD Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="blvd_voltage">
+            <type>voltage</type>
+            <sensorId>BLVD_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.56.0</getOid>
+            </value>
+            <label>BLVD Voltage</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="blvd_duration">
+            <type>timeinhrs</type>
+            <sensorId>BLVD_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.58.0</getOid>
+            </value>
+            <label>BLVD Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="preset_equalized_charge_duration">
+            <type>timeinhrs</type>
+            <sensorId>PRESET_EQUALIZED_CHARGE_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.59.0</getOid>
+            </value>
+            <label>Preset Equalized Charge Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="preset_equalized_charge_enabled">
+            <type>state</type>
+            <sensorId>PRESET_EQUALIZED_CHARGE_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.60.0</getOid>
+				</mapValue>
+            </value>
+            <label>Preset Equalized Charge Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="temperature_compensation_voltage_maximum">
+            <type>voltage</type>
+            <sensorId>TEMPERATURE_COMPENSATION_VOLTAGE_MAXIMUM</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.62.0</getOid>
+            </value>
+            <label>Temperature Compensation Voltage Maximum</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="temperature_compensation_voltage_minimum">
+            <type>voltage</type>
+            <sensorId>TEMPERATURE_COMPENSATION_VOLTAGE_MINIMUM</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.63.0</getOid>
+            </value>
+            <label>Temperature Compensation Voltage Minimum</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="llvd1_enabled">
+            <type>state</type>
+            <sensorId>LLVD1_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.66.0</getOid>
+				</mapValue>
+            </value>
+            <label>LLVD1 Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="llvd2_enabled">
+            <type>state</type>
+            <sensorId>LLVD2_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.67.0</getOid>
+				</mapValue>
+            </value>
+            <label>LLVD2 Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="minimum_qty_of_started_smrs">
+            <type>num</type>
+            <sensorId>MINIMUM_QTY_OF_STARTED_SMRS</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.69.0</getOid>
+            </value>
+            <label>Minimum Qty.of Started SMRs</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_detect_period">
+            <type>timeinhrs</type>
+            <sensorId>BATTERY_DETECT_PERIOD</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.70.0</getOid>
+            </value>
+            <label>Battery Detect Period</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="battery_detect_duration">
+            <type>timeinhrs</type>
+            <sensorId>BATTERY_DETECT_DURATION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.71.0</getOid>
+            </value>
+            <label>Battery Detect Duration</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd1_capacity">
+            <type>pctofcapacity</type>
+            <sensorId>LLVD1_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.85.0</getOid>
+            </value>
+            <label>LLVD1 Capacity</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="llvd2_capacity">
+            <type>pctofcapacity</type>
+            <sensorId>LLVD2_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.86.0</getOid>
+            </value>
+            <label>LLVD2 Capacity</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<numSensor ruleid="blvd_capacity">
+            <type>pctofcapacity</type>
+            <sensorId>BLVD_CAPACITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.88.0</getOid>
+            </value>
+            <label>BLVD Capacity</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="bhtd_enabled">
+            <type>state</type>
+            <sensorId>BHTD_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.90.0</getOid>
+				</mapValue>
+            </value>
+            <label>BHTD Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<numSensor ruleid="bhtd_temperature">
+            <type>temp</type>
+            <sensorId>BHTD_TEMPERATURE</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.91.0</getOid>
+            </value>
+            <label>BHTD Temperature</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor>
+		<stateSensor ruleid="disconnect_mode">
+            <type>state</type>
+            <sensorId>DISCONNECT_MODE</sensorId>
+            <value>
+				<mapValue mapid="disconnect_mode-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.94.0</getOid>
+				</mapValue>
+            </value>
+            <label>Disconnect Mode</label>
+            <enum>disconnect_mode-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="disconnect_mode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="disconnect_mode-em">
+			<label>Disabled</label>
+			<label>Battery Voltage</label>
+			<label>Power Off Time</label>
+			<label>Battery Remaining Capacity</label>
+		</enumMap>
+		
+		<stateSensor ruleid="generator_mode">
+            <type>state</type>
+            <sensorId>GENERATOR_MODE</sensorId>
+            <value>
+				<mapValue mapid="auto_manual-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.106.0</getOid>
+				</mapValue>
+            </value>
+            <label>Generator Mode</label>
+            <enum>auto_manual-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="auto_manual-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+		</valueMap>
+		<enumMap ruleid="auto_manual-em">
+			<label>Auto</label>
+			<label>Manual</label>
+		</enumMap>
+		
+		<stateSensor ruleid="bltd_enabled">
+            <type>state</type>
+            <sensorId>BLTD_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.129.0</getOid>
+				</mapValue>
+            </value>
+            <label>BLTD Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="smr_smart_cooling_enabled">
+            <type>state</type>
+            <sensorId>SMR_SMART_COOLING_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.160.0</getOid>
+				</mapValue>
+            </value>
+            <label>SMR Smart Cooling Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		
+		<stateSensor ruleid="battery_charge_mode">
+            <type>state</type>
+            <sensorId>BATTERY_CHARGE_MODE</sensorId>
+            <value>
+				<mapValue mapid="charge_mode-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.163.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Charge Mode</label>
+            <enum>charge_mode-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="charge_mode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<enumMap ruleid="charge_mode-em">
+			<label>Normal</label>
+			<label>Smart</label>
+			<label>Fast</label>
+		</enumMap>
+		
+		<stateSensor ruleid="temperature_compensation_mode">
+            <type>state</type>
+            <sensorId>TEMPERATURE_COMPENSATION_MODE</sensorId>
+            <value>
+				<mapValue mapid="temperature_compensation_mode-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.174.0</getOid>
+				</mapValue>
+            </value>
+            <label>Temperature Compensation Mode</label>
+            <enum>temperature_compensation_mode-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		<valueMap ruleid="temperature_compensation_mode-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		<enumMap ruleid="temperature_compensation_mode-em">
+			<label>Enabled</label>
+			<label>Float</label>
+			<label>Equalized</label>
+			<label>Disabled</label>
+		</enumMap>
+		
+		<stateSensor ruleid="battery_heater_enabled">
+            <type>state</type>
+            <sensorId>BATTERY_HEATER_ENABLED</sensorId>
+            <value>
+				<mapValue mapid="disable_enable-vm">
+					<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.175.0</getOid>
+				</mapValue>
+            </value>
+            <label>Battery Heater Enable Status</label>
+            <enum>disable_enable-em</enum>
+            <sensorSet>System Parameters</sensorSet>
+        </stateSensor>
+		
+		<numSensor ruleid="bltd_temperature">
+            <type>temp</type>
+            <sensorId>BLTD_TEMPERATURE</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.166.0</getOid>
+            </value>
+            <label>BLTD Temperature</label>
+            <sensorSet>System Parameters</sensorSet>
+        </numSensor> -->
+		
+		<alarmFlags ruleid="ac_spd_status">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.65540.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>AC SPD Fault Exists</activeText>
+					<inactiveText>AC SPD Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>AC Data</category>
+				<description>
+					<activeText>AC SPD Fault Exists</activeText>
+					<inactiveText>AC SPD Fault Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="ats_ac_signal_status">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.3.2.65557.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>ATS AC1 Signal Fault Exists</activeText>
+					<inactiveText>ATS AC1 Signal Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>AC Data</category>
+				<description>
+					<activeText>ATS AC1 Signal Fault Exists</activeText>
+					<inactiveText>ATS AC1 Signal Fault Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags2 ruleid="smr_work_status" index=".1.3.6.1.4.1.3902.2800.1.2.3.3.65786.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.3.3.65786.1.2</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Alarm
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>SMR Data</category>
+				<description>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Alarm condition exists.
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Communication Failure
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Communication Failure Cleared
+					</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>SMR Data</category>
+				<description>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Communication Failure condition exists.
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Communication Failure condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Update
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Update Cleared
+					</inactiveText>
+				</name>
+				<severity>informational</severity>
+				<category>SMR Data</category>
+				<description>
+					<activeText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Update condition exists.
+					</activeText>
+					<inactiveText>SMR<space/>
+						<regex>
+							<op>\d+\.(\d+)</op>
+							<op><rowIndex/></op>
+							<op>%1$s</op>
+						</regex> Update condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		
+		<alarmFlags2 ruleid="ac_spd_status" index=".1.3.6.1.4.1.3902.2800.1.2.6.2.1.4">
+			<rowTest>
+				<mapValue mapid="delete_null_alarm-vm">
+					<getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+			<value><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.4</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Alarms</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Exists</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.3902.2800.1.2.6.2.1.3</getRowOid> Alarm Cleared</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<!--
+		<alarmFlags ruleid="battery_test_failure_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65537.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Battery Test Failure Alarm</activeText>
+					<inactiveText>Critical Battery Test Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Battery Test Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical Battery Test Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Battery Test Failure Alarm</activeText>
+					<inactiveText>Major Battery Test Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Battery Test Failure Alarm condition exists.</activeText>
+					<inactiveText>Major Battery Test Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Battery Test Failure Alarm</activeText>
+					<inactiveText>Minor Battery Test Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Battery Test Failure Alarm condition exists.</activeText>
+					<inactiveText>Minor Battery Test Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Battery Test Failure Alarm</activeText>
+					<inactiveText>Warning Battery Test Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Battery Test Failure Alarm condition exists.</activeText>
+					<inactiveText>Warning Battery Test Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="llvd1_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65540.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical LLVD1 Alarm</activeText>
+					<inactiveText>Critical LLVD1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical LLVD1 Alarm condition exists.</activeText>
+					<inactiveText>Critical LLVD1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major LLVD1 Alarm</activeText>
+					<inactiveText>Major LLVD1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major LLVD1 Alarm condition exists.</activeText>
+					<inactiveText>Major LLVD1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor LLVD1 Alarm</activeText>
+					<inactiveText>Minor LLVD1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor LLVD1 Alarm condition exists.</activeText>
+					<inactiveText>Minor LLVD1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning LLVD1 Alarm</activeText>
+					<inactiveText>Warning LLVD1 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning LLVD1 Alarm condition exists.</activeText>
+					<inactiveText>Warning LLVD1 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="llvd2_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65542.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical LLVD2 Alarm</activeText>
+					<inactiveText>Critical LLVD2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical LLVD2 Alarm condition exists.</activeText>
+					<inactiveText>Critical LLVD2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major LLVD2 Alarm</activeText>
+					<inactiveText>Major LLVD2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major LLVD2 Alarm condition exists.</activeText>
+					<inactiveText>Major LLVD2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor LLVD2 Alarm</activeText>
+					<inactiveText>Minor LLVD2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor LLVD2 Alarm condition exists.</activeText>
+					<inactiveText>Minor LLVD2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning LLVD2 Alarm</activeText>
+					<inactiveText>Warning LLVD2 Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning LLVD2 Alarm condition exists.</activeText>
+					<inactiveText>Warning LLVD2 Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="lltd_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65544.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical LLTD Alarm</activeText>
+					<inactiveText>Critical LLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical LLTD Alarm condition exists.</activeText>
+					<inactiveText>Critical LLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major LLTD Alarm</activeText>
+					<inactiveText>Major LLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major LLTD Alarm condition exists.</activeText>
+					<inactiveText>Major LLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor LLTD Alarm</activeText>
+					<inactiveText>Minor LLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor LLTD Alarm condition exists.</activeText>
+					<inactiveText>Minor LLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning LLTD Alarm</activeText>
+					<inactiveText>Warning LLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning LLTD Alarm condition exists.</activeText>
+					<inactiveText>Warning LLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="blvd_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65547.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical BLVD Alarm</activeText>
+					<inactiveText>Critical BLVD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical BLVD Alarm condition exists.</activeText>
+					<inactiveText>Critical BLVD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major BLVD Alarm</activeText>
+					<inactiveText>Major BLVD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major BLVD Alarm condition exists.</activeText>
+					<inactiveText>Major BLVD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor BLVD Alarm</activeText>
+					<inactiveText>Minor BLVD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor BLVD Alarm condition exists.</activeText>
+					<inactiveText>Minor BLVD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning BLVD Alarm</activeText>
+					<inactiveText>Warning BLVD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning BLVD Alarm condition exists.</activeText>
+					<inactiveText>Warning BLVD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battery_detection_abnormal_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65550.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Battery Detection Abnormal Alarm</activeText>
+					<inactiveText>Critical Battery Detection Abnormal Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Battery Detection Abnormal Alarm condition exists.</activeText>
+					<inactiveText>Critical Battery Detection Abnormal Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Battery Detection Abnormal Alarm</activeText>
+					<inactiveText>Major Battery Detection Abnormal Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Battery Detection Abnormal Alarm condition exists.</activeText>
+					<inactiveText>Major Battery Detection Abnormal Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Battery Detection Abnormal Alarm</activeText>
+					<inactiveText>Minor Battery Detection Abnormal Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Battery Detection Abnormal Alarm condition exists.</activeText>
+					<inactiveText>Minor Battery Detection Abnormal Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Battery Detection Abnormal Alarm</activeText>
+					<inactiveText>Warning Battery Detection Abnormal Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Battery Detection Abnormal Alarm condition exists.</activeText>
+					<inactiveText>Warning Battery Detection Abnormal Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="bhtd_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65551.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical BHTD Alarm</activeText>
+					<inactiveText>Critical BHTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical BHTD Alarm condition exists.</activeText>
+					<inactiveText>Critical BHTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major BHTD Alarm</activeText>
+					<inactiveText>Major BHTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major BHTD Alarm condition exists.</activeText>
+					<inactiveText>Major BHTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor BHTD Alarm</activeText>
+					<inactiveText>Minor BHTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor BHTD Alarm condition exists.</activeText>
+					<inactiveText>Minor BHTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning BHTD Alarm</activeText>
+					<inactiveText>Warning BHTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning BHTD Alarm condition exists.</activeText>
+					<inactiveText>Warning BHTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarms_blocked_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65554.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical All Alarms Blocked Alarm</activeText>
+					<inactiveText>Critical All Alarms Blocked Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical All Alarms Blocked Alarm condition exists.</activeText>
+					<inactiveText>Critical All Alarms Blocked Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major All Alarms Blocked Alarm</activeText>
+					<inactiveText>Major All Alarms Blocked Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major All Alarms Blocked Alarm condition exists.</activeText>
+					<inactiveText>Major All Alarms Blocked Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor All Alarms Blocked Alarm</activeText>
+					<inactiveText>Minor All Alarms Blocked Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor All Alarms Blocked Alarm condition exists.</activeText>
+					<inactiveText>Minor All Alarms Blocked Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning All Alarms Blocked Alarm</activeText>
+					<inactiveText>Warning All Alarms Blocked Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning All Alarms Blocked Alarm condition exists.</activeText>
+					<inactiveText>Warning All Alarms Blocked Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="alarms_blocked_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65558.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical System Overload Alarm</activeText>
+					<inactiveText>Critical System Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical System Overload Alarm condition exists.</activeText>
+					<inactiveText>Critical System Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major System Overload Alarm</activeText>
+					<inactiveText>Major System Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major System Overload Alarm condition exists.</activeText>
+					<inactiveText>Major System Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor System Overload Alarm</activeText>
+					<inactiveText>Minor System Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor System Overload Alarm condition exists.</activeText>
+					<inactiveText>Minor System Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning System Overload Alarm</activeText>
+					<inactiveText>Warning System Overload Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning System Overload Alarm condition exists.</activeText>
+					<inactiveText>Warning System Overload Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="bltd_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65560.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical BLTD Alarm</activeText>
+					<inactiveText>Critical BLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical BLTD Alarm condition exists.</activeText>
+					<inactiveText>Critical BLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major BLTD Alarm</activeText>
+					<inactiveText>Major BLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major BLTD Alarm condition exists.</activeText>
+					<inactiveText>Major BLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor BLTD Alarm</activeText>
+					<inactiveText>Minor BLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor BLTD Alarm condition exists.</activeText>
+					<inactiveText>Minor BLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning BLTD Alarm</activeText>
+					<inactiveText>Warning BLTD Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning BLTD Alarm condition exists.</activeText>
+					<inactiveText>Warning BLTD Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battery_equalized_charge_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65564.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Battery Equalized Charge Alarm</activeText>
+					<inactiveText>Critical Battery Equalized Charge Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Battery Equalized Charge Alarm condition exists.</activeText>
+					<inactiveText>Critical Battery Equalized Charge Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Battery Equalized Charge Alarm</activeText>
+					<inactiveText>Major Battery Equalized Charge Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Battery Equalized Charge Alarm condition exists.</activeText>
+					<inactiveText>Major Battery Equalized Charge Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Battery Equalized Charge Alarm</activeText>
+					<inactiveText>Minor Battery Equalized Charge Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Battery Equalized Charge Alarm condition exists.</activeText>
+					<inactiveText>Minor Battery Equalized Charge Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Battery Equalized Charge Alarm</activeText>
+					<inactiveText>Warning Battery Equalized Charge Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Battery Equalized Charge Alarm condition exists.</activeText>
+					<inactiveText>Warning Battery Equalized Charge Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="bmu_communication_failure_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65570.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical BMU Communication Failure Alarm</activeText>
+					<inactiveText>Critical BMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical BMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical BMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major BMU Communication Failure Alarm</activeText>
+					<inactiveText>Major BMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major BMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Major BMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor BMU Communication Failure Alarm</activeText>
+					<inactiveText>Minor BMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor BMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Minor BMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning BMU Communication Failure Alarm</activeText>
+					<inactiveText>Warning BMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning BMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Warning BMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="battery_testing_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65571.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Battery Testing Alarm</activeText>
+					<inactiveText>Critical Battery Testing Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Battery Testing Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical Battery Testing Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Battery Testing Alarm</activeText>
+					<inactiveText>Major Battery Testing Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Battery Testing Alarm condition exists.</activeText>
+					<inactiveText>Major Battery Testing Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Battery Testing Alarm</activeText>
+					<inactiveText>Minor Battery Testing Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Battery Testing Alarm condition exists.</activeText>
+					<inactiveText>Minor Battery Testing Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Battery Testing Alarm</activeText>
+					<inactiveText>Warning Battery Testing Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Battery Testing Alarm condition exists.</activeText>
+					<inactiveText>Warning Battery Testing Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="multi_smr_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65577.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Multi-SMR Alarm</activeText>
+					<inactiveText>Critical Multi-SMR Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Multi-SMR Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical Multi-SMR Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Multi-SMR Alarm</activeText>
+					<inactiveText>Major Multi-SMR Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Multi-SMR Alarm condition exists.</activeText>
+					<inactiveText>Major Multi-SMR Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Multi-SMR Alarm</activeText>
+					<inactiveText>Minor Multi-SMR Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Multi-SMR Alarm condition exists.</activeText>
+					<inactiveText>Minor Multi-SMR Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Multi-SMR Alarm</activeText>
+					<inactiveText>Warning Multi-SMR Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Multi-SMR Alarm condition exists.</activeText>
+					<inactiveText>Warning Multi-SMR Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="io_board_comms_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65584.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical I/O Board Communication Failure Alarm</activeText>
+					<inactiveText>Critical I/O Board Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical I/O Board Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical I/O Board Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major I/O Board Communication Failure Alarm</activeText>
+					<inactiveText>Major I/O Board Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major I/O Board Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Major I/O Board Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor I/O Board Communication Failure Alarm</activeText>
+					<inactiveText>Minor I/O Board Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor I/O Board Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Minor I/O Board Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning I/O Board Communication Failure Alarm</activeText>
+					<inactiveText>Warning I/O Board Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning I/O Board Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Warning I/O Board Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="fbmu_comms_fail_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65592.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical FBMU Communication Failure Alarm</activeText>
+					<inactiveText>Critical FBMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical FBMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Critical FBMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major FBMU Communication Failure Alarm</activeText>
+					<inactiveText>Major FBMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major FBMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Major FBMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor FBMU Communication Failure Alarm</activeText>
+					<inactiveText>Minor FBMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor FBMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Minor FBMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning FBMU Communication Failure Alarm</activeText>
+					<inactiveText>Warning FBMU Communication Failure Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning FBMU Communication Failure Alarm condition exists.</activeText>
+					<inactiveText>Warning FBMU Communication Failure Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="mac_address_not_set_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.65604.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical MAC Address Not Set Alarm</activeText>
+					<inactiveText>Critical MAC Address Not Set Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical MAC Address Not Set Alarm condition exists.</activeText>
+					<inactiveText>Critical MAC Address Not Set Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major MAC Address Not Set Alarm</activeText>
+					<inactiveText>Major MAC Address Not Set Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major MAC Address Not Set Alarm condition exists.</activeText>
+					<inactiveText>Major MAC Address Not Set Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor MAC Address Not Set Alarm</activeText>
+					<inactiveText>Minor MAC Address Not Set Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor MAC Address Not Set Alarm condition exists.</activeText>
+					<inactiveText>Minor MAC Address Not Set Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning MAC Address Not Set Alarm</activeText>
+					<inactiveText>Warning MAC Address Not Set Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning MAC Address Not Set Alarm condition exists.</activeText>
+					<inactiveText>Warning MAC Address Not Set Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="common_alarm">
+			<value><getOid>.1.3.6.1.4.1.3902.2800.1.2.2.1.655789.0</getOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Critical Common Alarm</activeText>
+					<inactiveText>Critical Common Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Critical Common Alarm condition exists.</activeText>
+					<inactiveText>Critical Common Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Major Common Alarm</activeText>
+					<inactiveText>Major Common Alarm Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Major Common Alarm condition exists.</activeText>
+					<inactiveText>Major Common Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Minor Common Alarm</activeText>
+					<inactiveText>Minor Common Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Minor Common Alarm condition exists.</activeText>
+					<inactiveText>Minor Common Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Warning Common Alarm</activeText>
+					<inactiveText>Warning Common Alarm Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System Parameters</category>
+				<description>
+					<activeText>Warning Common Alarm condition exists.</activeText>
+					<inactiveText>Warning Common Alarm condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags> -->
+	</device>
+</APC_DDF>

@@ -1,0 +1,1638 @@
+<?xml version="1.0"?>
+<!--  APC InRoomPerimeter -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid="apcairinroom" ddfname="APC NetworkAir InRoom" ddfversion="4">
+    <schemaVersion>1.6</schemaVersion>
+    <device deviceid="airinroomperimeter">
+	   <oidMustMatch ruleid="inroomsysid" oid=".1.3.6.1.2.1.1.2.0">
+		  <valueList>
+			 <value>.1.3.6.1.4.1.318.1.3.14.9</value> <!-- inRoomPerimeter -->
+			 <value>.1.3.6.1.4.1.318.1.3.14.9.*</value> <!-- other inRoomPerimeter -->
+		  </valueList>
+	   </oidMustMatch>
+	   <!-- Maintenance Status -->
+	   <stateSensor ruleid="maintenancestatus">
+		  <type>state/maintenancestatus</type>
+		  <sensorId>IN_ROOM_MAINTENANCE_STATUS</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.3.15.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Maintenance Status</label>
+		  <enum>maintenance-enum</enum>
+		  <sensorSet>Unit Status</sensorSet>
+	   </stateSensor>
+	   <!-- Unit Temperature -->
+	   <numSensor ruleid="unittemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.11.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_UNIT_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.11.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Unit Temperature</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Unit Humidity -->
+	   <numSensor ruleid="unithumidity">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.12.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>IN_ROOM_UNIT_HUMIDITY</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.12.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Unit Humidity</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Water Temperature -->
+	   <numSensor ruleid="watertemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.32.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_WATER_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.32.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Water Temperature</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Water Temperature 2 -->
+	   <numSensor ruleid="watertemp2">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.43.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_WATER_TEMP2</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.43.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Water Temperature 2</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Return Air Temperature -->
+	   <numSensor ruleid="returnairtemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.33.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_RETURN_AIR_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.33.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Return Air Temperature</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Supply Air Temperature -->
+	   <numSensor ruleid="supplyairtemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.34.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_SUPPLY_AIR_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.34.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Supply Air Temperature</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Return Air Humidity -->
+	   <numSensor ruleid="returnairhumidity">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.35.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>IN_ROOM_RETURN_AIR_HUMIDITY</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.35.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Return Air Humidity</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Supply Air Humidity -->
+	   <numSensor ruleid="supplyairhumidity">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.36.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>IN_ROOM_SUPPLY_AIR_HUMIDITY</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.36.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Supply Air Humidity</label>
+		  <sensorSet>Unit Status</sensorSet>
+	   </numSensor>
+	   <!-- Zone Temperature -->
+	   <numSensor ruleid="zonetemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.2.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_ZONE_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.2.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Zone Temperature</label>
+		  <sensorSet>Zone Status</sensorSet>
+	   </numSensor>
+	   <!-- Zone Supply Temperature -->
+	   <numSensor ruleid="zonesupplytemp">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.4.1.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>temp</type>
+		  <sensorId>IN_ROOM_ZONE_SUPPLY_TEMP</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.4.1.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Zone Supply Temperature</label>
+		  <sensorSet>Zone Status</sensorSet>
+	   </numSensor>
+	   <!-- Zone Humidity -->
+	   <numSensor ruleid="zonehumidity">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.3.0</getOid>
+			 </mapValue>
+		  </rowTest>	
+		  <type>humidity</type>
+		  <sensorId>IN_ROOM_ZONE_HUMIDITY</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.3.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Zone Humidity</label>
+		  <sensorSet>Zone Status</sensorSet>
+	   </numSensor>
+	   <!-- Zone Supply Humidity -->
+	   <numSensor ruleid="zonesupplyhumidity">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.5.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>humidity</type>
+		  <sensorId>IN_ROOM_ZONE_SUPPLY_HUMIDITY</sensorId>
+		  <value>
+			 <mult>
+				<op><getOid>.1.3.6.1.4.1.318.1.1.13.5.3.44.5.0</getOid></op>
+				<op>0.1</op>
+			 </mult>
+		  </value>
+		  <label>Zone Supply Humidity</label>
+		  <sensorSet>Zone Status</sensorSet>
+	   </numSensor>
+	   <!-- Unit State -->
+	   <stateSensor ruleid="unitstate">
+		  <type>state/unitonoffstate</type>
+		  <enumid>acunitstate</enumid>
+		  <sensorId>IN_ROOM_UNIT_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.3.14.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Unit State</label>
+		  <!-- the enumMap will implicitly define enuminc -->
+		  <enum>unit-state-enum</enum>
+		  <sensorSet>Unit Status</sensorSet>
+	   </stateSensor>
+	   <!-- Electric Heating 1 State -->
+	   <stateSensor ruleid="electricheat1state">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.4.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_ELECHEAT1_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.4.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Electrical Re-Heat 1 State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <!-- Electric Heating 2 State -->
+	   <stateSensor ruleid="electricheat2state">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.4.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_ELECHEAT2_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.4.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Electrical Re-Heat 2 State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <!-- Electric Heating 3 State -->
+	   <stateSensor ruleid="electricheat3state">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.4.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_ELECHEAT3_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.4.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Electrical Re-Heat 3 State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <!-- Hot Gas Heating State -->
+	   <stateSensor ruleid="hotgasheatstate">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.25.3.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_HOTGASHEAT_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.25.3.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Hot Gas Re-Heat State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Re-Heat - Hot Gas</sensorSet>
+	   </stateSensor>
+	   <!-- Humidifier 1 State -->
+	   <stateSensor ruleid="humidifier1state">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.3.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_HUMIDIFIER1_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.3.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Humidifier 1 State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <!-- Dehumidific State -->
+	   <stateSensor ruleid="dehumidificstate">
+		  <rowTest>
+			 <mapValue mapid="delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.3.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_DEHUMIDIFIC_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.3.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Dehumidifier State</label>
+		  <enum>active-inactive-enum</enum>
+		  <sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <valueMap ruleid="unit-state-to-enum">
+		  <valueIn>1</valueIn><valueOut>0</valueOut>
+		  <valueIn>2</valueIn><valueOut>1</valueOut>
+		  <valueIn>*</valueIn><valueOut>2</valueOut>
+	   </valueMap>
+	   <enumMap ruleid="active-inactive-enum">
+		  <label>Inactive</label>
+		  <label>Active</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   <enumMap ruleid="unit-state-enum">
+		  <!-- correction attributes indicate which state they match up with in the acunitstate stateenum -->
+		  <!-- no corrections here because they have the same index --> 
+		  <label>Off</label>
+		  <label>On</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   <enumMap ruleid="maintenance-enum">
+		  <label>Not Required</label>
+		  <label>Required</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   <valueMap ruleid="delete_null_sensor">
+		  <!-- omit sensors returning -1 -->
+		  <valueIn>-1</valueIn><valueOut>[false]</valueOut>
+		  <!-- include the rest -->
+		  <valueIn>*</valueIn><valueOut>[true]</valueOut>
+	   </valueMap>
+    </device>
+	<device deviceid="airinroomperimiter_phase2">
+	  <oidMustMatch ruleid="inroomsysid" oid=".1.3.6.1.2.1.1.2.0">
+		  <valueList>
+			 <value>.1.3.6.1.4.1.318.1.3.14.9</value> <!-- inRoomPerimeter -->
+			 <value>.1.3.6.1.4.1.318.1.3.14.9.*</value> <!-- other inRoomPerimeter -->
+		  </valueList>
+	  </oidMustMatch>
+	  <oidMustExist ruleid="has_phase2_oids" oid=".1.3.6.1.4.1.318.1.1.13.5.3.4.5.0"/>
+	  <numSensor ruleid="unit_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>UNIT_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.5.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Unit Runtime</label>
+		<sensorSet>Unit Status</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="cooling_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.7.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>COOLING_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.7.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Cooling Runtime</label>
+		<sensorSet>Unit Status</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="reheat_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.8.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>REHEAT_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.8.0</getOid>
+	      </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Re-Heat Runtime</label>
+		<sensorSet>Unit Status</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="humidification_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.9.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>HUMIDIFICATION_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.9.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidification Runtime</label>
+		<sensorSet>Unit Status</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="dehumidification_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.10.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DEHUMIDIFICATION_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.4.10.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dehumidification Runtime</label>
+		<sensorSet>Unit Status</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="compressor1_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.29.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>COMPRESSOR1_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.29.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Compressor 1 Runtime</label>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="compressor2_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.29.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>COMPRESSOR2_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.29.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Compressor 2 Runtime</label>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	  </numSensor>
+	  <stateSensor ruleid="compressor1_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>COMPRESSOR1_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Compressor 1 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="compressor2_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>COMPRESSOR2_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Compressor 2 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="compressor1_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>COMPRESSOR1_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.7.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Compressor 1 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="compressor2_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>COMPRESSOR2_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.8.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Compressor 2 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Compressors</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan1_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>FAN1_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 1 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan2_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>FAN2_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 2 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan3_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>FAN3_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 3 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan1_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.6.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+	   <sensorId>FAN1_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.6.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 1 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan2_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.6.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>FAN2_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.6.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 2 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="fan3_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.6.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>FAN3_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.6.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Fan 3 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Fans</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="fan1_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.32.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>FAN1_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.32.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 1 Runtime</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan2_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.32.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>FAN2_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.32.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 2 Runtime</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan3_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.32.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>FAN3_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.32.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 3 Runtime</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan1_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.33.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN1_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.33.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 1 Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan2_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.33.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN2_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.33.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 2 Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan3_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.33.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN3_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.33.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 3 Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan1_manual_op_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.34.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN1_MANUAL_OP_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.32.34.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 1 Manual Operation Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan2_manual_op_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.34.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN2_MANUAL_OP_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.33.34.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 2 Manual Operation Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="fan3_manual_op_speed">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.34.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>FAN3_MANUAL_OP_SPEED</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.34.34.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Fan 3 Manual Operation Speed</label>
+		<sensorSet>Cooling - Fans</sensorSet>
+	  </numSensor>
+	  <stateSensor ruleid="louver1_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.35.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER1_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.35.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 1 Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="louver2_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.36.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER2_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.36.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 2 Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="louver3_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.37.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER3_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.37.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 3 Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="louver1_manual_op_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.35.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER1_MANUAL_OP_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.35.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 1 Manual Operation Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="louver2_manual_op_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.36.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER2_MANUAL_OP_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.36.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 2 Manual Operation Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="louver3_manual_op_position">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.37.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>LOUVER3_MANUAL_OP_POSITION</sensorId>
+		<value>
+		   <mapValue mapid="louver_position_map">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.37.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Louver 3 Manual Operation Position</label>
+		<enum>louver_position_enum</enum>
+		<sensorSet>Cooling - Louvers</sensorSet>
+	   </stateSensor>
+	   <valueMap ruleid="louver_position_map">
+		  <valueIn>1</valueIn><valueOut>1</valueOut>
+		  <valueIn>2</valueIn><valueOut>0</valueOut>
+		  <valueIn>*</valueIn><valueOut>2</valueOut>
+	   </valueMap>
+	   <enumMap ruleid="louver_position_enum">
+		  <label>Open</label>
+		  <label>Closed</label>
+		  <label>Unknown</label>
+	   </enumMap>
+	   <stateSensor ruleid="drycooler1_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>DRYCOOLER1_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 1 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler2_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>DRYCOOLER2_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 2 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler3_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>DRYCOOLER3_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 3 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler4_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>DRYCOOLER4_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 4 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler1_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+	   <sensorId>DRYCOOLER1_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 1 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler2_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+	   <sensorId>DRYCOOLER2_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 2 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler3_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+	   <sensorId>DRYCOOLER3_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 3 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="drycooler4_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+	   <sensorId>DRYCOOLER4_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dry Cooler 4 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="drycooler1_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DRYCOOLER1_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.17.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dry Cooler 1 Runtime</label>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="drycooler2_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DRYCOOLER2_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.18.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dry Cooler 2 Runtime</label>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="drycooler3_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DRYCOOLER3_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.19.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dry Cooler 3 Runtime</label>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="drycooler4_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DRYCOOLER4_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+			<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.20.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dry Cooler 4 Runtime</label>
+		<sensorSet>Cooling - Dry Coolers</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="electric_reheat1_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.17.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>ELECTRIC_REHEAT1_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.17.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Electrical Re-Heat 1 Runtime</label>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="electric_reheat2_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.17.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>ELECTRIC_REHEAT2_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.17.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Electrical Re-Heat 2 Runtime</label>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="electric_reheat3_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.17.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>ELECTRIC_REHEAT3_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.17.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Electrical Re-Heat 3 Runtime</label>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="electric_reheat4_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.17.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>ELECTRIC_REHEAT4_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.17.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Electrical Re-Heat 4 Runtime</label>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	  </numSensor>
+	   <stateSensor ruleid="electric_reheat1_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>ELECTRIC_REHEAT1_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.11.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Electrical Re-Heat 1 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="electric_reheat2_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>ELECTRIC_REHEAT2_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.12.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Electrical Re-Heat 2 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="electric_reheat3_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>ELECTRIC_REHEAT3_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.13.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Electrical Re-Heat 3 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="electric_reheat4_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>ELECTRIC_REHEAT4_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Electrical Re-Heat 4 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="electricheat4state">
+		  <rowTest>
+			 <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.4.0</getOid>
+			 </mapValue>
+		  </rowTest>
+		  <type>state/heatingstate</type>
+		  <sensorId>IN_ROOM_ELECHEAT4_STATE</sensorId>
+		  <value>
+			 <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+				<getOid>.1.3.6.1.4.1.318.1.1.13.5.3.14.4.0</getOid>
+			 </mapValue>
+		  </value>
+		  <label>Electrical Re-Heat 4 State</label>
+		  <enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		  <sensorSet>Re-Heat - Electrical</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="pww_reheat_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>PWW_REHEAT_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>PWW Re-Heat State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - PWW</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="pww_reheat_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.4.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>PWW_REHEAT_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.4.0</getOid>
+		   </mapValue>
+		</value>
+		<label>PWW Re-Heat Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Re-Heat - PWW</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="pww_reheat_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>PWW_REHEAT_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>PWW Re-Heat Value</label>
+		<sensorSet>Re-Heat - PWW</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="pww_reheat_manual_op_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.17.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>PWW_REHEAT_MANUAL_OP_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.26.17.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>PWW Re-Heat Manual Operation Value</label>
+		<sensorSet>Re-Heat - PWW</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="gecw_valve_opening_grade">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.15.15.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>GECW_VALVE_OPENING_GRADE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.15.15.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>GE/CW Valve Opening Grade</label>
+		<sensorSet>Cooling - Valves</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="gecw_valve_manual_op_opening_grade">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.15.16.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>GECW_VALVE_MANUAL_OP_OPENING_GRADE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.15.16.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>GE/CW Valve Manual Operation Opening Grade</label>
+		<sensorSet>Cooling - Valves</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="g_valve_opening_grade">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.16.13.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>G_VALVE_OPENING_GRADE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.16.13.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>G Valve Opening Grade</label>
+		<sensorSet>Cooling - Valves</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="g_valve_manual_op_opening_grade">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.16.14.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>G_VALVE_MANUAL_OP_OPENING_GRADE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.16.14.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>G Valve Manual Operation Opening Grade</label>
+		<sensorSet>Cooling - Valves</sensorSet>
+	  </numSensor>
+	  <stateSensor ruleid="dehumidifier_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>DEHUMIDIFIER_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Dehumidifier Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="dehumidifier_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.21.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>DEHUMIDIFIER_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.31.21.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Dehumidifier Runtime</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <stateSensor ruleid="humidifier1_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>HUMIDIFIER1_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Humidifier 1 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="humidifier1_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.27.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>HUMIDIFIER1_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.27.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 1 Runtime</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="humidifier1_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.28.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>HUMIDIFIER1_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.28.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 1 Value</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="humidifier1_manual_op_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.29.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>HUMIDIFIER1_MANUAL_OP_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.27.29.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 1 Manual Operation Value</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <stateSensor ruleid="humidifier2_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.3.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>HUMIDIFIER2_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.3.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Humidifier 2 State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <stateSensor ruleid="humidifier2_manual_op_state">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.5.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>state/activestate</type>
+		<sensorId>HUMIDIFIER2_MANUAL_OP_STATE</sensorId>
+		<value>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/unit-state-to-enum">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.5.0</getOid>
+		   </mapValue>
+		</value>
+		<label>Humidifier 2 Manual Operation State</label>
+		<enum>apcairinroom/airinroomperimeter/active-inactive-enum</enum>
+		<sensorSet>Humidification</sensorSet>
+	   </stateSensor>
+	   <numSensor ruleid="humidifier2_runtime">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.27.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>runhours</type>
+		<sensorId>HUMIDIFIER2_RUNTIME</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.27.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 2 Runtime</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="humidifier2_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.28.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>HUMIDIFIER2_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.28.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 2 Value</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	  <numSensor ruleid="humidifier2_manual_op_value">
+		<rowTest>
+		   <mapValue mapid="apcairinroom/airinroomperimeter/delete_null_sensor">
+			  <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.29.0</getOid>
+		   </mapValue>
+		</rowTest>
+		<type>pctofcapacity</type>
+		<sensorId>HUMIDIFIER2_MANUAL_OP_VALUE</sensorId>
+		<value>
+		  <formatNumber printffmt="%f">
+		    <getOid>.1.3.6.1.4.1.318.1.1.13.5.3.28.29.0</getOid>
+		  </formatNumber>
+		</value>
+		<valueInc>1</valueInc>
+		<label>Humidifier 2 Manual Operation Value</label>
+		<sensorSet>Humidification</sensorSet>
+	  </numSensor>
+	</device>
+</APC_DDF>
+

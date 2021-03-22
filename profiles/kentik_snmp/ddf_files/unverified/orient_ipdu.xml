@@ -1,0 +1,269 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="orient_ipdu"
+	ddfname="Orient - IPDU"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="orient_ipdu">
+		<oidMustExist ruleid="snmpdevicetest" oid=".1.3.6.1.4.1.23273.1" istree="yes" /> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Orient</setProductData>
+		<setProductData ruleid="modeldata" field="model">IPDU</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData>
+
+        <numSensor ruleid="masterVoltageL1">
+            <type>voltage</type>
+            <sensorId>MASTER_VOLTAGE_L1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master - L1 Total Voltage</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterCurrentL1">
+            <type>amperage</type>
+            <sensorId>MASTER_CURRENT_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.2.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Master- L1 Total Current</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterEnergyL1">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_ENERGY_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.3.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master - L1 Total Energy</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterVoltageL2">
+            <type>voltage</type>
+            <sensorId>MASTER_VOLTAGE_L2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.2.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master - L2 Total Voltage</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterCurrentL2">
+            <type>amperage</type>
+            <sensorId>MASTER_CURRENT_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.5.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Master - L2 Total Current</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterEnergyL2">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_ENERGY_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.6.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master - L2 Total Energy</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterVoltageL3">
+            <type>voltage</type>
+            <sensorId>MASTER_VOLTAGE_L3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.2.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master - L3 Total Voltage</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterCurrentL3">
+            <type>amperage</type>
+            <sensorId>MASTER_CURRENT_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.8.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Master - L3 Total Current</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterEnergyL3">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_ENERGY_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.2.9.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Master- L3 Total Energy</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterTemperature">
+            <type>temp</type>
+            <sensorId>MASTER_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.2.10.0</getOid>
+            </value>
+            <label>Master Temperature</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterHumidity">
+            <type>humidity</type>
+            <sensorId>MASTER_HUMIDITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.2.11.0</getOid>
+            </value>
+            <label>Master Humidity</label>
+            <sensorSet>Master Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveVoltageL1">
+            <type>voltage</type>
+            <sensorId>SLAVE_VOLTAGE_L1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.3.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L1 Total Voltage</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveCurrentL1">
+            <type>amperage</type>
+            <sensorId>SLAVE_CURRENT_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.2.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Slave - L1 Total Current</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveEnergyL1">
+            <type>num/kwatthr</type>
+            <sensorId>SLAVE_ENERGY_L1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.3.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L1 Total Energy</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveVoltageL2">
+            <type>voltage</type>
+            <sensorId>SLAVE_VOLTAGE_L2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.3.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L2 Total Voltage</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveCurrentL2">
+            <type>amperage</type>
+            <sensorId>SLAVE_CURRENT_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.5.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Slave - L2 Total Current</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveEnergyL2">
+            <type>num/kwatthr</type>
+            <sensorId>SLAVE_ENERGY_L2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.6.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L2 Total Energy</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveVoltageL3">
+            <type>voltage</type>
+            <sensorId>SLAVE_VOLTAGE_L3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.3.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L3 Total Voltage</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveCurrentL3">
+            <type>amperage</type>
+            <sensorId>SLAVE_CURRENT_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.8.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+            <label>Slave - L3 Total Current</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveEnergyL3">
+            <type>num/kwatthr</type>
+            <sensorId>SLAVE_ENERGY_L3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.23273.1.3.9.0</getOid></op>
+                    <op>0.01</op>
+                </mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Slave - L3 Total Energy</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveTemperature">
+            <type>temp</type>
+            <sensorId>SLAVE_TEMPERATURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.3.10.0</getOid>
+            </value>
+            <label>Slave Temperature</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+        <numSensor ruleid="slaveHumidity">
+            <type>humidity</type>
+            <sensorId>SLAVE_HUMIDITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.23273.1.3.11.0</getOid>
+            </value>
+            <label>Slave Humidity</label>
+            <sensorSet>Slave Status</sensorSet>
+        </numSensor>
+	</device>
+</APC_DDF>

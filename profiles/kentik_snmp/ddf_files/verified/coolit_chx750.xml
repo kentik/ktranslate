@@ -1,0 +1,1355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="coolit_chx750"
+	ddfname="CoolIT CHx750"
+	ddfversion="5"
+	canremove="yes">
+	
+	<!--
+		SOURCE
+		/snmp/resources/mibs/coolit/CHx750v5.mib
+		/snmp/resources/mibs/coolit/Cooltera Global.mib
+		
+		24 January 2020
+	-->
+		 
+	<schemaVersion>1.6</schemaVersion>
+	<device deviceid="cdu_discovery">
+		<oidMustExist ruleid="cdu_exists" oid=".1.3.6.1.4.1.51077.1" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">CoolIT</setProductData>
+		<setProductData ruleid="modeldata" field="model">CHx750</setProductData>
+		<setProductData ruleid="typedata" field="type">Cooling Device</setProductData>
+	</device>
+	
+	<device deviceid="commonValueMaps">
+		<oidMustExist ruleid="cduRdhx_exists" oid=".1.3.6.1.4.1.51077.1" istree="yes"/> 
+		
+		<valueMap ruleid="2state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="rdAlarmStatus-em">
+			<label>Unknown</label>
+			<label>Inactive</label>
+			<label>Active</label>
+		</enumMap>
+		
+		<valueMap ruleid="3state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="cduStatusCurrentPump-em">
+			<label>Unknown</label>
+			<label>Pump 1 and 2</label>
+			<label>Pump 1</label>
+			<label>Pump 2</label>
+		</enumMap>
+		
+		<valueMap ruleid="4state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="cduStatusGroupMode-em">
+			<label>Unknown</label>
+			<label>Standalone</label>
+			<label>Master</label>
+			<label>Slave</label>
+			<label>Independent</label>
+		</enumMap>
+		
+		<valueMap ruleid="9state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="rdStatusMode-em">
+			<label>Unknown</label>
+			<label>Not Configured</label>
+			<label>Shutdown Network</label>
+			<label>Manual Override</label>
+			<label>Off</label>
+			<label>On</label>
+			<label>Fault Shutdown</label>
+			<label>Group Standby</label>
+			<label>Comms Failure</label>
+			<label>Not Connected</label>
+		</enumMap>
+		
+		<valueMap ruleid="10state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>8</valueIn><valueOut>8</valueOut>
+			<valueIn>9</valueIn><valueOut>9</valueOut>
+			<valueIn>10</valueIn><valueOut>10</valueOut>
+		</valueMap>
+		
+		<enumMap ruleid="cduStatusMode-em">
+			<label>Unknown</label>
+			<label>Not Configured</label>
+			<label>Shutdown</label>
+			<label>Shutdown Network</label>
+			<label>Manual Override</label>
+			<label>Standby</label>
+			<label>Online</label>
+			<label>Online Filling</label>
+			<label>Filling</label>
+			<label>Fault Shutdown</label>
+			<label>Group Standby</label>
+		</enumMap>
+		
+	</device>
+	
+	<device deviceid="statusSI">
+		<oidMustExist ruleid="statusSI_exists" oid=".1.3.6.1.4.1.51077.1.1" istree="yes"/>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>32767</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+        <stateSensor ruleid="cduStatusSIMode">
+            <type>state</type>
+            <sensorId>_OPERATING_MODE_1_1</sensorId>
+            <value>
+                <mapValue mapid="coolit_chx750/commonValueMaps/10state-vm">
+                    <getOid>.1.3.6.1.4.1.51077.1.1.1.0</getOid>
+                </mapValue>
+            </value>
+            <label>CDU Operating Mode</label>
+            <enum>coolit_chx750/commonValueMaps/cduStatusMode-em</enum>
+            <sensorSet>SI</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="cduStatusSIGroupMode">
+            <type>state</type>
+            <sensorId>_OPERATING_MODE_1_2</sensorId>
+            <value>
+                <mapValue mapid="coolit_chx750/commonValueMaps/4state-vm">
+                    <getOid>.1.3.6.1.4.1.51077.1.1.2.0</getOid>
+                </mapValue>
+            </value>
+            <label>CDU Group Operating Mode</label>
+            <enum>coolit_chx750/commonValueMaps/cduStatusGroupMode-em</enum>
+            <sensorSet>SI</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="cduStatusSICurrentPump">
+            <type>state</type>
+            <sensorId>SECONDARY_PUMP</sensorId>
+            <value>
+                <mapValue mapid="coolit_chx750/commonValueMaps/3state-vm">
+                    <getOid>.1.3.6.1.4.1.51077.1.1.3.0</getOid>
+                </mapValue>
+            </value>
+            <label>Secondary Pump</label>
+            <enum>coolit_chx750/commonValueMaps/cduStatusCurrentPump-em</enum>
+            <sensorSet>SI</sensorSet>
+        </stateSensor>
+
+        <numSensor ruleid="cduStatusSIPump1Speed">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.4.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>PUMP_1_SPEED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.4.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Pump 1 Speed</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPump2Speed">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>PUMP_2_SPEED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Pump 2 Speed</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIValveDemand">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.6.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>CONTROL_VALVE_COOLING_DEMAND</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Control Valve Cooling Demand</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIValveFeedback">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>CONTROL_VALVE_FEEDBACK</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Control Valve Feedback</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPrimaryTempT1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP1_ARU_0</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.8.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Primary Temperature (T1)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryTempT2a">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SUPPLY_AIR_TEMPERATURE_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.9.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Secondary Supply Temperature (T2a)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryTempT2b">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.10.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SUPPLY_AIR_TEMPERATURE_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.10.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Secondary Supply Temperature (T2b)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryTempT2c">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.11.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SUPPLY_AIR_TEMPERATURE_3</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.11.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Secondary Supply Temperature (T2c)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryTempT2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.12.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>SUPPLY_AIR_TEMPERATURE_4</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.12.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Secondary Supply Temperature (T2)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIRoomTempT3a">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.13.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP1_ARU_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.13.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor A Temperature (T3)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIRoomRHa">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.14.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>1_OUTDOOR_AIR_HUMIDITY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.14.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor A Humidity</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIDewpointa">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.15.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_NAIRFM_SYSCTRL_TEMP</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.15.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor A Dewpoint Value</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIRoomTempT3b">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.16.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP1_ARU_2</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.16.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor B Temperatue (T3)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIRoomRHb">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.17.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>2_OUTDOOR_AIR_HUMIDITY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.17.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor B Humidity</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIDewpointb">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.18.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_NAIRFM_SYSCTRL_TEMP1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.18.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Room Sensor B Dewpoint Value</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryTempT4">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.19.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_NAIRFM_SYSMODSTATUS_RETURNTEMP_1</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.19.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Secondary Return Temperature (T2)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS1a">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.20.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_PRESSURE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.20.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Pressure (PS1a)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS1b">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.21.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_PRESSURE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.21.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Pressure (PS1b)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.22.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_PRESSURE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.22.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Pressure (PS1)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.23.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_PRESSURE4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.23.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Pressure (PS2)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecDiffPress">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.24.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_PRESSURE5</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.24.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Differential Pressure (PS2-PS1)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS3">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.25.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>FILTER_PRESSURE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.25.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Filter Inlet Pressure (PS3)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS4">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.26.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>FILTER_PRESSURE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.26.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Filter Outlet Pressure (PS4)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIFilterPressDiff">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.27.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>FILTER_PRESSURE3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.27.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Filter Differential Pressure (PS3-PS4)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPrimaryFlowRate">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.28.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>fluidflow</type>
+            <sensorId>PRIMARY_CW_FLOW_RATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.28.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Primary Chilled Water Flow Rate</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryFlowRate">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.29.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>fluidflow</type>
+            <sensorId>SECONDARY_CIRCUIT_FLOW_RATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.29.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Circuit Flow Rate</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecondaryDuty">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.30.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>SECONDARY_CIRCUIT_DUTY</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.30.0</getOid></op>
+                    <op>1000</op>
+                </mult>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Circuit Duty</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSICurrentSetpoint">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.31.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>OPERATING_SETPOINT_VALUE</sensorId>
+            <value>
+                <mult>
+                    <op><getOid>.1.3.6.1.4.1.51077.1.1.31.0</getOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Operating Setpoint Value</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPumpRuntimeP1">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.32.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>runhours</type>
+            <sensorId>PUMP_1_RUNTIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.32.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Pump 1 Runtime</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPumpRuntimeP2">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.33.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>runhours</type>
+            <sensorId>PUMP_2_RUNTIME</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.33.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Pump 2 Runtime</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS5a">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.34.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_FILTER_PRESSURE1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.34.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Filter Inlet Pressure (PS5a)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIPS5b">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.35.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>SECONDARY_FILTER_PRESSURE2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.35.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Secondary Filter Inlet Pressure (PS5b)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecFilter1PressDiff">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.36.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>FILTER_1_DIFFERENTIAL_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.36.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Filter 1 Differential Pressure (PS3-PS4)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSISecFilter2PressDiff">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.37.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>FILTER_2_DIFFERENTIAL_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.37.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Filter 2 Differential Pressure (PS3-PS4)</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIGroupSecondaryFlowRate">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.38.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>fluidflow</type>
+            <sensorId>GROUP_TOTAL_SECONDARY_CIRCUIT_FLOW_RATE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.38.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Group Total Secondary Circuit Flow Rate</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+        <numSensor ruleid="cduStatusSIGroupSecDiffPress">
+			<rowTest>
+				<mapValue mapid="delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.51077.1.1.39.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>GROUP_AVG_SECONDARY_DIFFERENTIAL_PRESSURE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.51077.1.1.39.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Group Average Secondary Differential Pressure</label>
+            <sensorSet>SI</sensorSet>
+        </numSensor>
+
+	</device>
+	
+	<device deviceid="statusRearDoors">
+		<oidMustExist ruleid="statusRearDoors_exists" oid=".1.3.6.1.4.1.51077.1.7" istree="yes"/>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>9</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+        <stateSensor ruleid="rdStatusMode" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>OPERATING_MODE_<rowIndex/></sensorId>
+            <value>
+                <mapValue mapid="coolit_chx750/commonValueMaps/9state-vm">
+                    <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+                </mapValue>
+            </value>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Operating Mode</label>
+            <enum>coolit_chx750/commonValueMaps/rdStatusMode-em</enum>
+            <sensorSet>Rear Door</sensorSet>
+        </stateSensor>
+        <stateSensor ruleid="rdAlarmStatus" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>RDHX_<rowIndex/>_ALARM_STATUS</sensorId>
+            <value>
+                <mapValue mapid="coolit_chx750/commonValueMaps/2state-vm">
+                    <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.3</getRowOid>
+                </mapValue>
+            </value>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Alarm Status</label>
+            <enum>coolit_chx750/commonValueMaps/rdAlarmStatus-em</enum>
+            <sensorSet>Rear Door</sensorSet>
+        </stateSensor>		
+
+        <numSensor ruleid="rdStatusRDHxExitTempT1" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP1_ARU_1<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.4</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T1)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerExitTempT2" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP2_ARU_2<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.5</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T2)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerInletTempT3" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP3_ARU_3<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.6</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T3)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusDiffPressure" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pressure</type>
+            <sensorId>DIFFERENTIAL_PRESSURE_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.7</getRowOid></op>
+                    <op>0.001</op>
+                </mult>
+            </value>
+            <valueInc>0.001</valueInc>
+            <label>Differential Pressure <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid></label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusFanSpeed" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>fanspeed</type>
+            <sensorId>_FAN<rowIndex/>_SPEED</sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.8</getRowOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Fan <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Speed</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusValveDemand" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>CONTROL_VALVE_COOLING_DEMAND_<rowIndex/></sensorId>
+            <value>
+                <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.9</getRowOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Control Valve <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Cooling Demand</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusRDHxExitTempT1a" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP1_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.10</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T1a)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusRDHxExitTempT1b" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP2_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.11</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T1b)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusRDHxExitTempT1c" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP3_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.12</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T1c)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerExitTempT2a" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP4_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.13</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T2a)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerExitTempT2b" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP5_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.14</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T2b)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerExitTempT2c" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP6_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.15</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T2c)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerInletTempT3a" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP7_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.16</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T3a)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+        <numSensor ruleid="rdStatusServerInletTempT3b" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+			<rowTest>
+				<!-- do not show if RDHx is not connected -->
+				<mapValue mapid="delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_TEMP8_ARU_<rowIndex/></sensorId>
+            <value>
+                <mult>
+                    <op><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.17</getRowOid></op>
+                    <op>0.1</op>
+                </mult>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> Exit Temperature (T3b)</label>
+            <sensorSet>Rear Door</sensorSet>
+        </numSensor>
+
+        <alarmFlags2 ruleid="rdAlarmStatusA01" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.18</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A01 Alarm - T1a RDHx Exit Temperature Sensor Fault</activeText>
+                    <inactiveText>A01 Alarm - T1a RDHx Exit Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A01 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1a) - condition exists.</activeText>
+                    <inactiveText>A01 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1a) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA02" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.19</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A02 Alarm - T1b RDHx Exit Temperature Sensor Fault</activeText>
+                    <inactiveText>A02 Alarm - T1b RDHx Exit Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A02 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1b) - condition exists.</activeText>
+                    <inactiveText>A02 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1b) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA03" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.20</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A03 Alarm - T1c RDHx Exit Temperature Sensor Fault</activeText>
+                    <inactiveText>A03 Alarm - T1c RDHx Exit Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A03 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1c) - condition exists.</activeText>
+                    <inactiveText>A03 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit temperature sensor fault (T1c) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA04" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.21</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A04 Alarm - T2a RDHx Inlet Temperature Sensor Fault</activeText>
+                    <inactiveText>A04 Alarm - T2a RDHx Inlet Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A04 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2a) - condition exists.</activeText>
+                    <inactiveText>A04 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2a) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA05" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.22</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A05 Alarm - T2b RDHx Inlet Temperature Sensor Fault</activeText>
+                    <inactiveText>A05 Alarm - T2b RDHx Inlet Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A05 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2b) - condition exists.</activeText>
+                    <inactiveText>A05 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2b) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA06" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.23</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A06 Alarm - T2c RDHx Inlet Temperature Sensor Fault</activeText>
+                    <inactiveText>A06 Alarm - T2c RDHx Inlet Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A06 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2c) - condition exists.</activeText>
+                    <inactiveText>A06 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet temperature sensor fault (T2c) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA07" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.24</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A07 Alarm - T3a Server Inlet Temperature Sensor Fault</activeText>
+                    <inactiveText>A07 Alarm - T3a Server Inlet Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A07 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet temperature sensor fault (T3a) - condition exists.</activeText>
+                    <inactiveText>A07 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet temperature sensor fault (T3a) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA08" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.25</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A08 Alarm - T3b Server Inlet Temperature Sensor Fault</activeText>
+                    <inactiveText>A08 Alarm - T3b Server Inlet Temperature Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A08 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet temperature sensor fault (T3b) - condition exists.</activeText>
+                    <inactiveText>A08 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet temperature sensor fault (T3b) - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA09" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.26</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A09 Alarm - DP Sensor Fault</activeText>
+                    <inactiveText>A09 Alarm - DP Sensor Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A09 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> DP sensor fault - condition exists.</activeText>
+                    <inactiveText>A09 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> DP sensor fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA10" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.27</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A10 Alarm - Fan #1 Fault</activeText>
+                    <inactiveText>A10 Alarm - Fan #1 Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A10 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #1 fault - condition exists.</activeText>
+                    <inactiveText>A10 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #1 fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA11" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.28</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A11 Alarm - Fan #2 Fault</activeText>
+                    <inactiveText>A11 Alarm - Fan #2 Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A11 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #2 fault - condition exists.</activeText>
+                    <inactiveText>A11 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #2 fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA12" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.29</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A12 Alarm - Fan #3 Fault</activeText>
+                    <inactiveText>A12 Alarm - Fan #3 Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A12 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #3 fault - condition exists.</activeText>
+                    <inactiveText>A12 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #3 fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA13" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.30</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A13 Alarm - Fan #4 Fault</activeText>
+                    <inactiveText>A13 Alarm - Fan #4 Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A13 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #4 fault - condition exists.</activeText>
+                    <inactiveText>A13 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #4 fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA14" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.31</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A14 Alarm - Fan #5 Fault</activeText>
+                    <inactiveText>A14 Alarm - Fan #5 Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Fault</category>
+                <description>
+                    <activeText>A14 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #5 fault - condition exists.</activeText>
+                    <inactiveText>A14 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> fan #5 fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA15" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.32</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A15 Alarm - Cooling Valve Fault</activeText>
+                    <inactiveText>A15 Alarm - Cooling Valve Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Cooling</category>
+                <description>
+                    <activeText>A15 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> cooling valve fault - condition exists.</activeText>
+                    <inactiveText>A15 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> cooling valve fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA16" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.33</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A16 Alarm - microSD Card Fault</activeText>
+                    <inactiveText>A16 Alarm - microSD Card Fault Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Device</category>
+                <description>
+                    <activeText>A16 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> microSD Card fault - condition exists.</activeText>
+                    <inactiveText>A16 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> microSD Card fault - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA17" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.34</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A17 Alarm - Server Inlet High Temperature</activeText>
+                    <inactiveText>A17 Alarm - Server Inlet High Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A17 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet high temperature - condition exists.</activeText>
+                    <inactiveText>A17 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> server inlet high temperature - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA18" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.35</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A18 Alarm - RDHx Inlet High Temperature</activeText>
+                    <inactiveText>A18 Alarm - RDHx Inlet High Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A18 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet high temperature - condition exists.</activeText>
+                    <inactiveText>A18 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> inlet high temperature - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+        <alarmFlags2 ruleid="rdAlarmStatusA19" index=".1.3.6.1.4.1.51077.1.7.1.1.1">
+            <value><getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.36</getRowOid></value>
+            <alarmFlagsTest match="2">
+                <name>
+                    <activeText>A19 Alarm - RDHx Exit High Temperature</activeText>
+                    <inactiveText>A19 Alarm - RDHx Exit High Temperature Cleared</inactiveText>
+                </name>
+                <severity>warning</severity>
+                <category>Temperature</category>
+                <description>
+                    <activeText>A19 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit high temperature - condition exists.</activeText>
+                    <inactiveText>A19 Alarm - RDHx <getRowOid>.1.3.6.1.4.1.51077.1.7.1.1.1</getRowOid> exit high temperature - condition no longer exists.</inactiveText>
+                </description>
+            </alarmFlagsTest>
+        </alarmFlags2>
+	
+	</device>
+</APC_DDF>

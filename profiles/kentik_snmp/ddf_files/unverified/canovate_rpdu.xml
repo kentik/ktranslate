@@ -1,0 +1,785 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="canovate_rpdu"
+	ddfname="Canovate - RPDU"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="canovate_rpdu_device_discovery">
+		<oidMustExist ruleid="canovate_rpdu_exists" oid=".1.3.6.1.4.1.30966.6" istree="yes" />
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="Canovate">Canovate</setProductData>
+		<setProductData ruleid="modeldata" field="model">RPDU</setProductData>
+		<setProductData ruleid="typedata" field="type">Rack PDU</setProductData> 
+		
+	</device>
+	
+		<!--
+		
+			Sensor values are listed as strings - no scaling
+		
+		-->
+	
+	<device deviceid="canovate_rpdu_device_one">
+		<oidMustExist ruleid="canovate_rpdu_exists" oid=".1.3.6.1.4.1.30966.6.1" istree="yes" />
+
+        <numSensor ruleid="masterLineOnePower">
+            <type>powerW</type>
+            <sensorId>MASTER_L1_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.3.1.0</getOid>
+            </value>
+            <valueInc>0.001</valueInc>
+            <label>Device 1 Master - Phase 1 Power</label>
+            <sensorSet>Master Line 1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineOnePF">
+            <type>num/powerfactor</type>
+            <sensorId>MASTER_L1_PF</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.3.2.0</getOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Device 1 Master - Phase 1 PF</label>
+            <sensorSet>Master Line 1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineOneEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_L1_ENERGY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.3.3.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 1 Energy</label>
+            <sensorSet>Master Line 1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineOneCurrent">
+            <type>amperage</type>
+            <sensorId>MASTER_L1_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.3.4.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 1 Current</label>
+            <sensorSet>Master Line 1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineOneVoltage">
+            <type>voltage</type>
+            <sensorId>MASTER_L1_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.3.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Phase 1 Voltage</label>
+            <sensorSet>Master Line 1</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineTwoPower">
+            <type>powerW</type>
+            <sensorId>MASTER_L2_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.4.1.0</getOid>
+            </value>
+            <valueInc>0.001</valueInc>
+            <label>Device 1 Master - Phase 2 Power</label>
+            <sensorSet>Master Line 2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineTwoPF">
+            <type>num/powerfactor</type>
+            <sensorId>MASTER_L2_PF</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.4.2.0</getOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Device 1 Master - Phase 2 PF</label>
+            <sensorSet>Master Line 2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineTwoEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_L2_ENERGY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.4.3.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 2 Energy</label>
+            <sensorSet>Master Line 2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineTwoCurrent">
+            <type>amperage</type>
+            <sensorId>MASTER_L2_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.4.4.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 2 Current</label>
+            <sensorSet>Master Line 2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineTwoVoltage">
+            <type>voltage</type>
+            <sensorId>MASTETR_L2_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.4.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Phase 2 Voltage</label>
+            <sensorSet>Master Line 2</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineThreePower">
+            <type>powerW</type>
+            <sensorId>MASTER_L3_POWER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.5.1.0</getOid>
+            </value>
+            <valueInc>0.001</valueInc>
+            <label>Device 1 Master - Phase 3 Power</label>
+            <sensorSet>Master Line 3</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineThreePF">
+            <type>num/powerfactor</type>
+            <sensorId>MASTER_L3_PF</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.5.2.0</getOid>
+            </value>
+            <valueInc>0.01</valueInc>
+            <label>Device 1 Master - Phase 3 PF</label>
+            <sensorSet>Master Line 3</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineThreeEnergy">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_L3_ENERGY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.5.3.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 3 Energy</label>
+            <sensorSet>Master Line 3</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineThreeCurrent">
+            <type>amperage</type>
+            <sensorId>MASTER_L3_CURRENT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.5.4.0</getOid>
+            </value>
+            <valueInc>0.1</valueInc>
+            <label>Device 1 Master - Phase 3 Current</label>
+            <sensorSet>Master Line 3</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterLineThreeVoltage">
+            <type>voltage</type>
+            <sensorId>MASTETR_L3_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.5.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Phase 3 Voltage</label>
+            <sensorSet>Master Line 3</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterTempOne">
+            <type>temp</type>
+            <sensorId>MASTER_TEMP_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.1.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Temp 1</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterTempTwo">
+            <type>temp</type>
+            <sensorId>MASTER_TEMP_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.2.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Temp 2</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterTempThree">
+            <type>temp</type>
+            <sensorId>MASTER_TEMP_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.3.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Temp 3</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterTempFour">
+            <type>temp</type>
+            <sensorId>MASTER_TEMP_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.4.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Temp 4</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterHumOne">
+            <type>humidity</type>
+            <sensorId>MASTER_HUM_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Humidity 1</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterHumTwo">
+            <type>humidity</type>
+            <sensorId>MASTER_HUM_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Humidity 2</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterHumThree">
+            <type>humidity</type>
+            <sensorId>MASTER_HUM_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Humidity 3</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterHumFour">
+            <type>humidity</type>
+            <sensorId>MASTER_HUM_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.8.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Humidity 4</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterDoorOne">
+            <type>num</type>
+            <sensorId>MASTER_DOOR_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.9.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Door 1</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterDoorTwo">
+            <type>num</type>
+            <sensorId>MASTER_DOOR_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Door 2</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterSmoke">
+            <type>num</type>
+            <sensorId>MASTER_SMOKE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Smoke</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterWater">
+            <type>num</type>
+            <sensorId>MASTER_WATER</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.6.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Water</label>
+            <sensorSet>Master Sensor</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentOne">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.1.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 1</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwo">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.2.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 2</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentThree">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.3.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 3</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentFour">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.4.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 4</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentFive">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_5</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 5</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentSix">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_6</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 6</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentSeven">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_7</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 7</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEight">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_8</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.8.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 8</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentNine">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_9</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.9.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 9</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_10</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 10</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEleven">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_11</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 11</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwelve">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_12</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 12</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentThirteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_13</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.13.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 13</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentFourteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_14</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.14.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 14</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentFifteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_15</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.15.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 15</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentSixteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_16</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.16.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 16</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentSeventeen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_17</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 17</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEighteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_18</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 18</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentNineteen">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_19</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.19.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 19</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwenty">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_20</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.20.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 20</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwentyOne">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_21</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.21.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 21</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwentyTwo">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_22</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.22.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 22</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwentyThree">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_23</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.23.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 23</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentTwentyFour">
+            <type>amperage</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_24</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.10.24.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current 24</label>
+            <sensorSet>Master Output Current</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyOne">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_1</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.1.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 1</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwo">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_2</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.2.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 2</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyThree">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_3</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.3.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 3</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyFour">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_4</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.4.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 4</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyFive">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_5</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.5.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 5</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergySix">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_6</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.6.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 6</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergySeven">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_7</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.7.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 7</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyEight">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_8</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.8.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 8</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyNine">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_9</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.9.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 9</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_10</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.10.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 10</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyEleven">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_11</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.11.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 11</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwelve">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_12</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.12.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 12</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyThirteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_13</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.13.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 13</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyFourteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_14</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.14.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 14</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyFifteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_15</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.15.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 15</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergySixteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_16</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.16.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 16</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergySeventeen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_17</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.17.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 17</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyEighteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_18</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.18.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 18</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyNineteen">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_19</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.19.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 19</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwenty">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_20</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.20.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 20</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwentyOne">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_21</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.21.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 21</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwentyTwo">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_22</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.22.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 22</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwentyThree">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_23</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.23.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 23</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+        <numSensor ruleid="masterOutputCurrentEnergyTwentyFour">
+            <type>num/kwatthr</type>
+            <sensorId>MASTER_OUTPUT_CURRENT_ENERGY_24</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.30966.6.1.1.13.24.0</getOid>
+            </value>
+            <valueInc>1</valueInc>
+            <label>Device 1 Master - Output Current Energy 24</label>
+            <sensorSet>Master Output Current Energy</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

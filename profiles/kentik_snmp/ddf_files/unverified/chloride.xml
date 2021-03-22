@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+	ddfid ="chloride"
+	ddfname="Chloride"
+	ddfversion="4"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+  
+<!-- deviceInfo-->
+  <!-- productTitle -->
+	<device deviceid="chloride_info">
+	    <oidMustExist ruleid="mib2objidtest" oid=".1.3.6.1.4.1.1364" istree="yes" />
+    
+		<setProductData ruleid="bootversion" field="bootversion">
+			<getOid>.1.3.6.1.4.1.1364.10.2.1.1.0</getOid>
+		</setProductData>
+	</device>
+    			 
+	<device deviceid="chloride_sensors">
+    <oidMustExist ruleid="chlorideDetect" oid=".1.3.6.1.4.1.1364" istree="yes"/>
+    
+<!-- sensorEntry Begin -->
+<!-- outputState -->
+	<stateSensor ruleid="outputState">
+      <type>state</type>
+      <sensorId>OUTPUT_STATE</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.32.0</getOid>
+        </mapValue>
+      </value>
+      <label>Output State</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+
+    <valueMap ruleid="value4-vm">
+      <valueIn>1</valueIn><valueOut>0</valueOut>
+      <valueIn>2</valueIn><valueOut>1</valueOut>
+      <valueIn>3</valueIn><valueOut>2</valueOut>
+      <valueIn>4</valueIn><valueOut>3</valueOut>
+      <valueIn>*</valueIn><valueOut>0</valueOut>
+    </valueMap>
+
+    <enumMap ruleid="state-em">
+      <label>normal</label>
+      <label>informational</label>
+      <label>warning</label>
+      <label>severe</label>
+    </enumMap>
+    
+<!-- inputStatus3 --> 
+		<stateSensor ruleid="inputStatus3">
+      <type>state</type>
+      <sensorId>INPUT_STATUS_3</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.27.0</getOid>
+        </mapValue>
+      </value>
+      <label>Input Status 3</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+<!-- inputStatus2 --> 
+		<stateSensor ruleid="inputStatus2">
+      <type>state</type>
+      <sensorId>INPUT_STATUS_2</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.22.0</getOid>
+        </mapValue>
+      </value>
+      <label>Input Status 2</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+<!-- inputStatus1 --> 
+		<stateSensor ruleid="inputStatus1">
+      <type>state</type>
+      <sensorId>INPUT_STATUS_1</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.17.0</getOid>
+        </mapValue>
+      </value>
+      <label>Input Status 1</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+<!-- humidityStatus --> 
+		<stateSensor ruleid="humidityStatus">
+      <type>state</type>
+      <sensorId>HUMIDITY_STATUS</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>Humidity Status</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+<!-- humidity --> 
+		<numSensor ruleid="humidity">
+      <type>pctofcapacity</type>
+      <sensorId>HUMIDITY</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.10.0</getOid>
+      </value>
+      <label>Humidity</label>
+      <sensorSet>Sensor Entry</sensorSet>
+    </numSensor>
+    
+<!--tempStatus -->
+		<stateSensor ruleid="tempStatus">
+      <type>state</type>
+      <sensorId>TEMP_STATUS</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.5.0</getOid>
+        </mapValue>
+      </value>
+      <label>Temperature Status</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+<!-- temperature -->
+		<numSensor ruleid="temperature">
+      <type>temp</type>
+      <sensorId>TEMPERATURE</sensorId>
+      <value>
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.4.0</getOid>
+      </value>
+      <label>Temperature</label>
+      <sensorSet>Sensor Entry</sensorSet>
+    </numSensor>
+    
+<!-- status -->
+		<stateSensor ruleid="status">
+      <type>state</type>
+      <sensorId>STATUS</sensorId>
+      <value>
+        <mapValue mapid="value4-vm">
+          <getOid>.1.3.6.1.4.1.1364.10.2.1.2.0</getOid>
+        </mapValue>
+      </value>
+      <label>Status</label>
+      <enum>state-em</enum>
+      <sensorSet>Sensor Entry</sensorSet>
+    </stateSensor>
+    
+</device>  
+</APC_DDF>

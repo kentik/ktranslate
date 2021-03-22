@@ -1,0 +1,1973 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="delta_pdu_1311"
+	ddfname="Delta PDU-1311"
+	ddfversion="2"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="delta_pdu_1311">
+		<oidMustExist ruleid="delta_pdu_1311_exists" oid=".1.3.6.1.4.1.2254.2.32" istree="yes"/>
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor"><getOid>.1.3.6.1.4.1.2254.2.32.1.1.0</getOid></setProductData>
+		<setProductData ruleid="modeldata" field="model"><getRowOid>.1.3.6.1.4.1.2254.2.32.1.6.1.3</getRowOid></setProductData>
+		<setProductData ruleid="serial_number" field="serial_num"><getRowOid>.1.3.6.1.4.1.2254.2.32.1.6.1.4</getRowOid></setProductData>
+		<setProductData ruleid="firmware_version" field="appversion"><getRowOid>.1.3.6.1.4.1.2254.2.32.1.6.1.5</getRowOid></setProductData>
+		<setProductData ruleid="typedata" field="type">PDU</setProductData> 
+
+		<!-- PDU Information -->
+		
+		<stringSensor ruleid="pdu_nmc_software_version">
+            <type>string</type>
+            <sensorId>PDU_NMC_SOFTWARE_VERSION</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.32.1.4.0</getOid>
+            </value>
+            <label>PDU NMC Software Version</label>
+            <sensorSet>PDU Information</sensorSet>
+        </stringSensor>
+		
+		<numSensor ruleid="number_of_pdu_devices">
+            <type>num</type>
+            <sensorId>NUMBER_OF_PDU_DEVICES</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.2254.2.32.1.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Number of PDU Devices</label>
+            <sensorSet>PDU Information</sensorSet>
+        </numSensor>
+		
+		<!-- PDU Output -->
+		
+		<numSensor ruleid="pdu_output_frequency" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>frequency</type>
+            <sensorId>PDU_OUTPUT_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output Frequency</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_voltage" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>PDU_OUTPUT_L1_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Voltage</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L1_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_voltage" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>PDU_OUTPUT_L2_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.5</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Voltage</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L2_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.6</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_voltage" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>voltage</type>
+            <sensorId>PDU_OUTPUT_L3_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.7</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Voltage</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L3_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.8</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L1_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.9</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L1_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.10</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L2_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.11</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L2_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.12</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L3_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.13</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L3_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.14</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_power_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_POWER_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.15</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output Power Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_energy_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_ENERGY_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.16</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output Energy Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_2_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L1_2_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.17</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-2 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_2_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L2_2_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.18</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-2 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_2_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L3_2_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.19</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-2 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_2_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L1_2_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.20</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-2 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_2_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L2_2_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.21</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-2 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_2_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L3_2_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.22</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-2 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_2_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L1_2_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.23</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-2 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_2_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L2_2_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.24</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-2 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_2_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L3_2_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.25</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-2 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_3_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L1_3_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.26</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-3 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_3_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L2_3_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.27</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-3 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_3_current" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L3_3_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.28</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-3 Current</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_3_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L1_3_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.29</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-3 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_3_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L2_3_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.30</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-3 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_3_power" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L3_3_POWER_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.31</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-3 Power</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_3_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L1_3_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.32</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1-3 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_3_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L2_3_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.33</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2-3 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_3_energy" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>num/kwatthr</type>
+            <sensorId>PDU_OUTPUT_L3_3_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.34</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3-3 Energy</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_current_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L1_CURRENT_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.35</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Current Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_current_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L2_CURRENT_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.36</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Current Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_current_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L3_CURRENT_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.37</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Current Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l1_power_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L1_POWER_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.39</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L1 Power Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l2_power_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>powerW</type>
+            <sensorId>PDU_OUTPUT_L2_POWER_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.40</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L2 Power Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pdu_output_l3_power_total" index=".1.3.6.1.4.1.2254.2.32.2.1.1.1">
+            <type>amperage</type>
+            <sensorId>PDU_OUTPUT_L3_POWER_TOTAL_<rowIndex/></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.41</getRowOid>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.2.1.1.1</getRowOid> Output L3 Power Total</label>
+            <sensorSet>PDU Output</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="pdu_alarm_disconnect_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_ALARM_DISCONNECT_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> Alarm Disconnect</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_1_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_1_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_1_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_1_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_1_output_voltage_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_1_OUTPUT_VOLTAGE_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_1_output_voltage_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_1_OUTPUT_VOLTAGE_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_1_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_1_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.7</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_1_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_1_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.8</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_1_output_voltage_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_1_OUTPUT_VOLTAGE_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.9</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_1_output_voltage_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_1_OUTPUT_VOLTAGE_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.10</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_1_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_1_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.11</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_1_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_1_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.12</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_1_output_voltage_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_1_OUTPUT_VOLTAGE_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.13</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_1_output_voltage_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_1_OUTPUT_VOLTAGE_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.14</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_l2_l3_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_L2_L3_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.15</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_l2_l3_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_L2_L3_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.16</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_1_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_1_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.17</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_1_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_1_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.18</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_1_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_1_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.19</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_2_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_2_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.20</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_2_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_2_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.21</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_2_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_2_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.22</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_2_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_2_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.23</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_2_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_2_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.24</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_2_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_2_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.25</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_2_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_2_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.26</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_2_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_2_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.27</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_2_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_2_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.28</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_3_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_3_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.29</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_3_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_3_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.30</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_3_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_3_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.31</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_3_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_3_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.32</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_3_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_3_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.33</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_3_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_3_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.34</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_3_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_3_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.35</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_3_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_3_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.36</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_3_breaker_open_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_3_BREAKER_OPEN_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.37</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Breaker Open Status</label>
+            <enum>open_close-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.38</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l1_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L1_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.39</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.40</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l2_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L2_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.41</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_load_major_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_LOAD_MAJOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.42</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Major Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+		<stateSensor ruleid="pdu_l3_load_minor_alarm_status" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+            <type>state</type>
+            <sensorId>PDU_L3_LOAD_MINOR_ALARM_STATUS_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="status1-vm">
+					<getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.43</getRowOid>
+				</mapValue>
+            </value>
+            <label>PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Minor Alarm Status</label>
+            <enum>on_off-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="status1-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="on_off-em">
+			<label>On</label>
+			<label>Off</label>
+		</enumMap>
+		<enumMap ruleid="open_close-em">
+			<label>Open</label>
+			<label>Close</label>
+		</enumMap>
+
+		<!-- Alarms -->
+		
+		<valueMap ruleid="isAlarm-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		
+		<alarmFlags2 ruleid="pdu_alarm_disconnect" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.2</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> Alarm Disconnect
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> Alarm Disconnect Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Communication</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> Alarm Disconnect condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> Alarm Disconnect condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_1_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.3</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_1_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.4</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_1_output_voltage_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.5</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_1_output_voltage_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.6</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Output Voltage Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+				<alarmFlags2 ruleid="pdu_l2_1_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.7</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_1_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.8</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_1_output_voltage_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.9</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_1_output_voltage_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.10</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Output Voltage Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+				<alarmFlags2 ruleid="pdu_l3_1_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.11</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_1_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.12</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_1_output_voltage_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.13</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_1_output_voltage_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.14</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Output Voltage Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_l2_l3_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.15</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_l2_l3_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.16</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1, L2-1, L3-1 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_1_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.17</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-1 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_1_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.18</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-1 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_1_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.19</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-1 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_2_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.20</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_2_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.21</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_2_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.22</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_2_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.23</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_2_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.24</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_2_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.25</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_2_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.26</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-2 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_2_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.27</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-2 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_2_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.28</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-2 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_3_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.29</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_3_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.30</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_3_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.31</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_3_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.32</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_3_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.33</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_3_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.34</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_3_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.35</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1-3 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_3_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.36</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2-3 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_3_breaker_open" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.37</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Breaker Open
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Breaker Open Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Breaker Open condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3-3 Breaker Open condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.38</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l1_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.39</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L1 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.40</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l2_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.41</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L2 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_load_major_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.42</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Major Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Major Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Major Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Major Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+		<alarmFlags2 ruleid="pdu_l3_load_minor_alarm" index=".1.3.6.1.4.1.2254.2.32.3.1.1.1">
+			<value><mapValue mapid="isAlarm-vm"><getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.43</getRowOid></mapValue></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Minor Alarm
+					</activeText>
+					<inactiveText>
+						PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Minor Alarm Cleared
+					</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>Power</category>
+				<description>
+					<activeText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Minor Alarm condition exists.
+					</activeText>
+					<inactiveText>
+						A PDU <getRowOid>.1.3.6.1.4.1.2254.2.32.3.1.1.1</getRowOid> L3 Load Minor Alarm condition no longer exists.
+					</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2> 
+	</device>
+</APC_DDF>

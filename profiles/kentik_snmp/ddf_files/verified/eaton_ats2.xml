@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="eaton_ats2"
+	ddfname="Eaton ATS2"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="eaton_ats2">
+		<oidMustExist ruleid="eaton_ats2" oid=".1.3.6.1.4.1.534.10.2" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="typedata" field="type">Transfer Switch</setProductData>
+
+		<setProductData ruleid="ats2IdentManufacturer" field="vendor">
+			<getOid>.1.3.6.1.4.1.534.10.2.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="ats2IdentModel" field="model">
+			<getOid>.1.3.6.1.4.1.534.10.2.1.2.0</getOid>
+		</setProductData>
+		<setProductData ruleid="ats2IdentFWVersion" field="appversion">
+			<getOid>.1.3.6.1.4.1.534.10.2.1.3.0</getOid>
+		</setProductData>
+		<setProductData ruleid="ats2IdentSerialNumber" field="serial_num">
+			<getOid>.1.3.6.1.4.1.534.10.2.1.5.0</getOid>
+		</setProductData>
+
+		<numSensor ruleid="ats2InputVoltage" index=".1.3.6.1.4.1.534.10.2.2.2.1.2">
+            <type>voltage</type>
+            <sensorId>ATS2_INPUT_VOLTAGE_<getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.1</getRowOid></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.2</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.1</getRowOid> Voltage</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2InputFrequency" index=".1.3.6.1.4.1.534.10.2.2.2.1.3">
+            <type>frequency</type>
+            <sensorId>ATS2_INPUT_FREQUENCY_<getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.1</getRowOid></sensorId>
+            <value>
+                <mult><op><getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.3</getRowOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.2.2.1.1</getRowOid> Frequency</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ats2OutputVoltage">
+            <type>voltage</type>
+            <sensorId>ATS2_OUTPUT_VOLTAGE</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.534.10.2.2.3.1.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Voltage</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2OutputCurrent">
+            <type>amperage</type>
+            <sensorId>ATS2_OUTPUT_CURRENT</sensorId>
+            <value>
+                <mult><op><getOid>.1.3.6.1.4.1.534.10.2.2.3.2.0</getOid></op><op>0.1</op></mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Output Current</label>
+            <sensorSet>Measure</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="ats2OperationMode-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>7</valueIn><valueOut>7</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats2OperationMode-em">
+			<label>Unknown</label>
+			<label>Initialization</label>
+			<label>Diagnosis</label>
+			<label>Off</label>
+			<label>Source 1</label>
+			<label>Source 2</label>
+			<label>Safe</label>
+			<label>Fault</label>
+		</enumMap>
+		<stateSensor ruleid="ats2OperationMode">
+            <type>state</type>
+            <sensorId>ATS2_OPERATION_MODE</sensorId>
+            <value>
+				<mapValue mapid="ats2OperationMode-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.2.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Operation Mode</label>
+            <enum>ats2OperationMode-em</enum>
+            <sensorSet>Measure</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2InputStatusDephasing-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>Out of Range</label>
+		</enumMap>
+		<stateSensor ruleid="ats2InputStatusDephasing">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_DEPHASING</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.1.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Input Dephasing Status</label>
+            <enum>ats2InputStatusDephasing-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2InputStatusFrequency-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Out of Range</label>
+		</enumMap>
+		<stateSensor ruleid="ats2InputStatusFrequency" index=".1.3.6.1.4.1.534.10.2.3.2.1.2">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_FREQUENCY_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Frequency Status</label>
+            <enum>ats2InputStatusFrequency-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2InputStatusFrequency-af" index=".1.3.6.1.4.1.534.10.2.3.2.1.2">
+			<value><getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.2</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Frequency Out of Range</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Frequency Normal</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> frequency is out of range.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> frequency has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2InputStatusGood-em">
+			<label>Unknown</label>
+			<label>Voltage or Frequency Out of Range</label>
+			<label>Voltage and Frequency Normal Range</label>
+			<label>Voltage Derated Range and Frequency Normal Range</label>
+			<label>Voltage and Frequency Normal Range, Waveform Not OK</label>
+		</enumMap>
+		<stateSensor ruleid="ats2InputStatusGood" index=".1.3.6.1.4.1.534.10.2.3.2.1.3">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_GOOD_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Status</label>
+            <enum>ats2InputStatusGood-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2InputStatusGood-af" index=".1.3.6.1.4.1.534.10.2.3.2.1.3">
+			<value><getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.3</getRowOid></value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Voltage or Frequency Out of Range</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Voltage or Frequency Out of Range Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage or frequency is out of range.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage and frequency have returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Voltage Derated</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Voltage Derated Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage is derated.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Waveform Not OK</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Waveform OK</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> waveform is not OK.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> waveform has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<stateSensor ruleid="ats2InputStatusInternalFailure" index=".1.3.6.1.4.1.534.10.2.3.2.1.4">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_INTERNAL_FAILURE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.4</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Internal Failure</label>
+            <enum>internalFailure-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2InputStatusInternalFailure-af" index=".1.3.6.1.4.1.534.10.2.3.2.1.4">
+			<value><getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.4</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Internal Failure</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Internal Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText>An Internal Failure has been detected on Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid>.</activeText>
+					<inactiveText>Internal Failure on Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2InputStatusVoltage-em">
+			<label>Unknown</label>
+			<label>Normal Range</label>
+			<label>Derated Range</label>
+			<label>Out of Range</label>
+			<label>Missing</label>
+		</enumMap>
+		<stateSensor ruleid="ats2InputStatusVoltage" index=".1.3.6.1.4.1.534.10.2.3.2.1.5">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_VOLTAGE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.5</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Voltage Status</label>
+            <enum>ats2InputStatusVoltage-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2InputStatusVoltage-af" index=".1.3.6.1.4.1.534.10.2.3.2.1.5">
+			<value><getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.5</getRowOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Derated Range</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Derated Range Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage is derated.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Out of Range</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Out of Range Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage is out of range.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="4">
+				<name>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Missing</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Missing Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage is missing.</activeText>
+					<inactiveText>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> voltage has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2InputStatusUsed-em">
+			<label>Unknown</label>
+			<label>Not Powering Load</label>
+			<label>Powering Load</label>
+		</enumMap>
+		<stateSensor ruleid="ats2InputStatusUsed" index=".1.3.6.1.4.1.534.10.2.3.2.1.6">
+            <type>state</type>
+            <sensorId>ATS2_INPUT_STATUS_USED_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.6</getRowOid>
+				</mapValue>
+            </value>
+            <label>Input <getRowOid>.1.3.6.1.4.1.534.10.2.3.2.1.1</getRowOid> Relay Status</label>
+            <enum>ats2InputStatusUsed-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<stateSensor ruleid="ats2StatusInternalFailure">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_INTERNAL_FAILURE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Internal Failure</label>
+            <enum>internalFailure-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusInternalFailure-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.1.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Output Internal Failure</activeText>
+					<inactiveText>Output Internal Failure Cleared</inactiveText>
+				</name>
+				<severity>failure</severity>
+				<category>System</category>
+				<description>
+					<activeText>An Internal Failure has been detected on Output.</activeText>
+					<inactiveText>Internal Failure on Output no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2StatusOutput-em">
+			<label>Unknown</label>
+			<label>Output Not Powered</label>
+			<label>Output Powered</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusOutput">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_OUTPUT</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.2.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Status</label>
+            <enum>ats2StatusOutput-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2StatusOverload-em">
+			<label>Unknown</label>
+			<label>No Overload</label>
+			<label>Overload Warning</label>
+			<label>Overload Critical</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusOverload">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_OVERLOAD</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.3.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Overload Status</label>
+            <enum>ats2StatusOverload-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusOverload-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.3.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Output Overload Warning</activeText>
+					<inactiveText>Output Overload Warning Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>Output is overloaded.</activeText>
+					<inactiveText>Output has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+			<alarmFlagsTest match="3">
+				<name>
+					<activeText>Output Overload Critical</activeText>
+					<inactiveText>Output Overload Critical Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Output is critically overloaded.</activeText>
+					<inactiveText>Output has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2StatusOverTemperature-em">
+			<label>Unknown</label>
+			<label>No Over Temperature</label>
+			<label>Over Temperature</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusOverTemperature">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_OVER_TEMPERATURE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.4.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Over Temperature Status</label>
+            <enum>ats2StatusOverTemperature-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusOverTemperature-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.4.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Output Over Temperature</activeText>
+					<inactiveText>Output Over Temperature Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>Output temperature is over the high threshold.</activeText>
+					<inactiveText>Output temperature returns to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2StatusShortCircuit-em">
+			<label>Unknown</label>
+			<label>No Short Circuit</label>
+			<label>Short Circuit</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusShortCircuit">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_SHORT_CIRCUIT</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Short Circuit Status</label>
+            <enum>ats2StatusShortCircuit-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusShortCircuit-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.5.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Output Short Circuit</activeText>
+					<inactiveText>Output Short Circuit Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Short Circuit has been detected on the output.</activeText>
+					<inactiveText>Output Short Circuit has returned to normal.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2StatusCommunicationLost-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Communication Lost</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusCommunicationLost">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_COMM_LOST</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Communication Status</label>
+            <enum>ats2StatusCommunicationLost-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusCommunicationLost-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.6.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Communication Failure</activeText>
+					<inactiveText>Communication Failure Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Communication Failure has been detected.</activeText>
+					<inactiveText>Communication Failure no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<enumMap ruleid="ats2StatusConfigurationFailure-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Configuration Failure</label>
+		</enumMap>
+		<stateSensor ruleid="ats2StatusConfigurationFailure">
+            <type>state</type>
+            <sensorId>ATS2_STATUS_CONFIG_FAILURE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.3.3.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Output Configuration Status</label>
+            <enum>ats2StatusConfigurationFailure-em</enum>
+            <sensorSet>Status</sensorSet>
+        </stateSensor>
+		<alarmFlags2 ruleid="ats2StatusConfigurationFailure-af">
+			<value><getOid>.1.3.6.1.4.1.534.10.2.3.3.7.0</getOid></value>
+			<alarmFlagsTest match="2">
+				<name>
+					<activeText>Configuration Failure</activeText>
+					<inactiveText>Configuration Failure Cleared</inactiveText>
+				</name>
+				<severity>critical</severity>
+				<category>System</category>
+				<description>
+					<activeText>A Configuration Failure has been detected.</activeText>
+					<inactiveText>Configuration Failure no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+		<numSensor ruleid="ats2ConfigInputVoltageRating">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_INPUT_VOLTAGE_RATING</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Voltage Rating</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2ConfigInputFrequencyRating">
+            <type>frequency</type>
+            <sensorId>ATS2_CONFIG_INPUT_FREQUENCY_RATING</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Frequency Rating</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2ConfigOutputVoltage">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_OUTPUT_VOLTAGE_RATING</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Output Voltage Rating</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+
+		<enumMap ruleid="ats2ConfigPreferred-em">
+			<label>Unknown</label>
+			<label>Source 1</label>
+			<label>Source 2</label>
+		</enumMap>
+		<stateSensor ruleid="ats2ConfigPreferred">
+            <type>state</type>
+            <sensorId>ATS2_CONFIG_PREFERRED</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.4.5.0</getOid>
+				</mapValue>
+            </value>
+            <label>Preferred Source</label>
+            <enum>ats2ConfigPreferred-em</enum>
+            <sensorSet>Config</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2ConfigSensitivity-em">
+			<label>Unknown</label>
+			<label>Normal</label>
+			<label>High Sensitivity</label>
+			<label>Low Sensitivity</label>
+		</enumMap>
+		<stateSensor ruleid="ats2ConfigSensitivity">
+            <type>state</type>
+            <sensorId>ATS2_CONFIG_SENSITIVITY</sensorId>
+            <value>
+				<mapValue mapid="3state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.4.6.0</getOid>
+				</mapValue>
+            </value>
+            <label>Preferred Source</label>
+            <enum>ats2ConfigSensitivity-em</enum>
+            <sensorSet>Config</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2TransferMode-em">
+			<label>Unknown</label>
+			<label>Standard</label>
+			<label>Gap</label>
+		</enumMap>
+		<stateSensor ruleid="ats2TransferMode">
+            <type>state</type>
+            <sensorId>ATS2_TRANSFER_MODE</sensorId>
+            <value>
+				<mapValue mapid="2state-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.4.7.0</getOid>
+				</mapValue>
+            </value>
+            <label>Transfer Mode</label>
+            <enum>ats2TransferMode-em</enum>
+            <sensorSet>Config</sensorSet>
+        </stateSensor>
+
+		<valueMap ruleid="ats2TransferTest-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>6</valueIn><valueOut>6</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="ats2TransferTest-em">
+			<label>Unknown</label>
+			<label>Done - Passed</label>
+			<label>Done - Warning</label>
+			<label>Done - Error</label>
+			<label>Aborted</label>
+			<label>In Progress</label>
+			<label>No Test Initiated</label>
+		</enumMap>
+		<stateSensor ruleid="ats2TransferTest">
+            <type>state</type>
+            <sensorId>ATS2_TRANSFER_TEST</sensorId>
+            <value>
+				<mapValue mapid="ats2TransferTest-vm">
+                <getOid>.1.3.6.1.4.1.534.10.2.4.8.0</getOid>
+				</mapValue>
+            </value>
+            <label>Transfer Test Result</label>
+            <enum>ats2TransferTest-em</enum>
+            <sensorSet>Config</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="ats2ConfigBrownoutLow">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_BROWNOUT_LOW</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.9.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Brownout Low Voltage</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2ConfigBrownoutLowDerated">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_BROWNOUT_LOW_DERATED</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Brownout Low Derated Voltage</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2ConfigBrownoutHigh">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_BROWNOUT_HIGH</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.11.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Brownout High Voltage</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2ConfigHysteresisVoltage">
+            <type>voltage</type>
+            <sensorId>ATS2_CONFIG_HYSTERESIS_VOLTAGE</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.4.12.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Voltage Hysteresis</label>
+            <sensorSet>Config</sensorSet>
+        </numSensor>
+
+		<numSensor ruleid="ats2EnvRemoteTemp">
+            <type>temp</type>
+            <sensorId>ATS2_ENV_REMOTE_TEMP</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Temperature</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2EnvRemoteHumidity">
+            <type>humidity</type>
+            <sensorId>ATS2_ENV_REMOTE_HUMIDITY</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.2.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Humidity</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<enumMap ruleid="ats2ContactType-em">
+			<label>Unknown</label>
+			<label>Normally Open</label>
+			<label>Normally Closed</label>
+			<label>Any Change</label>
+			<label>Not Used</label>
+		</enumMap>
+		<stateSensor ruleid="ats2ContactType" index=".1.3.6.1.4.1.534.10.2.5.4.1.2">
+            <type>state</type>
+            <sensorId>ATS2_CONTACT_TYPE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.5.4.1.2</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.534.10.2.5.4.1.4</getRowOid> Type</label>
+            <enum>ats2ContactType-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="ats2ContactState-em">
+			<label>Unknown</label>
+			<label>Open</label>
+			<label>Closed</label>
+			<label>Open with Notice</label>
+			<label>Closed with Notice</label>
+		</enumMap>
+		<stateSensor ruleid="ats2ContactState" index=".1.3.6.1.4.1.534.10.2.5.4.1.3">
+            <type>state</type>
+            <sensorId>ATS2_CONTACT_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="4state-vm">
+                <getRowOid>.1.3.6.1.4.1.534.10.2.5.4.1.3</getRowOid>
+				</mapValue>
+            </value>
+            <label><getRowOid>.1.3.6.1.4.1.534.10.2.5.4.1.4</getRowOid> State</label>
+            <enum>ats2ContactState-em</enum>
+            <sensorSet>Environmental</sensorSet>
+        </stateSensor>
+
+		<numSensor ruleid="ats2EnvRemoteTempLowerLimit">
+            <type>temp</type>
+            <sensorId>ATS2_ENV_REMOTE_TEMP_LOWER_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.5.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Temperature Lower Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2EnvRemoteTempUpperLimit">
+            <type>temp</type>
+            <sensorId>ATS2_ENV_REMOTE_TEMP_UPPER_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.6.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Temperature Upper Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2EnvRemoteHumidityLowerLimit">
+            <type>humidity</type>
+            <sensorId>ATS2_ENV_REMOTE_HUMIDITY_LOWER_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Humidity Lower Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+		<numSensor ruleid="ats2EnvRemoteHumidityUpperLimit">
+            <type>humidity</type>
+            <sensorId>ATS2_ENV_REMOTE_HUMIDITY_UPPER_LIMIT</sensorId>
+            <value>
+                <getOid>.1.3.6.1.4.1.534.10.2.5.8.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Remote Humidity Upper Limit</label>
+            <sensorSet>Environmental</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="2state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="3state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<valueMap ruleid="4state-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>4</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="internalFailure-em">
+			<label>Unknown</label>
+			<label>Good</label>
+			<label>Internal Failure</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

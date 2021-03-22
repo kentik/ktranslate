@@ -1,0 +1,472 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="racktivity"
+	ddfname="Racktivity"
+	ddfversion="3"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="racktivity">
+		<oidMustExist ruleid="racktivity" oid=".1.3.6.1.4.1.34097.9" istree="yes" /> 
+
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Racktivity</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+			<getOid>.1.3.6.1.2.1.1.1.0</getOid>
+		</setProductData>
+		<setProductData ruleid="typedata" field="type">Power Meter</setProductData>
+		<setProductData ruleid="mMAC" field="mac_addr">
+			<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10015.1.0</getOid>
+		</setProductData>
+
+		<setDefaultLabel>
+			<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid>
+		</setDefaultLabel>
+
+		<numSensor ruleid="mTemperature" index=".1.3.6.1.4.1.34097.9.77.1.1.11">
+            <type>temp</type>
+            <sensorId>M_TEMP_<rowIndex/></sensorId>
+            <value>
+				<sub>
+				<op>
+					<mult>
+					<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.11</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				<op>273</op>
+				</sub>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Temperature<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mVoltage" index=".1.3.6.1.4.1.34097.9.77.1.1.4">
+            <type>voltage</type>
+            <sensorId>M_VOLT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.4</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Voltage<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mHighCurrent" index=".1.3.6.1.4.1.34097.9.77.1.1.41">
+            <type>amperage</type>
+            <sensorId>M_HIGH_CURRENT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.41</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> High Current<space/>
+				<getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.10109</getRowOid>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mHighPower" index=".1.3.6.1.4.1.34097.9.77.1.1.43">
+            <type>num/powerKW</type>
+            <sensorId>M_HIGH_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.43</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> High Power<space/>
+				<getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.10109</getRowOid>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mPositiveEnergy" index=".1.3.6.1.4.1.34097.9.77.1.1.46">
+            <type>num/kwatthr</type>
+            <sensorId>M_POSITIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.46</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Positive Energy<space/>
+				<getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.10109</getRowOid>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mNegativeEnergy" index=".1.3.6.1.4.1.34097.9.77.1.1.47">
+            <type>num/kwatthr</type>
+            <sensorId>M_NEGATIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.47</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Negative Energy<space/>
+				<getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.10109</getRowOid>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mTotalPositiveEnergy" index=".1.3.6.1.4.1.34097.9.77.1.1.48">
+            <type>num/kwatthr</type>
+            <sensorId>M_TOTAL_POSITIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.48</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Total Positive Energy<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="mNegativeEnergy" index=".1.3.6.1.4.1.34097.9.77.1.1.49">
+            <type>num/kwatthr</type>
+            <sensorId>M_TOTAL_NEGATIVE_ENERGY_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.77.1.1.49</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>
+				<getOid>.1.3.6.1.4.1.34097.9.77.1.1.10001.1.0</getOid> Total Negative Energy<space/>
+				<formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber>
+			</label>
+            <sensorSet>Master Modules</sensorSet>
+        </numSensor>
+	</device>
+
+	<device deviceid="racktivity_powerModule">
+		<oidMustExist ruleid="powerModule" oid=".1.3.6.1.4.1.34097.9.80" istree="yes" />
+
+		<numSensor ruleid="pVoltage" index=".1.3.6.1.4.1.34097.9.80.1.1.4">
+            <type>voltage</type>
+            <sensorId>P_VOLT_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.4</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Voltage <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pFrequency" index=".1.3.6.1.4.1.34097.9.80.1.1.5">
+            <type>frequency</type>
+            <sensorId>P_FREQ_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.5</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Frequency <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pCurrent" index=".1.3.6.1.4.1.34097.9.80.1.1.6">
+            <type>amperage</type>
+            <sensorId>P_CURR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.6</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Current <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pPower" index=".1.3.6.1.4.1.34097.9.80.1.1.7">
+            <type>powerW</type>
+            <sensorId>P_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.7</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pActiveEnergy" index=".1.3.6.1.4.1.34097.9.80.1.1.9">
+            <type>num/kwatthr</type>
+            <sensorId>P_ACT_NRG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.9</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Active Energy <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pApparentEnergy" index=".1.3.6.1.4.1.34097.9.80.1.1.10">
+            <type>num/kVAhr</type>
+            <sensorId>P_APP_NRG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.10</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Apparent Energy <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTemperature" index=".1.3.6.1.4.1.34097.9.80.1.1.11">
+            <type>temp</type>
+            <sensorId>P_TEMP_<rowIndex/></sensorId>
+            <value>
+				<sub>
+				<op>
+					<mult>
+					<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.11</getRowOid></op>
+					<op>0.1</op>
+					</mult>
+				</op>
+				<op>273</op>
+				</sub>
+            </value>
+            <label>Temperature <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pApparentPower" index=".1.3.6.1.4.1.34097.9.80.1.1.15">
+            <type>powerVA</type>
+            <sensorId>P_APP_PWR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.15</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Apparent Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pPowerFactor" index=".1.3.6.1.4.1.34097.9.80.1.1.16">
+            <type>num/powerfactor</type>
+            <sensorId>P_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.16</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Power Factor <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalCurrent" index=".1.3.6.1.4.1.34097.9.80.1.1.17">
+            <type>amperage</type>
+            <sensorId>P_TOT_CURR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.17</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Total Current <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalRealPower" index=".1.3.6.1.4.1.34097.9.80.1.1.18">
+            <type>powerW</type>
+            <sensorId>P_TOT_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.18</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Total Real Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalApparentPower" index=".1.3.6.1.4.1.34097.9.80.1.1.19">
+            <type>powerVA</type>
+            <sensorId>P_TOT_APP_PWR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.19</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Total Apparent Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalActiveEnergy" index=".1.3.6.1.4.1.34097.9.80.1.1.20">
+            <type>num/kwatthr</type>
+            <sensorId>P_TOT_ACT_NRG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.20</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Total Active Energy <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalApparentEnergy" index=".1.3.6.1.4.1.34097.9.80.1.1.21">
+            <type>num/kVAhr</type>
+            <sensorId>P_TOT_APP_NRG_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.21</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Total Apparent Energy <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalPowerFactor" index=".1.3.6.1.4.1.34097.9.80.1.1.22">
+            <type>num/powerfactor</type>
+            <sensorId>P_TOT_PF_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.22</getRowOid></op>
+				<op>0.01</op>
+				</mult>
+            </value>
+			<valueInc>0.01</valueInc>
+            <label>Total Power Factor <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTimeOnline" index=".1.3.6.1.4.1.34097.9.80.1.1.24">
+            <type>timeinsec</type>
+            <sensorId>P_TIME_ONLINE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.24</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Time Online <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pTotalHarmonicDistortion" index=".1.3.6.1.4.1.34097.9.80.1.1.50">
+            <type>pctofcapacity</type>
+            <sensorId>P_THD_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.50</getRowOid></op>
+				<op>0.1</op>
+				</mult>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Total Harmonic Distortion <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pPhase" index=".1.3.6.1.4.1.34097.9.80.1.1.51">
+            <type>num</type>
+			<units>degreesAngle</units>
+            <sensorId>P_PHASE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.51</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pBigCurrent" index=".1.3.6.1.4.1.34097.9.80.1.1.52">
+            <type>amperage</type>
+            <sensorId>P_BIG_CURR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.52</getRowOid></op>
+				<op>0.0001</op>
+				</mult>
+            </value>
+			<valueInc>0.0001</valueInc>
+            <label>Current <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pBigPower" index=".1.3.6.1.4.1.34097.9.80.1.1.53">
+            <type>powerW</type>
+            <sensorId>P_BIG_POWER_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.53</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+		<numSensor ruleid="pBigApparentPower" index=".1.3.6.1.4.1.34097.9.80.1.1.54">
+            <type>powerVA</type>
+            <sensorId>P_BIG_APP_PWR_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.54</getRowOid></op>
+				<op>0.001</op>
+				</mult>
+            </value>
+			<valueInc>0.001</valueInc>
+            <label>Apparent Power <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+
+		<valueMap ruleid="pDetectedPhase-vm">
+			<valueIn>255</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		<numSensor ruleid="pDetectedPhase" index=".1.3.6.1.4.1.34097.9.80.1.1.55">
+			<rowTest>
+				<mapValue mapid="pDetectedPhase-vm">
+				<getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.55</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>P_DET_PHASE_<rowIndex/></sensorId>
+            <value>
+				<mult>
+				<op><getRowOid>.1.3.6.1.4.1.34097.9.80.1.1.55</getRowOid></op>
+				<op>1</op>
+				</mult>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Detected Phase <formatNumber printffmt="%1.0f"><add><op><rowNumber/></op><op>1</op></add></formatNumber></label>
+            <sensorSet>Power Modules</sensorSet>
+        </numSensor>
+
+	</device>
+</APC_DDF>

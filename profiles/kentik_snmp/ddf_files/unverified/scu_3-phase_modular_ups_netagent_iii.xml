@@ -1,0 +1,4294 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="apc_ddf_1_6.xsl"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="scu_3-phase_modular_ups_netagent_iii"
+	ddfname="SCU 3-Phase Modular UPS - NetAgent III"
+	ddfversion="1"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+    <device deviceid="scu_3-phase_modular_ups_netagent_iii_header">
+		<suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+		<suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+		<suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">SCU</setProductData>
+		<setProductData ruleid="modeldata" field="model">3-Phase Modular UPS - NetAgent III</setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+
+		<oidMustExist ruleid="scu_3-phase_modular_ups_netagent_iii_i" oid=".1.3.6.1.4.1.2350.1" istree="yes"/>
+    </device>
+	<device deviceid="scu_3-phase_modular_ups_netagent_iii_i">
+		<oidMustExist ruleid="scu_3-phase_modular_ups_netagent_iii_i" oid=".1.3.6.1.4.1.2350.1.1" istree="yes"/>
+
+		<stateSensor ruleid="upsI3pAutoRestartType">
+			<type>state</type>
+			<sensorId>UPS_I3P_AUTO_RESTART_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.21.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Auto Restart Type</label>
+			<enum>upsI3pAutoRestartType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsI3pAutoRestartType-em">
+			<label>Automatic</label>
+			<label>Manual</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsI3pShutdownType">
+			<type>state</type>
+			<sensorId>UPS_I3P_SHUTDOWN_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.22.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Shutdown Type</label>
+			<enum>upsI3pShutdownType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsI3pShutdownType-em">
+			<label>Shutdown Output Only</label>
+			<label>Entire</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsI3pBatCondition">
+			<type>state</type>
+			<sensorId>UPS_I3P_BAT_CONDITION</sensorId>
+			<value>
+				<mapValue mapid="upsI3pBatCondition-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.23.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Battery Condition</label>
+			<enum>upsI3pBatCondition-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsI3pBatCondition-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsI3pBatCondition-em">
+			<label>Good</label>
+			<label>Weak</label>
+            <label>Replace</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsI3pBatStatus">
+			<type>state</type>
+			<sensorId>UPS_I3P_BAT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsI3pBatStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.24.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Battery Status</label>
+			<enum>upsI3pBatStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsI3pBatStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsI3pBatStatus-em">
+			<label>OK</label>
+			<label>Low</label>
+            <label>Depleted</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsI3pBatChargeStatus">
+			<type>state</type>
+			<sensorId>UPS_I3P_BAT_CHARGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsI3pBatChargeStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.25.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Battery Charge Status</label>
+			<enum>upsI3pBatChargeStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsI3pBatChargeStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsI3pBatChargeStatus-em">
+			<label>Floating</label>
+			<label>Charging</label>
+            <label>Resting</label>
+            <label>Discharging</label>
+		</enumMap>
+
+		<numSensor ruleid="upsI3pEstimatedMinutesOnBat">
+			<type>timeinmins</type>
+			<sensorId>UPS_I3P_ESTIMATED_MINUTES_ON_BAT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.26.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Estimated Minutes on Battery</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pEstimatedCharge">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_I3P_ESTIMATED_CHARGE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.28.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Estimated Charge</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBatteryVol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_BATTERY_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.29.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Battery Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_BATTERY_CURRENT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.30.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBatteryTemperature">
+			<type>temp</type>
+			<sensorId>UPS_I3P_BATTERY_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.31.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLineBads">
+			<type>num</type>
+			<sensorId>UPS_I3P_INPUT_LINE_BADS</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.32.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line Bads</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLines">
+			<type>num</type>
+			<sensorId>UPS_I3P_INPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.33.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Lines</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine1Fre">
+			<type>frequency</type>
+			<sensorId>UPS_I3P_INPUT_LINE_1_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.34.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 1 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.35.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.36.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_INPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.37.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine2Fre">
+			<type>frequency</type>
+			<sensorId>UPS_I3P_INPUT_LINE_2_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.38.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 2 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.39.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.40.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_INPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.41.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine3Fre">
+			<type>frequency</type>
+			<sensorId>UPS_I3P_INPUT_LINE_3_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.42.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 3 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.43.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_INPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.44.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pInputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_INPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.45.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Input Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsI3pOutputSource">
+			<type>state</type>
+			<sensorId>UPS_I3P_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="upsI3pOutputSource-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.1.1.46.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS I - Output Source</label>
+			<enum>upsI3pOutputSource-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsI3pOutputSource-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsI3pOutputSource-em">
+			<label>Normal</label>
+			<label>By Battery</label>
+            <label>By Pass</label>
+            <label>Reduce</label>
+            <label>Boost</label>
+            <label>Other</label>
+		</enumMap>
+
+		<numSensor ruleid="upsI3pOutputFre">
+			<type>frequency</type>
+			<sensorId>UPS_I3P_OUTPUT_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.47.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Frequency</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLines">
+			<type>num</type>
+			<sensorId>UPS_I3P_OUTPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.48.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Lines</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.49.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.50.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.51.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine1Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_1_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.52.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 1 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.53.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.54.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.55.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine2Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_2_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.56.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 2 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.57.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.58.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.59.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pOutputLine3Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_I3P_OUTPUT_LINE_3_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.60.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Line 3 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassFre">
+			<type>frequency</type>
+			<sensorId>UPS_I3P_BYPASS_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.61.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Frequency</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLines">
+			<type>num</type>
+			<sensorId>UPS_I3P_BYPASS_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.62.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Lines</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.63.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.64.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.65.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.66.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.67.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.68.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.69.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.70.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBypassLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_BYPASS_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.71.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Bypass Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsI3pTestResult">
+			<type>state</type>
+			<sensorId>UPS_I3P_TEST_RESULT</sensorId>
+			<value>
+				<mapValue mapid="upsI3pTestResult-vm">
+					<getOid>.1.3.6.1.4.1.2350.1.1.1.72.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS I - Test Result</label>
+			<enum>upsI3pTestResult-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsI3pTestResult-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsI3pTestResult-em">
+			<label>No Test</label>
+			<label>Test Pass</label>
+            <label>Test In Progress</label>
+            <label>General Test Fail</label>
+            <label>Battery Test Fail</label>
+            <label>Deep Battery Test Fail</label>
+		</enumMap>
+
+		<numSensor ruleid="upsI3pOutputTotalPower">
+			<type>num/powerKW</type>
+			<sensorId>UPS_I3P_OUTPUT_TOTAL_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.73.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Output Total Power</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pBatteryCap">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_I3P_BATTERY_CAP</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.74.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsI3pTemperature">
+			<type>temp</type>
+			<sensorId>UPS_I3P_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.1.1.75.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS I - Temperature</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="upsI3pTemperatureTooHigh">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.17.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Temperature Too High</activeText>
+					<inactiveText>UPS I - Temperature Too High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Temperature Too High condition exists.</activeText>
+					<inactiveText>UPS I - Temperature Too High condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pInputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.18.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Input Fault</activeText>
+					<inactiveText>UPS I - Input Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Input Fault condition exists.</activeText>
+					<inactiveText>UPS I - Input Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pOutputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.19.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Output Fault</activeText>
+					<inactiveText>UPS I - Output Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Output Fault condition exists.</activeText>
+					<inactiveText>UPS I - Output Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pOverLoad">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.20.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Over Load</activeText>
+					<inactiveText>UPS I - Over Load Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Over Load condition exists.</activeText>
+					<inactiveText>UPS I - Over Load condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pBypassFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.21.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Bypass Fault</activeText>
+					<inactiveText>UPS I - Bypass Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Bypass Fault condition exists.</activeText>
+					<inactiveText>UPS I - Bypass Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pOutputShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.22.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Output Shutdown</activeText>
+					<inactiveText>UPS I - Output Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Output Shutdown condition exists.</activeText>
+					<inactiveText>UPS I - Output Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.23.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Shutdown</activeText>
+					<inactiveText>UPS I - Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Shutdown condition exists.</activeText>
+					<inactiveText>UPS I - Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pChargeFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.24.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Charge Fault</activeText>
+					<inactiveText>UPS I - Charge Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Charge Fault condition exists.</activeText>
+					<inactiveText>UPS I - Charge Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pSystemShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.25.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - System Shutdown</activeText>
+					<inactiveText>UPS I - System Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A System Shutdown condition exists.</activeText>
+					<inactiveText>UPS I - System Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pFanFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.26.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Fan Fault</activeText>
+					<inactiveText>UPS I - Fan Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Fan Fault condition exists.</activeText>
+					<inactiveText>UPS I - Fan Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pFuseFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.27.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Fuse Fault</activeText>
+					<inactiveText>UPS I - Fuse Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Fuse Fault condition exists.</activeText>
+					<inactiveText>UPS I - Fuse Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pGeneralFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.28.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - General Fault</activeText>
+					<inactiveText>UPS I - General Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A General Fault condition exists.</activeText>
+					<inactiveText>UPS I - General Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pAutoRestart">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.29.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Auto Restart</activeText>
+					<inactiveText>UPS I - Auto Restart Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Auto Restart condition exists.</activeText>
+					<inactiveText>UPS I - Auto Restart condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pShutdownDelayStatus">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.30.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Showdown Delay Status</activeText>
+					<inactiveText>UPS I - Showdown Delay Status Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Showdown Delay Status condition exists.</activeText>
+					<inactiveText>UPS I - Showdown Delay Status condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pShutdownAtOnce">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.31.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Shutdown At Once</activeText>
+					<inactiveText>UPS I - Shutdown At Once Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Shutdown At Once condition exists.</activeText>
+					<inactiveText>UPS I - Shutdown At Once condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="usp1Communication">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.32.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Communication</activeText>
+					<inactiveText>UPS I - Communication Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Communication condition exists.</activeText>
+					<inactiveText>UPS I - Communication condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pBatteryFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.33.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Battery Fault</activeText>
+					<inactiveText>UPS I - Battery Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Battery Fault condition exists.</activeText>
+					<inactiveText>UPS I - Battery Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pBatteryVolLow">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.34.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Battery Voltage Low</activeText>
+					<inactiveText>UPS I - Battery Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Battery Voltage Low condition exists.</activeText>
+					<inactiveText>UPS I - Battery Voltage Low condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pBypass">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.35.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Bypass</activeText>
+					<inactiveText>UPS I - Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Bypass condition exists.</activeText>
+					<inactiveText>UPS I - Bypass condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pOtherFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.36.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Other Fault</activeText>
+					<inactiveText>UPS I - Other Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Other Fault condition exists.</activeText>
+					<inactiveText>UPS I - Other Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsI3pTestInProgress">
+			<value><getOid>.1.3.6.1.4.1.2350.1.1.2.37.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS I - Test In Progress</activeText>
+					<inactiveText>UPS I - Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS I - A Test In Progress condition exists.</activeText>
+					<inactiveText>UPS I - Test In Progress condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+	</device>
+	<device deviceid="scu_3-phase_modular_ups_netagent_iii_ii">
+		<oidMustExist ruleid="scu_3-phase_modular_ups_netagent_iii_ii" oid=".1.3.6.1.4.1.2350.1.2" istree="yes"/>
+
+		<stateSensor ruleid="upsII3pAutoRestartType">
+			<type>state</type>
+			<sensorId>UPS_II3P_AUTO_RESTART_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.21.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Auto Restart Type</label>
+			<enum>upsII3pAutoRestartType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsII3pAutoRestartType-em">
+			<label>Automatic</label>
+			<label>Manual</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsII3pShutdownType">
+			<type>state</type>
+			<sensorId>UPS_II3P_SHUTDOWN_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.22.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Shutdown Type</label>
+			<enum>upsII3pShutdownType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsII3pShutdownType-em">
+			<label>Shutdown Output Only</label>
+			<label>Entire</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsII3pBatCondition">
+			<type>state</type>
+			<sensorId>UPS_II3P_BAT_CONDITION</sensorId>
+			<value>
+				<mapValue mapid="upsII3pBatCondition-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.23.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Battery Condition</label>
+			<enum>upsII3pBatCondition-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsII3pBatCondition-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsII3pBatCondition-em">
+			<label>Good</label>
+			<label>Weak</label>
+            <label>Replace</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsII3pBatStatus">
+			<type>state</type>
+			<sensorId>UPS_II3P_BAT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsII3pBatStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.24.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Battery Status</label>
+			<enum>upsII3pBatStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsII3pBatStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsII3pBatStatus-em">
+			<label>OK</label>
+			<label>Low</label>
+            <label>Depleted</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsII3pBatChargeStatus">
+			<type>state</type>
+			<sensorId>UPS_II3P_BAT_CHARGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsII3pBatChargeStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.25.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Battery Charge Status</label>
+			<enum>upsII3pBatChargeStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsII3pBatChargeStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsII3pBatChargeStatus-em">
+			<label>Floating</label>
+			<label>Charging</label>
+            <label>Resting</label>
+            <label>Discharging</label>
+		</enumMap>
+
+		<numSensor ruleid="upsII3pEstimatedMinutesOnBat">
+			<type>timeinmins</type>
+			<sensorId>UPS_II3P_ESTIMATED_MINUTES_ON_BAT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.26.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Estimated Minutes on Battery</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pEstimatedCharge">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_II3P_ESTIMATED_CHARGE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.28.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Estimated Charge</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBatteryVol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_BATTERY_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.29.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Battery Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_BATTERY_CURRENT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.30.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBatteryTemperature">
+			<type>temp</type>
+			<sensorId>UPS_II3P_BATTERY_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.31.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLineBads">
+			<type>num</type>
+			<sensorId>UPS_II3P_INPUT_LINE_BADS</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.32.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line Bads</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLines">
+			<type>num</type>
+			<sensorId>UPS_II3P_INPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.33.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Lines</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine1Fre">
+			<type>frequency</type>
+			<sensorId>UPS_II3P_INPUT_LINE_1_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.34.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 1 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.35.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.36.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_INPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.37.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine2Fre">
+			<type>frequency</type>
+			<sensorId>UPS_II3P_INPUT_LINE_2_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.38.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 2 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.39.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.40.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_INPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.41.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine3Fre">
+			<type>frequency</type>
+			<sensorId>UPS_II3P_INPUT_LINE_3_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.42.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 3 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.43.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_INPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.44.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pInputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_INPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.45.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Input Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsII3pOutputSource">
+			<type>state</type>
+			<sensorId>UPS_II3P_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="upsII3pOutputSource-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.2.1.46.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS II - Output Source</label>
+			<enum>upsII3pOutputSource-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsII3pOutputSource-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsII3pOutputSource-em">
+			<label>Normal</label>
+			<label>By Battery</label>
+            <label>By Pass</label>
+            <label>Reduce</label>
+            <label>Boost</label>
+            <label>Other</label>
+		</enumMap>
+
+		<numSensor ruleid="upsII3pOutputFre">
+			<type>frequency</type>
+			<sensorId>UPS_II3P_OUTPUT_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.47.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Frequency</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLines">
+			<type>num</type>
+			<sensorId>UPS_II3P_OUTPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.48.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Lines</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.49.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.50.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.51.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine1Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_1_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.52.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 1 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.53.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.54.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.55.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine2Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_2_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.56.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 2 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.57.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.58.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.59.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pOutputLine3Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_II3P_OUTPUT_LINE_3_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.60.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Line 3 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassFre">
+			<type>frequency</type>
+			<sensorId>UPS_II3P_BYPASS_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.61.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Frequency</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLines">
+			<type>num</type>
+			<sensorId>UPS_II3P_BYPASS_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.62.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Lines</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.63.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.64.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.65.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.66.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.67.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.68.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.69.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.70.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBypassLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_BYPASS_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.71.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Bypass Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsII3pTestResult">
+			<type>state</type>
+			<sensorId>UPS_II3P_TEST_RESULT</sensorId>
+			<value>
+				<mapValue mapid="upsII3pTestResult-vm">
+					<getOid>.1.3.6.1.4.1.2350.1.2.1.72.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS II - Test Result</label>
+			<enum>upsII3pTestResult-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsII3pTestResult-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsII3pTestResult-em">
+			<label>No Test</label>
+			<label>Test Pass</label>
+            <label>Test In Progress</label>
+            <label>General Test Fail</label>
+            <label>Battery Test Fail</label>
+            <label>Deep Battery Test Fail</label>
+		</enumMap>
+
+		<numSensor ruleid="upsII3pOutputTotalPower">
+			<type>num/powerKW</type>
+			<sensorId>UPS_II3P_OUTPUT_TOTAL_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.73.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Output Total Power</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pBatteryCap">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_II3P_BATTERY_CAP</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.74.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsII3pTemperature">
+			<type>temp</type>
+			<sensorId>UPS_II3P_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.2.1.75.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS II - Temperature</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="upsII3pTemperatureTooHigh">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.17.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Temperature Too High</activeText>
+					<inactiveText>UPS II - Temperature Too High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Temperature Too High condition exists.</activeText>
+					<inactiveText>UPS II - Temperature Too High condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pInputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.18.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Input Fault</activeText>
+					<inactiveText>UPS II - Input Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Input Fault condition exists.</activeText>
+					<inactiveText>UPS II - Input Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pOutputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.19.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Output Fault</activeText>
+					<inactiveText>UPS II - Output Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Output Fault condition exists.</activeText>
+					<inactiveText>UPS II - Output Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pOverLoad">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.20.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Over Load</activeText>
+					<inactiveText>UPS II - Over Load Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Over Load condition exists.</activeText>
+					<inactiveText>UPS II - Over Load condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pBypassFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.21.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Bypass Fault</activeText>
+					<inactiveText>UPS II - Bypass Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Bypass Fault condition exists.</activeText>
+					<inactiveText>UPS II - Bypass Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pOutputShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.22.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Output Shutdown</activeText>
+					<inactiveText>UPS II - Output Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Output Shutdown condition exists.</activeText>
+					<inactiveText>UPS II - Output Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.23.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Shutdown</activeText>
+					<inactiveText>UPS II - Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Shutdown condition exists.</activeText>
+					<inactiveText>UPS II - Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pChargeFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.24.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Charge Fault</activeText>
+					<inactiveText>UPS II - Charge Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Charge Fault condition exists.</activeText>
+					<inactiveText>UPS II - Charge Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pSystemShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.25.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - System Shutdown</activeText>
+					<inactiveText>UPS II - System Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A System Shutdown condition exists.</activeText>
+					<inactiveText>UPS II - System Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pFanFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.26.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Fan Fault</activeText>
+					<inactiveText>UPS II - Fan Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Fan Fault condition exists.</activeText>
+					<inactiveText>UPS II - Fan Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pFuseFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.27.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Fuse Fault</activeText>
+					<inactiveText>UPS II - Fuse Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Fuse Fault condition exists.</activeText>
+					<inactiveText>UPS II - Fuse Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pGeneralFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.28.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - General Fault</activeText>
+					<inactiveText>UPS II - General Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A General Fault condition exists.</activeText>
+					<inactiveText>UPS II - General Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pAutoRestart">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.29.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Auto Restart</activeText>
+					<inactiveText>UPS II - Auto Restart Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Auto Restart condition exists.</activeText>
+					<inactiveText>UPS II - Auto Restart condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pShutdownDelayStatus">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.30.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Showdown Delay Status</activeText>
+					<inactiveText>UPS II - Showdown Delay Status Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Showdown Delay Status condition exists.</activeText>
+					<inactiveText>UPS II - Showdown Delay Status condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pShutdownAtOnce">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.31.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Shutdown At Once</activeText>
+					<inactiveText>UPS II - Shutdown At Once Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Shutdown At Once condition exists.</activeText>
+					<inactiveText>UPS II - Shutdown At Once condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="usp1Communication">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.32.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Communication</activeText>
+					<inactiveText>UPS II - Communication Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Communication condition exists.</activeText>
+					<inactiveText>UPS II - Communication condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pBatteryFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.33.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Battery Fault</activeText>
+					<inactiveText>UPS II - Battery Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Battery Fault condition exists.</activeText>
+					<inactiveText>UPS II - Battery Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pBatteryVolLow">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.34.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Battery Voltage Low</activeText>
+					<inactiveText>UPS II - Battery Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Battery Voltage Low condition exists.</activeText>
+					<inactiveText>UPS II - Battery Voltage Low condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pBypass">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.35.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Bypass</activeText>
+					<inactiveText>UPS II - Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Bypass condition exists.</activeText>
+					<inactiveText>UPS II - Bypass condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pOtherFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.36.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Other Fault</activeText>
+					<inactiveText>UPS II - Other Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Other Fault condition exists.</activeText>
+					<inactiveText>UPS II - Other Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsII3pTestInProgress">
+			<value><getOid>.1.3.6.1.4.1.2350.1.2.2.37.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS II - Test In Progress</activeText>
+					<inactiveText>UPS II - Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS II - A Test In Progress condition exists.</activeText>
+					<inactiveText>UPS II - Test In Progress condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+	</device>
+	<device deviceid="scu_3-phase_modular_ups_netagent_iii_iii">
+		<oidMustExist ruleid="scu_3-phase_modular_ups_netagent_iii_iii" oid=".1.3.6.1.4.1.2350.1.3" istree="yes"/>
+
+		<stateSensor ruleid="upsIII3pAutoRestartType">
+			<type>state</type>
+			<sensorId>UPS_III3P_AUTO_RESTART_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.21.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Auto Restart Type</label>
+			<enum>upsIII3pAutoRestartType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsIII3pAutoRestartType-em">
+			<label>Automatic</label>
+			<label>Manual</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIII3pShutdownType">
+			<type>state</type>
+			<sensorId>UPS_III3P_SHUTDOWN_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.22.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Shutdown Type</label>
+			<enum>upsIII3pShutdownType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsIII3pShutdownType-em">
+			<label>Shutdown Output Only</label>
+			<label>Entire</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIII3pBatCondition">
+			<type>state</type>
+			<sensorId>UPS_III3P_BAT_CONDITION</sensorId>
+			<value>
+				<mapValue mapid="upsIII3pBatCondition-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.23.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Battery Condition</label>
+			<enum>upsIII3pBatCondition-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIII3pBatCondition-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIII3pBatCondition-em">
+			<label>Good</label>
+			<label>Weak</label>
+            <label>Replace</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIII3pBatStatus">
+			<type>state</type>
+			<sensorId>UPS_III3P_BAT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsIII3pBatStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.24.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Battery Status</label>
+			<enum>upsIII3pBatStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIII3pBatStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIII3pBatStatus-em">
+			<label>OK</label>
+			<label>Low</label>
+            <label>Depleted</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIII3pBatChargeStatus">
+			<type>state</type>
+			<sensorId>UPS_III3P_BAT_CHARGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsIII3pBatChargeStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.25.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Battery Charge Status</label>
+			<enum>upsIII3pBatChargeStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIII3pBatChargeStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIII3pBatChargeStatus-em">
+			<label>Floating</label>
+			<label>Charging</label>
+            <label>Resting</label>
+            <label>Discharging</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIII3pEstimatedMinutesOnBat">
+			<type>timeinmins</type>
+			<sensorId>UPS_III3P_ESTIMATED_MINUTES_ON_BAT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.26.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Estimated Minutes on Battery</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pEstimatedCharge">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_III3P_ESTIMATED_CHARGE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.28.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Estimated Charge</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBatteryVol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_BATTERY_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.29.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Battery Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_BATTERY_CURRENT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.30.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBatteryTemperature">
+			<type>temp</type>
+			<sensorId>UPS_III3P_BATTERY_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.31.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLineBads">
+			<type>num</type>
+			<sensorId>UPS_III3P_INPUT_LINE_BADS</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.32.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line Bads</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLines">
+			<type>num</type>
+			<sensorId>UPS_III3P_INPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.33.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Lines</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine1Fre">
+			<type>frequency</type>
+			<sensorId>UPS_III3P_INPUT_LINE_1_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.34.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 1 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.35.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.36.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_INPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.37.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine2Fre">
+			<type>frequency</type>
+			<sensorId>UPS_III3P_INPUT_LINE_2_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.38.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 2 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.39.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.40.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_INPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.41.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine3Fre">
+			<type>frequency</type>
+			<sensorId>UPS_III3P_INPUT_LINE_3_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.42.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 3 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.43.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_INPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.44.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pInputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_INPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.45.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Input Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsIII3pOutputSource">
+			<type>state</type>
+			<sensorId>UPS_III3P_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="upsIII3pOutputSource-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.3.1.46.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS III - Output Source</label>
+			<enum>upsIII3pOutputSource-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIII3pOutputSource-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIII3pOutputSource-em">
+			<label>Normal</label>
+			<label>By Battery</label>
+            <label>By Pass</label>
+            <label>Reduce</label>
+            <label>Boost</label>
+            <label>Other</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIII3pOutputFre">
+			<type>frequency</type>
+			<sensorId>UPS_III3P_OUTPUT_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.47.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Frequency</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLines">
+			<type>num</type>
+			<sensorId>UPS_III3P_OUTPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.48.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Lines</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.49.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.50.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.51.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine1Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_1_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.52.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 1 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.53.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.54.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.55.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine2Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_2_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.56.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 2 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.57.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.58.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.59.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pOutputLine3Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_III3P_OUTPUT_LINE_3_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.60.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Line 3 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassFre">
+			<type>frequency</type>
+			<sensorId>UPS_III3P_BYPASS_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.61.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Frequency</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLines">
+			<type>num</type>
+			<sensorId>UPS_III3P_BYPASS_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.62.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Lines</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.63.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.64.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.65.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.66.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.67.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.68.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.69.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.70.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBypassLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_BYPASS_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.71.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Bypass Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsIII3pTestResult">
+			<type>state</type>
+			<sensorId>UPS_III3P_TEST_RESULT</sensorId>
+			<value>
+				<mapValue mapid="upsIII3pTestResult-vm">
+					<getOid>.1.3.6.1.4.1.2350.1.3.1.72.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS III - Test Result</label>
+			<enum>upsIII3pTestResult-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIII3pTestResult-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIII3pTestResult-em">
+			<label>No Test</label>
+			<label>Test Pass</label>
+            <label>Test In Progress</label>
+            <label>General Test Fail</label>
+            <label>Battery Test Fail</label>
+            <label>Deep Battery Test Fail</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIII3pOutputTotalPower">
+			<type>num/powerKW</type>
+			<sensorId>UPS_III3P_OUTPUT_TOTAL_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.73.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Output Total Power</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pBatteryCap">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_III3P_BATTERY_CAP</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.74.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIII3pTemperature">
+			<type>temp</type>
+			<sensorId>UPS_III3P_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.3.1.75.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS III - Temperature</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="upsIII3pTemperatureTooHigh">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.17.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Temperature Too High</activeText>
+					<inactiveText>UPS III - Temperature Too High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Temperature Too High condition exists.</activeText>
+					<inactiveText>UPS III - Temperature Too High condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pInputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.18.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Input Fault</activeText>
+					<inactiveText>UPS III - Input Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Input Fault condition exists.</activeText>
+					<inactiveText>UPS III - Input Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pOutputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.19.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Output Fault</activeText>
+					<inactiveText>UPS III - Output Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Output Fault condition exists.</activeText>
+					<inactiveText>UPS III - Output Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pOverLoad">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.20.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Over Load</activeText>
+					<inactiveText>UPS III - Over Load Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Over Load condition exists.</activeText>
+					<inactiveText>UPS III - Over Load condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pBypassFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.21.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Bypass Fault</activeText>
+					<inactiveText>UPS III - Bypass Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Bypass Fault condition exists.</activeText>
+					<inactiveText>UPS III - Bypass Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pOutputShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.22.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Output Shutdown</activeText>
+					<inactiveText>UPS III - Output Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Output Shutdown condition exists.</activeText>
+					<inactiveText>UPS III - Output Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.23.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Shutdown</activeText>
+					<inactiveText>UPS III - Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Shutdown condition exists.</activeText>
+					<inactiveText>UPS III - Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pChargeFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.24.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Charge Fault</activeText>
+					<inactiveText>UPS III - Charge Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Charge Fault condition exists.</activeText>
+					<inactiveText>UPS III - Charge Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pSystemShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.25.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - System Shutdown</activeText>
+					<inactiveText>UPS III - System Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A System Shutdown condition exists.</activeText>
+					<inactiveText>UPS III - System Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pFanFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.26.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Fan Fault</activeText>
+					<inactiveText>UPS III - Fan Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Fan Fault condition exists.</activeText>
+					<inactiveText>UPS III - Fan Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pFuseFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.27.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Fuse Fault</activeText>
+					<inactiveText>UPS III - Fuse Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Fuse Fault condition exists.</activeText>
+					<inactiveText>UPS III - Fuse Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pGeneralFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.28.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - General Fault</activeText>
+					<inactiveText>UPS III - General Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A General Fault condition exists.</activeText>
+					<inactiveText>UPS III - General Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pAutoRestart">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.29.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Auto Restart</activeText>
+					<inactiveText>UPS III - Auto Restart Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Auto Restart condition exists.</activeText>
+					<inactiveText>UPS III - Auto Restart condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pShutdownDelayStatus">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.30.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Showdown Delay Status</activeText>
+					<inactiveText>UPS III - Showdown Delay Status Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Showdown Delay Status condition exists.</activeText>
+					<inactiveText>UPS III - Showdown Delay Status condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pShutdownAtOnce">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.31.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Shutdown At Once</activeText>
+					<inactiveText>UPS III - Shutdown At Once Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Shutdown At Once condition exists.</activeText>
+					<inactiveText>UPS III - Shutdown At Once condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="usp1Communication">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.32.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Communication</activeText>
+					<inactiveText>UPS III - Communication Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Communication condition exists.</activeText>
+					<inactiveText>UPS III - Communication condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pBatteryFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.33.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Battery Fault</activeText>
+					<inactiveText>UPS III - Battery Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Battery Fault condition exists.</activeText>
+					<inactiveText>UPS III - Battery Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pBatteryVolLow">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.34.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Battery Voltage Low</activeText>
+					<inactiveText>UPS III - Battery Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Battery Voltage Low condition exists.</activeText>
+					<inactiveText>UPS III - Battery Voltage Low condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pBypass">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.35.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Bypass</activeText>
+					<inactiveText>UPS III - Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Bypass condition exists.</activeText>
+					<inactiveText>UPS III - Bypass condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pOtherFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.36.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Other Fault</activeText>
+					<inactiveText>UPS III - Other Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Other Fault condition exists.</activeText>
+					<inactiveText>UPS III - Other Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIII3pTestInProgress">
+			<value><getOid>.1.3.6.1.4.1.2350.1.3.2.37.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS III - Test In Progress</activeText>
+					<inactiveText>UPS III - Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS III - A Test In Progress condition exists.</activeText>
+					<inactiveText>UPS III - Test In Progress condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+	</device>
+	<device deviceid="scu_3-phase_modular_ups_netagent_iii_iv">
+		<oidMustExist ruleid="scu_3-phase_modular_ups_netagent_iii_iv" oid=".1.3.6.1.4.1.2350.1.4" istree="yes"/>
+
+		<stateSensor ruleid="upsIV3pAutoRestartType">
+			<type>state</type>
+			<sensorId>UPS_IV3P_AUTO_RESTART_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.21.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Auto Restart Type</label>
+			<enum>upsIV3pAutoRestartType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsIV3pAutoRestartType-em">
+			<label>Automatic</label>
+			<label>Manual</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIV3pShutdownType">
+			<type>state</type>
+			<sensorId>UPS_IV3P_SHUTDOWN_TYPE</sensorId>
+			<value>
+				<mapValue mapid="binaryDefaultZero-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.22.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Shutdown Type</label>
+			<enum>upsIV3pShutdownType-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+		<enumMap ruleid="upsIV3pShutdownType-em">
+			<label>Shutdown Output Only</label>
+			<label>Entire</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIV3pBatCondition">
+			<type>state</type>
+			<sensorId>UPS_IV3P_BAT_CONDITION</sensorId>
+			<value>
+				<mapValue mapid="upsIV3pBatCondition-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.23.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Battery Condition</label>
+			<enum>upsIV3pBatCondition-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIV3pBatCondition-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIV3pBatCondition-em">
+			<label>Good</label>
+			<label>Weak</label>
+            <label>Replace</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIV3pBatStatus">
+			<type>state</type>
+			<sensorId>UPS_IV3P_BAT_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsIV3pBatStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.24.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Battery Status</label>
+			<enum>upsIV3pBatStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIV3pBatStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIV3pBatStatus-em">
+			<label>OK</label>
+			<label>Low</label>
+            <label>Depleted</label>
+		</enumMap>
+
+		<stateSensor ruleid="upsIV3pBatChargeStatus">
+			<type>state</type>
+			<sensorId>UPS_IV3P_BAT_CHARGE_STATUS</sensorId>
+			<value>
+				<mapValue mapid="upsIV3pBatChargeStatus-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.25.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Battery Charge Status</label>
+			<enum>upsIV3pBatChargeStatus-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIV3pBatChargeStatus-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIV3pBatChargeStatus-em">
+			<label>Floating</label>
+			<label>Charging</label>
+            <label>Resting</label>
+            <label>Discharging</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIV3pEstimatedMinutesOnBat">
+			<type>timeinmins</type>
+			<sensorId>UPS_IV3P_ESTIMATED_MINUTES_ON_BAT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.26.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Estimated Minutes on Battery</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pEstimatedCharge">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_IV3P_ESTIMATED_CHARGE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.28.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Estimated Charge</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBatteryVol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_BATTERY_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.29.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Battery Voltage</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBatteryCurrent">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_BATTERY_CURRENT</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.30.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Battery Current</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBatteryTemperature">
+			<type>temp</type>
+			<sensorId>UPS_IV3P_BATTERY_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.31.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Battery Temperature</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLineBads">
+			<type>num</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_BADS</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.32.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line Bads</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLines">
+			<type>num</type>
+			<sensorId>UPS_IV3P_INPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.33.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Lines</label>
+			<sensorSet>Input</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine1Fre">
+			<type>frequency</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_1_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.34.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 1 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.35.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.36.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.37.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine2Fre">
+			<type>frequency</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_2_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.38.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 2 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.39.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.40.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.41.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine3Fre">
+			<type>frequency</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_3_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.42.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 3 - Frequency</label>
+			<sensorSet>Frequency</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.43.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.44.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pInputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_INPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.45.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Input Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsIV3pOutputSource">
+			<type>state</type>
+			<sensorId>UPS_IV3P_OUTPUT_SOURCE</sensorId>
+			<value>
+				<mapValue mapid="upsIV3pOutputSource-vm">
+				    <div>
+				    <op><getOid>.1.3.6.1.4.1.2350.1.4.1.46.0</getOid></op>
+				    <op>100</op>
+				    </div>
+				</mapValue>
+			</value>
+			<label>UPS IV - Output Source</label>
+			<enum>upsIV3pOutputSource-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIV3pOutputSource-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIV3pOutputSource-em">
+			<label>Normal</label>
+			<label>By Battery</label>
+            <label>By Pass</label>
+            <label>Reduce</label>
+            <label>Boost</label>
+            <label>Other</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIV3pOutputFre">
+			<type>frequency</type>
+			<sensorId>UPS_IV3P_OUTPUT_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.47.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Frequency</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLines">
+			<type>num</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.48.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Lines</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.49.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.50.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.51.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine1Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_1_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.52.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 1 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.53.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.54.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.55.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine2Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_2_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.56.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 2 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.57.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.58.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.59.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pOutputLine3Load">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_IV3P_OUTPUT_LINE_3_LOAD</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.60.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Line 3 - Load</label>
+			<sensorSet>Load</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassFre">
+			<type>frequency</type>
+			<sensorId>UPS_IV3P_BYPASS_FRE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.61.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Frequency</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLines">
+			<type>num</type>
+			<sensorId>UPS_IV3P_BYPASS_LINES</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.62.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Lines</label>
+			<sensorSet>Bypass</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine1Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_1_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.63.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 1 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine1Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_1_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.64.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 1 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine1Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_1_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.65.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 1 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine2Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_2_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.66.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 2 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine2Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_2_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.67.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 2 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine2Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_2_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.68.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 2 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine3Vol">
+			<type>voltage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_3_VOL</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.69.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 3 - Voltage</label>
+			<sensorSet>Voltage</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine3Cur">
+			<type>amperage</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_3_CUR</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.70.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 3 - Current</label>
+			<sensorSet>Current</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBypassLine3Power">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_BYPASS_LINE_3_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.71.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Bypass Line 3 - Power</label>
+			<sensorSet>Power</sensorSet>
+		</numSensor>
+		<stateSensor ruleid="upsIV3pTestResult">
+			<type>state</type>
+			<sensorId>UPS_IV3P_TEST_RESULT</sensorId>
+			<value>
+				<mapValue mapid="upsIV3pTestResult-vm">
+					<getOid>.1.3.6.1.4.1.2350.1.4.1.72.0</getOid>
+				</mapValue>
+			</value>
+			<label>UPS IV - Test Result</label>
+			<enum>upsIV3pTestResult-em</enum>
+			<sensorSet>Status</sensorSet>
+		</stateSensor>
+        <valueMap ruleid="upsIV3pTestResult-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+            <valueIn>2</valueIn><valueOut>2</valueOut>
+            <valueIn>3</valueIn><valueOut>3</valueOut>
+            <valueIn>4</valueIn><valueOut>4</valueOut>
+            <valueIn>5</valueIn><valueOut>5</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+		<enumMap ruleid="upsIV3pTestResult-em">
+			<label>No Test</label>
+			<label>Test Pass</label>
+            <label>Test In Progress</label>
+            <label>General Test Fail</label>
+            <label>Battery Test Fail</label>
+            <label>Deep Battery Test Fail</label>
+		</enumMap>
+
+		<numSensor ruleid="upsIV3pOutputTotalPower">
+			<type>num/powerKW</type>
+			<sensorId>UPS_IV3P_OUTPUT_TOTAL_POWER</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.73.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Output Total Power</label>
+			<sensorSet>Output</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pBatteryCap">
+			<type>pctofcapacity</type>
+			<sensorId>UPS_IV3P_BATTERY_CAP</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.74.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Battery Capacity</label>
+			<sensorSet>Battery</sensorSet>
+		</numSensor>
+		<numSensor ruleid="upsIV3pTemperature">
+			<type>temp</type>
+			<sensorId>UPS_IV3P_TEMPERATURE</sensorId>
+			<value>
+				<div>
+				<op><getOid>.1.3.6.1.4.1.2350.1.4.1.75.0</getOid></op>
+				<op>100</op>
+				</div>
+			</value>
+			<label>UPS IV - Temperature</label>
+			<sensorSet>Other</sensorSet>
+		</numSensor>
+		<alarmFlags ruleid="upsIV3pTemperatureTooHigh">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.17.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Temperature Too High</activeText>
+					<inactiveText>UPS IV - Temperature Too High Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Temperature Too High condition exists.</activeText>
+					<inactiveText>UPS IV - Temperature Too High condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pInputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.18.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Input Fault</activeText>
+					<inactiveText>UPS IV - Input Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Input Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Input Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pOutputFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.19.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Output Fault</activeText>
+					<inactiveText>UPS IV - Output Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Output Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Output Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pOverLoad">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.20.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Over Load</activeText>
+					<inactiveText>UPS IV - Over Load Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Over Load condition exists.</activeText>
+					<inactiveText>UPS IV - Over Load condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pBypassFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.21.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Bypass Fault</activeText>
+					<inactiveText>UPS IV - Bypass Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Bypass Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Bypass Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pOutputShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.22.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Output Shutdown</activeText>
+					<inactiveText>UPS IV - Output Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Output Shutdown condition exists.</activeText>
+					<inactiveText>UPS IV - Output Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.23.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Shutdown</activeText>
+					<inactiveText>UPS IV - Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Shutdown condition exists.</activeText>
+					<inactiveText>UPS IV - Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pChargeFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.24.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Charge Fault</activeText>
+					<inactiveText>UPS IV - Charge Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Charge Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Charge Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pSystemShutdown">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.25.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - System Shutdown</activeText>
+					<inactiveText>UPS IV - System Shutdown Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A System Shutdown condition exists.</activeText>
+					<inactiveText>UPS IV - System Shutdown condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pFanFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.26.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Fan Fault</activeText>
+					<inactiveText>UPS IV - Fan Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Fan Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Fan Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pFuseFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.27.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Fuse Fault</activeText>
+					<inactiveText>UPS IV - Fuse Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Fuse Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Fuse Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pGeneralFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.28.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - General Fault</activeText>
+					<inactiveText>UPS IV - General Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A General Fault condition exists.</activeText>
+					<inactiveText>UPS IV - General Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pAutoRestart">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.29.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Auto Restart</activeText>
+					<inactiveText>UPS IV - Auto Restart Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Auto Restart condition exists.</activeText>
+					<inactiveText>UPS IV - Auto Restart condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pShutdownDelayStatus">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.30.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Showdown Delay Status</activeText>
+					<inactiveText>UPS IV - Showdown Delay Status Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Showdown Delay Status condition exists.</activeText>
+					<inactiveText>UPS IV - Showdown Delay Status condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pShutdownAtOnce">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.31.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Shutdown At Once</activeText>
+					<inactiveText>UPS IV - Shutdown At Once Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Shutdown At Once condition exists.</activeText>
+					<inactiveText>UPS IV - Shutdown At Once condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="usp1Communication">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.32.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Communication</activeText>
+					<inactiveText>UPS IV - Communication Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Communication condition exists.</activeText>
+					<inactiveText>UPS IV - Communication condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pBatteryFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.33.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Battery Fault</activeText>
+					<inactiveText>UPS IV - Battery Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Battery Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Battery Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pBatteryVolLow">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.34.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Battery Voltage Low</activeText>
+					<inactiveText>UPS IV - Battery Voltage Low Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Battery Voltage Low condition exists.</activeText>
+					<inactiveText>UPS IV - Battery Voltage Low condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pBypass">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.35.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Bypass</activeText>
+					<inactiveText>UPS IV - Bypass Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Bypass condition exists.</activeText>
+					<inactiveText>UPS IV - Bypass condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pOtherFault">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.36.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Other Fault</activeText>
+					<inactiveText>UPS IV - Other Fault Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Other Fault condition exists.</activeText>
+					<inactiveText>UPS IV - Other Fault condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<alarmFlags ruleid="upsIV3pTestInProgress">
+			<value><getOid>.1.3.6.1.4.1.2350.1.4.2.37.0</getOid></value>
+			<alarmFlagsTest mask="1" match="1">
+				<name>
+					<activeText>UPS IV - Test In Progress</activeText>
+					<inactiveText>UPS IV - Test In Progress Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText>UPS IV - A Test In Progress condition exists.</activeText>
+					<inactiveText>UPS IV - Test In Progress condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags>
+		<valueMap ruleid="binaryDefaultZero-vm">
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+		</valueMap>
+	</device>
+</APC_DDF>

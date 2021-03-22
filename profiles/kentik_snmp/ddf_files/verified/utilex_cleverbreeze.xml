@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="utilex_cleverbreeze" ddfname="Utilex CleverBreeze" ddfversion="2" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="utilex_cleverbreeze">
+        <oidMustExist istree="yes" ruleid="utilex_cleverbreeze_exist" oid=".1.3.6.1.4.1.17095.1"/>
+
+		<setProductData ruleid="vendordata" field="vendor">Utilex</setProductData>
+		<setProductData ruleid="modeldata" field="model">
+            <getOid>.1.3.6.1.4.1.17095.1.1.1.0</getOid>
+        </setProductData>
+
+		<!-- App Version -->
+		<setProductData ruleid="appversiondata" field="appversion">
+			<getOid>.1.3.6.1.4.1.17095.1.1.2.0</getOid>
+		</setProductData>
+
+		<setProductData ruleid="typedata" field="type">Rack Manager</setProductData>
+
+        
+		<stateSensor ruleid="frontdoor_status">
+			<type>state</type>
+			<sensorId>FRONTDOOR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="close_open-vm">
+                    <getOid>.1.3.6.1.4.1.17095.1.3.1.0</getOid>
+				</mapValue>
+			</value>
+			<label>Front Door Status</label>
+			<enum>close_open-em</enum>
+			<sensorSet>Status Sensors</sensorSet>
+		</stateSensor>
+        
+		<stateSensor ruleid="backdoor_status">
+			<type>state</type>
+			<sensorId>BACKDOOR_STATUS</sensorId>
+			<value>
+				<mapValue mapid="close_open-vm">
+                    <getOid>.1.3.6.1.4.1.17095.1.3.2.0</getOid>
+				</mapValue>
+			</value>
+			<label>Back Door Status</label>
+			<enum>close_open-em</enum>
+			<sensorSet>Status Sensors</sensorSet>
+		</stateSensor>
+       
+		<stateSensor ruleid="sidedoors_status">
+			<type>state</type>
+			<sensorId>SIDEDOORS_STATUS</sensorId>
+			<value>
+				<mapValue mapid="close_open-vm">
+                    <getOid>.1.3.6.1.4.1.17095.1.3.3.0</getOid>
+				</mapValue>
+			</value>
+			<label>Side Doors Status</label>
+			<enum>close_open-em</enum>
+			<sensorSet>Status Sensors</sensorSet>
+		</stateSensor>
+
+ 		<numSensor ruleid="temperrack">
+			<type>temp</type>
+			<sensorId>TEMPERRACK</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.4.0</getOid>
+			</value>
+			<label>Temperature in Rack</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+ 
+ 		<numSensor ruleid="temperin">
+			<type>temp</type>
+			<sensorId>TEMPERIN</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.5.0</getOid>
+			</value>
+			<label>Temperature at Inlet to Conditioner</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+ 
+ 		<numSensor ruleid="temperout">
+			<type>temp</type>
+			<sensorId>TEMPEROUT</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.6.0</getOid>
+			</value>
+			<label>Temperature at Outlet to Conditioner</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+
+ 		<numSensor ruleid="humidityrack">
+			<type>humidity</type>
+			<sensorId>HUMIDITYRACK</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.7.0</getOid>
+			</value>
+			<label>Humidity in Rack</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+ 
+ 		<numSensor ruleid="speed_fan1">
+			<type>fanspeed</type>
+			<sensorId>SPEED_FAN1</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.8.0</getOid>
+			</value>
+			<label>Speed of Fan 1</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+     
+ 		<numSensor ruleid="speed_fan2">
+			<type>fanspeed</type>
+			<sensorId>SPEED_FAN2</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.9.0</getOid>
+			</value>
+			<label>Speed of Fan 2</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+  
+ 		<numSensor ruleid="speed_fan3">
+			<type>fanspeed</type>
+			<sensorId>SPEED_FAN3</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.10.0</getOid>
+			</value>
+			<label>Speed of Fan 3</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+  
+ 		<numSensor ruleid="ups_input_voltage">
+			<type>voltage</type>
+			<sensorId>UPS_INPUT_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.11.0</getOid>
+			</value>
+			<label>UPS Input Voltage</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+  
+ 		<numSensor ruleid="ups_output_voltage">
+			<type>voltage</type>
+			<sensorId>UPS_OUTPUT_VOLTAGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.12.0</getOid>
+			</value>
+			<label>UPS Output Voltage</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+  
+ 		<numSensor ruleid="battery_charge">
+			<type>pctofcapacity</type>
+			<sensorId>BATTERY_CHARGE</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.13.0</getOid>
+			</value>
+			<label>Battery Charge</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+ 
+ 		<numSensor ruleid="output_power_load">
+			<type>pctofcapacity</type>
+			<sensorId>OUTPUT_POWER_LOAD</sensorId>
+			<value>
+				<getOid>.1.3.6.1.4.1.17095.1.3.14.0</getOid>
+			</value>
+			<label>Output Power Load</label>
+			<sensorSet>Numeric Sensors</sensorSet>
+		</numSensor>
+        
+		<valueMap ruleid="close_open-vm">
+			<valueIn>0</valueIn><valueOut>0</valueOut>
+			<valueIn>1</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+
+		<enumMap ruleid="close_open-em">
+			<label>Close</label>
+			<label>Open</label>
+			<label>Unknown</label>
+		</enumMap>
+
+	</device>
+</APC_DDF>

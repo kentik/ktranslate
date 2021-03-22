@@ -18,7 +18,7 @@ require (
 	github.com/honeycombio/libhoney-go v1.15.2
 	github.com/json-iterator/go v1.1.10
 	github.com/kentik/api-schema v0.0.0-20210319014549-635f521cd3a2 // indirect
-	github.com/kentik/api-schema-public v0.0.0-20210319014654-d678b0f2f1a4 // indirect
+	github.com/kentik/api-schema-public v0.0.0-20210319014654-d678b0f2f1a4
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/golog v0.0.0-20180824173632-e2ac67cc4105
 	github.com/kentik/gosnmp v0.0.0-20210316190950-425ee043d4b7

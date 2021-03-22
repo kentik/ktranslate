@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!-- For the hip, discerning APC UPS owner who wishes to see the new model SKU string rather than the traditional model name string  -->
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+         ddfid="apcupsmodelsku" ddfname="APC UPS Model SKU" ddfversion="2" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+
+  <device deviceid="apcupsmodelsku">
+    <!-- oid is relatively new and may not be reported for all APC UPS or from older NMCs -->
+    <!--
+         From Mark Melanson Dec2010:
+
+         The ups sku oid was added for the Teradata UPS project (xups app on aos37x / rhodes1).
+         This UPS supports the Micro-Link data necessary for this snmp oid so there's no special error handling other than lost comm.
+         In the future, when this oid is added for sumx, I would design it so that it responds with a 'no such name' error for UPSs
+         that don't support it.  FYI, the only UPSs that do support this info are the new Micro-Link UPSs such as Smart-UPS 5G or Lynx DSP.
+         We could do a look-up table for older UPS-Link UPSs but that is not our intention.
+    -->
+    <oidMustExist ruleid="apcupsmodelsku" oid=".1.3.6.1.4.1.318.1.1.1.1.2.5.0" />
+
+    <!-- make sure all possible competing model rules are overridden-->
+    <suppressRule ruleid="stompmib2model" suppressid="core/mib2data/modeldata"/>
+    <suppressRule ruleid="stompdiscmodel" suppressid="core/apcdiscdata/modeldata"/>
+    <suppressRule ruleid="stompapcupsmodel" suppressid="apcsmartups/apcsmartups_discovery/modeldata"/>
+    <!-- load the SKU -->
+    <setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.318.1.1.1.1.2.5.0</getOid></setProductData>
+ </device>
+</APC_DDF>

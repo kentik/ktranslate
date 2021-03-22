@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="ppc_ups_e"
+	ddfname="PPC UPS E"
+	ddfversion="2"
+	canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+	<!--
+		SOURCE
+		\snmp\resources\mibs\ppc\EPPC.MIB
+		EPPC-MIB | 24 June 2020
+	-->
+	<device deviceid="upsEIdentity">
+		<oidMustExist ruleid="upsEIdentity_exists" oid=".1.3.6.1.4.1.935.10.1.1.1" istree="yes"/> 
+		
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">PPC</setProductData>
+		<setProductData ruleid="modeldata" field="model"><getOid>.1.3.6.1.4.1.935.10.1.1.1.2.0</getOid></setProductData>
+		<setProductData ruleid="fw_version" field="appversion"><getOid>.1.3.6.1.4.1.935.10.1.1.1.3.0</getOid></setProductData>
+		<setProductData ruleid="serialnumber" field="serial_num"><getOid>.1.3.6.1.4.1.935.10.1.1.1.4.0</getOid></setProductData>
+		<setProductData ruleid="typedata" field="type">UPS</setProductData>
+		
+	</device>
+	
+	<device deviceid="commonValueMaps">
+		<oidMustExist ruleid="is_ppc_ups_e" oid=".1.3.6.1.4.1.935.10.1.1" istree="yes"/>
+		
+		<valueMap ruleid="5state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>*</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="6state-vm">
+			<valueIn>*</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="12state-vm">
+			<valueIn>1</valueIn><valueOut>0</valueOut>
+			<valueIn>2</valueIn><valueOut>1</valueOut>
+			<valueIn>3</valueIn><valueOut>2</valueOut>
+			<valueIn>4</valueIn><valueOut>3</valueOut>
+			<valueIn>5</valueIn><valueOut>4</valueOut>
+			<valueIn>6</valueIn><valueOut>5</valueOut>
+			<valueIn>7</valueIn><valueOut>6</valueOut>
+			<valueIn>8</valueIn><valueOut>7</valueOut>
+			<valueIn>9</valueIn><valueOut>8</valueOut>
+			<valueIn>10</valueIn><valueOut>9</valueOut>
+			<valueIn>11</valueIn><valueOut>10</valueOut>
+			<valueIn>12</valueIn><valueOut>11</valueOut>
+			<valueIn>*</valueIn><valueOut>12</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="delete_null_sensor-vm">
+			<valueIn>-1</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+		
+		<valueMap ruleid="zero2onebased-vm">
+			<valueIn>0</valueIn><valueOut>1</valueOut>
+			<valueIn>1</valueIn><valueOut>2</valueOut>
+			<valueIn>2</valueIn><valueOut>3</valueOut>
+			<valueIn>*</valueIn><valueOut>?</valueOut>
+		</valueMap>
+		
+	</device>
+	
+	<device deviceid="upsESystemSummary">
+		<oidMustExist ruleid="upsESystemSummary_exists" oid=".1.3.6.1.4.1.935.10.1.1.2" istree="yes"/>
+		
+		<setProductData ruleid="inputphasecount" field="inputphasecount"><getOid>.1.3.6.1.4.1.935.10.1.1.2.15.0</getOid></setProductData>
+		<setProductData ruleid="outputphasecount" field="outputphasecount"><getOid>.1.3.6.1.4.1.935.10.1.1.2.17.0</getOid></setProductData>
+
+		<stateSensor ruleid="upsESystemStatus">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_UPS_SYSTEM_STATUS</sensorId>
+            <value>
+                <mapValue mapid="commonValueMaps/12state-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>System Status</label>
+            <enum>upsESystemStatus-em</enum>
+            <sensorSet>UPS Summary</sensorSet>
+        </stateSensor>
+		
+		<enumMap ruleid="upsESystemStatus-em">
+			<label>Power On</label>
+			<label>Standby</label>
+			<label>Bypass</label>
+			<label>Line</label>
+			<label>Battery</label>
+			<label>Battery Test</label>
+			<label>Fault</label>
+			<label>Converter</label>
+			<label>Eco</label>
+			<label>Shutdown</label>
+			<label>On Booster</label>
+			<label>On Reducer</label>
+			<label>Other</label>
+		</enumMap>
+		
+		<numSensor ruleid="upsESystemTemperature">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>UPS_INTERNAL_TEMP</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.2.2.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>UPS Temperature</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigInputVoltage">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_NOMINAL_INPUT_VOLTAGE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.2.5.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Nominal Input Voltage</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigInputFrequence">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.6.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>_NOMINAL_INPUT_FREQ</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.2.6.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Nominal Input Frequency</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigOutputVoltage">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_NOMINAL_OUTPUT_VOLTAGE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.2.7.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Nominal Output Voltage</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigOutputFrequency">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>_NOMINAL_OUTPUT_FREQ</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.2.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>Nominal Output Frequency</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigOutputVA">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>_NOMINAL_OUTPUT_APPARENT_POWER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.2.9.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Output Apparent Power</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemConfigOutputPower">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.10.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>_NOMINAL_OUTPUT_POWER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.2.10.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Nominal Output True Power</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemInputSourceNum">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.13.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_EXTERNAL_INPUT_POWER_SOURCE</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.2.13.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>External Input Power Source Total</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemInputLineBads">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.2.14.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_INPUT_OUT_OF_TOLERANCE_TOTAL</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.2.14.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>Input Out of Tolerance Total</label>
+            <sensorSet>UPS Summary</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="upsESystemInputTable">
+		<oidMustExist ruleid="upsESystemInputTable_exists" oid=".1.3.6.1.4.1.935.10.1.1.2.16" istree="yes"/>
+		
+		<suppressRule ruleid="suppress-upsInputFrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+		<numSensor ruleid="upsESystemInputFrequency" index=".1.3.6.1.4.1.935.10.1.1.2.16.1.2">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>INPUT_FREQ_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Input Frequency L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+		<numSensor ruleid="upsESystemInputVoltage" index=".1.3.6.1.4.1.935.10.1.1.2.16.1.3">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>INPUT_VOLTAGE_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Input Voltage L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+		<numSensor ruleid="upsESystemInputCurrent" index=".1.3.6.1.4.1.935.10.1.1.2.16.1.4">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>INPUT_CURRENT_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Input Current L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsInputPower" suppressid="upsmib/upsmib/upsInputTruePower"/>
+		<numSensor ruleid="upsESystemInputWatts" index=".1.3.6.1.4.1.935.10.1.1.2.16.1.5">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>INPUT_POWER_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.16.1.5</getRowOid>
+            </value>
+            <label>
+				UPS Input Power L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Input</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="upsESystemOutputTable">
+		<oidMustExist ruleid="upsESystemOutputTable_exists" oid=".1.3.6.1.4.1.935.10.1.1.2.18" istree="yes"/>
+
+		<suppressRule ruleid="suppress-upsOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+		<numSensor ruleid="upsESystemOutputFrequency" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.2">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>OUTPUT_FREQ_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Output Frequency L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+		<numSensor ruleid="upsESystemOutputVoltage" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.3">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>OUTPUT_VOLTAGE_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Output Voltage L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+		<numSensor ruleid="upsESystemOutputCurrent" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.4">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>OUTPUT_CURRENT_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Output Current L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsOutputPower" suppressid="upsmib/upsmib/upsOutputPower"/>
+		<numSensor ruleid="upsESystemOutputWatts" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.5">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>OUTPUT_POWER_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.5</getRowOid>
+            </value>
+            <label>
+				UPS Output Power L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsESystemOutputVA" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.6">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.6</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerVA</type>
+            <sensorId>OUTPUT_APPARENT_POWER_<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.6</getRowOid>
+            </value>
+            <label>
+				UPS Output Apparent Power L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsOutputLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+		<numSensor ruleid="upsESystemOutputLoad" index=".1.3.6.1.4.1.935.10.1.1.2.18.1.7">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.7</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>OUTPUT_LOAD_PERCENT_<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.18.1.7</getRowOid>
+            </value>
+            <label>
+				UPS Output Load L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Output</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="upsESystemBypassTable">
+		<oidMustExist ruleid="upsESystemBypassTable_exists" oid=".1.3.6.1.4.1.935.10.1.1.2.20" istree="yes"/>
+		
+		<suppressRule ruleid="suppress-upsBypassFrequency" suppressid="upsmib/upsmib/upsBypassFrequency"/>
+		<numSensor ruleid="upsESystemBypassFrequency" index=".1.3.6.1.4.1.935.10.1.1.2.20.1.2">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.2</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>frequency</type>
+            <sensorId>BYPASS_FREQ_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.2</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Bypass Frequency L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsBypassVoltage" suppressid="upsmib/upsmib/upsBypassVoltage"/>
+		<numSensor ruleid="upsESystemBypassVoltage" index=".1.3.6.1.4.1.935.10.1.1.2.20.1.3">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.3</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>BYPASS_VOLTAGE_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.3</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Bypass Voltage L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsBypassCurrent" suppressid="upsmib/upsmib/upsBypassCurrent"/>
+		<numSensor ruleid="upsESystemBypassCurrent" index=".1.3.6.1.4.1.935.10.1.1.2.20.1.4">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.4</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>amperage</type>
+            <sensorId>BYPASS_CURRENT_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<mult>
+					<op><getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.4</getRowOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>
+				UPS Bypass Current L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Bypass</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsBypassPower" suppressid="upsmib/upsmib/upsBypassPower"/>
+		<numSensor ruleid="upsESystemBypassWatts" index=".1.3.6.1.4.1.935.10.1.1.2.20.1.5">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.5</getRowOid>
+				</mapValue>
+			</rowTest>
+            <type>powerW</type>
+            <sensorId>BYPASS_POWER_PHASE<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue></sensorId>
+            <value>
+				<getRowOid>.1.3.6.1.4.1.935.10.1.1.2.20.1.5</getRowOid>
+            </value>
+            <label>
+				UPS Bypass Power L
+				<mapValue mapid="commonValueMaps/zero2onebased-vm"><rowNumber/></mapValue>
+			</label>
+            <sensorSet>UPS Bypass</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="upsEBatterySystem">
+		<oidMustExist ruleid="upsEBatterySystem_exists" oid=".1.3.6.1.4.1.935.10.1.1.3" istree="yes"/>
+		
+		<suppressRule ruleid="suppress-upsBatteryCurrent" suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+		
+		<suppressRule ruleid="suppress-upsBatteryStatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+		<stateSensor ruleid="upsEBatteryStatus">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_BATTSTATUS</sensorId>
+            <value>
+				<mapValue mapid="commonValueMaps/6state-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.1.0</getOid>
+				</mapValue>
+            </value>
+            <label>UPS Battery Status</label>
+            <enum>batteryStatus-em</enum>
+            <sensorSet>UPS Battery</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="batteryStatus-em">
+			<label>Unknown</label>
+			<label>Battery Normal</label>
+			<label>Battery Low</label>
+			<label>Battery Depleted</label>
+			<label>Battery Discharging</label>
+			<label>Battery Failure</label>
+		</enumMap>
+		
+		<suppressRule ruleid="suppress-upsSecondsOnBattery" suppressid="upsmib/upsmib/upsSecondsOnBattery"/>
+		<numSensor ruleid="upsESecondsOnBattery">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.2.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinmin</type>
+            <sensorId>_TIME_ON_BATT</sensorId>
+            <value>
+				<div>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.3.2.0</getOid></op>
+					<op>60</op>
+				</div>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Time On Battery</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsEstimatedMinutesRemaining" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+		<numSensor ruleid="upsEBatteryEstimatedMinutesRemaining">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.3.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>timeinmin</type>
+            <sensorId>_TIME_REMAINING_ON_BATT</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.3.3.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Battery Time Remaining</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsEstimatedChargeRemaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+		<numSensor ruleid="upsEBatteryEstimatedChargeRemaining">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.4.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>pctofcapacity</type>
+            <sensorId>_BATT_CAPACITY_LEFT</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.3.4.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Battery Charge Remaining</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsBatteryVoltage" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+		<numSensor ruleid="upsEPositiveBatteryVoltage">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.5.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>voltage</type>
+            <sensorId>_BATT_VOLTAGE</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.3.5.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>UPS Battery Voltage</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEBatteryCellNumber">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.7.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_BATT_CELL_NUMBER</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.3.7.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Battery Cell Number</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<suppressRule ruleid="suppress-upsBatteryTemperature" suppressid="upsmib/upsmib/upsBatteryTemperature"/>
+		<numSensor ruleid="upsEBatteryTemperature">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.8.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_BATT_TEMP</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.3.8.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>UPS Battery Temperature</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<numSensor ruleid="upsEBatteryLastReplacedDate">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.9.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>timeindays</type>
+            <sensorId>_BATT_AGE</sensorId>
+            <value>
+				<div>
+				<op>
+					<sub>
+					<op><curUTCTime/></op>
+					<op>
+						<sub>
+						<op><parseDate><getOid>.1.3.6.1.4.1.935.10.1.1.3.9.0</getOid></parseDate></op>
+						<op>43200</op><!-- parseDate assumes Noon, so offset -12h -->
+						</sub>
+					</op>
+					</sub>
+				</op>
+				<op>86400</op>
+				</div>
+            </value>
+			<valueInc>0.1</valueInc>
+            <label>Time Since Battery Last Replaced</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+		<stateSensor ruleid="upsEBatteryABMStatus">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.10.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>_BATT_ABM_STATUS</sensorId>
+            <value>
+				<mapValue mapid="commonValueMaps/5state-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.10.0</getOid>
+				</mapValue>
+            </value>
+            <label>UPS Battery ABM Status</label>
+            <enum>batteryABMStatus-em</enum>
+            <sensorSet>UPS Battery</sensorSet>
+        </stateSensor>
+
+		<enumMap ruleid="batteryABMStatus-em">
+			<label>Charge</label>
+			<label>Float</label>
+			<label>Rest</label>
+			<label>Discharge</label>
+			<label>Disable</label>
+			<label>Unknown</label>
+		</enumMap>
+		
+		<numSensor ruleid="upsEChargerModulesNum">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.3.11.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>num</type>
+            <sensorId>_CHARGER_MODULES</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.3.11.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Charger Modules</label>
+            <sensorSet>UPS Battery</sensorSet>
+        </numSensor>
+		
+	</device>
+	
+	<device deviceid="upsEEnvironment">
+		<oidMustExist ruleid="upsEEnvironment_exists" oid=".1.3.6.1.4.1.935.10.1.1.6" istree="yes"/>
+
+		<numSensor ruleid="upsEEnvironmentCurrentTemperature">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.6.1.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>temp</type>
+            <sensorId>_EM_TEMP_1</sensorId>
+            <value>
+				<mult>
+					<op><getOid>.1.3.6.1.4.1.935.10.1.1.6.1.1.0</getOid></op>
+					<op>0.1</op>
+				</mult>
+            </value>
+            <label>UPS Temperature Sensor Value</label>
+            <sensorSet>UPS Environment</sensorSet>
+        </numSensor>
+		<numSensor ruleid="upsEEnvironmentCurrentHumidity">
+			<rowTest>
+				<mapValue mapid="commonValueMaps/delete_null_sensor-vm">
+					<getOid>.1.3.6.1.4.1.935.10.1.1.6.2.1.0</getOid>
+				</mapValue>
+			</rowTest>
+            <type>humidity</type>
+            <sensorId>_EM_HUMIDITY_1</sensorId>
+            <value>
+				<getOid>.1.3.6.1.4.1.935.10.1.1.6.2.1.0</getOid>
+            </value>
+			<valueInc>1</valueInc>
+            <label>UPS Humidity Sensor Value</label>
+            <sensorSet>UPS Environment</sensorSet>
+        </numSensor>
+	</device>
+</APC_DDF>

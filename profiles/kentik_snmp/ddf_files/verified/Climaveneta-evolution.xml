@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="apc_ddf_1_6.xsd"
+         ddfid="Climaveneta-evolution" ddfname="Climaveneta_Evolution" ddfversion="1" canremove="yes">
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="climaveneta">
+		<oidMustExist ruleid="climavenetaheader" oid="1.3.6.1.4.1.39983.1.1.1.1.0"/>
+
+		<setProductData ruleid="vendordata" field="vendor">
+		Climaveneta
+		</setProductData>
+
+		<setProductData ruleid="modeldata" field="model">
+		Evolution
+		</setProductData>
+
+		<setProductData ruleid="typedata" field="type">
+		Cooling Device
+		</setProductData>
+
+	</device>	
+
+	<device deviceid="climavenetasensordata">
+		<oidMustExist ruleid="climavenetaevoultionheader"  oid="1.3.6.1.4.1.39983.1.1.1.1.0"/>
+
+		<numSensor ruleid="Unit-ON">
+			<type>temp</type>
+			<sensorId>UNIT_ON</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.1.1.0</getOid>
+					</op>
+					<op>0.1</op>
+				</mult>
+			</value>
+			<label>Unit ON</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="dehumidification_set">
+			<type>pctofcapacity</type>
+			<sensorId>dehumidification_set</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.3.148.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Dehumidification set</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="humidification_set">
+			<type>pctofcapacity</type>
+			<sensorId>_HUMIDIFICATION_SET</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.3.149.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>Humidification set</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+		<numSensor ruleid="high_room_temperature_threshold">
+			<type>pctofcapacity</type>
+			<sensorId>_high_room_temperature_threshold</sensorId>
+			<value>
+				<mult>
+					<op>
+						<getOid>.1.3.6.1.4.1.9839.2.1.3.149.0</getOid>
+					</op>
+					<op>1</op>
+				</mult>
+			</value>
+			<label>High room temperature threshold</label>
+			<sensorSet>Temperature</sensorSet>
+		</numSensor>
+
+	</device>
+</APC_DDF>

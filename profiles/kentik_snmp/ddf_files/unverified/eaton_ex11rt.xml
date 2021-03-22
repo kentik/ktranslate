@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<APC_DDF xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd" ddfid="eaton_ex11rt" ddfname="Eaton EX11RT" ddfversion="1" canremove="yes">
+  <schemaVersion>1.6</schemaVersion>
+  <device deviceid="eaton_ex11rt">
+    <oidMustExist ruleid="snmpdevicetest" istree="yes" oid=".1.3.6.1.4.1.705.1" />
+	<oidMustMatch ruleid="sysobjidtest" oid=".1.3.6.1.2.1.1.2.0">
+          <valueList>
+             <value>.1.3.6.1.4.1.705.1.2</value>
+          </valueList>
+       </oidMustMatch>
+    <setProductData ruleid="vendordata" field="vendor">Eaton</setProductData>
+    <setProductData ruleid="modeldata" field="model">EX11RT</setProductData>
+    <setProductData ruleid="typedata" field="type">UPS</setProductData>
+    <stringSensor ruleid="upsmg_ident_family_name">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_IDENT_FAMILY_NAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.1.1.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Ident Family Name</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsmg_ident_model_name">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_IDENT_MODEL_NAME</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.1.2.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Ident Model Name</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsmg_ident_firmware_version">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_IDENT_FIRMWARE_VERSION</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.1.4.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Ident Firmware Version</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsmg_ident_serial_number">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_IDENT_SERIAL_NUMBER</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.1.7.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Ident Serial Number</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <numSensor ruleid="upsmg_config_low_battery_time">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_UPSMG_CONFIG_LOW_BATTERY_TIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.4.7.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Config Low Battery Time</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_config_low_battery_level">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSMG_CONFIG_LOW_BATTERY_LEVEL</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.4.8.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Config Low Battery Level</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="upsmg_config_auto_restart">
+      <type>state</type>
+      <sensorId>_UPSMG_CONFIG_AUTO_RESTART</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.4.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Config Auto Restart</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="upsmg_config_va_rating">
+      <type>powerVA</type>
+      <units />
+      <sensorId>_UPSMG_CONFIG_VA_RATING</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.4.12.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Config VA Rating</label>
+      <sensorSet>Power</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibEstimatedMinutesRemaining" suppressid="upsmib/upsmib/upsEstimatedMinutesRemaining"/>
+	<suppressRule ruleid="supressmgetimeremainingonbatt" suppressid="mge/mgeups/timeremainingonbatt"/>
+    <numSensor ruleid="upsmg_battery_remaining_time">
+      <type>timeinsec</type>
+      <units />
+      <sensorId>_UPSMG_BATTERY_REMAINING_TIME</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.5.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Battery Remaining Time</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibEstimatedChargeRemaining" suppressid="upsmib/upsmib/upsEstimatedChargeRemaining"/>
+	<suppressRule ruleid="supressmgepctofbatt" suppressid="mge/mgeups/pctofbatt"/>
+    <numSensor ruleid="upsmg_battery_level">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSMG_BATTERY_LEVEL</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.5.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Battery Level</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibBatteryVoltage" suppressid="upsmib/upsmib/upsBatteryVoltage"/>
+	<suppressRule ruleid="supressmgebattvoltage" suppressid="mge/mgeups/battvoltage"/>
+    <numSensor ruleid="upsmg_battery_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_UPSMG_BATTERY_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.5.5.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Battery Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibBatteryCurrent" suppressid="upsmib/upsmib/upsBatteryCurrent"/>
+	<suppressRule ruleid="supressmgebattamps" suppressid="mge/mgeups/battamps"/>
+    <numSensor ruleid="upsmg_battery_current">
+      <type>amperage</type>
+      <units />
+      <sensorId>_UPSMG_BATTERY_CURRENT</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.5.6.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Battery Current</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibBatteryStatus" suppressid="upsmib/upsmib/upsBatteryStatus"/>
+	<suppressRule ruleid="supressmgebatterystate" suppressid="mge/mgeups/batterystate"/>
+    <stateSensor ruleid="upsmg_battery_fault_battery">
+      <type>state</type>
+      <sensorId>_UPSMG_BATTERY_FAULT_BATTERY</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.5.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Battery Fault Battery</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgebatteryreplace" suppressid="mge/mgeups/batteryreplace"/>
+    <stateSensor ruleid="upsmg_battery_replacement">
+      <type>state</type>
+      <sensorId>_UPSMG_BATTERY_REPLACEMENT</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.5.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Battery Replacement</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsmg_battery_low_battery">
+      <type>state</type>
+      <sensorId>_UPSMG_BATTERY_LOW_BATTERY</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.5.14.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Battery Low Battery</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgebatterychargerfault" suppressid="mge/mgeups/batterychargerfault"/>
+    <stateSensor ruleid="upsmg_battery_charger_fault">
+      <type>state</type>
+      <sensorId>_UPSMG_BATTERY_CHARGER_FAULT</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.5.15.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Battery Charger Fault</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsmg_battery_low_condition">
+      <type>state</type>
+      <sensorId>_UPSMG_BATTERY_LOW_CONDITION</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.5.16.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Battery Low Condition</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="upsmg_input_phase_num">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_INPUT_PHASE_NUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Input Phase Num</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibInputFrequency" suppressid="upsmib/upsmib/upsInputFrequency"/>
+	<suppressRule ruleid="supressmgeinputvoltage" suppressid="mge/mgeups/inputvoltage"/>
+    <numSensor ruleid="mginput_voltage_1">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGINPUT_VOLTAGE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.2.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Voltage 1</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_voltage_2">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGINPUT_VOLTAGE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.2.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Voltage 2</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_voltage_3">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGINPUT_VOLTAGE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.2.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Voltage 3</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibInputVoltage" suppressid="upsmib/upsmib/upsInputVoltage"/>
+	<suppressRule ruleid="supressmgeinputfrequency" suppressid="mge/mgeups/inputfrequency"/>
+    <numSensor ruleid="mginput_frequency_1">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGINPUT_FREQUENCY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.3.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Frequency 1</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_frequency_2">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGINPUT_FREQUENCY_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.3.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Frequency 2</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_frequency_3">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGINPUT_FREQUENCY_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.3.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Frequency 3</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_minimum_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGINPUT_MINIMUM_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.4.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Minimum Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_maximum_voltage">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGINPUT_MAXIMUM_VOLTAGE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.5.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Maximum Voltage</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibInputCurrent" suppressid="upsmib/upsmib/upsInputCurrent"/>
+	<suppressRule ruleid="supressmgeinputcurrent" suppressid="mge/mgeups/inputcurrent"/>
+    <numSensor ruleid="mginput_current_1">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGINPUT_CURRENT_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.6.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Current 1</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_current_2">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGINPUT_CURRENT_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.6.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Current 2</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mginput_current_3">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGINPUT_CURRENT_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.2.1.6.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mginput Current 3</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressmgeinputbadstatus" suppressid="mge/mgeups/inputbadstatus"/>
+    <numSensor ruleid="upsmg_input_bad_status">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_INPUT_BAD_STATUS</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Input Bad Status</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressmgeinputbadcause" suppressid="mge/mgeups/inputbadcause"/>
+    <numSensor ruleid="upsmg_input_line_fail_cause">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_INPUT_LINE_FAIL_CAUSE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.6.4.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Input Line Fail Cause</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_output_phase_num">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_OUTPUT_PHASE_NUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Output Phase Num</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_phase_index_1">
+      <type>num</type>
+      <units />
+      <sensorId>_MGOUTPUT_PHASE_INDEX_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.1.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Phase Index 1</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_phase_index_2">
+      <type>num</type>
+      <units />
+      <sensorId>_MGOUTPUT_PHASE_INDEX_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.1.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Phase Index 2</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_phase_index_3">
+      <type>num</type>
+      <units />
+      <sensorId>_MGOUTPUT_PHASE_INDEX_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.1.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Phase Index 3</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibOutputVoltage" suppressid="upsmib/upsmib/upsOutputVoltage"/>
+	<suppressRule ruleid="supressmgeoutputvoltage1" suppressid="mge/mgeups/outputvoltage"/>
+	<suppressRule ruleid="supressmgeoutputvoltage2" suppressid="mge/mgeUpsComet/outputvoltage"/>
+	<suppressRule ruleid="supressmgephaseoutputva1" suppressid="mge/mgeUpsGalaxy7k/phaseoutputva"/>
+	<suppressRule ruleid="supressmgephaseoutputva2" suppressid="mge/mgeups/phaseoutputva"/>
+    <numSensor ruleid="mgoutput_voltage_1">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGOUTPUT_VOLTAGE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.2.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Voltage 1</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_voltage_2">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGOUTPUT_VOLTAGE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.2.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Voltage 2</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_voltage_3">
+      <type>voltage</type>
+      <units />
+      <sensorId>_MGOUTPUT_VOLTAGE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.2.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Voltage 3</label>
+      <sensorSet>Voltage</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibOutputFrequency" suppressid="upsmib/upsmib/upsOutputFrequency"/>
+	<suppressRule ruleid="supressmgeoutputfrequency" suppressid="mge/mgeups/outputfrequency"/>
+    <numSensor ruleid="mgoutput_frequency_1">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGOUTPUT_FREQUENCY_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.3.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Frequency 1</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_frequency_2">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGOUTPUT_FREQUENCY_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.3.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Frequency 2</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_frequency_3">
+      <type>frequency</type>
+      <units />
+      <sensorId>_MGOUTPUT_FREQUENCY_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.3.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Frequency 3</label>
+      <sensorSet>Frequency</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibOutputPercentLoad" suppressid="upsmib/upsmib/upsOutputPercentLoad"/>
+	<suppressRule ruleid="supressmgeoutputload" suppressid="mge/mgeups/outputload"/>
+    <numSensor ruleid="mgoutput_load_per_phase_1">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_MGOUTPUT_LOAD_PER_PHASE_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.4.1.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Load Per Phase 1</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_load_per_phase_2">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_MGOUTPUT_LOAD_PER_PHASE_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.4.2.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Load Per Phase 2</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_load_per_phase_3">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_MGOUTPUT_LOAD_PER_PHASE_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.4.3.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Load Per Phase 3</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressUpsmibOutputCurrent" suppressid="upsmib/upsmib/upsOutputCurrent"/>
+	<suppressRule ruleid="supressmgeoutputcurrent" suppressid="mge/mgeups/outputcurrent"/>
+    <numSensor ruleid="mgoutput_current_1">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGOUTPUT_CURRENT_1</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.5.1.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Current 1</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_current_2">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGOUTPUT_CURRENT_2</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.5.2.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Current 2</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+    <numSensor ruleid="mgoutput_current_3">
+      <type>amperage</type>
+      <units />
+      <sensorId>_MGOUTPUT_CURRENT_3</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.7.2.1.5.3.0</getOid>
+          </op>
+          <op>10</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>mgoutput Current 3</label>
+      <sensorSet>Current</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressmgeonbattery" suppressid="mge/mgeups/onbattery"/>
+    <stateSensor ruleid="upsmg_output_on_battery">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_ON_BATTERY</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.3.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output On Battery</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgeonbypass" suppressid="mge/mgeups/onbypass"/>
+    <stateSensor ruleid="upsmg_output_on_by_pass">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_ON_BY_PASS</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.4.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output On By Pass</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgeutilityoff" suppressid="mge/mgeups/utilityoff"/>
+    <stateSensor ruleid="upsmg_output_utility_off">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_UTILITY_OFF</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.7.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output Utility Off</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgeinverteroff" suppressid="mge/mgeups/inverteroff"/>
+    <stateSensor ruleid="upsmg_output_inverter_off">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_INVERTER_OFF</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.9.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output Inverter Off</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgeoutputoverload" suppressid="mge/mgeups/outputoverload"/>
+    <stateSensor ruleid="upsmg_output_over_load">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_OVER_LOAD</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.10.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output Over Load</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmgeovertemp" suppressid="mge/mgeups/overtemp"/>
+    <stateSensor ruleid="upsmg_output_over_temp">
+      <type>state</type>
+      <sensorId>_UPSMG_OUTPUT_OVER_TEMP</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.7.11.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Output Over Temp</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="upsmg_environ_ambient_temp">
+      <type>temp</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRON_AMBIENT_TEMP</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.1.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>upsmg Environ Ambient Temp</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_environ_ambient_humidity">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRON_AMBIENT_HUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.2.0</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>upsmg Environ Ambient Humidity</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_environment_num">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRONMENT_NUM</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.6.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Environment Num</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_environment_index">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRONMENT_INDEX</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.7.1.1.1</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Environment Index</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+	
+	<suppressRule ruleid="supressmgesensorcommfailure" suppressid="mge/mge_environment/sensorcommfailure"/>
+    <stateSensor ruleid="upsmg_environment_com_failure">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_COM_FAILURE</sensorId>
+      <value>
+        <mapValue mapid="n/a_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.2.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Com Failure</label>
+      <enum>n/a_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="upsmg_environment_temperature">
+      <type>temp</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRONMENT_TEMPERATURE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.7.1.3.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>upsmg Environment Temperature</label>
+      <sensorSet>Temperature</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="upsmg_environment_temperature_l_ow">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_TEMPERATURE_L_OW</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.4.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Temperature L ow</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsmg_environment_temperature_high">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_TEMPERATURE_HIGH</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.5.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Temperature High</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <numSensor ruleid="upsmg_environment_humidity">
+      <type>pctofcapacity</type>
+      <units />
+      <sensorId>_UPSMG_ENVIRONMENT_HUMIDITY</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.8.7.1.6.1</getOid>
+          </op>
+          <op>0.1</op>
+        </mult>
+      </value>
+      <valueInc>0.1</valueInc>
+      <label>upsmg Environment Humidity</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="upsmg_environment_humidity_low">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_HUMIDITY_LOW</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.7.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Humidity Low</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stateSensor ruleid="upsmg_environment_humidity_high">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_HUMIDITY_HIGH</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.8.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Humidity High</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmge_input_contact1" suppressid="mge/mge_environment/mge_input_contact1"/>
+    <stateSensor ruleid="upsmg_environment_input_1_state">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_INPUT_1_STATE</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.9.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Input 1 State</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	
+	<suppressRule ruleid="supressmge_input_contact2" suppressid="mge/mge_environment/mge_input_contact2"/>
+    <stateSensor ruleid="upsmg_environment_input_2_state">
+      <type>state</type>
+      <sensorId>_UPSMG_ENVIRONMENT_INPUT_2_STATE</sensorId>
+      <value>
+        <mapValue mapid="openclose_vm">
+          <getOid>.1.3.6.1.4.1.705.1.8.7.1.10.1</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Environment Input 2 State</label>
+      <enum>openclose_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+    <stringSensor ruleid="upsmg_agent_ip_address">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_IP_ADDRESS</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.12.1.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Agent Ip Address</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsmg_agent_subnet_mask">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_SUBNET_MASK</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.12.2.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Agent Subnet Mask</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <stringSensor ruleid="upsmg_agent_def_gateway">
+      <type>string</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_DEF_GATEWAY</sensorId>
+      <value>
+        <op>
+          <getOid>.1.3.6.1.4.1.705.1.12.3.0</getOid>
+        </op>
+      </value>
+      <label>upsmg Agent Def Gateway</label>
+      <sensorSet>General</sensorSet>
+    </stringSensor>
+    <numSensor ruleid="upsmg_agent_type">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_TYPE</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.12.6.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Agent Type</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_agent_mib_version">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_MIB_VERSION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.12.11.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Agent Mib Version</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <numSensor ruleid="upsmg_agent_firmware_version">
+      <type>num</type>
+      <units />
+      <sensorId>_UPSMG_AGENT_FIRMWARE_VERSION</sensorId>
+      <value>
+        <mult>
+          <op>
+            <getOid>.1.3.6.1.4.1.705.1.12.12.0</getOid>
+          </op>
+          <op>1</op>
+        </mult>
+      </value>
+      <valueInc>1</valueInc>
+      <label>upsmg Agent Firmware Version</label>
+      <sensorSet>General</sensorSet>
+    </numSensor>
+    <stateSensor ruleid="upsmg_agent_comm_ups">
+      <type>state</type>
+      <sensorId>_UPSMG_AGENT_COMM_UPS</sensorId>
+      <value>
+        <mapValue mapid="yesno_vm">
+          <getOid>.1.3.6.1.4.1.705.1.12.13.0</getOid>
+        </mapValue>
+      </value>
+      <label>upsmg Agent Comm UPS</label>
+      <enum>yesno_em</enum>
+      <sensorSet>Status</sensorSet>
+    </stateSensor>
+	<valueMap ruleid="yesno_vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+	</valueMap>
+	<enumMap ruleid="yesno_em">
+		<label>Yes</label>
+		<label>No</label>
+	</enumMap>
+	<valueMap ruleid="openclose_vm">
+		<valueIn>1</valueIn><valueOut>0</valueOut>
+		<valueIn>2</valueIn><valueOut>1</valueOut>
+	</valueMap>
+	<enumMap ruleid="openclose_em">
+		<label>Closed</label>
+		<label>Open</label>
+	</enumMap>
+  </device>
+</APC_DDF>

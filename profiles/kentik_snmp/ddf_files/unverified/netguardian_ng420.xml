@@ -1,0 +1,136 @@
+<APC_DDF
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://localhost/ddf_schema/apc_ddf_1_6.xsd"
+	ddfid="netguardian_ng420"
+	ddfname="NetGuardian NG420"
+	ddfversion="1"
+	canremove="yes">
+		 
+	<schemaVersion>1.6</schemaVersion>
+
+	<device deviceid="netguardian_ng420">
+        <suppressRule ruleid="suppresscorevendordata" suppressid="core/mib2data/vendordata"/>
+        <suppressRule ruleid="suppresscoremodeldata" suppressid="core/mib2data/modeldata"/>
+        <suppressRule ruleid="suppresscoretypedata" suppressid="core/mib2data/typedata"/>
+
+		<setProductData ruleid="vendordata" field="vendor">DPS Telecom</setProductData>
+		<setProductData ruleid="modeldata" field="model">NetGuardian NG420</setProductData>
+		<setProductData ruleid="typedata" field="type">Network Device</setProductData>
+
+		<oidMustExist ruleid="dpsInc" oid=".1.3.6.1.4.1.2682" istree="yes" /> 
+
+		<enumMap ruleid="dpsRTUAState-em">
+			<label>Clear</label>
+			<label>Alarm</label>
+			<label>Unknown</label>
+		</enumMap>
+		<valueMap ruleid="dpsRTUAState-vm">
+			<valueIn>Clear</valueIn><valueOut>0</valueOut>
+			<valueIn>Alarm</valueIn><valueOut>1</valueOut>
+			<valueIn>*</valueIn><valueOut>2</valueOut>
+		</valueMap>
+		<valueMap ruleid="deleteUnknowns-vm">
+			<valueIn>2</valueIn><valueOut>[false]</valueOut>
+			<valueIn>*</valueIn><valueOut>[true]</valueOut>
+		</valueMap>
+
+		<!--
+		<stateSensor ruleid="dpsRTUAState-ss" index=".1.3.6.1.4.1.2682.1.2.5.1.6">
+			<rowTest>
+				<mapValue mapid="deleteUnknowns-vm">
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.6</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DPS_RTUA_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.6</getRowOid>
+				</mapValue>
+			</value>
+            <label><getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.5</getRowOid> (<rowIndex/>)</label>
+            <enum>dpsRTUAState-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<alarmFlags2 ruleid="dpsRTUAState-alarm" index=".1.3.6.1.4.1.2682.1.2.5.1.6">
+			<rowTest>
+				<mapValue mapid="deleteUnknowns-vm">
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.6</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.5</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.5</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.5</getRowOid> condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.2682.1.2.5.1.5</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+		-->
+
+		<!-- v1 above | v2 below -->
+
+		<stateSensor ruleid="dpsRTUv2AState-ss" index=".1.3.6.1.4.1.2682.1.4.5.1.6">
+			<rowTest>
+				<mapValue mapid="deleteUnknowns-vm">
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.6</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+            <type>state</type>
+            <sensorId>DPS_RTUV2A_STATE_<rowIndex/></sensorId>
+            <value>
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.6</getRowOid>
+				</mapValue>
+			</value>
+            <label><getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.5</getRowOid> (<rowIndex/>)</label>
+            <enum>dpsRTUAState-em</enum>
+            <sensorSet>System Status</sensorSet>
+        </stateSensor>
+
+		<alarmFlags2 ruleid="dpsRTUv2AState-alarm" index=".1.3.6.1.4.1.2682.1.4.5.1.6">
+			<rowTest>
+				<mapValue mapid="deleteUnknowns-vm">
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.6</getRowOid>
+				</mapValue>
+				</mapValue>
+			</rowTest>
+			<value>
+				<mapValue mapid="dpsRTUAState-vm">
+				<getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.6</getRowOid>
+				</mapValue>
+			</value>
+			<alarmFlagsTest match="1">
+				<name>
+					<activeText><getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.5</getRowOid></activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.5</getRowOid> Cleared</inactiveText>
+				</name>
+				<severity>warning</severity>
+				<category>System</category>
+				<description>
+					<activeText><getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.5</getRowOid> condition exists.</activeText>
+					<inactiveText><getRowOid>.1.3.6.1.4.1.2682.1.4.5.1.5</getRowOid> condition no longer exists.</inactiveText>
+				</description>
+			</alarmFlagsTest>
+		</alarmFlags2>
+
+	</device>
+</APC_DDF>
