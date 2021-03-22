@@ -154,7 +154,9 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 				mdb.log.Errorf("Cannot parse Yaml mib %s %v", fname, err)
 			}
 		default:
-			mdb.log.Infof("Ignoring file %s", fname)
+			if len(pts) > 1 {
+				mdb.log.Infof("Ignoring file %s", fname)
+			}
 		}
 	}
 
@@ -398,8 +400,11 @@ func (mdb *MibDB) parseMibFromYml(fname string, file os.DirEntry, extends map[st
 
 	// For each sysobjid listed, add this file into our map.
 	for _, sysid := range t.Sysobjectid {
+		if strings.HasPrefix(sysid, ".") {
+			sysid = sysid[1:] // Strip this out if we start with .
+		}
 		mdb.profiles[sysid] = &t
-		mdb.log.Debugf("Adding profile for %s: %s", sysid, t.Device.Vendor)
+		mdb.log.Debugf("Adding profile for %s: %s %s", sysid, t.Device.Vendor, t.From)
 	}
 
 	return nil
@@ -414,8 +419,15 @@ func (mdb *MibDB) parseMibFromXml(file string) error {
 	profiles := newProfileFromApc(ap, file, mdb.log)
 	for _, t := range profiles {
 		for _, sysid := range t.Sysobjectid {
+			if strings.HasPrefix(sysid, ".") {
+				sysid = sysid[1:] // Strip this out if we start with .
+			}
+			if sysid == "" {
+				mdb.log.Warnf("Skipping profile with no OID: %s: %s", sysid, t.Device.Vendor)
+				continue
+			}
 			mdb.profiles[sysid] = t
-			mdb.log.Debugf("Adding profile for %s: %s %d metrics and %d tags", sysid, t.Device.Vendor, len(t.Metrics), len(t.MetricTags))
+			mdb.log.Debugf("Adding profile for [%s]: %s %d metrics and %d tags", sysid, t.Device.Vendor, len(t.Metrics), len(t.MetricTags))
 		}
 	}
 
@@ -465,9 +477,9 @@ func newProfileFromApc(ap *apc.APC, file string, log logger.ContextL) []*Profile
 		for _, sensor := range device.NumSensors {
 			if _, ok := mibSet[sensor.SensorSet]; !ok {
 				mibSet[sensor.SensorSet] = &MIB{
-					ForcedType: sensor.Type,
-					Mib:        sensor.SensorSet,
-					Symbols:    []OID{},
+					//ForcedType: sensor.Type,
+					Mib:     sensor.SensorSet,
+					Symbols: []OID{},
 				}
 			}
 			mib := mibSet[sensor.SensorSet]
