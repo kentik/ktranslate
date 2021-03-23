@@ -110,6 +110,7 @@ type SnmpDiscoConfig struct {
 	Threads            int           `yaml:"threads"`
 	CheckAll           bool          `yaml:"check_all"`
 	ReplaceDevices     bool          `yaml:"replace_devices"`
+	CidrOrig           string        `yaml:"-"`
 }
 
 type SnmpGlobalConfig struct {
@@ -124,10 +125,11 @@ type SnmpGlobalConfig struct {
 }
 
 type SnmpConfig struct {
-	Devices DeviceMap         `yaml:"devices"`
-	Trap    *SnmpTrapConfig   `yaml:"trap"`
-	Disco   *SnmpDiscoConfig  `yaml:"discovery"`
-	Global  *SnmpGlobalConfig `yaml:"global"`
+	Devices    DeviceMap         `yaml:"devices"`
+	Trap       *SnmpTrapConfig   `yaml:"trap"`
+	Disco      *SnmpDiscoConfig  `yaml:"discovery"`
+	Global     *SnmpGlobalConfig `yaml:"global"`
+	DeviceOrig string            `yaml:"-"`
 }
 
 type SnmpMetricSet struct {

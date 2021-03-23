@@ -191,6 +191,7 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 		if err != nil {
 			return nil, err
 		}
+		ms.Disco.CidrOrig = ms.Disco.Cidrs[0][1:]
 		ms.Disco.Cidrs = cidrList
 	}
 
@@ -205,6 +206,7 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 			if err != nil {
 				return nil, err
 			}
+			ms.DeviceOrig = devFile.DeviceName[1:]
 			ms.Devices = devices
 		}
 	}

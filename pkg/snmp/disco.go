@@ -1,6 +1,7 @@
 package snmp
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -209,10 +210,44 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	}
 	log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
 
+	// Write out to seperate files any sections which need this.
+	if conf.Disco.CidrOrig != "" {
+		t, err := yaml.Marshal(conf.Disco.Cidrs)
+		if err != nil {
+			return err
+		}
+		err = ioutil.WriteFile(conf.Disco.CidrOrig, t, permissions)
+		if err != nil {
+			return err
+		}
+		conf.Disco.Cidrs = nil
+	}
+
+	if conf.DeviceOrig != "" {
+		t, err := yaml.Marshal(conf.Devices)
+		if err != nil {
+			return err
+		}
+		err = ioutil.WriteFile(conf.DeviceOrig, t, permissions)
+		if err != nil {
+			return err
+		}
+		conf.Devices = nil
+	}
+
 	// Save out the config file.
 	t, err := yaml.Marshal(conf)
 	if err != nil {
 		return err
 	}
+
+	// Swap for our external sections.
+	if conf.Disco.CidrOrig != "" {
+		t = bytes.Replace(t, []byte("cidrs: []"), []byte(`cidrs: "@`+conf.Disco.CidrOrig+`"`), 1)
+	}
+	if conf.DeviceOrig != "" {
+		t = bytes.Replace(t, []byte("devices: {}"), []byte(`devices: "@`+conf.DeviceOrig+`"`), 1)
+	}
+
 	return ioutil.WriteFile(snmpFile, t, permissions)
 }
