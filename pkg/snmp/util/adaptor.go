@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/gosnmp"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -98,10 +98,14 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 	}
 
 	if device.V3 == nil {
-		log.Infof("Running with SNMP v2c")
-
-		server.Version = gosnmp.Version2c
 		server.Community = device.Community
+		if device.UseV1 {
+			log.Infof("Running with SNMP v1")
+			server.Version = gosnmp.Version1
+		} else {
+			log.Infof("Running with SNMP v2c")
+			server.Version = gosnmp.Version2c
+		}
 	} else {
 		params, flags, contextEngineID, contextName, err := parseV3Config(device.V3)
 		if err != nil {
@@ -109,7 +113,6 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 		}
 
 		log.Infof("Running with SNMP v3")
-
 		server.Version = gosnmp.Version3
 		server.ContextEngineID = contextEngineID
 		server.ContextName = contextName

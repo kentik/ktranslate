@@ -80,6 +80,7 @@ type SnmpDeviceConfig struct {
 	DeviceName             string            `yaml:"device_name"`
 	DeviceIP               string            `yaml:"device_ip"`
 	Community              string            `yaml:"snmp_comm"`
+	UseV1                  bool              `yaml:"use_snmp_v1"`
 	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
 	Debug                  bool              `yaml:"debug"`
 	RateMultiplier         int64             `yaml:"rate_multiplier"`
@@ -105,6 +106,7 @@ type SnmpDiscoConfig struct {
 	Debug              bool          `yaml:"debug"`
 	Ports              []int         `yaml:"ports"`
 	DefaultCommunities []string      `yaml:"default_communities"`
+	UseV1              bool          `yaml:"use_snmp_v1"`
 	DefaultV3          *V3SNMPConfig `yaml:"default_v3"`
 	AddDevices         bool          `yaml:"add_devices"`
 	Threads            int           `yaml:"threads"`

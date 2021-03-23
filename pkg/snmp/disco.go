@@ -111,6 +111,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			DeviceName: result.Name,
 			DeviceIP:   result.Host.String(),
 			Community:  "", // Run using v3 here.
+			UseV1:      conf.Disco.UseV1,
 			V3:         conf.Disco.DefaultV3,
 			Debug:      conf.Disco.Debug,
 			Port:       uint16(conf.Disco.Ports[0]),
@@ -132,6 +133,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				DeviceName: result.Name,
 				DeviceIP:   result.Host.String(),
 				Community:  community,
+				UseV1:      conf.Disco.UseV1,
 				V3:         conf.Disco.DefaultV3,
 				Debug:      conf.Disco.Debug,
 				Port:       uint16(conf.Disco.Ports[0]),
