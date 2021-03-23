@@ -36,31 +36,13 @@ type Device struct {
 	Vendor string `yaml:"vendor"`
 }
 
-type StringArray []string
-
-func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
-	var multi []string
-	err := unmarshal(&multi)
-	if err != nil {
-		var single string
-		err := unmarshal(&single)
-		if err != nil {
-			return err
-		}
-		*a = []string{single}
-	} else {
-		*a = multi
-	}
-	return nil
-}
-
 type Profile struct {
 	logger.ContextL
-	Metrics     []MIB       `yaml:"metrics"`
-	Extends     []string    `yaml:"extends"`
-	Device      Device      `yaml:"device"`
-	MetricTags  []Tag       `yaml:"metric_tags"`
-	Sysobjectid StringArray `yaml:"sysobjectid"`
+	Metrics     []MIB          `yaml:"metrics"`
+	Extends     []string       `yaml:"extends"`
+	Device      Device         `yaml:"device"`
+	MetricTags  []Tag          `yaml:"metric_tags"`
+	Sysobjectid kt.StringArray `yaml:"sysobjectid"`
 	extended    bool
 	From        string
 }

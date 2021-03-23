@@ -101,7 +101,7 @@ type SnmpTrapConfig struct {
 }
 
 type SnmpDiscoConfig struct {
-	Cidrs              []string      `yaml:"cidrs"`
+	Cidrs              StringArray   `yaml:"cidrs"`
 	Debug              bool          `yaml:"debug"`
 	Ports              []int         `yaml:"ports"`
 	DefaultCommunities []string      `yaml:"default_communities"`
@@ -124,10 +124,10 @@ type SnmpGlobalConfig struct {
 }
 
 type SnmpConfig struct {
-	Devices map[string]*SnmpDeviceConfig `yaml:"devices"`
-	Trap    *SnmpTrapConfig              `yaml:"trap"`
-	Disco   *SnmpDiscoConfig             `yaml:"discovery"`
-	Global  *SnmpGlobalConfig            `yaml:"global"`
+	Devices DeviceMap         `yaml:"devices"`
+	Trap    *SnmpTrapConfig   `yaml:"trap"`
+	Disco   *SnmpDiscoConfig  `yaml:"discovery"`
+	Global  *SnmpGlobalConfig `yaml:"global"`
 }
 
 type SnmpMetricSet struct {
@@ -191,4 +191,40 @@ func (mb Mib) String() string {
 type LastMetadata struct {
 	DeviceInfo    map[string]interface{}
 	InterfaceInfo map[IfaceID]map[string]interface{}
+}
+
+type DeviceMap map[string]*SnmpDeviceConfig
+
+func (a *DeviceMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var multi map[string]*SnmpDeviceConfig
+	err := unmarshal(&multi)
+	if err != nil {
+		var single string
+		err := unmarshal(&single)
+		if err != nil {
+			return err
+		}
+		*a = map[string]*SnmpDeviceConfig{"file": &SnmpDeviceConfig{DeviceName: single}}
+	} else {
+		*a = multi
+	}
+	return nil
+}
+
+type StringArray []string
+
+func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var multi []string
+	err := unmarshal(&multi)
+	if err != nil {
+		var single string
+		err := unmarshal(&single)
+		if err != nil {
+			return err
+		}
+		*a = []string{single}
+	} else {
+		*a = multi
+	}
+	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -177,6 +178,35 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 	err = yaml.Unmarshal(by, &ms)
 	if err != nil {
 		return nil, err
+	}
+
+	// Expand out any seconds which require it.
+	if len(ms.Disco.Cidrs) > 0 && strings.HasPrefix(ms.Disco.Cidrs[0], "@") {
+		cidrList := []string{}
+		byc, err := ioutil.ReadFile(ms.Disco.Cidrs[0][1:])
+		if err != nil {
+			return nil, err
+		}
+		err = yaml.Unmarshal(byc, &cidrList)
+		if err != nil {
+			return nil, err
+		}
+		ms.Disco.Cidrs = cidrList
+	}
+
+	if len(ms.Devices) == 1 {
+		if devFile, ok := ms.Devices["file"]; ok && strings.HasPrefix(devFile.DeviceName, "@") {
+			devices := map[string]*kt.SnmpDeviceConfig{}
+			byc, err := ioutil.ReadFile(devFile.DeviceName[1:])
+			if err != nil {
+				return nil, err
+			}
+			err = yaml.Unmarshal(byc, &devices)
+			if err != nil {
+				return nil, err
+			}
+			ms.Devices = devices
+		}
 	}
 
 	return &ms, nil
