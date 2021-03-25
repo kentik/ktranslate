@@ -34,7 +34,7 @@ func TestBasic(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(len(kt.InputTesting), len(out))
 	for i, _ := range out {
-		assert.Equal(int(kt.InputTesting[i].Protocol), int(out[i]["protocol"].(int64)))
+		assert.Equal(kt.InputTesting[i].Protocol, out[i]["protocol"].(string))
 		assert.Equal(kt.InputTesting[i].SrcAddr, out[i]["src_addr"])
 		assert.Equal(kt.InputTesting[i].DstAddr, out[i]["dst_addr"])
 		assert.Equal(int(kt.InputTesting[i].L4DstPort), int(out[i]["l4_dst_port"].(int64)))

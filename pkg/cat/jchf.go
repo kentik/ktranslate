@@ -148,7 +148,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.L4DstPort = src.CHF.L4DstPort()
 	dst.L4SrcPort = src.CHF.L4SrcPort()
 	dst.OutputPort = kt.IfaceID(src.CHF.OutputPort())
-	dst.Protocol = src.CHF.Protocol()
+	dst.Protocol = ic.PROTO_NAMES[uint16(src.CHF.Protocol())]
 	dst.SampledPacketSize = src.CHF.SampledPacketSize()
 	dst.SrcAs = src.CHF.SrcAs()
 	if src.CHF.SrcGeo() > 0 {

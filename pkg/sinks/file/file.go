@@ -52,12 +52,14 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 	}
 
 	// Set up a file first.
-	name := s.getName()
-	f, err := os.Create(name)
-	if err != nil {
-		return err
+	if s.doWrite {
+		name := s.getName()
+		f, err := os.Create(name)
+		if err != nil {
+			return err
+		}
+		s.fd = f
 	}
-	s.fd = f
 
 	go func() {
 		// Listen for signals to print or not.
@@ -74,19 +76,37 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 				case syscall.SIGUSR1: // Toggles print.
 					s.doWrite = !s.doWrite
 					s.Infof("Write is now: %v", s.doWrite)
+					if s.doWrite {
+						s.mux.Lock()
+						name := s.getName()
+						f, err := os.Create(name)
+						if err != nil {
+							s.Errorf("Cannot create file %s -> %v", name, err)
+						} else {
+							s.fd = f
+						}
+						s.mux.Unlock()
+					}
 				}
 
 			case _ = <-dumpTick.C:
+				if !s.doWrite {
+					continue
+				}
+
 				s.mux.Lock()
-				s.fd.Sync()
-				s.fd.Close()
+				if s.fd != nil {
+					s.fd.Sync()
+					s.fd.Close()
+				}
 				name := s.getName()
 				f, err := os.Create(name)
 				if err != nil {
 					s.Errorf("Cannot create file %s -> %v", name, err)
 					s.fd = nil
+				} else {
+					s.fd = f
 				}
-				s.fd = f
 				s.mux.Unlock()
 				s.Debugf("New file: %s", name)
 

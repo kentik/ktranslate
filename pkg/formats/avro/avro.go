@@ -40,7 +40,7 @@ const chfAvroSchema = `
 {"name": "l4_dst_port", "type": "long", "default": 0},
 {"name": "l4_src_port", "type": "long", "default": 0},
 {"name": "output_port", "type": "long", "default": 0},
-{"name": "protocol", "type": "long", "default": 0},
+{"name": "protocol", "type": "string", "default": ""},
 {"name": "sampled_packet_size", "type": "long", "default": 0},
 {"name": "src_as", "type": "long", "default": 0},
 {"name": "src_geo", "type": "string", "default": ""},

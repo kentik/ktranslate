@@ -75,7 +75,7 @@ type JCHF struct {
 	L4DstPort               uint32            `json:"l4_dst_port"`
 	L4SrcPort               uint32            `json:"l4_src_port"`
 	OutputPort              IfaceID           `json:"output_port"`
-	Protocol                uint32            `json:"protocol"`
+	Protocol                string            `json:"protocol"`
 	SampledPacketSize       uint32            `json:"sampled_packet_size"`
 	SrcAs                   uint32            `json:"src_as"`
 	SrcGeo                  string            `json:"src_geo"`
@@ -188,7 +188,7 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["l4_dst_port"] = int64(j.L4DstPort)
 	j.avroSet["l4_src_port"] = int64(j.L4SrcPort)
 	j.avroSet["output_port"] = int64(j.OutputPort)
-	j.avroSet["protocol"] = int64(j.Protocol)
+	j.avroSet["protocol"] = j.Protocol
 	j.avroSet["sampled_packet_size"] = int64(j.SampledPacketSize)
 	j.avroSet["src_as"] = int64(j.SrcAs)
 	j.avroSet["src_geo"] = j.SrcGeo

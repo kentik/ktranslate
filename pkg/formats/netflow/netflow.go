@@ -8,11 +8,11 @@ import (
 	"net"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
-
+	"github.com/kentik/ktranslate/pkg/util/ic"
 	"github.com/kentik/ktranslate/pkg/util/trkdsess"
+
 	"github.com/kentik/netflow"
 	"github.com/kentik/netflow/ipfix"
 	"github.com/kentik/netflow/netflow9"
@@ -172,7 +172,7 @@ func (ipf *NetflowFormat) setCHFField(flow *kt.JCHF, id uint16, value interface{
 		if !ok {
 			return false
 		}
-		flow.Protocol = uint32(protocol)
+		flow.Protocol = ic.PROTO_NAMES[uint16(protocol)]
 
 	case TOS:
 		tos, ok := value.(uint8)
@@ -374,7 +374,7 @@ func encodeFlow(flow *kt.JCHF) (*bytes.Buffer, error) {
 
 		switch field.Type {
 		case PROTOCOL:
-			value = uint8(flow.Protocol)
+			value = uint8(ic.PROTO_NUMS[flow.Protocol])
 		case TOS:
 			value = uint8(flow.Tos)
 		case TCP_FLAGS:
