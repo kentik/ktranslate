@@ -112,6 +112,7 @@ type SnmpDiscoConfig struct {
 	Threads            int           `yaml:"threads"`
 	CheckAll           bool          `yaml:"check_all"`
 	ReplaceDevices     bool          `yaml:"replace_devices"`
+	AddFromMibDB       bool          `yaml:"add_from_mibdb"`
 	CidrOrig           string        `yaml:"-"`
 }
 

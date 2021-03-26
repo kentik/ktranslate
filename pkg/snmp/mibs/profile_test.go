@@ -18,6 +18,7 @@ func TestFindProfile(t *testing.T) {
 			"1.3.6.1.4.1.2636.1.1.1.2.65": &Profile{Device: Device{Vendor: "juniper"}},
 			"1.3.6.1.4.1.29671.*":         &Profile{Device: Device{Vendor: "meraki"}},
 			"1.3.6.1.4.*":                 &Profile{Device: Device{Vendor: "generic"}},
+			"1.3.6.1.4.1.318.*":           &Profile{Device: Device{Vendor: "apc"}},
 		},
 	}
 
@@ -28,6 +29,8 @@ func TestFindProfile(t *testing.T) {
 		".1.3.6.1.4.1.29671.2.65":        "meraki",
 		".1.3.6.1.4.1.2636.1.1.1.2.65.2": "generic",
 		".1.3.6.1.4.1.29671":             "meraki",
+		".1.3.6.1.4.1.318.1.3.4.6":       "apc",
+		".1.3.6.1.4.1.318":               "apc",
 	}
 
 	for sysid, vendor := range inputs {

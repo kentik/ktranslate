@@ -178,7 +178,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	if err != nil {
 		log.Warnf("Issue loading mibs: %v", err)
 	} else {
-		if first {
+		if first && conf.Disco.AddFromMibDB {
 			device.DeviceOids = mibs
 		}
 		device.Provider = provider
