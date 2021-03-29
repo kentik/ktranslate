@@ -72,6 +72,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
 		msgsc:      make(chan []byte, 60),
 		ol:         ol,
+		tooBig:     make(chan int, CHAN_SLACK),
 	}
 
 	for i := 0; i < config.Threads; i++ {
@@ -176,7 +177,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
 	for _, sinkStr := range strings.Split(sinks, ",") {
 		sink := ss.Sink(sinkStr)
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry)
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}
@@ -500,6 +501,12 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 					}
 				}
 			}
+
+		case <-kc.tooBig:
+			// We need to dynamically shrink the size of data being sent in based on feedback from one of our sinks.
+			os := kc.config.MaxFlowPerMessage
+			kc.config.MaxFlowPerMessage = int(float64(kc.config.MaxFlowPerMessage) * .75)
+			kc.log.Infof("Updating MaxFlowPerMessage to %d from %d based on errors sending", kc.config.MaxFlowPerMessage, os)
 
 		case <-ctx.Done():
 			kc.log.Infof("sendToSinks base Done")

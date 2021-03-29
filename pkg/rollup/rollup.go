@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -38,10 +39,12 @@ type Roller interface {
 }
 
 type Rollup struct {
-	Dimension string  `json:"dimension"`
-	Metric    float64 `json:"metric"`
-	EventType string  `json:"eventType"`
-	KeyJoin   string  `json:"keyJoin"`
+	Dimension string        `json:"dimension"`
+	Metric    float64       `json:"metric"`
+	EventType string        `json:"eventType"`
+	KeyJoin   string        `json:"keyJoin"`
+	Interval  time.Duration `json:"interval"`
+	dims      []string
 }
 
 type Method string
@@ -131,6 +134,7 @@ type rollupBase struct {
 	eventType    string
 	mux          sync.RWMutex
 	sample       bool
+	dtime        time.Time
 }
 
 func (r *rollupBase) init(rd RollupDef) error {
@@ -140,6 +144,7 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.multiDims = make([][]string, 0)
 	r.keyJoin = *keyJoin
 	r.topK = *topK
+	r.dtime = time.Now()
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
@@ -200,4 +205,19 @@ func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 	}
 
 	return strings.Join(keyPts, r.keyJoin)
+}
+
+func (r *Rollup) GetDims() []string {
+	return r.dims
+}
+
+func combo(dims []string, multiDims [][]string) []string {
+	ret := make([]string, len(dims))
+	for i, d := range dims {
+		ret[i] = d
+	}
+	for _, d := range multiDims {
+		ret = append(ret, d[1])
+	}
+	return ret
 }

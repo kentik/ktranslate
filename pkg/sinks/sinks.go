@@ -44,7 +44,7 @@ const (
 	GCloudSink        = "gcloud"
 )
 
-func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry) (SinkImpl, error) {
+func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int) (SinkImpl, error) {
 	switch sink {
 	case StdOutSink:
 		return stdout.NewSink(log, registry)
@@ -53,7 +53,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry) (Si
 	case KafkaSink:
 		return kafka.NewSink(log, registry)
 	case NewRelicSink:
-		return nr.NewSink(log, registry)
+		return nr.NewSink(log, registry, tooBig)
 	case KentikSink:
 		return kentik.NewSink(log, registry)
 	case NetSink:

@@ -92,6 +92,7 @@ type KTranslate struct {
 	resolver       *Resolver
 	auth           *auth.Server
 	apic           *api.KentikApi
+	tooBig         chan int
 }
 
 type CustomMapper struct {

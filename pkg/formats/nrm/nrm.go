@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -117,8 +118,22 @@ func (f *NRMFormat) From(raw []byte) ([]map[string]interface{}, error) {
 }
 
 func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+	ct := time.Now().UnixNano() / 1e+6 // Convert to milliseconds
+	ms := NRMetricSet{
+		Metrics: f.toNRMetricRollup(rolls, ct),
+	}
+
+	if len(ms.Metrics) == 0 {
+		return nil, nil
+	}
+
+	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.
+	if err != nil {
+		return nil, err
+	}
+
 	if !f.doGz {
-		return json.Marshal(rolls)
+		return target, nil
 	}
 
 	serBuf := make([]byte, 0)
@@ -129,12 +144,7 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		return nil, err
 	}
 
-	b, err := json.Marshal(rolls)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = zw.Write(b)
+	_, err = zw.Write(target)
 	if err != nil {
 		return nil, err
 	}
@@ -177,8 +187,30 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
 	return nil
 }
 
-func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
+	ms := make([]NRMetric, 0, len(in))
+	for _, roll := range in {
+		dims := roll.GetDims()
+		attr := map[string]interface{}{
+			"provider": kt.ProviderRouter,
+		}
+		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
+			attr[dims[i]] = pt
+		}
+		ptsm := strings.Split(roll.EventType, ":")
+		ms = append(ms, NRMetric{
+			Name:       "kentik.rollup." + ptsm[1],
+			Type:       NR_GAUGE_TYPE,
+			Value:      int64(roll.Metric),
+			Interval:   roll.Interval.Microseconds(),
+			Timestamp:  ts,
+			Attributes: attr,
+		})
+	}
+	return ms
+}
 
+func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}

@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -117,6 +118,8 @@ func (r *StatsRollup) Export() []Rollup {
 	r.state = map[string][]float64{}
 	r.mux.Unlock()
 
+	ot := r.dtime
+	r.dtime = time.Now()
 	keys := make([]Rollup, len(os))
 	next := 0
 	for k, v := range os {
@@ -130,7 +133,7 @@ func (r *StatsRollup) Export() []Rollup {
 		if err != nil {
 			r.Errorf("Error calculating: %v", err)
 		} else {
-			keys[next] = Rollup{EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin}
+			keys[next] = Rollup{EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)}
 			next++
 		}
 	}

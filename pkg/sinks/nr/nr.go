@@ -36,6 +36,7 @@ type NRSink struct {
 	compression kt.Compression
 	estimate    bool
 	fmtr        *nrm.NRMFormat
+	tooBig      chan int
 }
 
 type NRMetric struct {
@@ -57,7 +58,7 @@ var (
 	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
 )
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*NRSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int) (*NRSink, error) {
 	nr := NRSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nrSink"}, log),
 		NRApiKey: os.Getenv(EnvNrApiKey),
@@ -68,6 +69,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*NRSink, erro
 			DeliveryBytes: go_metrics.GetOrRegisterMeter("delivery_bytes_nr", registry),
 		},
 		estimate: *EstimateSize,
+		tooBig:   tooBig,
 	}
 
 	return &nr, nil
@@ -155,7 +157,11 @@ func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
 			s.Errorf("Cannot get resp body from NR: %v", err)
 			s.metrics.DeliveryErr.Mark(1)
 		} else {
-			if resp.StatusCode >= 400 {
+			if resp.StatusCode == 413 {
+				s.Errorf("Cannot write to NR, body too big. Adjusting max records down")
+				s.metrics.DeliveryErr.Mark(1)
+				s.tooBig <- len(payload)
+			} else if resp.StatusCode >= 400 {
 				s.Errorf("Cannot write to NR, status code %d", resp.StatusCode)
 				s.metrics.DeliveryErr.Mark(1)
 			} else {

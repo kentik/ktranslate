@@ -3,6 +3,7 @@ package rollup
 import (
 	"encoding/binary"
 	"sort"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -96,10 +97,12 @@ func (r *UniqueRollup) Export() []Rollup {
 	r.state = map[string]gohll.HLL{}
 	r.mux.Unlock()
 
+	ot := r.dtime
+	r.dtime = time.Now()
 	keys := make([]Rollup, len(os))
 	next := 0
 	for k, v := range os {
-		keys[next] = Rollup{Dimension: k, Metric: float64(v.EstimateCardinality()), EventType: r.eventType}
+		keys[next] = Rollup{EventType: r.eventType, Dimension: k, Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)}
 		next++
 	}
 
