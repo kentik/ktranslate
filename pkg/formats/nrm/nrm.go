@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -259,6 +260,20 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	for k, _ := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
+		} else {
+			switch tr := attr[k].(type) {
+			case int:
+				// Force this to string.
+				attr[k] = strconv.Itoa(tr)
+			case int32:
+				// Force this to string.
+				attr[k] = strconv.Itoa(int(tr))
+			case int64:
+				// Force this to string.
+				attr[k] = strconv.Itoa(int(tr))
+			default:
+				// noop.
+			}
 		}
 	}
 

@@ -36,7 +36,9 @@ publish: docker
 	docker tag ktranslate:v2 gcr.io/kentik-continuous-delivery/ktranslate:v2
 	docker push gcr.io/kentik-continuous-delivery/ktranslate:v2
 	docker tag ktranslate:v2 kentik/ktranslate:v2
+	docker tag ktranslate:v2 kentik/ktranslate:v1
 	docker push kentik/ktranslate:v2
+	docker push kentik/ktranslate:v1
 
 .PHONY: pub_latest
 pub_latest: publish
