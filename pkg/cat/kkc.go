@@ -177,7 +177,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
 	for _, sinkStr := range strings.Split(sinks, ",") {
 		sink := ss.Sink(sinkStr)
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig)
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, config.Kentik)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}

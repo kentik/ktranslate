@@ -44,7 +44,7 @@ func main() {
 		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
 		subtype        = flag.String("subtype", "", "Load mappings for this device subtype")
-		kentikEmail    = flag.String("email", "", "Kentik email to use for API calls")
+		kentikEmail    = flag.String("kentik_email", "", "Kentik email to use for API calls")
 		apiRoot        = flag.String("api_root", "https://api.kentik.com", "API url prefix. If not set, defaults to https://api.kentik.com")
 		kentikPlan     = flag.Int("kentik_plan", 0, "Kentik plan id to use for creating devices")
 	)

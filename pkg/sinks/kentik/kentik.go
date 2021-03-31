@@ -5,13 +5,12 @@ import (
 	"compress/gzip"
 	"context"
 	"crypto/tls"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
+	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -20,24 +19,17 @@ import (
 )
 
 const (
-	EnvApiToken = "KENTIK_API_TOKEN"
-	CHF_TYPE    = "application/chf"
-)
-
-var (
-	KentikEmail = flag.String("kentik_email", "", "Email to use for sending flow on to Kentik")
-	KentikUrl   = flag.String("kentik_url", "https://flow.kentik.com/chf", "URL to use for sending flow on to Kentik")
+	CHF_TYPE = "application/chf"
 )
 
 type KentikSink struct {
 	logger.ContextL
-	registry    go_metrics.Registry
-	metrics     *KentikMetric
-	KentikEmail string
-	KentikToken string
-	KentikUrl   string
-	client      *http.Client
-	tr          *http.Transport
+	registry  go_metrics.Registry
+	metrics   *KentikMetric
+	KentikUrl string
+	client    *http.Client
+	tr        *http.Transport
+	conf      *kt.KentikConfig
 }
 
 type KentikMetric struct {
@@ -45,9 +37,10 @@ type KentikMetric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*KentikSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.KentikConfig) (*KentikSink, error) {
 	return &KentikSink{
 		registry: registry,
+		conf:     conf,
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kentikSink"}, log),
 		metrics: &KentikMetric{
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_kentik", registry),
@@ -57,13 +50,10 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*KentikSink, 
 }
 
 func (s *KentikSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	s.KentikEmail = *KentikEmail
-	s.KentikUrl = *KentikUrl
-	s.KentikToken = os.Getenv(EnvApiToken)
-
-	if s.KentikEmail == "" || s.KentikUrl == "" || s.KentikToken == "" {
+	if s.conf == nil || s.conf.ApiEmail == "" || s.conf.ApiToken == "" {
 		return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
 	}
+	s.KentikUrl = strings.ReplaceAll(s.conf.ApiRoot, "api.", "flow.") + "/chf"
 
 	s.tr = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
@@ -106,8 +96,8 @@ func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string) {
 		return
 	}
 
-	req.Header.Set("X-CH-Auth-Email", s.KentikEmail)
-	req.Header.Set("X-CH-Auth-API-Token", s.KentikToken)
+	req.Header.Set("X-CH-Auth-Email", s.conf.ApiEmail)
+	req.Header.Set("X-CH-Auth-API-Token", s.conf.ApiEmail)
 	req.Header.Set("Content-Type", CHF_TYPE)
 	req.Header.Set("Content-Encoding", "gzip")
 
