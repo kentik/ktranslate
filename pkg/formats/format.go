@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats/netflow"
 	"github.com/kentik/ktranslate/pkg/formats/nrm"
 	"github.com/kentik/ktranslate/pkg/formats/prom"
+	"github.com/kentik/ktranslate/pkg/formats/splunk"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 )
@@ -31,6 +32,7 @@ const (
 	FORMAT_PROM           = "prometheus"
 	FORMAT_NR             = "new_relic"
 	FORMAT_NRM            = "new_relic_metric"
+	FORMAT_SPLUNK         = "splunk"
 )
 
 func NewFormat(format Format, log logger.Underlying, compression kt.Compression) (Formatter, error) {
@@ -49,6 +51,8 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:
 		return nrm.NewFormat(log, compression)
+	case FORMAT_SPLUNK:
+		return splunk.NewFormat(log, compression)
 	default:
 		return nil, fmt.Errorf("Unknown format %v", format)
 	}
