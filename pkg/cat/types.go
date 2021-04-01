@@ -40,6 +40,8 @@ const (
 // Config configuration parameters used by activate service
 type Config struct {
 	Listen            string
+	SslCertFile       string
+	SslKeyFile        string
 	MappingFile       string
 	Code2Region       string
 	Code2City         string

@@ -47,6 +47,8 @@ func main() {
 		kentikEmail    = flag.String("kentik_email", "", "Kentik email to use for API calls")
 		apiRoot        = flag.String("api_root", "https://api.kentik.com", "API url prefix. If not set, defaults to https://api.kentik.com")
 		kentikPlan     = flag.Int("kentik_plan", 0, "Kentik plan id to use for creating devices")
+		sslCertFile    = flag.String("ssl_cert_file", "", "SSL Cert file to use for serving HTTPS traffic")
+		sslKeyFile     = flag.String("ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
@@ -61,6 +63,8 @@ func main() {
 
 	conf := cat.Config{
 		Listen:            *listenIPPort,
+		SslCertFile:       *sslCertFile,
+		SslKeyFile:        *sslKeyFile,
 		MappingFile:       *mappingFile,
 		Code2Region:       *region,
 		Code2City:         *city,

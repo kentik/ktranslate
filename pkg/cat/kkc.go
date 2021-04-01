@@ -668,9 +668,16 @@ func (kc *KTranslate) getRouter() http.Handler {
 }
 
 func (kc *KTranslate) listenHTTP() {
-	kc.log.Infof("Setting up HTTP system on %s%s", kc.config.Listen, HttpAlertInboundPath)
 	server := &http.Server{Addr: kc.config.Listen, Handler: kc.getRouter()}
-	err := server.ListenAndServe()
+	var err error
+	if kc.config.SslCertFile != "" {
+		kc.log.Infof("Setting up HTTPS system on %s%s", kc.config.Listen, HttpAlertInboundPath)
+		err = server.ListenAndServeTLS(kc.config.SslCertFile, kc.config.SslKeyFile)
+	} else {
+		kc.log.Infof("Setting up HTTP system on %s%s", kc.config.Listen, HttpAlertInboundPath)
+		err = server.ListenAndServe()
+	}
+
 	// err is always non-nil -- the http server stopped.
 	if err != http.ErrServerClosed {
 		kc.log.Errorf("While bringing up HTTP system on %s -- %v", kc.config.Listen, err)
