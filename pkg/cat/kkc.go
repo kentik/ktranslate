@@ -288,10 +288,59 @@ func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 	serBuf := make([]byte, 0)
 	select {
 	case jflow := <-kc.jchfChans[0]: // non blocking select on this chan.
-		err := json.Unmarshal(raw, jflow)
+		var base map[string]interface{}
+		err := json.Unmarshal(raw, &base)
 		if err != nil {
 			return err
 		} else {
+			jflow.CustomStr = make(map[string]string)
+			jflow.CustomInt = make(map[string]int32)
+			jflow.CustomBigInt = make(map[string]int64)
+
+			// map any fields found into the jflow obj.
+			for k, v := range base {
+				switch tv := v.(type) {
+				case string:
+					jflow.CustomStr[k] = tv
+				case int:
+					jflow.CustomBigInt[k] = int64(tv)
+				case uint32:
+					jflow.CustomBigInt[k] = int64(tv)
+				case uint64:
+					jflow.CustomBigInt[k] = int64(tv)
+				case int64:
+					jflow.CustomBigInt[k] = int64(tv)
+				case float64:
+					jflow.CustomBigInt[k] = int64(tv)
+				case int32:
+					jflow.CustomInt[k] = tv
+				case map[string]interface{}:
+					for kk, sv := range tv {
+						switch it := sv.(type) {
+						case string:
+							jflow.CustomStr[kk] = it
+						case float64:
+							jflow.CustomBigInt[k] = int64(it)
+						}
+					}
+				case []interface{}:
+					for _, sv := range tv {
+						switch it := sv.(type) {
+						case map[string]interface{}:
+							for ik, iv := range it {
+								switch iit := iv.(type) {
+								case string:
+									jflow.CustomStr[ik] = iit
+								case float64:
+									jflow.CustomBigInt[ik] = int64(iit)
+								}
+							}
+						}
+					}
+				default:
+					// noop
+				}
+			}
 			res, err := kc.format.To([]*kt.JCHF{jflow}, serBuf)
 			jflow.Reset()
 			kc.jchfChans[0] <- jflow
@@ -310,6 +359,10 @@ func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 // Gets called from a goroutine-per-request
 func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	var err error
+
+	if r.Method != http.MethodPost {
+		return
+	}
 
 	defer func() {
 		if err != nil {
@@ -339,10 +392,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	vals := r.URL.Query()
 	senderId := vals.Get(HttpSenderID)
 	cidBase := vals.Get(HttpCompanyID)
-	cid, err := strconv.Atoi(cidBase)
-	if err != nil {
-		return
-	}
+	cid, _ := strconv.Atoi(cidBase)
 
 	// Allocate a buffer for the expected size of the incoming data.
 	var bodyBufferBytes []byte
