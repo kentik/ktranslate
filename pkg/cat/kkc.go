@@ -320,27 +320,44 @@ func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 					for kk, sv := range tv {
 						switch it := sv.(type) {
 						case string:
-							jflow.CustomStr[kk] = it
+							jflow.CustomStr[k+"_"+kk] = it
 						case float64:
-							jflow.CustomBigInt[k] = int64(it)
+							jflow.CustomBigInt[k+"_"+kk] = int64(it)
+						case map[string]interface{}:
+							for ik, iv := range it {
+								key := fmt.Sprintf("%s_%s_%s", k, kk, ik)
+								switch iit := iv.(type) {
+								case string:
+									jflow.CustomStr[key] = iit
+								case float64:
+									jflow.CustomBigInt[key] = int64(iit)
+								default:
+									kc.log.Warnf("Unhandled json type 1: %s", sv)
+								}
+							}
+						default:
+							kc.log.Warnf("Unhandled json type 2: %s", tv)
 						}
 					}
 				case []interface{}:
-					for _, sv := range tv {
+					for i, sv := range tv {
 						switch it := sv.(type) {
 						case map[string]interface{}:
 							for ik, iv := range it {
+								key := fmt.Sprintf("%s_%d_%s", k, i, ik)
 								switch iit := iv.(type) {
 								case string:
-									jflow.CustomStr[ik] = iit
+									jflow.CustomStr[key] = iit
 								case float64:
-									jflow.CustomBigInt[ik] = int64(iit)
+									jflow.CustomBigInt[key] = int64(iit)
+								default:
+									kc.log.Warnf("Unhandled json type 3: %s", iv)
 								}
 							}
 						}
 					}
 				default:
-					// noop
+					kc.log.Warnf("Unhandled json type 4: %s", v)
 				}
 			}
 			res, err := kc.format.To([]*kt.JCHF{jflow}, serBuf)
