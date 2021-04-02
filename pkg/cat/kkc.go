@@ -296,6 +296,8 @@ func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 			jflow.CustomStr = make(map[string]string)
 			jflow.CustomInt = make(map[string]int32)
 			jflow.CustomBigInt = make(map[string]int64)
+			jflow.Provider = kt.ProviderAlert
+			jflow.EventType = kt.KENTIK_EVENT_JSON
 
 			// map any fields found into the jflow obj.
 			for k, v := range base {

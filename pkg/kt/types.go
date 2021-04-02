@@ -22,6 +22,7 @@ const (
 	KENTIK_EVENT_SNMP_INT_METRIC = "KSnmpInterfaceMetric"
 	KENTIK_EVENT_SNMP_METADATA   = "KSnmpInterfaceMetadata"
 	KENTIK_EVENT_SNMP_TRAP       = "KSnmpTrap"
+	KENTIK_EVENT_JSON            = "KJson"
 
 	KentikAPIToken   = "KENTIK_API_TOKEN"
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
@@ -39,6 +40,7 @@ const (
 	ProviderPDU               = "kentik-pdu"
 	ProviderIOT               = "kentik-iot"
 	ProviderHost              = "kentik-host"
+	ProviderAlert             = "kentik-alert"
 )
 
 type IntId uint64
