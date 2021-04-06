@@ -129,8 +129,11 @@ func (f *SplunkFormat) toSplunkMetric(in *kt.JCHF, ts int64) []SplunkMetric {
 				delete(out, k)
 			}
 		case int64:
-			if tv == 0 || k == "timestamp" {
+			if tv == 0 {
 				delete(out, k)
+			} else if k == "timestamp" {
+				out["timestamp"] = time.Unix(tv, 0).Format(time.RFC3339)
+
 			}
 		}
 	}
