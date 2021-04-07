@@ -369,10 +369,15 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 				if t := kc.apic.GetTest(kt.TestId(dst.CustomBigInt[udr.ColumnName])); t != nil {
 					dst.CustomStr["test_name"] = t.GetName()
 					dst.CustomStr["test_type"] = t.GetType()
+				} else {
+					dst.CustomStr["test_name"] = ""
+					dst.CustomStr["test_type"] = ""
 				}
 			case "agent_id":
 				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {
 					dst.CustomStr["agent_name"] = a.GetAlias()
+				} else {
+					dst.CustomStr["agent_name"] = ""
 				}
 			}
 		}

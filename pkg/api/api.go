@@ -274,7 +274,8 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 
 	synTests := map[kt.TestId]*synthetics.Test{}
 	for _, test := range r.GetTests() {
-		synTests[kt.NewTestId(test.GetId())] = test
+		localt := test
+		synTests[kt.NewTestId(test.GetId())] = localt
 	}
 
 	la := &synthetics.ListAgentsRequest{}
@@ -285,7 +286,8 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 
 	synAgents := map[kt.AgentId]*synthetics.Agent{}
 	for _, agent := range ra.GetAgents() {
-		synAgents[kt.NewAgentId(agent.GetId())] = agent
+		locala := agent
+		synAgents[kt.NewAgentId(agent.GetId())] = locala
 	}
 
 	api.synAgents = synAgents
