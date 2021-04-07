@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -31,7 +32,15 @@ const (
 	API_PASSWORD_HEADER = "X-CH-Auth-API-Token"
 )
 
+var (
+	deviceFile = flag.String("api_device_file", "", "File to sideload devices without hitting API")
+)
+
 func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte, error) {
+	if *deviceFile != "" {
+		api.Infof("Reading devices from local file: %s", *deviceFile)
+		return os.ReadFile(*deviceFile)
+	}
 
 	// Try to make a request, parse the result as json.
 	req, err := http.NewRequestWithContext(ctx, "GET", apiUrl, nil)

@@ -44,6 +44,7 @@ func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		msgsNew := make([]map[string]interface{}, len(msgs))
 		for i, msg := range msgs {
 			msgsNew[i] = msg.Flatten()
+			strip(msgsNew[i])
 		}
 		t, err := json.Marshal(msgsNew)
 		if err != nil {
@@ -137,4 +138,23 @@ func (f *JsonFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func strip(in map[string]interface{}) {
+	for k, v := range in {
+		switch tv := v.(type) {
+		case string:
+			if tv == "" {
+				delete(in, k)
+			}
+		case int32:
+			if tv == 0 {
+				delete(in, k)
+			}
+		case int64:
+			if tv == 0 {
+				delete(in, k)
+			}
+		}
+	}
 }
