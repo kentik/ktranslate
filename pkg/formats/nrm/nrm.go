@@ -193,14 +193,14 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	for _, roll := range in {
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
-			"provider": kt.ProviderRouter,
+			"provider":     kt.ProviderRouter,
+			"interval_sec": roll.Interval.Seconds(),
 		}
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
 			attr[dims[i]] = pt
 		}
-		ptsm := strings.Split(roll.EventType, ":")
 		ms = append(ms, NRMetric{
-			Name:       "kentik.rollup." + ptsm[1],
+			Name:       "kentik.rollup." + roll.Name,
 			Type:       NR_GAUGE_TYPE,
 			Value:      int64(roll.Metric),
 			Interval:   roll.Interval.Microseconds(),

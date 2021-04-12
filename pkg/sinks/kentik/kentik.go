@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -22,6 +23,10 @@ const (
 	CHF_TYPE = "application/chf"
 )
 
+var (
+	relayUrl = flag.String("kentik_relay_url", "", "If set, override the kentik api url to send flow over here.")
+)
+
 type KentikSink struct {
 	logger.ContextL
 	registry  go_metrics.Registry
@@ -30,6 +35,7 @@ type KentikSink struct {
 	client    *http.Client
 	tr        *http.Transport
 	conf      *kt.KentikConfig
+	isKentik  bool
 }
 
 type KentikMetric struct {
@@ -54,13 +60,18 @@ func (s *KentikSink) Init(ctx context.Context, format formats.Format, compressio
 		return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
 	}
 	s.KentikUrl = strings.ReplaceAll(s.conf.ApiRoot, "api.", "flow.") + "/chf"
+	if *relayUrl != "" { // If this is set, override and go directly here instead.
+		s.KentikUrl = *relayUrl
+	}
+
+	s.isKentik = strings.Contains(strings.ToLower(s.KentikUrl), "kentik.com") // Make sure we can't feed data back into kentik in a loop.
 
 	s.tr = &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	s.client = &http.Client{Transport: s.tr}
 
-	s.Infof("Exporting to Kentik at %s", s.KentikUrl)
+	s.Infof("Exporting to Kentik at %s (isKentik=%v)", s.KentikUrl, s.isKentik)
 
 	return nil
 }
@@ -78,7 +89,11 @@ func (s *KentikSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string) {
+func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string, offset int) {
+	if s.isKentik && offset == 0 { // Cut short any flow which is coming from kentik going back to kentik.
+		return
+	}
+
 	vals := url.Values{}
 	vals.Set("sid", strconv.Itoa(cid))
 	vals.Set("sender_id", senderId)

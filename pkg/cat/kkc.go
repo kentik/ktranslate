@@ -452,11 +452,11 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	if senderId != "" && len(evt) > MSG_KEY_PREFIX && // Direct flow without enrichment.
 		(evt[0] == 0x00 && evt[1] == 0x00 && evt[2] == 0x00 && evt[3] == 0x00 && evt[4] == 0x00) { // Double check with this
 		offset = MSG_KEY_PREFIX
+	}
 
-		// If we have a kentik sink, send on here. Don't let flow from kentik get looped back into kentik.
-		if kc.kentik != nil {
-			go kc.kentik.SendKentik(evt, cid, senderId)
-		}
+	// If we have a kentik sink, send on here.
+	if kc.kentik != nil {
+		go kc.kentik.SendKentik(evt, cid, senderId, offset)
 	}
 
 	// decompress and read (capnproto "packed" representation)
@@ -592,8 +592,12 @@ func (kc *KTranslate) monitorSnmp(ctx context.Context, seri func([]*kt.JCHF, []b
 		case msgs := <-kc.snmpChan:
 			// If we have any rollups defined, send here instead of directly to the output format.
 			if kc.doRollups {
+				rv := make([]map[string]interface{}, len(msgs))
+				for i, msg := range msgs {
+					rv[i] = msg.ToMap()
+				}
 				for _, r := range kc.rollups {
-					r.Add(msgs)
+					r.Add(rv)
 				}
 			}
 
@@ -635,8 +639,12 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 
 		// If we have any rollups defined, send here instead of directly to the output format.
 		if kc.doRollups {
+			rv := make([]map[string]interface{}, len(msgs))
+			for i, msg := range msgs {
+				rv[i] = msg.ToMap()
+			}
 			for _, r := range kc.rollups {
-				r.Add(msgs)
+				r.Add(rv)
 			}
 		}
 

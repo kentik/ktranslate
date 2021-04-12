@@ -8,8 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kentik/ktranslate/pkg/kt"
-
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 )
 
@@ -34,7 +32,7 @@ var (
 )
 
 type Roller interface {
-	Add([]*kt.JCHF)
+	Add([]map[string]interface{})
 	Export() []Rollup
 }
 
@@ -45,6 +43,7 @@ type Rollup struct {
 	KeyJoin   string        `json:"keyJoin"`
 	Interval  time.Duration `json:"interval"`
 	dims      []string
+	Name      string
 }
 
 type Method string
@@ -54,10 +53,11 @@ type RollupDef struct {
 	Method     Method
 	Metrics    []string
 	Dimensions []string
+	Name       string
 }
 
 func (r *RollupDef) String() string {
-	return fmt.Sprintf("Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.Method, r.Sample, r.Metrics, r.Dimensions)
+	return fmt.Sprintf("Name: %s, Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.Name, r.Method, r.Sample, r.Metrics, r.Dimensions)
 }
 
 type RollupFlag []RollupDef
@@ -73,7 +73,7 @@ func (rf *RollupFlag) String() string {
 func (i *RollupFlag) Set(value string) error {
 	pts := strings.Split(value, ",")
 	if len(pts) < 3 {
-		return fmt.Errorf("Rollup flag is defined by type, metric, dimension 1, dimension 2, ..., dimension n")
+		return fmt.Errorf("Rollup flag is defined by type, name, metric, dimension 1, dimension 2, ..., dimension n")
 	}
 	ptn := make([]string, len(pts))
 	for i, p := range pts {
@@ -82,15 +82,17 @@ func (i *RollupFlag) Set(value string) error {
 	if len(ptn[0]) > 2 && ptn[0][0:2] == "s_" {
 		*i = append(*i, RollupDef{
 			Method:     Method(ptn[0][2:]),
-			Metrics:    strings.Split(ptn[1], "+"),
-			Dimensions: ptn[2:],
+			Name:       ptn[1],
+			Metrics:    strings.Split(ptn[2], "+"),
+			Dimensions: ptn[3:],
 			Sample:     true,
 		})
 	} else {
 		*i = append(*i, RollupDef{
 			Method:     Method(ptn[0]),
-			Metrics:    strings.Split(ptn[1], "+"),
-			Dimensions: ptn[2:],
+			Name:       ptn[1],
+			Metrics:    strings.Split(ptn[2], "+"),
+			Dimensions: ptn[3:],
 		})
 	}
 	return nil
@@ -135,6 +137,7 @@ type rollupBase struct {
 	mux          sync.RWMutex
 	sample       bool
 	dtime        time.Time
+	name         string
 }
 
 func (r *rollupBase) init(rd RollupDef) error {
@@ -145,6 +148,7 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.keyJoin = *keyJoin
 	r.topK = *topK
 	r.dtime = time.Now()
+	r.name = rd.Name
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 

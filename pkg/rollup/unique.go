@@ -5,8 +5,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/kentik/ktranslate/pkg/kt"
-
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/dchest/siphash"
@@ -40,10 +38,9 @@ func newUniqueRollup(log logger.Underlying, rd RollupDef) (*UniqueRollup, error)
 	return r, nil
 }
 
-func (r *UniqueRollup) Add(in []*kt.JCHF) {
+func (r *UniqueRollup) Add(in []map[string]interface{}) {
 	toAdd := map[string]gohll.HLL{}
-	for _, val := range in {
-		mapr := val.ToMap()
+	for _, mapr := range in {
 		key := r.getKey(mapr)
 		if _, ok := toAdd[key]; !ok {
 			toAdd[key] = make(gohll.HLL, hllSizeForErrRateHigh)
@@ -102,7 +99,7 @@ func (r *UniqueRollup) Export() []Rollup {
 	keys := make([]Rollup, len(os))
 	next := 0
 	for k, v := range os {
-		keys[next] = Rollup{EventType: r.eventType, Dimension: k, Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)}
+		keys[next] = Rollup{Name: r.name, EventType: r.eventType, Dimension: k, Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)}
 		next++
 	}
 

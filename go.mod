@@ -8,6 +8,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/bmatsuo/lmdb-go v1.8.0
+	github.com/cornelk/hashmap v1.0.1 // indirect
 	github.com/dchest/siphash v1.2.2
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect
 	github.com/elliotchance/orderedmap v1.4.0
@@ -34,6 +35,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
+	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa
 	google.golang.org/grpc v1.36.0
 	gopkg.in/yaml.v2 v2.4.0
