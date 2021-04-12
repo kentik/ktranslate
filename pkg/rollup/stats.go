@@ -24,7 +24,7 @@ type StatsRollup struct {
 	statr2    func(stats.Float64Data, float64) (float64, error)
 	arg2      float64
 	isSum     bool
-	kvs       chan map[string]float64
+	kvs       chan []map[string]uint64
 	exportKvs chan chan []Rollup
 }
 
@@ -38,7 +38,7 @@ func newStatsRollup(log logger.Underlying, rd RollupDef) (*StatsRollup, error) {
 	case "sum":
 		r.statr = stats.Sum
 		r.isSum = true
-		r.kvs = make(chan map[string]float64, CHAN_SLACK)
+		r.kvs = make(chan []map[string]uint64, CHAN_SLACK)
 		r.exportKvs = make(chan chan []Rollup)
 		go r.sumKvs()
 	case "min":
@@ -80,7 +80,11 @@ func newStatsRollup(log logger.Underlying, rd RollupDef) (*StatsRollup, error) {
 }
 
 func (r *StatsRollup) addSum(in []map[string]interface{}) {
-	ks := map[string]float64{}
+	sum := map[string]uint64{}
+	count := map[string]uint64{}
+	min := map[string]uint64{}
+	max := map[string]uint64{}
+
 	for _, mapr := range in {
 		key := r.getKey(mapr)
 		sr := mapr["sample_rate"].(int64)
@@ -91,7 +95,17 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 						if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
 							m *= sr
 						}
-						ks[key] += float64(m)
+						value := uint64(m)
+						sum[key] += value
+						count[key]++
+						if _, ok := min[key]; !ok {
+							min[key] = value
+						} else if min[key] > value {
+							min[key] = value
+						}
+						if max[key] < value {
+							max[key] = value
+						}
 					}
 				}
 			}
@@ -100,17 +114,58 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 
 	// Dump into our hash map here
 	select {
-	case r.kvs <- ks:
+	case r.kvs <- []map[string]uint64{sum, count, min, max}:
 	default:
 		r.Warnf("kvs chan full")
 	}
 }
 
 func (r *StatsRollup) Add(in []map[string]interface{}) {
-	if r.isSum {
+	if r.isSum { // this is a fast path for pure additive rollups.
 		r.addSum(in)
 		return
 	}
+
+	// And this is the slow path for more fine grained rollups.
+	toAdd := map[string][]float64{}
+	for i, mapr := range in {
+		key := r.getKey(mapr)
+		sr := mapr["sample_rate"].(int64)
+		if _, ok := toAdd[key]; !ok {
+			toAdd[key] = make([]float64, len(in))
+		}
+
+		for _, metric := range r.metrics {
+			if mm, ok := mapr[metric]; ok {
+				if m, ok := mm.(int64); ok {
+					toAdd[key][i] = float64(m)
+				}
+			}
+		}
+		for _, m := range r.multiMetrics { // Now handle the 2 level deep metrics
+			if m1, ok := mapr[m[0]]; ok {
+				switch mm := m1.(type) {
+				case map[string]int32:
+					toAdd[key][i] = float64(mm[m[1]])
+				case map[string]int64:
+					toAdd[key][i] = float64(mm[m[1]])
+				}
+			}
+		}
+		if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
+			toAdd[key][i] *= float64(sr)
+		}
+	}
+
+	// Now need a lock for actually updating the current rollup state.
+	r.mux.Lock()
+	for k, v := range toAdd {
+		if _, ok := r.state[k]; !ok {
+			r.state[k] = []float64{}
+		}
+		r.state[k] = append(r.state[k], v...)
+	}
+	r.mux.Unlock()
 }
 
 func (r *StatsRollup) Export() []Rollup {
@@ -154,33 +209,61 @@ func (r *StatsRollup) Export() []Rollup {
 }
 
 func (r *StatsRollup) sumKvs() {
-	vs := map[string]float64{}
+	sum := map[string]uint64{}
+	count := map[string]uint64{}
+	min := map[string]uint64{}
+	max := map[string]uint64{}
+
 	for {
 		select {
-		case itm := <-r.kvs: // Just add to our map
-			for k, v := range itm {
-				vs[k] += v
+		case itm := <-r.kvs: // Just add to our map // 	case r.kvs <- []map[string]int64{sum, count, min, max}:
+			for k, v := range itm[0] {
+				sum[k] += v
+			}
+			for k, v := range itm[1] {
+				count[k] += v
+			}
+			for k, v := range itm[2] {
+				if _, ok := min[k]; !ok {
+					min[k] = v
+				} else if min[k] > v {
+					min[k] = v
+				}
+			}
+			for k, v := range itm[3] {
+				if max[k] < v {
+					max[k] = v
+				}
 			}
 		case rc := <-r.exportKvs: // Return the top results
-			go r.exportSum(vs, rc)
-			vs = map[string]float64{}
+			go r.exportSum(sum, count, min, max, rc)
+			sum = map[string]uint64{}
+			count = map[string]uint64{}
+			min = map[string]uint64{}
+			max = map[string]uint64{}
 		}
 	}
 }
 
-func (r *StatsRollup) exportSum(vs map[string]float64, rc chan []Rollup) {
-	if len(vs) == 0 {
+func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, min map[string]uint64, max map[string]uint64, rc chan []Rollup) {
+	if len(sum) == 0 {
 		rc <- nil
 		return
 	}
 
 	ot := r.dtime
 	r.dtime = time.Now()
-	keys := make([]Rollup, 0, len(vs))
-	total := 0.0
-	for k, v := range vs {
-		keys = append(keys, Rollup{Name: r.name, EventType: r.eventType, Dimension: k, Metric: v, KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)})
+	keys := make([]Rollup, 0, len(sum))
+	total := uint64(0)
+	totalc := uint64(0)
+	for k, v := range sum {
+		keys = append(keys, Rollup{
+			Name: r.name, EventType: r.eventType, Dimension: k,
+			Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot),
+			Count: count[k], Min: min[k], Max: max[k],
+		})
 		total += v
+		totalc++
 	}
 
 	sort.Sort(byValue(keys))
@@ -191,7 +274,11 @@ func (r *StatsRollup) exportSum(vs map[string]float64, rc chan []Rollup) {
 		for i, _ := range dims {
 			totals[i] = "total"
 		}
-		top = append(top, Rollup{Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin), Metric: total, KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot)})
+		top = append(top, Rollup{
+			Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
+			Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
+			Min: 0, Max: 0, Count: totalc,
+		})
 		rc <- top
 		return
 	}

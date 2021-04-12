@@ -43,7 +43,7 @@ type NRMetricSet struct {
 type NRMetric struct {
 	Name       string                 `json:"name"`
 	Type       string                 `json:"type"`
-	Value      interface{}            `json:"value"`
+	Value      interface{}            `json:"value,omitempty"`
 	Timestamp  int64                  `json:"timestamp"`
 	Interval   int64                  `json:"interval.ms"`
 	Attributes map[string]interface{} `json:"attributes"`
@@ -196,17 +196,28 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 			"provider":     kt.ProviderRouter,
 			"interval_sec": roll.Interval.Seconds(),
 		}
+		bad := false
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
 			attr[dims[i]] = pt
+			if pt == "0" || pt == "" {
+				bad = true
+			}
 		}
-		ms = append(ms, NRMetric{
-			Name:       "kentik.rollup." + roll.Name,
-			Type:       NR_GAUGE_TYPE,
-			Value:      int64(roll.Metric),
-			Interval:   roll.Interval.Microseconds(),
-			Timestamp:  ts,
-			Attributes: attr,
-		})
+		if !bad {
+			ms = append(ms, NRMetric{
+				Name: "kentik.rollup." + roll.Name,
+				Type: NR_SUMMARY_TYPE,
+				Value: map[string]uint64{
+					"count": roll.Count,
+					"sum":   uint64(roll.Metric),
+					"min":   roll.Min,
+					"max":   roll.Max,
+				},
+				Interval:   roll.Interval.Microseconds(),
+				Timestamp:  ts,
+				Attributes: attr,
+			})
+		}
 	}
 	return ms
 }

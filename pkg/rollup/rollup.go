@@ -44,6 +44,9 @@ type Rollup struct {
 	Interval  time.Duration `json:"interval"`
 	dims      []string
 	Name      string
+	Count     uint64
+	Min       uint64
+	Max       uint64
 }
 
 type Method string
