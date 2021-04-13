@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -105,7 +106,79 @@ func (f *SplunkFormat) From(raw []byte) ([]map[string]interface{}, error) {
 }
 
 func (f *SplunkFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
-	return nil, nil // Not supported for now.
+	ct := time.Now().Unix()
+	ms := f.toSplunkMetricRollup(rolls, ct)
+
+	if len(ms) == 0 {
+		return nil, nil
+	}
+
+	var buf bytes.Buffer
+	for _, m := range ms {
+		target, err := json.Marshal(m)
+		if err != nil {
+			return nil, err
+		}
+		buf.Write(target)
+		buf.WriteString("\n") // Because splunk
+	}
+
+	if !f.doGz {
+		return buf.Bytes(), nil
+	}
+
+	var buf2 bytes.Buffer
+	zw, err := gzip.NewWriterLevel(&buf2, gzip.DefaultCompression)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = zw.Write(buf.Bytes())
+	if err != nil {
+		return nil, err
+	}
+
+	err = zw.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	return buf2.Bytes(), nil
+}
+
+func (f *SplunkFormat) toSplunkMetricRollup(in []rollup.Rollup, ts int64) []SplunkMetric {
+	ms := make([]SplunkMetric, 0, len(in))
+	for _, roll := range in {
+		dims := roll.GetDims()
+		attr := map[string]interface{}{
+			"count":    roll.Count,
+			"sum":      uint64(roll.Metric),
+			"min":      roll.Min,
+			"max":      roll.Max,
+			"interval": roll.Interval.Microseconds(),
+			"name":     "kentik.rollup." + roll.Name,
+		}
+		host := ""
+		bad := false
+		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
+			attr[dims[i]] = pt
+			if pt == "0" || pt == "" {
+				bad = true
+			}
+			if dims[i] == "device_name" {
+				host = pt
+			}
+		}
+		if !bad {
+			ms = append(ms, SplunkMetric{
+				Host:       host,
+				SourceType: string(kt.ProviderRouter),
+				Timestamp:  ts,
+				Event:      attr,
+			})
+		}
+	}
+	return ms
 }
 
 func (f *SplunkFormat) toSplunkMetric(in *kt.JCHF, ts int64) []SplunkMetric {
