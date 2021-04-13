@@ -11,6 +11,7 @@ type Device struct {
 	Subtype     string   `json:"device_subtype"`
 	Description string   `json:"device_description"`
 	IP          net.IP   `json:"ip"`
+	SendingIps  []net.IP `json:"sending_ips"`
 	SampleRate  int      `json:"device_sample_rate,string"`
 	BgpType     string   `json:"device_bgp_type"`
 	Plan        Plan     `json:"plan"`
@@ -18,6 +19,7 @@ type Device struct {
 	MaxFlowRate int      `json:"max_flow_rate"`
 	CompanyID   int      `json:"company_id,string"`
 	Customs     []Column `json:"custom_column_data,omitempty"`
+	CustomStr   string   `json:"custom_columns"`
 }
 
 type Plan struct {

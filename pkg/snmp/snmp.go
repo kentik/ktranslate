@@ -66,6 +66,9 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			// Default provider to something we can work with.
 			device.Provider = kt.ProviderRouter
 		}
+		if device.FlowOnly {
+			continue
+		}
 
 		log.Infof("Client SNMP: Running SNMP for %s on %s (type=%s)", device.DeviceName, device.DeviceIP, device.Provider)
 		metrics.Mux.Lock()
@@ -212,4 +215,9 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 	}
 
 	return &ms, nil
+}
+
+// Public wrapper for calling this other places.
+func ParseConfig(file string) (*kt.SnmpConfig, error) {
+	return parseConfig(file)
 }

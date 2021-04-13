@@ -84,6 +84,7 @@ type SnmpDeviceConfig struct {
 	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
 	Debug                  bool              `yaml:"debug"`
 	RateMultiplier         int64             `yaml:"rate_multiplier"`
+	SampleRate             int64             `yaml:"sample_rate"`
 	Port                   uint16            `yaml:"port"`
 	OID                    string            `yaml:"oid"`
 	Description            string            `yaml:"description"`
@@ -92,6 +93,7 @@ type SnmpDeviceConfig struct {
 	DeviceOids             map[string]*Mib   `yaml:"device_oids"`
 	MibProfile             string            `yaml:"mib_profile"`
 	Provider               Provider          `yaml:"provider"`
+	FlowOnly               bool              `yaml:"flow_only"`
 }
 
 type SnmpTrapConfig struct {
