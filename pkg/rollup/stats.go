@@ -263,26 +263,43 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 			Count: count[k], Min: min[k], Max: max[k],
 		})
 		total += v
-		totalc++
+		totalc += count[k]
 	}
 
 	sort.Sort(byValue(keys))
 	if len(keys) > r.topK {
-		top := keys[0:r.topK]
-		dims := combo(r.dims, r.multiDims)
-		totals := make([]string, len(dims))
-		for i, _ := range dims {
-			totals[i] = "total"
-		}
-		top = append(top, Rollup{
-			Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
-			Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
-			Min: 0, Max: 0, Count: totalc,
-		})
-		rc <- top
-		return
+		r.getTopkSum(keys, total, totalc, ot, rc)
+	} else {
+		rc <- keys
 	}
 
-	rc <- keys
 	return
+}
+
+func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot time.Time, rc chan []Rollup) {
+	top := make([]Rollup, 0, len(keys))
+	seen := map[string]int{}
+
+	for _, roll := range keys {
+		pts := strings.SplitN(roll.Dimension, r.keyJoin, 2)
+		if seen[pts[0]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
+			top = append(top, roll)
+		}
+		seen[pts[0]]++
+	}
+
+	// Fill in the total value here.
+	dims := combo(r.dims, r.multiDims)
+	totals := make([]string, len(dims))
+	for i, _ := range dims {
+		totals[i] = "total"
+	}
+	top = append(top, Rollup{
+		Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
+		Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
+		Min: 0, Max: 0, Count: totalc,
+	})
+
+	// Return out filled out set.
+	rc <- top
 }

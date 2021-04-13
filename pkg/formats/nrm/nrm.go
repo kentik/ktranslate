@@ -193,8 +193,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	for _, roll := range in {
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
-			"provider":     kt.ProviderRouter,
-			"interval_sec": roll.Interval.Seconds(),
+			"provider": kt.ProviderRouter,
 		}
 		bad := false
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
