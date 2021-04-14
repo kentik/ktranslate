@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 const (
@@ -47,6 +48,7 @@ type Rollup struct {
 	Count     uint64
 	Min       uint64
 	Max       uint64
+	Provider  kt.Provider
 }
 
 type Method string

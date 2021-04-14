@@ -59,7 +59,7 @@ func NewCustomMapper(file string) (*CustomMapper, error) {
 	return &m, nil
 }
 
-func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
+func NewUDRMapper(file string) (*UDRMapper, int, error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil, 0, err
@@ -68,13 +68,8 @@ func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 	scanner := bufio.NewScanner(f)
 
 	um := UDRMapper{
-		UDRs:    make(map[int32]map[string]*UDR),
-		Subtype: nil,
-	}
-
-	// Only load this in if we're just looking at 1 subtype of data.
-	if subtype != "" {
-		um.Subtype = make(map[string]*UDR)
+		UDRs:     make(map[int32]map[string]*UDR),
+		Subtypes: make(map[string]map[string]*UDR),
 	}
 
 	found := 0
@@ -106,9 +101,10 @@ func NewUDRMapper(file string, subtype string) (*UDRMapper, int, error) {
 			}
 			um.UDRs[app][fixupName(pts[1])] = &udr
 		} else { // Support for defined subtype here.
-			if subtype != "" && subtype == pts[3] {
-				um.Subtype[fixupName(pts[1])] = &udr
+			if _, ok := um.Subtypes[pts[3]]; !ok {
+				um.Subtypes[pts[3]] = make(map[string]*UDR)
 			}
+			um.Subtypes[pts[3]][fixupName(pts[1])] = &udr
 		}
 		found++
 	}

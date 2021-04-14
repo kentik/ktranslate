@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/kt"
 
 	"github.com/montanaflynn/stats"
 )
@@ -24,8 +25,16 @@ type StatsRollup struct {
 	statr2    func(stats.Float64Data, float64) (float64, error)
 	arg2      float64
 	isSum     bool
-	kvs       chan []map[string]uint64
+	kvs       chan *sumset
 	exportKvs chan chan []Rollup
+}
+
+type sumset struct {
+	sum   map[string]uint64
+	count map[string]uint64
+	min   map[string]uint64
+	max   map[string]uint64
+	prov  map[string]kt.Provider
 }
 
 func newStatsRollup(log logger.Underlying, rd RollupDef) (*StatsRollup, error) {
@@ -38,7 +47,7 @@ func newStatsRollup(log logger.Underlying, rd RollupDef) (*StatsRollup, error) {
 	case "sum":
 		r.statr = stats.Sum
 		r.isSum = true
-		r.kvs = make(chan []map[string]uint64, CHAN_SLACK)
+		r.kvs = make(chan *sumset, CHAN_SLACK)
 		r.exportKvs = make(chan chan []Rollup)
 		go r.sumKvs()
 	case "min":
@@ -84,6 +93,7 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 	count := map[string]uint64{}
 	min := map[string]uint64{}
 	max := map[string]uint64{}
+	prov := map[string]kt.Provider{}
 
 	for _, mapr := range in {
 		key := r.getKey(mapr)
@@ -106,6 +116,7 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 						if max[key] < value {
 							max[key] = value
 						}
+						prov[key] = mapr["provider"].(kt.Provider)
 					}
 				}
 			}
@@ -114,7 +125,7 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 
 	// Dump into our hash map here
 	select {
-	case r.kvs <- []map[string]uint64{sum, count, min, max}:
+	case r.kvs <- &sumset{sum: sum, count: count, min: min, max: max, prov: prov}:
 	default:
 		r.Warnf("kvs chan full")
 	}
@@ -213,39 +224,44 @@ func (r *StatsRollup) sumKvs() {
 	count := map[string]uint64{}
 	min := map[string]uint64{}
 	max := map[string]uint64{}
+	prov := map[string]kt.Provider{}
 
 	for {
 		select {
 		case itm := <-r.kvs: // Just add to our map // 	case r.kvs <- []map[string]int64{sum, count, min, max}:
-			for k, v := range itm[0] {
+			for k, v := range itm.sum {
 				sum[k] += v
 			}
-			for k, v := range itm[1] {
+			for k, v := range itm.count {
 				count[k] += v
 			}
-			for k, v := range itm[2] {
+			for k, v := range itm.min {
 				if _, ok := min[k]; !ok {
 					min[k] = v
 				} else if min[k] > v {
 					min[k] = v
 				}
 			}
-			for k, v := range itm[3] {
+			for k, v := range itm.max {
 				if max[k] < v {
 					max[k] = v
 				}
 			}
+			for k, v := range itm.prov {
+				prov[k] = v
+			}
 		case rc := <-r.exportKvs: // Return the top results
-			go r.exportSum(sum, count, min, max, rc)
+			go r.exportSum(sum, count, min, max, prov, rc)
 			sum = map[string]uint64{}
 			count = map[string]uint64{}
 			min = map[string]uint64{}
 			max = map[string]uint64{}
+			prov = map[string]kt.Provider{}
 		}
 	}
 }
 
-func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, min map[string]uint64, max map[string]uint64, rc chan []Rollup) {
+func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, min map[string]uint64, max map[string]uint64, prov map[string]kt.Provider, rc chan []Rollup) {
 	if len(sum) == 0 {
 		rc <- nil
 		return
@@ -256,19 +272,21 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	keys := make([]Rollup, 0, len(sum))
 	total := uint64(0)
 	totalc := uint64(0)
+	var provt kt.Provider
 	for k, v := range sum {
 		keys = append(keys, Rollup{
 			Name: r.name, EventType: r.eventType, Dimension: k,
 			Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot),
-			Count: count[k], Min: min[k], Max: max[k],
+			Count: count[k], Min: min[k], Max: max[k], Provider: prov[k],
 		})
 		total += v
 		totalc += count[k]
+		provt = prov[k]
 	}
 
 	sort.Sort(byValue(keys))
 	if len(keys) > r.topK {
-		r.getTopkSum(keys, total, totalc, ot, rc)
+		r.getTopkSum(keys, total, totalc, ot, provt, rc)
 	} else {
 		rc <- keys
 	}
@@ -276,7 +294,7 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	return
 }
 
-func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot time.Time, rc chan []Rollup) {
+func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot time.Time, prov kt.Provider, rc chan []Rollup) {
 	top := make([]Rollup, 0, len(keys))
 	seen := map[string]int{}
 
@@ -297,7 +315,7 @@ func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot 
 	top = append(top, Rollup{
 		Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
 		Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
-		Min: 0, Max: 0, Count: totalc,
+		Min: 0, Max: 0, Count: totalc, Provider: prov,
 	})
 
 	// Return out filled out set.

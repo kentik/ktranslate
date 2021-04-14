@@ -35,6 +35,11 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		return err
 	}
 
+	// If there's no global section, just turn ourselves off here.
+	if conf.Global == nil {
+		return nil
+	}
+
 	// Get these bits of info.
 	connectTimeout := 5 * time.Second
 	retries := 0
@@ -184,7 +189,7 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 	}
 
 	// Expand out any seconds which require it.
-	if len(ms.Disco.Cidrs) > 0 && strings.HasPrefix(ms.Disco.Cidrs[0], "@") {
+	if ms.Disco != nil && len(ms.Disco.Cidrs) > 0 && strings.HasPrefix(ms.Disco.Cidrs[0], "@") {
 		cidrList := []string{}
 		byc, err := ioutil.ReadFile(ms.Disco.Cidrs[0][1:])
 		if err != nil {

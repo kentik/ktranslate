@@ -184,6 +184,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	// Do we have info about this device?
 	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
 		dst.DeviceName = d.Name
+		dst.CustomStr[UDR_TYPE] = d.DeviceSubtype
 		if i, ok := d.Interfaces[dst.InputPort]; ok {
 			dst.InputIntDesc = i.InterfaceDescription
 			dst.InputIntAlias = i.SnmpAlias
@@ -333,8 +334,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	// Finally, update any udr based columns with the correct mapping
 	if kc.udrMapr != nil {
 		var mapr map[string]*UDR
-		if kc.udrMapr.Subtype != nil {
-			mapr = kc.udrMapr.Subtype
+		if dst.CustomStr[UDR_TYPE] != "" && kc.udrMapr.Subtypes[dst.CustomStr[UDR_TYPE]] != nil {
+			mapr = kc.udrMapr.Subtypes[dst.CustomStr[UDR_TYPE]]
 		} else if ap, ok := dst.CustomInt[APP_PROTOCOL_COL]; ok {
 			if maprr, ok := kc.udrMapr.UDRs[ap]; ok {
 				mapr = maprr

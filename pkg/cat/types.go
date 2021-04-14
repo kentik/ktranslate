@@ -60,7 +60,6 @@ type Config struct {
 	Auth              *AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool
-	Subtype           string
 	Kentik            *kt.KentikConfig
 }
 
@@ -108,8 +107,8 @@ type UDR struct {
 }
 
 type UDRMapper struct {
-	UDRs    map[int32]map[string]*UDR
-	Subtype map[string]*UDR
+	UDRs     map[int32]map[string]*UDR
+	Subtypes map[string]map[string]*UDR
 }
 
 type hc struct {
