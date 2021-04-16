@@ -113,6 +113,10 @@ func (p *Uint32Trees) FindBestMatch(addr uint32, addr6 []byte) (bool, uint32, er
 	}
 }
 
+func (p *Uint32Trees) GetSizeName() int {
+	return len(p.mapr)
+}
+
 func (p *Uint32Trees) GetName(asn uint32) string {
 	if p.mapr == nil {
 		return ""

@@ -29,7 +29,9 @@ func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (*patricia.NodeGeo, er
 	return kc.geo.SearchBestFromHostGeo(net.IP(ipv6))
 }
 
-func (kc *KTranslate) setGeoAsn(src *Flow) (srcName, dstName string) {
+func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
+	var srcName, dstName string
+
 	// Fetch our own geo if not already set.
 	if kc.geo != nil {
 		if src.CHF.SrcGeo() == 0 || src.CHF.SrcGeo() == DEFAULT_GEO_PACKED {
@@ -59,6 +61,8 @@ func (kc *KTranslate) setGeoAsn(src *Flow) (srcName, dstName string) {
 				src.CHF.SetSrcAs(asn)
 				srcName = kc.asn.GetName(asn)
 			}
+		} else {
+			srcName = kc.asn.GetName(src.CHF.SrcAs())
 		}
 
 		if src.CHF.DstAs() == 0 {
@@ -67,10 +71,12 @@ func (kc *KTranslate) setGeoAsn(src *Flow) (srcName, dstName string) {
 				src.CHF.SetDstAs(asn)
 				dstName = kc.asn.GetName(asn)
 			}
+		} else {
+			dstName = kc.asn.GetName(src.CHF.DstAs())
 		}
 	}
 
-	return
+	return srcName, dstName
 }
 
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
@@ -127,8 +133,17 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	// In the direct case, users can map their own asn/geo values into here.
 	if kc.geo != nil || kc.asn != nil {
 		srcAsnName, dstAsnName := kc.setGeoAsn(src)
-		dst.CustomStr["src_as_name"] = srcAsnName
-		dst.CustomStr["dst_as_name"] = dstAsnName
+		if srcAsnName != "" {
+			dst.CustomStr["src_as_name"] = srcAsnName
+		} else {
+			dst.CustomStr["src_as_name"] = strconv.Itoa(int(src.CHF.SrcAs()))
+		}
+
+		if dstAsnName != "" {
+			dst.CustomStr["dst_as_name"] = dstAsnName
+		} else {
+			dst.CustomStr["dst_as_name"] = strconv.Itoa(int(src.CHF.DstAs()))
+		}
 	}
 
 	// dst.Timestamp = src.CHF.Timestamp() This is being strage, use current timestamp for now.
@@ -310,7 +325,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 					dst.CustomStr["ult_exit_device"] = d.Name
 				}
 			default:
-				if !isInt {
+				if tv, ok := kc.tagMap[v]; ok {
+					dst.CustomStr[tv[0]] = tv[1]
+				} else if !isInt {
 					dst.CustomInt[name] = int32(v) // TODO, way to pull out tags from this?
 				}
 			}
@@ -384,6 +401,14 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 		}
 	}
 
+	// Do we need to remap any of the custom strings?
+	for k, v := range dst.CustomStr {
+		if n, ok := remapCustomStrings[k]; ok {
+			dst.CustomStr[n] = v
+			delete(dst.CustomStr, k)
+		}
+	}
+
 	// Set the type dynamically here to help out processing.
 	dst.EventType = kc.getEventType(dst)
 	dst.Provider = kc.getProviderType(dst)
@@ -453,5 +478,31 @@ var (
 		5: "knock",
 		6: "query",
 		7: "shake",
+	}
+
+	remapCustomStrings = map[string]string{
+		"kt_aws_dst_acc_id":       "dest_account",
+		"kt_aws_src_acc_id":       "source_account",
+		"kt_az_dst_sub_id":        "dest_account",
+		"kt_az_src_sub_id":        "source_account",
+		"destination_project_id":  "dest_account",
+		"source_project_id":       "source_account",
+		"account":                 "source_account",
+		"kt_aws_src_region":       "source_region",
+		"kt_aws_dst_region":       "dest_region",
+		"kt_az_src_region":        "source_region",
+		"kt_az_dst_region":        "dest_region",
+		"src_region":              "source_region",
+		"dst_region":              "dest_region",
+		"source_region":           "source_region",
+		"destination_region":      "dest_region",
+		"kt_aws_src_vpc_id":       "source_vpc",
+		"kt_aws_dst_vpc_id":       "dest_vpc",
+		"kt_az_dst_rsrc_group":    "source_vpc",
+		"kt_az_src_rsrc_group":    "dest_vpc",
+		"source_subnet_name":      "source_vpc",
+		"destination_subnet_name": "dest_vpc",
+		"src_vpc":                 "source_vpc",
+		"dst_vpc":                 "dest_vpc",
 	}
 )

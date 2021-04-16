@@ -188,35 +188,72 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
 	return nil
 }
 
+var (
+	rollupMap = map[string]string{
+		"source_account": "vpc_account",
+		"source_region":  "vpc_region",
+		"source_vpc":     "vpc_name",
+		"src_addr":       "ip_address",
+		"src_as":         "asn_name",
+		"src_as_name":    "asn_name",
+		"src_geo":        "country",
+		"l4_src_port":    "port",
+		"dest_account":   "vpc_account",
+		"dest_region":    "vpc_region",
+		"dest_vpc":       "vpc_name",
+		"dst_addr":       "ip_address",
+		"dst_as":         "asn_name",
+		"dst_as_name":    "asn_name",
+		"dst_geo":        "country",
+		"l4_dst_port":    "port",
+	}
+)
+
 func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	ms := make([]NRMetric, 0, len(in))
 	for _, roll := range in {
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
-			"provider": roll.Provider,
+			"provider":                 roll.Provider,
+			"instrumentation.provider": kt.InstProvider,
+			"instrumentation.name":     roll.Provider,
+			"collector.name":           kt.CollectorName,
 		}
-		bad := false
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
-			attr[dims[i]] = pt
-			if pt == "0" || pt == "" {
-				bad = true
+			aname := dims[i]
+			if n, ok := rollupMap[aname]; ok {
+				aname = n
+			}
+			attr[aname] = pt
+			if pt == "0" {
+				delete(attr, aname)
+			} else if pt == "" {
+				delete(attr, aname)
 			}
 		}
-		if !bad {
-			ms = append(ms, NRMetric{
-				Name: "kentik.rollup." + roll.Name,
-				Type: NR_SUMMARY_TYPE,
-				Value: map[string]uint64{
-					"count": roll.Count,
-					"sum":   uint64(roll.Metric),
-					"min":   roll.Min,
-					"max":   roll.Max,
-				},
-				Interval:   roll.Interval.Microseconds(),
-				Timestamp:  ts,
-				Attributes: attr,
-			})
+
+		// Finally, combine vpc_account:vpc_name pre-shipping and call it vpc_identification
+		acct, istra := attr["vpc_account"].(string)
+		name, istrn := attr["vpc_name"].(string)
+		if istra && istrn && acct != "" && name != "" {
+			attr["vpc_identification"] = acct + ":" + name
+			delete(attr, "vpc_account")
+			delete(attr, "vpc_name")
 		}
+
+		ms = append(ms, NRMetric{
+			Name: "kentik.rollup." + roll.Name,
+			Type: NR_SUMMARY_TYPE,
+			Value: map[string]uint64{
+				"count": roll.Count,
+				"sum":   uint64(roll.Metric),
+				"min":   roll.Min,
+				"max":   roll.Max,
+			},
+			Interval:   roll.Interval.Microseconds(),
+			Timestamp:  ts,
+			Attributes: attr,
+		})
 	}
 	return ms
 }
@@ -436,7 +473,10 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 
 func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interface{} {
 	attrNew := map[string]interface{}{
-		"objectIdentifier": name,
+		"objectIdentifier":         name,
+		"instrumentation.provider": kt.InstProvider,
+		"instrumentation.name":     attr["provider"],
+		"collector.name":           kt.CollectorName,
 	}
 	for k, v := range attr {
 		attrNew[k] = v

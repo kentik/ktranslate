@@ -39,6 +39,10 @@ with t as (SELECT
 
  Load UDRs with
  select app_protocol_id || ',' || custom_column || ',' || dimension_label || ',' || display_name from  mn_lookup_app_protocol as a join mn_lookup_app_protocol_cols as b on (a.id = b.app_protocol_id) order by app_protocol_id;
+
+ Tags With:
+ Select field_id, b.name, lookup_id, lookup_value from mn_bulk_tag as a join mn_company_field as b on (a.field_id = b.id) where a.company_id = 26393;
+
 */
 
 func NewCustomMapper(file string) (*CustomMapper, error) {
@@ -120,3 +124,46 @@ func fixupName(name string) string {
 	name = strings.ToLower(strings.ReplaceAll(name, " ", "_"))
 	return name
 }
+
+func NewTagMapper(file string) (TagMapper, error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+
+	tm := map[uint32][2]string{}
+	for scanner.Scan() {
+		pts := strings.SplitN(scanner.Text(), ",", 4)
+		if len(pts) != 4 {
+			continue
+		}
+		ida, err := strconv.Atoi(pts[2])
+		if err != nil {
+			continue
+		}
+
+		id := uint32(ida)
+		tm[id] = [2]string{fixupName(pts[1]), fixupName(pts[3])}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return tm, nil
+}
+
+/***
+account id
+
+KT_AWS_DST_ACC_ID
+KT_AWS_SRC_ACC_ID
+KT_AZ_DST_SUB_ID
+KT_AZ_SRC_SUB_ID
+Source Project ID
+Source Project ID
+Destination Project ID
+
+*/

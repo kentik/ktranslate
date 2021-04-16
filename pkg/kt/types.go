@@ -41,6 +41,9 @@ const (
 	ProviderIOT               = "kentik-iot"
 	ProviderHost              = "kentik-host"
 	ProviderAlert             = "kentik-alert"
+
+	InstProvider  = "kentik"
+	CollectorName = "ktranslate"
 )
 
 type IntId uint64

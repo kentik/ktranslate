@@ -60,6 +60,7 @@ type Config struct {
 	Auth              *AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool
+	TagFile           string
 	Kentik            *kt.KentikConfig
 }
 
@@ -94,6 +95,7 @@ type KTranslate struct {
 	auth           *auth.Server
 	apic           *api.KentikApi
 	tooBig         chan int
+	tagMap         TagMapper
 }
 
 type CustomMapper struct {
@@ -140,3 +142,5 @@ type KKCMetric struct {
 	Snmp           go_metrics.Meter
 	SnmpDeviceData *kt.SnmpMetricSet
 }
+
+type TagMapper map[uint32][2]string

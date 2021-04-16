@@ -112,7 +112,8 @@ func OpenASN(file4 string, file6 string, fileName string, log *logger.Logger) (*
 				if err != nil {
 					return found, fmt.Errorf("Error adding name with line %s -> %v", line, err)
 				}
-				mapr[uint32(num)] = pts[1]
+				more := strings.Split(pts[1], ",")
+				mapr[uint32(num)] = strings.TrimSpace(more[0])
 				found++
 			}
 		}

@@ -143,6 +143,7 @@ type rollupBase struct {
 	sample       bool
 	dtime        time.Time
 	name         string
+	primaryDim   int
 }
 
 func (r *rollupBase) init(rd RollupDef) error {
@@ -157,16 +158,26 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
-	for _, d := range rd.Dimensions {
+	isMultiPrimary := false
+	for i, d := range rd.Dimensions {
 		pts := strings.Split(d, ".")
 		switch len(pts) {
 		case 1:
 			r.dims = append(r.dims, d)
 		case 2:
 			r.multiDims = append(r.multiDims, pts)
+			if i == 0 {
+				isMultiPrimary = true
+			}
 		default:
 			return fmt.Errorf("Invalid dimension: %s", d)
 		}
+	}
+
+	if isMultiPrimary { // How do we sort by?
+		r.primaryDim = len(r.dims)
+	} else {
+		r.primaryDim = 0
 	}
 
 	for _, m := range rd.Metrics {
@@ -204,6 +215,13 @@ func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 			switch dd := d1.(type) {
 			case map[string]string:
 				keyPts[next] = dd[d[1]]
+				if keyPts[next] == "" {
+					if strings.HasPrefix(d[1], "source_") {
+						keyPts[next] = dd["dest_"+d[1][7:]]
+					} else if strings.HasPrefix(d[1], "dest_") {
+						keyPts[next] = dd["source_"+d[1][5:]]
+					}
+				}
 			case map[string]int32:
 				keyPts[next] = strconv.Itoa(int(dd[d[1]]))
 			case map[string]int64:

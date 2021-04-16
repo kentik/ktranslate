@@ -97,29 +97,43 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 
 	for _, mapr := range in {
 		key := r.getKey(mapr)
-		sr := mapr["sample_rate"].(int64)
-		for _, metric := range r.metrics {
+		sr := uint64(mapr["sample_rate"].(int64))
+		value := uint64(0)
+
+		for _, metric := range r.metrics { // 1 level deap one first.
 			if mm, ok := mapr[metric]; ok {
 				if m, ok := mm.(int64); ok {
-					if m > 0 {
-						if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
-							m *= sr
-						}
-						value := uint64(m)
-						sum[key] += value
-						count[key]++
-						if _, ok := min[key]; !ok {
-							min[key] = value
-						} else if min[key] > value {
-							min[key] = value
-						}
-						if max[key] < value {
-							max[key] = value
-						}
-						prov[key] = mapr["provider"].(kt.Provider)
-					}
+					value += uint64(m)
 				}
 			}
+		}
+
+		for _, m := range r.multiMetrics { // Now handle the 2 level deep metrics
+			if m1, ok := mapr[m[0]]; ok {
+				switch mm := m1.(type) {
+				case map[string]int32:
+					value += uint64(mm[m[1]])
+				case map[string]int64:
+					value += uint64(mm[m[1]])
+				}
+			}
+		}
+
+		if value > 0 {
+			if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
+				value *= sr
+			}
+			sum[key] += value
+			count[key]++
+			if _, ok := min[key]; !ok {
+				min[key] = value
+			} else if min[key] > value {
+				min[key] = value
+			}
+			if max[key] < value {
+				max[key] = value
+			}
+			prov[key] = mapr["provider"].(kt.Provider)
 		}
 	}
 
@@ -299,24 +313,26 @@ func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot 
 	seen := map[string]int{}
 
 	for _, roll := range keys {
-		pts := strings.SplitN(roll.Dimension, r.keyJoin, 2)
-		if seen[pts[0]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
+		pts := strings.Split(roll.Dimension, r.keyJoin)
+		if seen[pts[r.primaryDim]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
 			top = append(top, roll)
 		}
-		seen[pts[0]]++
+		seen[pts[r.primaryDim]]++
 	}
 
-	// Fill in the total value here.
-	dims := combo(r.dims, r.multiDims)
-	totals := make([]string, len(dims))
-	for i, _ := range dims {
-		totals[i] = "total"
+	// Fill in the total value here, unless the name has total in it.
+	if !strings.Contains(r.name, "vpc.") {
+		dims := combo(r.dims, r.multiDims)
+		totals := make([]string, len(dims))
+		for i, _ := range dims {
+			totals[i] = "total"
+		}
+		top = append(top, Rollup{
+			Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
+			Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
+			Min: 0, Max: 0, Count: totalc, Provider: prov,
+		})
 	}
-	top = append(top, Rollup{
-		Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
-		Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
-		Min: 0, Max: 0, Count: totalc, Provider: prov,
-	})
 
 	// Return out filled out set.
 	rc <- top

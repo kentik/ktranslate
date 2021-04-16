@@ -146,6 +146,17 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		kc.log.Infof("Loaded %d udr and %d subtype mappings with %d udrs total", len(m.UDRs), len(m.Subtypes), udrs)
 	}
 
+	if config.TagFile != "" {
+		m, err := NewTagMapper(config.TagFile)
+		if err != nil {
+			return nil, err
+		}
+		kc.tagMap = m
+		kc.log.Infof("Loaded %d tag mappings", len(m))
+	} else {
+		kc.tagMap = map[uint32][2]string{} // Noop here
+	}
+
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {
 		geo, err := patricia.OpenGeo(config.GeoMapping, false, ol)
@@ -162,7 +173,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		if err != nil {
 			return nil, err
 		} else {
-			kc.log.Infof("Loaded %d asn cidrs", asn.Length)
+			kc.log.Infof("Loaded %d asn cidrs with %d names", asn.Length, asn.GetSizeName())
 			kc.asn = asn
 		}
 	}
