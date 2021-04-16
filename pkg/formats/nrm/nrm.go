@@ -216,8 +216,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 		attr := map[string]interface{}{
 			"provider":                 roll.Provider,
 			"instrumentation.provider": kt.InstProvider,
-			"instrumentation.name":     roll.Provider,
-			"collector.name":           kt.CollectorName,
+			"instrumentation.name":     kt.InstName,
 		}
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
 			aname := dims[i]
@@ -225,9 +224,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 				aname = n
 			}
 			attr[aname] = pt
-			if pt == "0" {
-				delete(attr, aname)
-			} else if pt == "" {
+			if pt == "0" || pt == "" || pt == "--" {
 				delete(attr, aname)
 			}
 		}
@@ -237,8 +234,6 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 		name, istrn := attr["vpc_name"].(string)
 		if istra && istrn && acct != "" && name != "" {
 			attr["vpc_identification"] = acct + ":" + name
-			delete(attr, "vpc_account")
-			delete(attr, "vpc_name")
 		}
 
 		ms = append(ms, NRMetric{
@@ -475,8 +470,8 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 	attrNew := map[string]interface{}{
 		"objectIdentifier":         name,
 		"instrumentation.provider": kt.InstProvider,
-		"instrumentation.name":     attr["provider"],
-		"collector.name":           kt.CollectorName,
+		"instrumentation.name":     kt.InstName,
+		"collector.name":           kt.SnmpCollector,
 	}
 	for k, v := range attr {
 		attrNew[k] = v

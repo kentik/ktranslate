@@ -43,7 +43,8 @@ const (
 	ProviderAlert             = "kentik-alert"
 
 	InstProvider  = "kentik"
-	CollectorName = "ktranslate"
+	InstName      = "ktranslate"
+	SnmpCollector = "snmp"
 )
 
 type IntId uint64
