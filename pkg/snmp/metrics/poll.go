@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"context"
 	"math/rand"
 	"time"
 
@@ -60,7 +61,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	}
 }
 
-func (p *Poller) StartLoop() {
+func (p *Poller) StartLoop(ctx context.Context) {
 
 	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
 	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
@@ -74,47 +75,55 @@ func (p *Poller) StartLoop() {
 	p.log.Infof("snmpCounterPoll: First poll will be at %v. Polling every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
 
 	go func() {
-		// Track the counters here, to convert from raw counters to differences
-		for scheduledTime := range counterCheck.C {
+		for {
+			select {
 
-			startTime := time.Now()
-			if !startTime.Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
-				// This poll was supposed to occur in a previous five-minute-block, but we were delayed
-				// in picking it up -- presumably because a previous poll overflowed *its* block.
-				// Since we can't possibly complete this one on schedule, skip it.
-				p.log.Warnf("Skipping a counter datapoint for the period %v -- poll scheduled for %v, but only dequeued at %v",
-					scheduledTime.Truncate(counterAlignment), scheduledTime, startTime)
-				p.interfaceMetrics.DiscardDeltaState()
-				continue
+			// Track the counters here, to convert from raw counters to differences
+			case scheduledTime := <-counterCheck.C:
+
+				startTime := time.Now()
+				if !startTime.Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
+					// This poll was supposed to occur in a previous five-minute-block, but we were delayed
+					// in picking it up -- presumably because a previous poll overflowed *its* block.
+					// Since we can't possibly complete this one on schedule, skip it.
+					p.log.Warnf("Skipping a counter datapoint for the period %v -- poll scheduled for %v, but only dequeued at %v",
+						scheduledTime.Truncate(counterAlignment), scheduledTime, startTime)
+					p.interfaceMetrics.DiscardDeltaState()
+					continue
+				}
+
+				flows, err := p.Poll()
+				if err != nil {
+					p.log.Warnf("Issue polling SNMP Counter: %v", err)
+
+					// We didn't collect all the metrics here, which means that our delta values are
+					// off, and we have to discard them.
+					p.interfaceMetrics.DiscardDeltaState()
+					continue
+				}
+
+				// Send counter data as flow
+				if p.dropIfOutside && !time.Now().Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
+					// Uggh.  calling PollSNMPCounter took us long enough that we're no longer in the five-minute block
+					// we were in when we started the poll.
+					p.log.Warnf("Missed a counter datapoint for the period %v -- poll scheduled for %v, started at %v, ended at %v",
+						scheduledTime.Truncate(counterAlignment), scheduledTime, startTime, time.Now())
+
+					// Because this counter poll took too long, and at least the earliest values received in the
+					// poll are already over five minutes old, we can no longer use them as the basis for deltas.
+					// Throw all the values away, and start over with the next polling cycle
+					p.interfaceMetrics.DiscardDeltaState()
+					continue
+				}
+
+				// Great!  We finished the poll in the same five-minute block we started it in!
+				// send the results to Sinks.
+				p.jchfChan <- flows
+
+			case <-ctx.Done():
+				p.log.Infof("Metrics Poll Done")
+				return
 			}
-
-			flows, err := p.Poll()
-			if err != nil {
-				p.log.Warnf("Issue polling SNMP Counter: %v", err)
-
-				// We didn't collect all the metrics here, which means that our delta values are
-				// off, and we have to discard them.
-				p.interfaceMetrics.DiscardDeltaState()
-				continue
-			}
-
-			// Send counter data as flow
-			if p.dropIfOutside && !time.Now().Truncate(counterAlignment).Equal(scheduledTime.Truncate(counterAlignment)) {
-				// Uggh.  calling PollSNMPCounter took us long enough that we're no longer in the five-minute block
-				// we were in when we started the poll.
-				p.log.Warnf("Missed a counter datapoint for the period %v -- poll scheduled for %v, started at %v, ended at %v",
-					scheduledTime.Truncate(counterAlignment), scheduledTime, startTime, time.Now())
-
-				// Because this counter poll took too long, and at least the earliest values received in the
-				// poll are already over five minutes old, we can no longer use them as the basis for deltas.
-				// Throw all the values away, and start over with the next polling cycle
-				p.interfaceMetrics.DiscardDeltaState()
-				continue
-			}
-
-			// Great!  We finished the poll in the same five-minute block we started it in!
-			// send the results to Sinks.
-			p.jchfChan <- flows
 		}
 	}()
 }

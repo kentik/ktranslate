@@ -5,7 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -27,17 +30,54 @@ var (
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
+	// Do this once here just to see if we need to exit right away.
+	conf, _, _, err := initSnmp(ctx, snmpFile, log)
+	if err != nil || conf == nil || conf.Global == nil { // If no global, we're turning off all snmp polling.
+		return err
+	}
 
+	// Load a mibdb if we have one.
+	if conf.Global != nil {
+		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, log)
+		if err != nil {
+			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s, pymib: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, err)
+		}
+		mibdb = mdb
+	} else {
+		log.Infof("Skipping configurable mibs")
+	}
+
+	// Now, launch a metadata and metrics server for each configured or discovered device.
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log)
+
+	// Run a trap listener?
+	if conf.Trap != nil {
+		err := launchSnmpTrap(conf, jchfChan, metrics, log)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func Close() {
+	if mibdb != nil {
+		mibdb.Close()
+	}
+}
+
+func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.SnmpConfig, time.Duration, int, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("Client SNMP: Running SNMP interface polling, loading config from %s", snmpFile)
 	conf, err := parseConfig(snmpFile)
 	if err != nil {
-		return err
+		return nil, 0, 0, err
 	}
 
 	// If there's no global section, just turn ourselves off here.
 	if conf.Global == nil {
-		return nil
+		return nil, 0, 0, nil
 	}
 
 	// Get these bits of info.
@@ -54,18 +94,37 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	log.Infof("Setting timeout to %v", connectTimeout)
 	log.Infof("Setting retry to %v", retries)
 
-	// Load a mibdb if we have one.
-	if conf.Global != nil {
-		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, log)
-		if err != nil {
-			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s, pymib: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, err)
-		}
-		mibdb = mdb
-	} else {
-		log.Infof("Skipping configurable mibs")
+	return conf, connectTimeout, retries, nil
+}
+
+func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) {
+	ctxSnmp, cancel := context.WithCancel(ctx)
+	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log)
+	if err != nil {
+		log.Errorf("Error running snmp polling: %v", err)
 	}
 
-	// Now, launch a metadata and metrics server for each configured or discovered device.
+	// Now, wait for sigusr1 to re-do.
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGUSR1)
+
+	// Block here
+	_ = <-c
+
+	// If we got this signal, redo the snmp system.
+	cancel()
+
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log)
+}
+
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
+	// Parse again to make sure nothing's changed.
+	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
+	if err != nil || conf == nil || conf.Global == nil {
+		return err
+	}
+
+	log.Infof("Client SNMP: Setting up for %d devices", len(conf.Devices))
 	for _, device := range conf.Devices {
 		if device.Provider == "" {
 			// Default provider to something we can work with.
@@ -98,27 +157,13 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			return err
 		}
 
-		err = launchSnmp(conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
-		if err != nil {
-			return err
-		}
-	}
-
-	// Run a trap listener?
-	if conf.Trap != nil {
-		err := launchSnmpTrap(conf, jchfChan, metrics, log)
+		err = launchSnmp(ctx, conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
 		if err != nil {
 			return err
 		}
 	}
 
 	return nil
-}
-
-func Close() {
-	if mibdb != nil {
-		mibdb.Close()
-	}
 }
 
 func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) error {
@@ -135,7 +180,7 @@ func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.S
 	return nil
 }
 
-func launchSnmp(conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
+func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
 
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
@@ -170,8 +215,8 @@ func launchSnmp(conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan
 
 		// Having done that, we'll launch additional, separate goroutines for
 		// metadata and counter polling
-		metadataPoller.StartLoop()
-		metricPoller.StartLoop()
+		metadataPoller.StartLoop(ctx)
+		metricPoller.StartLoop(ctx)
 	}()
 
 	return nil

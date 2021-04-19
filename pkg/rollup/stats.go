@@ -119,22 +119,20 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 			}
 		}
 
-		if value > 0 {
-			if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
-				value *= sr
-			}
-			sum[key] += value
-			count[key]++
-			if _, ok := min[key]; !ok {
-				min[key] = value
-			} else if min[key] > value {
-				min[key] = value
-			}
-			if max[key] < value {
-				max[key] = value
-			}
-			prov[key] = mapr["provider"].(kt.Provider)
+		if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
+			value *= sr
 		}
+		sum[key] += value
+		count[key]++
+		if _, ok := min[key]; !ok {
+			min[key] = value
+		} else if min[key] > value {
+			min[key] = value
+		}
+		if max[key] < value {
+			max[key] = value
+		}
+		prov[key] = mapr["provider"].(kt.Provider)
 	}
 
 	// Dump into our hash map here

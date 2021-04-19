@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -63,29 +64,35 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	}
 }
 
-func (p *Poller) StartLoop() {
+func (p *Poller) StartLoop(ctx context.Context) {
 	interfaceCheck := tick.NewJitterTicker(p.interval, 25, 100)
 
 	go func() {
+		for {
+			select {
+			case _ = <-interfaceCheck.C:
+				p.log.Infof("Start: Polling SNMP Interface")
+				deviceDataNew, err := p.PollSNMPMetadata()
+				if err != nil {
+					p.log.Warnf("Issue polling SNMP Interface: %v", err)
+					p.metrics.Errors.Mark(1)
+					continue
+				}
 
-		for ; true; <-interfaceCheck.C {
-			p.log.Infof("Start: Polling SNMP Interface")
-			deviceDataNew, err := p.PollSNMPMetadata()
-			if err != nil {
-				p.log.Warnf("Issue polling SNMP Interface: %v", err)
-				p.metrics.Errors.Mark(1)
-				continue
-			}
+				// Do something with this data.
+				flows, err := p.toFlows(deviceDataNew)
+				if err != nil {
+					p.metrics.Errors.Mark(1)
+					p.log.Warnf("Issue converting metadata: %v", err)
+					continue
+				}
+				p.metrics.Metadata.Mark(1)
+				p.jchfChan <- flows
 
-			// Do something with this data.
-			flows, err := p.toFlows(deviceDataNew)
-			if err != nil {
-				p.metrics.Errors.Mark(1)
-				p.log.Warnf("Issue converting metadata: %v", err)
-				continue
+			case <-ctx.Done():
+				p.log.Infof("Metadata Poll Done")
+				return
 			}
-			p.metrics.Metadata.Mark(1)
-			p.jchfChan <- flows
 		}
 	}()
 }
