@@ -31,16 +31,17 @@ const (
 type Provider string
 
 const (
-	ProviderRouter   Provider = "kentik-router"
-	ProviderVPC               = "kentik-vpc"
-	ProviderSynth             = "kentik-network-synthetic"
-	ProviderSwitch            = "kentik-switch"
-	ProviderFirewall          = "kentik-firewall"
-	ProviderUPS               = "kentik-ups"
-	ProviderPDU               = "kentik-pdu"
-	ProviderIOT               = "kentik-iot"
-	ProviderHost              = "kentik-host"
-	ProviderAlert             = "kentik-alert"
+	ProviderRouter     Provider = "kentik-router"
+	ProviderVPC                 = "kentik-vpc"
+	ProviderSynth               = "kentik-network-synthetic"
+	ProviderSwitch              = "kentik-switch"
+	ProviderFirewall            = "kentik-firewall"
+	ProviderUPS                 = "kentik-ups"
+	ProviderPDU                 = "kentik-pdu"
+	ProviderIOT                 = "kentik-iot"
+	ProviderHost                = "kentik-host"
+	ProviderAlert               = "kentik-alert"
+	ProviderFlowDevice          = "kentik-flow-device"
 
 	InstProvider  = "kentik"
 	InstName      = "ktranslate"

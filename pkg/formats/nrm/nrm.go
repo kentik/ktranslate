@@ -214,7 +214,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	for _, roll := range in {
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
-			"provider":                 roll.Provider,
+			"provider":                 kt.ProviderFlowDevice, // This is overriding the passed in rollup. Should we be smarter? @TODO
 			"instrumentation.provider": kt.InstProvider,
 			"instrumentation.name":     kt.InstName,
 		}
