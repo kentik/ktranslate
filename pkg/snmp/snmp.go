@@ -106,7 +106,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 
 	// Now, wait for sigusr1 to re-do.
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGUSR1)
+	signal.Notify(c, syscall.SIGUSR2)
 
 	// Block here
 	_ = <-c
