@@ -403,6 +403,30 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 
 	// Do we need to remap any of the custom strings?
 	for k, v := range dst.CustomStr {
+		switch dst.CustomStr[UDR_TYPE] { // Kick out any cross contaminated tags.
+		case "gcp_subnet":
+			if strings.HasPrefix(k, "kt_aws") || strings.HasPrefix(k, "kt_az") {
+				delete(dst.CustomStr, k)
+				continue
+			}
+		case "aws_subnet":
+			if strings.HasPrefix(k, "kt_az") {
+				delete(dst.CustomStr, k)
+				continue
+			}
+		case "azure_subnet":
+			if strings.HasPrefix(k, "kt_aws") {
+				delete(dst.CustomStr, k)
+				continue
+			}
+		case "ibm_subnet":
+			if strings.HasPrefix(k, "kt_aws") || strings.HasPrefix(k, "kt_az") {
+				delete(dst.CustomStr, k)
+				continue
+			}
+		}
+
+		// Now remap to common fields.
 		if n, ok := remapCustomStrings[k]; ok {
 			dst.CustomStr[n] = v
 			delete(dst.CustomStr, k)
