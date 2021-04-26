@@ -233,6 +233,12 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 			if pt == "0" || pt == "" || pt == "--" {
 				delete(attr, aname)
 			}
+			if aname == "port" { // Remap efemeral ports down here.
+				port, _ := strconv.Atoi(pt)
+				if port > 32768 {
+					attr[aname] = 32768
+				}
+			}
 		}
 
 		// Finally, combine vpc_account:vpc_name pre-shipping and call it vpc_identification

@@ -19,7 +19,7 @@ type IntFilter struct {
 
 func newIntFilter(log logger.Underlying, fd FilterDef) (*IntFilter, error) {
 	sf := &IntFilter{
-		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "stringFilter"}, log),
+		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "intFilter"}, log),
 		dimension: strings.Split(fd.Dimension, "."),
 	}
 

@@ -319,6 +319,7 @@ func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot 
 	}
 
 	// Fill in the total value here, unless the name has total in it.
+	/** Taking this out per NR ask.
 	if !strings.Contains(r.name, "vpc.") {
 		dims := combo(r.dims, r.multiDims)
 		totals := make([]string, len(dims))
@@ -331,6 +332,7 @@ func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot 
 			Min: 0, Max: 0, Count: totalc, Provider: prov,
 		})
 	}
+	*/
 
 	// Return out filled out set.
 	rc <- top
