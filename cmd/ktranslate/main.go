@@ -15,6 +15,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/baseserver"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
+	"github.com/kentik/ktranslate/pkg/vpc"
 )
 
 const ()
@@ -49,6 +50,7 @@ func main() {
 		sslCertFile    = flag.String("ssl_cert_file", "", "SSL Cert file to use for serving HTTPS traffic")
 		sslKeyFile     = flag.String("ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 		tags           = flag.String("tag_map", "", "CSV file mapping tag ids to strings")
+		vpcSource      = flag.String("vpc", "", "Run VPC Flow Ingest")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
@@ -83,6 +85,7 @@ func main() {
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
 		TagFile:           *tags,
+		VpcSource:         vpc.CloudSource(*vpcSource),
 		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
 			ApiToken: os.Getenv(kt.KentikAPIToken),

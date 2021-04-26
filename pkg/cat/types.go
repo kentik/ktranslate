@@ -16,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
+	"github.com/kentik/ktranslate/pkg/vpc"
 
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
 
@@ -62,6 +63,7 @@ type Config struct {
 	SNMPDisco         bool
 	TagFile           string
 	Kentik            *kt.KentikConfig
+	VpcSource         vpc.CloudSource
 }
 
 type AuthConfig struct {
@@ -96,6 +98,7 @@ type KTranslate struct {
 	apic           *api.KentikApi
 	tooBig         chan int
 	tagMap         TagMapper
+	vpc            vpc.VpcImpl
 }
 
 type CustomMapper struct {

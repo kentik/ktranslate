@@ -23,6 +23,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/snmp"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
+	"github.com/kentik/ktranslate/pkg/vpc"
 
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 
@@ -228,6 +229,9 @@ func (kc *KTranslate) cleanup() {
 	if kc.asn != nil {
 		kc.asn.Close()
 	}
+	if kc.vpc != nil {
+		kc.vpc.Close()
+	}
 }
 
 // GetStatus implements the baseserver.Service interface.
@@ -280,6 +284,10 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 				"Errors":           met.Errors.Rate1(),
 			}
 		}
+	}
+
+	if kc.vpc != nil {
+		h.Sinks["vpc"] = kc.vpc.HttpInfo()
 	}
 
 	b, err := json.Marshal(h)
@@ -828,6 +836,20 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		go kc.monitorSnmp(ctx, kc.format.To)
+	}
+
+	// If we're looking for vpc flows coming in
+	if kc.config.VpcSource != "" {
+		if kc.snmpChan == nil {
+			kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
+			go kc.monitorSnmp(ctx, kc.format.To)
+		}
+
+		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.snmpChan, kc.apic)
+		if err != nil {
+			return err
+		}
+		kc.vpc = vpci
 	}
 
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate)
