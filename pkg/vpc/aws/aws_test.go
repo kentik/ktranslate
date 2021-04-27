@@ -72,6 +72,8 @@ func TestParseFlows(t *testing.T) {
 		fmt.Sprintf("3 vpc-6081b704 subnet-feb1cc88 - eni-05ed3ab55eb4374f8 672740005165 IPv4 159.203.161.141 10.232.83.71 46017 8088 159.203.161.141 10.232.83.71 6 120 2 %d %d REJECT 2 OK", now, now+300),
 		"version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstaddr srcport dstport pkt-srcaddr pkt-dstaddr protocol bytes packets start end action tcp-flags log-status region az-id sublocation-type sublocation-id",
 		fmt.Sprintf("4 vpc-6081b704 subnet-feb1cc88 - eni-05ed3ab55eb4374f8 672740005165 IPv4 159.203.161.141 10.232.83.71 46017 8088 159.203.161.141 10.232.83.71 6 120 2 %d %d REJECT 2 OK us-east 2323232 outpost 234234234", now, now+300),
+		"version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstaddr srcport dstport pkt-srcaddr pkt-dstaddr protocol bytes packets start pkt-src-aws-service action tcp-flags log-status region az-id sublocation-type sublocation-id",
+		fmt.Sprintf("5 vpc-6081b704 subnet-feb1cc88 - eni-05ed3ab55eb4374f8 672740005165 IPv4 159.203.161.141 10.232.83.71 46017 8088 159.203.161.141 10.232.83.71 6 120 2 %d AMAZON REJECT 2 OK us-east 2323232 outpost 234234234", now),
 	}
 
 	lineMap := AwsLineMap{}
@@ -113,6 +115,13 @@ func TestParseFlows(t *testing.T) {
 				assert.Equal(t, int(120), int(res[0].Bytes))
 				assert.Equal(t, int(2), int(res[0].Packets))
 				assert.Equal(t, "us-east", res[0].Region)
+				assert.Equal(t, "2323232", res[0].AzID)
+			} else if res[0].Version == 5 {
+				assert.Equal(t, int(2), int(res[0].TcpFlags))
+				assert.Equal(t, int(6), int(res[0].Protocol))
+				assert.Equal(t, int(120), int(res[0].Bytes))
+				assert.Equal(t, int(2), int(res[0].Packets))
+				assert.Equal(t, "AMAZON", res[0].SrcPktService)
 				assert.Equal(t, "2323232", res[0].AzID)
 			} else if res[0].Version == 3 {
 				assert.Equal(t, int(2), int(res[0].TcpFlags))

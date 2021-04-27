@@ -63,10 +63,12 @@ const (
 	AWS_LOG_STATUS   = "log-status"
 
 	// v4 fields
-	AWS_REGION              = "region"
-	AWS_AZ_ID               = "az-id"
-	AWS_SUBLOCATION_TYPE    = "sublocation-type"
-	AWS_SUBLOCATION_ID      = "sublocation-id"
+	AWS_REGION           = "region"
+	AWS_AZ_ID            = "az-id"
+	AWS_SUBLOCATION_TYPE = "sublocation-type"
+	AWS_SUBLOCATION_ID   = "sublocation-id"
+
+	// v5 fields
 	AWS_PKT_SRC_AWS_SERVICE = "pkt-src-aws-service"
 	AWS_PKT_DST_AWS_SERVICE = "pkt-dst-aws-service"
 	AWS_FLOW_DIRECTION      = "flow-direction"
@@ -286,49 +288,67 @@ func NewAwsFromV2(lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWS
 	return done, lineMap, nil
 }
 
+func getString(lineMap AwsLineMap, pts []string, key string) string {
+	if i, ok := lineMap[key]; ok {
+		return pts[i]
+	}
+	return ""
+}
+
+func getIP(lineMap AwsLineMap, pts []string, key string) net.IP {
+	return net.ParseIP(getString(lineMap, pts, key))
+}
+
+func getUint32(lineMap AwsLineMap, pts []string, key string) uint32 {
+	v, _ := strconv.Atoi(getString(lineMap, pts, key))
+	return uint32(v)
+}
+
+func getUint64(lineMap AwsLineMap, pts []string, key string) uint64 {
+	v, _ := strconv.Atoi(getString(lineMap, pts, key))
+	return uint64(v)
+}
+
+func getTime(lineMap AwsLineMap, pts []string, key string) time.Time {
+	v, _ := strconv.Atoi(getString(lineMap, pts, key))
+	return time.Unix(int64(v), 0)
+}
+
 //version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstaddr srcport dstport pkt-srcaddr pkt-dstaddr protocol bytes packets start end action tcp-flags log-status
-func NewAwsFromV34(version int, lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWSLogLine, AwsLineMap, error) {
+func NewAwsFromV345(version int, lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWSLogLine, AwsLineMap, error) {
 	line := AWSLogLine{}
 	line.Version = version
-	line.VPCID = pts[lineMap[AWS_VPC_ID]]
-	line.SubnetID = pts[lineMap[AWS_SUBNET_ID]]
-	line.InstanceID = pts[lineMap[AWS_INSTANCE_ID]]
-	line.InterfaceID = pts[lineMap[AWS_INTERFACE_ID]]
-	line.AccountID = pts[lineMap[AWS_ACCOUNT_ID]]
-	line.SrcAddr = net.ParseIP(pts[lineMap[AWS_SRC_ADDR]])
-	line.DstAddr = net.ParseIP(pts[lineMap[AWS_DST_ADDR]])
-	base, _ := strconv.Atoi(pts[lineMap[AWS_SRC_PORT]])
-	line.SrcPort = uint32(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_DST_PORT]])
-	line.DstPort = uint32(base)
-	line.SrcPktAddr = net.ParseIP(pts[lineMap[AWS_PKT_SRC_ADDR]])
-	line.DstPktAddr = net.ParseIP(pts[lineMap[AWS_PKT_DST_ADDR]])
-	base, _ = strconv.Atoi(pts[lineMap[AWS_PROTOCOL]])
-	line.Protocol = uint32(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_BYTES]])
-	line.Bytes = uint64(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_PACKETS]])
-	line.Packets = uint64(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_START]])
-	line.StartTime = time.Unix(int64(base), 0)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_END]])
-	line.EndTime = time.Unix(int64(base), 0)
-	line.Action = pts[lineMap[AWS_LINE_ACTION]]
-	base, _ = strconv.Atoi(pts[lineMap[AWS_TCP_FLAGS]])
-	line.TcpFlags = uint32(base)
-	line.Status = pts[lineMap[AWS_LOG_STATUS]]
-	line.Region = pts[lineMap[AWS_REGION]]
-	line.AzID = pts[lineMap[AWS_AZ_ID]]
-	line.SublocationType = pts[lineMap[AWS_SUBLOCATION_TYPE]]
-	line.SublocationID = pts[lineMap[AWS_SUBLOCATION_ID]]
-	line.SrcPktService = pts[lineMap[AWS_PKT_SRC_AWS_SERVICE]]
-	line.DstPktService = pts[lineMap[AWS_PKT_DST_AWS_SERVICE]]
-	line.FlowDirection = pts[lineMap[AWS_FLOW_DIRECTION]]
-	line.TrafficPath = pts[lineMap[AWS_TRAFFIC_PATH]]
+	line.VPCID = getString(lineMap, pts, AWS_VPC_ID)
+	line.SubnetID = getString(lineMap, pts, AWS_SUBNET_ID)
+	line.InstanceID = getString(lineMap, pts, AWS_INSTANCE_ID)
+	line.InterfaceID = getString(lineMap, pts, AWS_INTERFACE_ID)
+	line.AccountID = getString(lineMap, pts, AWS_ACCOUNT_ID)
+	line.SrcAddr = getIP(lineMap, pts, AWS_SRC_ADDR)
+	line.DstAddr = getIP(lineMap, pts, AWS_DST_ADDR)
+	line.SrcPort = getUint32(lineMap, pts, AWS_SRC_PORT)
+	line.DstPort = getUint32(lineMap, pts, AWS_DST_PORT)
+	line.SrcPktAddr = getIP(lineMap, pts, AWS_PKT_SRC_ADDR)
+	line.DstPktAddr = getIP(lineMap, pts, AWS_PKT_DST_ADDR)
+	line.Protocol = getUint32(lineMap, pts, AWS_PROTOCOL)
+	line.Bytes = getUint64(lineMap, pts, AWS_BYTES)
+	line.Packets = getUint64(lineMap, pts, AWS_PACKETS)
+	line.StartTime = getTime(lineMap, pts, AWS_START)
+	line.EndTime = getTime(lineMap, pts, AWS_END)
+	line.Action = getString(lineMap, pts, AWS_LINE_ACTION)
+	line.TcpFlags = getUint32(lineMap, pts, AWS_TCP_FLAGS)
+	line.Status = getString(lineMap, pts, AWS_LOG_STATUS)
+	line.Region = getString(lineMap, pts, AWS_REGION)
+	line.AzID = getString(lineMap, pts, AWS_AZ_ID)
+	line.SublocationType = getString(lineMap, pts, AWS_SUBLOCATION_TYPE)
+	line.SublocationID = getString(lineMap, pts, AWS_SUBLOCATION_ID)
+	line.SrcPktService = getString(lineMap, pts, AWS_PKT_SRC_AWS_SERVICE)
+	line.DstPktService = getString(lineMap, pts, AWS_PKT_DST_AWS_SERVICE)
+	line.FlowDirection = getString(lineMap, pts, AWS_FLOW_DIRECTION)
+	line.TrafficPath = getString(lineMap, pts, AWS_TRAFFIC_PATH)
 
 	done := []*AWSLogLine{}
 	if line.StartTime.Before(time.Now().Add(-7 * 24 * time.Hour)) {
-		//log.Debugf("Bad v3/4 log line: %v | %v-> %s", lineMap, line.StartTime, strings.Join(pts, "|"))
+		//log.Debugf("Bad v3/4/5 log line: %v | %v-> %s", lineMap, line.StartTime, strings.Join(pts, "|"))
 		// Set start time to now.
 		line.StartTime = time.Now()
 		done = append(done, &line)
@@ -375,9 +395,11 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 	case 2:
 		return NewAwsFromV2(lineMap, pts, log)
 	case 3:
-		return NewAwsFromV34(3, lineMap, pts, log)
+		return NewAwsFromV345(3, lineMap, pts, log)
 	case 4:
-		return NewAwsFromV34(4, lineMap, pts, log)
+		return NewAwsFromV345(4, lineMap, pts, log)
+	case 5:
+		return NewAwsFromV345(5, lineMap, pts, log)
 	default:
 		// Try parsing as a Kinesis stream
 		if strings.Contains(*raw, baseSplitAWS) {
