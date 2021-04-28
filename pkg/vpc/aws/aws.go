@@ -257,26 +257,19 @@ func NewAwsFromKinesis(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]
 func NewAwsFromV2(lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWSLogLine, AwsLineMap, error) {
 	line := AWSLogLine{}
 	line.Version = 2
-	line.AccountID = pts[lineMap[AWS_ACCOUNT_ID]]
-	line.InterfaceID = pts[lineMap[AWS_INTERFACE_ID]]
-	line.SrcAddr = net.ParseIP(pts[lineMap[AWS_SRC_ADDR]])
-	line.DstAddr = net.ParseIP(pts[lineMap[AWS_DST_ADDR]])
-	base, _ := strconv.Atoi(pts[lineMap[AWS_SRC_PORT]])
-	line.SrcPort = uint32(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_DST_PORT]])
-	line.DstPort = uint32(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_PROTOCOL]])
-	line.Protocol = uint32(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_PACKETS]])
-	line.Packets = uint64(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_BYTES]])
-	line.Bytes = uint64(base)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_START]])
-	line.StartTime = time.Unix(int64(base), 0)
-	base, _ = strconv.Atoi(pts[lineMap[AWS_END]])
-	line.EndTime = time.Unix(int64(base), 0)
-	line.Action = pts[lineMap[AWS_ACTION]]
-	line.Status = pts[lineMap[AWS_LOG_STATUS]]
+	line.AccountID = getString(lineMap, pts, AWS_ACCOUNT_ID)
+	line.InterfaceID = getString(lineMap, pts, AWS_INTERFACE_ID)
+	line.SrcAddr = getIP(lineMap, pts, AWS_SRC_ADDR)
+	line.DstAddr = getIP(lineMap, pts, AWS_DST_ADDR)
+	line.SrcPort = getUint32(lineMap, pts, AWS_SRC_PORT)
+	line.DstPort = getUint32(lineMap, pts, AWS_DST_PORT)
+	line.Protocol = getUint32(lineMap, pts, AWS_PROTOCOL)
+	line.Packets = getUint64(lineMap, pts, AWS_PACKETS)
+	line.Bytes = getUint64(lineMap, pts, AWS_BYTES)
+	line.StartTime = getTime(lineMap, pts, AWS_START)
+	line.EndTime = getTime(lineMap, pts, AWS_END)
+	line.Action = getString(lineMap, pts, AWS_ACTION)
+	line.Status = getString(lineMap, pts, AWS_LOG_STATUS)
 
 	done := []*AWSLogLine{}
 	if line.StartTime.Before(time.Now().Add(-7 * 24 * time.Hour)) {
@@ -390,7 +383,7 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 		}
 	}
 
-	ver, _ := strconv.Atoi(pts[lineMap[AWS_VERSION]])
+	ver := getUint32(lineMap, pts, AWS_VERSION)
 	switch ver {
 	case 2:
 		return NewAwsFromV2(lineMap, pts, log)
@@ -405,7 +398,8 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 		if strings.Contains(*raw, baseSplitAWS) {
 			return NewAwsFromKinesis(lineMap, raw, log)
 		} else {
-			return nil, lineMap, fmt.Errorf("Bad log version: %d -> %v", ver, *raw)
+			// Fall back to trying a 3/4/5 line becuase version isn't required.
+			return NewAwsFromV345(5, lineMap, pts, log)
 		}
 	}
 }

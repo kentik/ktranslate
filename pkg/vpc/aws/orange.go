@@ -3,6 +3,8 @@ package aws
 import (
 	"context"
 	"flag"
+	"fmt"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 
@@ -37,9 +39,11 @@ type OrangeMetric struct {
 }
 
 var (
-	IamRole = flag.String("iam-role", "", "IAM Role to use for processing flow")
-	Region  = flag.String("region", "us-east", "Region to look for flow in")
+	IamRole = flag.String("iam_role", "", "IAM Role to use for processing flow")
 	SqsName = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
+	Region  = flag.String("aws_region", "us-east-1", "Region to run in.")
+
+	ERROR_SLEEP_TIME = 20 * time.Second
 )
 
 func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*AwsVpc, error) {
@@ -55,7 +59,14 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		awsQUrl: *SqsName,
 	}
 
-	vpc.Infof("Running with role %s in region %s, looking at q %s", *IamRole, *Region, *SqsName)
+	if vpc.awsQUrl == "" {
+		return nil, fmt.Errorf("Flag --sqs_name required")
+	}
+	if *IamRole == "" {
+		return nil, fmt.Errorf("Flag --iam_role required")
+	}
+
+	vpc.Infof("Running with role %s in region %s looking at q %s", *IamRole, *Region, *SqsName)
 	sess := session.Must(session.NewSession())
 	conf := aws.NewConfig().
 		WithRegion(*Region).
@@ -84,6 +95,7 @@ func (vpc *AwsVpc) checkQIn(ctx context.Context) {
 		err := vpc.checkQueue(ctx) // Will block waiting for input from sqs queue.
 		if err != nil {
 			vpc.Errorf("Cannot check queue: %s -> %v", vpc.awsQUrl, err)
+			time.Sleep(ERROR_SLEEP_TIME)
 		}
 	}
 }

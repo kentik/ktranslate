@@ -162,7 +162,7 @@ func (vpc *AwsVpc) checkQueue(ctx context.Context) error {
 		WaitTimeSeconds:     &waitTime,
 	})
 	if err != nil {
-		vpc.Errorf("Error revieving messages: %v", err)
+		return err
 	}
 
 	for _, m := range res.Messages {

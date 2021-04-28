@@ -24,7 +24,7 @@ func main() {
 	var (
 		// runtime options
 		listenIPPort   = flag.String("listen", "127.0.0.1:8081", "IP:Port to listen on")
-		mappingFile    = flag.String("mapping", "config.json", "Mapping file to use for enums")
+		mappingFile    = flag.String("mapping", "", "Mapping file to use for enums")
 		region         = flag.String("region", "", "Region mapping file")
 		city           = flag.String("city", "", "City mapping file")
 		udrs           = flag.String("udrs", "", "UDR mapping file")
