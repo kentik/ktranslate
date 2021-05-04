@@ -136,6 +136,8 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		}
 		kc.mapr = m
 		kc.log.Infof("Loaded %d custom mappings", len(m.Customs))
+	} else { // Make this empty to we don't error out.
+		kc.mapr = &CustomMapper{Customs: map[uint32]string{}}
 	}
 
 	if config.UDRFile != "" {

@@ -4,6 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"strings"
+	"sync"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -27,6 +29,9 @@ type AwsVpc struct {
 	awsQUrl  string
 	client   *s3.S3
 	jchfChan chan []*kt.JCHF
+	topo     *AWSTopology
+	regions  []string
+	mux      sync.RWMutex
 }
 
 type OrangeMetric struct {
@@ -41,9 +46,10 @@ type OrangeMetric struct {
 var (
 	IamRole = flag.String("iam_role", "", "IAM Role to use for processing flow")
 	SqsName = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
-	Region  = flag.String("aws_region", "us-east-1", "Region to run in.")
+	Regions = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
 
-	ERROR_SLEEP_TIME = 20 * time.Second
+	ERROR_SLEEP_TIME     = 20 * time.Second
+	MappingCheckDuration = 30 * 60 * time.Second
 )
 
 func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*AwsVpc, error) {
@@ -66,10 +72,16 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		return nil, fmt.Errorf("Flag --iam_role required")
 	}
 
-	vpc.Infof("Running with role %s in region %s looking at q %s", *IamRole, *Region, *SqsName)
+	regions := strings.Split(*Regions, ",")
+	if len(regions) == 0 {
+		return nil, fmt.Errorf("Flag --regions required")
+	}
+	vpc.regions = regions
+
+	vpc.Infof("Running with role %s in region %s looking at q %s", *IamRole, vpc.regions[0], *SqsName)
 	sess := session.Must(session.NewSession())
 	conf := aws.NewConfig().
-		WithRegion(*Region).
+		WithRegion(vpc.regions[0]).
 		WithCredentials(stscreds.NewCredentials(sess, *IamRole))
 	vpc.client = s3.New(sess, conf)
 	vpc.sqsCli = sqs.New(sess, conf)

@@ -38,6 +38,6 @@ require (
 	go.uber.org/atomic v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa
 	google.golang.org/grpc v1.36.0
-	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	zombiezen.com/go/capnproto2 v2.18.0+incompatible
 )
