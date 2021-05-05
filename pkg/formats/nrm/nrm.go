@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -23,6 +24,9 @@ const (
 	NR_GAUGE_TYPE   = "gauge"
 	NR_SUMMARY_TYPE = "summary"
 	NR_UNIQUE_TYPE  = "uniqueCount"
+
+	DO_DEMO_PERIOD = "NRM_DO_DEMO_PERIOD"
+	DEMO_AMP       = uint32(3) //  go up to 300% of the base value and then shrink to -300 %
 )
 
 type NRMFormat struct {
@@ -32,6 +36,7 @@ type NRMFormat struct {
 	lastMetadata map[string]*kt.LastMetadata
 	invalids     map[string]bool
 	mux          sync.RWMutex
+	demo         *Demozer
 
 	EventChan chan []byte
 }
@@ -57,6 +62,12 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 		EventChan:    make(chan []byte, 100), // Used for sending events to the event API.
+	}
+
+	dp := os.Getenv(DO_DEMO_PERIOD)
+	if per, err := strconv.Atoi(dp); err == nil {
+		jf.demo = NewDemozer(jf, uint32(per), DEMO_AMP)
+		jf.Infof("Running Demo System with period of %d and amplitude of %d", per, DEMO_AMP)
 	}
 
 	switch compression {
@@ -212,6 +223,10 @@ var (
 func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	ms := make([]NRMetric, 0, len(in))
 	for _, roll := range in {
+		if roll.Metric == 0 {
+			continue
+		}
+
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
 			"provider":                 roll.Provider,
@@ -262,6 +277,12 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 			Attributes: attr,
 		})
 	}
+
+	// Tweak any values if we have a demoizer set.
+	if f.demo != nil {
+		f.demo.demoize(ms)
+	}
+
 	return ms
 }
 
