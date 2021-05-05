@@ -9,7 +9,7 @@ import (
 
 func TestWave(t *testing.T) {
 	assert := assert.New(t)
-	w := NewSineWave(10, 10)
+	w := NewSineWave(nil, 10, 10)
 	assert.NotNil(w)
 
 	for i := 0; i < 6; i++ {
@@ -28,7 +28,7 @@ func TestWave(t *testing.T) {
 
 func TestWaveSmall(t *testing.T) {
 	assert := assert.New(t)
-	w := NewSineWave(100, 1)
+	w := NewSineWave(nil, 100, 1)
 	assert.NotNil(w)
 
 	for i := 0; i < 50; i++ {

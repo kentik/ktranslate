@@ -32,8 +32,9 @@ func NewDemozer(log logger.ContextL, period uint32, amplitude uint32) *Demozer {
 
 // Move wave a random value from 0 forward.
 func (d *Demozer) NewSineWaveOffset() *SineWave {
-	w := NewSineWave(d.period, d.amplitude)
-	offset := rand.Int31n(100)
+	w := NewSineWave(d, d.period, d.amplitude)
+	w.PeriodVar = 40 // Change the period of each wave by +- 20 each time.
+	offset := rand.Int31n(int32(d.period * 4))
 	for i := 0; i < int(offset); i++ {
 		<-w.Output
 	}
@@ -48,30 +49,27 @@ func (d *Demozer) demoize(ms []NRMetric) {
 	for i, m := range ms {
 		// if we have a wave for this value, adjust by the next tick.
 		// Otherwise, start a wave for it.
-		if country, ok := m.Attributes["country"].(string); ok {
-			if name, ok := m.Attributes["vpc_identification"].(string); ok {
-				if name != "" && VALID_GEO[country] {
-					key := m.Name + name + country
-					adjust, ok := adjusts[key]
-					if !ok {
-						if _, ok := d.waves[key]; !ok { // 1 wave per vpc + metric + country
-							d.waves[key] = d.NewSineWaveOffset()
-						}
-						adjust = <-d.waves[key].Output
-						adjusts[key] = adjust
+		if vpc, ok := m.Attributes["vpc_identification"].(string); ok {
+			if vpc != "" {
+				key := m.Name + vpc
+				adjust, ok := adjusts[key]
+				if !ok {
+					if _, ok := d.waves[key]; !ok { // 1 wave per vpc + metric + country
+						d.waves[key] = d.NewSineWaveOffset()
 					}
+					adjust = <-d.waves[key].Output
+					adjusts[key] = adjust
+				}
 
-					if vals, ok := m.Value.(map[string]uint64); ok {
-						fv := float64(vals["sum"])
-						adj := fv * adjust
-						if fv+adj > 0 {
-							vals["sum"] = uint64(fv + adj)
-						} else {
-							vals["sum"] = uint64((adj + fv) * -1)
-						}
-						d.Debugf("%s %s: %d * %f -> %d", name, country, adjust, vals["sum"])
-						ms[i].Value = vals
+				if vals, ok := m.Value.(map[string]uint64); ok {
+					fv := float64(vals["sum"])
+					adj := fv * adjust
+					if fv+adj > 0 {
+						vals["sum"] = uint64(fv + adj)
+					} else {
+						vals["sum"] = uint64((adj + fv) * -1)
 					}
+					ms[i].Value = vals
 				}
 			}
 		}
@@ -79,15 +77,18 @@ func (d *Demozer) demoize(ms []NRMetric) {
 }
 
 type SineWave struct {
+	logger.ContextL
 	Period    uint32
 	Amplitude uint32
+	PeriodVar int32
 
 	// Generated data is written to this channel.
 	Output chan float64
 }
 
-func NewSineWave(period uint32, amplitude uint32) *SineWave {
+func NewSineWave(log logger.ContextL, period uint32, amplitude uint32) *SineWave {
 	sw := &SineWave{
+		ContextL:  log,
 		Period:    period,
 		Amplitude: amplitude,
 		Output:    make(chan float64),
@@ -111,6 +112,19 @@ func (wave *SineWave) Generate() {
 			wave.Output <- currentValue * sign
 			currentValue -= step
 		}
+
+		if sign < 0 { // If we are shifting our period, do so here afer 1 revolution
+			if wave.PeriodVar > 0 {
+				adj := rand.Int31n(wave.PeriodVar)
+				op := period
+				nv := int32(wave.Period) + (adj - (wave.PeriodVar / 2))
+				if nv > 0 {
+					period = uint32(nv)
+					wave.Infof("New Period: %d, from %d", period, op)
+				}
+			}
+		}
+
 		sign = sign * -1
 	}
 }

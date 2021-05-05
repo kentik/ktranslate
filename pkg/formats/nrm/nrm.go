@@ -26,7 +26,7 @@ const (
 	NR_UNIQUE_TYPE  = "uniqueCount"
 
 	DO_DEMO_PERIOD = "NRM_DO_DEMO_PERIOD"
-	DEMO_AMP       = uint32(3) //  go up to 300% of the base value and then shrink to -300 %
+	DO_DEMO_AMP    = "NRM_DO_DEMO_AMPLITIDE"
 )
 
 type NRMFormat struct {
@@ -66,8 +66,13 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 
 	dp := os.Getenv(DO_DEMO_PERIOD)
 	if per, err := strconv.Atoi(dp); err == nil {
-		jf.demo = NewDemozer(jf, uint32(per), DEMO_AMP)
-		jf.Infof("Running Demo System with period of %d and amplitude of %d", per, DEMO_AMP)
+		da := os.Getenv(DO_DEMO_AMP)
+		if amp, err := strconv.Atoi(da); err != nil {
+			return nil, fmt.Errorf("Bad value for demo amplitude: %s. Be sure to set %s", da, DO_DEMO_AMP)
+		} else {
+			jf.demo = NewDemozer(jf, uint32(per), uint32(amp))
+			jf.Infof("Running Demo System with period of %d and amplitude of %d", per, amp)
+		}
 	}
 
 	switch compression {
