@@ -78,7 +78,7 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 	}
 	vpc.regions = regions
 
-	vpc.Infof("Running with role %s in region %s looking at q %s", *IamRole, vpc.regions[0], *SqsName)
+	vpc.Infof("Running with role %s in region %s looking at q %s and metadata in %v", *IamRole, vpc.regions[0], *SqsName, vpc.regions)
 	sess := session.Must(session.NewSession())
 	conf := aws.NewConfig().
 		WithRegion(vpc.regions[0]).
@@ -88,6 +88,7 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 
 	go vpc.checkQIn(ctx)
 	go vpc.checkQOut(ctx)
+	go vpc.checkMappings(ctx)
 
 	return vpc, nil
 }
@@ -117,8 +118,12 @@ func (vpc *AwsVpc) checkQOut(ctx context.Context) {
 		select {
 		case rec := <-vpc.recs:
 			dst := make([]*kt.JCHF, len(rec.Lines))
+			var topo *AWSTopology
+			vpc.mux.RLock()
+			topo = vpc.topo
+			vpc.mux.RUnlock()
 			for i, l := range rec.Lines {
-				dst[i] = l.ToFlow()
+				dst[i] = l.ToFlow(vpc, topo)
 			}
 
 			if len(dst) > 0 {

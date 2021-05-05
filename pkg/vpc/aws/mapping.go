@@ -3,21 +3,7 @@ package aws
 import (
 	"context"
 	"time"
-
-	tree "github.com/kentik/patricia/string_tree"
 )
-
-type MappingSet struct {
-	SubnetTrieV4 *tree.TreeV4
-	SubnetTrieV6 *tree.TreeV6
-}
-
-func NewMappingSet() *MappingSet {
-	return &MappingSet{
-		SubnetTrieV4: tree.NewTreeV4(),
-		SubnetTrieV6: tree.NewTreeV6(),
-	}
-}
 
 func (vpc *AwsVpc) checkMappings(ctx context.Context) {
 	checkTicker := time.NewTicker(MappingCheckDuration)

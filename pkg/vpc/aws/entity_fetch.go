@@ -12,6 +12,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+
+	"github.com/kentik/patricia"
+	tree "github.com/kentik/patricia/string_tree"
 )
 
 // AWSEntities holds all of the entities fetched for a company
@@ -42,12 +45,16 @@ func NewAWSTopology() AWSTopology {
 }
 
 type AWSHierarchy struct {
-	Regions map[string]RegionSkel `json:"Regions"`
+	Regions      map[string]RegionSkel `json:"Regions"`
+	SubnetTrieV4 *tree.TreeV4
+	SubnetTrieV6 *tree.TreeV6
 }
 
 func NewAWSHierarchy() AWSHierarchy {
 	return AWSHierarchy{
-		Regions: make(map[string]RegionSkel),
+		Regions:      make(map[string]RegionSkel),
+		SubnetTrieV4: tree.NewTreeV4(),
+		SubnetTrieV6: tree.NewTreeV6(),
 	}
 }
 
@@ -337,6 +344,17 @@ func fetchSubnets(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, r
 					topology.Hierarchy.Regions[regionName].Vpcs[*subnet.VpcId] = NewVpcSkel(*subnet.VpcId)
 				}
 				topology.Hierarchy.Regions[regionName].Vpcs[*subnet.VpcId].Subnets[*subnet.SubnetId] = NewSubnetSkel(*subnet.SubnetId)
+
+				// Now, add to out lookup.
+				ip4, ip6, err := patricia.ParseIPFromString(*subnet.CidrBlock)
+				if err != nil {
+					continue
+				}
+				if ip4 != nil {
+					topology.Hierarchy.SubnetTrieV4.Set(*ip4, *subnet.SubnetId)
+				} else {
+					topology.Hierarchy.SubnetTrieV6.Set(*ip6, *subnet.SubnetId)
+				}
 			}
 			time.Sleep(sleepTime)
 			return true

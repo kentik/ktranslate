@@ -10,6 +10,9 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/ic"
+
+	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/kentik/patricia"
 )
 
 /**
@@ -378,7 +381,7 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 	if pts[0] == "version" {
 		return NewAwsHeader(pts)
 	} else if len(lineMap) == 0 {
-		if strings.Contains(*raw, "version") && !strings.Contains(*raw, baseSplitAWS) {
+		if !strings.Contains(*raw, baseSplitAWS) {
 			return NewAwsHeader(pts)
 		}
 	}
@@ -397,22 +400,43 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 		// Try parsing as a Kinesis stream
 		if strings.Contains(*raw, baseSplitAWS) {
 			return NewAwsFromKinesis(lineMap, raw, log)
-		} else {
-			// Fall back to trying a 3/4/5 line becuase version isn't required.
-			return NewAwsFromV345(5, lineMap, pts, log)
+		} else { // Error here because we don't know version.
+			if len(lineMap) == 0 {
+				return nil, lineMap, fmt.Errorf("Bad log version: %d -> %v", ver, *raw)
+			} else {
+				// Go ahead and try to parse with v5 since we have a line map.
+				return NewAwsFromV345(5, lineMap, pts, log)
+			}
 		}
 	}
 }
 
-func (m *AWSLogLine) GetPrivateIP() net.IP {
-	if isPrivateIP(m.SrcAddr) {
-		return m.SrcAddr
-	} else {
-		return m.DstAddr
+func (m *AWSLogLine) getOther(ip net.IP, topo *AWSTopology) *ec2.Subnet {
+	if topo != nil {
+		// Since flow is in the egress direction, dst ip will be the other side.
+		if ip.To4() == nil {
+			address := patricia.NewIPv6Address(ip.To16(), 128)
+			found, val, _ := topo.Hierarchy.SubnetTrieV6.FindDeepestTag(address)
+			if found {
+				if s, ok := topo.Entities.Subnets[val]; ok {
+					return &s
+				}
+			}
+		} else {
+			address := patricia.NewIPv4AddressFromBytes(ip.To4(), 32)
+			found, val, _ := topo.Hierarchy.SubnetTrieV4.FindDeepestTag(address)
+			if found {
+				if s, ok := topo.Entities.Subnets[val]; ok {
+					return &s
+				}
+			}
+		}
 	}
+
+	return nil
 }
 
-func (m *AWSLogLine) ToFlow() (in *kt.JCHF) {
+func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF) {
 
 	in = kt.NewJCHF()
 	in.CustomStr = make(map[string]string)
@@ -423,8 +447,6 @@ func (m *AWSLogLine) ToFlow() (in *kt.JCHF) {
 	in.Timestamp = m.StartTime.Unix()
 	in.InBytes = m.Bytes
 	in.InPkts = m.Packets
-	in.OutBytes = 0
-	in.OutPkts = 0
 	in.L4DstPort = m.DstPort
 	in.L4SrcPort = m.SrcPort
 	in.Protocol = ic.PROTO_NAMES[uint16(m.Protocol)]
@@ -442,30 +464,50 @@ func (m *AWSLogLine) ToFlow() (in *kt.JCHF) {
 	in.DstAddr = m.DstAddr.String()
 	in.CustomStr["SrcPktAddr"] = m.SrcPktAddr.String()
 	in.CustomStr["DstPktAddr"] = m.DstPktAddr.String()
-
-	if isPrivateIP(m.SrcAddr) {
-		in.OutBytes = in.InBytes
-		in.OutPkts = in.InPkts
-		in.InBytes = 0
-		in.InPkts = 0
-	}
-
-	in.CustomStr["VpcID"] = m.VPCID
-	in.CustomStr["SubnetID"] = m.SubnetID
-	in.CustomStr["InstanceID"] = m.InstanceID
-	in.CustomStr["InterfaceID"] = m.InterfaceID
-	in.CustomStr["AzID"] = m.AzID
-	in.CustomStr["Region"] = m.Region
 	in.CustomStr["SublocationType"] = m.SublocationType
 	in.CustomStr["SublocationID"] = m.SublocationID
 	in.CustomStr["SrcPktService"] = m.SrcPktService
 	in.CustomStr["DstPktService"] = m.DstPktService
 	in.CustomStr["FlowDirection"] = m.FlowDirection
 	in.CustomStr["TrafficPath"] = m.TrafficPath
-
-	// Add in any custom dimensions for this flow.
 	in.CustomBigInt["StartTime"] = m.StartTime.Unix()
 	in.CustomBigInt["EndTime"] = m.EndTime.Unix()
+
+	// The rest is set up into src and dst parts.
+	if m.FlowDirection == "egress" {
+		in.OutBytes = in.InBytes // Move these to out since its egress.
+		in.OutPkts = in.InPkts
+		in.InBytes = 0 // And 0 these out.
+		in.InPkts = 0
+
+		in.CustomStr["SrcVpcID"] = m.VPCID
+		in.CustomStr["SrcSubnetID"] = m.SubnetID
+		in.CustomStr["SrcInstanceID"] = m.InstanceID
+		in.CustomStr["SrcInterfaceID"] = m.InterfaceID
+		in.CustomStr["SrcAzID"] = m.AzID
+		in.CustomStr["SrcRegion"] = m.Region
+
+		other := m.getOther(m.DstAddr, topo) // Do we know anything about the other side of the conversation?
+		if other != nil {
+			in.CustomStr["DstVpcID"] = *other.VpcId
+			in.CustomStr["DstAzID"] = *other.AvailabilityZoneId
+			in.CustomStr["DstRegion"] = *other.AvailabilityZone // This should likely be something else?
+		}
+	} else {
+		in.CustomStr["DstVpcID"] = m.VPCID
+		in.CustomStr["DstSubnetID"] = m.SubnetID
+		in.CustomStr["DstInstanceID"] = m.InstanceID
+		in.CustomStr["DstInterfaceID"] = m.InterfaceID
+		in.CustomStr["DstAzID"] = m.AzID
+		in.CustomStr["DstRegion"] = m.Region
+
+		other := m.getOther(m.SrcAddr, topo) // Do we know anything about the other side of the conversation?
+		if other != nil {
+			in.CustomStr["SrctVpcID"] = *other.VpcId
+			in.CustomStr["SrcAzID"] = *other.AvailabilityZoneId
+			in.CustomStr["SrcRegion"] = *other.AvailabilityZone // This should likely be something else?
+		}
+	}
 
 	return in
 }
