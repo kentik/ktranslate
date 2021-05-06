@@ -15,7 +15,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/baseserver"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
-	"github.com/kentik/ktranslate/pkg/vpc"
+	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 )
 
 const ()

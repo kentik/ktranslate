@@ -11,9 +11,9 @@ import (
 	"github.com/kentik/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/ktranslate/pkg/snmp/mibs"
-	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
 )
 
 type SnmpTrap struct {

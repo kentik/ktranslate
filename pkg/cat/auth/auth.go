@@ -12,7 +12,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-	"github.com/kentik/ktranslate/pkg/snmp"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 )
 
 type Server struct {

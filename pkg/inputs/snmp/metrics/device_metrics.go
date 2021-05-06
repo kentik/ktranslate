@@ -9,7 +9,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
-	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 )
 
 type DeviceMetrics struct {

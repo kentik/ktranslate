@@ -8,9 +8,9 @@ import (
 	"github.com/kentik/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/kt/counters"
-	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
 )
 
 // SNMP keys used in various places

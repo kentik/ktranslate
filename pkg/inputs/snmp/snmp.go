@@ -14,12 +14,12 @@ import (
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
+	snmp_metrics "github.com/kentik/ktranslate/pkg/inputs/snmp/metrics"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/traps"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/ktranslate/pkg/snmp/metadata"
-	snmp_metrics "github.com/kentik/ktranslate/pkg/snmp/metrics"
-	"github.com/kentik/ktranslate/pkg/snmp/mibs"
-	"github.com/kentik/ktranslate/pkg/snmp/traps"
-	snmp_util "github.com/kentik/ktranslate/pkg/snmp/util"
 
 	"gopkg.in/yaml.v2"
 )

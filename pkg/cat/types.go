@@ -11,12 +11,12 @@ import (
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
-	"github.com/kentik/ktranslate/pkg/vpc"
 
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
 

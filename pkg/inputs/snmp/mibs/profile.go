@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs/apc"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/ktranslate/pkg/snmp/mibs/apc"
 
 	"gopkg.in/yaml.v2"
 )

@@ -16,14 +16,14 @@ import (
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp"
+	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
-	"github.com/kentik/ktranslate/pkg/snmp"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
-	"github.com/kentik/ktranslate/pkg/vpc"
 
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 

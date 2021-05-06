@@ -8,8 +8,8 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/vpc/aws"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/ktranslate/pkg/vpc/aws"
 )
 
 type VpcImpl interface {

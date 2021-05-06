@@ -8,8 +8,8 @@ import (
 	"github.com/kentik/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/ktranslate/pkg/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
 
