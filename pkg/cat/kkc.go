@@ -16,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -233,6 +234,9 @@ func (kc *KTranslate) cleanup() {
 	}
 	if kc.vpc != nil {
 		kc.vpc.Close()
+	}
+	if kc.nfs != nil {
+		kc.nfs.Close()
 	}
 }
 
@@ -852,6 +856,20 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		kc.vpc = vpci
+	}
+
+	// If we're looking for netflow direct flows coming in
+	if kc.config.FlowSource != "" {
+		if kc.snmpChan == nil {
+			kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
+			go kc.monitorSnmp(ctx, kc.format.To)
+		}
+
+		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.snmpChan, kc.apic)
+		if err != nil {
+			return err
+		}
+		kc.nfs = nfs
 	}
 
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate)

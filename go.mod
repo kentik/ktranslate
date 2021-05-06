@@ -8,6 +8,7 @@ require (
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/bmatsuo/lmdb-go v1.8.0
+	github.com/cloudflare/goflow/v3 v3.4.2 // indirect
 	github.com/cornelk/hashmap v1.0.1 // indirect
 	github.com/dchest/siphash v1.2.2
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect

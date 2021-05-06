@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -64,6 +65,7 @@ type Config struct {
 	TagFile           string
 	Kentik            *kt.KentikConfig
 	VpcSource         vpc.CloudSource
+	FlowSource        flow.FlowSource
 }
 
 type AuthConfig struct {
@@ -99,6 +101,7 @@ type KTranslate struct {
 	tooBig         chan int
 	tagMap         TagMapper
 	vpc            vpc.VpcImpl
+	nfs            *flow.KentikTransport
 }
 
 type CustomMapper struct {
