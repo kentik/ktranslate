@@ -27,8 +27,8 @@ const (
 )
 
 var (
-	Addr          = flag.String("nf.addr", "", "Sflow/NetFlow/IPFIX listening address")
-	Port          = flag.Int("nf.port", 2055, "Sflow/NetFlow/IPFIX listening port")
+	Addr          = flag.String("nf.addr", "127.0.0.1", "Sflow/NetFlow/IPFIX listening address")
+	Port          = flag.Int("nf.port", 9995, "Sflow/NetFlow/IPFIX listening port")
 	Reuse         = flag.Bool("nf.reuserport", false, "Enable so_reuseport for Sflow/NetFlow/IPFIX")
 	Workers       = flag.Int("nf.workers", 1, "Number of workers per flow collector")
 	MessageFields = flag.String("nf.message.fields", defaultFields, "The list of fields to include in flow messages")
@@ -47,6 +47,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying,
 	}
 
 	kt.Infof("Netflow listener running on %s:%d for format %s", *Addr, *Port, proto)
+	kt.Infof("Netflow listener sending fields %s", *MessageFields)
 
 	switch proto {
 	case Ipfix, Netflow9:
