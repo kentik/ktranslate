@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go/storage v1.14.0
+	github.com/DataDog/datadog-api-client-go v1.0.0-beta.20 // indirect
 	github.com/RoaringBitmap/roaring v0.5.5
 	github.com/StackExchange/wmi v0.0.0-20210224194228-fe8f1750fd46 // indirect
 	github.com/aws/aws-sdk-go v1.37.32

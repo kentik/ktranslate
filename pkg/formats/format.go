@@ -6,6 +6,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
+	"github.com/kentik/ktranslate/pkg/formats/ddog"
 	"github.com/kentik/ktranslate/pkg/formats/influx"
 	"github.com/kentik/ktranslate/pkg/formats/json"
 	"github.com/kentik/ktranslate/pkg/formats/netflow"
@@ -33,6 +34,7 @@ const (
 	FORMAT_NR             = "new_relic"
 	FORMAT_NRM            = "new_relic_metric"
 	FORMAT_SPLUNK         = "splunk"
+	FORMAT_DATADOG        = "ddog"
 )
 
 func NewFormat(format Format, log logger.Underlying, compression kt.Compression) (Formatter, error) {
@@ -53,6 +55,8 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 		return nrm.NewFormat(log, compression)
 	case FORMAT_SPLUNK:
 		return splunk.NewFormat(log, compression)
+	case FORMAT_DATADOG:
+		return ddog.NewFormat(log, compression)
 	default:
 		return nil, fmt.Errorf("Unknown format %v", format)
 	}

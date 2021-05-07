@@ -1,5 +1,9 @@
 package kt
 
+import (
+	"net"
+)
+
 // Devices is a map of device ids to devices for a company.
 type Devices map[DeviceID]*Device
 
@@ -13,6 +17,7 @@ type Device struct {
 	DeviceSubtype string   `json:"device_subtype"`
 	Interfaces    map[IfaceID]Interface
 	AllInterfaces []Interface `json:"all_interfaces"`
+	SendingIps    []net.IP    `json:"sending_ips"`
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents

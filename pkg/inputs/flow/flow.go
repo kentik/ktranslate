@@ -43,7 +43,8 @@ func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying,
 		metrics: &FlowMetric{
 			Flows: go_metrics.GetOrRegisterMeter("netflow.flows^fmt="+string(proto), registry),
 		},
-		fields: strings.Split(*MessageFields, ","),
+		fields:  strings.Split(*MessageFields, ","),
+		devices: apic.GetDevicesAsMap(0),
 	}
 
 	kt.Infof("Netflow listener running on %s:%d for format %s", *Addr, *Port, proto)

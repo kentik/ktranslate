@@ -36,5 +36,5 @@ func (l *KentikLog) Infof(f string, vars ...interface{}) {
 }
 func (l *KentikLog) Fatalf(f string, vars ...interface{}) {
 	l.Errorf(f, vars)
-	panic(fmt.Sprintf(f, vars))
+	panic(fmt.Sprintf(f, vars...))
 }

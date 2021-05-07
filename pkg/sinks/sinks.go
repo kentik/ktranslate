@@ -9,6 +9,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/sinks/ddog"
 	"github.com/kentik/ktranslate/pkg/sinks/file"
 	"github.com/kentik/ktranslate/pkg/sinks/gcloud"
 	"github.com/kentik/ktranslate/pkg/sinks/http"
@@ -42,6 +43,7 @@ const (
 	PromSink          = "prometheus"
 	S3Sink            = "s3"
 	GCloudSink        = "gcloud"
+	DDogSink          = "ddog"
 )
 
 func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig) (SinkImpl, error) {
@@ -66,6 +68,8 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 		return s3.NewSink(log, registry)
 	case GCloudSink:
 		return gcloud.NewSink(log, registry)
+	case DDogSink:
+		return ddog.NewSink(log, registry)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
 }

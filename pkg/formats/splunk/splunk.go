@@ -36,7 +36,7 @@ type SplunkMetric struct {
 func NewFormat(log logger.Underlying, compression kt.Compression) (*SplunkFormat, error) {
 	jf := &SplunkFormat{
 		compression:  compression,
-		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "nrmFormat"}, log),
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "splunkFormat"}, log),
 		doGz:         false,
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
@@ -49,7 +49,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*SplunkFormat
 	case kt.CompressionGzip:
 		jf.doGz = true
 	default:
-		return nil, fmt.Errorf("Invalid compression (%s): format nrm only supports none|gzip", compression)
+		return nil, fmt.Errorf("Invalid compression (%s): format splunk only supports none|gzip", compression)
 	}
 
 	return jf, nil

@@ -22,6 +22,7 @@ type KentikTransport struct {
 	apic     *api.KentikApi
 	metrics  *FlowMetric
 	fields   []string
+	devices  map[string]*kt.Device
 }
 
 type FlowMetric struct {
@@ -62,6 +63,14 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderFlowDevice
+	in.SampleRate = 1
+	if dev, ok := t.devices[net.IP(fmsg.SamplerAddress).String()]; ok {
+		in.DeviceName = dev.Name
+		in.DeviceId = dev.ID
+		in.CompanyId = dev.CompanyID
+	} else {
+		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
+	}
 
 	for _, field := range t.fields {
 		switch field {

@@ -109,6 +109,29 @@ func (api *KentikApi) GetAgent(aid kt.AgentId) *synthetics.Agent {
 	return api.synAgents[aid]
 }
 
+func (api *KentikApi) GetDevicesAsMap(cid kt.Cid) map[string]*kt.Device {
+	if api == nil {
+		return nil
+	}
+	res := map[string]*kt.Device{}
+	if cid == 0 {
+		for _, cd := range api.devices {
+			for _, d := range cd {
+				for _, ip := range d.SendingIps {
+					res[ip.String()] = d
+				}
+			}
+		}
+	} else {
+		for _, d := range api.devices[cid] {
+			for _, ip := range d.SendingIps {
+				res[ip.String()] = d
+			}
+		}
+	}
+	return res
+}
+
 func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	if api == nil {
 		return nil
