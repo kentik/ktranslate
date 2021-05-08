@@ -34,6 +34,7 @@ type DDogMetric struct {
 
 const (
 	DD_API_KEY = "DD_API_KEY"
+	DD_APP_KEY = "DD_APP_KEY"
 )
 
 var (
@@ -68,14 +69,19 @@ func (s *DDogSink) Init(ctx context.Context, format formats.Format, compression 
 		s.headers["Content-Encoding"] = "GZIP"
 	}
 
+	// Fill in some values from envs.
 	apiKey := os.Getenv(DD_API_KEY)
 	if apiKey == "" {
 		return fmt.Errorf("Missing env var %s", DD_API_KEY)
 	}
 	s.headers["DD-API-KEY"] = apiKey
 
-	s.Infof("Exporting to DDog at %s", s.TargetUrl)
+	appKey := os.Getenv(DD_APP_KEY) // @TODO -- does this do anything?
+	if appKey != "" {
+		s.headers["DD-APP-KEY"] = appKey
+	}
 
+	s.Infof("Exporting to DDog at %s", s.TargetUrl)
 	return nil
 }
 

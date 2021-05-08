@@ -11,7 +11,8 @@ COPY lib/librdkafka.so.1 /lib/x86_64-linux-gnu/librdkafka.so.1
 COPY mibs.db /etc/mibs.db
 COPY devices.json /etc/devices.json
 COPY profiles /etc/profiles
-COPY snmp.yaml.sample /
+COPY snmp.yaml.sample /etc/snmp.yaml.sample
+COPY snmp-base.yaml /etc/snmp-base.yaml
 COPY devices.json /etc/devices.json
 ENTRYPOINT ["/usr/bin/ktranslate", "-metalisten", "0.0.0.0:8083", "-metrics", "tsdb:https://flow.kentik.com/tsdb", "-listen", "0.0.0.0:8082", "-mapping", "/etc/config.json", "--city", "/etc/code2city.mdb", "--region", "/etc/code2region.mdb", "--udrs", "/etc/udr.csv", "-api_devices", "/etc/devices.json"]
 
