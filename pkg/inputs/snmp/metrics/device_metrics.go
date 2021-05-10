@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/kentik/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -129,6 +130,7 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.CustomBigInt["Uptime"] = dmr.Uptime
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
+		dst.Timestamp = time.Now().Unix()
 		metrics := map[string]string{"CPU": "", "MemoryUtilization": "", "Uptime": "sysUpTime", "MemoryFree": ""}
 
 		if dmr.juniperOperatingDRAMSize > 0 {
@@ -262,6 +264,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.CustomStr["Error"] = dmr.Error
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
+		dst.Timestamp = time.Now().Unix()
 		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
 		flows = append(flows, dst)
 	}

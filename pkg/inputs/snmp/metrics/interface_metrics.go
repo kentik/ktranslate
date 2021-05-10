@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/kentik/gosnmp"
 
@@ -209,6 +210,7 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		dst.OutputPort = kt.IfaceID(intr)
 		dst.DeviceName = im.conf.DeviceName
 		dst.SrcAddr = im.conf.DeviceIP
+		dst.Timestamp = time.Now().Unix()
 
 		metrics := map[string]string{}
 		for k, v := range cs {
