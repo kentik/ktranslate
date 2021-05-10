@@ -179,7 +179,7 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	profile = strings.ToLower(profile)
 
 	combo := name + "^" + description
-	if strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") {
+	if strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") || strings.Contains(combo, "freebsd") {
 		return kt.ProviderRouter, true
 	}
 	if strings.Contains(combo, "switch") || strings.Contains(profile, "cisco-catalyst") {
@@ -188,7 +188,7 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(combo, "firewall") {
 		return kt.ProviderFirewall, true
 	}
-	if strings.Contains(combo, "ups") {
+	if strings.Contains(combo, "ups") && !strings.Contains(combo, "groups") {
 		return kt.ProviderUPS, true
 	}
 	if strings.Contains(combo, "pdu") && !strings.Contains(profile, "router") {

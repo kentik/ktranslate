@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"sync"
 	"time"
 
@@ -73,7 +74,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		st := time.Now()
 		log.Infof("Starting to check %d ips in %s, checkall=%v", len(results), ipr, conf.Disco.CheckAll)
 		for _, result := range results {
-			if result.IsHostUp() && (conf.Disco.CheckAll || result.Manufacturer != "") {
+			if strings.HasSuffix(ipr, "/32") || (result.IsHostUp() && (conf.Disco.CheckAll || result.Manufacturer != "")) {
 				wg.Add(1)
 				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, log)
 			}

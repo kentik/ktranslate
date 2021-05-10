@@ -19,6 +19,7 @@ func TestFindProfile(t *testing.T) {
 			"1.3.6.1.4.1.29671.*":         &Profile{Device: Device{Vendor: "meraki"}},
 			"1.3.6.1.4.*":                 &Profile{Device: Device{Vendor: "generic"}},
 			"1.3.6.1.4.1.318.*":           &Profile{Device: Device{Vendor: "apc"}},
+			"1.3.6.1.4.1.8072.3.2.8":      &Profile{Device: Device{Vendor: "freebsd"}},
 		},
 	}
 
@@ -31,6 +32,7 @@ func TestFindProfile(t *testing.T) {
 		".1.3.6.1.4.1.29671":             "meraki",
 		".1.3.6.1.4.1.318.1.3.4.6":       "apc",
 		".1.3.6.1.4.1.318":               "apc",
+		".1.3.6.1.4.1.8072.3.2.8":        "freebsd",
 	}
 
 	for sysid, vendor := range inputs {
