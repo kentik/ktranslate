@@ -29,6 +29,7 @@ install:
 
 .PHONY: docker
 docker: all
+	docker pull ubuntu:20.04
 	docker build -t ktranslate:v2 -f Dockerfile .
 
 .PHONY: publish
