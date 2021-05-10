@@ -21,10 +21,9 @@ var (
 )
 
 type PromData struct {
-	Name      string
-	Value     float64
-	Tags      map[string]interface{}
-	Timestamp int64
+	Name  string
+	Value float64
+	Tags  map[string]interface{}
 }
 
 func (d *PromData) AddTagLabels(vecTags tagVec) {
@@ -213,10 +212,9 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik:synth:" + k,
-			Value:     float64(v),
-			Timestamp: in.Timestamp * 1000000000,
-			Tags:      attr,
+			Name:  "kentik:synth:" + k,
+			Value: float64(v),
+			Tags:  attr,
 		})
 	}
 
@@ -249,10 +247,9 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik:flow:" + k,
-			Value:     float64(v),
-			Timestamp: in.Timestamp * 1000000000,
-			Tags:      attr,
+			Name:  "kentik:flow:" + k,
+			Value: float64(v),
+			Tags:  attr,
 		})
 	}
 
@@ -275,10 +272,9 @@ func (f *PromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []PromData {
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik:snmp:" + k,
-			Value:     float64(v),
-			Timestamp: in.Timestamp * 1000000000,
-			Tags:      attr,
+			Name:  "kentik:snmp:" + k,
+			Value: float64(v),
+			Tags:  attr,
 		})
 	}
 
@@ -326,18 +322,16 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 	res := []PromData{}
 	for k, v := range ms {
 		res = append(res, PromData{
-			Name:      "kentik:snmp:" + k,
-			Value:     float64(v),
-			Timestamp: in.Timestamp * 1000000000,
-			Tags:      attr,
+			Name:  "kentik:snmp:" + k,
+			Value: float64(v),
+			Tags:  attr,
 		})
 	}
 	for k, v := range msF {
 		res = append(res, PromData{
-			Name:      "kentik:snmp:" + k,
-			Value:     v,
-			Timestamp: in.Timestamp * 1000000000,
-			Tags:      attr,
+			Name:  "kentik:snmp:" + k,
+			Value: v,
+			Tags:  attr,
 		})
 	}
 
