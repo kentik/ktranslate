@@ -232,8 +232,16 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 		}
 	}
 
+	for k, v := range attr { // Weed out any spaces which might break things.
+		if sv, ok := v.(string); ok {
+			if strings.Contains(sv, " ") {
+				delete(attr, k)
+			}
+		}
+	}
+
 	return []InfluxData{InfluxData{
-		Name:      "kentik.snmp",
+		Name:      "kentik.snmp.device",
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -251,6 +259,14 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
 			ms[m] = in.CustomBigInt[m]
+		}
+	}
+
+	for k, v := range attr { // Weed out any spaces which might break things.
+		if sv, ok := v.(string); ok {
+			if strings.Contains(sv, " ") {
+				delete(attr, k)
+			}
 		}
 	}
 
@@ -279,7 +295,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{InfluxData{
-		Name:        "kentik.snmp",
+		Name:        "kentik.snmp.interface",
 		Fields:      ms,
 		FieldsFloat: msF,
 		Timestamp:   in.Timestamp * 1000000000,

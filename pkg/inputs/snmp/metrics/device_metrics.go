@@ -102,6 +102,9 @@ func (dm *DeviceMetrics) Poll(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 		dmrs = dm.getCiscoDeviceMetrics(dm.log, server)
 	case snmp_util.ContainsAny(deviceManufacturer, "arista"):
 		dmrs = dm.getAristaDeviceMetrics(dm.log, server)
+	default:
+		// Since we don't have any specific metrics here, go ahead and get the very basics with pollfromconfig
+		return dm.pollFromConfig(server)
 	}
 	flows := dm.convertDMToCHF(dmrs)
 	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))
@@ -262,6 +265,22 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.Provider = dm.conf.Provider
 		dst.CustomBigInt["Uptime"] = uptime
 		dst.CustomStr["Error"] = dmr.Error
+		dst.DeviceName = dm.conf.DeviceName
+		dst.SrcAddr = dm.conf.DeviceIP
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
+		flows = append(flows, dst)
+	}
+
+	// In this case, we need to send just a blank line with the uptime.
+	if len(m) == 0 {
+		dst := kt.NewJCHF()
+		dst.CustomStr = map[string]string{}
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = dm.conf.Provider
+		dst.CustomBigInt["Uptime"] = uptime
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
