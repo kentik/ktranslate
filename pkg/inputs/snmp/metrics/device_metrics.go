@@ -34,6 +34,11 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		}
 	}
 
+	// These are defined per device in the yaml conf.
+	for k, v := range conf.UserTags {
+		log.Infof("Adding user tag %s -> %s", k, v)
+	}
+
 	return &DeviceMetrics{
 		gconf:   gconf,
 		log:     log,
@@ -135,6 +140,9 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
 		metrics := map[string]string{"CPU": "", "MemoryUtilization": "", "Uptime": "sysUpTime", "MemoryFree": ""}
+		for k, v := range dm.conf.UserTags {
+			dst.CustomStr[k] = v
+		}
 
 		if dmr.juniperOperatingDRAMSize > 0 {
 			dst.CustomBigInt["juniperOperatingDRAMSize"] = dmr.juniperOperatingDRAMSize
@@ -269,6 +277,9 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
 		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
+		for k, v := range dm.conf.UserTags {
+			dst.CustomStr[k] = v
+		}
 		flows = append(flows, dst)
 	}
 
@@ -285,6 +296,9 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
 		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
+		for k, v := range dm.conf.UserTags {
+			dst.CustomStr[k] = v
+		}
 		flows = append(flows, dst)
 	}
 

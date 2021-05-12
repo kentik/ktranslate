@@ -211,6 +211,9 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		dst.DeviceName = im.conf.DeviceName
 		dst.SrcAddr = im.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
+		for k, v := range im.conf.UserTags {
+			dst.CustomStr[k] = v
+		}
 
 		metrics := map[string]string{}
 		for k, v := range cs {

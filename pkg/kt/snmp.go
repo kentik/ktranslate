@@ -94,6 +94,7 @@ type SnmpDeviceConfig struct {
 	MibProfile             string            `yaml:"mib_profile"`
 	Provider               Provider          `yaml:"provider"`
 	FlowOnly               bool              `yaml:"flow_only"`
+	UserTags               map[string]string `yaml:"user_tags"`
 }
 
 type SnmpTrapConfig struct {
