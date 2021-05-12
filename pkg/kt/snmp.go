@@ -67,13 +67,13 @@ type TopValue struct {
 }
 
 type V3SNMPConfig struct {
-	UserName                 string `yaml:"UserName"`
-	AuthenticationProtocol   string `yaml:"AuthenticationProtocol"`
-	AuthenticationPassphrase string `yaml:"AuthenticationPassphrase"`
-	PrivacyProtocol          string `yaml:"PrivacyProtocol"`
-	PrivacyPassphrase        string `yaml:"PrivacyPassphrase"`
-	ContextEngineID          string `yaml:"ContextEngineID"`
-	ContextName              string `yaml:"ContextName"`
+	UserName                 string `yaml:"user_name"`
+	AuthenticationProtocol   string `yaml:"authentication_protocol"`
+	AuthenticationPassphrase string `yaml:"authentication_passphrase"`
+	PrivacyProtocol          string `yaml:"privacy_protocol"`
+	PrivacyPassphrase        string `yaml:"privacy_passphrase"`
+	ContextEngineID          string `yaml:"context_engine_id"`
+	ContextName              string `yaml:"context_name"`
 }
 
 type SnmpDeviceConfig struct {

@@ -15,16 +15,6 @@ const (
 	MAX_CONNECT_TRY = 10
 )
 
-type V3SNMPConfig struct {
-	UserName                 string `json:"UserName"`
-	AuthenticationProtocol   string `json:"AuthenticationProtocol"`
-	AuthenticationPassphrase string `json:"AuthenticationPassphrase"`
-	PrivacyProtocol          string `json:"PrivacyProtocol"`
-	PrivacyPassphrase        string `json:"PrivacyPassphrase"`
-	ContextEngineID          string `json:"ContextEngineID"`
-	ContextName              string `json:"ContextName"`
-}
-
 func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, gosnmp.SnmpV3MsgFlags, string, string, error) {
 
 	if v3config == nil {
@@ -47,6 +37,8 @@ func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, go
 		params.PrivacyProtocol = gosnmp.DES
 	case "AES":
 		params.PrivacyProtocol = gosnmp.AES
+	default:
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 privacy_protocol: %s. valid options: NoPriv|DES|AES", v3config.PrivacyProtocol)
 	}
 
 	switch v3config.AuthenticationProtocol {
@@ -57,6 +49,8 @@ func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, go
 		params.AuthenticationProtocol = gosnmp.MD5
 	case "SHA":
 		params.AuthenticationProtocol = gosnmp.SHA
+	default:
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 authentication_protocol: %s. valid options: NoAuth|MD5|SHA", v3config.AuthenticationProtocol)
 	}
 
 	return &params, flags, v3config.ContextEngineID, v3config.ContextName, nil
