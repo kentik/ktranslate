@@ -4,7 +4,7 @@ import (
 	"bytes"
 
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/kentik/netflow/ipfix"
+	"github.com/kentik/ktranslate/pkg/util/netflow/ipfix"
 )
 
 func (f *NetflowFormat) packIpfix(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
