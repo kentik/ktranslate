@@ -46,16 +46,22 @@ type NRMFormat struct {
 	EventChan chan []byte
 }
 
+type NRCommon struct {
+	Timestamp  int64             `json:"timestamp"`
+	Attributes map[string]string `json:"attributes"`
+}
+
 type NRMetricSet struct {
 	Metrics []NRMetric `json:"metrics"`
+	Common  *NRCommon  `json:"common"`
 }
 
 type NRMetric struct {
 	Name       string                 `json:"name"`
 	Type       string                 `json:"type"`
 	Value      interface{}            `json:"value,omitempty"`
-	Timestamp  int64                  `json:"timestamp"`
-	Interval   int64                  `json:"interval.ms"`
+	Timestamp  int64                  `json:"timestamp,omitempty"`
+	Interval   int64                  `json:"interval.ms,omitempty"`
 	Attributes map[string]interface{} `json:"attributes"`
 }
 
@@ -95,10 +101,10 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	ms := NRMetricSet{
 		Metrics: make([]NRMetric, 0, len(msgs)*4),
+		Common:  newNRCommon(),
 	}
-	ct := time.Now().UnixNano() / 1e+6 // Convert to milliseconds
 	for _, m := range msgs {
-		ms.Metrics = append(ms.Metrics, f.toNRMetric(m, ct)...)
+		ms.Metrics = append(ms.Metrics, f.toNRMetric(m)...)
 	}
 
 	if len(ms.Metrics) == 0 {
@@ -140,9 +146,9 @@ func (f *NRMFormat) From(raw []byte) ([]map[string]interface{}, error) {
 }
 
 func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
-	ct := time.Now().UnixNano() / 1e+6 // Convert to milliseconds
 	ms := NRMetricSet{
-		Metrics: f.toNRMetricRollup(rolls, ct),
+		Metrics: f.toNRMetricRollup(rolls),
+		Common:  newNRCommon(),
 	}
 
 	if len(ms.Metrics) == 0 {
@@ -179,18 +185,18 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (f *NRMFormat) toNRMetric(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {
 	switch in.EventType {
 	case kt.KENTIK_EVENT_TYPE:
-		return f.fromKflow(in, ts)
+		return f.fromKflow(in)
 	case kt.KENTIK_EVENT_SNMP_DEV_METRIC:
-		return f.fromSnmpDeviceMetric(in, ts)
+		return f.fromSnmpDeviceMetric(in)
 	case kt.KENTIK_EVENT_SNMP_INT_METRIC:
-		return f.fromSnmpInterfaceMetric(in, ts)
+		return f.fromSnmpInterfaceMetric(in)
 	case kt.KENTIK_EVENT_SYNTH:
-		return f.fromKSynth(in, ts)
+		return f.fromKSynth(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
-		return f.fromSnmpMetadata(in, ts)
+		return f.fromSnmpMetadata(in)
 	case kt.KENTIK_EVENT_SNMP_TRAP:
 		// This is actually an event, send out as an event to sink directly.
 		err := events.SendEvent(in, f.doGz, f.EventChan)
@@ -230,7 +236,7 @@ var (
 	}
 )
 
-func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
+func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup) []NRMetric {
 	ms := make([]NRMetric, 0, len(in))
 	for _, roll := range in {
 		if roll.Metric == 0 {
@@ -239,10 +245,8 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 
 		dims := roll.GetDims()
 		attr := map[string]interface{}{
-			"provider":                 roll.Provider,
-			"instrumentation.provider": kt.InstProvider,
-			"collector.name":           kt.CollectorName,
-			"instrumentation.name":     toInstName(roll.Provider),
+			"provider":             roll.Provider,
+			"instrumentation.name": toInstName(roll.Provider),
 		}
 
 		// Override here for router to map to flowdevice
@@ -284,7 +288,6 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 				"max":   roll.Max,
 			},
 			Interval:   roll.Interval.Microseconds(),
-			Timestamp:  ts,
 			Attributes: attr,
 		})
 	}
@@ -297,7 +300,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 	return ms
 }
 
-func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
@@ -329,7 +332,7 @@ var (
 	}
 )
 
-func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	if in.CustomInt["result_type"] <= 1 {
 		return nil // Don't worry about timeouts and errrors for now.
 	}
@@ -344,8 +347,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	sent := 0.0
 
 	// Hard code these.
-	attr["instrumentation.provider"] = kt.InstProvider
-	attr["collector.name"] = kt.CollectorName
 	attr["instrumentation.name"] = InstNameSynthetic
 
 	for k, _ := range attr { // White list only a few attributes here.
@@ -375,7 +376,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 				Name:       "kentik.synth." + name,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomInt[m]),
-				Timestamp:  ts,
 				Attributes: attr,
 			})
 		case "lost":
@@ -390,7 +390,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 			Name:       "kentik.synth.lost_pct",
 			Type:       NR_GAUGE_TYPE,
 			Value:      (lost / sent) * 100.,
-			Timestamp:  ts,
 			Attributes: attr,
 		})
 	}
@@ -398,7 +397,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	return ms
 }
 
-func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) fromKflow(in *kt.JCHF) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
 	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
@@ -408,8 +407,6 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	ms := make([]NRMetric, 0)
 
 	// Hard code these.
-	attr["instrumentation.provider"] = kt.InstProvider
-	attr["collector.name"] = kt.CollectorName
 	attr["instrumentation.name"] = InstNameNetflow
 
 	for m, _ := range metrics {
@@ -431,7 +428,6 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 				Name:       "kentik.flow." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      value,
-				Timestamp:  ts,
 				Attributes: attr,
 			})
 		}
@@ -439,7 +435,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	return ms
 }
 
-func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
@@ -453,7 +449,6 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomBigInt[m]),
-				Timestamp:  ts,
 				Attributes: attrNew,
 			})
 		}
@@ -462,7 +457,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF, ts int64) []NRMetric {
 	return ms
 }
 
-func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
+func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
@@ -476,7 +471,6 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomBigInt[m]),
-				Timestamp:  ts,
 				Attributes: attrNew,
 			})
 		}
@@ -493,7 +487,6 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
 							Value:      float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed),
-							Timestamp:  ts,
 							Attributes: attr,
 						})
 					}
@@ -509,7 +502,6 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
 							Value:      float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed),
-							Timestamp:  ts,
 							Attributes: attr,
 						})
 					}
@@ -523,10 +515,8 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ts int64) []NRMetric {
 
 func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interface{} {
 	attrNew := map[string]interface{}{
-		"objectIdentifier":         name,
-		"instrumentation.provider": kt.InstProvider,
-		"collector.name":           kt.CollectorName,
-		"instrumentation.name":     InstNameSNMP,
+		"objectIdentifier":     name,
+		"instrumentation.name": InstNameSNMP,
 	}
 	for k, v := range attr {
 		attrNew[k] = v
@@ -539,4 +529,14 @@ func toInstName(prov kt.Provider) string {
 		return InstNameVPC
 	}
 	return InstNameNetflow
+}
+
+func newNRCommon() *NRCommon {
+	return &NRCommon{
+		Timestamp: time.Now().UnixNano() / 1e+6, // Convert to milliseconds
+		Attributes: map[string]string{
+			"instrumentation.provider": kt.InstProvider,
+			"collector.name":           kt.CollectorName,
+		},
+	}
 }

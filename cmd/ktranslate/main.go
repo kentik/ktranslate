@@ -105,9 +105,12 @@ func main() {
 		}
 	}
 
-	// Default this to 1.
+	// Default these to 1.
 	if conf.Threads <= 0 {
 		conf.Threads = 1
+	}
+	if conf.ThreadsInput <= 0 {
+		conf.ThreadsInput = 1
 	}
 
 	// and set this if overridden

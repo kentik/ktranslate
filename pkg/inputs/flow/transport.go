@@ -81,7 +81,9 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "SequenceNum":
 			in.CustomBigInt[field] = int64(fmsg.SequenceNum)
 		case "SamplingRate":
-			in.SampleRate = uint32(fmsg.SamplingRate)
+			if fmsg.SamplingRate > 0 {
+				in.SampleRate = uint32(fmsg.SamplingRate)
+			}
 		case "SamplerAddress":
 			in.CustomStr[field] = net.IP(fmsg.SamplerAddress).String()
 		case "TimeFlowStart":
@@ -161,9 +163,13 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 				in.CustomInt[field] = 0
 			}
 		case "SrcAddrEncap":
-			in.CustomStr[field] = net.IP(fmsg.SrcAddrEncap).String()
+			if ip := net.IP(fmsg.SrcAddrEncap); ip != nil {
+				in.CustomStr[field] = ip.String()
+			}
 		case "DstAddrEncap":
-			in.CustomStr[field] = net.IP(fmsg.DstAddrEncap).String()
+			if ip := net.IP(fmsg.DstAddrEncap); ip != nil {
+				in.CustomStr[field] = ip.String()
+			}
 		case "ProtoEncap":
 			in.CustomBigInt[field] = int64(fmsg.ProtoEncap)
 		case "EtypeEncap":

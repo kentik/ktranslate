@@ -605,8 +605,8 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
-func (kc *KTranslate) monitorInput(ctx context.Context, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
-	kc.log.Infof("monitorInput Starting")
+func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
+	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
 	for {
 		select {
@@ -634,7 +634,7 @@ func (kc *KTranslate) monitorInput(ctx context.Context, seri func([]*kt.JCHF, []
 
 			kc.metrics.InputQ.Mark(int64(len(msgs)))
 		case <-ctx.Done():
-			kc.log.Infof("monitorInput Done")
+			kc.log.Infof("monitorInput %d Done", num)
 			return
 		}
 	}
@@ -833,7 +833,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	assureInput := func() { // Start up input processing if any is asked of us.
 		if kc.inputChan == nil {
 			kc.inputChan = make(chan []*kt.JCHF, CHAN_SLACK)
-			go kc.monitorInput(ctx, kc.format.To)
+			for i := 0; i < kc.config.ThreadsInput; i++ {
+				go kc.monitorInput(ctx, i, kc.format.To)
+			}
 		}
 	}
 

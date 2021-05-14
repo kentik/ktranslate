@@ -157,4 +157,5 @@ func strip(in map[string]interface{}) {
 			}
 		}
 	}
+	in["instrumentation.provider"] = kt.InstProvider // Let them know who sent this.
 }
