@@ -27,6 +27,11 @@ const (
 
 	DO_DEMO_PERIOD = "NRM_DO_DEMO_PERIOD"
 	DO_DEMO_AMP    = "NRM_DO_DEMO_AMPLITIDE"
+
+	InstNameVPC       = "vpc-logs"
+	InstNameNetflow   = "netflow"
+	InstNameSNMP      = "snmp"
+	InstNameSynthetic = "synthetic"
 )
 
 type NRMFormat struct {
@@ -236,7 +241,8 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup, ts int64) []NRMetric {
 		attr := map[string]interface{}{
 			"provider":                 roll.Provider,
 			"instrumentation.provider": kt.InstProvider,
-			"instrumentation.name":     kt.InstName,
+			"collector.name":           kt.CollectorName,
+			"instrumentation.name":     toInstName(roll.Provider),
 		}
 
 		// Override here for router to map to flowdevice
@@ -337,6 +343,11 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF, ts int64) []NRMetric {
 	lost := 0.0
 	sent := 0.0
 
+	// Hard code these.
+	attr["instrumentation.provider"] = kt.InstProvider
+	attr["collector.name"] = kt.CollectorName
+	attr["instrumentation.name"] = InstNameSynthetic
+
 	for k, _ := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
@@ -395,6 +406,12 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF, ts int64) []NRMetric {
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0)
+
+	// Hard code these.
+	attr["instrumentation.provider"] = kt.InstProvider
+	attr["collector.name"] = kt.CollectorName
+	attr["instrumentation.name"] = InstNameNetflow
+
 	for m, _ := range metrics {
 		var value int64
 		switch m {
@@ -508,11 +525,18 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 	attrNew := map[string]interface{}{
 		"objectIdentifier":         name,
 		"instrumentation.provider": kt.InstProvider,
-		"instrumentation.name":     kt.InstName,
-		"collector.name":           kt.SnmpCollector,
+		"collector.name":           kt.CollectorName,
+		"instrumentation.name":     InstNameSNMP,
 	}
 	for k, v := range attr {
 		attrNew[k] = v
 	}
 	return attrNew
+}
+
+func toInstName(prov kt.Provider) string {
+	if strings.Contains(string(prov), "vpc") {
+		return InstNameVPC
+	}
+	return InstNameNetflow
 }

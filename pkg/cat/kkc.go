@@ -68,7 +68,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			AlphaQ:       go_metrics.GetOrRegisterGauge("alphaq", registry),
 			AlphaQDrop:   go_metrics.GetOrRegisterMeter("alphaq_drop", registry),
 			JCHFQ:        go_metrics.GetOrRegisterGauge("jchfq", registry),
-			Snmp:         go_metrics.GetOrRegisterMeter("snmp", registry),
+			InputQ:       go_metrics.GetOrRegisterMeter("inputq", registry),
 		},
 		alphaChans: make([]chan *Flow, config.Threads),
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
@@ -270,7 +270,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		AlphaQ:         kc.metrics.AlphaQ.Value(),
 		JCHFQ:          kc.metrics.JCHFQ.Value(),
 		AlphaQDrop:     kc.metrics.AlphaQDrop.Rate1(),
-		Snmp:           kc.metrics.Snmp.Rate1(),
+		InputQ:         kc.metrics.InputQ.Rate1(),
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 	}
@@ -605,12 +605,12 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
-func (kc *KTranslate) monitorSnmp(ctx context.Context, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
-	kc.log.Infof("monitorSnmp Starting")
+func (kc *KTranslate) monitorInput(ctx context.Context, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
+	kc.log.Infof("monitorInput Starting")
 	serBuf := make([]byte, 0)
 	for {
 		select {
-		case msgs := <-kc.snmpChan:
+		case msgs := <-kc.inputChan:
 			// If we have any rollups defined, send here instead of directly to the output format.
 			if kc.doRollups {
 				rv := make([]map[string]interface{}, len(msgs))
@@ -632,9 +632,9 @@ func (kc *KTranslate) monitorSnmp(ctx context.Context, seri func([]*kt.JCHF, []b
 				}
 			}
 
-			kc.metrics.Snmp.Mark(int64(len(msgs)))
+			kc.metrics.InputQ.Mark(int64(len(msgs)))
 		case <-ctx.Done():
-			kc.log.Infof("monitorSnmp Done")
+			kc.log.Infof("monitorInput Done")
 			return
 		}
 	}
@@ -830,28 +830,30 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.apic = apic
 	}
 
+	assureInput := func() { // Start up input processing if any is asked of us.
+		if kc.inputChan == nil {
+			kc.inputChan = make(chan []*kt.JCHF, CHAN_SLACK)
+			go kc.monitorInput(ctx, kc.format.To)
+		}
+	}
+
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.
 	if kc.config.SNMPFile != "" {
 		if kc.config.SNMPDisco { // Here, we're just returning the list of devices on the network which might speak snmp.
 			return snmp.Discover(ctx, kc.config.SNMPFile, kc.log)
 		}
-		kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
+		assureInput()
 		kc.metrics.SnmpDeviceData = kt.NewSnmpMetricSet(kc.registry)
-		err := snmp.StartSNMPPolls(ctx, kc.config.SNMPFile, kc.snmpChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log)
+		err := snmp.StartSNMPPolls(ctx, kc.config.SNMPFile, kc.inputChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log)
 		if err != nil {
 			return err
 		}
-		go kc.monitorSnmp(ctx, kc.format.To)
 	}
 
 	// If we're looking for vpc flows coming in
 	if kc.config.VpcSource != "" {
-		if kc.snmpChan == nil {
-			kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
-			go kc.monitorSnmp(ctx, kc.format.To)
-		}
-
-		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.snmpChan, kc.apic)
+		assureInput()
+		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
 		if err != nil {
 			return err
 		}
@@ -860,12 +862,8 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 
 	// If we're looking for netflow direct flows coming in
 	if kc.config.FlowSource != "" {
-		if kc.snmpChan == nil {
-			kc.snmpChan = make(chan []*kt.JCHF, CHAN_SLACK)
-			go kc.monitorSnmp(ctx, kc.format.To)
-		}
-
-		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.snmpChan, kc.apic)
+		assureInput()
+		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
 		if err != nil {
 			return err
 		}

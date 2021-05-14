@@ -44,7 +44,7 @@ const (
 	ProviderFlowDevice          = "kentik-flow-device"
 
 	InstProvider  = "kentik"
-	InstName      = "ktranslate"
+	CollectorName = "ktranslate"
 	SnmpCollector = "snmp"
 )
 

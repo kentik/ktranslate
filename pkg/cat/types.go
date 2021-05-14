@@ -48,6 +48,7 @@ type Config struct {
 	Code2Region       string
 	Code2City         string
 	Threads           int
+	ThreadsInput      int
 	Format            formats.Format
 	Compression       kt.Compression
 	MaxFlowPerMessage int
@@ -79,7 +80,7 @@ type KTranslate struct {
 	metrics        *KKCMetric
 	alphaChans     []chan *Flow
 	jchfChans      []chan *kt.JCHF
-	snmpChan       chan []*kt.JCHF
+	inputChan      chan []*kt.JCHF
 	mapr           *CustomMapper
 	udrMapr        *UDRMapper
 	pgdb           *sql.DB
@@ -127,7 +128,7 @@ type hc struct {
 	AlphaQ         int64
 	JCHFQ          int64
 	AlphaQDrop     float64
-	Snmp           float64
+	InputQ         float64
 	Sinks          map[sinks.Sink]map[string]float64
 	SnmpDeviceData map[string]map[string]float64
 }
@@ -145,7 +146,7 @@ type KKCMetric struct {
 	AlphaQ         go_metrics.Gauge
 	JCHFQ          go_metrics.Gauge
 	AlphaQDrop     go_metrics.Meter
-	Snmp           go_metrics.Meter
+	InputQ         go_metrics.Meter
 	SnmpDeviceData *kt.SnmpMetricSet
 }
 

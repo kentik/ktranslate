@@ -19,6 +19,9 @@ import (
 
 const (
 	EnvNrApiKey = "NEW_RELIC_API_KEY"
+
+	NR_DATA_PROVIDER = "kentik"
+	NR_USER_AGENT    = "kentik-ktranslate/0.1.0"
 )
 
 type NRSink struct {
@@ -142,6 +145,9 @@ func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
 	req.Header.Set("Api-Key", s.NRApiKey)
 	req.Header.Set("X-Insert-Key", s.NRApiKey)
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("NR-Data-Provider", NR_DATA_PROVIDER)
+	req.Header.Set("NR-Data-Type", "")
+	req.Header.Set("User-Agent", NR_USER_AGENT)
 	if s.compression == kt.CompressionGzip {
 		req.Header.Set("Content-Encoding", "GZIP")
 	}

@@ -35,6 +35,7 @@ func main() {
 		asnName        = flag.String("asnName", "", "Asn number to name mapping file")
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
+		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
 		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic)")
 		compression    = flag.String("compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
 		sinks          = flag.String("sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud)")
@@ -74,6 +75,7 @@ func main() {
 		Code2City:         *city,
 		Format:            formats.Format(*format),
 		Threads:           *threads,
+		ThreadsInput:      *threadsInput,
 		Compression:       kt.Compression(*compression),
 		MaxFlowPerMessage: *maxFlows,
 		RollupAndAlpha:    *rollupAndAlpha,
