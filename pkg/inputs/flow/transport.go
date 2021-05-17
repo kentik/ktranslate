@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/binary"
 	"net"
+	"strings"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 
@@ -15,29 +17,53 @@ import (
 	flowmessage "github.com/cloudflare/goflow/v3/pb"
 )
 
+const (
+	DeviceUpdateDuration = 1 * time.Hour
+)
+
 type KentikTransport struct {
 	logger.ContextL
-	ctx      context.Context
-	jchfChan chan []*kt.JCHF
-	apic     *api.KentikApi
-	metrics  *FlowMetric
-	fields   []string
-	devices  map[string]*kt.Device
+	jchfChan     chan []*kt.JCHF
+	apic         *api.KentikApi
+	metrics      *FlowMetric
+	fields       []string
+	devices      map[string]*kt.Device
+	maxBatchSize int
+	inputs       chan []*kt.JCHF
 }
 
 type FlowMetric struct {
 	Flows go_metrics.Meter
 }
 
+func NewKentikTransport(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string) *KentikTransport {
+	kt := KentikTransport{
+		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
+		jchfChan: jchfChan,
+		apic:     apic,
+		metrics: &FlowMetric{
+			Flows: go_metrics.GetOrRegisterMeter("netflow.flows^fmt="+string(proto), registry),
+		},
+		fields:       strings.Split(fields, ","),
+		devices:      apic.GetDevicesAsMap(0),
+		maxBatchSize: maxBatchSize,
+		inputs:       make(chan []*kt.JCHF, 10),
+	}
+	go kt.run(ctx) // Process flows and send them on.
+	return &kt
+}
+
 func (t *KentikTransport) Publish(msgs []*flowmessage.FlowMessage) {
 	t.metrics.Flows.Mark(int64(len(msgs)))
-	jchfs := make([]*kt.JCHF, len(msgs))
+	local := make([]*kt.JCHF, len(msgs))
 	for i, m := range msgs {
-		jchfs[i] = t.toJCHF(m)
+		local[i] = t.toJCHF(m)
 	}
 
-	if len(jchfs) > 0 {
-		t.jchfChan <- jchfs
+	if len(local) >= t.maxBatchSize {
+		t.jchfChan <- local
+	} else {
+		t.inputs <- local
 	}
 }
 
@@ -220,4 +246,37 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	}
 
 	return in
+}
+
+func (t *KentikTransport) run(ctx context.Context) {
+	sendTicker := time.NewTicker(kt.SendBatchDuration)
+	defer sendTicker.Stop()
+	deviceTicker := time.NewTicker(DeviceUpdateDuration)
+	defer deviceTicker.Stop()
+	batch := make([]*kt.JCHF, 0, t.maxBatchSize)
+
+	t.Infof("flow transport running")
+	for {
+		select {
+		case local := <-t.inputs:
+			batch = append(batch, local...)
+			if len(batch) >= t.maxBatchSize {
+				t.jchfChan <- batch
+				batch = make([]*kt.JCHF, 0, t.maxBatchSize)
+			}
+		case <-sendTicker.C:
+			if len(batch) > 0 {
+				t.jchfChan <- batch
+				batch = make([]*kt.JCHF, 0, t.maxBatchSize)
+			}
+		case <-deviceTicker.C:
+			go func() {
+				t.Infof("updating device list for flow")
+				t.devices = t.apic.GetDevicesAsMap(0)
+			}()
+		case <-ctx.Done():
+			t.Infof("flow transport done")
+			return
+		}
+	}
 }

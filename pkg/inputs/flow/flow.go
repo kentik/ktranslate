@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
 
@@ -34,26 +33,15 @@ var (
 	MessageFields = flag.String("nf.message.fields", defaultFields, "The list of fields to include in flow messages")
 )
 
-func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*KentikTransport, error) {
-	kt := KentikTransport{
-		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
-		ctx:      ctx,
-		jchfChan: jchfChan,
-		apic:     apic,
-		metrics: &FlowMetric{
-			Flows: go_metrics.GetOrRegisterMeter("netflow.flows^fmt="+string(proto), registry),
-		},
-		fields:  strings.Split(*MessageFields, ","),
-		devices: apic.GetDevicesAsMap(0),
-	}
-
-	kt.Infof("Netflow listener running on %s:%d for format %s", *Addr, *Port, proto)
+func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*KentikTransport, error) {
+	kt := NewKentikTransport(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, *MessageFields)
+	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", *Addr, *Port, proto, maxBatchSize)
 	kt.Infof("Netflow listener sending fields %s", *MessageFields)
 
 	switch proto {
 	case Ipfix, Netflow9:
 		sNF := &utils.StateNetFlow{
-			Transport: &kt,
+			Transport: kt,
 			Logger:    &KentikLog{ContextL: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
@@ -62,10 +50,10 @@ func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying,
 				sNF.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
 			}
 		}()
-		return &kt, nil
+		return kt, nil
 	case Sflow:
 		sSF := &utils.StateSFlow{
-			Transport: &kt,
+			Transport: kt,
 			Logger:    &KentikLog{ContextL: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
@@ -74,10 +62,10 @@ func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying,
 				sSF.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
 			}
 		}()
-		return &kt, nil
+		return kt, nil
 	case Netflow5:
 		sNFL := &utils.StateNFLegacy{
-			Transport: &kt,
+			Transport: kt,
 			Logger:    &KentikLog{ContextL: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
@@ -86,7 +74,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, log logger.Underlying,
 				sNFL.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
 			}
 		}()
-		return &kt, nil
+		return kt, nil
 	}
 	return nil, fmt.Errorf("Unknown flow format %v", proto)
 }

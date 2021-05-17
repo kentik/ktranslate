@@ -53,7 +53,7 @@ func main() {
 		sslKeyFile     = flag.String("ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 		tags           = flag.String("tag_map", "", "CSV file mapping tag ids to strings")
 		vpcSource      = flag.String("vpc", "", "Run VPC Flow Ingest")
-		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly")
+		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())

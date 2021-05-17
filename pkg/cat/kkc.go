@@ -46,7 +46,6 @@ const (
 	CHAN_SLACK                        = 8000      // Up to this many messages / sec
 	MetricsCheckDuration              = 60 * time.Second
 	CacheInvalidateDuration           = 8 * time.Hour
-	SendBatchDuration                 = 1 * time.Second
 	MDB_NO_LOCK                       = 0x400000
 	MDB_PERMS                         = 0666
 )
@@ -644,7 +643,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 	cacheTicker := time.NewTicker(CacheInvalidateDuration)
 	defer cacheTicker.Stop()
 
-	sendTicker := time.NewTicker(SendBatchDuration)
+	sendTicker := time.NewTicker(kt.SendBatchDuration)
 	defer sendTicker.Stop()
 
 	// Set up some data structures.
@@ -865,7 +864,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for netflow direct flows coming in
 	if kc.config.FlowSource != "" {
 		assureInput()
-		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
+		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.config.MaxFlowPerMessage, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
 		if err != nil {
 			return err
 		}

@@ -2,6 +2,7 @@ package kt
 
 import (
 	"strconv"
+	"time"
 )
 
 type Compression string
@@ -46,6 +47,8 @@ const (
 	InstProvider  = "kentik"
 	CollectorName = "ktranslate"
 	SnmpCollector = "snmp"
+
+	SendBatchDuration = 1 * time.Second
 )
 
 type IntId uint64
