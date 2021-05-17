@@ -230,6 +230,36 @@ func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.Context
 	return kapi, err
 }
 
+func NewKentikApiFromLocalDevices(localDevices map[string]*kt.Device, log logger.ContextL) *KentikApi {
+	if localDevices == nil {
+		return nil
+	}
+
+	api := &KentikApi{
+		ContextL: log,
+	}
+
+	resDev := map[kt.Cid]kt.Devices{}
+	num := 0
+	for _, device := range localDevices {
+		if _, ok := resDev[device.CompanyID]; !ok {
+			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
+		}
+		device.Interfaces = map[kt.IfaceID]kt.Interface{}
+		for _, intf := range device.AllInterfaces {
+			device.Interfaces[intf.SnmpID] = intf
+		}
+		resDev[device.CompanyID][device.ID] = device
+		num++
+	}
+
+	api.setTime = time.Now()
+	api.Infof("Loaded %d Kentik devices via local file", num)
+	api.devices = resDev
+
+	return api
+}
+
 func (api *KentikApi) manageCache(ctx context.Context) {
 	checkTicker := time.NewTicker(CACHE_TIME_DEVICE)
 	defer checkTicker.Stop()

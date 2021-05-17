@@ -15,9 +15,18 @@ type Device struct {
 	CompanyID     Cid      `json:"company_id,string"`
 	DeviceType    string   `json:"device_type"`
 	DeviceSubtype string   `json:"device_subtype"`
+	Description   string   `json:"device_description"`
+	IP            net.IP   `json:"ip"`
 	Interfaces    map[IfaceID]Interface
 	AllInterfaces []Interface `json:"all_interfaces"`
 	SendingIps    []net.IP    `json:"sending_ips"`
+	SampleRate    int         `json:"device_sample_rate,string"`
+	BgpType       string      `json:"device_bgp_type"`
+	Plan          Plan        `json:"plan"`
+	CdnAttr       string      `json:"cdn_attr"`
+	MaxFlowRate   int         `json:"max_flow_rate"`
+	Customs       []Column    `json:"custom_column_data,omitempty"`
+	CustomStr     string      `json:"custom_columns"`
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents
@@ -56,9 +65,16 @@ type Interface struct {
 	InterfaceDescription string  `json:"interface_description"`
 	Provider             string  `json:"provider"`
 	VrfID                int64   `json:"vrf_id"`
+	Netmask              string  `json:"interface_ip_netmask"`
+	Addrs                []Addr  `json:"secondary_ips"`
 
 	SiteTitle   string `json:"site_title"`
 	SiteCountry string `json:"site_country"`
+}
+
+type Addr struct {
+	Address string `json:"address"`
+	Netmask string `json:"netmask"`
 }
 
 type DeviceList struct {
@@ -84,4 +100,15 @@ type InterfaceRow struct {
 	VrfId                uint32 `json:"vrf_id"`
 	SiteTitle            string `json:"site_title"`
 	SiteCountry          string `json:"site_country"`
+}
+
+type Plan struct {
+	ID   uint64 `json:"id"`
+	Name string `json:"name"`
+}
+
+type Column struct {
+	ID   uint64 `json:"field_id,string"`
+	Name string `json:"col_name"`
+	Type string `json:"col_type"`
 }

@@ -13,12 +13,13 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 type Server struct {
-	Devices     map[string]*Device
-	DevicesByIP map[string]*Device
-	log         logger.ContextL
+	devicesByName map[string]*kt.Device
+	devicesByIP   map[string]*kt.Device
+	log           logger.ContextL
 }
 
 const (
@@ -27,15 +28,15 @@ const (
 	API_INT = "/api/internal"
 )
 
-func NewServer(deviceFile string, snmpFile string, log logger.ContextL) (*Server, error) {
-	devices, err := loadDevices(deviceFile)
+func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server, error) {
+	devices, err := loadDevices(auth)
 	if err != nil {
 		return nil, err
 	}
 	s := &Server{
-		log:         log,
-		Devices:     devices,
-		DevicesByIP: make(map[string]*Device),
+		log:           log,
+		devicesByName: devices,
+		devicesByIP:   make(map[string]*kt.Device),
 	}
 
 	if snmpFile != "" {
@@ -45,7 +46,7 @@ func NewServer(deviceFile string, snmpFile string, log logger.ContextL) (*Server
 		}
 
 		// Pick a device to copy things from
-		var root *Device
+		var root *kt.Device
 		for _, db := range devices {
 			root = db
 			break
@@ -54,36 +55,36 @@ func NewServer(deviceFile string, snmpFile string, log logger.ContextL) (*Server
 			// Now, itterate over this snmp file, adding in all the devices we have listed here.
 			nextID := root.ID + 100
 			for _, d := range snmp.Devices {
-				nd := &Device{
-					ID:          nextID,
-					Name:        d.DeviceName,
-					Type:        root.Type,
-					Subtype:     root.Subtype,
-					Description: d.Description,
-					IP:          net.ParseIP(d.DeviceIP),
-					SendingIps:  []net.IP{net.ParseIP(d.DeviceIP)},
-					SampleRate:  int(d.SampleRate),
-					BgpType:     root.BgpType,
-					Plan:        root.Plan,
-					CdnAttr:     root.CdnAttr,
-					MaxFlowRate: root.MaxFlowRate,
-					CompanyID:   root.CompanyID,
-					Customs:     root.Customs,
-					CustomStr:   root.CustomStr,
+				nd := &kt.Device{
+					ID:            nextID,
+					Name:          d.DeviceName,
+					DeviceType:    root.DeviceType,
+					DeviceSubtype: root.DeviceSubtype,
+					Description:   d.Description,
+					IP:            net.ParseIP(d.DeviceIP),
+					SendingIps:    []net.IP{net.ParseIP(d.DeviceIP)},
+					SampleRate:    int(d.SampleRate),
+					BgpType:       root.BgpType,
+					Plan:          root.Plan,
+					CdnAttr:       root.CdnAttr,
+					MaxFlowRate:   root.MaxFlowRate,
+					CompanyID:     root.CompanyID,
+					Customs:       root.Customs,
+					CustomStr:     root.CustomStr,
 				}
 				if nd.SampleRate == 0 {
 					nd.SampleRate = 1
 				}
-				s.Devices[strconv.Itoa(nd.ID)] = nd
+				s.devicesByName[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}
 		}
 	}
 
-	log.Infof("API server running %d devices", len(s.Devices))
-	for _, d := range s.Devices {
+	log.Infof("API server running %d devices", len(s.devicesByName))
+	for _, d := range s.devicesByName {
 		for _, ip := range d.SendingIps {
-			s.DevicesByIP[ip.String()] = d
+			s.devicesByIP[ip.String()] = d
 		}
 	}
 
@@ -100,9 +101,16 @@ func (s *Server) RegisterRoutes(r *kmux.Router) {
 	r.HandleFunc(API_INT+"/devices", s.wrap(s.devices))
 }
 
-func (s *Server) getDevice(query string) *Device {
+func (s *Server) GetDeviceMap() map[string]*kt.Device {
+	if s == nil {
+		return nil
+	}
+	return s.devicesByIP
+}
+
+func (s *Server) getDevice(query string) *kt.Device {
 	// Try finding this device directly by its ID
-	device, ok := s.Devices[query]
+	device, ok := s.devicesByName[query]
 	if ok {
 		return device
 	}
@@ -110,7 +118,7 @@ func (s *Server) getDevice(query string) *Device {
 	// Else, can we find this by its IP?
 	ipr := net.ParseIP(query)
 	if ipr != nil {
-		return s.DevicesByIP[ipr.String()]
+		return s.devicesByIP[ipr.String()]
 	}
 
 	return nil
@@ -138,8 +146,8 @@ func (s *Server) device(w http.ResponseWriter, r *http.Request) {
 func (s *Server) devices(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	devices := []*Device{}
-	for _, d := range s.Devices {
+	devices := []*kt.Device{}
+	for _, d := range s.devicesByName {
 		devices = append(devices, d)
 	}
 
@@ -161,21 +169,21 @@ func (s *Server) create(w http.ResponseWriter, r *http.Request) {
 
 	create := wrapper["device"]
 
-	plan := Plan{
+	plan := kt.Plan{
 		ID: uint64(create.PlanID),
 	}
 
-	var od *Device
-	for _, d := range s.Devices {
+	var od *kt.Device
+	for _, d := range s.devicesByName {
 		od = d
 		break
 	}
 
 	id, _ := rand.Int(rand.Reader, big.NewInt(65535))
-	device := &Device{
-		ID:          int(id.Int64()),
+	device := &kt.Device{
+		ID:          kt.DeviceID(id.Int64()),
 		Name:        create.Name,
-		Type:        create.Type,
+		DeviceType:  create.Type,
 		Description: create.Description,
 		IP:          create.IPs[0],
 		SampleRate:  create.SampleRate,
@@ -201,11 +209,11 @@ func (s *Server) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.log.Infof("Created device %d", device.ID)
-	s.Devices[create.IPs[0].String()] = device // Save for later
+	s.devicesByName[create.IPs[0].String()] = device // Save for later
 }
 
 func (s *Server) interfaces(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode([]Interface{})
+	json.NewEncoder(w).Encode([]kt.Interface{})
 }
 
 func (s *Server) update(w http.ResponseWriter, r *http.Request) {
@@ -234,16 +242,16 @@ func (s *Server) wrap(f handler) handler {
 
 type handler func(http.ResponseWriter, *http.Request)
 
-func loadDevices(file string) (map[string]*Device, error) {
-	ms := map[string]*Device{}
+func loadDevices(conf *AuthConfig) (map[string]*kt.Device, error) {
+	ms := map[string]*kt.Device{}
 
 	// If the file is empty string, just continue and load 0 devices.
-	if file == "" {
+	if conf == nil || conf.DevicesFile == "" {
 		return ms, nil
 	}
 
 	// Otherwise, we need to try and process it.
-	by, err := ioutil.ReadFile(file)
+	by, err := ioutil.ReadFile(conf.DevicesFile)
 	if err != nil {
 		return nil, err
 	}

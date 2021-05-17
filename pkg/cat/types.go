@@ -60,17 +60,13 @@ type Config struct {
 	AsnName           string
 	DnsResolver       string
 	SampleRate        uint32
-	Auth              *AuthConfig
+	Auth              *auth.AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool
 	TagFile           string
 	Kentik            *kt.KentikConfig
 	VpcSource         vpc.CloudSource
 	FlowSource        flow.FlowSource
-}
-
-type AuthConfig struct {
-	DevicesFile string
 }
 
 type KTranslate struct {

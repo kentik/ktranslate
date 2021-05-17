@@ -8,6 +8,7 @@ import (
 
 	"github.com/kentik/ktranslate/cmd/version"
 	"github.com/kentik/ktranslate/pkg/cat"
+	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/formats"
 	kt "github.com/kentik/ktranslate/pkg/kt"
 
@@ -100,7 +101,7 @@ func main() {
 	}
 
 	if *apiDevices != "" {
-		conf.Auth = &cat.AuthConfig{
+		conf.Auth = &auth.AuthConfig{
 			DevicesFile: *apiDevices,
 		}
 	}

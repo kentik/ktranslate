@@ -2,58 +2,20 @@ package auth
 
 import (
 	"net"
+
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
-type Device struct {
-	ID          int      `json:"id,string"`
-	Name        string   `json:"device_name"`
-	Type        string   `json:"device_type"`
-	Subtype     string   `json:"device_subtype"`
-	Description string   `json:"device_description"`
-	IP          net.IP   `json:"ip"`
-	SendingIps  []net.IP `json:"sending_ips"`
-	SampleRate  int      `json:"device_sample_rate,string"`
-	BgpType     string   `json:"device_bgp_type"`
-	Plan        Plan     `json:"plan"`
-	CdnAttr     string   `json:"cdn_attr"`
-	MaxFlowRate int      `json:"max_flow_rate"`
-	CompanyID   int      `json:"company_id,string"`
-	Customs     []Column `json:"custom_column_data,omitempty"`
-	CustomStr   string   `json:"custom_columns"`
-}
-
-type Plan struct {
-	ID   uint64 `json:"id"`
-	Name string `json:"name"`
-}
-
-type Column struct {
-	ID   uint64 `json:"field_id,string"`
-	Name string `json:"col_name"`
-	Type string `json:"col_type"`
+type AuthConfig struct {
+	DevicesFile string
 }
 
 type DeviceWrapper struct {
-	Device *Device `json:"device"`
+	Device *kt.Device `json:"device"`
 }
 
 type AllDeviceWrapper struct {
-	Devices []*Device `json:"devices"`
-}
-
-type Interface struct {
-	ID      uint64 `json:"id,string"`
-	Index   uint64 `json:"snmp_id,string"`
-	Alias   string `json:"snmp_alias"`
-	Desc    string `json:"interface_description"`
-	Address string `json:"interface_ip"`
-	Netmask string `json:"interface_ip_netmask"`
-	Addrs   []Addr `json:"secondary_ips"`
-}
-
-type Addr struct {
-	Address string `json:"address"`
-	Netmask string `json:"netmask"`
+	Devices []*kt.Device `json:"devices"`
 }
 
 type DeviceCreate struct {
