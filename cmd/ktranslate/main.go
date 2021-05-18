@@ -60,6 +60,9 @@ func main() {
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
 
+	// If we're running in a given mode, set the flags accordingly.
+	setMode(bs, flag.Arg(0))
+
 	if *listenIPPort == "" {
 		bs.Fail("Invalid --listen value")
 	}
@@ -128,4 +131,21 @@ func main() {
 
 	lc.Infof("Running")
 	bs.Run(kc)
+}
+
+func setMode(bs *baseserver.BaseServer, mode string) {
+	switch mode {
+	case "":
+		return // noop
+	case "vpc":
+		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
+		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+	case "flow":
+		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
+		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+		flag.Set("rollups", "s_sum,pkts.xmt,out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
+		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+	default:
+		bs.Fail("Invalid mode " + mode + ". Options = vpc|flow")
+	}
 }

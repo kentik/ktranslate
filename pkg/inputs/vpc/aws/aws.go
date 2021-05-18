@@ -452,8 +452,8 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.Protocol = ic.PROTO_NAMES[uint16(m.Protocol)]
 	in.SampleRate = 1
 	in.TcpFlags = m.TcpFlags
-	in.CustomStr["Action"] = m.Action
-	in.CustomStr["Status"] = m.Status
+	in.CustomStr["action"] = m.Action
+	in.CustomStr["status"] = m.Status
 	in.DeviceName = m.VPCID
 
 	if m.Sample > 0 { // Set sample rate here if we are switching.
@@ -462,16 +462,16 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 
 	in.SrcAddr = m.SrcAddr.String()
 	in.DstAddr = m.DstAddr.String()
-	in.CustomStr["SrcPktAddr"] = m.SrcPktAddr.String()
-	in.CustomStr["DstPktAddr"] = m.DstPktAddr.String()
-	in.CustomStr["SublocationType"] = m.SublocationType
-	in.CustomStr["SublocationID"] = m.SublocationID
-	in.CustomStr["SrcPktService"] = m.SrcPktService
-	in.CustomStr["DstPktService"] = m.DstPktService
-	in.CustomStr["FlowDirection"] = m.FlowDirection
-	in.CustomStr["TrafficPath"] = m.TrafficPath
-	in.CustomBigInt["StartTime"] = m.StartTime.Unix()
-	in.CustomBigInt["EndTime"] = m.EndTime.Unix()
+	in.CustomStr["source_pkt_addr"] = m.SrcPktAddr.String()
+	in.CustomStr["dest_pkt_addr"] = m.DstPktAddr.String()
+	in.CustomStr["sublocation_type"] = m.SublocationType
+	in.CustomStr["sublocation_id"] = m.SublocationID
+	in.CustomStr["source_pkt_service"] = m.SrcPktService
+	in.CustomStr["dest_pkt_service"] = m.DstPktService
+	in.CustomStr["flow_direction"] = m.FlowDirection
+	in.CustomStr["traffic_path"] = m.TrafficPath
+	in.CustomBigInt["start_time"] = m.StartTime.Unix()
+	in.CustomBigInt["end_time"] = m.EndTime.Unix()
 
 	// The rest is set up into src and dst parts.
 	if m.FlowDirection == "egress" {
@@ -480,32 +480,32 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		in.InBytes = 0 // And 0 these out.
 		in.InPkts = 0
 
-		in.CustomStr["SrcVpcID"] = m.VPCID
-		in.CustomStr["SrcSubnetID"] = m.SubnetID
-		in.CustomStr["SrcInstanceID"] = m.InstanceID
-		in.CustomStr["SrcInterfaceID"] = m.InterfaceID
-		in.CustomStr["SrcAzID"] = m.AzID
-		in.CustomStr["SrcRegion"] = m.Region
+		in.CustomStr["source_vpc"] = m.VPCID
+		in.CustomStr["source_subne"] = m.SubnetID
+		in.CustomStr["source_instance"] = m.InstanceID
+		in.CustomStr["source_interface"] = m.InterfaceID
+		in.CustomStr["source_az"] = m.AzID
+		in.CustomStr["source_region"] = m.Region
 
 		other := m.getOther(m.DstAddr, topo) // Do we know anything about the other side of the conversation?
 		if other != nil {
-			in.CustomStr["DstVpcID"] = *other.VpcId
-			in.CustomStr["DstAzID"] = *other.AvailabilityZoneId
-			in.CustomStr["DstRegion"] = *other.AvailabilityZone // This should likely be something else?
+			in.CustomStr["dest_vpc"] = *other.VpcId
+			in.CustomStr["dest_az"] = *other.AvailabilityZoneId
+			in.CustomStr["dest_region"] = *other.AvailabilityZone // This should likely be something else?
 		}
 	} else {
-		in.CustomStr["DstVpcID"] = m.VPCID
-		in.CustomStr["DstSubnetID"] = m.SubnetID
-		in.CustomStr["DstInstanceID"] = m.InstanceID
-		in.CustomStr["DstInterfaceID"] = m.InterfaceID
-		in.CustomStr["DstAzID"] = m.AzID
-		in.CustomStr["DstRegion"] = m.Region
+		in.CustomStr["dest_vpc"] = m.VPCID
+		in.CustomStr["dest_subnet"] = m.SubnetID
+		in.CustomStr["dest_instance"] = m.InstanceID
+		in.CustomStr["dest_interface"] = m.InterfaceID
+		in.CustomStr["dest_az"] = m.AzID
+		in.CustomStr["dest_region"] = m.Region
 
 		other := m.getOther(m.SrcAddr, topo) // Do we know anything about the other side of the conversation?
 		if other != nil {
-			in.CustomStr["SrctVpcID"] = *other.VpcId
-			in.CustomStr["SrcAzID"] = *other.AvailabilityZoneId
-			in.CustomStr["SrcRegion"] = *other.AvailabilityZone // This should likely be something else?
+			in.CustomStr["source_vpc"] = *other.VpcId
+			in.CustomStr["source_az"] = *other.AvailabilityZoneId
+			in.CustomStr["source_region"] = *other.AvailabilityZone // This should likely be something else?
 		}
 	}
 

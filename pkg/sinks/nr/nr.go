@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -59,6 +60,18 @@ var (
 	NrUrl        = flag.String("nr_url", "https://insights-collector.newrelic.com/v1/accounts/%s/events", "URL to use to send into NR")
 	NrMetricsUrl = flag.String("nr_metrics_url", "https://metric-api.newrelic.com/metric/v1", "URL to use to send into NR Metrics API")
 	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
+	NrRegion     = flag.String("nr_region", "", "NR Region to use. US|EU")
+
+	regions = map[string]map[string]string{
+		"us": map[string]string{
+			"events":  "https://insights-collector.newrelic.com/v1/accounts/%s/events",
+			"metrics": "https://metric-api.newrelic.com/metric/v1",
+		},
+		"eu": map[string]string{
+			"events":  "https://insights-collector.eu01.nr-data.net/v1/accounts/%s/events",
+			"metrics": "https://metric-api.eu.newrelic.com/metric/v1",
+		},
+	}
 )
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int) (*NRSink, error) {
@@ -79,6 +92,17 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 }
 
 func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
+	// set region if this is set.
+	rval := strings.ToLower(*NrRegion)
+	switch rval {
+	case "": // noop
+	case "eu", "us":
+		*NrUrl = regions[rval]["events"]
+		*NrMetricsUrl = regions[rval]["metrics"]
+	default:
+		return fmt.Errorf("Invalid NR region %s. Current regions: EU|US", *NrRegion)
+	}
+
 	s.NRAccount = *NrAccount
 	s.NRUrl = *NrUrl
 	s.format = format
