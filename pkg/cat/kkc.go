@@ -582,7 +582,7 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 			for _, r := range kc.rollups {
 				export := r.Export()
 				if len(export) > 0 {
-					res, err := kc.format.Rollup(export)
+					res, err := kc.formatRollup.Rollup(export)
 					if err != nil {
 						kc.log.Errorf("Cannot handle rollup: %v", err)
 					} else {
@@ -802,6 +802,16 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		return err
 	}
 	kc.format = fmtr
+
+	if kc.config.FormatRollup != "" { // Rollups default to using the same format as main, but can be seperated out.
+		fmtr, err := formats.NewFormat(kc.config.FormatRollup, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.Compression)
+		if err != nil {
+			return err
+		}
+		kc.formatRollup = fmtr
+	} else {
+		kc.formatRollup = fmtr
+	}
 
 	// Connect our sinks.
 	for _, sink := range kc.sinks {

@@ -37,9 +37,10 @@ func main() {
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
-		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic)")
+		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
+		formatRollup   = flag.String("format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
 		compression    = flag.String("compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
-		sinks          = flag.String("sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud)")
+		sinks          = flag.String("sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog)")
 		maxFlows       = flag.Int("max_flows_per_message", 10000, "Max number of flows to put in each emitted message")
 		dumpRollups    = flag.Int("rollup_interval", 0, "Export timer for rollups in seconds")
 		rollupAndAlpha = flag.Bool("rollup_and_alpha", false, "Send both rollups and alpha inputs to sinks")
@@ -78,6 +79,7 @@ func main() {
 		Code2Region:       *region,
 		Code2City:         *city,
 		Format:            formats.Format(*format),
+		FormatRollup:      formats.Format(*formatRollup),
 		Threads:           *threads,
 		ThreadsInput:      *threadsInput,
 		Compression:       kt.Compression(*compression),
@@ -140,11 +142,13 @@ func setMode(bs *baseserver.BaseServer, mode string) {
 	case "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+		flag.Set("rollup_and_alpha", "true")
 	case "flow":
 		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 		flag.Set("rollups", "s_sum,pkts.xmt,out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+		flag.Set("rollup_and_alpha", "true")
 	default:
 		bs.Fail("Invalid mode " + mode + ". Options = vpc|flow")
 	}

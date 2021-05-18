@@ -13,7 +13,11 @@ func SendEvent(msg *kt.JCHF, doGz bool, evts chan []byte) error {
 	if err != nil {
 		return err
 	}
-	evts <- res // Give this guy up to the sender.
+	select {
+	case evts <- res: // Give this guy up to the sender.
+	default:
+		// noop
+	}
 
 	return nil
 }

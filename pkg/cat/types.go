@@ -50,6 +50,7 @@ type Config struct {
 	Threads           int
 	ThreadsInput      int
 	Format            formats.Format
+	FormatRollup      formats.Format
 	Compression       kt.Compression
 	MaxFlowPerMessage int
 	RollupAndAlpha    bool
@@ -86,6 +87,7 @@ type KTranslate struct {
 	ol             *old_logger.Logger
 	sinks          map[sinks.Sink]sinks.SinkImpl
 	format         formats.Formatter
+	formatRollup   formats.Formatter
 	kentik         *kentik.KentikSink // This one gets special handling
 	rollups        []rollup.Roller
 	doRollups      bool
