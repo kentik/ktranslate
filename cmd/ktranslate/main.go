@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate/cmd/version"
@@ -45,6 +46,7 @@ func main() {
 		dumpRollups    = flag.Int("rollup_interval", 0, "Export timer for rollups in seconds")
 		rollupAndAlpha = flag.Bool("rollup_and_alpha", false, "Send both rollups and alpha inputs to sinks")
 		sample         = flag.Int("sample_rate", 1, "Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.")
+		sampleMin      = flag.Int("max_before_sample", 1, "Only sample when a set of inputs is at least this many")
 		apiDevices     = flag.String("api_devices", "", "json file containing dumy devices to use for the stub Kentik API")
 		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
 		snmpDisco      = flag.Bool("snmp_discovery", false, "If true, try to discover snmp devices on this network as configured.")
@@ -92,6 +94,7 @@ func main() {
 		AsnName:           *asnName,
 		DnsResolver:       *dns,
 		SampleRate:        uint32(*sample),
+		MaxBeforeSample:   *sampleMin,
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
 		TagFile:           *tags,
@@ -136,20 +139,37 @@ func main() {
 }
 
 func setMode(bs *baseserver.BaseServer, mode string) {
+	setNr := func() { // Specific settings for NR
+		flag.Set("rollup_and_alpha", "true")
+		flag.Set("format", "new_relic")
+		flag.Set("format_rollup", "new_relic_metric")
+		flag.Set("sample_rate", "1000")
+		flag.Set("max_before_sample", "100")
+		flag.Set("rollup_interval", "60")
+		flag.Set("compression", "gzip")
+		flag.Set("sinks", "new_relic")
+		flag.Set("rollup_top_k", "100")
+	}
+
 	switch mode {
 	case "":
 		return // noop
-	case "vpc":
+	case "nr1.vpc", "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
-		flag.Set("rollup_and_alpha", "true")
-	case "flow":
+		if strings.HasPrefix(mode, "nr1") {
+			setNr()
+		}
+
+	case "nr1.flow", "flow":
 		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 		flag.Set("rollups", "s_sum,pkts.xmt,out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
-		flag.Set("rollup_and_alpha", "true")
+		if strings.HasPrefix(mode, "nr1") {
+			setNr()
+		}
 	default:
-		bs.Fail("Invalid mode " + mode + ". Options = vpc|flow")
+		bs.Fail("Invalid mode " + mode + ". Options = nr1.vpc|nr1.flow|vpc|flow")
 	}
 }

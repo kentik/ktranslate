@@ -44,7 +44,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string
 
 		switch vt := v.(type) {
 		case string, kt.Provider:
-			if vt != "" {
+			if vt != "" && vt != "-" && vt != "--" {
 				attr[k] = vt
 			}
 		case int64:

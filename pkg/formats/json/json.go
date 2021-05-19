@@ -144,7 +144,7 @@ func strip(in map[string]interface{}) {
 	for k, v := range in {
 		switch tv := v.(type) {
 		case string:
-			if tv == "" {
+			if tv == "" || tv == "-" || tv == "--" {
 				delete(in, k)
 			}
 		case int32:

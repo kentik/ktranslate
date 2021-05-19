@@ -61,6 +61,7 @@ type Config struct {
 	AsnName           string
 	DnsResolver       string
 	SampleRate        uint32
+	MaxBeforeSample   int
 	Auth              *auth.AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool

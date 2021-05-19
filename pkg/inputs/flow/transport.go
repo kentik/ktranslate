@@ -137,9 +137,13 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "OutIf":
 			in.OutputPort = kt.IfaceID(fmsg.OutIf)
 		case "SrcMac":
-			in.SrcEthMac = net.HardwareAddr(srcmac).String()
+			if fmsg.SrcMac > 0 {
+				in.SrcEthMac = net.HardwareAddr(srcmac).String()
+			}
 		case "DstMac":
-			in.DstEthMac = net.HardwareAddr(dstmac).String()
+			if fmsg.DstMac > 0 {
+				in.DstEthMac = net.HardwareAddr(dstmac).String()
+			}
 		case "SrcVlan":
 			in.VlanIn = fmsg.SrcVlan
 		case "DstVlan":

@@ -260,7 +260,7 @@ func (f *NRMFormat) toNRMetricRollup(in []rollup.Rollup) []NRMetric {
 				aname = n
 			}
 			attr[aname] = pt
-			if pt == "0" || pt == "" || pt == "--" {
+			if pt == "0" || pt == "" || pt == "-" || pt == "--" {
 				delete(attr, aname)
 			}
 			if aname == "port" { // Remap efemeral ports down here.

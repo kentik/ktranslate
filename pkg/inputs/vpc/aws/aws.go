@@ -481,7 +481,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		in.InPkts = 0
 
 		in.CustomStr["source_vpc"] = m.VPCID
-		in.CustomStr["source_subne"] = m.SubnetID
+		in.CustomStr["source_subnet"] = m.SubnetID
 		in.CustomStr["source_instance"] = m.InstanceID
 		in.CustomStr["source_interface"] = m.InterfaceID
 		in.CustomStr["source_az"] = m.AzID

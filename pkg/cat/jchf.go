@@ -530,3 +530,47 @@ var (
 		"dst_vpc":                 "dest_vpc",
 	}
 )
+
+// Updates asn and geo if set for any of these inputs.
+func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map[uint32]string, msgs []*kt.JCHF) {
+	for _, msg := range msgs {
+		sip := net.ParseIP(msg.SrcAddr)
+		dip := net.ParseIP(msg.DstAddr)
+
+		// Fetch our own geo if not already set.
+		if kc.geo != nil {
+			if sip != nil {
+				if geo, err := kc.geo.SearchBestFromHostGeo(sip); err != nil {
+					cntr := patricia.GetCountry(geo)
+					msg.SrcGeo = fmt.Sprintf("%c%c", cntr>>8, cntr&0xFF)
+					msg.SrcGeoRegion = lookupRegionName(regioncache, patricia.GetRegion(geo), kc.envCode2Region)
+					msg.SrcGeoCity = lookupCityName(citycache, patricia.GetCity(geo), kc.envCode2City)
+				}
+			}
+			if dip != nil {
+				if geo, err := kc.geo.SearchBestFromHostGeo(dip); err != nil {
+					cntr := patricia.GetCountry(geo)
+					msg.DstGeo = fmt.Sprintf("%c%c", cntr>>8, cntr&0xFF)
+					msg.DstGeoRegion = lookupRegionName(regioncache, patricia.GetRegion(geo), kc.envCode2Region)
+					msg.DstGeoCity = lookupCityName(citycache, patricia.GetCity(geo), kc.envCode2City)
+				}
+			}
+		}
+
+		// And set our own asn also if not set.
+		if kc.asn != nil {
+			if sip != nil {
+				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(sip); resultsFound && err == nil {
+					msg.SrcAs = asn
+					msg.CustomStr["src_as_name"] = kc.asn.GetName(asn)
+				}
+			}
+			if dip != nil {
+				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(dip); resultsFound && err == nil {
+					msg.DstAs = asn
+					msg.CustomStr["dst_as_name"] = kc.asn.GetName(asn)
+				}
+			}
+		}
+	}
+}

@@ -26,7 +26,7 @@ const (
 )
 
 var (
-	Addr          = flag.String("nf.addr", "127.0.0.1", "Sflow/NetFlow/IPFIX listening address")
+	Addr          = flag.String("nf.addr", "0.0.0.0", "Sflow/NetFlow/IPFIX listening address")
 	Port          = flag.Int("nf.port", 9995, "Sflow/NetFlow/IPFIX listening port")
 	Reuse         = flag.Bool("nf.reuserport", false, "Enable so_reuseport for Sflow/NetFlow/IPFIX")
 	Workers       = flag.Int("nf.workers", 1, "Number of workers per flow collector")

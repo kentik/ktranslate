@@ -10,6 +10,7 @@ package patricia
 import "C"
 
 import (
+	"net"
 	"time"
 
 	"github.com/kentik/golog/logger"
@@ -110,6 +111,17 @@ func (p *Uint32Trees) FindBestMatch(addr uint32, addr6 []byte) (bool, uint32, er
 	} else {
 		address := patricia.NewIPv6Address(addr6, 128)
 		return p.tree6.FindDeepestTag(address)
+	}
+}
+
+// Finds the most-specific tag with the input address (relying on tree traversing behavior)
+func (p *Uint32Trees) FindBestMatchFromIP(ip net.IP) (bool, uint32, error) {
+	if ip.To4() == nil {
+		address := patricia.NewIPv6Address(ip.To16(), 128)
+		return p.tree6.FindDeepestTag(address)
+	} else {
+		address := patricia.NewIPv4AddressFromBytes(ip.To4(), 32)
+		return p.tree4.FindDeepestTag(address)
 	}
 }
 

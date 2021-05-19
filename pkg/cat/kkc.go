@@ -607,9 +607,16 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
 	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
+	citycache := map[uint32]string{}
+	regioncache := map[uint32]string{}
+
 	for {
 		select {
 		case msgs := <-kc.inputChan:
+			if kc.geo != nil || kc.asn != nil {
+				kc.doEnrichments(citycache, regioncache, msgs)
+			}
+
 			// If we have any rollups defined, send here instead of directly to the output format.
 			if kc.doRollups {
 				rv := make([]map[string]interface{}, len(msgs))
@@ -623,7 +630,19 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 
 			// Turn into a binary format here, using the passed in encoder.
 			if !kc.doRollups || kc.config.RollupAndAlpha {
-				ser, err := seri(msgs, serBuf)
+				// Compute and sample rate stuff here.
+				keep := len(msgs)
+				if kc.config.SampleRate > 1 && keep > kc.config.MaxBeforeSample {
+					rand.Shuffle(len(msgs), func(i, j int) {
+						msgs[i], msgs[j] = msgs[j], msgs[i]
+					})
+					keep = int(math.Max(float64(len(msgs))/float64(kc.config.SampleRate), 1))
+					for _, msg := range msgs {
+						msg.SampleRate = msg.SampleRate * kc.config.SampleRate
+					}
+					kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
+				}
+				ser, err := seri(msgs[0:keep], serBuf)
 				if err != nil {
 					kc.log.Errorf("Converting to native: %v", err)
 				} else {
@@ -672,7 +691,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		if !kc.doRollups || kc.config.RollupAndAlpha {
 			// Compute and sample rate stuff here.
 			keep := len(msgs)
-			if kc.config.SampleRate > 1 {
+			if kc.config.SampleRate > 1 && keep > kc.config.MaxBeforeSample {
 				rand.Shuffle(len(msgs), func(i, j int) {
 					msgs[i], msgs[j] = msgs[j], msgs[i]
 				})
@@ -680,6 +699,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 				for _, msg := range msgs {
 					msg.SampleRate = msg.SampleRate * kc.config.SampleRate
 				}
+				kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 			}
 			ser, err := seri(msgs[0:keep], serBuf)
 			if err != nil {
@@ -883,7 +903,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.nfs = nfs
 	}
 
-	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate)
+	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1 after %d", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate, kc.config.MaxBeforeSample)
 	go kc.listenHTTP()
 	return kc.sendToSinks(ctx)
 }
