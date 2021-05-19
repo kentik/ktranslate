@@ -27,10 +27,11 @@ const (
 
 type NRSink struct {
 	logger.ContextL
-	NRAccount  string
-	NRApiKey   string
-	NRUrl      string
-	NRUrlEvent string
+	NRAccount   string
+	NRApiKey    string
+	NRUrl       string
+	NRUrlEvent  string
+	NRUrlMetric string
 
 	client      *http.Client
 	tr          *http.Transport
@@ -132,10 +133,11 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 
 	s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
 	s.NRUrlEvent = s.NRUrl
+	s.NRUrlMetric = *NrMetricsUrl
 	if s.format == formats.FORMAT_NRM {
 		s.NRUrl = *NrMetricsUrl
 	}
-	s.Infof("Exporting to New Relic at %s", s.NRUrl)
+	s.Infof("Exporting to New Relic at main: %s, events: %s, metrics: %s", s.NRUrl, s.NRUrlEvent, s.NRUrlMetric)
 
 	return nil
 }
@@ -143,6 +145,8 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 func (s *NRSink) Send(ctx context.Context, payload *kt.Output) {
 	if payload.IsEvent() {
 		go s.sendNR(ctx, payload, s.NRUrlEvent)
+	} else if payload.IsMetric() {
+		go s.sendNR(ctx, payload, s.NRUrlMetric)
 	} else {
 		go s.sendNR(ctx, payload, s.NRUrl)
 	}

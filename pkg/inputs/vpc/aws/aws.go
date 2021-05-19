@@ -411,15 +411,21 @@ func NewAws(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]*AWSLogLine
 	}
 }
 
-func (m *AWSLogLine) getOther(ip net.IP, topo *AWSTopology) *ec2.Subnet {
+func (m *AWSLogLine) lookupTopo(ip net.IP, topo *AWSTopology) (subnet *ec2.Subnet, vpc *ec2.Vpc, az *ec2.AvailabilityZone) {
 	if topo != nil {
-		// Since flow is in the egress direction, dst ip will be the other side.
 		if ip.To4() == nil {
 			address := patricia.NewIPv6Address(ip.To16(), 128)
 			found, val, _ := topo.Hierarchy.SubnetTrieV6.FindDeepestTag(address)
 			if found {
 				if s, ok := topo.Entities.Subnets[val]; ok {
-					return &s
+					subnet = &s
+					if v, ok := topo.Entities.Vpcs[*s.VpcId]; ok {
+						vpc = &v
+					}
+					if a, ok := topo.Entities.AvailabilityZones[*s.AvailabilityZoneId]; ok {
+						az = &a
+					}
+					return
 				}
 			}
 		} else {
@@ -427,13 +433,20 @@ func (m *AWSLogLine) getOther(ip net.IP, topo *AWSTopology) *ec2.Subnet {
 			found, val, _ := topo.Hierarchy.SubnetTrieV4.FindDeepestTag(address)
 			if found {
 				if s, ok := topo.Entities.Subnets[val]; ok {
-					return &s
+					subnet = &s
+					if v, ok := topo.Entities.Vpcs[*s.VpcId]; ok {
+						vpc = &v
+					}
+					if a, ok := topo.Entities.AvailabilityZones[*s.AvailabilityZoneId]; ok {
+						az = &a
+					}
+					return
 				}
 			}
 		}
 	}
 
-	return nil
+	return
 }
 
 func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF) {
@@ -473,6 +486,10 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.CustomBigInt["start_time"] = m.StartTime.Unix()
 	in.CustomBigInt["end_time"] = m.EndTime.Unix()
 
+	// Do we know anything more about this conversation?
+	srcSubnet, srcVpc, srcAz := m.lookupTopo(m.SrcAddr, topo)
+	dstSubnet, dstVpc, dstAz := m.lookupTopo(m.DstAddr, topo)
+
 	// The rest is set up into src and dst parts.
 	if m.FlowDirection == "egress" {
 		in.OutBytes = in.InBytes // Move these to out since its egress.
@@ -487,11 +504,20 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		in.CustomStr["source_az"] = m.AzID
 		in.CustomStr["source_region"] = m.Region
 
-		other := m.getOther(m.DstAddr, topo) // Do we know anything about the other side of the conversation?
-		if other != nil {
-			in.CustomStr["dest_vpc"] = *other.VpcId
-			in.CustomStr["dest_az"] = *other.AvailabilityZoneId
-			in.CustomStr["dest_region"] = *other.AvailabilityZone // This should likely be something else?
+		if dstSubnet != nil {
+			in.CustomStr["dest_vpc"] = *dstSubnet.VpcId
+			in.CustomStr["dest_az"] = *dstAz.ZoneName
+			in.CustomStr["dest_region"] = *dstAz.RegionName
+		}
+		if srcVpc != nil {
+			for _, tag := range srcVpc.Tags {
+				in.CustomStr[*tag.Key] = *tag.Value
+			}
+		}
+		if srcSubnet != nil {
+			for _, tag := range srcSubnet.Tags {
+				in.CustomStr[*tag.Key] = *tag.Value
+			}
 		}
 	} else {
 		in.CustomStr["dest_vpc"] = m.VPCID
@@ -501,11 +527,20 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		in.CustomStr["dest_az"] = m.AzID
 		in.CustomStr["dest_region"] = m.Region
 
-		other := m.getOther(m.SrcAddr, topo) // Do we know anything about the other side of the conversation?
-		if other != nil {
-			in.CustomStr["source_vpc"] = *other.VpcId
-			in.CustomStr["source_az"] = *other.AvailabilityZoneId
-			in.CustomStr["source_region"] = *other.AvailabilityZone // This should likely be something else?
+		if srcSubnet != nil {
+			in.CustomStr["source_vpc"] = *srcSubnet.VpcId
+			in.CustomStr["source_az"] = *srcAz.ZoneName
+			in.CustomStr["source_region"] = *srcAz.RegionName
+		}
+		if dstVpc != nil {
+			for _, tag := range dstVpc.Tags {
+				in.CustomStr[*tag.Key] = *tag.Value
+			}
+		}
+		if dstSubnet != nil {
+			for _, tag := range dstSubnet.Tags {
+				in.CustomStr[*tag.Key] = *tag.Value
+			}
 		}
 	}
 

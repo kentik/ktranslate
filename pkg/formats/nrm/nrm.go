@@ -117,7 +117,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 
 	if !f.doGz {
-		return kt.NewOutputWithProvider(target, msgs[0].Provider, "metric"), nil
+		return kt.NewOutputWithProvider(target, msgs[0].Provider, kt.MetricOutput), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
@@ -137,7 +137,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, err
 	}
 
-	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, "metric"), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, kt.MetricOutput), nil
 }
 
 func (f *NRMFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
@@ -161,7 +161,7 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	}
 
 	if !f.doGz {
-		return kt.NewOutputWithProvider(target, rolls[0].Provider, "rollup"), nil
+		return kt.NewOutputWithProvider(target, rolls[0].Provider, kt.RollupOutput), nil
 	}
 
 	serBuf := make([]byte, 0)
@@ -182,7 +182,7 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		return nil, err
 	}
 
-	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, "rollup"), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, kt.RollupOutput), nil
 }
 
 func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {

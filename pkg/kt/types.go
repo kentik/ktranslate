@@ -29,6 +29,14 @@ const (
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
 )
 
+type OutputType string
+
+const (
+	EventOutput  OutputType = "event"
+	MetricOutput            = "metric"
+	RollupOutput            = "rollup"
+)
+
 type Provider string
 
 const (
@@ -279,7 +287,7 @@ type KentikConfig struct {
 
 type OutputContext struct {
 	Provider Provider
-	Type     string
+	Type     OutputType
 }
 
 type Output struct {
@@ -291,12 +299,16 @@ func NewOutput(body []byte) *Output {
 	return &Output{Body: body}
 }
 
-func NewOutputWithProvider(body []byte, prov Provider, stype string) *Output {
+func NewOutputWithProvider(body []byte, prov Provider, stype OutputType) *Output {
 	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype}}
 }
 
 func (o *Output) IsEvent() bool {
-	return o.Ctx.Type == "event"
+	return o.Ctx.Type == EventOutput
+}
+
+func (o *Output) IsMetric() bool {
+	return o.Ctx.Type == RollupOutput || o.Ctx.Type == MetricOutput
 }
 
 func (o *Output) GetDataType() string {

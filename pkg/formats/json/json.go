@@ -60,7 +60,7 @@ func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 
 	if !f.doGz {
-		return kt.NewOutputWithProvider(target, msgs[0].Provider, "event"), nil
+		return kt.NewOutputWithProvider(target, msgs[0].Provider, kt.EventOutput), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
@@ -80,7 +80,7 @@ func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, err
 	}
 
-	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, "event"), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, kt.EventOutput), nil
 }
 
 func (f *JsonFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
@@ -112,7 +112,7 @@ func (f *JsonFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 func (f *JsonFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	if !f.doGz {
 		res, err := json.Marshal(rolls)
-		return kt.NewOutputWithProvider(res, rolls[0].Provider, "rollup"), err
+		return kt.NewOutputWithProvider(res, rolls[0].Provider, kt.RollupOutput), err
 	}
 
 	serBuf := make([]byte, 0)
@@ -138,7 +138,7 @@ func (f *JsonFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		return nil, err
 	}
 
-	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, "rollup"), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, kt.RollupOutput), nil
 }
 
 func strip(in map[string]interface{}) {
