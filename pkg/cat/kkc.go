@@ -531,7 +531,7 @@ func (kc *KTranslate) doSend(ctx context.Context) {
 	for {
 		select {
 		case ser := <-kc.msgsc:
-			if len(ser.Body) == 0 {
+			if ser.BodyLen() == 0 {
 				continue
 			}
 

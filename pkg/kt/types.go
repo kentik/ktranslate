@@ -331,3 +331,10 @@ func (o *Output) GetDataType() string {
 
 	return "device-flows" // Default to this.
 }
+
+func (o *Output) BodyLen() int {
+	if o == nil {
+		return 0
+	}
+	return len(o.Body)
+}
