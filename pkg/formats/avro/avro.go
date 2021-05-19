@@ -138,7 +138,7 @@ func NewFormat(log logger.Underlying, comp kt.Compression) (*AvroFormat, error) 
 	return af, nil
 }
 
-func (f *AvroFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *AvroFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	buf := bytes.NewBuffer(serBuf)
 	buf.Reset()
 
@@ -160,11 +160,11 @@ func (f *AvroFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	if err = ocfw.Append(values); err != nil {
 		return nil, err
 	}
-	return buf.Bytes(), nil
+	return kt.NewOutput(buf.Bytes()), nil
 }
 
-func (f *AvroFormat) From(raw []byte) ([]map[string]interface{}, error) {
-	ior := bytes.NewBuffer(raw)
+func (f *AvroFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
+	ior := bytes.NewBuffer(raw.Body)
 	br := bufio.NewReader(ior)
 	values := make([]map[string]interface{}, 0)
 	ocfr, err := goavro.NewOCFReader(br)
@@ -181,7 +181,7 @@ func (f *AvroFormat) From(raw []byte) ([]map[string]interface{}, error) {
 	return values, ocfr.Err()
 }
 
-func (f *AvroFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *AvroFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	buf := bytes.NewBuffer(make([]byte, 0))
 	values := make([]map[string]interface{}, len(rolls))
 	for i, r := range rolls {
@@ -204,5 +204,5 @@ func (f *AvroFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	if err = ocfw.Append(values); err != nil {
 		return nil, err
 	}
-	return buf.Bytes(), nil
+	return kt.NewOutput(buf.Bytes()), nil
 }

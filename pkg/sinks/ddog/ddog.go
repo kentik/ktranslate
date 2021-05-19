@@ -85,8 +85,8 @@ func (s *DDogSink) Init(ctx context.Context, format formats.Format, compression 
 	return nil
 }
 
-func (s *DDogSink) Send(ctx context.Context, payload []byte) {
-	go s.sendHttp(ctx, payload)
+func (s *DDogSink) Send(ctx context.Context, payload *kt.Output) {
+	go s.sendHttp(ctx, payload.Body)
 }
 
 func (s *DDogSink) Close() {}

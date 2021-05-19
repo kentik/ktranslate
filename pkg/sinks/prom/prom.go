@@ -53,7 +53,7 @@ func (s *PromSink) HttpInfo() map[string]float64 {
 	return map[string]float64{}
 }
 
-func (s *PromSink) Send(ctx context.Context, payload []byte) {
+func (s *PromSink) Send(ctx context.Context, payload *kt.Output) {
 	// Noop because already registered in the rollup phase.
 }
 

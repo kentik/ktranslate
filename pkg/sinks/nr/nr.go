@@ -140,8 +140,12 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	return nil
 }
 
-func (s *NRSink) Send(ctx context.Context, payload []byte) {
-	go s.sendNR(ctx, payload, s.NRUrl)
+func (s *NRSink) Send(ctx context.Context, payload *kt.Output) {
+	if payload.IsEvent() {
+		go s.sendNR(ctx, payload, s.NRUrlEvent)
+	} else {
+		go s.sendNR(ctx, payload, s.NRUrl)
+	}
 }
 
 func (s *NRSink) Close() {}
@@ -155,12 +159,12 @@ func (s *NRSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
-	s.metrics.DeliveryBytes.Mark(int64(len(payload))) // Compression will effect this, but we can do our best.
-	if s.estimate {                                   // here, just mark how much we would have sent.
+func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
+	s.metrics.DeliveryBytes.Mark(int64(len(payload.Body))) // Compression will effect this, but we can do our best.
+	if s.estimate {                                        // here, just mark how much we would have sent.
 		return
 	}
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload.Body))
 	if err != nil {
 		s.Errorf("Cannot create NR request: %v", err)
 		return
@@ -170,7 +174,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
 	req.Header.Set("X-Insert-Key", s.NRApiKey)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("NR-Data-Provider", NR_DATA_PROVIDER)
-	req.Header.Set("NR-Data-Type", "")
+	req.Header.Set("NR-Data-Type", payload.GetDataType())
 	req.Header.Set("User-Agent", NR_USER_AGENT)
 	if s.compression == kt.CompressionGzip {
 		req.Header.Set("Content-Encoding", "GZIP")
@@ -190,7 +194,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload []byte, url string) {
 			if resp.StatusCode == 413 {
 				s.Errorf("Cannot write to NR, body too big. Adjusting max records down")
 				s.metrics.DeliveryErr.Mark(1)
-				s.tooBig <- len(payload)
+				s.tooBig <- len(payload.Body)
 			} else if resp.StatusCode >= 400 {
 				s.Errorf("Cannot write to NR, status code %d", resp.StatusCode)
 				s.metrics.DeliveryErr.Mark(1)
@@ -214,7 +218,7 @@ func (s *NRSink) checkForEvents(ctx context.Context) {
 		select {
 		case evt := <-s.fmtr.EventChan:
 			s.Debugf("Sending event")
-			go s.sendNR(ctx, evt, s.NRUrlEvent)
+			go s.sendNR(ctx, kt.NewOutputWithProvider(evt, kt.ProviderRouter, "event"), s.NRUrlEvent)
 		case <-ctx.Done():
 			s.Infof("checkForEvents Done")
 			return

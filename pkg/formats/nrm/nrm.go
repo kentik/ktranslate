@@ -98,7 +98,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 	return jf, nil
 }
 
-func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	ms := NRMetricSet{
 		Metrics: make([]NRMetric, 0, len(msgs)*4),
 		Common:  newNRCommon(),
@@ -117,7 +117,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return target, nil
+		return kt.NewOutputWithProvider(target, msgs[0].Provider, "metric"), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
@@ -137,15 +137,15 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, "metric"), nil
 }
 
-func (f *NRMFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *NRMFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *NRMFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	ms := NRMetricSet{
 		Metrics: f.toNRMetricRollup(rolls),
 		Common:  newNRCommon(),
@@ -161,7 +161,7 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return target, nil
+		return kt.NewOutputWithProvider(target, rolls[0].Provider, "rollup"), nil
 	}
 
 	serBuf := make([]byte, 0)
@@ -182,7 +182,7 @@ func (f *NRMFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, "rollup"), nil
 }
 
 func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {

@@ -120,7 +120,7 @@ func NewFormat(log logger.Underlying, comp kt.Compression) (*NetflowFormat, erro
 	return ipf, nil
 }
 
-func (f *NetflowFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *NetflowFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	switch f.version {
 	case netflow9.Version:
 		return f.pack9(msgs, serBuf)
@@ -131,8 +131,8 @@ func (f *NetflowFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	}
 }
 
-func (f *NetflowFormat) From(raw []byte) ([]map[string]interface{}, error) {
-	m, err := f.d.Read(bytes.NewBuffer(raw))
+func (f *NetflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
+	m, err := f.d.Read(bytes.NewBuffer(raw.Body))
 	if err != nil {
 		return nil, err
 	}
@@ -140,10 +140,10 @@ func (f *NetflowFormat) From(raw []byte) ([]map[string]interface{}, error) {
 	var chfs []*kt.JCHF
 	switch p := m.(type) {
 	case *netflow9.Packet:
-		chfs = f.decodeV9(p, raw)
+		chfs = f.decodeV9(p, raw.Body)
 
 	case *ipfix.Message:
-		chfs = f.decodeIpfix(p, raw)
+		chfs = f.decodeIpfix(p, raw.Body)
 
 	default:
 		return nil, fmt.Errorf("ipfix parser failed to decode a message: %v: %v", err, raw)
@@ -157,7 +157,7 @@ func (f *NetflowFormat) From(raw []byte) ([]map[string]interface{}, error) {
 }
 
 // Not implemented for this format.
-func (f *NetflowFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *NetflowFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	return nil, nil
 }
 

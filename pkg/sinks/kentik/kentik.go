@@ -76,7 +76,7 @@ func (s *KentikSink) Init(ctx context.Context, format formats.Format, compressio
 	return nil
 }
 
-func (s *KentikSink) Send(ctx context.Context, payload []byte) {
+func (s *KentikSink) Send(ctx context.Context, payload *kt.Output) {
 	// Noop, can't send this way.
 }
 

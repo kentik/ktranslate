@@ -55,7 +55,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*SplunkFormat
 	return jf, nil
 }
 
-func (f *SplunkFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *SplunkFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	ms := make([]SplunkMetric, 0, len(msgs)*4)
 	ct := time.Now().Unix()
 	for _, m := range msgs {
@@ -78,7 +78,7 @@ func (f *SplunkFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return buf.Bytes(), nil
+		return kt.NewOutput(buf.Bytes()), nil
 	}
 
 	var buf2 bytes.Buffer
@@ -97,15 +97,15 @@ func (f *SplunkFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf2.Bytes(), nil
+	return kt.NewOutput(buf2.Bytes()), nil
 }
 
-func (f *SplunkFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *SplunkFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *SplunkFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *SplunkFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	ct := time.Now().Unix()
 	ms := f.toSplunkMetricRollup(rolls, ct)
 
@@ -124,7 +124,7 @@ func (f *SplunkFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return buf.Bytes(), nil
+		return kt.NewOutput(buf.Bytes()), nil
 	}
 
 	var buf2 bytes.Buffer
@@ -143,7 +143,7 @@ func (f *SplunkFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf2.Bytes(), nil
+	return kt.NewOutput(buf2.Bytes()), nil
 }
 
 func (f *SplunkFormat) toSplunkMetricRollup(in []rollup.Rollup, ts int64) []SplunkMetric {

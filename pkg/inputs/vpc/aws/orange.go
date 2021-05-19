@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"strings"
-	"sync"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -31,7 +30,6 @@ type AwsVpc struct {
 	jchfChan chan []*kt.JCHF
 	topo     *AWSTopology
 	regions  []string
-	mux      sync.RWMutex
 }
 
 type OrangeMetric struct {
@@ -118,12 +116,8 @@ func (vpc *AwsVpc) checkQOut(ctx context.Context) {
 		select {
 		case rec := <-vpc.recs:
 			dst := make([]*kt.JCHF, len(rec.Lines))
-			var topo *AWSTopology
-			vpc.mux.RLock()
-			topo = vpc.topo
-			vpc.mux.RUnlock()
 			for i, l := range rec.Lines {
-				dst[i] = l.ToFlow(vpc, topo)
+				dst[i] = l.ToFlow(vpc, vpc.topo)
 			}
 
 			if len(dst) > 0 {

@@ -38,7 +38,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression, doFlatten bool
 	return jf, nil
 }
 
-func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	var target []byte
 	if f.doFlatten {
 		msgsNew := make([]map[string]interface{}, len(msgs))
@@ -60,7 +60,7 @@ func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return target, nil
+		return kt.NewOutputWithProvider(target, msgs[0].Provider, "event"), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
@@ -80,17 +80,17 @@ func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, "event"), nil
 }
 
-func (f *JsonFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *JsonFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	msgs := []*kt.JCHF{}
 	var err error
 
 	if !f.doGz {
-		err = json.Unmarshal(raw, &msgs)
+		err = json.Unmarshal(raw.Body, &msgs)
 	} else {
-		r, err := gzip.NewReader(bytes.NewBuffer(raw))
+		r, err := gzip.NewReader(bytes.NewBuffer(raw.Body))
 		if err != nil {
 			return nil, err
 		}
@@ -109,9 +109,10 @@ func (f *JsonFormat) From(raw []byte) ([]map[string]interface{}, error) {
 	return values, err
 }
 
-func (f *JsonFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *JsonFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	if !f.doGz {
-		return json.Marshal(rolls)
+		res, err := json.Marshal(rolls)
+		return kt.NewOutputWithProvider(res, rolls[0].Provider, "rollup"), err
 	}
 
 	serBuf := make([]byte, 0)
@@ -137,7 +138,7 @@ func (f *JsonFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), rolls[0].Provider, "rollup"), nil
 }
 
 func strip(in map[string]interface{}) {

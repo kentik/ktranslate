@@ -65,8 +65,8 @@ func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compressio
 	return nil
 }
 
-func (s *GCloudSink) Send(ctx context.Context, payload []byte) {
-	go s.send(ctx, payload)
+func (s *GCloudSink) Send(ctx context.Context, payload *kt.Output) {
+	go s.send(ctx, payload.Body)
 }
 
 func (s *GCloudSink) send(ctx context.Context, payload []byte) {

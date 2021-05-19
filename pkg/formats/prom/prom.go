@@ -99,7 +99,7 @@ func (f *PromFormat) toLabels(name string) []string {
 	return res
 }
 
-func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	res := make([]PromData, 0, len(msgs))
 	for _, m := range msgs {
 		res = append(res, f.toPromMetric(m)...)
@@ -143,12 +143,12 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 }
 
 // Not supported.
-func (f *PromFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *PromFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *PromFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	for _, r := range rolls {
 		pkts := strings.Split(r.EventType, ":")
 		if _, ok := f.vecs[r.EventType]; !ok {

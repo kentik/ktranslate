@@ -98,8 +98,8 @@ func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression 
 	return nil
 }
 
-func (s *HttpSink) Send(ctx context.Context, payload []byte) {
-	go s.sendHttp(ctx, payload)
+func (s *HttpSink) Send(ctx context.Context, payload *kt.Output) {
+	go s.sendHttp(ctx, payload.Body)
 }
 
 func (s *HttpSink) Close() {}

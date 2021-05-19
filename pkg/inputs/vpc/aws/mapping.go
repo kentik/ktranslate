@@ -16,22 +16,21 @@ func (vpc *AwsVpc) checkMappings(ctx context.Context) {
 		vpc.Errorf("Cannot get mapping %v", err)
 	}
 
-	go func() {
-		vpc.Infof("checkMapping Online")
-		for {
-			select {
-			case <-checkTicker.C:
-				err := vpc.updateMapping(ctx)
-				if err != nil {
-					vpc.Errorf("Cannot get mapping %v", err)
-				}
-
-			case <-ctx.Done():
-				vpc.Infof("checkMapping Done")
-				return
+	vpc.Infof("checkMapping Online")
+	for {
+		select {
+		case <-checkTicker.C:
+			vpc.Infof("Starting to update mapping")
+			err := vpc.updateMapping(ctx)
+			if err != nil {
+				vpc.Errorf("Cannot get mapping %v", err)
 			}
+
+		case <-ctx.Done():
+			vpc.Infof("checkMapping Done")
+			return
 		}
-	}()
+	}
 }
 
 func (vpc *AwsVpc) updateMapping(ctx context.Context) error {
@@ -43,9 +42,7 @@ func (vpc *AwsVpc) updateMapping(ctx context.Context) error {
 	}
 
 	// And if good, update our mapping set.
-	vpc.mux.Lock()
 	vpc.topo = &topo
-	vpc.mux.Unlock()
 	vpc.Infof("Updated mappings -- %d vpcs, %d regions in %v", len(topo.Entities.Vpcs), len(topo.Hierarchy.Regions), time.Now().Sub(start))
 
 	return nil

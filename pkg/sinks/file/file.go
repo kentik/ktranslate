@@ -121,11 +121,11 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 	return nil
 }
 
-func (s *FileSink) Send(ctx context.Context, payload []byte) {
+func (s *FileSink) Send(ctx context.Context, payload *kt.Output) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	if s.doWrite && s.fd != nil {
-		_, err := s.fd.Write(payload)
+		_, err := s.fd.Write(payload.Body)
 		if err != nil {
 			s.Infof("Cannot write to %s, %v", s.location, err)
 		}

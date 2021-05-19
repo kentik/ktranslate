@@ -19,7 +19,7 @@ func TestSeriToAvro(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 	out, err := f.From(res)
-	assert.NoError(err, "%s", string(res))
+	assert.NoError(err, "%s", string(res.Body))
 	assert.NotNil(out)
 	assert.Equal(len(kt.InputTesting), len(out))
 	for i, _ := range out {
@@ -45,7 +45,7 @@ func TestSeriToAvro(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 	out, err = f.From(res)
-	assert.NoError(err, "%s", string(res))
+	assert.NoError(err, "%s", string(res.Body))
 	assert.NotNil(out)
 	assert.Equal(len(inputNew), len(out))
 
@@ -59,7 +59,7 @@ func TestSeriToAvro(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 	out, err = f.From(res)
-	assert.NoError(err, "%s", string(res))
+	assert.NoError(err, "%s", string(res.Body))
 	assert.NotNil(out)
 	assert.Equal(len(inputNew), len(out))
 }
@@ -92,7 +92,7 @@ func TestSeriToAvroManyItterations(t *testing.T) {
 			assert.NoError(err)
 			assert.NotNil(res)
 			out, err := f.From(res)
-			assert.NoError(err, "%s", string(res))
+			assert.NoError(err, "%s", string(res.Body))
 			assert.NotNil(out)
 			assert.Equal(len(inputNew), len(out))
 		}(round)
@@ -117,7 +117,7 @@ func TestSeriToAvroManyItterations(t *testing.T) {
 			assert.NoError(err)
 			assert.NotNil(res)
 			out, err := f.From(res)
-			assert.NoError(err, "%s", string(res))
+			assert.NoError(err, "%s", string(res.Body))
 			assert.NotNil(out)
 			assert.Equal(len(inputNew), len(out))
 		}(round)
@@ -148,6 +148,6 @@ func BenchmarkAvro(b *testing.B) {
 		assert.NoError(b, err)
 		assert.NotNil(b, res)
 		_, err = f.From(res)
-		assert.NoError(b, err, "%s", string(res))
+		assert.NoError(b, err, "%s", string(res.Body))
 	}
 }

@@ -64,9 +64,9 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 	return nil
 }
 
-func (s *KafkaSink) Send(ctx context.Context, payload []byte) {
+func (s *KafkaSink) Send(ctx context.Context, payload *kt.Output) {
 	err := s.kp.WriteMessages(ctx, kafka.Message{
-		Value: payload,
+		Value: payload.Body,
 	})
 	if err != nil {
 		s.Errorf("Delivery failed: %v\n", err)

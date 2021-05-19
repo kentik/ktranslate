@@ -7,7 +7,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/netflow/netflow9"
 )
 
-func (f *NetflowFormat) pack9(flows []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *NetflowFormat) pack9(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	var err error
 
 	header := netflow9.PacketHeader{
@@ -54,7 +54,7 @@ func (f *NetflowFormat) pack9(flows []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), err
+	return kt.NewOutput(buf.Bytes()), err
 }
 
 func (f *NetflowFormat) decodeV9(msg *netflow9.Packet, raw []byte) []*kt.JCHF {

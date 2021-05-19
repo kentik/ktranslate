@@ -82,7 +82,7 @@ type KTranslate struct {
 	mapr           *CustomMapper
 	udrMapr        *UDRMapper
 	pgdb           *sql.DB
-	msgsc          chan []byte
+	msgsc          chan *kt.Output
 	envCode2Region *lmdb.Env
 	envCode2City   *lmdb.Env
 	ol             *old_logger.Logger

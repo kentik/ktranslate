@@ -276,3 +276,58 @@ type KentikConfig struct {
 	ApiRoot  string
 	ApiPlan  int
 }
+
+type OutputContext struct {
+	Provider Provider
+	Type     string
+}
+
+type Output struct {
+	Body []byte
+	Ctx  OutputContext
+}
+
+func NewOutput(body []byte) *Output {
+	return &Output{Body: body}
+}
+
+func NewOutputWithProvider(body []byte, prov Provider, stype string) *Output {
+	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype}}
+}
+
+func (o *Output) IsEvent() bool {
+	return o.Ctx.Type == "event"
+}
+
+func (o *Output) GetDataType() string {
+	if o == nil {
+		return ""
+	}
+
+	switch o.Ctx.Provider {
+	case ProviderRouter:
+		return "snmp"
+	case ProviderVPC:
+		return "vpc-flows"
+	case ProviderSynth:
+		return "synthetics"
+	case ProviderSwitch:
+		return "snmp"
+	case ProviderFirewall:
+		return "snmp"
+	case ProviderUPS:
+		return "snmp"
+	case ProviderPDU:
+		return "snmp"
+	case ProviderIOT:
+		return "snmp"
+	case ProviderHost:
+		return "snmp"
+	case ProviderAlert:
+		return "snmp"
+	case ProviderFlowDevice:
+		return "device-flows"
+	}
+
+	return "device-flows" // Default to this.
+}

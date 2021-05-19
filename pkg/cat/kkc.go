@@ -71,7 +71,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		},
 		alphaChans: make([]chan *Flow, config.Threads),
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
-		msgsc:      make(chan []byte, 60),
+		msgsc:      make(chan *kt.Output, 60),
 		ol:         ol,
 		tooBig:     make(chan int, CHAN_SLACK),
 	}
@@ -531,7 +531,7 @@ func (kc *KTranslate) doSend(ctx context.Context) {
 	for {
 		select {
 		case ser := <-kc.msgsc:
-			if len(ser) == 0 {
+			if len(ser.Body) == 0 {
 				continue
 			}
 
@@ -604,7 +604,7 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
-func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
+func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
 	citycache := map[uint32]string{}
@@ -658,7 +658,7 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 	}
 }
 
-func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*kt.JCHF, []byte) ([]byte, error)) {
+func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	cacheTicker := time.NewTicker(CacheInvalidateDuration)
 	defer cacheTicker.Stop()
 

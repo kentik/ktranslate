@@ -62,8 +62,8 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	return nil
 }
 
-func (s *S3Sink) Send(ctx context.Context, payload []byte) {
-	go s.send(ctx, payload)
+func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
+	go s.send(ctx, payload.Body)
 }
 
 func (s *S3Sink) send(ctx context.Context, payload []byte) {

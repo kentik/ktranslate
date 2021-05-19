@@ -91,7 +91,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*InfluxFormat
 	return jf, nil
 }
 
-func (f *InfluxFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *InfluxFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	res := make([]InfluxData, 0, len(msgs))
 	for _, m := range msgs {
 		res = append(res, f.toInfluxMetric(m)...)
@@ -101,7 +101,7 @@ func (f *InfluxFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, nil
 	}
 
-	return InfluxDataSet(res).Bytes(), nil
+	return kt.NewOutput(InfluxDataSet(res).Bytes()), nil
 }
 
 func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
@@ -129,12 +129,12 @@ func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
 }
 
 // Not supported.
-func (f *InfluxFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	res := make([]string, len(rolls))
 	ts := time.Now()
 	for i, r := range rolls {
@@ -144,7 +144,7 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		}
 	}
 
-	return []byte(strings.Join(res, "\n")), nil
+	return kt.NewOutput([]byte(strings.Join(res, "\n"))), nil
 }
 
 func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {

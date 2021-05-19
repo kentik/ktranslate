@@ -54,7 +54,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*DDogFormat, 
 	return jf, nil
 }
 
-func (f *DDogFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *DDogFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	ms := datadog.NewMetricsPayloadWithDefaults()
 	series := map[string]*datadog.Series{}
 	for _, m := range msgs {
@@ -75,7 +75,7 @@ func (f *DDogFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return target, nil
+		return kt.NewOutput(target), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
@@ -95,15 +95,15 @@ func (f *DDogFormat) To(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutput(buf.Bytes()), nil
 }
 
-func (f *DDogFormat) From(raw []byte) ([]map[string]interface{}, error) {
+func (f *DDogFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *DDogFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
+func (f *DDogFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	ms := datadog.NewMetricsPayloadWithDefaults()
 	series := map[string]*datadog.Series{}
 	f.toDDogMetricRollup(rolls, series)
@@ -122,7 +122,7 @@ func (f *DDogFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 	}
 
 	if !f.doGz {
-		return target, nil
+		return kt.NewOutput(target), nil
 	}
 
 	serBuf := make([]byte, 0)
@@ -143,7 +143,7 @@ func (f *DDogFormat) Rollup(rolls []rollup.Rollup) ([]byte, error) {
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutput(buf.Bytes()), nil
 }
 
 func (f *DDogFormat) toDDogMetricRollup(in []rollup.Rollup, series map[string]*datadog.Series) {

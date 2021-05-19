@@ -7,7 +7,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/netflow/ipfix"
 )
 
-func (f *NetflowFormat) packIpfix(msgs []*kt.JCHF, serBuf []byte) ([]byte, error) {
+func (f *NetflowFormat) packIpfix(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	// Quick guard.
 	if len(msgs) == 0 {
@@ -60,7 +60,7 @@ func (f *NetflowFormat) packIpfix(msgs []*kt.JCHF, serBuf []byte) ([]byte, error
 		return nil, err
 	}
 
-	return buf.Bytes(), nil
+	return kt.NewOutput(buf.Bytes()), nil
 }
 
 func (f *NetflowFormat) decodeIpfix(msg *ipfix.Message, raw []byte) []*kt.JCHF {

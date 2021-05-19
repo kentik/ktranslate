@@ -24,7 +24,7 @@ import (
 
 type SinkImpl interface {
 	Init(context.Context, formats.Format, kt.Compression, formats.Formatter) error
-	Send(context.Context, []byte)
+	Send(context.Context, *kt.Output)
 	Close()
 	HttpInfo() map[string]float64
 }

@@ -18,9 +18,9 @@ import (
 )
 
 type Formatter interface {
-	To([]*kt.JCHF, []byte) ([]byte, error)
-	From([]byte) ([]map[string]interface{}, error)
-	Rollup([]rollup.Rollup) ([]byte, error)
+	To([]*kt.JCHF, []byte) (*kt.Output, error)
+	From(*kt.Output) ([]map[string]interface{}, error)
+	Rollup([]rollup.Rollup) (*kt.Output, error)
 }
 
 type Format string
