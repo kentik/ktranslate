@@ -153,11 +153,10 @@ func (f *DDogFormat) toDDogMetricRollup(in []rollup.Rollup, series map[string]*d
 			"provider": string(kt.ProviderRouter),
 		}
 		host := ""
-		bad := false
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
 			attr[dims[i]] = pt
 			if pt == "0" || pt == "" {
-				bad = true
+				delete(attr, dims[i])
 			}
 			if dims[i] == "device_name" {
 				host = pt
@@ -170,20 +169,18 @@ func (f *DDogFormat) toDDogMetricRollup(in []rollup.Rollup, series map[string]*d
 			tags = append(tags, k+"="+v)
 		}
 
-		if !bad {
-			seriesName := "kentik.rollup." + roll.Name
-			key := strings.Join([]string{seriesName, host}, ":")
-			intv := roll.Interval.Microseconds()
-			interval := datadog.NewNullableInt64(&intv)
-			if _, ok := series[key]; !ok {
-				series[key] = datadog.NewSeries(seriesName, [][]float64{})
-				series[key].Host = &host
-				series[key].Interval = *interval
-				series[key].Type = &DDOG_RATE_TYPE
-				series[key].Tags = &tags
-			}
-			series[key].Points = append(series[key].Points, []float64{float64(time.Now().Unix()), roll.Metric})
+		seriesName := "kentik.rollup." + roll.Name
+		key := strings.Join([]string{seriesName, host}, ":")
+		intv := roll.Interval.Microseconds()
+		interval := datadog.NewNullableInt64(&intv)
+		if _, ok := series[key]; !ok {
+			series[key] = datadog.NewSeries(seriesName, [][]float64{})
+			series[key].Host = &host
+			series[key].Interval = *interval
+			series[key].Type = &DDOG_RATE_TYPE
+			series[key].Tags = &tags
 		}
+		series[key].Points = append(series[key].Points, []float64{float64(time.Now().Unix()), roll.Metric})
 	}
 }
 
