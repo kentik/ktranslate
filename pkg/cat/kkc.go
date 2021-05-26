@@ -122,7 +122,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			kc.envCode2Region = envRegion
 			log.Infof("Loaded Code2Region from %s", config.Code2Region)
 		} else {
-			log.Infof("Cannot open Code2Region from %s", config.Code2Region)
+			log.Errorf("Cannot open Code2Region from %s", config.Code2Region)
 			envRegion.Close()
 			return nil, err
 		}
@@ -152,6 +152,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if config.TagFile != "" {
 		m, err := NewTagMapper(config.TagFile)
 		if err != nil {
+			kc.log.Errorf("Cannot open tag service %v", err)
 			return nil, err
 		}
 		kc.tagMap = m
@@ -164,6 +165,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if config.GeoMapping != "" {
 		geo, err := patricia.OpenGeo(config.GeoMapping, false, ol)
 		if err != nil {
+			kc.log.Errorf("Error with geo service: %v", err)
 			return nil, err
 		} else {
 			kc.geo = geo
@@ -174,14 +176,13 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if config.Asn4 != "" && config.Asn6 != "" {
 		asn, err := patricia.OpenASN(config.Asn4, config.Asn6, config.AsnName, ol)
 		if err != nil {
+			kc.log.Errorf("Error with asn service %v", err)
 			return nil, err
 		} else {
 			kc.log.Infof("Loaded %d asn cidrs with %d names", asn.Length, asn.GetSizeName())
 			kc.asn = asn
 		}
 	}
-
-	kc.log.Infof("Disabling tagging service")
 
 	// Define our sinks for where to send data to.
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
@@ -604,6 +605,48 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
+func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[uint32]string, regioncache map[uint32]string, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+	if kc.geo != nil || kc.asn != nil {
+		kc.doEnrichments(citycache, regioncache, msgs)
+	}
+
+	// If we have any rollups defined, send here instead of directly to the output format.
+	if kc.doRollups {
+		rv := make([]map[string]interface{}, len(msgs))
+		for i, msg := range msgs {
+			rv[i] = msg.ToMap()
+		}
+		for _, r := range kc.rollups {
+			r.Add(rv)
+		}
+	}
+
+	// Turn into a binary format here, using the passed in encoder.
+	if !kc.doRollups || kc.config.RollupAndAlpha {
+		// Compute and sample rate stuff here.
+		keep := len(msgs)
+		if kc.config.SampleRate > 1 && keep > kc.config.MaxBeforeSample {
+			rand.Shuffle(len(msgs), func(i, j int) {
+				msgs[i], msgs[j] = msgs[j], msgs[i]
+			})
+			keep = int(math.Max(float64(len(msgs))/float64(kc.config.SampleRate), 1))
+			for _, msg := range msgs {
+				msg.SampleRate = msg.SampleRate * kc.config.SampleRate
+			}
+			kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
+		}
+		ser, err := seri(msgs[0:keep], serBuf)
+		if err != nil {
+			kc.log.Errorf("Converting to native: %v", err)
+		} else {
+			ser.CB = cb
+			kc.msgsc <- ser
+		}
+	}
+
+	kc.metrics.InputQ.Mark(int64(len(msgs)))
+}
+
 func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
@@ -613,44 +656,7 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 	for {
 		select {
 		case msgs := <-kc.inputChan:
-			if kc.geo != nil || kc.asn != nil {
-				kc.doEnrichments(citycache, regioncache, msgs)
-			}
-
-			// If we have any rollups defined, send here instead of directly to the output format.
-			if kc.doRollups {
-				rv := make([]map[string]interface{}, len(msgs))
-				for i, msg := range msgs {
-					rv[i] = msg.ToMap()
-				}
-				for _, r := range kc.rollups {
-					r.Add(rv)
-				}
-			}
-
-			// Turn into a binary format here, using the passed in encoder.
-			if !kc.doRollups || kc.config.RollupAndAlpha {
-				// Compute and sample rate stuff here.
-				keep := len(msgs)
-				if kc.config.SampleRate > 1 && keep > kc.config.MaxBeforeSample {
-					rand.Shuffle(len(msgs), func(i, j int) {
-						msgs[i], msgs[j] = msgs[j], msgs[i]
-					})
-					keep = int(math.Max(float64(len(msgs))/float64(kc.config.SampleRate), 1))
-					for _, msg := range msgs {
-						msg.SampleRate = msg.SampleRate * kc.config.SampleRate
-					}
-					kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
-				}
-				ser, err := seri(msgs[0:keep], serBuf)
-				if err != nil {
-					kc.log.Errorf("Converting to native: %v", err)
-				} else {
-					kc.msgsc <- ser
-				}
-			}
-
-			kc.metrics.InputQ.Mark(int64(len(msgs)))
+			kc.handleInput(msgs, serBuf, citycache, regioncache, nil, seri)
 		case <-ctx.Done():
 			kc.log.Infof("monitorInput %d Done", num)
 			return
@@ -886,7 +892,13 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for vpc flows coming in
 	if kc.config.VpcSource != "" {
 		assureInput()
-		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
+		serBufInput := make([]byte, 0)
+		citycacheInput := map[uint32]string{}
+		regioncacheInput := map[uint32]string{}
+		handler := func(msgs []*kt.JCHF, cb func(error)) { // Capture this in a closure.
+			kc.handleInput(msgs, serBufInput, citycacheInput, regioncacheInput, cb, kc.format.To)
+		}
+		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic, handler)
 		if err != nil {
 			return err
 		}

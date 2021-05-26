@@ -11,7 +11,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/cat"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
 	"github.com/kentik/ktranslate/pkg/formats"
-	kt "github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/kt"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/baseserver"
@@ -20,8 +20,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 )
-
-const ()
 
 func main() {
 	var (
@@ -45,7 +43,7 @@ func main() {
 		maxFlows       = flag.Int("max_flows_per_message", 10000, "Max number of flows to put in each emitted message")
 		dumpRollups    = flag.Int("rollup_interval", 0, "Export timer for rollups in seconds")
 		rollupAndAlpha = flag.Bool("rollup_and_alpha", false, "Send both rollups and alpha inputs to sinks")
-		sample         = flag.Int("sample_rate", 0, "Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.")
+		sample         = flag.Int("sample_rate", kt.LookupEnvInt("KENTIK_SAMPLE_RATE", 0), "Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.")
 		sampleMin      = flag.Int("max_before_sample", 1, "Only sample when a set of inputs is at least this many")
 		apiDevices     = flag.String("api_devices", "", "json file containing dumy devices to use for the stub Kentik API")
 		snmpFile       = flag.String("snmp", "", "yaml file containing snmp config to use")
@@ -56,7 +54,7 @@ func main() {
 		sslCertFile    = flag.String("ssl_cert_file", "", "SSL Cert file to use for serving HTTPS traffic")
 		sslKeyFile     = flag.String("ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 		tags           = flag.String("tag_map", "", "CSV file mapping tag ids to strings")
-		vpcSource      = flag.String("vpc", "", "Run VPC Flow Ingest")
+		vpcSource      = flag.String("vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 	)
 
@@ -64,7 +62,7 @@ func main() {
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
 
 	// If we're running in a given mode, set the flags accordingly.
-	setMode(bs, flag.Arg(0), *sample)
+	setMode(bs, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0)), *sample)
 
 	if *listenIPPort == "" {
 		bs.Fail("Invalid --listen value")
@@ -160,13 +158,14 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 	switch mode {
 	case "":
 		return // noop
+	case "nr1.vpc.lambda":
+		setNr() // Here, we only send the flow in as events to NR.
 	case "nr1.vpc", "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 		if strings.HasPrefix(mode, "nr1") {
 			setNr()
 		}
-
 	case "nr1.flow", "flow":
 		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")

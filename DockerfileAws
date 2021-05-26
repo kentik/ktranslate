@@ -1,0 +1,5 @@
+# copy artifacts to a clean image
+FROM public.ecr.aws/lambda/provided:al2
+COPY bin/ktranslate /main
+COPY lib/libpcap.so.0.8 /lib64/libpcap.so.0.8
+ENTRYPOINT [ "/main" ]

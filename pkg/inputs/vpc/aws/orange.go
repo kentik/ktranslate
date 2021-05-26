@@ -13,6 +13,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -22,14 +23,15 @@ import (
 
 type AwsVpc struct {
 	logger.ContextL
-	metrics  *OrangeMetric
-	recs     chan *FlowSet
-	sqsCli   *sqs.SQS
-	awsQUrl  string
-	client   *s3.S3
-	jchfChan chan []*kt.JCHF
-	topo     *AWSTopology
-	regions  []string
+	metrics       *OrangeMetric
+	recs          chan *FlowSet
+	sqsCli        *sqs.SQS
+	awsQUrl       string
+	client        *s3.S3
+	jchfChan      chan []*kt.JCHF
+	topo          *AWSTopology
+	regions       []string
+	lambdaHandler func([]*kt.JCHF, func(error))
 }
 
 type OrangeMetric struct {
@@ -42,15 +44,16 @@ type OrangeMetric struct {
 }
 
 var (
-	IamRole = flag.String("iam_role", "", "IAM Role to use for processing flow")
-	SqsName = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
-	Regions = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
+	IamRole  = flag.String("iam_role", "", "IAM Role to use for processing flow")
+	SqsName  = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
+	Regions  = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
+	IsLambda = flag.Bool("aws_lambda", kt.LookupEnvBool("AWS_IS_LAMBDA", false), "Run as a AWS Lambda function")
 
 	ERROR_SLEEP_TIME     = 20 * time.Second
 	MappingCheckDuration = 30 * 60 * time.Second
 )
 
-func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*AwsVpc, error) {
+func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, lambdaHandler func([]*kt.JCHF, func(error))) (*AwsVpc, error) {
 	vpc := &AwsVpc{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "awsVpc"}, log),
 		recs:     make(chan *FlowSet, 1000),
@@ -63,30 +66,39 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		awsQUrl: *SqsName,
 	}
 
-	if vpc.awsQUrl == "" {
-		return nil, fmt.Errorf("Flag --sqs_name required")
-	}
-	if *IamRole == "" {
-		return nil, fmt.Errorf("Flag --iam_role required")
-	}
+	if *IsLambda {
+		sess := session.Must(session.NewSession())
+		conf := aws.NewConfig()
+		vpc.client = s3.New(sess, conf)
+		vpc.lambdaHandler = lambdaHandler
+		go lambda.Start(vpc.handleLamdba)
+		vpc.Infof("Running as a lamdba function")
+	} else {
+		if vpc.awsQUrl == "" {
+			return nil, fmt.Errorf("Flag --sqs_name required")
+		}
+		if *IamRole == "" {
+			return nil, fmt.Errorf("Flag --iam_role required")
+		}
 
-	regions := strings.Split(*Regions, ",")
-	if len(regions) == 0 {
-		return nil, fmt.Errorf("Flag --regions required")
+		regions := strings.Split(*Regions, ",")
+		if len(regions) == 0 {
+			return nil, fmt.Errorf("Flag --regions required")
+		}
+		vpc.regions = regions
+
+		vpc.Infof("Running with role %s in region %s looking at q %s and metadata in %v", *IamRole, vpc.regions[0], *SqsName, vpc.regions)
+		sess := session.Must(session.NewSession())
+		conf := aws.NewConfig().
+			WithRegion(vpc.regions[0]).
+			WithCredentials(stscreds.NewCredentials(sess, *IamRole))
+		vpc.client = s3.New(sess, conf)
+		vpc.sqsCli = sqs.New(sess, conf)
+
+		go vpc.checkQIn(ctx)
+		go vpc.checkQOut(ctx)
+		go vpc.checkMappings(ctx)
 	}
-	vpc.regions = regions
-
-	vpc.Infof("Running with role %s in region %s looking at q %s and metadata in %v", *IamRole, vpc.regions[0], *SqsName, vpc.regions)
-	sess := session.Must(session.NewSession())
-	conf := aws.NewConfig().
-		WithRegion(vpc.regions[0]).
-		WithCredentials(stscreds.NewCredentials(sess, *IamRole))
-	vpc.client = s3.New(sess, conf)
-	vpc.sqsCli = sqs.New(sess, conf)
-
-	go vpc.checkQIn(ctx)
-	go vpc.checkQOut(ctx)
-	go vpc.checkMappings(ctx)
 
 	return vpc, nil
 }

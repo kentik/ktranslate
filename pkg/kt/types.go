@@ -293,6 +293,7 @@ type OutputContext struct {
 type Output struct {
 	Body []byte
 	Ctx  OutputContext
+	CB   func(error) // Called when this is sent to a sink.
 }
 
 func NewOutput(body []byte) *Output {
