@@ -158,13 +158,14 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 	switch mode {
 	case "":
 		return // noop
+	case "nr1.vpc.lambda":
+		setNr() // Here, we only send the flow in as events to NR.
 	case "nr1.vpc", "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 		if strings.HasPrefix(mode, "nr1") {
 			setNr()
 		}
-
 	case "nr1.flow", "flow":
 		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")

@@ -164,8 +164,9 @@ func (s *NRSink) HttpInfo() map[string]float64 {
 }
 
 func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
+	var cbErr error = nil
 	if payload.CB != nil { // Let anyone who asked know that this has been sent
-		defer payload.CB(nil)
+		defer payload.CB(cbErr)
 	}
 
 	s.metrics.DeliveryBytes.Mark(int64(len(payload.Body))) // Compression will effect this, but we can do our best.
@@ -175,6 +176,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload.Body))
 	if err != nil {
 		s.Errorf("Cannot create NR request: %v", err)
+		cbErr = err
 		return
 	}
 
@@ -191,12 +193,14 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 	resp, err := s.client.Do(req)
 	if err != nil {
 		s.Errorf("Cannot write to NR: %v, creating new client", err)
+		cbErr = err
 		s.client = &http.Client{Transport: s.tr}
 	} else {
 		defer resp.Body.Close()
 		bdy, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			s.Errorf("Cannot get resp body from NR: %v", err)
+			cbErr = err
 			s.metrics.DeliveryErr.Mark(1)
 		} else {
 			if resp.StatusCode == 413 {
@@ -211,6 +215,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 				err = json.Unmarshal(bdy, &nr)
 				if err != nil {
 					s.Errorf("Cannot parse resp from NR: %v", err)
+					cbErr = err
 					s.metrics.DeliveryErr.Mark(1)
 				} else {
 					s.Debugf("NR Success: %v UUID: %s, RID: %s", nr.Success, nr.Uuid, nr.RequestId)

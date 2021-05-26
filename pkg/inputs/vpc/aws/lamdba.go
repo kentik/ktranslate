@@ -38,6 +38,7 @@ func (vpc *AwsVpc) handleLamdba(ctx context.Context, s3Event events.S3Event) err
 		rec := <-vpc.recs
 
 		dst := make([]*kt.JCHF, len(rec.Lines))
+		vpc.Debugf("Found %d logs to send", len(rec.Lines))
 		for i, l := range rec.Lines {
 			dst[i] = l.ToFlow(vpc, vpc.topo)
 		}
