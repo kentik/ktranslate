@@ -638,7 +638,7 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 		ser, err := seri(msgs[0:keep], serBuf)
 		if err != nil {
 			kc.log.Errorf("Converting to native: %v", err)
-		} else {
+		} else if ser != nil {
 			ser.CB = cb
 			kc.msgsc <- ser
 		}
