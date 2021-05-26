@@ -25,10 +25,10 @@ const (
 	Azure             = "azure"
 )
 
-func NewVpc(ctx context.Context, cloud CloudSource, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (VpcImpl, error) {
+func NewVpc(ctx context.Context, cloud CloudSource, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, lambdaHandler func([]*kt.JCHF, func(error))) (VpcImpl, error) {
 	switch cloud {
 	case Aws:
-		return aws.NewVpc(ctx, log, registry, jchfChan, apic)
+		return aws.NewVpc(ctx, log, registry, jchfChan, apic, lambdaHandler)
 	case Gcp:
 		return nil, fmt.Errorf("Unimplemented vpc %v", cloud)
 	case Azure:

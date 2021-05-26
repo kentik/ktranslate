@@ -36,7 +36,7 @@ type SQSObject struct {
 	Key string `json:"key"`
 }
 
-func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
+func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) error {
 	vpc.Debugf("Processing %s %s", bucket, *mdata.Key)
 	input := &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
@@ -48,7 +48,7 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
 	result, err := vpc.client.GetObject(input)
 	if err != nil {
 		vpc.Errorf("Cannot process object: %s %s -> %v", bucket, *mdata.Key, err)
-		return
+		return err
 	} else {
 		if result.ContentLength != nil {
 			size = *result.ContentLength
@@ -83,11 +83,11 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
 				}
 				if err := scanner.Err(); err != nil {
 					vpc.Warnf("cannot scan clear %s %s: %v", bucket, *mdata.Key, err)
-					return
+					return err
 				}
 			} else { // Can't un-gzip here.
 				vpc.Warnf("cannot gz %s %s: %v", bucket, *mdata.Key, err)
-				return
+				return err
 			}
 		} else {
 			scanner := bufio.NewScanner(zr)
@@ -115,11 +115,11 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
 			}
 			if err := scanner.Err(); err != nil {
 				vpc.Warnf("cannot scan %s %s: %v", bucket, *mdata.Key, err)
-				return
+				return err
 			}
 			if err := zr.Close(); err != nil {
 				vpc.Warnf("cannot close zr %s %s: %v", bucket, *mdata.Key, err)
-				return
+				return err
 			}
 		}
 	}
@@ -133,7 +133,7 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
 		err := record.ProcessKey(bucket, *mdata.Key)
 		if err != nil {
 			vpc.Warnf("cannot process %s %s: %v", bucket, *mdata.Key, err)
-			return
+			return err
 		}
 
 		// Send this record on to be processed.
@@ -147,7 +147,7 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) {
 		vpc.Warnf("No flows found for %s %s", bucket, *mdata.Key)
 	}
 
-	return
+	return nil
 }
 
 // Get message from sqs
