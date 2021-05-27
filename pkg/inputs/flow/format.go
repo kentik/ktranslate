@@ -3,6 +3,7 @@ package flow
 import (
 	"context"
 	"encoding/binary"
+	"fmt"
 	"net"
 	"strings"
 	"time"
@@ -14,14 +15,14 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/ic"
 
-	flowmessage "github.com/cloudflare/goflow/v3/pb"
+	flowmessage "github.com/netsampler/goflow2/pb"
 )
 
 const (
 	DeviceUpdateDuration = 1 * time.Hour
 )
 
-type KentikTransport struct {
+type KentikDriver struct {
 	logger.ContextL
 	jchfChan     chan []*kt.JCHF
 	apic         *api.KentikApi
@@ -29,15 +30,15 @@ type KentikTransport struct {
 	fields       []string
 	devices      map[string]*kt.Device
 	maxBatchSize int
-	inputs       chan []*kt.JCHF
+	inputs       chan *kt.JCHF
 }
 
 type FlowMetric struct {
 	Flows go_metrics.Meter
 }
 
-func NewKentikTransport(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string) *KentikTransport {
-	kt := KentikTransport{
+func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string) *KentikDriver {
+	kt := KentikDriver{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
 		jchfChan: jchfChan,
 		apic:     apic,
@@ -47,35 +48,39 @@ func NewKentikTransport(ctx context.Context, proto FlowSource, maxBatchSize int,
 		fields:       strings.Split(fields, ","),
 		devices:      apic.GetDevicesAsMap(0),
 		maxBatchSize: maxBatchSize,
-		inputs:       make(chan []*kt.JCHF, 10),
+		inputs:       make(chan *kt.JCHF, maxBatchSize),
 	}
 	go kt.run(ctx) // Process flows and send them on.
 	return &kt
 }
 
-func (t *KentikTransport) Publish(msgs []*flowmessage.FlowMessage) {
-	t.metrics.Flows.Mark(int64(len(msgs)))
-	local := make([]*kt.JCHF, len(msgs))
-	for i, m := range msgs {
-		local[i] = t.toJCHF(m)
-	}
-
-	if len(local) >= t.maxBatchSize {
-		t.jchfChan <- local
-	} else {
-		t.inputs <- local
-	}
+func (t *KentikDriver) Init(ctx context.Context) error {
+	return nil
 }
 
-func (t *KentikTransport) Close() {}
+func (t *KentikDriver) Prepare() error {
+	return nil
+}
 
-func (t *KentikTransport) HttpInfo() map[string]float64 {
+func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
+	msg, ok := data.(*flowmessage.FlowMessage)
+	if !ok {
+		return nil, nil, fmt.Errorf("message is not protobuf")
+	}
+	t.metrics.Flows.Mark(1)
+	t.inputs <- t.toJCHF(msg) // Pull out into our own system here.
+	return nil, nil, nil
+}
+
+func (t *KentikDriver) Close() {}
+
+func (t *KentikDriver) HttpInfo() map[string]float64 {
 	return map[string]float64{
 		"Flows": t.metrics.Flows.Rate1(),
 	}
 }
 
-func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
+func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	srcmac := make([]byte, 8)
 	dstmac := make([]byte, 8)
 	binary.BigEndian.PutUint64(srcmac, fmsg.SrcMac)
@@ -186,34 +191,6 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.SrcNet)
 		case "DstNet":
 			in.CustomBigInt[field] = int64(fmsg.DstNet)
-		case "HasEncap":
-			if fmsg.HasEncap {
-				in.CustomInt[field] = 1
-			} else {
-				in.CustomInt[field] = 0
-			}
-		case "SrcAddrEncap":
-			if ip := net.IP(fmsg.SrcAddrEncap); ip != nil {
-				in.CustomStr[field] = ip.String()
-			}
-		case "DstAddrEncap":
-			if ip := net.IP(fmsg.DstAddrEncap); ip != nil {
-				in.CustomStr[field] = ip.String()
-			}
-		case "ProtoEncap":
-			in.CustomBigInt[field] = int64(fmsg.ProtoEncap)
-		case "EtypeEncap":
-			in.CustomBigInt[field] = int64(fmsg.EtypeEncap)
-		case "IPTosEncap":
-			in.CustomBigInt[field] = int64(fmsg.IPTosEncap)
-		case "IPTTLEncap":
-			in.CustomBigInt[field] = int64(fmsg.IPTTLEncap)
-		case "IPv6FlowLabelEncap":
-			in.CustomBigInt[field] = int64(fmsg.IPv6FlowLabelEncap)
-		case "FragmentIdEncap":
-			in.CustomBigInt[field] = int64(fmsg.FragmentIdEncap)
-		case "FragmentOffsetEncap":
-			in.CustomBigInt[field] = int64(fmsg.FragmentOffsetEncap)
 		case "HasMPLS":
 			if fmsg.HasMPLS {
 				in.CustomInt[field] = 1
@@ -238,32 +215,24 @@ func (t *KentikTransport) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastTTL)
 		case "MPLSLastLabel":
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastLabel)
-		case "HasPPP":
-			if fmsg.HasPPP {
-				in.CustomInt[field] = 1
-			} else {
-				in.CustomInt[field] = 0
-			}
-		case "PPPAddressControl":
-			in.CustomBigInt[field] = int64(fmsg.PPPAddressControl)
 		}
 	}
 
 	return in
 }
 
-func (t *KentikTransport) run(ctx context.Context) {
+func (t *KentikDriver) run(ctx context.Context) {
 	sendTicker := time.NewTicker(kt.SendBatchDuration)
 	defer sendTicker.Stop()
 	deviceTicker := time.NewTicker(DeviceUpdateDuration)
 	defer deviceTicker.Stop()
 	batch := make([]*kt.JCHF, 0, t.maxBatchSize)
 
-	t.Infof("flow transport running")
+	t.Infof("kentik driver running")
 	for {
 		select {
 		case local := <-t.inputs:
-			batch = append(batch, local...)
+			batch = append(batch, local)
 			if len(batch) >= t.maxBatchSize {
 				t.jchfChan <- batch
 				batch = make([]*kt.JCHF, 0, t.maxBatchSize)
@@ -279,7 +248,7 @@ func (t *KentikTransport) run(ctx context.Context) {
 				t.devices = t.apic.GetDevicesAsMap(0)
 			}()
 		case <-ctx.Done():
-			t.Infof("flow transport done")
+			t.Infof("kentik driver done")
 			return
 		}
 	}

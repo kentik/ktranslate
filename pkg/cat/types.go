@@ -101,7 +101,7 @@ type KTranslate struct {
 	tooBig         chan int
 	tagMap         TagMapper
 	vpc            vpc.VpcImpl
-	nfs            *flow.KentikTransport
+	nfs            *flow.KentikDriver
 }
 
 type CustomMapper struct {

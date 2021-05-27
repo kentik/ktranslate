@@ -8,7 +8,6 @@ require (
 	github.com/aws/aws-lambda-go v1.24.0
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/bmatsuo/lmdb-go v1.8.0
-	github.com/cloudflare/goflow/v3 v3.4.2 // indirect
 	github.com/cornelk/hashmap v1.0.1 // indirect
 	github.com/dchest/siphash v1.2.2
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect
@@ -27,7 +26,8 @@ require (
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.0
 	github.com/montanaflynn/stats v0.6.6 // indirect
-	github.com/prometheus/client_golang v1.9.0 // indirect
+	github.com/netsampler/goflow2 v1.0.1 // indirect
+	github.com/prometheus/client_golang v1.10.0 // indirect
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.10
 	github.com/shirou/gopsutil v3.21.2+incompatible
