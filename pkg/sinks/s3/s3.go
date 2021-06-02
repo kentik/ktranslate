@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -24,6 +25,9 @@ type S3Sink struct {
 	registry go_metrics.Registry
 	metrics  *S3Metric
 	prefix   string
+	suffix   string
+	buf      *bytes.Buffer
+	mux      sync.RWMutex
 }
 
 type S3Metric struct {
@@ -32,11 +36,13 @@ type S3Metric struct {
 }
 
 var (
-	S3Bucket = flag.String("s3_bucket", "", "AWS S3 Bucket to write flows to")
-	S3Prefix = flag.String("s3_prefix", "/kentik", "AWS S3 Object prefix")
+	S3Bucket    = flag.String("s3_bucket", "", "AWS S3 Bucket to write flows to")
+	S3Prefix    = flag.String("s3_prefix", "/kentik", "AWS S3 Object prefix")
+	FlushDurSec = flag.Int("s3_flush_sec", 60, "Create a new output file every this many seconds")
 )
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry) (*S3Sink, error) {
+	rand.Seed(time.Now().UnixNano())
 	return &S3Sink{
 		registry: registry,
 		Bucket:   *S3Bucket,
@@ -46,7 +52,12 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*S3Sink, erro
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_s3", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_s3", registry),
 		},
+		buf: bytes.NewBuffer(make([]byte, 0)),
 	}, nil
+}
+
+func (s *S3Sink) getName() string {
+	return fmt.Sprintf("%s/%d_%d%s", s.prefix, time.Now().Unix(), rand.Intn(100000), s.suffix)
 }
 
 func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
@@ -57,23 +68,58 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	sess := session.Must(session.NewSession())
 	s.client = s3manager.NewUploader(sess)
 
-	s.Infof("System connected to s3, bucket is %s", s.Bucket)
+	switch compression {
+	case kt.CompressionNone, kt.CompressionNull:
+		s.suffix = ""
+	case kt.CompressionGzip:
+		s.suffix = ".gz"
+	default:
+		s.suffix = "." + string(compression)
+	}
+
+	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(*FlushDurSec)*time.Second)
+
+	go func() {
+		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
+		defer dumpTick.Stop()
+
+		for {
+			select {
+			case _ = <-dumpTick.C:
+				s.mux.Lock()
+				if s.buf.Len() == 0 {
+					s.mux.Unlock()
+					continue
+				}
+				ob := s.buf
+				s.buf = bytes.NewBuffer(make([]byte, 0, ob.Len()))
+				go s.send(ctx, ob.Bytes())
+				s.mux.Unlock()
+
+			case <-ctx.Done():
+				s.Infof("s3Sink Done")
+				return
+			}
+		}
+	}()
 
 	return nil
 }
 
 func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
-	go s.send(ctx, payload.Body)
+	s.mux.Lock()
+	defer s.mux.Unlock()
+	s.buf.Write(payload.Body)
 }
 
 func (s *S3Sink) send(ctx context.Context, payload []byte) {
 	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
 		Bucket: aws.String(s.Bucket),
-		Key:    aws.String(fmt.Sprintf("%s/%d_%d", s.prefix, time.Now().Unix(), rand.Intn(100000))),
 		Body:   bytes.NewBuffer(payload),
+		Key:    aws.String(s.getName()),
 	})
 	if err != nil {
-		s.Errorf("Cannot close upload to s3: %v", err)
+		s.Errorf("Cannot upload to s3: %v", err)
 		s.metrics.DeliveryErr.Mark(1)
 	} else {
 		s.metrics.DeliveryWin.Mark(1)
