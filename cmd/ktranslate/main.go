@@ -19,6 +19,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
+	"github.com/kentik/ktranslate/pkg/maps"
 )
 
 func main() {
@@ -53,7 +54,7 @@ func main() {
 		kentikPlan     = flag.Int("kentik_plan", 0, "Kentik plan id to use for creating devices")
 		sslCertFile    = flag.String("ssl_cert_file", "", "SSL Cert file to use for serving HTTPS traffic")
 		sslKeyFile     = flag.String("ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
-		tags           = flag.String("tag_map", "", "CSV file mapping tag ids to strings")
+		tagMapType     = flag.String("tag_map_type", "", "type of mapping to use for tag values. file|null")
 		vpcSource      = flag.String("vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 	)
@@ -95,7 +96,7 @@ func main() {
 		MaxBeforeSample:   *sampleMin,
 		SNMPFile:          *snmpFile,
 		SNMPDisco:         *snmpDisco,
-		TagFile:           *tags,
+		TagMapType:        maps.Mapper(*tagMapType),
 		VpcSource:         vpc.CloudSource(*vpcSource),
 		FlowSource:        flow.FlowSource(*flowSource),
 		Kentik: &kt.KentikConfig{

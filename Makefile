@@ -50,3 +50,5 @@ pub_latest: publish
 pub_aws: all
 	docker pull public.ecr.aws/lambda/provided:al2
 	docker build -t ktranslate:aws -f DockerfileAws .
+	docker tag ktranslate:aws kentik/ktranslate:aws
+	docker push kentik/ktranslate:aws

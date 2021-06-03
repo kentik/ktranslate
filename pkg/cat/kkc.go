@@ -20,6 +20,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
@@ -149,17 +150,12 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		kc.log.Infof("Loaded %d udr and %d subtype mappings with %d udrs total", len(m.UDRs), len(m.Subtypes), udrs)
 	}
 
-	if config.TagFile != "" {
-		m, err := NewTagMapper(config.TagFile)
-		if err != nil {
-			kc.log.Errorf("Cannot open tag service %v", err)
-			return nil, err
-		}
-		kc.tagMap = m
-		kc.log.Infof("Loaded %d tag mappings", len(m))
-	} else {
-		kc.tagMap = map[uint32][2]string{} // Noop here
+	m, err := maps.LoadMapper(config.TagMapType, log.GetLogger().GetUnderlyingLogger())
+	if err != nil {
+		kc.log.Errorf("Cannot open tag service %v", err)
+		return nil, err
 	}
+	kc.tagMap = m
 
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {

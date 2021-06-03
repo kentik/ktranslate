@@ -30,3 +30,8 @@ func LookupEnvBool(key string, defaultVal bool) bool {
 	}
 	return defaultVal
 }
+
+func FixupName(name string) string {
+	name = strings.ToLower(strings.ReplaceAll(name, " ", "_"))
+	return name
+}

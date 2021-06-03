@@ -325,10 +325,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 					dst.CustomStr["ult_exit_device"] = d.Name
 				}
 			default:
-				if tv, ok := kc.tagMap[v]; ok {
-					dst.CustomStr[tv[0]] = tv[1]
+				if tk, tv, ok := kc.tagMap.LookupTagValue(dst.CompanyId, v, name); ok {
+					dst.CustomStr[tk] = tv
 				} else if !isInt {
-					dst.CustomInt[name] = int32(v) // TODO, way to pull out tags from this?
+					dst.CustomInt[name] = int32(v) // We don't know anything more about this so best to leave it as it is.
 				}
 			}
 		case model.Custom_value_Which_uint64Val:

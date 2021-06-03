@@ -131,7 +131,9 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		go s.checkForEvents(ctx)
 	}
 
-	s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
+	if strings.Contains(s.NRUrl, "%s") {
+		s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
+	}
 	s.NRUrlEvent = s.NRUrl
 	s.NRUrlMetric = *NrMetricsUrl
 	if s.format == formats.FORMAT_NRM {

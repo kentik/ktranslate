@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 // List of ids to name mapping.
@@ -57,7 +59,7 @@ func NewCustomMapper(file string) (*CustomMapper, error) {
 	}
 
 	for id, n := range m.Customs {
-		m.Customs[id] = fixupName(n)
+		m.Customs[id] = kt.FixupName(n)
 	}
 
 	return &m, nil
@@ -83,8 +85,8 @@ func NewUDRMapper(file string) (*UDRMapper, int, error) {
 			continue
 		}
 		udr := UDR{
-			ColumnName:      fixupName(pts[2]),
-			ApplicationName: fixupName(pts[3]),
+			ColumnName:      kt.FixupName(pts[2]),
+			ApplicationName: kt.FixupName(pts[3]),
 			Type:            UDR_TYPE_INT,
 		}
 		if strings.HasPrefix(pts[1], "STR") || strings.HasPrefix(pts[1], "INET_") {
@@ -103,12 +105,12 @@ func NewUDRMapper(file string) (*UDRMapper, int, error) {
 			if _, ok := um.UDRs[app]; !ok {
 				um.UDRs[app] = make(map[string]*UDR)
 			}
-			um.UDRs[app][fixupName(pts[1])] = &udr
+			um.UDRs[app][kt.FixupName(pts[1])] = &udr
 		} else { // Support for defined subtype here.
 			if _, ok := um.Subtypes[pts[3]]; !ok {
 				um.Subtypes[pts[3]] = make(map[string]*UDR)
 			}
-			um.Subtypes[pts[3]][fixupName(pts[1])] = &udr
+			um.Subtypes[pts[3]][kt.FixupName(pts[1])] = &udr
 		}
 		found++
 	}
@@ -118,41 +120,6 @@ func NewUDRMapper(file string) (*UDRMapper, int, error) {
 	}
 
 	return &um, found, nil
-}
-
-func fixupName(name string) string {
-	name = strings.ToLower(strings.ReplaceAll(name, " ", "_"))
-	return name
-}
-
-func NewTagMapper(file string) (TagMapper, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	scanner := bufio.NewScanner(f)
-
-	tm := map[uint32][2]string{}
-	for scanner.Scan() {
-		pts := strings.SplitN(scanner.Text(), ",", 4)
-		if len(pts) != 4 {
-			continue
-		}
-		ida, err := strconv.Atoi(pts[2])
-		if err != nil {
-			continue
-		}
-
-		id := uint32(ida)
-		tm[id] = [2]string{fixupName(pts[1]), fixupName(pts[3])}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return tm, nil
 }
 
 /***

@@ -14,6 +14,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
@@ -65,7 +66,7 @@ type Config struct {
 	Auth              *auth.AuthConfig
 	SNMPFile          string
 	SNMPDisco         bool
-	TagFile           string
+	TagMapType        maps.Mapper
 	Kentik            *kt.KentikConfig
 	VpcSource         vpc.CloudSource
 	FlowSource        flow.FlowSource
@@ -99,7 +100,7 @@ type KTranslate struct {
 	auth           *auth.Server
 	apic           *api.KentikApi
 	tooBig         chan int
-	tagMap         TagMapper
+	tagMap         maps.TagMapper
 	vpc            vpc.VpcImpl
 	nfs            *flow.KentikDriver
 }
@@ -148,5 +149,3 @@ type KKCMetric struct {
 	InputQ         go_metrics.Meter
 	SnmpDeviceData *kt.SnmpMetricSet
 }
-
-type TagMapper map[uint32][2]string
