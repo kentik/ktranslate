@@ -351,7 +351,7 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 }
 
 func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfig) error {
-	if api == nil {
+	if api == nil || api.conf == nil {
 		return nil
 	}
 
