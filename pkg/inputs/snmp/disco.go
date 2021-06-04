@@ -72,9 +72,9 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		var wg sync.WaitGroup
 		var mux sync.RWMutex
 		st := time.Now()
-		log.Infof("Starting to check %d ips in %s, checkall=%v", len(results), ipr, conf.Disco.CheckAll)
+		log.Infof("Starting to check %d ips in %s", len(results), ipr)
 		for _, result := range results {
-			if strings.HasSuffix(ipr, "/32") || (result.IsHostUp() && (conf.Disco.CheckAll || result.Manufacturer != "")) {
+			if strings.HasSuffix(ipr, "/32") || result.IsHostUp() {
 				wg.Add(1)
 				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, log)
 			}
