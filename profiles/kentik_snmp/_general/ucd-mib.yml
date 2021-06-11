@@ -1,0 +1,130 @@
+# Alternative MIB for host-resources-mib used on some older devices
+# http://oid-info.com/get/1.3.6.1.4.1.2021
+
+metrics:
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.3.0
+      name: memTotalSwap
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.4.0
+      name: memAvailSwap
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.5.0
+      name: memTotalReal
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.6.0
+      name: memAvailReal
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.11.0
+      name: memTotalFree
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.12.0
+      name: memMinimumSwap
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.13.0
+      name: memShared
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.14.0
+      name: memBuffer
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.4.15.0
+      name: memCached
+  - MIB: UCD-SNMP-MIB
+    table:
+      OID: 1.3.6.1.4.1.2021.10
+      name: laTable
+    symbols:
+      - OID: 1.3.6.1.4.1.2021.10.1.2
+        name: laNames
+      - OID: 1.3.6.1.4.1.2021.10.1.3
+        name: laLoad
+      - OID: 1.3.6.1.4.1.2021.10.1.4
+        name: laConfig
+      - OID: 1.3.6.1.4.1.2021.10.1.5
+        name: laLoadInt
+      - OID: 1.3.6.1.4.1.2021.10.1.6
+        name: laLoadFloat
+      - OID: 1.3.6.1.4.1.2021.10.1.100
+        name: laErrorFlag
+      - OID: 1.3.6.1.4.1.2021.10.1.101
+        name: laErrMessage
+    metric_tags:
+      - tag: la_index
+        column:
+          OID: 1.3.6.1.4.1.2021.10.1.1
+          name: laIndex
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.3.0
+      name: ssSwapIn
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.4.0
+      name: ssSwapOut
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.5.0
+      name: ssIOSent
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.6.0
+      name: ssIOReceive
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.7.0
+      name: ssSysInterrupts
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.8.0
+      name: ssSysContext
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.9.0
+      name: ssCpuUser
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.10.0
+      name: ssCpuSystem
+  - MIB: UCD-SNMP-MIB
+    symbol:
+      OID: 1.3.6.1.4.1.2021.11.11.0
+      name: ssCpuIdle
+  - MIB: UCD-DISKIO-MIB
+    table:
+      OID: 1.3.6.1.4.1.2021.13.15.1.1
+      name: diskIOTable
+    symbols:
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.2
+        name: diskIODevice
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.3
+        name: diskIONRead
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.4
+        name: diskIONWritten
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.5
+        name: diskIOReads
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.6
+        name: diskIOWrites
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.9
+        name: diskIOLA1
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.10
+        name: diskIOLA5
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.11
+        name: diskIOLA15
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.12
+        name: diskIONReadX
+      - OID: 1.3.6.1.4.1.2021.13.15.1.1.13
+        name: diskIONWrittenX
+    metric_tags:
+      - tag: diskIO_index
+        column:
+          OID: 1.3.6.1.4.1.2021.13.15.1.1.1
+          name: diskIOIndex
