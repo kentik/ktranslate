@@ -26,15 +26,16 @@ type Formatter interface {
 type Format string
 
 const (
-	FORMAT_AVRO    Format = "avro"
-	FORMAT_JSON           = "json"
-	FORMAT_NETFLOW        = "netflow"
-	FORMAT_INFLUX         = "influx"
-	FORMAT_PROM           = "prometheus"
-	FORMAT_NR             = "new_relic"
-	FORMAT_NRM            = "new_relic_metric"
-	FORMAT_SPLUNK         = "splunk"
-	FORMAT_DATADOG        = "ddog"
+	FORMAT_AVRO      Format = "avro"
+	FORMAT_JSON             = "json"
+	FORMAT_JSON_FLAT        = "flat_json"
+	FORMAT_NETFLOW          = "netflow"
+	FORMAT_INFLUX           = "influx"
+	FORMAT_PROM             = "prometheus"
+	FORMAT_NR               = "new_relic"
+	FORMAT_NRM              = "new_relic_metric"
+	FORMAT_SPLUNK           = "splunk"
+	FORMAT_DATADOG          = "ddog"
 )
 
 func NewFormat(format Format, log logger.Underlying, compression kt.Compression) (Formatter, error) {
@@ -49,7 +50,7 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 		return influx.NewFormat(log, compression)
 	case FORMAT_PROM:
 		return prom.NewFormat(log, compression)
-	case FORMAT_NR:
+	case FORMAT_NR, FORMAT_JSON_FLAT:
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:
 		return nrm.NewFormat(log, compression)
