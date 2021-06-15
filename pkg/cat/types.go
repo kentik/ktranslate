@@ -50,6 +50,7 @@ type Config struct {
 	Code2City         string
 	Threads           int
 	ThreadsInput      int
+	MaxThreads        int
 	Format            formats.Format
 	FormatRollup      formats.Format
 	Compression       kt.Compression

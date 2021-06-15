@@ -559,6 +559,7 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	for i := 0; i < kc.config.Threads; i++ {
 		go kc.monitorAlphaChan(ctx, i, kc.format.To)
 	}
+	nextRun := kc.config.Threads
 
 	for {
 		select {
@@ -574,6 +575,19 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 				total += len(c)
 			}
 			kc.metrics.JCHFQ.Update(int64(total))
+
+			if total < 10 || true { // We're running out of jchfs to send into.
+				if nextRun < kc.config.MaxThreads {
+					kc.log.Infof("sendToSinks launching another jchf channel. remaining %d", total)
+					kc.jchfChans[nextRun] = make(chan *kt.JCHF, CHAN_SLACK)
+					for j := 0; j < CHAN_SLACK; j++ {
+						kc.jchfChans[nextRun] <- kt.NewJCHF()
+					}
+					kc.alphaChans[i] = make(chan *Flow, CHAN_SLACK)
+					go kc.monitorAlphaChan(ctx, nextRun, kc.format.To)
+					nextRun++
+				}
+			}
 
 		case <-rollupsTicker.C:
 			for _, r := range kc.rollups {
@@ -641,6 +655,29 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 	}
 
 	kc.metrics.InputQ.Mark(int64(len(msgs)))
+}
+
+func (kc *KTranslate) watchInput(ctx context.Context, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+	kc.log.Infof("watchInput running")
+	checkTicker := time.NewTicker(60 * time.Second)
+	defer checkTicker.Stop()
+	nextRun := kc.config.ThreadsInput
+
+	for {
+		select {
+		case _ = <-checkTicker.C:
+			if len(kc.inputChan) > CHAN_SLACK-10 || true { // We're filling up our channel here. Try launching another thread.
+				if nextRun < kc.config.MaxThreads {
+					kc.log.Infof("watchInput launching another input channel. input at %d", len(kc.inputChan))
+					go kc.monitorInput(ctx, nextRun, seri)
+					nextRun++
+				}
+			}
+		case <-ctx.Done():
+			kc.log.Infof("watchInput Done")
+			return
+		}
+	}
 }
 
 func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
@@ -868,6 +905,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			kc.inputChan = make(chan []*kt.JCHF, CHAN_SLACK)
 			for i := 0; i < kc.config.ThreadsInput; i++ {
 				go kc.monitorInput(ctx, i, kc.format.To)
+			}
+			if kc.config.ThreadsInput < kc.config.MaxThreads {
+				go kc.watchInput(ctx, kc.format.To)
 			}
 		}
 	}
