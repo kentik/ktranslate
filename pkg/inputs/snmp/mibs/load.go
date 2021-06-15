@@ -188,10 +188,10 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(combo, "firewall") {
 		return kt.ProviderFirewall, true
 	}
-	if strings.Contains(combo, "ups") && !strings.Contains(combo, "groups") {
+	if strings.Contains(profile, "ups") || (strings.Contains(combo, "ups") && !strings.Contains(combo, "groups")) {
 		return kt.ProviderUPS, true
 	}
-	if strings.Contains(combo, "pdu") && !strings.Contains(profile, "router") {
+	if strings.Contains(profile, "pdu") || (strings.Contains(combo, "pdu") && !strings.Contains(profile, "router")) {
 		return kt.ProviderPDU, true
 	}
 	if strings.Contains(combo, "iot") {
