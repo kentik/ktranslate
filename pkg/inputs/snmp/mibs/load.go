@@ -179,7 +179,7 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	profile = strings.ToLower(profile)
 
 	combo := name + "^" + description
-	if strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") || strings.Contains(combo, "freebsd") {
+	if !strings.Contains(profile, "cisco-catalyst") && (strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") || strings.Contains(combo, "freebsd")) {
 		return kt.ProviderRouter, true
 	}
 	if strings.Contains(combo, "switch") || strings.Contains(profile, "cisco-catalyst") {
@@ -188,10 +188,10 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(combo, "firewall") {
 		return kt.ProviderFirewall, true
 	}
-	if strings.Contains(combo, "ups") && !strings.Contains(combo, "groups") {
+	if strings.Contains(profile, "ups") || (strings.Contains(combo, "ups") && !strings.Contains(combo, "groups")) {
 		return kt.ProviderUPS, true
 	}
-	if strings.Contains(combo, "pdu") && !strings.Contains(profile, "router") {
+	if strings.Contains(profile, "pdu") || (strings.Contains(combo, "pdu") && !strings.Contains(profile, "router")) {
 		return kt.ProviderPDU, true
 	}
 	if strings.Contains(combo, "iot") {
@@ -199,6 +199,15 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	}
 	if strings.Contains(combo, "printer") {
 		return kt.ProviderIOT, true
+	}
+	if strings.Contains(combo, "nas") {
+		return kt.ProviderNas, true
+	}
+	if strings.Contains(combo, "san") {
+		return kt.ProviderSan, true
+	}
+	if strings.Contains(combo, "wireless") {
+		return kt.ProviderWirelessController, true
 	}
 
 	return "", false
