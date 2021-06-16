@@ -200,6 +200,15 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(combo, "printer") {
 		return kt.ProviderIOT, true
 	}
+	if strings.Contains(combo, "nas") {
+		return kt.ProviderNas, true
+	}
+	if strings.Contains(combo, "san") {
+		return kt.ProviderSan, true
+	}
+	if strings.Contains(combo, "wireless") {
+		return kt.ProviderWirelessController, true
+	}
 
 	return "", false
 }

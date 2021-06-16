@@ -53,6 +53,7 @@ const (
 	ProviderFlowDevice                  = "kentik-flow-device"
 	ProviderWirelessController          = "kentik-wireless-controller"
 	ProviderNas                         = "kentik-nas"
+	ProviderSan                         = "kentik-san"
 
 	InstProvider  = "kentik"
 	CollectorName = "ktranslate"

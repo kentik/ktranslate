@@ -130,6 +130,9 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	if dev != nil {
 		dst.DeviceName = dev.DeviceName
 		dst.Provider = dev.Provider
+		for k, v := range dev.UserTags {
+			dst.CustomStr[k] = v
+		}
 	} else {
 		dst.DeviceName = addr.IP.String()
 		dst.Provider = kt.ProviderRouter
