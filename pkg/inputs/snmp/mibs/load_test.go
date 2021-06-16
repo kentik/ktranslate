@@ -52,6 +52,8 @@ func TestFullProvider(t *testing.T) {
 		".1.3.6.1.4.1.318.1.3.4.5": []string{"apc_pdu.yaml", "APC SNMP Agent"},
 		".1.3.6.1.4.1.318.1.3.4.7": []string{"apc_pdu.yaml", "APC SNMP Agent"},
 		".1.3.6.1.4.1.318.1.3.5.4": []string{"apc_ups.yaml", "APC SNMP Agent"},
+		".1.3.6.1.4.1.9.1.275":     []string{"cisco-catalyst.yml", "Cisco IOS Software, s72033_rp Software (s72033_rp-ADVIPSERVICESK9_WAN-M), Version 12.2(33)SXI14, RELEASE SOFTWARE (fc2)/Technica"},
+		".1.3.6.1.4.1.9.1.1287":    []string{"cisco-catalyst.yml", "Cisco ios xr"},
 	}
 
 	inputs := map[string]kt.Provider{
@@ -67,6 +69,8 @@ func TestFullProvider(t *testing.T) {
 		".1.3.6.1.4.1.318.1.3.4.6":       kt.ProviderPDU,
 		".1.3.6.1.4.1.318.1.3.4.5":       kt.ProviderPDU,
 		".1.3.6.1.4.1.318.1.3.4.7":       kt.ProviderPDU,
+		".1.3.6.1.4.1.9.1.275":           kt.ProviderSwitch,
+		".1.3.6.1.4.1.9.1.1287":          kt.ProviderSwitch,
 	}
 
 	for input, prov := range inputs {
