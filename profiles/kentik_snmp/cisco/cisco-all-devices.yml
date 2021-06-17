@@ -7,6 +7,7 @@
 # http://oid-info.com/get/1.3.6.1.4.1.9.9.147.1.2
 # http://oid-info.com/get/1.3.6.1.4.1.9.9.388.1.2.2
 # http://oid-info.com/get/1.3.6.1.4.1.9.9.42.1.2
+# https://oidref.com/1.3.6.1.4.1.9.9.807.1.4.2.1
 ---
 extends:
   - if-mib.yml
@@ -240,3 +241,17 @@ metrics:
         tag: rtt_operation_type
       - index: 1
         tag: rtt_operation_index
+  - MIB: CISCO-VPC-MIB
+    table: 
+      OID: 1.3.6.1.4.1.9.9.807.1.4.2
+      name: cVpcStatusHostLinkTable
+    symbols:
+      - OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.4
+        name: cVpcStatusHostLinkStatus
+      - OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.5
+        name: cVpcStatusHostLinkConsistencyStatus
+    metric_tags:
+      - column:
+          OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.3
+          name: cVpcStatusHostLinkIfIndex
+        tag: link_if_index
