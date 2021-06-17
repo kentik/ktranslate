@@ -643,6 +643,28 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 	kc.metrics.InputQ.Mark(int64(len(msgs)))
 }
 
+func (kc *KTranslate) watchInput(ctx context.Context, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+	kc.log.Infof("watchInput running")
+	checkTicker := time.NewTicker(60 * time.Second)
+	defer checkTicker.Stop()
+
+	for {
+		select {
+		case _ = <-checkTicker.C:
+			if kc.config.ThreadsInput < kc.config.MaxThreads {
+				if len(kc.inputChan) > CHAN_SLACK-10 { // We're filling up our channel here. Try launching another thread.
+					kc.log.Infof("watchInput launching another input channel. input at %d", len(kc.inputChan))
+					go kc.monitorInput(ctx, kc.config.ThreadsInput, seri)
+					kc.config.ThreadsInput++
+				}
+			}
+		case <-ctx.Done():
+			kc.log.Infof("watchInput Done")
+			return
+		}
+	}
+}
+
 func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
@@ -868,6 +890,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			kc.inputChan = make(chan []*kt.JCHF, CHAN_SLACK)
 			for i := 0; i < kc.config.ThreadsInput; i++ {
 				go kc.monitorInput(ctx, i, kc.format.To)
+			}
+			if kc.config.ThreadsInput < kc.config.MaxThreads {
+				go kc.watchInput(ctx, kc.format.To)
 			}
 		}
 	}

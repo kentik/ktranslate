@@ -189,7 +189,12 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 	for oid, mib := range dm.conf.DeviceOids {
 		oidResults, err := snmp_util.WalkOID(oid, server, dm.log, "CustomDeviceMetrics")
 		if err != nil {
-			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", oid, err)}
+			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{
+				Error:        fmt.Sprintf("Walking %s: %v", oid, err),
+				customStr:    map[string]string{},
+				customInt:    map[string]int32{},
+				customBigInt: map[string]int64{},
+			}
 			dm.metrics.Errors.Mark(1)
 			continue
 		}
@@ -208,7 +213,11 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 			uptime = snmp_util.ToInt64(uptimeResults[0].Value)
 		}
 	} else {
-		m["uptime"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", sysUpTime, err)}
+		m["uptime"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", sysUpTime, err),
+			customStr:    map[string]string{},
+			customInt:    map[string]int32{},
+			customBigInt: map[string]int64{},
+		}
 	}
 
 	// Map back into types we know about.

@@ -37,6 +37,7 @@ func main() {
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
+		maxThreads     = flag.Int("max_threads", 0, "Dynamically grow threads up to this number")
 		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
 		formatRollup   = flag.String("format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
 		compression    = flag.String("compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
@@ -83,6 +84,7 @@ func main() {
 		FormatRollup:      formats.Format(*formatRollup),
 		Threads:           *threads,
 		ThreadsInput:      *threadsInput,
+		MaxThreads:        *maxThreads,
 		Compression:       kt.Compression(*compression),
 		MaxFlowPerMessage: *maxFlows,
 		RollupAndAlpha:    *rollupAndAlpha,
@@ -119,6 +121,9 @@ func main() {
 	}
 	if conf.ThreadsInput <= 0 {
 		conf.ThreadsInput = 1
+	}
+	if conf.MaxThreads <= 0 {
+		conf.MaxThreads = 1
 	}
 	if conf.SampleRate == 0 {
 		conf.SampleRate = 1
