@@ -24,6 +24,7 @@ const (
 	KENTIK_EVENT_SNMP_METADATA   = "KSnmpInterfaceMetadata"
 	KENTIK_EVENT_SNMP_TRAP       = "KSnmpTrap"
 	KENTIK_EVENT_JSON            = "KJson"
+	KENTIK_EVENT_KTRANS_METRIC   = "KTranslateMetric"
 
 	KentikAPIToken   = "KENTIK_API_TOKEN"
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
@@ -54,6 +55,7 @@ const (
 	ProviderWirelessController          = "kentik-wireless-controller"
 	ProviderNas                         = "kentik-nas"
 	ProviderSan                         = "kentik-san"
+	ProviderAgent                       = "kentik-agent"
 
 	InstProvider  = "kentik"
 	CollectorName = "ktranslate"

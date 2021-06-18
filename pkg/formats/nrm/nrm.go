@@ -197,6 +197,8 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {
 		return f.fromKSynth(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
+	case kt.KENTIK_EVENT_KTRANS_METRIC:
+		return f.fromKtranslate(in)
 	case kt.KENTIK_EVENT_SNMP_TRAP:
 		// This is actually an event, send out as an event to sink directly.
 		err := events.SendEvent(in, f.doGz, f.EventChan)
@@ -510,6 +512,68 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		}
 	}
 
+	return ms
+}
+
+func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]string{"name": "", "value": "", "count": "", "one-minute": "", "95-percentile": "", "du": ""}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	f.mux.RUnlock()
+	ms := make([]NRMetric, 0)
+
+	// Hard code these.
+	attr["instrumentation.name"] = InstNameNetflow
+
+	switch in.CustomStr["type"] {
+	case "counter":
+		if in.CustomBigInt["count"] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.ktranslate." + in.CustomStr["name"],
+				Type:       NR_GAUGE_TYPE,
+				Value:      in.CustomBigInt["count"],
+				Attributes: attr,
+			})
+		}
+	case "gauge":
+		if in.CustomBigInt["value"] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.ktranslate." + in.CustomStr["name"],
+				Type:       NR_GAUGE_TYPE,
+				Value:      in.CustomBigInt["value"],
+				Attributes: attr,
+			})
+		}
+	case "histogram":
+		if in.CustomBigInt["95-percentile"] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.ktranslate." + in.CustomStr["name"],
+				Type:       NR_GAUGE_TYPE,
+				Value:      in.CustomBigInt["95-percentile"],
+				Attributes: attr,
+			})
+		}
+	case "meter":
+		if in.CustomBigInt["one-minute"] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.ktranslate." + in.CustomStr["name"],
+				Type:       NR_GAUGE_TYPE,
+				Value:      in.CustomBigInt["one-minute"],
+				Attributes: attr,
+			})
+		}
+	case "timer":
+		if in.CustomBigInt["value"] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.ktranslate." + in.CustomStr["95-percentile"],
+				Type:       NR_GAUGE_TYPE,
+				Value:      in.CustomBigInt["95-percentile"],
+				Attributes: attr,
+			})
+		}
+	}
 	return ms
 }
 

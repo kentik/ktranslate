@@ -72,6 +72,7 @@ type Config struct {
 	VpcSource         vpc.CloudSource
 	FlowSource        flow.FlowSource
 	LogTee            chan string
+	MetricsChan       chan []*kt.JCHF
 }
 
 type KTranslate struct {

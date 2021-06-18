@@ -936,6 +936,17 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.nfs = nfs
 	}
 
+	// If we're sending self metrics via a chan to sinks.
+	if kc.config.MetricsChan != nil {
+		assureInput()
+		go func() {
+			for {
+				o := <-kc.config.MetricsChan
+				kc.inputChan <- o
+			}
+		}()
+	}
+
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1 after %d", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate, kc.config.MaxBeforeSample)
 	go kc.listenHTTP()
 	return kc.sendToSinks(ctx)

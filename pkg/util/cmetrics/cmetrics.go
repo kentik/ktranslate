@@ -9,6 +9,7 @@ import (
 	"time"
 
 	metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 var (
@@ -25,11 +26,13 @@ type Logger interface {
 	Warnf(prefix, format string, v ...interface{})
 }
 
-func SetConf(conf string, l Logger, log_prefix string, tsdb_prefix string, tags []string, extra []string, apiEmail *string, apiPassword *string) {
-	SetConfWithRegistry(conf, l, log_prefix, tsdb_prefix, tags, extra, apiEmail, apiPassword, metrics.DefaultRegistry)
+func SetConf(conf string, l Logger, log_prefix string, tsdb_prefix string, tags []string, extra []string, apiEmail *string, apiPassword *string, outChan interface{}) {
+	SetConfWithRegistry(conf, l, log_prefix, tsdb_prefix, tags, extra, apiEmail, apiPassword, metrics.DefaultRegistry, outChan)
 }
 
-func SetConfWithRegistry(conf string, l Logger, log_prefix string, tsdb_prefix string, tags []string, extra []string, apiEmail *string, apiPassword *string, registry metrics.Registry) {
+func SetConfWithRegistry(conf string, l Logger, log_prefix string, tsdb_prefix string, tags []string,
+	extra []string, apiEmail *string, apiPassword *string, registry metrics.Registry, outChan interface{}) {
+
 	l.Infof(log_prefix, "Setting metrics: %s", conf)
 
 	if conf != "none" {
@@ -42,6 +45,23 @@ func SetConfWithRegistry(conf string, l Logger, log_prefix string, tsdb_prefix s
 			}
 		case "stderr":
 			go metrics.Log(registry, 60e9, log.New(os.Stderr, "metrics: ", log.Lmicroseconds))
+		case "jchf":
+			flushTime := 60 * time.Second
+			l.Infof(log_prefix, "Metrics: Connecting jchf")
+			lc, ok := outChan.(chan []*kt.JCHF)
+			if !ok {
+				l.Errorf(log_prefix, "Could not start jchf metrics: chan not right")
+			} else {
+				go OpenJCHFWithConfig(OpenJCHFConfig{
+					OutChan:       lc,
+					Registry:      registry,
+					FlushInterval: flushTime,
+					DurationUnit:  time.Millisecond,
+					Prefix:        tsdb_prefix,
+					Tags:          TagsMap(tags),
+					Extra:         TagsMap(extra),
+				})
+			}
 		default:
 			dest := strings.SplitN(conf, ":", 2)
 			switch dest[0] {

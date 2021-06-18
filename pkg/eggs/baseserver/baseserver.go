@@ -111,19 +111,19 @@ type BaseServer struct {
 }
 
 // Perform baseserver initialization steps -- hopefully 9 out of 10 services can just call this and Run()
-func Boilerplate(serviceName string, versionInfo version.VersionInfo, defaultPropertyBacking properties.PropertyBacking) *BaseServer {
+func Boilerplate(serviceName string, versionInfo version.VersionInfo, defaultPropertyBacking properties.PropertyBacking, mextra interface{}) *BaseServer {
 	bs := NewBaseServer(serviceName, versionInfo, "chf", defaultPropertyBacking)
 	bs.ParseFlags()
-	bs.Init()
+	bs.Init(mextra)
 	setGlobalBaseServer(bs)
 	return bs
 }
 
 // For when you need to set metrics prefix.
-func BoilerplateWithPrefix(serviceName string, versionInfo version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking) *BaseServer {
+func BoilerplateWithPrefix(serviceName string, versionInfo version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking, mextra interface{}) *BaseServer {
 	bs := NewBaseServer(serviceName, versionInfo, metricsPrefix, defaultPropertyBacking)
 	bs.ParseFlags()
-	bs.Init()
+	bs.Init(mextra)
 	setGlobalBaseServer(bs)
 	return bs
 }
@@ -206,12 +206,12 @@ func (bs *BaseServer) ParseFlags() {
 
 // Perform some early initialization steps -- things it makes sense to do before callers start building/initializing
 // anything from the actual service. Most things should probably be started from Run().  Called by Boilerplate().
-func (bs *BaseServer) Init() {
+func (bs *BaseServer) Init(mextra interface{}) {
 	bs.InitLogger(bs.LogToStdout, bs.LogLevel)
 	bs.Logger.Infof(bs.LogPrefix, "version %s starting", bs.VersionInfo.Version)
 	bs.InitMaxProcs()
 	bs.InitOlly()
-	bs.InitMetrics()
+	bs.InitMetrics(mextra)
 }
 
 func (bs *BaseServer) Fail(msg string) {
@@ -354,12 +354,12 @@ func (bs *BaseServer) InitMaxProcs() {
 }
 
 // Initialize metrics.
-func (bs *BaseServer) InitMetrics() {
+func (bs *BaseServer) InitMetrics(extra interface{}) {
 	tags := []string{
 		"ver=" + bs.VersionInfo.Version,
 		"svc=" + bs.ServiceName,
 	}
-	cmetrics.SetConf(bs.MetricsDestination, bs.Logger, bs.LogPrefix, bs.MetricsPrefix, nil, tags, nil, nil)
+	cmetrics.SetConf(bs.MetricsDestination, bs.Logger, bs.LogPrefix, bs.MetricsPrefix, nil, tags, nil, nil, extra)
 }
 
 // Initialize olly observability.

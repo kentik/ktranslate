@@ -61,7 +61,8 @@ func main() {
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
 	)
 
-	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
+	metricsChan := make(chan []*kt.JCHF, cat.CHAN_SLACK)
+	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking(), metricsChan)
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
 
 	// Set up NR logging if configured.
@@ -115,7 +116,8 @@ func main() {
 			ApiRoot:  *apiRoot,
 			ApiPlan:  *kentikPlan,
 		},
-		LogTee: logTee,
+		LogTee:      logTee,
+		MetricsChan: metricsChan,
 	}
 
 	if *apiDevices != "" {
