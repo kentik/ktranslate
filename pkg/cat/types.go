@@ -71,6 +71,7 @@ type Config struct {
 	Kentik            *kt.KentikConfig
 	VpcSource         vpc.CloudSource
 	FlowSource        flow.FlowSource
+	LogTee            chan string
 }
 
 type KTranslate struct {

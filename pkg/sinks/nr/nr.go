@@ -2,6 +2,7 @@ package nr
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"crypto/tls"
 	"flag"
@@ -10,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -32,6 +34,7 @@ type NRSink struct {
 	NRUrl       string
 	NRUrlEvent  string
 	NRUrlMetric string
+	NRUrlLog    string
 
 	client      *http.Client
 	tr          *http.Transport
@@ -42,12 +45,14 @@ type NRSink struct {
 	estimate    bool
 	fmtr        *nrm.NRMFormat
 	tooBig      chan int
+	logTee      chan string
 }
 
 type NRMetric struct {
 	DeliveryErr   go_metrics.Meter
 	DeliveryWin   go_metrics.Meter
 	DeliveryBytes go_metrics.Meter
+	DeliveryLogs  go_metrics.Meter
 }
 
 type NRResponce struct {
@@ -67,15 +72,17 @@ var (
 		"us": map[string]string{
 			"events":  "https://insights-collector.newrelic.com/v1/accounts/%s/events",
 			"metrics": "https://metric-api.newrelic.com/metric/v1",
+			"logs":    "https://log-api.newrelic.com/log/v1",
 		},
 		"eu": map[string]string{
 			"events":  "https://insights-collector.eu01.nr-data.net/v1/accounts/%s/events",
 			"metrics": "https://metric-api.eu.newrelic.com/metric/v1",
+			"logs":    "https://log-api.eu.newrelic.com/log/v1",
 		},
 	}
 )
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int) (*NRSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string) (*NRSink, error) {
 	nr := NRSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nrSink"}, log),
 		NRApiKey: os.Getenv(EnvNrApiKey),
@@ -84,9 +91,11 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 			DeliveryErr:   go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
 			DeliveryWin:   go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
 			DeliveryBytes: go_metrics.GetOrRegisterMeter("delivery_bytes_nr", registry),
+			DeliveryLogs:  go_metrics.GetOrRegisterMeter("delivery_logs_nr", registry),
 		},
 		estimate: *EstimateSize,
 		tooBig:   tooBig,
+		logTee:   logTee,
 	}
 
 	return &nr, nil
@@ -100,6 +109,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	case "eu", "us":
 		*NrUrl = regions[rval]["events"]
 		*NrMetricsUrl = regions[rval]["metrics"]
+		s.NRUrlLog = regions[rval]["logs"]
 	default:
 		return fmt.Errorf("Invalid NR region %s. Current regions: EU|US", *NrRegion)
 	}
@@ -139,7 +149,17 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	if s.format == formats.FORMAT_NRM {
 		s.NRUrl = *NrMetricsUrl
 	}
-	s.Infof("Exporting to New Relic at main: %s, events: %s, metrics: %s", s.NRUrl, s.NRUrlEvent, s.NRUrlMetric)
+
+	if s.NRUrlLog == "" { // TODO -- better default?
+		s.NRUrlLog = regions["us"]["logs"]
+	}
+
+	// Send logs on to NR if this is set.
+	if s.logTee != nil {
+		go s.watchLogs(ctx)
+	}
+
+	s.Infof("Exporting to New Relic at main: %s, events: %s, metrics: %s, logs %s", s.NRUrl, s.NRUrlEvent, s.NRUrlMetric, s.NRUrlLog)
 
 	return nil
 }
@@ -162,6 +182,7 @@ func (s *NRSink) HttpInfo() map[string]float64 {
 		"DeliveryWin":     s.metrics.DeliveryWin.Rate1(),
 		"DeliveryBytes1":  s.metrics.DeliveryBytes.Rate1(),
 		"DeliveryBytes15": s.metrics.DeliveryBytes.Rate15(),
+		"DeliveryLogs":    s.metrics.DeliveryLogs.Rate1(),
 	}
 }
 
@@ -239,4 +260,95 @@ func (s *NRSink) checkForEvents(ctx context.Context) {
 			return
 		}
 	}
+}
+
+// Forwards any logs recieved to the NR log API.
+func (s *NRSink) watchLogs(ctx context.Context) {
+	s.Infof("Watching for logs")
+	logTicker := time.NewTicker(1 * time.Second)
+	defer logTicker.Stop()
+	batch := make([]string, 0, 100)
+	for {
+		select {
+		case log := <-s.logTee:
+			batch = append(batch, log)
+			s.metrics.DeliveryLogs.Mark(1)
+		case _ = <-logTicker.C:
+			if len(batch) > 0 {
+				ob := batch
+				batch = make([]string, 0, 100)
+				go s.sendLogBatch(ctx, ob)
+			}
+		case <-ctx.Done():
+			s.Infof("Watching for logs done")
+			return
+		}
+	}
+}
+
+// Quick types to pass in log lines.
+type logSet struct {
+	Common *common `json:"common"`
+	Logs   []log   `json:"logs"`
+}
+
+type common struct {
+	Attributes map[string]string `json:"attributes"`
+}
+
+type log struct {
+	Timestamp int64  `json:"timestamp"`
+	Message   string `json:"message"`
+}
+
+func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
+	ts := time.Now().Unix()
+	ls := logSet{
+		Common: &common{
+			Attributes: map[string]string{
+				"instrumentation.provider": kt.InstProvider,
+				"collector.name":           kt.CollectorName,
+			},
+		},
+		Logs: make([]log, len(logs)),
+	}
+	for i, l := range logs {
+		ls.Logs[i] = log{
+			Timestamp: ts,
+			Message:   l,
+		}
+	}
+
+	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.
+	if err != nil {
+		s.Errorf("Cannot marshal log set: %v", err)
+		return
+	}
+
+	if s.compression != kt.CompressionGzip {
+		s.sendNR(ctx, kt.NewOutput(target), s.NRUrlLog)
+	}
+
+	serBuf := []byte{}
+	buf := bytes.NewBuffer(serBuf)
+	buf.Reset()
+	zw, err := gzip.NewWriterLevel(buf, gzip.DefaultCompression)
+	if err != nil {
+		s.Errorf("Cannot gzip log set: %v", err)
+		return
+	}
+
+	_, err = zw.Write(target)
+	if err != nil {
+		s.Errorf("Cannot write log set: %v", err)
+		return
+	}
+
+	err = zw.Close()
+	if err != nil {
+		s.Errorf("Cannot close log set: %v", err)
+		return
+	}
+
+	s.sendNR(ctx, kt.NewOutput(buf.Bytes()), s.NRUrlLog)
 }

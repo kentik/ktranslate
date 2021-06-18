@@ -302,6 +302,11 @@ func (bs *BaseServer) Shutdown(reason string) {
 	bs.cancel()
 }
 
+// Tell base logger to also log messages along this tee
+func (bs *BaseServer) SetLogTee(logChan chan string) {
+	logger.SetTee(logChan)
+}
+
 // Initialize logging.
 func (bs *BaseServer) InitLogger(stdout bool, loglevel string) {
 

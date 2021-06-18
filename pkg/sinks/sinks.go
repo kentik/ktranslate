@@ -46,16 +46,16 @@ const (
 	DDogSink          = "ddog"
 )
 
-func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig) (SinkImpl, error) {
+func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig, logTee chan string) (SinkImpl, error) {
 	switch sink {
 	case StdOutSink:
-		return stdout.NewSink(log, registry)
+		return stdout.NewSink(log, registry, logTee)
 	case FileSink:
 		return file.NewSink(log, registry)
 	case KafkaSink:
 		return kafka.NewSink(log, registry)
 	case NewRelicSink:
-		return nr.NewSink(log, registry, tooBig)
+		return nr.NewSink(log, registry, tooBig, logTee)
 	case KentikSink:
 		return kentik.NewSink(log, registry, conf)
 	case NetSink:

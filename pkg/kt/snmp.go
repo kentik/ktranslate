@@ -189,6 +189,7 @@ type Mib struct {
 	Name  string
 	Type  Oidtype
 	Extra string
+	Tag   string
 }
 
 func (mb Mib) String() string {

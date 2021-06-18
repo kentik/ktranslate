@@ -44,6 +44,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 			oids = append(oids, el.Key.(string))
 		}
 	} else {
+		log.Infof("Getting device metadata from custom map: %v", deviceMetadataMibs)
 		oids = getFromCustomMap(deviceMetadataMibs)
 	}
 
@@ -60,6 +61,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 
 		// You can get a nil value w/out getting an error.
 		if value == nil || pdu.Type == gosnmp.NoSuchObject {
+			log.Warnf("Dropping %s because of nil value or missing object: %+v", oidVal, pdu)
 			continue
 		}
 

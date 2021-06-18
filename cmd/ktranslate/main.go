@@ -38,7 +38,7 @@ func main() {
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
 		maxThreads     = flag.Int("max_threads", 0, "Dynamically grow threads up to this number")
-		format         = flag.String("format", "json", "Format to convert kflow to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
+		format         = flag.String("format", "json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
 		formatRollup   = flag.String("format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)")
 		compression    = flag.String("compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
 		sinks          = flag.String("sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog)")
@@ -58,10 +58,18 @@ func main() {
 		tagMapType     = flag.String("tag_map_type", "", "type of mapping to use for tag values. file|null")
 		vpcSource      = flag.String("vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
+		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
 	)
 
 	bs := baseserver.BoilerplateWithPrefix("ktranslate", version.Version, "chf.kkc", properties.NewEnvPropertyBacking())
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
+
+	// Set up NR logging if configured.
+	var logTee chan string
+	if *teeLog {
+		logTee = make(chan string, cat.CHAN_SLACK)
+		bs.SetLogTee(logTee)
+	}
 
 	// If we're running in a given mode, set the flags accordingly.
 	setMode(bs, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0)), *sample)
@@ -107,6 +115,7 @@ func main() {
 			ApiRoot:  *apiRoot,
 			ApiPlan:  *kentikPlan,
 		},
+		LogTee: logTee,
 	}
 
 	if *apiDevices != "" {

@@ -331,6 +331,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				Oid:  tag.Column.Oid,
 				Name: tag.Column.Name,
 				Type: kt.String,
+				Tag:  tag.Tag,
 			}
 			deviceMetadata[tag.Column.Oid] = mib
 		}
@@ -353,6 +354,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Oid:  t.Column.Oid,
 					Name: t.Column.Name,
 					Type: kt.String,
+					Tag:  t.Tag,
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib

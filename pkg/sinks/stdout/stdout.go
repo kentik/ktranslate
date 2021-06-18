@@ -12,15 +12,21 @@ import (
 
 type StdoutSink struct {
 	logger.ContextL
+	logTee chan string
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*StdoutSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, logTee chan string) (*StdoutSink, error) {
 	return &StdoutSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "stdoutSink"}, log),
+		logTee:   logTee,
 	}, nil
 }
 
 func (s *StdoutSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
+	if s.logTee != nil {
+		go s.watchLogs(ctx)
+	}
+
 	return nil
 }
 
@@ -32,4 +38,17 @@ func (s *StdoutSink) Close() {}
 
 func (s *StdoutSink) HttpInfo() map[string]float64 {
 	return map[string]float64{}
+}
+
+func (s *StdoutSink) watchLogs(ctx context.Context) {
+	s.Infof("Watching for logs")
+	for {
+		select {
+		case log := <-s.logTee:
+			s.Send(ctx, kt.NewOutput([]byte(log)))
+		case <-ctx.Done():
+			s.Infof("Watching for logs done")
+			return
+		}
+	}
 }
