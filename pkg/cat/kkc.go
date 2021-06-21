@@ -919,7 +919,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		handler := func(msgs []*kt.JCHF, cb func(error)) { // Capture this in a closure.
 			kc.handleInput(msgs, serBufInput, citycacheInput, regioncacheInput, cb, kc.format.To)
 		}
-		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic, handler)
+		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic, kc.config.MaxFlowPerMessage, handler)
 		if err != nil {
 			return err
 		}

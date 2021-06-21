@@ -31,7 +31,7 @@ func TestMetaServer(t *testing.T) {
 	BaseServerConfigurationDefaults.HealthCheckPeriod = 1 * time.Second
 	BaseServerConfigurationDefaults.HealthCheckTimeout = 1 * time.Second
 
-	bs := Boilerplate("dumdum", versionInfo,nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil)
 	assert.NotNil(t, bs, "Boilerplate should return a non-nil value")
 
 	dumdum := NewDummyService(t, false, 1*time.Millisecond)

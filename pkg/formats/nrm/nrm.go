@@ -28,10 +28,11 @@ const (
 	DO_DEMO_PERIOD = "NRM_DO_DEMO_PERIOD"
 	DO_DEMO_AMP    = "NRM_DO_DEMO_AMPLITIDE"
 
-	InstNameVPC       = "vpc-logs"
-	InstNameNetflow   = "netflow"
-	InstNameSNMP      = "snmp"
-	InstNameSynthetic = "synthetic"
+	InstNameVPC        = "vpc-logs"
+	InstNameNetflow    = "netflow"
+	InstNameSNMP       = "snmp"
+	InstNameSynthetic  = "synthetic"
+	InstNameKtranslate = "heartbeat"
 )
 
 type NRMFormat struct {
@@ -525,7 +526,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 	ms := make([]NRMetric, 0)
 
 	// Hard code these.
-	attr["instrumentation.name"] = InstNameNetflow
+	attr["instrumentation.name"] = InstNameKtranslate
 
 	switch in.CustomStr["type"] {
 	case "counter":

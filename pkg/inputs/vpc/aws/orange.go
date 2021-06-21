@@ -109,7 +109,7 @@ func (vpc *AwsVpc) HttpInfo() map[string]float64 {
 	return map[string]float64{
 		"ObjectsSeen":  vpc.metrics.ObjectsSeen.Rate1(),
 		"Flows":        vpc.metrics.Flows.Rate1(),
-		"DroppedFlows": vpc.metrics.Flows.Rate1(),
+		"DroppedFlows": vpc.metrics.DroppedFlows.Rate1(),
 	}
 }
 

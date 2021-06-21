@@ -66,7 +66,7 @@ func TestBoilerplateAndShutdown(t *testing.T) {
 	BaseServerConfigurationDefaults.SkipParseFlags = true
 	BaseServerConfigurationDefaults.LogToStdout = false
 	BaseServerConfigurationDefaults.ShutdownSettleTime = 1 * time.Millisecond
-	bs := Boilerplate("dumdum", versionInfo, nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil)
 	assert.NotNil(t, bs, "Boilerplate should return a non-nil value")
 
 	assert.NotNil(t, GetGlobalBaseServer())
@@ -91,7 +91,7 @@ func TestSignalShutdown(t *testing.T) {
 	BaseServerConfigurationDefaults.SkipParseFlags = true
 	BaseServerConfigurationDefaults.LogToStdout = false
 	BaseServerConfigurationDefaults.ShutdownSettleTime = 1 * time.Millisecond
-	bs := Boilerplate("dumdum", versionInfo, nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil)
 	assert.NotNil(t, bs, "Boilerplate returns a non-nil value")
 
 	dumdum := NewDummyService(t, true, 10*time.Millisecond)

@@ -9,6 +9,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc/aws"
+	"github.com/kentik/ktranslate/pkg/inputs/vpc/gcp"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -25,12 +26,13 @@ const (
 	Azure             = "azure"
 )
 
-func NewVpc(ctx context.Context, cloud CloudSource, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, lambdaHandler func([]*kt.JCHF, func(error))) (VpcImpl, error) {
+func NewVpc(ctx context.Context, cloud CloudSource, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF,
+	apic *api.KentikApi, maxBatchSize int, lambdaHandler func([]*kt.JCHF, func(error))) (VpcImpl, error) {
 	switch cloud {
 	case Aws:
 		return aws.NewVpc(ctx, log, registry, jchfChan, apic, lambdaHandler)
 	case Gcp:
-		return nil, fmt.Errorf("Unimplemented vpc %v", cloud)
+		return gcp.NewVpc(ctx, log, registry, jchfChan, apic, maxBatchSize)
 	case Azure:
 		return nil, fmt.Errorf("Unimplemented vpc %v", cloud)
 	}
