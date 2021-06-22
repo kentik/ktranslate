@@ -61,7 +61,13 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 
 		// You can get a nil value w/out getting an error.
 		if value == nil || pdu.Type == gosnmp.NoSuchObject {
-			log.Warnf("Dropping %s because of nil value or missing object: %+v", oidVal, pdu)
+			if oidInfo, ok := deviceMetadataMibs[oidVal[1:]]; ok {
+				log.Infof("Trying to walk %s -> %s as a table", oidInfo.Name, oidVal)
+				err := getTable(log, server, oidVal, oidInfo, &md)
+				if err != nil {
+					log.Warnf("Dropping %s because of nil value or missing object: %+v", oidVal, pdu)
+				}
+			}
 			continue
 		}
 
@@ -122,4 +128,24 @@ func getFromCustomMap(mibs map[string]*kt.Mib) []string {
 
 	sort.Strings(keys)
 	return keys
+}
+
+func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md *kt.DeviceMetricsMetadata) error {
+	results, err := g.WalkAll(oid)
+	if err != nil {
+		return err
+	}
+
+	log.Infof("TableWalk Results: %s: %s -> %d", mib.Name, oid, len(results))
+	for _, variable := range results {
+		switch variable.Type {
+		case gosnmp.OctetString:
+			md.Customs[mib.Name+"."+variable.Name[len(oid)+1:]] = string(variable.Value.([]byte))
+		default:
+			// Try to just use as a number
+			md.CustomInts[mib.Name+"."+variable.Name[len(oid)+1:]] = gosnmp.ToBigInt(variable.Value).Int64()
+		}
+	}
+
+	return nil
 }
