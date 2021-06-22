@@ -52,39 +52,39 @@ func sendJCHF(c *OpenJCHFConfig) error {
 		switch metric := i.(type) {
 		case metrics.Counter:
 			dst.CustomStr["type"] = "counter"
-			dst.CustomBigInt["count"] = metric.Count()
+			dst.CustomBigInt["count"] = metric.Count() * 100
 		case metrics.Gauge:
 			dst.CustomStr["type"] = "gauge"
-			dst.CustomBigInt["value"] = metric.Value()
+			dst.CustomBigInt["value"] = metric.Value() * 100
 		case metrics.Histogram:
 			dst.CustomStr["type"] = "histogram"
 			h := metric.Snapshot()
 			ps := h.Percentiles([]float64{0.5, 0.75, 0.95, 0.99, 0.999})
-			dst.CustomBigInt["count"] = h.Count()
-			dst.CustomBigInt["min"] = h.Min()
-			dst.CustomBigInt["max"] = h.Max()
-			dst.CustomBigInt["mean"] = int64(h.Mean())
-			dst.CustomBigInt["95-percentile"] = int64(ps[2])
-			dst.CustomBigInt["99-percentile"] = int64(ps[3])
+			dst.CustomBigInt["count"] = h.Count() * 100
+			dst.CustomBigInt["min"] = h.Min() * 100
+			dst.CustomBigInt["max"] = h.Max() * 100
+			dst.CustomBigInt["mean"] = int64(h.Mean() * 100)
+			dst.CustomBigInt["95-percentile"] = int64(ps[2] * 100)
+			dst.CustomBigInt["99-percentile"] = int64(ps[3] * 100)
 			metric.Clear()
 		case metrics.Meter:
 			dst.CustomStr["type"] = "meter"
 			m := metric.Snapshot()
-			dst.CustomBigInt["count"] = m.Count()
-			dst.CustomBigInt["one-minute"] = int64(m.Rate1())
+			dst.CustomBigInt["count"] = m.Count() * 100
+			dst.CustomBigInt["one-minute"] = int64(m.Rate1() * 100)
 		case metrics.Timer:
 			dst.CustomStr["type"] = "timer"
 			t := metric.Snapshot()
 			ps := t.Percentiles([]float64{0.5, 0.75, 0.95, 0.99, 0.999})
-			dst.CustomBigInt["count"] = t.Count()
-			dst.CustomBigInt["min"] = t.Min() / int64(du)
-			dst.CustomBigInt["max"] = t.Max() / int64(du)
-			dst.CustomBigInt["mean"] = int64(t.Mean() / du)
-			dst.CustomBigInt["95-percentile"] = int64(ps[2] / du)
-			dst.CustomBigInt["99-percentile"] = int64(ps[3] / du)
-			dst.CustomBigInt["one-minute"] = int64(t.Rate1())
-			dst.CustomBigInt["five-minute"] = int64(t.Rate5())
-			dst.CustomBigInt["fifteen-minute"] = int64(t.Rate15())
+			dst.CustomBigInt["count"] = t.Count() * 100
+			dst.CustomBigInt["min"] = int64((float64(t.Min()) / du) * 100)
+			dst.CustomBigInt["max"] = int64((float64(t.Max()) / du) * 100)
+			dst.CustomBigInt["mean"] = int64((t.Mean() / du) * 100)
+			dst.CustomBigInt["95-percentile"] = int64((ps[2] / du) * 100)
+			dst.CustomBigInt["99-percentile"] = int64((ps[3] / du) * 100)
+			dst.CustomBigInt["one-minute"] = int64(t.Rate1() * 100)
+			dst.CustomBigInt["five-minute"] = int64(t.Rate5() * 100)
+			dst.CustomBigInt["fifteen-minute"] = int64(t.Rate15() * 100)
 			metric.Clear()
 		}
 		base = append(base, dst)

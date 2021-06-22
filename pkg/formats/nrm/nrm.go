@@ -534,7 +534,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
-				Value:      in.CustomBigInt["count"],
+				Value:      float64(in.CustomBigInt["count"]) / 100,
 				Attributes: attr,
 			})
 		}
@@ -543,7 +543,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
-				Value:      in.CustomBigInt["value"],
+				Value:      float64(in.CustomBigInt["value"]) / 100,
 				Attributes: attr,
 			})
 		}
@@ -552,7 +552,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
-				Value:      in.CustomBigInt["95-percentile"],
+				Value:      float64(in.CustomBigInt["95-percentile"]) / 100,
 				Attributes: attr,
 			})
 		}
@@ -561,7 +561,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
-				Value:      in.CustomBigInt["one-minute"],
+				Value:      float64(in.CustomBigInt["one-minute"]) / 100,
 				Attributes: attr,
 			})
 		}
@@ -570,7 +570,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["95-percentile"],
 				Type:       NR_GAUGE_TYPE,
-				Value:      in.CustomBigInt["95-percentile"],
+				Value:      float64(in.CustomBigInt["95-percentile"]) / 100,
 				Attributes: attr,
 			})
 		}
