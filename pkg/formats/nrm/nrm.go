@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -33,6 +34,8 @@ const (
 	InstNameSNMP       = "snmp"
 	InstNameSynthetic  = "synthetic"
 	InstNameKtranslate = "heartbeat"
+
+	MAX_ATTR_FOR_NR = 100
 )
 
 type NRMFormat struct {
@@ -600,6 +603,25 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 	for k, v := range attr {
 		attrNew[k] = v
 	}
+
+	if len(attrNew) > MAX_ATTR_FOR_NR {
+		// Since NR limits us to 100 attributes, we need to prune. Take the first 100 lexographical keys.
+		keys := make([]string, len(attrNew))
+		i := 0
+		for k, _ := range attrNew {
+			keys[i] = k
+			i++
+		}
+		sort.Strings(keys)
+		for _, k := range keys[MAX_ATTR_FOR_NR-2:] {
+			delete(attrNew, k)
+		}
+
+		// Force these to be back in.
+		attrNew["objectIdentifier"] = name
+		attrNew["instrumentation.name"] = InstNameSNMP
+	}
+
 	return attrNew
 }
 
