@@ -636,7 +636,7 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 
 		// Ship all the logs out, according to max flows per message.
 		last := 0
-		for next := kc.config.MaxFlowPerMessage; next < keep; next += kc.config.MaxFlowPerMessage {
+		for next := kc.config.MaxFlowPerMessage; next < keep+kc.config.MaxFlowPerMessage; next += kc.config.MaxFlowPerMessage {
 			batch := next
 			if batch > keep {
 				batch = keep
@@ -649,6 +649,10 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 				kc.msgsc <- ser
 			}
 			last = next
+
+			if batch == keep { // We're done here, no need to send more.
+				break
+			}
 		}
 	}
 
