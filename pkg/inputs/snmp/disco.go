@@ -171,6 +171,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	if mibProfile != nil {
 		log.Infof("Found profile for %s: %v", md.SysObjectID, mibProfile)
 		device.MibProfile = mibProfile.From
+		device.MibSet = mibProfile.GetMibs()
 	}
 
 	// Now, see what mibs this sucker can use.
@@ -212,6 +213,25 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		}
 	}
 	log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
+
+	// Fill up list of mibs to run on here.
+	if conf.Disco.AddAllMibs {
+		fullMibSet := map[string]bool{}
+		for _, device := range conf.Devices {
+			for mib, _ := range device.MibSet {
+				fullMibSet[mib] = true
+			}
+		}
+		for _, mib := range conf.Global.MibsEnabled {
+			fullMibSet[mib] = true
+		}
+
+		mibList := []string{}
+		for mib, _ := range fullMibSet {
+			mibList = append(mibList, mib)
+		}
+		conf.Global.MibsEnabled = mibList
+	}
 
 	// Write out to seperate files any sections which need this.
 	if conf.Disco.CidrOrig != "" {

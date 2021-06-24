@@ -367,6 +367,14 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 	return deviceMetadata, interfaceMetadata
 }
 
+func (p *Profile) GetMibs() map[string]bool {
+	mibs := map[string]bool{}
+	for _, metric := range p.Metrics {
+		mibs[metric.Mib] = true
+	}
+	return mibs
+}
+
 func (mdb *MibDB) parseMibFromYml(fname string, file os.DirEntry, extends map[string]*Profile) error {
 	t := Profile{ContextL: mdb.log, From: file.Name()}
 	data, err := os.ReadFile(fname)
