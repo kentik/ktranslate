@@ -312,7 +312,13 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 
 	f.mux.Lock()
 	defer f.mux.Unlock()
-	f.lastMetadata[in.DeviceName] = lm
+	if f.lastMetadata[in.DeviceName] == nil || lm.Size() >= f.lastMetadata[in.DeviceName].Size() {
+		f.Infof("New Metadata for %s", in.DeviceName)
+		f.lastMetadata[in.DeviceName] = lm
+	} else {
+		f.Infof("Not replaceing metadata for %s. Smaller attribute size. new=%d < old=%d, Missing: %v",
+			in.DeviceName, lm.Size(), f.lastMetadata[in.DeviceName].Size(), f.lastMetadata[in.DeviceName].Missing(lm))
+	}
 
 	return nil
 }
@@ -442,8 +448,12 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
+	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
-	f.mux.RUnlock()
+	if f.lastMetadata[in.DeviceName] == nil {
+		f.Warnf("Missing device metadata for %s", in.DeviceName)
+	}
+
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
@@ -466,6 +476,10 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	f.mux.RLock()
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	if f.lastMetadata[in.DeviceName] == nil {
+		f.Warnf("Missing interface metadata for %s", in.DeviceName)
+	}
+
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {

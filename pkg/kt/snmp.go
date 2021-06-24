@@ -3,6 +3,7 @@ package kt
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -95,6 +96,7 @@ type SnmpDeviceConfig struct {
 	Provider               Provider          `yaml:"provider"`
 	FlowOnly               bool              `yaml:"flow_only"`
 	UserTags               map[string]string `yaml:"user_tags"`
+	MibSet                 map[string]bool   `yaml:"mib_set"`
 }
 
 type SnmpTrapConfig struct {
@@ -112,6 +114,7 @@ type SnmpDiscoConfig struct {
 	UseV1              bool          `yaml:"use_snmp_v1"`
 	DefaultV3          *V3SNMPConfig `yaml:"default_v3"`
 	AddDevices         bool          `yaml:"add_devices"`
+	AddAllMibs         bool          `yaml:"add_mibs"`
 	Threads            int           `yaml:"threads"`
 	ReplaceDevices     bool          `yaml:"replace_devices"`
 	AddFromMibDB       bool          `yaml:"add_from_mibdb"`
@@ -199,6 +202,30 @@ func (mb Mib) String() string {
 type LastMetadata struct {
 	DeviceInfo    map[string]interface{}
 	InterfaceInfo map[IfaceID]map[string]interface{}
+}
+
+func (lm *LastMetadata) Size() int {
+	if lm == nil {
+		return 0
+	}
+
+	return len(lm.DeviceInfo) + len(lm.InterfaceInfo)
+}
+
+func (lm *LastMetadata) Missing(new *LastMetadata) []string {
+	missing := []string{}
+	for k, _ := range lm.DeviceInfo {
+		if _, ok := new.DeviceInfo[k]; !ok {
+			missing = append(missing, k)
+		}
+	}
+	for ifn, _ := range lm.InterfaceInfo {
+		if _, ok := new.InterfaceInfo[ifn]; !ok {
+			missing = append(missing, strconv.Itoa(int(ifn)))
+		}
+	}
+
+	return missing
 }
 
 type DeviceMap map[string]*SnmpDeviceConfig

@@ -19,6 +19,7 @@ type Poller struct {
 	interval           time.Duration
 	interfaceMetadata  *InterfaceMetadata
 	gotDeviceMetadata  bool
+	lastDeviceMetadata *kt.DeviceMetricsMetadata
 	jchfChan           chan []*kt.JCHF
 	conf               *kt.SnmpDeviceConfig
 	metrics            *kt.SnmpDeviceMetric
@@ -145,8 +146,11 @@ func (p *Poller) PollSNMPMetadata() (*kt.DeviceData, error) {
 		}
 		if deviceMetadata != nil {
 			p.gotDeviceMetadata = true
+			p.lastDeviceMetadata = deviceMetadata
 			deviceData.DeviceMetricsMetadata = deviceMetadata
 		}
+	} else {
+		deviceData.DeviceMetricsMetadata = p.lastDeviceMetadata
 	}
 
 	return deviceData, nil
