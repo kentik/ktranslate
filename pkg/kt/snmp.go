@@ -3,6 +3,7 @@ package kt
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"sync"
 	"time"
 
@@ -209,6 +210,22 @@ func (lm *LastMetadata) Size() int {
 	}
 
 	return len(lm.DeviceInfo) + len(lm.InterfaceInfo)
+}
+
+func (lm *LastMetadata) Missing(new *LastMetadata) []string {
+	missing := []string{}
+	for k, _ := range lm.DeviceInfo {
+		if _, ok := new.DeviceInfo[k]; !ok {
+			missing = append(missing, k)
+		}
+	}
+	for ifn, _ := range lm.InterfaceInfo {
+		if _, ok := new.InterfaceInfo[ifn]; !ok {
+			missing = append(missing, strconv.Itoa(int(ifn)))
+		}
+	}
+
+	return missing
 }
 
 type DeviceMap map[string]*SnmpDeviceConfig

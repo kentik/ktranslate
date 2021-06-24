@@ -316,7 +316,8 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 		f.Infof("New Metadata for %s", in.DeviceName)
 		f.lastMetadata[in.DeviceName] = lm
 	} else {
-		f.Infof("Not replaceing metadata for %s. Smaller attribute size. new=%d < old=%d", in.DeviceName, lm.Size(), f.lastMetadata[in.DeviceName].Size())
+		f.Infof("Not replaceing metadata for %s. Smaller attribute size. new=%d < old=%d, Missing: %v",
+			in.DeviceName, lm.Size(), f.lastMetadata[in.DeviceName].Size(), f.lastMetadata[in.DeviceName].Missing(lm))
 	}
 
 	return nil
