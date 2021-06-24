@@ -451,7 +451,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	if f.lastMetadata[in.DeviceName] == nil {
-		f.Warnf("Missing device metadata for %s", in.DeviceName)
+		f.Debugf("Missing device metadata for %s", in.DeviceName)
 	}
 
 	ms := make([]NRMetric, 0, len(metrics))
@@ -477,7 +477,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	if f.lastMetadata[in.DeviceName] == nil {
-		f.Warnf("Missing interface metadata for %s", in.DeviceName)
+		f.Debugf("Missing interface metadata for %s", in.DeviceName)
 	}
 
 	ms := make([]NRMetric, 0, len(metrics))

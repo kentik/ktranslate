@@ -593,7 +593,7 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 		case <-kc.tooBig:
 			// We need to dynamically shrink the size of data being sent in based on feedback from one of our sinks.
 			os := kc.config.MaxFlowPerMessage
-			kc.config.MaxFlowPerMessage = int(float64(kc.config.MaxFlowPerMessage) * .75)
+			kc.config.MaxFlowPerMessage = int(math.Max((float64(kc.config.MaxFlowPerMessage) * .75), 1))
 			kc.log.Infof("Updating MaxFlowPerMessage to %d from %d based on errors sending", kc.config.MaxFlowPerMessage, os)
 
 		case <-ctx.Done():
@@ -633,12 +633,22 @@ func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[
 			}
 			kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 		}
-		ser, err := seri(msgs[0:keep], serBuf)
-		if err != nil {
-			kc.log.Errorf("Converting to native: %v", err)
-		} else if ser != nil {
-			ser.CB = cb
-			kc.msgsc <- ser
+
+		// Ship all the logs out, according to max flows per message.
+		last := 0
+		for next := kc.config.MaxFlowPerMessage; next < keep; next += kc.config.MaxFlowPerMessage {
+			batch := next
+			if batch > keep {
+				batch = keep
+			}
+			ser, err := seri(msgs[last:batch], serBuf)
+			if err != nil {
+				kc.log.Errorf("Converting to native: %v", err)
+			} else if ser != nil {
+				ser.CB = cb
+				kc.msgsc <- ser
+			}
+			last = next
 		}
 	}
 
