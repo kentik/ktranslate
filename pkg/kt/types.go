@@ -28,6 +28,7 @@ const (
 
 	KentikAPIToken   = "KENTIK_API_TOKEN"
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
+	IndexVar         = "Index"
 )
 
 type OutputType string

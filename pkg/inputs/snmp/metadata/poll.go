@@ -184,6 +184,14 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		for k, v := range dd.DeviceMetricsMetadata.CustomInts {
 			dst.CustomInt[k] = int32(v)
 		}
+		for idx, table := range dd.DeviceMetricsMetadata.Tables {
+			for oid, v := range table.Customs {
+				dst.CustomStr["table."+idx+"."+oid] = v
+			}
+			for oid, v := range table.CustomInts {
+				dst.CustomInt["table."+idx+"."+oid] = int32(v)
+			}
+		}
 	}
 
 	for intr, id := range dd.InterfaceData {

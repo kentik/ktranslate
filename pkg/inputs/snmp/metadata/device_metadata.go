@@ -36,6 +36,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 	md := kt.DeviceMetricsMetadata{
 		Customs:    map[string]string{},
 		CustomInts: map[string]int64{},
+		Tables:     map[string]kt.DeviceTableMetadata{},
 	}
 
 	var oids []string
@@ -137,13 +138,19 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 	}
 
 	log.Infof("TableWalk Results: %s: %s -> %d", mib.Name, oid, len(results))
+	// Save as index -> oid -> value
 	for _, variable := range results {
+		idx := variable.Name[len(oid)+1:]
+		if _, ok := md.Tables[idx]; !ok {
+			md.Tables[idx] = kt.NewDeviceTableMetadata()
+		}
+
 		switch variable.Type {
 		case gosnmp.OctetString:
-			md.Customs[mib.Name+"."+variable.Name[len(oid)+1:]] = string(variable.Value.([]byte))
+			md.Tables[idx].Customs[mib.Name] = string(variable.Value.([]byte))
 		default:
 			// Try to just use as a number
-			md.CustomInts[mib.Name+"."+variable.Name[len(oid)+1:]] = gosnmp.ToBigInt(variable.Value).Int64()
+			md.Tables[idx].CustomInts[mib.Name] = gosnmp.ToBigInt(variable.Value).Int64()
 		}
 	}
 

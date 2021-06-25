@@ -18,6 +18,18 @@ type DeviceData struct {
 	DeviceMetricsMetadata *DeviceMetricsMetadata    `yaml:"device_metrics_metadata,omitempty"`
 }
 
+type DeviceTableMetadata struct {
+	Customs    map[string]string
+	CustomInts map[string]int64
+}
+
+func NewDeviceTableMetadata() DeviceTableMetadata {
+	return DeviceTableMetadata{
+		Customs:    map[string]string{},
+		CustomInts: map[string]int64{},
+	}
+}
+
 type DeviceMetricsMetadata struct {
 	SysName     string `yaml:"sys_name,omitempty"`
 	SysObjectID string `yaml:"sys_object_id,omitempty"`
@@ -27,6 +39,7 @@ type DeviceMetricsMetadata struct {
 	SysServices int    `yaml:"sys_services,omitempty"`
 	Customs     map[string]string
 	CustomInts  map[string]int64
+	Tables      map[string]DeviceTableMetadata
 }
 
 const (
@@ -202,6 +215,7 @@ func (mb Mib) String() string {
 type LastMetadata struct {
 	DeviceInfo    map[string]interface{}
 	InterfaceInfo map[IfaceID]map[string]interface{}
+	Tables        map[string]DeviceTableMetadata
 }
 
 func (lm *LastMetadata) Size() int {

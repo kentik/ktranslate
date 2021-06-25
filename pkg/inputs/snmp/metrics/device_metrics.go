@@ -273,7 +273,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 
 	// Convert to JCFH and pass on.
 	flows := make([]*kt.JCHF, 0, len(m))
-	for _, dmr := range m {
+	for idx, dmr := range m {
 		dst := kt.NewJCHF()
 		dst.CustomStr = dmr.customStr
 		dst.CustomInt = dmr.customInt
@@ -282,6 +282,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.Provider = dm.conf.Provider
 		dst.CustomBigInt["Uptime"] = uptime
 		dst.CustomStr["Error"] = dmr.Error
+		dst.CustomStr[kt.IndexVar] = idx
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()

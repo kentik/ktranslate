@@ -65,6 +65,21 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string
 			attr[k] = v
 		}
 
+		idx := in.CustomStr[kt.IndexVar]
+		if idx != "" {
+			if idx[0:1] == "." {
+				idx = idx[1:]
+			}
+			if table, ok := lastMetadata.Tables[idx]; ok {
+				for k, v := range table.Customs {
+					attr[k] = v
+				}
+				for k, v := range table.CustomInts {
+					attr[k] = v
+				}
+			}
+		}
+
 		if in.OutputPort != in.InputPort {
 			if ii, ok := lastMetadata.InterfaceInfo[in.InputPort]; ok {
 				for k, v := range ii {
@@ -96,6 +111,7 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 	lm := kt.LastMetadata{
 		DeviceInfo:    map[string]interface{}{},
 		InterfaceInfo: map[kt.IfaceID]map[string]interface{}{},
+		Tables:        map[string]kt.DeviceTableMetadata{},
 	}
 	for k, v := range in.CustomStr {
 		if DroppedAttrs[k] {
@@ -112,6 +128,14 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 						lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 					}
 				}
+			}
+		} else if strings.HasPrefix(k, "table.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if _, ok := lm.Tables[pts[1]]; !ok {
+					lm.Tables[pts[1]] = kt.NewDeviceTableMetadata()
+				}
+				lm.Tables[pts[1]].Customs[pts[2]] = v
 			}
 		} else {
 			if v != "" {
@@ -132,6 +156,14 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 					}
 					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 				}
+			}
+		} else if strings.HasPrefix(k, "table.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if _, ok := lm.Tables[pts[1]]; !ok {
+					lm.Tables[pts[1]] = kt.NewDeviceTableMetadata()
+				}
+				lm.Tables[pts[1]].CustomInts[pts[2]] = int64(v)
 			}
 		} else {
 			lm.DeviceInfo[k] = v
