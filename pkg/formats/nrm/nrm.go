@@ -35,7 +35,7 @@ const (
 	InstNameSynthetic  = "synthetic"
 	InstNameKtranslate = "heartbeat"
 
-	MAX_ATTR_FOR_NR = 100
+	MAX_ATTR_FOR_NR = 25
 )
 
 type NRMFormat struct {
