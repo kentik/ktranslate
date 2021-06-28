@@ -1,0 +1,38 @@
+name: Publish Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get staging image
+        run: |
+          docker pull kentik/ktranslate:staging
+
+      - name: Publish docker image
+        run: |
+          docker tag kentik/ktranslate:staging kentik/ktranslate:v2
+          docker push kentik/ktranslate:v2
+          docker tag kentik/ktranslate:staging kentik/ktranslate:latest
+          docker push kentik/ktranslate:latest
