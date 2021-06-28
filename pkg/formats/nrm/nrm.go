@@ -461,10 +461,15 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, name)
+			value, ok := in.CustomBigInt[m]
+			if !ok && in.CustomStr[m] != "" {
+				attrNew[m] = in.CustomStr[m]
+				value = 0 // Hard code this one because what would we do with a string based metric?
+			}
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
-				Value:      int64(in.CustomBigInt[m]),
+				Value:      int64(value),
 				Attributes: attrNew,
 			})
 		}
