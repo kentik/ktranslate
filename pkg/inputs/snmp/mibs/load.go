@@ -109,7 +109,20 @@ func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
 }
 
 func (db *MibDB) GetForOid(oid string, profile string, description string) (map[string]*kt.Mib, kt.Provider, error) {
+
+	getProvider := func(moid string) (kt.Provider, bool) {
+		if prov, ok := db.checkForProvider(moid, profile, description); ok {
+			db.log.Infof("Provider: %s -> %s", moid, prov)
+			return prov, true
+		}
+		return "", false
+	}
+
 	if db.db == nil { // We might not have set up a db here.
+		if prov, ok := getProvider(oid); ok {
+			return nil, prov, nil
+		}
+
 		return nil, "", nil
 	}
 	mibs := map[string]*kt.Mib{}
@@ -125,10 +138,9 @@ func (db *MibDB) GetForOid(oid string, profile string, description string) (map[
 				if err == nil {
 					extra := strings.SplitN(pts[1], " ", 2)
 					if !foundProv {
-						if prov, ok := db.checkForProvider(pts[0], profile, description); ok {
+						if prov, ok := getProvider(pts[0]); ok {
 							provider = prov
 							foundProv = true
-							db.log.Infof("Provider: %s -> %s", string(iter.Key()), pts[0])
 						}
 					}
 					if validOids[kt.Oidtype(dt)] {
@@ -164,7 +176,7 @@ func (db *MibDB) GetForOidRecur(oid string, profile string, description string) 
 		if err != nil {
 			return nil, "", (i == len(pts)), err
 		}
-		if len(res) > 0 {
+		if len(res) > 0 || (db.db == nil && pro != "") {
 			return res, pro, (i == len(pts)), nil
 		}
 	}
