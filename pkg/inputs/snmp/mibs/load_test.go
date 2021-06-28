@@ -33,7 +33,7 @@ func TestCheckForProvider(t *testing.T) {
 
 func TestFullProvider(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	mdb, err := NewMibDB("mibs.db", "", "", l)
+	mdb, err := NewMibDB("", "", "", l)
 	assert.NoError(t, err)
 	defer mdb.Close()
 
@@ -57,20 +57,18 @@ func TestFullProvider(t *testing.T) {
 	}
 
 	inputs := map[string]kt.Provider{
-		".1.3.6.1.4.1.11.2.3.7.11.162.8": kt.ProviderSwitch,
-		".1.3.6.1.4.1.2435.2.3.9.1":      kt.ProviderIOT,
-		".1.3.6.1.4.1.9.1.2494":          kt.ProviderSwitch,
-		".1.3.6.1.4.1.9.1.1639":          kt.ProviderRouter,
-		".1.3.6.1.4.1.9.1.449":           kt.ProviderSwitch,
-		".1.3.6.1.4.1.318":               kt.ProviderUPS,
-		".1.3.6.1.4.1.8072.3.2.8":        kt.ProviderRouter,
-		".1.3.6.1.4.1.318.1.3.5.4":       kt.ProviderUPS,
-		".1.3.6.1.4.1.318.1.3.27":        kt.ProviderUPS,
-		".1.3.6.1.4.1.318.1.3.4.6":       kt.ProviderPDU,
-		".1.3.6.1.4.1.318.1.3.4.5":       kt.ProviderPDU,
-		".1.3.6.1.4.1.318.1.3.4.7":       kt.ProviderPDU,
-		".1.3.6.1.4.1.9.1.275":           kt.ProviderSwitch,
-		".1.3.6.1.4.1.9.1.1287":          kt.ProviderSwitch,
+		".1.3.6.1.4.1.9.1.2494":    kt.ProviderSwitch,
+		".1.3.6.1.4.1.9.1.1639":    kt.ProviderRouter,
+		".1.3.6.1.4.1.9.1.449":     kt.ProviderSwitch,
+		".1.3.6.1.4.1.318":         kt.ProviderUPS,
+		".1.3.6.1.4.1.8072.3.2.8":  kt.ProviderRouter,
+		".1.3.6.1.4.1.318.1.3.5.4": kt.ProviderUPS,
+		".1.3.6.1.4.1.318.1.3.27":  kt.ProviderUPS,
+		".1.3.6.1.4.1.318.1.3.4.6": kt.ProviderPDU,
+		".1.3.6.1.4.1.318.1.3.4.5": kt.ProviderPDU,
+		".1.3.6.1.4.1.318.1.3.4.7": kt.ProviderPDU,
+		".1.3.6.1.4.1.9.1.275":     kt.ProviderSwitch,
+		".1.3.6.1.4.1.9.1.1287":    kt.ProviderSwitch,
 	}
 
 	for input, prov := range inputs {

@@ -16,7 +16,7 @@ COPY devices.json /etc/devices.json
 COPY profiles /etc/profiles
 COPY snmp.yaml.sample /etc/snmp.yaml.sample
 COPY snmp-base.yaml /etc/snmp-base.yaml
-COPY devices.json /etc/devices.json
+
 ENTRYPOINT ["/usr/bin/ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/config.json", "-city", "/etc/code2city.mdb", "-region", "/etc/code2region.mdb", "-udrs", "/etc/udr.csv", "-api_devices", "/etc/devices.json", "-asn4", "/etc/ipv4-asn-ip.csv", "-asn6", "/etc/ipv6-asn-ip.csv", "-asnName", "/etc/asn-to-name.tsv", "-log_level", "info"]
 WORKDIR /
 

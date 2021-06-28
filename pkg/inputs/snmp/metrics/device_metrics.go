@@ -245,7 +245,13 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		metricsFound[mib.Name] = mib.Oid
 		switch mib.Type {
 		case kt.String:
-			dmr.customStr[mib.Name] = string(variable.Value.([]byte))
+			value := string(variable.Value.([]byte))
+			// Try to parse this as a number. If its not though, just store as a string.
+			if s, err := strconv.ParseInt(value, 10, 64); err == nil {
+				dmr.customBigInt[mib.Name] = s
+			} else {
+				dmr.customStr[mib.Name] = string(variable.Value.([]byte))
+			}
 		case kt.INTEGER:
 			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
 		case kt.NetAddr:
