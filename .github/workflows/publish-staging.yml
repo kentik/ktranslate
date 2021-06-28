@@ -53,3 +53,9 @@ jobs:
         run: |
           docker tag ktranslate:v2 kentik/ktranslate:staging
           docker push kentik/ktranslate:staging
+
+      - name: Publish binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: ktranslate
+          path: bin/ktranslate
