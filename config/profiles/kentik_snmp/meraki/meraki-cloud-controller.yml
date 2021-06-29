@@ -1,0 +1,68 @@
+# http://oid-info.com/get/1.3.6.1.4.1.29671.1.1.4.1
+# http://oid-info.com/get/1.3.6.1.4.1.29671.1.1.5.1
+---
+extends:
+  - system-mib.yml
+  - if-mib.yml
+
+device:
+  vendor: "meraki"
+
+sysobjectid: 1.3.6.1.4.1.29671.*
+
+metrics:
+  - MIB: MERAKI-CLOUD-CONTROLLER-MIB
+    table:
+      OID: 1.3.6.1.4.1.29671.1.1.4
+      name: devTable
+    symbols:
+      - OID: 1.3.6.1.4.1.29671.1.1.4.1.3
+        name: devStatus
+        enum:
+          offline: 0
+          online: 1
+      - OID: 1.3.6.1.4.1.29671.1.1.4.1.5
+        name: devClientCount
+    metric_tags:
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.4.1.2
+          name: devName
+        tag: ap_name
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.4.1.7
+          name: devPublicIp
+        tag: ap_public_ip
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.4.1.8
+          name: devSerial
+        tag: ap_serial
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.4.1.9
+          name: devProductCode
+        tag: ap_model
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.4.1.11
+          name: devNetworkName
+        tag: ap_network_name
+  - MIB: MERAKI-CLOUD-CONTROLLER-MIB
+    table:
+      OID: 1.3.6.1.4.1.29671.1.1.5
+      name: devInterfaceTable
+    symbols:
+      - OID: 1.3.6.1.4.1.29671.1.1.5.1.4
+        name: devInterfaceSentPkts
+      - OID: 1.3.6.1.4.1.29671.1.1.5.1.5
+        name: devInterfaceRecvPkts
+      - OID: 1.3.6.1.4.1.29671.1.1.5.1.6
+        name: devInterfaceSentBytes
+      - OID: 1.3.6.1.4.1.29671.1.1.5.1.7
+        name: devInterfaceRecvBytes
+    metric_tags:
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.5.1.2
+          name: devInterfaceIndex
+        tag: interface_index
+      - column:
+          OID: 1.3.6.1.4.1.29671.1.1.5.1.3
+          name: devInterfaceName
+        tag: interface_name
