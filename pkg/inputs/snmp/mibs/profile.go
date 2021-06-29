@@ -12,8 +12,9 @@ import (
 )
 
 type OID struct {
-	Oid  string `yaml:"OID"`
-	Name string `yaml:"name"`
+	Oid  string           `yaml:"OID"`
+	Name string           `yaml:"name"`
+	Enum map[string]int64 `yaml:"enum"`
 }
 
 type Tag struct {
@@ -280,6 +281,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Oid:  metric.Symbol.Oid,
 				Name: metric.Symbol.Name,
 				Type: otype,
+				Enum: metric.Symbol.Enum,
 			}
 			if strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
@@ -293,6 +295,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Oid:  s.Oid,
 				Name: s.Name,
 				Type: otype,
+				Enum: s.Enum,
 			}
 			if strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib

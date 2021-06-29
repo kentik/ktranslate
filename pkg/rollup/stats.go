@@ -309,13 +309,17 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot time.Time, prov kt.Provider, rc chan []Rollup) {
 	top := make([]Rollup, 0, len(keys))
 	seen := map[string]int{}
+	seenPrimay := map[string]bool{}
 
 	for _, roll := range keys {
 		pts := strings.Split(roll.Dimension, r.keyJoin)
 		if seen[pts[r.primaryDim]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
-			top = append(top, roll)
+			if len(seenPrimay) <= r.topK { // And, if the number of primary keys is also less than topk, add.
+				top = append(top, roll)
+			}
 		}
 		seen[pts[r.primaryDim]]++
+		seenPrimay[pts[r.primaryDim]] = true
 	}
 
 	// Fill in the total value here, unless the name has total in it.

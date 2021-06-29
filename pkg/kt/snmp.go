@@ -109,7 +109,7 @@ type SnmpDeviceConfig struct {
 	Provider               Provider          `yaml:"provider"`
 	FlowOnly               bool              `yaml:"flow_only"`
 	UserTags               map[string]string `yaml:"user_tags"`
-	MibSet                 map[string]bool   `yaml:"mib_set"`
+	DiscoveredMibs         []string          `yaml:"discovered_mibs"`
 }
 
 type SnmpTrapConfig struct {
@@ -206,6 +206,7 @@ type Mib struct {
 	Type  Oidtype
 	Extra string
 	Tag   string
+	Enum  map[string]int64
 }
 
 func (mb Mib) String() string {
