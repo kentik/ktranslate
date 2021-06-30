@@ -435,15 +435,6 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 		}
 	}
 
-	// extra check -- if we got no interfaces in that poll, something went badly wrong.
-	// Don't delete the interfaces from previous polls from the database; report an error
-	// and bail.
-	if len(intLine) == 0 {
-		err := fmt.Errorf("zero interfaces found")
-		im.log.Errorf("SNMP: Error polling metadata: %v", err)
-		return nil, "", err
-	}
-
 	deviceManufacturer := snmp_util.GetDeviceManufacturer(server, im.log)
 	lowerManufacturer := strings.ToLower(deviceManufacturer)
 	isNokia := snmp_util.ContainsAny(lowerManufacturer, "timos", "nokia")

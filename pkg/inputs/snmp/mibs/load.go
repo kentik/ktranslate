@@ -127,7 +127,7 @@ func (db *MibDB) GetForOid(oid string, profile string, description string) (map[
 	}
 	mibs := map[string]*kt.Mib{}
 	iter := db.db.NewIterator(util.BytesPrefix([]byte(oid)), nil)
-	provider := kt.ProviderRouter
+	provider := kt.ProviderDefault
 	foundProv := false
 	for iter.Next() {
 		pts := strings.SplitN(string(iter.Value()), " ", 2)
@@ -181,7 +181,7 @@ func (db *MibDB) GetForOidRecur(oid string, profile string, description string) 
 		}
 	}
 
-	return nil, kt.ProviderRouter, false, nil
+	return nil, kt.ProviderDefault, false, nil
 }
 
 func (db *MibDB) checkForProvider(name string, profile string, description string) (kt.Provider, bool) {

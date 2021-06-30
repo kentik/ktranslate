@@ -100,13 +100,16 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
 		default:
+			if oid.Tag != "" {
+				oidName = oid.Tag
+			}
 			switch vt := value.(type) {
 			case string:
-				md.Customs[oid.Name] = vt
+				md.Customs[oidName] = vt
 			case []byte:
-				md.Customs[oid.Name] = string(vt)
+				md.Customs[oidName] = string(vt)
 			default:
-				md.CustomInts[oid.Name] = snmp_util.ToInt64(value)
+				md.CustomInts[oidName] = snmp_util.ToInt64(value)
 			}
 		}
 	}
@@ -137,7 +140,12 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 		return err
 	}
 
-	log.Infof("TableWalk Results: %s: %s -> %d", mib.Name, oid, len(results))
+	oidName := mib.Name
+	if mib.Tag != "" {
+		oidName = mib.Tag
+	}
+
+	log.Infof("TableWalk Results: %s: %s -> %d", oidName, oid, len(results))
 	// Save as index -> oid -> value
 	for _, variable := range results {
 		idx := variable.Name[len(oid)+1:]
@@ -147,10 +155,10 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 
 		switch variable.Type {
 		case gosnmp.OctetString:
-			md.Tables[idx].Customs[mib.Name] = string(variable.Value.([]byte))
+			md.Tables[idx].Customs[oidName] = string(variable.Value.([]byte))
 		default:
 			// Try to just use as a number
-			md.Tables[idx].CustomInts[mib.Name] = gosnmp.ToBigInt(variable.Value).Int64()
+			md.Tables[idx].CustomInts[oidName] = gosnmp.ToBigInt(variable.Value).Int64()
 		}
 	}
 
