@@ -243,36 +243,25 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		}
 		dmr := assureDeviceMetrics(m, idx)
 		metricsFound[mib.Name] = mib.Oid
-		switch mib.Type {
-		case kt.String:
+		switch variable.Type {
+		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
-			// Try to parse this as a number. If its not though, just store as a string.
-			if s, err := strconv.ParseInt(value, 10, 64); err == nil {
-				dmr.customBigInt[mib.Name] = s
+			if mib.Enum != nil {
+				if val, ok := mib.Enum[strings.ToLower(value)]; ok {
+					dmr.customBigInt[mib.Name] = val
+				} else {
+					dm.log.Warnf("Missing enum value for device metric %s %s", mib.Name, value)
+				}
 			} else {
-				dmr.customStr[mib.Name] = string(variable.Value.([]byte))
+				// Try to parse this as a number. If its not though, just store as a string.
+				if s, err := strconv.ParseInt(value, 10, 64); err == nil {
+					dmr.customBigInt[mib.Name] = s
+				} else {
+					dm.log.Warnf("unable to set string valued metric as numeric: %s %s", mib.Name, value)
+					dmr.customStr[mib.Name] = string(value)
+				}
 			}
-		case kt.INTEGER:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
-		case kt.NetAddr:
-			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
-		case kt.IpAddr:
-			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
-		case kt.Counter:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
-		case kt.Gauge:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
-		case kt.TimeTicks:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
-		case kt.Counter64:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
-		case kt.BitString:
-			if str, ok := snmp_util.ReadOctetString(variable, false); ok {
-				dmr.customStr[mib.Name] = str
-			}
-		case kt.Index:
-			dm.log.Debugf("No handler for %+v, Value: %T %+v", variable, variable.Value, variable.Value)
-		case kt.Integer32:
+		default:
 			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
 		}
 	}

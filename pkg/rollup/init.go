@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	flag.Var(&rollups, "rollups", "Any rollups to use. Format: type, metric, dimension 1, dimension 2, ..., dimension n: sum,in_bytes,dst_addr")
+	flag.Var(&rollups, "rollups", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
 	verifyHLLConstantsOrPanic()
 }
 

@@ -171,7 +171,15 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	if mibProfile != nil {
 		log.Infof("Found profile for %s: %v", md.SysObjectID, mibProfile)
 		device.MibProfile = mibProfile.From
-		device.MibSet = mibProfile.GetMibs()
+		mibs := mibProfile.GetMibs()
+		if len(mibs) > 0 {
+			device.DiscoveredMibs = make([]string, len(mibs))
+			i := 0
+			for m, _ := range mibs {
+				device.DiscoveredMibs[i] = m
+				i++
+			}
+		}
 	}
 
 	// Now, see what mibs this sucker can use.
@@ -218,7 +226,7 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	if conf.Disco.AddAllMibs {
 		fullMibSet := map[string]bool{}
 		for _, device := range conf.Devices {
-			for mib, _ := range device.MibSet {
+			for _, mib := range device.DiscoveredMibs {
 				fullMibSet[mib] = true
 			}
 		}

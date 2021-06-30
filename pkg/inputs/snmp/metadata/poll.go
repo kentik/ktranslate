@@ -2,7 +2,6 @@ package metadata
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/kentik/gosnmp"
@@ -109,13 +108,9 @@ func (p *Poller) PollSNMPMetadata() (*kt.DeviceData, error) {
 		return nil, err
 	}
 
-	// extra check -- if we got no interfaces in that poll, something went badly wrong.
-	// Don't delete the interfaces from previous polls from the database; report an error
-	// and bail.
+	// If there's no interfaces, note this this might be an issue for some devices but keep on going.
 	if len(intLine) == 0 {
-		err := fmt.Errorf("zero interfaces found")
-		p.log.Errorf("SNMP: Error polling metadata: %v", err)
-		return nil, err
+		p.log.Warnf("SNMP: issue polling metadata: zero interfaces found")
 	}
 
 	deviceData := &kt.DeviceData{
@@ -204,6 +199,11 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomStr["if."+intr+".VrfName"] = id.VrfName
 		dst.CustomStr["if."+intr+".VrfDescr"] = id.VrfDescr
 		dst.CustomStr["if."+intr+".VrfRD"] = id.VrfRD
+
+		// And in anything extra which came out here.
+		for k, v := range id.ExtraInfo {
+			dst.CustomStr["if."+intr+"."+k] = v
+		}
 	}
 
 	return []*kt.JCHF{dst}, nil
