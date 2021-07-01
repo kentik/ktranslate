@@ -300,10 +300,6 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Enum: s.Enum,
 				Tag:  s.Tag,
 			}
-			if s.Tag != "" {
-				mib.Name = s.Tag
-			}
-
 			if strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
 			} else {
