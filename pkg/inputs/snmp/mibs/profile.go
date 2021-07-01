@@ -285,6 +285,9 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Enum: metric.Symbol.Enum,
 				Tag:  metric.Symbol.Tag,
 			}
+			for k, v := range mib.Enum {
+				mib.Enum[strings.ToLower(k)] = v
+			}
 			if strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
 			} else {
@@ -299,6 +302,9 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Type: otype,
 				Enum: s.Enum,
 				Tag:  s.Tag,
+			}
+			for k, v := range mib.Enum {
+				mib.Enum[strings.ToLower(k)] = v
 			}
 			if strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
