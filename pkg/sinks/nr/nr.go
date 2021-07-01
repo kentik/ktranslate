@@ -43,6 +43,7 @@ type NRSink struct {
 	format      formats.Format
 	compression kt.Compression
 	estimate    bool
+	checkJson   bool
 	fmtr        *nrm.NRMFormat
 	tooBig      chan int
 	logTee      chan string
@@ -67,6 +68,7 @@ var (
 	NrMetricsUrl = flag.String("nr_metrics_url", "https://metric-api.newrelic.com/metric/v1", "URL to use to send into NR Metrics API")
 	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
 	NrRegion     = flag.String("nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU")
+	NrCheckJson  = flag.Bool("nr_check_json", false, "Verify body is valid json before sending on")
 
 	regions = map[string]map[string]string{
 		"us": map[string]string{
@@ -93,9 +95,10 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 			DeliveryBytes: go_metrics.GetOrRegisterMeter("delivery_bytes_nr", registry),
 			DeliveryLogs:  go_metrics.GetOrRegisterMeter("delivery_logs_nr", registry),
 		},
-		estimate: *EstimateSize,
-		tooBig:   tooBig,
-		logTee:   logTee,
+		estimate:  *EstimateSize,
+		checkJson: *NrCheckJson,
+		tooBig:    tooBig,
+		logTee:    logTee,
 	}
 
 	return &nr, nil
@@ -165,6 +168,13 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 }
 
 func (s *NRSink) Send(ctx context.Context, payload *kt.Output) {
+	if s.checkJson {
+		if err := s.doCheckJson(payload); err != nil {
+			s.Errorf("Invalid payload! Not sending -- len: %d, err: %v", len(payload.Body), err)
+			return
+		}
+	}
+
 	if payload.IsEvent() {
 		go s.sendNR(ctx, payload, s.NRUrlEvent)
 	} else if payload.IsMetric() {
@@ -351,4 +361,25 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	}
 
 	s.sendNR(ctx, kt.NewOutput(buf.Bytes()), s.NRUrlLog)
+}
+
+func (s *NRSink) doCheckJson(payload *kt.Output) error {
+	var base interface{}
+	if s.compression != kt.CompressionGzip { // plain path
+		if err := json.Unmarshal(payload.Body, &base); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	// Compression check here.
+	r, err := gzip.NewReader(bytes.NewBuffer(payload.Body))
+	if err != nil {
+		return err
+	}
+	if err := json.NewDecoder(r).Decode(&base); err != nil {
+		return err
+	}
+
+	return nil
 }

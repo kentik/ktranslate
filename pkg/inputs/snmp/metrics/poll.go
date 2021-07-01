@@ -33,7 +33,9 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 
 	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
 	counterTimeSec := 5 * 60
-	if gconf != nil && gconf.PollTimeSec > 0 {
+	if conf != nil && conf.PollTimeSec > 0 {
+		counterTimeSec = conf.PollTimeSec
+	} else if gconf != nil && gconf.PollTimeSec > 0 {
 		counterTimeSec = gconf.PollTimeSec
 	}
 

@@ -110,6 +110,7 @@ type SnmpDeviceConfig struct {
 	FlowOnly               bool              `yaml:"flow_only"`
 	UserTags               map[string]string `yaml:"user_tags"`
 	DiscoveredMibs         []string          `yaml:"discovered_mibs"`
+	PollTimeSec            int               `yaml:"poll_time_sec"`
 }
 
 type SnmpTrapConfig struct {
