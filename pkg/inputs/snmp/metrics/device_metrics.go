@@ -29,7 +29,11 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 			if !strings.HasPrefix(noid, ".") {
 				noid = "." + noid
 			}
-			log.Infof("Adding device metric %s -> %s", noid, m.Name)
+			oidName := m.Name
+			if m.Tag != "" {
+				oidName = m.Tag
+			}
+			log.Infof("Adding device metric %s -> %s", noid, oidName)
 			conf.DeviceOids[noid] = m
 		}
 	}
@@ -241,28 +245,36 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 			dm.log.Infof("Missing Custom oid: %+v, Value: %T %+v", variable, variable.Value, variable.Value)
 			continue
 		}
+		oidName := mib.Name
+		if mib.Tag != "" {
+			oidName = mib.Tag
+		}
+
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[mib.Name] = mib.Oid
+		metricsFound[oidName] = mib.Oid
 		switch variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
 			if mib.Enum != nil {
+				dmr.customStr[kt.StringPrefix+oidName] = value // Save the string valued field as an attribute.
 				if val, ok := mib.Enum[strings.ToLower(value)]; ok {
-					dmr.customBigInt[mib.Name] = val
+					dmr.customBigInt[oidName] = val
 				} else {
-					dm.log.Warnf("Missing enum value for device metric %s %s", mib.Name, value)
+					dm.log.Warnf("Missing enum value for device metric %s %s", oidName, value)
+					dmr.customBigInt[oidName] = 0
 				}
 			} else {
 				// Try to parse this as a number. If its not though, just store as a string.
 				if s, err := strconv.ParseInt(value, 10, 64); err == nil {
-					dmr.customBigInt[mib.Name] = s
+					dmr.customBigInt[oidName] = s
 				} else {
-					dm.log.Warnf("unable to set string valued metric as numeric: %s %s", mib.Name, value)
-					dmr.customStr[mib.Name] = string(value)
+					dm.log.Warnf("unable to set string valued metric as numeric: %s %s", oidName, value)
+					dmr.customStr[kt.StringPrefix+oidName] = value // Still save this as a string valued field.
+					dmr.customBigInt[oidName] = 0
 				}
 			}
 		default:
-			dmr.customBigInt[mib.Name] = snmp_util.ToInt64(variable.Value)
+			dmr.customBigInt[oidName] = snmp_util.ToInt64(variable.Value)
 		}
 	}
 

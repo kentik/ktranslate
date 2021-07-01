@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,4 +27,8 @@ func TestCopyAttrforSNMP(t *testing.T) {
 	res = copyAttrForSnmp(input, name)
 	assert.Equal(MAX_ATTR_FOR_NR, len(res)) // truncated at MAX_ATTR_FOR_NR
 	assert.Equal("name", res["objectIdentifier"])
+
+	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
+	res = copyAttrForSnmp(input, name)
+	assert.Equal("one", res["foo"], res)
 }
