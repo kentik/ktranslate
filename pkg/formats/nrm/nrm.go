@@ -601,7 +601,11 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 		"instrumentation.name": InstNameSNMP,
 	}
 	for k, v := range attr {
-		attrNew[k] = v
+		if strings.HasPrefix(k, kt.StringPrefix) {
+			attrNew[k[len(kt.StringPrefix):]] = v
+		} else {
+			attrNew[k] = v
+		}
 	}
 
 	if len(attrNew) > MAX_ATTR_FOR_NR {

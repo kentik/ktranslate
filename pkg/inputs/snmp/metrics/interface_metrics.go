@@ -61,8 +61,12 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		if !strings.HasPrefix(noid, ".") {
 			noid = "." + noid
 		}
-		log.Infof("Adding interface metric %s -> %s", noid, m.Name)
-		oidMap[noid] = m.Name
+		oidName := m.Name
+		if m.Tag != "" {
+			oidName = m.Tag
+		}
+		log.Infof("Adding interface metric %s -> %s", noid, oidName)
+		oidMap[noid] = oidName
 	}
 
 	if len(oidMap) == 0 {
