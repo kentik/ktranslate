@@ -268,7 +268,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 				if s, err := strconv.ParseInt(value, 10, 64); err == nil {
 					dmr.customBigInt[oidName] = s
 				} else {
-					dm.log.Warnf("unable to set string valued metric as numeric: %s %s", oidName, value)
+					dm.log.Debugf("unable to set string valued metric as numeric: %s %s", oidName, value)
 					dmr.customStr[kt.StringPrefix+oidName] = value // Still save this as a string valued field.
 					dmr.customBigInt[oidName] = 0
 				}
