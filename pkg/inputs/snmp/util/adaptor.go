@@ -75,6 +75,16 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 		return nil, fmt.Errorf("community or server IP not set")
 	}
 
+	// If these are set at a device level, use these instead of the passed in values.
+	if device.TimeoutMS > 0 {
+		connectTimeout = time.Duration(device.TimeoutMS) * time.Millisecond
+		log.Infof("Device Level timeout of %v", connectTimeout)
+	}
+	if device.Retries > 0 {
+		retries = device.Retries
+		log.Infof("Device Level retries of %v", retries)
+	}
+
 	port := SNMP_PORT
 	if device.Port != 0 {
 		port = device.Port

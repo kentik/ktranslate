@@ -157,7 +157,8 @@ type JCHF struct {
 	Provider                Provider          `json:"provider"` // Entity type for this data.
 	avroSet                 map[string]interface{}
 	hasSetAvro              bool
-	CustomMetrics           map[string]string `json:"-"`
+	CustomMetrics           map[string]string              `json:"-"`
+	CustomTables            map[string]DeviceTableMetadata `json:"-"`
 }
 
 func NewJCHF() *JCHF {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net/http"
 
 	go_metrics "github.com/kentik/go-metrics"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	"github.com/netsampler/goflow2/utils"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type FlowSource string
@@ -31,12 +33,20 @@ var (
 	Reuse         = flag.Bool("nf.reuserport", false, "Enable so_reuseport for Sflow/NetFlow/IPFIX")
 	Workers       = flag.Int("nf.workers", 1, "Number of workers per flow collector")
 	MessageFields = flag.String("nf.message.fields", defaultFields, "The list of fields to include in flow messages")
+	PromPath      = flag.String("nf.prom.listen", "", "Run a promethues metrics collector here")
 )
 
 func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*KentikDriver, error) {
 	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, *MessageFields)
 	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", *Addr, *Port, proto, maxBatchSize)
 	kt.Infof("Netflow listener sending fields %s", *MessageFields)
+
+	defer func() {
+		if *PromPath != "" {
+			http.Handle("/metrics", promhttp.Handler())
+			go http.ListenAndServe(*PromPath, nil)
+		}
+	}()
 
 	switch proto {
 	case Ipfix, Netflow9:
