@@ -129,14 +129,6 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 					}
 				}
 			}
-		} else if strings.HasPrefix(k, "table.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if _, ok := lm.Tables[pts[1]]; !ok {
-					lm.Tables[pts[1]] = kt.NewDeviceTableMetadata()
-				}
-				lm.Tables[pts[1]].Customs[pts[2]] = v
-			}
 		} else {
 			if v != "" {
 				lm.DeviceInfo[k] = v
@@ -157,18 +149,11 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
 				}
 			}
-		} else if strings.HasPrefix(k, "table.") {
-			pts := strings.SplitN(k, ".", 3)
-			if len(pts) == 3 {
-				if _, ok := lm.Tables[pts[1]]; !ok {
-					lm.Tables[pts[1]] = kt.NewDeviceTableMetadata()
-				}
-				lm.Tables[pts[1]].CustomInts[pts[2]] = int64(v)
-			}
 		} else {
 			lm.DeviceInfo[k] = v
 		}
 	}
+	lm.Tables = in.CustomTables
 
 	return &lm
 }

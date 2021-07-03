@@ -50,10 +50,10 @@ type NRSink struct {
 }
 
 type NRMetric struct {
-	DeliveryErr   go_metrics.Meter
-	DeliveryWin   go_metrics.Meter
-	DeliveryBytes go_metrics.Meter
-	DeliveryLogs  go_metrics.Meter
+	DeliveryErr     go_metrics.Meter
+	DeliveryWin     go_metrics.Meter
+	DeliveryMetrics go_metrics.Meter
+	DeliveryLogs    go_metrics.Meter
 }
 
 type NRResponce struct {
@@ -90,10 +90,10 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 		NRApiKey: os.Getenv(EnvNrApiKey),
 		registry: registry,
 		metrics: &NRMetric{
-			DeliveryErr:   go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
-			DeliveryWin:   go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
-			DeliveryBytes: go_metrics.GetOrRegisterMeter("delivery_bytes_nr", registry),
-			DeliveryLogs:  go_metrics.GetOrRegisterMeter("delivery_logs_nr", registry),
+			DeliveryErr:     go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
+			DeliveryWin:     go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
+			DeliveryMetrics: go_metrics.GetOrRegisterMeter("delivery_metrics_nr", registry),
+			DeliveryLogs:    go_metrics.GetOrRegisterMeter("delivery_logs_nr", registry),
 		},
 		estimate:  *EstimateSize,
 		checkJson: *NrCheckJson,
@@ -188,11 +188,11 @@ func (s *NRSink) Close() {}
 
 func (s *NRSink) HttpInfo() map[string]float64 {
 	return map[string]float64{
-		"DeliveryErr":     s.metrics.DeliveryErr.Rate1(),
-		"DeliveryWin":     s.metrics.DeliveryWin.Rate1(),
-		"DeliveryBytes1":  s.metrics.DeliveryBytes.Rate1(),
-		"DeliveryBytes15": s.metrics.DeliveryBytes.Rate15(),
-		"DeliveryLogs":    s.metrics.DeliveryLogs.Rate1(),
+		"DeliveryErr":       s.metrics.DeliveryErr.Rate1(),
+		"DeliveryWin":       s.metrics.DeliveryWin.Rate1(),
+		"DeliveryMetrics1":  s.metrics.DeliveryMetrics.Rate1(),
+		"DeliveryMetrics15": s.metrics.DeliveryMetrics.Rate15(),
+		"DeliveryLogs":      s.metrics.DeliveryLogs.Rate1(),
 	}
 }
 
@@ -202,8 +202,8 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 		defer payload.CB(cbErr)
 	}
 
-	s.metrics.DeliveryBytes.Mark(int64(len(payload.Body))) // Compression will effect this, but we can do our best.
-	if s.estimate {                                        // here, just mark how much we would have sent.
+	s.metrics.DeliveryMetrics.Mark(1) // Compression will effect this, but we can do our best.
+	if s.estimate {                   // here, just mark how much we would have sent.
 		return
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload.Body))
