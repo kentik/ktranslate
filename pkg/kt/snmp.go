@@ -111,6 +111,8 @@ type SnmpDeviceConfig struct {
 	UserTags               map[string]string `yaml:"user_tags"`
 	DiscoveredMibs         []string          `yaml:"discovered_mibs"`
 	PollTimeSec            int               `yaml:"poll_time_sec"`
+	TimeoutMS              int               `yaml:"timeout_ms"`
+	Retries                int               `yaml:"retries"`
 }
 
 type SnmpTrapConfig struct {

@@ -148,11 +148,10 @@ func main() {
 	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, bs.Logger, *sinks)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("Cannot start ktranslate: %v", err))
-	} else {
-		lc.Infof("Version %s; Build %s", version.Version.Version, version.Version.Date)
 	}
 
-	lc.Infof("Running")
+	lc.Infof("Running -- Version %s; Build %s", version.Version.Version, version.Version.Date)
+	lc.Infof("CLI: %v", os.Args)
 	bs.Run(kc)
 }
 
