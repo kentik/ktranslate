@@ -160,7 +160,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {
-		geo, err := patricia.OpenGeo(config.GeoMapping, false, ol)
+		geo, err := patricia.NewGeoFromMM(config.GeoMapping, ol)
 		if err != nil {
 			kc.log.Errorf("Error with geo service: %v", err)
 			return nil, err
