@@ -52,7 +52,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	case Ipfix, Netflow9:
 		sNF := &utils.StateNetFlow{
 			Format: kt,
-			Logger: &KentikLog{ContextL: kt},
+			Logger: &KentikLog{l: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sNF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -64,7 +64,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	case Sflow:
 		sSF := &utils.StateSFlow{
 			Format: kt,
-			Logger: &KentikLog{ContextL: kt},
+			Logger: &KentikLog{l: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sSF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -76,7 +76,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	case Netflow5:
 		sNFL := &utils.StateNFLegacy{
 			Format: kt,
-			Logger: &KentikLog{ContextL: kt},
+			Logger: &KentikLog{l: kt},
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sNFL.FlowRoutine(*Workers, *Addr, *Port, *Reuse)

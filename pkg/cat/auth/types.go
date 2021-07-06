@@ -22,7 +22,7 @@ type DeviceCreate struct {
 	Name        string   `json:"device_name"`
 	Type        string   `json:"device_type"`
 	Description string   `json:"device_description"`
-	SampleRate  int      `json:"device_sample_rate,string"`
+	SampleRate  uint32   `json:"device_sample_rate,string"`
 	BgpType     string   `json:"device_bgp_type"`
 	PlanID      int      `json:"plan_id,omitempty"`
 	SiteID      int      `json:"site_id,omitempty"`

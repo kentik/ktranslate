@@ -26,11 +26,13 @@ type KentikDriver struct {
 	logger.ContextL
 	jchfChan     chan []*kt.JCHF
 	apic         *api.KentikApi
-	metrics      *FlowMetric
+	metrics      map[string]*FlowMetric
 	fields       []string
 	devices      map[string]*kt.Device
 	maxBatchSize int
 	inputs       chan *kt.JCHF
+	proto        FlowSource
+	registry     go_metrics.Registry
 }
 
 type FlowMetric struct {
@@ -39,16 +41,16 @@ type FlowMetric struct {
 
 func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string) *KentikDriver {
 	kt := KentikDriver{
-		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
-		jchfChan: jchfChan,
-		apic:     apic,
-		metrics: &FlowMetric{
-			Flows: go_metrics.GetOrRegisterMeter("netflow.flows^fmt="+string(proto), registry),
-		},
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
+		jchfChan:     jchfChan,
+		apic:         apic,
+		metrics:      map[string]*FlowMetric{},
 		fields:       strings.Split(fields, ","),
 		devices:      apic.GetDevicesAsMap(0),
 		maxBatchSize: maxBatchSize,
 		inputs:       make(chan *kt.JCHF, maxBatchSize),
+		proto:        proto,
+		registry:     registry,
 	}
 	go kt.run(ctx) // Process flows and send them on.
 	return &kt
@@ -67,7 +69,6 @@ func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
 	if !ok {
 		return nil, nil, fmt.Errorf("message is not protobuf")
 	}
-	t.metrics.Flows.Mark(1)
 	t.inputs <- t.toJCHF(msg) // Pull out into our own system here.
 	return nil, nil, nil
 }
@@ -75,9 +76,11 @@ func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
 func (t *KentikDriver) Close() {}
 
 func (t *KentikDriver) HttpInfo() map[string]float64 {
-	return map[string]float64{
-		"Flows": t.metrics.Flows.Rate1(),
+	flows := map[string]float64{}
+	for d, f := range t.metrics {
+		flows[d] = f.Flows.Rate1()
 	}
+	return flows
 }
 
 func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
@@ -94,13 +97,22 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderFlowDevice
-	in.SampleRate = 1
 	if dev, ok := t.devices[net.IP(fmsg.SamplerAddress).String()]; ok {
 		in.DeviceName = dev.Name
 		in.DeviceId = dev.ID
 		in.CompanyId = dev.CompanyID
+		in.SampleRate = dev.SampleRate
 	} else {
 		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
+	}
+
+	if _, ok := t.metrics[in.DeviceName]; !ok {
+		t.metrics[in.DeviceName] = &FlowMetric{Flows: go_metrics.GetOrRegisterMeter(fmt.Sprintf("netflow.flows^fmt=%s^device_name=%s", string(t.proto), in.DeviceName), t.registry)}
+	}
+	t.metrics[in.DeviceName].Flows.Mark(1)
+
+	if in.SampleRate == 0 {
+		in.SampleRate = 1
 	}
 
 	for _, field := range t.fields {

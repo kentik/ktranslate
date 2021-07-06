@@ -135,6 +135,7 @@ type hc struct {
 	InputQLen      float64
 	Sinks          map[sinks.Sink]map[string]float64
 	SnmpDeviceData map[string]map[string]float64
+	Inputs         map[string]map[string]float64
 }
 
 type Flow struct {

@@ -97,8 +97,8 @@ type SnmpDeviceConfig struct {
 	UseV1                  bool              `yaml:"use_snmp_v1"`
 	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
 	Debug                  bool              `yaml:"debug"`
-	RateMultiplier         int64             `yaml:"rate_multiplier"`
-	SampleRate             int64             `yaml:"sample_rate"`
+	RateMultiplier         int64             `yaml:"rate_multiplier"` // Used for snmp.
+	SampleRate             int64             `yaml:"sample_rate"`     // Used for flow.
 	Port                   uint16            `yaml:"port"`
 	OID                    string            `yaml:"oid"`
 	Description            string            `yaml:"description"`
