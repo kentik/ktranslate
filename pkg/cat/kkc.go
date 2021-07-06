@@ -160,7 +160,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {
-		geo, err := patricia.OpenGeo(config.GeoMapping, false, ol)
+		geo, err := patricia.NewGeoFromMM(config.GeoMapping, ol)
 		if err != nil {
 			kc.log.Errorf("Error with geo service: %v", err)
 			return nil, err
@@ -271,6 +271,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		InputQLen:      kc.metrics.InputQLen.Rate1(),
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
+		Inputs:         map[string]map[string]float64{},
 	}
 
 	// Now, let other sinks do their work
@@ -278,8 +279,10 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		h.Sinks[sn] = sink.HttpInfo()
 	}
 
+	// And store any metrics from inputs.
 	if kc.metrics.SnmpDeviceData != nil {
 		kc.metrics.SnmpDeviceData.Mux.RLock()
+		defer kc.metrics.SnmpDeviceData.Mux.RUnlock()
 		for d, met := range kc.metrics.SnmpDeviceData.Devices {
 			h.SnmpDeviceData[d] = map[string]float64{
 				"DeviceMetrics":    met.DeviceMetrics.Rate1(),
@@ -289,9 +292,11 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
 	if kc.vpc != nil {
-		h.Sinks["vpc"] = kc.vpc.HttpInfo()
+		h.Inputs["vpc"] = kc.vpc.HttpInfo()
+	}
+	if kc.nfs != nil {
+		h.Inputs["flow"] = kc.nfs.HttpInfo()
 	}
 
 	b, err := json.Marshal(h)

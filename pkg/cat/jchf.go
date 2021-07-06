@@ -22,7 +22,7 @@ var (
 	DEFAULT_GEO_PACKED = patricia.PackGeo(DEFAULT_GEO)
 )
 
-func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (*patricia.NodeGeo, error) {
+func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (string, error) {
 	if ipv4 != 0 {
 		return kc.geo.SearchBestFromHostGeo(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
 	}
@@ -37,18 +37,14 @@ func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
 		if src.CHF.SrcGeo() == 0 || src.CHF.SrcGeo() == DEFAULT_GEO_PACKED {
 			ipv6, _ := src.CHF.Ipv6SrcAddr()
 			if srcGeo, err := kc.lookupGeo(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
-				src.CHF.SetSrcGeo(patricia.GetCountry(srcGeo))
-				src.CHF.SetSrcGeoRegion(patricia.GetRegion(srcGeo))
-				src.CHF.SetSrcGeoCity(patricia.GetCity(srcGeo))
+				src.CHF.SetSrcGeo(patricia.PackGeo([]byte(srcGeo)))
 			}
 		}
 
 		if src.CHF.DstGeo() == 0 || src.CHF.DstGeo() == DEFAULT_GEO_PACKED {
 			ipv6, _ := src.CHF.Ipv6DstAddr()
 			if dstGeo, err := kc.lookupGeo(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
-				src.CHF.SetDstGeo(patricia.GetCountry(dstGeo))
-				src.CHF.SetDstGeoRegion(patricia.GetRegion(dstGeo))
-				src.CHF.SetDstGeoCity(patricia.GetCity(dstGeo))
+				src.CHF.SetDstGeo(patricia.PackGeo([]byte(dstGeo)))
 			}
 		}
 	}
@@ -540,19 +536,13 @@ func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map
 		// Fetch our own geo if not already set.
 		if kc.geo != nil {
 			if sip != nil {
-				if geo, err := kc.geo.SearchBestFromHostGeo(sip); err != nil {
-					cntr := patricia.GetCountry(geo)
-					msg.SrcGeo = fmt.Sprintf("%c%c", cntr>>8, cntr&0xFF)
-					msg.SrcGeoRegion = lookupRegionName(regioncache, patricia.GetRegion(geo), kc.envCode2Region)
-					msg.SrcGeoCity = lookupCityName(citycache, patricia.GetCity(geo), kc.envCode2City)
+				if geo, err := kc.geo.SearchBestFromHostGeo(sip); err == nil {
+					msg.SrcGeo = geo
 				}
 			}
 			if dip != nil {
-				if geo, err := kc.geo.SearchBestFromHostGeo(dip); err != nil {
-					cntr := patricia.GetCountry(geo)
-					msg.DstGeo = fmt.Sprintf("%c%c", cntr>>8, cntr&0xFF)
-					msg.DstGeoRegion = lookupRegionName(regioncache, patricia.GetRegion(geo), kc.envCode2Region)
-					msg.DstGeoCity = lookupCityName(citycache, patricia.GetCity(geo), kc.envCode2City)
+				if geo, err := kc.geo.SearchBestFromHostGeo(dip); err == nil {
+					msg.DstGeo = geo
 				}
 			}
 		}

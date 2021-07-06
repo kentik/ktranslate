@@ -20,7 +20,7 @@ type Device struct {
 	Interfaces    map[IfaceID]Interface
 	AllInterfaces []Interface `json:"all_interfaces"`
 	SendingIps    []net.IP    `json:"sending_ips"`
-	SampleRate    int         `json:"device_sample_rate,string"`
+	SampleRate    uint32      `json:"device_sample_rate,string"`
 	BgpType       string      `json:"device_bgp_type"`
 	Plan          Plan        `json:"plan"`
 	CdnAttr       string      `json:"cdn_attr"`

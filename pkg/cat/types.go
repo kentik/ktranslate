@@ -97,7 +97,7 @@ type KTranslate struct {
 	rollups        []rollup.Roller
 	doRollups      bool
 	filters        []filter.Filter
-	geo            *patricia.GeoTrees
+	geo            *patricia.MMGeo
 	asn            *patricia.Uint32Trees
 	resolver       *Resolver
 	auth           *auth.Server
@@ -135,6 +135,7 @@ type hc struct {
 	InputQLen      float64
 	Sinks          map[sinks.Sink]map[string]float64
 	SnmpDeviceData map[string]map[string]float64
+	Inputs         map[string]map[string]float64
 }
 
 type Flow struct {
