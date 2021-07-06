@@ -43,8 +43,6 @@ metrics:
       OID: 1.3.6.1.4.1.2021.10
       name: laTable
     symbols:
-      - OID: 1.3.6.1.4.1.2021.10.1.2
-        name: laNames
       - OID: 1.3.6.1.4.1.2021.10.1.3
         name: laLoad
       - OID: 1.3.6.1.4.1.2021.10.1.4
@@ -55,13 +53,19 @@ metrics:
         name: laLoadFloat
       - OID: 1.3.6.1.4.1.2021.10.1.100
         name: laErrorFlag
-      - OID: 1.3.6.1.4.1.2021.10.1.101
-        name: laErrMessage
     metric_tags:
       - tag: la_index
         column:
           OID: 1.3.6.1.4.1.2021.10.1.1
           name: laIndex
+      - tag: la_names
+        column:
+          OID: 1.3.6.1.4.1.2021.10.1.2
+          name: laNames
+      - tag: la_error_message
+        column:
+          OID: 1.3.6.1.4.1.2021.10.1.101
+          name: laErrMessage
   - MIB: UCD-SNMP-MIB
     symbol:
       OID: 1.3.6.1.4.1.2021.11.3.0
@@ -103,8 +107,6 @@ metrics:
       OID: 1.3.6.1.4.1.2021.13.15.1.1
       name: diskIOTable
     symbols:
-      - OID: 1.3.6.1.4.1.2021.13.15.1.1.2
-        name: diskIODevice
       - OID: 1.3.6.1.4.1.2021.13.15.1.1.3
         name: diskIONRead
       - OID: 1.3.6.1.4.1.2021.13.15.1.1.4
@@ -128,3 +130,7 @@ metrics:
         column:
           OID: 1.3.6.1.4.1.2021.13.15.1.1.1
           name: diskIOIndex
+      - tag: diskIO_device
+        column:
+          OID: 1.3.6.1.4.1.2021.13.15.1.1.2
+          name: diskIODevice

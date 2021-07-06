@@ -25,8 +25,27 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.117.1.1.2.1.1
         name: cefcFRUPowerAdminStatus
+        enum:
+          on: 1
+          off: 2
+          inlineAuto: 3
+          inlineOn: 4
+          powerCycle: 5
       - OID: 1.3.6.1.4.1.9.9.117.1.1.2.1.2
         name: cefcFRUPowerOperStatus
+        enum:
+          offEnvOther: 1
+          on: 2
+          offAdmin: 3
+          offDenied: 4
+          offEnvPower: 5
+          offEnvTemp: 6
+          offEnvFan: 7
+          failed: 8
+          onButFanFail: 9
+          offCooling: 10
+          offConnectorRating: 11
+          onButInlinePowerFail: 12
       - OID: 1.3.6.1.4.1.9.9.117.1.1.2.1.3
         name: cefcFRUCurrent
     metric_tags:
@@ -39,6 +58,11 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.117.1.4.1.1.1
         name: cefcFanTrayOperStatus
+        enum:
+          unknown: 1
+          up: 2
+          down: 3
+          warning: 4
     metric_tags:
       - index: 1
         tag: field_replaceable_unit
@@ -79,11 +103,17 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.13.1.3.1.3
         name: ciscoEnvMonTemperatureStatusValue
+      - OID: 1.3.6.1.4.1.9.9.13.1.3.1.6
+        name: ciscoEnvMonTemperatureState
+        enum:
+          normal: 1
+          warning: 2
+          critical: 3
+          shutdown: 4
+          notPresent: 5
+          notFunctioning: 6
+        tag: temp_state
     metric_tags:
-      - tag: temp_state
-        column:
-          OID: 1.3.6.1.4.1.9.9.13.1.3.1.6
-          name: ciscoEnvMonTemperatureState
       - tag: temp_index
         index: 1
   - MIB: CISCO-ENVMON-MIB
@@ -93,6 +123,13 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.13.1.5.1.3
         name: ciscoEnvMonSupplyState
+        enum:
+          normal: 1
+          warning: 2
+          critical: 3
+          shutdown: 4
+          notPresent: 5
+          notFunctioning: 6
     metric_tags:
       - column:
           OID: 1.3.6.1.4.1.9.9.13.1.5.1.4
@@ -109,6 +146,13 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.13.1.4.1.3
         name: ciscoEnvMonFanState
+        enum:
+          normal: 1
+          warning: 2
+          critical: 3
+          shutdown: 4
+          notPresent: 5
+          notFunctioning: 6
     metric_tags:
       - column:
           OID: 1.3.6.1.4.1.9.9.13.1.4.1.1
@@ -121,6 +165,10 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.500.1.2.2.1.1
         name: cswStackPortOperStatus
+        enum:
+          up: 1
+          down: 2
+          forcedDown: 3
     metric_tags:
       - MIB: IF-MIB
         column:
@@ -135,6 +183,18 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.500.1.2.1.1.6
         name: cswSwitchState
+        enum:
+          waiting: 1
+          progressing: 2
+          added: 3
+          ready: 4
+          sdmMismatch: 5
+          verMismatch: 6
+          featureMismatch: 7
+          newMasterInit: 8
+          provisioned: 9
+          invalid: 10
+          removed: 11
     metric_tags:
       - tag: mac_address
         column:
@@ -169,11 +229,17 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.147.1.2.2.2.1.4
         name: cfwConnectionStatCount
-    metric_tags:
-      - column:
-          OID: 1.3.6.1.4.1.9.9.147.1.2.2.2.1.2
-          name: cfwConnectionStatType
+      - OID: 1.3.6.1.4.1.9.9.147.1.2.2.2.1.2
+        name: cfwConnectionStatType
         tag: connection_type
+        enum:
+          other: 1
+          totalOpen: 2
+          currentOpen: 3
+          currentClosing: 4
+          currentHalfOpen: 5
+          currentInUse: 6
+          high: 7
   - MIB: CISCO-FIREWALL-MIB
     table:
       OID: 1.3.6.1.4.1.9.9.147.1.2.1.1
@@ -181,6 +247,17 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.147.1.2.1.1.1.3
         name: cfwHardwareStatusValue
+        enum:
+          other: 1
+          up: 2
+          down: 3
+          error: 4
+          overTemp: 5
+          busy: 6
+          noMedia: 7
+          backup: 8
+          active: 9
+          standby: 10
     metric_tags:
       - index: 1
         tag: hardware_type
@@ -209,6 +286,46 @@ metrics:
         name: rttMonLatestRttOperCompletionTime
       - OID: 1.3.6.1.4.1.9.9.42.1.2.10.1.2
         name: rttMonLatestRttOperSense
+        enum:
+          other: 0
+          ok: 1
+          disconnected: 2
+          overThreshold: 3
+          timeout: 4
+          busy: 5
+          notConnected: 6
+          dropped: 7
+          sequenceError: 8
+          verifyError: 9
+          applicationSpecific: 10
+          dnsServerTimeout: 11
+          tcpConnectTimeout: 12
+          httpTransactionTimeout: 13
+          dnsQueryError: 14
+          httpError: 15
+          error: 16
+          mplsLspEchoTxError: 17
+          mplsLspUnreachable: 18
+          mplsLspMalformedReq: 19
+          mplsLspReachButNotFEC: 20
+          enableOk: 21
+          enableNoConnect: 22
+          enableVersionFail: 23
+          enableInternalError: 24
+          enableAbort: 25
+          enableFail: 26
+          enableAuthFail: 27
+          enableFormatError: 28
+          enablePortInUse: 29
+          statsRetrieveOk: 30
+          statsRetrieveNoConnect: 31
+          statsRetrieveVersionFail: 32
+          statsRetrieveInternalError: 33
+          statsRetrieveAbort: 34
+          statsRetrieveFail: 35
+          statsRetrieveAuthFail: 36
+          statsRetrieveFormatError: 37
+          statsRetrievePortInUse: 38
     metric_tags:
       - column:
           OID: 1.3.6.1.4.1.9.9.42.1.2.9.1.10
@@ -248,8 +365,16 @@ metrics:
     symbols:
       - OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.4
         name: cVpcStatusHostLinkStatus
+        enum:
+          down: 1
+          downStar: 2
+          up: 3
       - OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.5
         name: cVpcStatusHostLinkConsistencyStatus
+        enum:
+          success: 1
+          failed: 2
+          notApplicable: 3
     metric_tags:
       - column:
           OID: 1.3.6.1.4.1.9.9.807.1.4.2.1.3
