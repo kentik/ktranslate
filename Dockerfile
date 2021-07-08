@@ -1,24 +1,21 @@
 FROM ubuntu:20.04
-RUN apt-get update && apt-get install -y \
-    krb5-user libsasl2-modules-gssapi-mit liblz4-dev libzstd-dev libsasl2-dev libpcap-dev ca-certificates wget zstd
-COPY bin/ktranslate /usr/bin/ktranslate
-COPY bin/fetch /usr/bin/fetch
-COPY config.json /etc/config.json
-COPY code2city.mdb /etc/code2city.mdb
-COPY code2region.mdb /etc/code2region.mdb
-COPY ipv4-asn-ip.csv /etc/ipv4-asn-ip.csv
-COPY ipv6-asn-ip.csv /etc/ipv6-asn-ip.csv
-COPY asn-to-name.tsv /etc/asn-to-name.tsv
-COPY udr.csv /etc/udr.csv
-COPY lib/librdkafka.so.1 /lib/x86_64-linux-gnu/librdkafka.so.1
-COPY mibs.db /etc/mibs.db
-COPY devices.json /etc/devices.json
-COPY profiles /etc/profiles
-COPY snmp.yaml.sample /etc/snmp.yaml.sample
-COPY snmp-base.yaml /etc/snmp-base.yaml
 
-ENTRYPOINT ["/usr/bin/ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/config.json", "-city", "/etc/code2city.mdb", "-region", "/etc/code2region.mdb", "-udrs", "/etc/udr.csv", "-api_devices", "/etc/devices.json", "-asn4", "/etc/ipv4-asn-ip.csv", "-asn6", "/etc/ipv6-asn-ip.csv", "-asnName", "/etc/asn-to-name.tsv", "-log_level", "info"]
-WORKDIR /
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		ca-certificates \
+		libpcap0.8 \
+	; \
+	rm -rf /var/lib/apt/lists/*
+
+COPY config/ /etc/ktranslate/
+
+# add backwards compatibility symlinks for folks using an snmp.yml from the older image (and "ls" to verify the symlinks are correct and working)
+RUN set -eux; ln -sv ktranslate/profiles ktranslate/mibs.db /etc/; ls -l /etc/profiles/ /etc/mibs.db/
+
+COPY bin/ktranslate /usr/local/bin/
+
+ENTRYPOINT ["ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn4", "/etc/ktranslate/ipv4-asn-ip.csv", "-asn6", "/etc/ktranslate/ipv6-asn-ip.csv", "-asnName", "/etc/ktranslate/asn-to-name.tsv", "-log_level", "info"]
 
 EXPOSE 8082
 EXPOSE 8083

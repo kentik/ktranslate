@@ -97,8 +97,7 @@ type SnmpDeviceConfig struct {
 	UseV1                  bool              `yaml:"use_snmp_v1"`
 	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
 	Debug                  bool              `yaml:"debug"`
-	RateMultiplier         int64             `yaml:"rate_multiplier"` // Used for snmp.
-	SampleRate             int64             `yaml:"sample_rate"`     // Used for flow.
+	SampleRate             int64             `yaml:"sample_rate"` // Used for flow.
 	Port                   uint16            `yaml:"port"`
 	OID                    string            `yaml:"oid"`
 	Description            string            `yaml:"description"`
@@ -138,14 +137,13 @@ type SnmpDiscoConfig struct {
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec     int      `yaml:"poll_time_sec"`
-	DropIfOutside   bool     `yaml:"drop_if_outside_poll"`
-	MibProfileDir   string   `yaml:"mib_profile_dir"`
-	PyMibProfileDir string   `yaml:"pymib_profile_dir"`
-	MibDB           string   `yaml:"mibs_db"`
-	MibsEnabled     []string `yaml:"mibs_enabled"`
-	TimeoutMS       int      `yaml:"timeout_ms"`
-	Retries         int      `yaml:"retries"`
+	PollTimeSec   int      `yaml:"poll_time_sec"`
+	DropIfOutside bool     `yaml:"drop_if_outside_poll"`
+	MibProfileDir string   `yaml:"mib_profile_dir"`
+	MibDB         string   `yaml:"mibs_db"`
+	MibsEnabled   []string `yaml:"mibs_enabled"`
+	TimeoutMS     int      `yaml:"timeout_ms"`
+	Retries       int      `yaml:"retries"`
 }
 
 type SnmpConfig struct {
@@ -252,12 +250,22 @@ func (a *DeviceMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var multi map[string]*SnmpDeviceConfig
 	err := unmarshal(&multi)
 	if err != nil {
-		var single string
-		err := unmarshal(&single)
+		var mult []string
+		err := unmarshal(&mult)
 		if err != nil {
-			return err
+			var single string
+			err := unmarshal(&single)
+			if err != nil {
+				return err
+			}
+			*a = map[string]*SnmpDeviceConfig{"file_0": &SnmpDeviceConfig{DeviceName: single}}
+		} else {
+			res := map[string]*SnmpDeviceConfig{}
+			for i, s := range mult {
+				res["file_"+strconv.Itoa(i)] = &SnmpDeviceConfig{DeviceName: s}
+			}
+			*a = res
 		}
-		*a = map[string]*SnmpDeviceConfig{"file": &SnmpDeviceConfig{DeviceName: single}}
 	} else {
 		*a = multi
 	}

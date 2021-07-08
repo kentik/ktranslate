@@ -222,10 +222,6 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		metrics := map[string]string{}
 		for k, v := range cs {
 			dst.CustomBigInt[k] = int64(v)
-			switch k {
-			case SNMP_ifHCInUcastPkts, SNMP_ifHCOutUcastPkts, SNMP_ifHCInOctets, SNMP_ifHCOutOctets:
-				dst.CustomBigInt[k] = dst.CustomBigInt[k] * im.conf.RateMultiplier
-			}
 			metrics[k] = im.nameOidMap[k]
 		}
 		if uptimeDelta > 0 {

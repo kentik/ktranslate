@@ -24,13 +24,6 @@ type Poller struct {
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
-
-	// Default rate multiplier to 1 if its 0.
-	if conf.RateMultiplier == 0 {
-		conf.RateMultiplier = 1
-		log.Infof("Defaulting rate multiplier to 1")
-	}
-
 	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
 	counterTimeSec := 5 * 60
 	if conf != nil && conf.PollTimeSec > 0 {
