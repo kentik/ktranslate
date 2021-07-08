@@ -38,7 +38,7 @@ var (
 	}
 )
 
-func NewMibDB(mibpath string, profileDir string, pyMibDir string, log logger.ContextL) (*MibDB, error) {
+func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, error) {
 	mdb := &MibDB{
 		log:      log,
 		profiles: map[string]*Profile{},
@@ -59,14 +59,6 @@ func NewMibDB(mibpath string, profileDir string, pyMibDir string, log logger.Con
 			return nil, err
 		}
 		log.Infof("Loaded %d profiles from %s", num, profileDir)
-	}
-
-	if pyMibDir != "" {
-		num, err := mdb.LoadPyMibSet(pyMibDir)
-		if err != nil {
-			return nil, err
-		}
-		log.Infof("Loaded %d pyMib profiles from %s", num, pyMibDir)
 	}
 
 	return mdb, nil

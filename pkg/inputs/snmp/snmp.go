@@ -38,9 +38,9 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 
 	// Load a mibdb if we have one.
 	if conf.Global != nil {
-		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, log)
+		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 		if err != nil {
-			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s, pymib: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, conf.Global.PyMibProfileDir, err)
+			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
 	} else {
