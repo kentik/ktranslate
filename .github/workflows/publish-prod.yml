@@ -30,6 +30,10 @@ jobs:
         run: |
           docker pull kentik/ktranslate:staging
 
+      - name: Integration test
+        run: |
+          ./testing/test_staging.sh
+
       - name: Publish docker image
         run: |
           docker tag kentik/ktranslate:staging kentik/ktranslate:v2

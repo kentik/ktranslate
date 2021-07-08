@@ -78,6 +78,19 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string
 					attr[k] = v
 				}
 			}
+			// If the index is longer, see if there's a parent table to look into also.
+			pts := strings.Split(idx, ".")
+			if len(pts) > 1 {
+				parent := strings.Join(pts[0:len(pts)-1], ".")
+				if table, ok := lastMetadata.Tables[parent]; ok {
+					for k, v := range table.Customs {
+						attr[k] = v
+					}
+					for k, v := range table.CustomInts {
+						attr[k] = v
+					}
+				}
+			}
 		}
 
 		if in.OutputPort != in.InputPort {

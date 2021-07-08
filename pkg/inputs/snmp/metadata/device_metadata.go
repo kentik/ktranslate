@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"net"
 	"sort"
 
 	"github.com/elliotchance/orderedmap"
@@ -108,6 +109,8 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 				md.Customs[oidName] = vt
 			case []byte:
 				md.Customs[oidName] = string(vt)
+			case net.IP:
+				md.Customs[oidName] = vt.String()
 			default:
 				md.CustomInts[oidName] = snmp_util.ToInt64(value)
 			}
@@ -156,6 +159,15 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 		switch variable.Type {
 		case gosnmp.OctetString:
 			md.Tables[idx].Customs[oidName] = string(variable.Value.([]byte))
+		case gosnmp.IPAddress: // Does this work?
+			switch val := variable.Value.(type) {
+			case string:
+				md.Tables[idx].Customs[oidName] = val
+			case []byte:
+				md.Tables[idx].Customs[oidName] = string(val)
+			case net.IP:
+				md.Tables[idx].Customs[oidName] = val.String()
+			}
 		default:
 			// Try to just use as a number
 			md.Tables[idx].CustomInts[oidName] = gosnmp.ToBigInt(variable.Value).Int64()

@@ -202,12 +202,13 @@ const (
 )
 
 type Mib struct {
-	Oid   string
-	Name  string
-	Type  Oidtype
-	Extra string
-	Tag   string
-	Enum  map[string]int64
+	Oid     string
+	Name    string
+	Type    Oidtype
+	Extra   string
+	Tag     string
+	Enum    map[string]int64
+	EnumRev map[int64]string
 }
 
 func (mb Mib) String() string {
