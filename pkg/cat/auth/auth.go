@@ -40,7 +40,7 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 	}
 
 	if snmpFile != "" {
-		snmp, err := snmp.ParseConfig(snmpFile)
+		snmp, err := snmp.ParseConfig(snmpFile, log)
 		if err != nil {
 			return nil, err
 		}

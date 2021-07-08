@@ -66,6 +66,7 @@ var (
 	NrAccount    = flag.String("nr_account_id", kt.LookupEnvString("NR_ACCOUNT_ID", ""), "If set, sends flow to New Relic")
 	NrUrl        = flag.String("nr_url", "https://insights-collector.newrelic.com/v1/accounts/%s/events", "URL to use to send into NR")
 	NrMetricsUrl = flag.String("nr_metrics_url", "https://metric-api.newrelic.com/metric/v1", "URL to use to send into NR Metrics API")
+	NrLogUrl     = flag.String("nr_log_url", "https://log-api.newrelic.com/log/v1", "URL to use to logs into NR")
 	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
 	NrRegion     = flag.String("nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU")
 	NrCheckJson  = flag.Bool("nr_check_json", false, "Verify body is valid json before sending on")
@@ -153,8 +154,8 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		s.NRUrl = *NrMetricsUrl
 	}
 
-	if s.NRUrlLog == "" { // TODO -- better default?
-		s.NRUrlLog = regions["us"]["logs"]
+	if s.NRUrlLog == "" {
+		s.NRUrlLog = *NrLogUrl
 	}
 
 	// Send logs on to NR if this is set.
