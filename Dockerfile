@@ -15,7 +15,7 @@ RUN set -eux; ln -sv ktranslate/profiles ktranslate/mibs.db /etc/; ls -l /etc/pr
 
 COPY bin/ktranslate /usr/local/bin/
 
-ENTRYPOINT ["ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-city", "/etc/ktranslate/code2city.mdb", "-region", "/etc/ktranslate/code2region.mdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn4", "/etc/ktranslate/ipv4-asn-ip.csv", "-asn6", "/etc/ktranslate/ipv6-asn-ip.csv", "-asnName", "/etc/ktranslate/asn-to-name.tsv", "-log_level", "info"]
+ENTRYPOINT ["ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn4", "/etc/ktranslate/ipv4-asn-ip.csv", "-asn6", "/etc/ktranslate/ipv6-asn-ip.csv", "-asnName", "/etc/ktranslate/asn-to-name.tsv", "-log_level", "info"]
 
 EXPOSE 8082
 EXPOSE 8083
