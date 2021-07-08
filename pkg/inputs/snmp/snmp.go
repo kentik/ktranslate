@@ -70,7 +70,7 @@ func Close() {
 func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.SnmpConfig, time.Duration, int, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("Client SNMP: Running SNMP interface polling, loading config from %s", snmpFile)
-	conf, err := parseConfig(snmpFile)
+	conf, err := parseConfig(snmpFile, log)
 	if err != nil {
 		return nil, 0, 0, err
 	}
@@ -222,7 +222,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	return nil
 }
 
-func parseConfig(file string) (*kt.SnmpConfig, error) {
+func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 	ms := kt.SnmpConfig{}
 	by, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -248,26 +248,33 @@ func parseConfig(file string) (*kt.SnmpConfig, error) {
 		ms.Disco.Cidrs = cidrList
 	}
 
-	if len(ms.Devices) == 1 {
-		if devFile, ok := ms.Devices["file"]; ok && strings.HasPrefix(devFile.DeviceName, "@") {
-			devices := map[string]*kt.SnmpDeviceConfig{}
+	fullDevices := map[string]*kt.SnmpDeviceConfig{}
+	for name, devFile := range ms.Devices {
+		if strings.HasPrefix(name, "file_") && strings.HasPrefix(devFile.DeviceName, "@") {
+			deviceSet := map[string]*kt.SnmpDeviceConfig{}
 			byc, err := ioutil.ReadFile(devFile.DeviceName[1:])
 			if err != nil {
 				return nil, err
 			}
-			err = yaml.Unmarshal(byc, &devices)
+			err = yaml.Unmarshal(byc, &deviceSet)
 			if err != nil {
 				return nil, err
 			}
 			ms.DeviceOrig = devFile.DeviceName[1:]
-			ms.Devices = devices
+			log.Infof("Loading %d devices from %s", len(deviceSet), devFile.DeviceName[1:])
+			for k, v := range deviceSet {
+				fullDevices[k] = v
+			}
 		}
+	}
+	if len(fullDevices) > 0 {
+		ms.Devices = fullDevices
 	}
 
 	return &ms, nil
 }
 
 // Public wrapper for calling this other places.
-func ParseConfig(file string) (*kt.SnmpConfig, error) {
-	return parseConfig(file)
+func ParseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
+	return parseConfig(file, log)
 }

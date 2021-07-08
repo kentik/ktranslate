@@ -251,12 +251,22 @@ func (a *DeviceMap) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var multi map[string]*SnmpDeviceConfig
 	err := unmarshal(&multi)
 	if err != nil {
-		var single string
-		err := unmarshal(&single)
+		var mult []string
+		err := unmarshal(&mult)
 		if err != nil {
-			return err
+			var single string
+			err := unmarshal(&single)
+			if err != nil {
+				return err
+			}
+			*a = map[string]*SnmpDeviceConfig{"file_0": &SnmpDeviceConfig{DeviceName: single}}
+		} else {
+			res := map[string]*SnmpDeviceConfig{}
+			for i, s := range mult {
+				res["file_"+strconv.Itoa(i)] = &SnmpDeviceConfig{DeviceName: s}
+			}
+			*a = res
 		}
-		*a = map[string]*SnmpDeviceConfig{"file": &SnmpDeviceConfig{DeviceName: single}}
 	} else {
 		*a = multi
 	}

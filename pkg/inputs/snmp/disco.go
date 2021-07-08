@@ -26,7 +26,7 @@ const (
 func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	// First, parse the config file and see what we're doing.
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
-	conf, err := parseConfig(snmpFile)
+	conf, err := parseConfig(snmpFile, log)
 	if err != nil {
 		return err
 	}
