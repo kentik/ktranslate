@@ -274,6 +274,14 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 				}
 			}
 		default:
+			if mib.EnumRev != nil {
+				value := snmp_util.ToInt64(variable.Value)
+				if val, ok := mib.EnumRev[value]; ok {
+					dmr.customStr[kt.StringPrefix+oidName] = val // Save this string version as a attribute.
+				} else {
+					dm.log.Warnf("Missing enum value for device metric %s %d", oidName, value)
+				}
+			}
 			dmr.customBigInt[oidName] = snmp_util.ToInt64(variable.Value)
 		}
 	}
