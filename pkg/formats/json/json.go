@@ -11,6 +11,11 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 )
 
+const (
+	InstNameNetflowEvent = "netflow-events"
+	InstNameVPCEvent     = "vpc-logs-events"
+)
+
 type JsonFormat struct {
 	logger.ContextL
 	compression kt.Compression
@@ -158,5 +163,7 @@ func strip(in map[string]interface{}) {
 			}
 		}
 	}
-	in["instrumentation.provider"] = kt.InstProvider // Let them know who sent this.
+	in["instrumentation.provider"] = kt.InstProvider  // Let them know who sent this.
+	in["instrumentation.name"] = InstNameNetflowEvent // @TODO -- think about how to handle VPC
+	in["collector.name"] = kt.CollectorName
 }
