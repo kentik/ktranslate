@@ -29,11 +29,11 @@ const (
 	DO_DEMO_PERIOD = "NRM_DO_DEMO_PERIOD"
 	DO_DEMO_AMP    = "NRM_DO_DEMO_AMPLITIDE"
 
-	InstNameVPC        = "vpc-logs"
-	InstNameNetflow    = "netflow"
-	InstNameSNMP       = "snmp"
-	InstNameSynthetic  = "synthetic"
-	InstNameKtranslate = "heartbeat"
+	InstNameVPCMetric     = "vpc-logs-metrics"
+	InstNameNetflowMetric = "netflow-metrics"
+	InstNameSNMP          = "snmp"
+	InstNameSynthetic     = "synthetic"
+	InstNameKtranslate    = "heartbeat"
 
 	MAX_ATTR_FOR_NR = 64
 )
@@ -419,7 +419,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF) []NRMetric {
 	ms := make([]NRMetric, 0)
 
 	// Hard code these.
-	attr["instrumentation.name"] = InstNameNetflow
+	attr["instrumentation.name"] = InstNameNetflowMetric
 
 	for m, _ := range metrics {
 		var value int64
@@ -631,9 +631,9 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 
 func toInstName(prov kt.Provider) string {
 	if strings.Contains(string(prov), "vpc") {
-		return InstNameVPC
+		return InstNameVPCMetric
 	}
-	return InstNameNetflow
+	return InstNameNetflowMetric
 }
 
 func newNRCommon() *NRCommon {
