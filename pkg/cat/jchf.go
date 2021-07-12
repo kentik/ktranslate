@@ -185,8 +185,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.DstGeoRegion = lookupRegionName(regioncache, src.CHF.DstGeoRegion(), kc.envCode2Region)
 	dst.SrcGeoCity = lookupCityName(citycache, src.CHF.SrcGeoCity(), kc.envCode2City)
 	dst.DstGeoCity = lookupCityName(citycache, src.CHF.DstGeoCity(), kc.envCode2City)
-	dst.SrcRoutePrefix = src.CHF.SrcRoutePrefix()
-	dst.DstRoutePrefix = src.CHF.DstRoutePrefix()
 	dst.SrcSecondAsn = src.CHF.SrcSecondAsn()
 	dst.DstSecondAsn = src.CHF.DstSecondAsn()
 	dst.SrcThirdAsn = src.CHF.SrcThirdAsn()
@@ -260,6 +258,12 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 		addr = net.IP(ipr)
 	}
 	dst.SrcAddr = addr.String()
+
+	// These are ipv4 addresses.
+	addr = int2ip(src.CHF.SrcRoutePrefix())
+	dst.SrcRoutePrefix = addr.String()
+	addr = int2ip(src.CHF.DstRoutePrefix())
+	dst.DstRoutePrefix = addr.String()
 
 	if kc.resolver != nil {
 		dst.CustomStr["src_host"] = kc.resolver.Resolve(ctx, dst.SrcAddr)

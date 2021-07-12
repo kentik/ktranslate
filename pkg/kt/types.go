@@ -134,8 +134,8 @@ type JCHF struct {
 	DstGeoCity              string            `json:"dst_geo_city"`
 	DstNextHop              string            `json:"dst_nexthop"`
 	SrcNextHop              string            `json:"src_nexthop"`
-	SrcRoutePrefix          uint32            `json:"src_route_prefix"`
-	DstRoutePrefix          uint32            `json:"dst_route_prefix"`
+	SrcRoutePrefix          string            `json:"src_route_prefix"`
+	DstRoutePrefix          string            `json:"dst_route_prefix"`
 	SrcSecondAsn            uint32            `json:"src_second_asn"`
 	DstSecondAsn            uint32            `json:"dst_second_asn"`
 	SrcThirdAsn             uint32            `json:"src_third_asn"`
@@ -246,8 +246,8 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["dst_geo_city"] = j.DstGeoCity
 	j.avroSet["dst_nexthop"] = j.DstNextHop
 	j.avroSet["src_nexthop"] = j.SrcNextHop
-	j.avroSet["src_route_prefix"] = int64(j.SrcRoutePrefix)
-	j.avroSet["dst_route_prefix"] = int64(j.DstRoutePrefix)
+	j.avroSet["src_route_prefix"] = j.SrcRoutePrefix
+	j.avroSet["dst_route_prefix"] = j.DstRoutePrefix
 	j.avroSet["src_second_asn"] = int64(j.SrcSecondAsn)
 	j.avroSet["dst_second_asn"] = int64(j.DstSecondAsn)
 	j.avroSet["src_third_asn"] = int64(j.SrcThirdAsn)
