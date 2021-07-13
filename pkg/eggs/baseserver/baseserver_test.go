@@ -107,7 +107,7 @@ func TestSignalShutdown(t *testing.T) {
 	assert.Nil(t, err, "os.FindProcess returns a non-nil value")
 	process.Signal(os.Interrupt) // nolint: errcheck
 
-	time.Sleep(1 * time.Millisecond)
+	time.Sleep(10 * time.Millisecond)
 	assert.True(t, dumdum.contextGotDone, "service context should get closed during shutdown")
 	resetGlobalBaseServer()
 }
