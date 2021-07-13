@@ -156,7 +156,7 @@ func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		if _, ok := f.vecs[roll.EventType]; !ok {
 			f.vecs[roll.EventType] = prometheus.NewCounterVec(
 				prometheus.CounterOpts{
-					Name: roll.Name,
+					Name: strings.ReplaceAll(roll.Name, ".", ":"),
 				},
 				roll.GetDims(),
 			)
