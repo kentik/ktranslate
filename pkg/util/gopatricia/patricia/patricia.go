@@ -57,7 +57,10 @@ func GetCity(n *NodeGeo) uint32 {
 
 // Utility to turn Geo -> packed int
 func PackGeo(cnty []byte) uint32 {
-	return uint32(rune((cnty)[0])*256 + rune((cnty)[1]))
+	if len(cnty) == 2 {
+		return uint32(rune((cnty)[0])*256 + rune((cnty)[1]))
+	}
+	return 0
 }
 
 // Utility to turn packed int -> Geo

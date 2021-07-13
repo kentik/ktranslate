@@ -183,10 +183,10 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 			setNr()
 		}
 	case "nr1.flow", "flow":
-		flag.Set("rollups", "s_sum,bytes.xmt,out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
-		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
-		flag.Set("rollups", "s_sum,pkts.xmt,out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
-		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+		flag.Set("rollups", "s_sum,bytes.xmt,in_bytes+out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
+		flag.Set("rollups", "s_sum,bytes.rcv,in_bytes+out_bytes,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
+		flag.Set("rollups", "s_sum,pkts.xmt,in_pkts+out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
+		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 		if strings.HasPrefix(mode, "nr1") {
 			setNr()
 		}
