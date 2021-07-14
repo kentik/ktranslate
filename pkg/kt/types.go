@@ -30,6 +30,7 @@ const (
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
 	IndexVar         = "Index"
 	StringPrefix     = "ks_"
+	PrivateIP        = "Private IP"
 )
 
 type OutputType string
