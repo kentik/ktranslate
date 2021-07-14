@@ -26,6 +26,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
+	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 
@@ -197,6 +198,9 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			kc.kentik = snk.(*kentik.KentikSink)
 		}
 	}
+
+	// IP based rules
+	kc.rule = rule.NewRuleSet(log)
 
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")

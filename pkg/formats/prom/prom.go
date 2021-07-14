@@ -149,18 +149,20 @@ func (f *PromFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 }
 
 func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
-	for _, r := range rolls {
-		pkts := strings.Split(r.EventType, ":")
-		if _, ok := f.vecs[r.EventType]; !ok {
-			f.vecs[r.EventType] = prometheus.NewCounterVec(
-				prometheus.CounterOpts{
-					Name: strings.Join(pkts[0:2], ":"),
-				},
-				pkts[2:],
-			)
-			prometheus.MustRegister(f.vecs[r.EventType])
+	for _, roll := range rolls {
+		if roll.Metric == 0 {
+			continue
 		}
-		f.vecs[r.EventType].WithLabelValues(strings.Split(r.Dimension, r.KeyJoin)...).Add(float64(r.Metric))
+		if _, ok := f.vecs[roll.EventType]; !ok {
+			f.vecs[roll.EventType] = prometheus.NewCounterVec(
+				prometheus.CounterOpts{
+					Name: strings.ReplaceAll(roll.Name, ".", ":"),
+				},
+				roll.GetDims(),
+			)
+			prometheus.MustRegister(f.vecs[roll.EventType])
+		}
+		f.vecs[roll.EventType].WithLabelValues(strings.Split(roll.Dimension, roll.KeyJoin)...).Add(float64(roll.Metric))
 	}
 
 	return nil, nil

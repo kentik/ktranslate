@@ -19,6 +19,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
+	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
 
@@ -106,6 +107,7 @@ type KTranslate struct {
 	tagMap         maps.TagMapper
 	vpc            vpc.VpcImpl
 	nfs            *flow.KentikDriver
+	rule           *rule.RuleSet
 }
 
 type CustomMapper struct {

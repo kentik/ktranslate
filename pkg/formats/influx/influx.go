@@ -1,7 +1,6 @@
 package influx
 
 import (
-	"flag"
 	"fmt"
 	"strconv"
 	"strings"
@@ -13,10 +12,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-)
-
-var (
-	Measurement = flag.String("measurement", "kflow", "Measurement to use for rollups.")
 )
 
 type InfluxFormat struct {
@@ -135,12 +130,21 @@ func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 }
 
 func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
-	res := make([]string, len(rolls))
+	res := make([]string, 0)
 	ts := time.Now()
-	for i, r := range rolls {
-		pkts := strings.Split(r.EventType, ":")
-		if len(pkts) > 2 {
-			res[i] = fmt.Sprintf("%s,%s=%s %s=%d %d", *Measurement, strings.Join(pkts[2:], ":"), r.Dimension, pkts[1], uint64(r.Metric), ts.UnixNano()) // Time to nano
+	for _, roll := range rolls {
+		if roll.Metric == 0 {
+			continue
+		}
+
+		dims := roll.GetDims()
+		mets := strings.Split(roll.EventType, ":")
+		attr := []string{}
+		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
+			attr = append(attr, dims[i]+"="+pt)
+		}
+		if len(mets) > 2 {
+			res = append(res, fmt.Sprintf("%s,%s %s=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), ts.UnixNano())) // Time to nano
 		}
 	}
 

@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"strconv"
 	"strings"
 	"time"
 
@@ -229,6 +230,10 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastLabel)
 		}
 	}
+
+	// Now add some combo fields.
+	in.CustomStr["src_endpoint"] = in.SrcAddr + ":" + strconv.Itoa(int(in.L4SrcPort))
+	in.CustomStr["dst_endpoint"] = in.DstAddr + ":" + strconv.Itoa(int(in.L4DstPort))
 
 	return in
 }

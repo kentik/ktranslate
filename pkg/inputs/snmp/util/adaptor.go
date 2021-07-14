@@ -37,8 +37,16 @@ func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, go
 		params.PrivacyProtocol = gosnmp.DES
 	case "AES":
 		params.PrivacyProtocol = gosnmp.AES
+	case "AES192":
+		params.PrivacyProtocol = gosnmp.AES192
+	case "AES256":
+		params.PrivacyProtocol = gosnmp.AES256
+	case "AES192C":
+		params.PrivacyProtocol = gosnmp.AES192C
+	case "AES256C":
+		params.PrivacyProtocol = gosnmp.AES256C
 	default:
-		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 privacy_protocol: %s. valid options: NoPriv|DES|AES", v3config.PrivacyProtocol)
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 privacy_protocol: %s. valid options: NoPriv|DES|AES|AES192|AES256|AES192C|AES256C", v3config.PrivacyProtocol)
 	}
 
 	switch v3config.AuthenticationProtocol {
