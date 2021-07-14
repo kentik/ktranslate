@@ -15,6 +15,7 @@ import (
 	patricia "github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/ic"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
+	"github.com/kentik/ktranslate/pkg/util/service"
 )
 
 var (
@@ -536,15 +537,29 @@ func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)
+		setSip := false
+		setDip := false
+
+		// Internal ips get special handling
+		if kc.rule.IsInternal(sip, msg.SrcAs) {
+			msg.SrcGeo = kt.PrivateIP
+			msg.CustomStr["src_as_name"] = kt.PrivateIP
+			setSip = true
+		}
+		if kc.rule.IsInternal(dip, msg.DstAs) {
+			msg.DstGeo = kt.PrivateIP
+			msg.CustomStr["dst_as_name"] = kt.PrivateIP
+			setDip = true
+		}
 
 		// Fetch our own geo if not already set.
 		if kc.geo != nil {
-			if sip != nil {
+			if sip != nil && !setSip {
 				if geo, err := kc.geo.SearchBestFromHostGeo(sip); err == nil {
 					msg.SrcGeo = geo
 				}
 			}
-			if dip != nil {
+			if dip != nil && !setDip {
 				if geo, err := kc.geo.SearchBestFromHostGeo(dip); err == nil {
 					msg.DstGeo = geo
 				}
@@ -553,17 +568,28 @@ func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map
 
 		// And set our own asn also if not set.
 		if kc.asn != nil {
-			if sip != nil {
+			if sip != nil && !setSip {
 				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(sip); resultsFound && err == nil {
 					msg.SrcAs = asn
 					msg.CustomStr["src_as_name"] = kc.asn.GetName(asn)
 				}
 			}
-			if dip != nil {
+			if dip != nil && !setDip {
 				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(dip); resultsFound && err == nil {
 					msg.DstAs = asn
 					msg.CustomStr["dst_as_name"] = kc.asn.GetName(asn)
 				}
+			}
+		}
+
+		// See if we know what service this is based on proto and port.
+		if msg.L4SrcPort < msg.L4DstPort {
+			if app, ok := service.Services[service.Port{Number: msg.L4SrcPort, Protocol: ic.PROTO_NUMS[msg.Protocol]}]; ok {
+				msg.CustomStr["application"] = app
+			}
+		} else {
+			if app, ok := service.Services[service.Port{Number: msg.L4DstPort, Protocol: ic.PROTO_NUMS[msg.Protocol]}]; ok {
+				msg.CustomStr["application"] = app
 			}
 		}
 	}
