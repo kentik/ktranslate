@@ -483,6 +483,12 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		f.Debugf("Missing interface metadata for %s", in.DeviceName)
 	}
 
+	if drop, ok := attr[kt.DropMetric]; ok {
+		if drop.(bool) {
+			return nil // This Metric isn't in the white list so lets drop it.
+		}
+	}
+
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {

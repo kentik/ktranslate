@@ -17,6 +17,7 @@ func TestIsInternal(t *testing.T) {
 		"2001:d01:abcd::/64": true,
 		"10.2.1.3":           true,
 		"172.16.0.1":         true,
+		"10.19.38.78":        true,
 		"foo":                false,
 	}
 
@@ -28,6 +29,7 @@ func TestIsInternal(t *testing.T) {
 		"10.2.1.3":           4294967294,
 		"172.16.0.1":         3,
 		"foo":                3,
+		"10.19.38.78":        23,
 	}
 
 	for ip, isInternal := range tests {
