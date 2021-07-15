@@ -242,8 +242,20 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		}
 
 		if mib == nil {
-			dm.log.Infof("Missing Custom oid: %+v, Value: %T %+v", variable, variable.Value, variable.Value)
-			continue
+			if variable.Name[0:1] == "." { // Try again, this time not having a leading .
+				for oid, m := range dm.conf.DeviceOids {
+					if strings.HasPrefix(variable.Name[1:], oid) {
+						idx = snmp_util.GetIndex(variable.Name[1:], oid)
+						mib = m
+						break
+					}
+				}
+			}
+
+			if mib == nil {
+				dm.log.Warnf("Missing Custom oid: %+v, Value: %T %+v", variable, variable.Value, variable.Value)
+				continue
+			}
 		}
 		oidName := mib.Name
 		if mib.Tag != "" {
