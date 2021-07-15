@@ -112,6 +112,7 @@ type SnmpDeviceConfig struct {
 	PollTimeSec            int               `yaml:"poll_time_sec"`
 	TimeoutMS              int               `yaml:"timeout_ms"`
 	Retries                int               `yaml:"retries"`
+	MatchAttr              map[string]string `yaml:"match_attributes"`
 }
 
 type SnmpTrapConfig struct {
@@ -219,6 +220,7 @@ type LastMetadata struct {
 	DeviceInfo    map[string]interface{}
 	InterfaceInfo map[IfaceID]map[string]interface{}
 	Tables        map[string]DeviceTableMetadata
+	MatchAttr     map[string]*regexp.Regexp
 }
 
 func (lm *LastMetadata) Size() int {
