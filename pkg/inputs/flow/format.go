@@ -122,6 +122,11 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomStr[field] = fmsg.Type.String()
 		case "TimeReceived":
 			in.Timestamp = int64(fmsg.TimeReceived)
+			// Verify this is MS. If not, make it MS.
+			if in.Timestamp < 999999999999 {
+				// Assume seconds and multiply
+				in.Timestamp = in.Timestamp * 1000
+			}
 		case "SequenceNum":
 			in.CustomBigInt[field] = int64(fmsg.SequenceNum)
 		case "SamplingRate":

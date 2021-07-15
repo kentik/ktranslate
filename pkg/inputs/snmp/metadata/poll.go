@@ -2,6 +2,7 @@ package metadata
 
 import (
 	"context"
+	"regexp"
 	"time"
 
 	"github.com/kentik/gosnmp"
@@ -24,6 +25,7 @@ type Poller struct {
 	metrics            *kt.SnmpDeviceMetric
 	gconf              *kt.SnmpGlobalConfig
 	deviceMetadataMibs map[string]*kt.Mib
+	matchAttr          map[string]*regexp.Regexp
 }
 
 const (
@@ -50,6 +52,19 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		}
 	}
 
+	// Load any attribute level whiltelist info here.
+	attrMap := map[string]*regexp.Regexp{}
+	for attr, restr := range conf.MatchAttr {
+		re, err := regexp.Compile(restr)
+		if err != nil {
+			log.Errorf("Ignoring Match Attribute %s: %s -- invalid regex %v", attr, restr, err)
+		}
+		attrMap[attr] = re
+	}
+	if len(attrMap) > 0 {
+		log.Infof("Added %d Match Attribute(s)", len(attrMap))
+	}
+
 	return &Poller{
 		gconf:              gconf,
 		conf:               conf,
@@ -61,6 +76,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		jchfChan:           jchfChan,
 		metrics:            metrics,
 		deviceMetadataMibs: deviceMetadataMibs,
+		matchAttr:          attrMap,
 	}
 }
 
@@ -199,6 +215,10 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		for k, v := range id.ExtraInfo {
 			dst.CustomStr["if."+intr+"."+k] = v
 		}
+	}
+
+	if len(p.matchAttr) > 0 {
+		dst.MatchAttr = p.matchAttr
 	}
 
 	return []*kt.JCHF{dst}, nil

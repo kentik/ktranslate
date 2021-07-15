@@ -1,6 +1,7 @@
 package kt
 
 import (
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -31,6 +32,7 @@ const (
 	IndexVar         = "Index"
 	StringPrefix     = "ks_"
 	PrivateIP        = "Private IP"
+	DropMetric       = "DropMetric"
 )
 
 type OutputType string
@@ -160,6 +162,7 @@ type JCHF struct {
 	hasSetAvro              bool
 	CustomMetrics           map[string]string              `json:"-"`
 	CustomTables            map[string]DeviceTableMetadata `json:"-"`
+	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
 }
 
 func NewJCHF() *JCHF {
