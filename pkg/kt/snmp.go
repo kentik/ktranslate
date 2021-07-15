@@ -113,6 +113,7 @@ type SnmpDeviceConfig struct {
 	TimeoutMS              int               `yaml:"timeout_ms"`
 	Retries                int               `yaml:"retries"`
 	MatchAttr              map[string]string `yaml:"match_attributes"`
+	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 }
 
 type SnmpTrapConfig struct {
