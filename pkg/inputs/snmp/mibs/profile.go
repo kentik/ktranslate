@@ -322,6 +322,10 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 		}
 	}
 
+	// If we have any duplicate names, keep the longest OID.
+	prune(deviceMetrics)
+	prune(interfaceMetrics)
+
 	return deviceMetrics, interfaceMetrics
 }
 
@@ -384,6 +388,11 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 			}
 		}
 	}
+
+	// If we have any duplicate names, keep the longest OID.
+	prune(deviceMetadata)
+	prune(interfaceMetadata)
+
 	return deviceMetadata, interfaceMetadata
 }
 
@@ -509,4 +518,37 @@ func newProfileFromApc(ap *apc.APC, file string, log logger.ContextL) []*Profile
 	}
 
 	return profiles
+}
+
+// Sometimes the same tag can be in multiple mibs. Run down the list and keep the longest oid if there are any collisions.
+func prune(mibs map[string]*kt.Mib) {
+	seenNames := map[string]string{}
+
+	for oid, mib := range mibs {
+		oidName := mib.Name
+		if mib.Tag != "" {
+			oidName = mib.Tag
+		}
+		if _, ok := seenNames[oidName]; !ok { // We haven't seen this name yet so mark that we have it.
+			seenNames[oidName] = oid
+		} else {
+			// There's a conflict. Keep the longest oid.
+			if len(oid) > len(seenNames[oidName]) {
+				seenNames[oidName] = oid
+			}
+		}
+	}
+
+	// Reverse this map to know who we're keeping.
+	keepNames := map[string]bool{}
+	for _, oid := range seenNames {
+		keepNames[oid] = true
+	}
+
+	// Lastly, delete if we're not keeping.
+	for oid, _ := range mibs {
+		if !keepNames[oid] {
+			delete(mibs, oid)
+		}
+	}
 }
