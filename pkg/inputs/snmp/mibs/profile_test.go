@@ -7,6 +7,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 func TestFindProfile(t *testing.T) {
@@ -48,4 +49,21 @@ func TestFindProfile(t *testing.T) {
 			assert.Equal(t, vendor, res.Device.Vendor, "sysid: %s", sysid)
 		}
 	}
+}
+
+func TestPrune(t *testing.T) {
+	mibs := map[string]*kt.Mib{
+		".1.3.6.1.4.1.9.9.48.1.1.1.5": &kt.Mib{Tag: "MemoryUsed"},
+	}
+	prune(mibs)
+	assert.Equal(t, 1, len(mibs))
+
+	mibs = map[string]*kt.Mib{
+		".1.3.6.1.4.1.9.9.48.1.1.1.5":     &kt.Mib{Tag: "MemoryUsed"},
+		"1.3.6.1.4.1.9.9.305.1.1.1":       &kt.Mib{Tag: "CPU"},
+		".1.3.6.1.4.1.9.9.109.1.1.1.1.7":  &kt.Mib{Tag: "CPU"},
+		".1.3.6.1.4.1.9.9.109.1.1.1.1.13": &kt.Mib{Name: "cpmCPUMemoryFree"},
+	}
+	prune(mibs)
+	assert.Equal(t, 3, len(mibs))
 }

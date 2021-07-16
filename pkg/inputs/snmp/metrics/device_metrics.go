@@ -317,6 +317,20 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		for k, v := range dm.conf.UserTags {
 			dst.CustomStr[k] = v
 		}
+
+		// Memory can be compound value so need to do it here if present but not already set.
+		if _, ok := dst.CustomBigInt["MemoryUtilization"]; !ok {
+			memoryUsed, oku := dst.CustomBigInt["MemoryUsed"]
+			memoryFree, okt := dst.CustomBigInt["MemoryFree"]
+			if oku && okt {
+				memoryTotal := memoryFree + memoryUsed
+				if memoryTotal > 0 {
+					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
+					dst.CustomMetrics["MemoryUtilization"] = "computed"
+				}
+			}
+		}
+
 		flows = append(flows, dst)
 	}
 
