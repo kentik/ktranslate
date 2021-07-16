@@ -31,6 +31,11 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	} else if gconf != nil && gconf.PollTimeSec > 0 {
 		counterTimeSec = gconf.PollTimeSec
 	}
+	// Lastly, enforece a min polling interval.
+	if counterTimeSec < 30 {
+		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
+		counterTimeSec = 30
+	}
 
 	// Default is not not drop.
 	dropIfOutside := false
