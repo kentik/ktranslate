@@ -71,6 +71,7 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 					CompanyID:     root.CompanyID,
 					Customs:       root.Customs,
 					CustomStr:     root.CustomStr,
+					UserTags:      d.UserTags,
 				}
 				if nd.SampleRate == 0 {
 					nd.SampleRate = 1

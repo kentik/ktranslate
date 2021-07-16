@@ -99,10 +99,13 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderFlowDevice
 	if dev, ok := t.devices[net.IP(fmsg.SamplerAddress).String()]; ok {
-		in.DeviceName = dev.Name
+		in.DeviceName = dev.Name // Copy in any of these info we get
 		in.DeviceId = dev.ID
 		in.CompanyId = dev.CompanyID
 		in.SampleRate = dev.SampleRate
+		for k, v := range dev.UserTags {
+			in.CustomStr[k] = v
+		}
 	} else {
 		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
 	}

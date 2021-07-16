@@ -241,7 +241,8 @@ func NewKentikApiFromLocalDevices(localDevices map[string]*kt.Device, log logger
 
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
-	for _, device := range localDevices {
+	for _, devicel := range localDevices {
+		device := devicel
 		if _, ok := resDev[device.CompanyID]; !ok {
 			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
 		}
