@@ -144,7 +144,7 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			attr = append(attr, dims[i]+"="+pt)
 		}
 		if len(mets) > 2 {
-			res = append(res, fmt.Sprintf("%s,%s %s=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), ts.UnixNano())) // Time to nano
+			res = append(res, fmt.Sprintf("%s,%s %s=%d,count=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
 		}
 	}
 
