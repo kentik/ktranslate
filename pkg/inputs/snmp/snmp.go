@@ -27,6 +27,7 @@ import (
 var (
 	mibdb        *mibs.MibDB // Global singleton instance here.
 	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
+	flowOnly     = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
@@ -130,7 +131,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			// Default provider to something we can work with.
 			device.Provider = kt.ProviderRouter
 		}
-		if device.FlowOnly {
+		if *flowOnly || device.FlowOnly {
 			continue
 		}
 

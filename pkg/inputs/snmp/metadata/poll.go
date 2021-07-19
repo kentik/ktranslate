@@ -62,7 +62,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		attrMap[attr] = re
 	}
 	if !conf.MonitorAdminShut { // This one is common and so is set explicitly.
-		attrMap["if_ifAdminStatus"] = regexp.MustCompile("1")
+		attrMap[kt.StringPrefix+"ifAdminStatus"] = regexp.MustCompile("up")
 	}
 	if len(attrMap) > 0 {
 		log.Infof("Added %d Match Attribute(s)", len(attrMap))
