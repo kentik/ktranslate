@@ -509,11 +509,12 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
+						attrNew := copyAttrForSnmp(attr, "computed")
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
 							Value:      float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed),
-							Attributes: attr,
+							Attributes: attrNew,
 						})
 					}
 				}
@@ -524,11 +525,12 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
+						attrNew := copyAttrForSnmp(attr, "computed")
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
 							Value:      float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed),
-							Attributes: attr,
+							Attributes: attrNew,
 						})
 					}
 				}

@@ -49,6 +49,7 @@ type InterfaceMetrics struct {
 	intValues  map[string]*counters.CounterSet
 	oidMap     map[string]string
 	nameOidMap map[string]string
+	oidMibMap  map[string]*kt.Mib
 }
 
 func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *InterfaceMetrics {
@@ -88,6 +89,7 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		metrics:    metrics,
 		oidMap:     oidMap,
 		nameOidMap: nameOidMap,
+		oidMibMap:  profileMetrics,
 		intValues:  make(map[string]*counters.CounterSet),
 	}
 }
@@ -152,16 +154,22 @@ func (im *InterfaceMetrics) Poll(server *gosnmp.GoSNMP, lastDeviceMetrics []*kt.
 			if _, ok := im.intValues[intId]; !ok {
 				im.intValues[intId] = counters.NewCounterSetWithId(intId)
 			}
-
 			value := gosnmp.ToBigInt(variable.Value).Uint64()
 
-			// Calculate the different of this counter here.
 			delta, ok := deltas[intId]
 			if !ok {
 				delta = map[string]uint64{}
 				deltas[intId] = delta
 			}
-			delta[varName] = im.intValues[intId].SetValueAndReturnDelta(varName, value)
+			switch variable.Type {
+			case gosnmp.Integer:
+				// Since its just an int, keep it without computing a delta.
+				delta[varName] = value
+			default:
+				// Treat as a counter
+				// Calculate the different of this counter here.
+				delta[varName] = im.intValues[intId].SetValueAndReturnDelta(varName, value)
+			}
 		}
 	}
 
@@ -221,6 +229,15 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 
 		metrics := map[string]string{}
 		for k, v := range cs {
+			mib := im.oidMibMap[im.nameOidMap[k][1:]]
+			if mib != nil && mib.EnumRev != nil {
+				if ev, ok := mib.EnumRev[int64(v)]; ok {
+					// If we know what the enum string is, set it here.
+					dst.CustomStr[kt.StringPrefix+k] = ev
+				} else {
+					im.log.Warnf("Missing enum value for interface metric %s %d", k, v)
+				}
+			}
 			dst.CustomBigInt[k] = int64(v)
 			metrics[k] = im.nameOidMap[k]
 		}

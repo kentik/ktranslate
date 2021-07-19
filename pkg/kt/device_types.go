@@ -10,23 +10,24 @@ type Devices map[DeviceID]*Device
 // A Device represents a device, corresponding to a row in mn_device.
 // It also has all its interfaces attached.
 type Device struct {
-	ID            DeviceID `json:"id,string"`
-	Name          string   `json:"device_name"`
-	CompanyID     Cid      `json:"company_id,string"`
-	DeviceType    string   `json:"device_type"`
-	DeviceSubtype string   `json:"device_subtype"`
-	Description   string   `json:"device_description"`
-	IP            net.IP   `json:"ip"`
-	Interfaces    map[IfaceID]Interface
-	AllInterfaces []Interface `json:"all_interfaces"`
-	SendingIps    []net.IP    `json:"sending_ips"`
-	SampleRate    uint32      `json:"device_sample_rate,string"`
-	BgpType       string      `json:"device_bgp_type"`
-	Plan          Plan        `json:"plan"`
-	CdnAttr       string      `json:"cdn_attr"`
-	MaxFlowRate   int         `json:"max_flow_rate"`
-	Customs       []Column    `json:"custom_column_data,omitempty"`
-	CustomStr     string      `json:"custom_columns"`
+	ID            DeviceID              `json:"id,string"`
+	Name          string                `json:"device_name"`
+	CompanyID     Cid                   `json:"company_id,string"`
+	DeviceType    string                `json:"device_type"`
+	DeviceSubtype string                `json:"device_subtype"`
+	Description   string                `json:"device_description"`
+	IP            net.IP                `json:"ip"`
+	Interfaces    map[IfaceID]Interface `json:"-"`
+	AllInterfaces []Interface           `json:"all_interfaces"`
+	SendingIps    []net.IP              `json:"sending_ips"`
+	SampleRate    uint32                `json:"device_sample_rate,string"`
+	BgpType       string                `json:"device_bgp_type"`
+	Plan          Plan                  `json:"plan"`
+	CdnAttr       string                `json:"cdn_attr"`
+	MaxFlowRate   int                   `json:"max_flow_rate"`
+	Customs       []Column              `json:"custom_column_data,omitempty"`
+	CustomStr     string                `json:"custom_columns"`
+	UserTags      map[string]string     `json:"-"`
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents

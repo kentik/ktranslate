@@ -24,14 +24,12 @@ const (
 	SNMP_ipAdEntIfIndex     = "ipAdEntIfIndex"
 	SNMP_ipAdEntNetMask     = "ipAdEntNetMask"
 	SNMP_ipv6AddrPrefix     = "ipv6AddrPrefix"
-	SNMP_ifConnectorPresent = "ifConnectorPresent"
-	SNMP_ifType             = "ifType"
-	SNMP_ifMtu              = "ifMtu"
-	SNMP_ifPhysAddress      = "ifPhysAddress"
-	SNMP_ifAdminStatus      = "ifAdminStatus"
-	SNMP_ifOperStatus       = "ifOperStatus"
-	SNMP_ifLastChange       = "ifLastChange"
-	SNMP_ifStackStatus      = "ifStackStatus"
+	SNMP_ifConnectorPresent = "ConnectorPresent"
+	SNMP_ifType             = "Type"
+	SNMP_ifMtu              = "Mtu"
+	SNMP_ifPhysAddress      = "PhysAddress"
+	SNMP_ifLastChange       = "LastChange"
+	SNMP_ifStackStatus      = "StackStatus"
 
 	SNMP_lldpRemPortIdSubtype = "lldpRemPortIdSubtype"
 	SNMP_lldpRemPortId        = "lldpRemPortId"
@@ -81,8 +79,6 @@ var (
 		m.Set("1.3.6.1.2.1.2.2.1.3", SNMP_ifType)                    // (ifType)
 		m.Set("1.3.6.1.2.1.2.2.1.4", SNMP_ifMtu)                     // (ifMtu)
 		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)             // (ifPhysAddress)
-		m.Set("1.3.6.1.2.1.2.2.1.7", SNMP_ifAdminStatus)             // (ifAdminStatus)
-		m.Set("1.3.6.1.2.1.2.2.1.8", SNMP_ifOperStatus)              // (ifOperStatus)
 		m.Set("1.3.6.1.2.1.2.2.1.9", SNMP_ifLastChange)              // (ifLastChange)
 		m.Set("1.3.6.1.2.1.31.1.2.1.3", SNMP_ifStackStatus)          // (ifStackStatus, indexed by ifStackHigherLayer, ifStackLowerLayer)
 		m.Set("1.0.8802.1.1.2.1.4.1.1.6", SNMP_lldpRemPortIdSubtype) // lldpRemPortIdSubtype
@@ -421,12 +417,6 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 							data.ExtraInfo[SNMP_ifPhysAddress] = value
 						}
 					}
-				case SNMP_ifAdminStatus:
-					val := gosnmp.ToBigInt(variable.Value).Uint64()
-					data.ExtraInfo[SNMP_ifAdminStatus] = strconv.Itoa(int(val))
-				case SNMP_ifOperStatus:
-					val := gosnmp.ToBigInt(variable.Value).Uint64()
-					data.ExtraInfo[SNMP_ifOperStatus] = strconv.Itoa(int(val))
 				case SNMP_ifLastChange:
 					val := gosnmp.ToBigInt(variable.Value).Uint64()
 					data.ExtraInfo[SNMP_ifLastChange] = strconv.Itoa(int(val))
