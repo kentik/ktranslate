@@ -57,24 +57,20 @@ func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
 
 	// And set our own asn also if not set.
 	if kc.asn != nil {
-		if src.CHF.SrcAs() == 0 {
-			ipv6, _ := src.CHF.Ipv6SrcAddr()
-			if asn, name, err := kc.lookupAsn(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
+		ipv6, _ := src.CHF.Ipv6SrcAddr()
+		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
+			if src.CHF.SrcAs() == 0 {
 				src.CHF.SetSrcAs(asn)
-				srcName = name
 			}
-		} else {
-			srcName = kc.asn.FromMap(src.CHF.SrcAs())
+			srcName = name
 		}
 
-		if src.CHF.DstAs() == 0 {
-			ipv6, _ := src.CHF.Ipv6DstAddr()
-			if asn, name, err := kc.lookupAsn(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
+		ipv6, _ = src.CHF.Ipv6DstAddr()
+		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
+			if src.CHF.DstAs() == 0 {
 				src.CHF.SetDstAs(asn)
-				dstName = name
 			}
-		} else {
-			dstName = kc.asn.FromMap(src.CHF.DstAs())
+			dstName = name
 		}
 	}
 

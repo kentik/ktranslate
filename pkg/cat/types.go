@@ -56,7 +56,6 @@ type Config struct {
 	UDRFile           string
 	GeoMapping        string
 	AsnMapping        string
-	AsnName           string
 	DnsResolver       string
 	SampleRate        uint32
 	MaxBeforeSample   int
@@ -69,6 +68,7 @@ type Config struct {
 	FlowSource        flow.FlowSource
 	LogTee            chan string
 	MetricsChan       chan []*kt.JCHF
+	AppMap            string
 }
 
 type KTranslate struct {

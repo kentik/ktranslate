@@ -36,7 +36,7 @@ type RuleSet struct {
 }
 
 // NewRuleSet returns a new RuleSet
-func NewRuleSet(log logger.ContextL) *RuleSet {
+func NewRuleSet(appMap string, log logger.ContextL) *RuleSet {
 	rs := RuleSet{
 		log:            log,
 		ipAddressRules: NewIPAddressRules(),

@@ -151,12 +151,6 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			kc.log.Errorf("Error with asn service %v", err)
 			return nil, err
 		} else {
-			num, err := asn.LoadNames(config.AsnName)
-			if err != nil {
-				kc.log.Errorf("Error with asn service names %v", err)
-				return nil, err
-			}
-			kc.log.Infof("Loaded %d asn names", num)
 			kc.asn = asn
 		}
 	}
@@ -179,7 +173,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 
 	// IP based rules
-	kc.rule = rule.NewRuleSet(log)
+	kc.rule = rule.NewRuleSet(config.AppMap, log)
 
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")

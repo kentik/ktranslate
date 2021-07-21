@@ -30,7 +30,6 @@ func main() {
 		udrs           = flag.String("udrs", "", "UDR mapping file")
 		geo            = flag.String("geo", "", "Geo mapping file")
 		asn            = flag.String("asn", "", "Asn mapping file")
-		asnName        = flag.String("asnName", "", "Asn number to name mapping file")
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
@@ -56,6 +55,7 @@ func main() {
 		vpcSource      = flag.String("vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
+		appMap         = flag.String("application_map", "", "File containing custom application mappings")
 	)
 
 	metricsChan := make(chan []*kt.JCHF, cat.CHAN_SLACK)
@@ -95,7 +95,6 @@ func main() {
 		UDRFile:           *udrs,
 		GeoMapping:        *geo,
 		AsnMapping:        *asn,
-		AsnName:           *asnName,
 		DnsResolver:       *dns,
 		SampleRate:        uint32(*sample),
 		MaxBeforeSample:   *sampleMin,
@@ -104,6 +103,7 @@ func main() {
 		TagMapType:        maps.Mapper(*tagMapType),
 		VpcSource:         vpc.CloudSource(*vpcSource),
 		FlowSource:        flow.FlowSource(*flowSource),
+		AppMap:            *appMap,
 		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
 			ApiToken: os.Getenv(kt.KentikAPIToken),
