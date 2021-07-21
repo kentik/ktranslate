@@ -27,13 +27,9 @@ func main() {
 		// runtime options
 		listenIPPort   = flag.String("listen", "127.0.0.1:8081", "IP:Port to listen on")
 		mappingFile    = flag.String("mapping", "", "Mapping file to use for enums")
-		region         = flag.String("region", "", "Region mapping file")
-		city           = flag.String("city", "", "City mapping file")
 		udrs           = flag.String("udrs", "", "UDR mapping file")
 		geo            = flag.String("geo", "", "Geo mapping file")
-		asn4           = flag.String("asn4", "", "Asn ipv6 mapping file")
-		asn6           = flag.String("asn6", "", "Asn ipv6 mapping file")
-		asnName        = flag.String("asnName", "", "Asn number to name mapping file")
+		asn            = flag.String("asn", "", "Asn mapping file")
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
 		threadsInput   = flag.Int("input_threads", 0, "Number of threads to run for input processing")
@@ -59,6 +55,7 @@ func main() {
 		vpcSource      = flag.String("vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
+		appMap         = flag.String("application_map", "", "File containing custom application mappings")
 	)
 
 	metricsChan := make(chan []*kt.JCHF, cat.CHAN_SLACK)
@@ -87,8 +84,6 @@ func main() {
 		SslCertFile:       *sslCertFile,
 		SslKeyFile:        *sslKeyFile,
 		MappingFile:       *mappingFile,
-		Code2Region:       *region,
-		Code2City:         *city,
 		Format:            formats.Format(*format),
 		FormatRollup:      formats.Format(*formatRollup),
 		Threads:           *threads,
@@ -99,9 +94,7 @@ func main() {
 		RollupAndAlpha:    *rollupAndAlpha,
 		UDRFile:           *udrs,
 		GeoMapping:        *geo,
-		Asn4:              *asn4,
-		Asn6:              *asn6,
-		AsnName:           *asnName,
+		AsnMapping:        *asn,
 		DnsResolver:       *dns,
 		SampleRate:        uint32(*sample),
 		MaxBeforeSample:   *sampleMin,
@@ -110,6 +103,7 @@ func main() {
 		TagMapType:        maps.Mapper(*tagMapType),
 		VpcSource:         vpc.CloudSource(*vpcSource),
 		FlowSource:        flow.FlowSource(*flowSource),
+		AppMap:            *appMap,
 		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
 			ApiToken: os.Getenv(kt.KentikAPIToken),

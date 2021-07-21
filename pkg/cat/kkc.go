@@ -36,7 +36,6 @@ import (
 	go_metrics "github.com/kentik/go-metrics"
 	old_logger "github.com/kentik/golog/logger"
 
-	"github.com/bmatsuo/lmdb-go/lmdb"
 	capn "zombiezen.com/go/capnproto2"
 )
 
@@ -106,31 +105,6 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 	kc.filters = filters
 
-	// Load up our region and city mappers.
-	if config.Code2City != "" {
-		envCity, _ := lmdb.NewEnv()
-		if err := envCity.Open(config.Code2City, MDB_NO_LOCK, MDB_PERMS); err == nil {
-			kc.envCode2City = envCity
-			log.Infof("Loaded Code2city from %s", config.Code2City)
-		} else {
-			log.Errorf("Cannot open Code2City from %s", config.Code2Region)
-			envCity.Close()
-			return nil, err
-		}
-	}
-
-	if config.Code2Region != "" {
-		envRegion, _ := lmdb.NewEnv()
-		if err := envRegion.Open(config.Code2Region, MDB_NO_LOCK, MDB_PERMS); err == nil {
-			kc.envCode2Region = envRegion
-			log.Infof("Loaded Code2Region from %s", config.Code2Region)
-		} else {
-			log.Errorf("Cannot open Code2Region from %s", config.Code2Region)
-			envRegion.Close()
-			return nil, err
-		}
-	}
-
 	// Grab the custom data directly from a file.
 	if config.MappingFile != "" {
 		m, err := NewCustomMapper(config.MappingFile)
@@ -161,7 +135,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {
-		geo, err := patricia.NewGeoFromMM(config.GeoMapping, ol)
+		geo, err := patricia.NewMapFromMM(config.GeoMapping, ol)
 		if err != nil {
 			kc.log.Errorf("Error with geo service: %v", err)
 			return nil, err
@@ -171,13 +145,12 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 
 	// Load asn mapper if set.
-	if config.Asn4 != "" && config.Asn6 != "" {
-		asn, err := patricia.OpenASN(config.Asn4, config.Asn6, config.AsnName, ol)
+	if config.AsnMapping != "" {
+		asn, err := patricia.NewMapFromMM(config.AsnMapping, ol)
 		if err != nil {
 			kc.log.Errorf("Error with asn service %v", err)
 			return nil, err
 		} else {
-			kc.log.Infof("Loaded %d asn cidrs with %d names", asn.Length, asn.GetSizeName())
 			kc.asn = asn
 		}
 	}
@@ -200,7 +173,11 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 
 	// IP based rules
-	kc.rule = rule.NewRuleSet(log)
+	rule, err := rule.NewRuleSet(config.AppMap, log)
+	if err != nil {
+		return nil, err
+	}
+	kc.rule = rule
 
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")
@@ -220,12 +197,6 @@ func (kc *KTranslate) cleanup() {
 	}
 	if kc.pgdb != nil {
 		kc.pgdb.Close()
-	}
-	if kc.envCode2Region != nil {
-		kc.envCode2Region.Close()
-	}
-	if kc.envCode2City != nil {
-		kc.envCode2City.Close()
 	}
 	if kc.geo != nil {
 		kc.geo.Close()
@@ -612,9 +583,9 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
-func (kc *KTranslate) handleInput(msgs []*kt.JCHF, serBuf []byte, citycache map[uint32]string, regioncache map[uint32]string, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, citycache map[uint32]string, regioncache map[uint32]string, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	if kc.geo != nil || kc.asn != nil {
-		kc.doEnrichments(citycache, regioncache, msgs)
+		kc.doEnrichments(ctx, citycache, regioncache, msgs)
 	}
 
 	// If we have any rollups defined, send here instead of directly to the output format.
@@ -700,7 +671,7 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 	for {
 		select {
 		case msgs := <-kc.inputChan:
-			kc.handleInput(msgs, serBuf, citycache, regioncache, nil, seri)
+			kc.handleInput(ctx, msgs, serBuf, citycache, regioncache, nil, seri)
 		case <-ctx.Done():
 			kc.log.Infof("monitorInput %d Done", num)
 			return
@@ -943,7 +914,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		citycacheInput := map[uint32]string{}
 		regioncacheInput := map[uint32]string{}
 		handler := func(msgs []*kt.JCHF, cb func(error)) { // Capture this in a closure.
-			kc.handleInput(msgs, serBufInput, citycacheInput, regioncacheInput, cb, kc.format.To)
+			kc.handleInput(ctx, msgs, serBufInput, citycacheInput, regioncacheInput, cb, kc.format.To)
 		}
 		vpci, err := vpc.NewVpc(ctx, kc.config.VpcSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic, kc.config.MaxFlowPerMessage, handler)
 		if err != nil {
