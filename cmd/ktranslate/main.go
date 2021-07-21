@@ -27,12 +27,9 @@ func main() {
 		// runtime options
 		listenIPPort   = flag.String("listen", "127.0.0.1:8081", "IP:Port to listen on")
 		mappingFile    = flag.String("mapping", "", "Mapping file to use for enums")
-		region         = flag.String("region", "", "Region mapping file")
-		city           = flag.String("city", "", "City mapping file")
 		udrs           = flag.String("udrs", "", "UDR mapping file")
 		geo            = flag.String("geo", "", "Geo mapping file")
-		asn4           = flag.String("asn4", "", "Asn ipv6 mapping file")
-		asn6           = flag.String("asn6", "", "Asn ipv6 mapping file")
+		asn            = flag.String("asn", "", "Asn mapping file")
 		asnName        = flag.String("asnName", "", "Asn number to name mapping file")
 		dns            = flag.String("dns", "", "Resolve IPs at this ip:port")
 		threads        = flag.Int("threads", 0, "Number of threads to run for processing")
@@ -87,8 +84,6 @@ func main() {
 		SslCertFile:       *sslCertFile,
 		SslKeyFile:        *sslKeyFile,
 		MappingFile:       *mappingFile,
-		Code2Region:       *region,
-		Code2City:         *city,
 		Format:            formats.Format(*format),
 		FormatRollup:      formats.Format(*formatRollup),
 		Threads:           *threads,
@@ -99,8 +94,7 @@ func main() {
 		RollupAndAlpha:    *rollupAndAlpha,
 		UDRFile:           *udrs,
 		GeoMapping:        *geo,
-		Asn4:              *asn4,
-		Asn6:              *asn6,
+		AsnMapping:        *asn,
 		AsnName:           *asnName,
 		DnsResolver:       *dns,
 		SampleRate:        uint32(*sample),

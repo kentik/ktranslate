@@ -22,8 +22,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
-
-	"github.com/bmatsuo/lmdb-go/lmdb"
 )
 
 const (
@@ -47,8 +45,6 @@ type Config struct {
 	SslCertFile       string
 	SslKeyFile        string
 	MappingFile       string
-	Code2Region       string
-	Code2City         string
 	Threads           int
 	ThreadsInput      int
 	MaxThreads        int
@@ -59,8 +55,7 @@ type Config struct {
 	RollupAndAlpha    bool
 	UDRFile           string
 	GeoMapping        string
-	Asn4              string
-	Asn6              string
+	AsnMapping        string
 	AsnName           string
 	DnsResolver       string
 	SampleRate        uint32
@@ -77,37 +72,35 @@ type Config struct {
 }
 
 type KTranslate struct {
-	log            logger.ContextL
-	config         *Config
-	registry       go_metrics.Registry
-	metrics        *KKCMetric
-	alphaChans     []chan *Flow
-	jchfChans      []chan *kt.JCHF
-	inputChan      chan []*kt.JCHF
-	mapr           *CustomMapper
-	udrMapr        *UDRMapper
-	pgdb           *sql.DB
-	msgsc          chan *kt.Output
-	envCode2Region *lmdb.Env
-	envCode2City   *lmdb.Env
-	ol             *old_logger.Logger
-	sinks          map[sinks.Sink]sinks.SinkImpl
-	format         formats.Formatter
-	formatRollup   formats.Formatter
-	kentik         *kentik.KentikSink // This one gets special handling
-	rollups        []rollup.Roller
-	doRollups      bool
-	filters        []filter.Filter
-	geo            *patricia.MMGeo
-	asn            *patricia.Uint32Trees
-	resolver       *Resolver
-	auth           *auth.Server
-	apic           *api.KentikApi
-	tooBig         chan int
-	tagMap         maps.TagMapper
-	vpc            vpc.VpcImpl
-	nfs            *flow.KentikDriver
-	rule           *rule.RuleSet
+	log          logger.ContextL
+	config       *Config
+	registry     go_metrics.Registry
+	metrics      *KKCMetric
+	alphaChans   []chan *Flow
+	jchfChans    []chan *kt.JCHF
+	inputChan    chan []*kt.JCHF
+	mapr         *CustomMapper
+	udrMapr      *UDRMapper
+	pgdb         *sql.DB
+	msgsc        chan *kt.Output
+	ol           *old_logger.Logger
+	sinks        map[sinks.Sink]sinks.SinkImpl
+	format       formats.Formatter
+	formatRollup formats.Formatter
+	kentik       *kentik.KentikSink // This one gets special handling
+	rollups      []rollup.Roller
+	doRollups    bool
+	filters      []filter.Filter
+	geo          *patricia.MMMap
+	asn          *patricia.MMMap
+	resolver     *Resolver
+	auth         *auth.Server
+	apic         *api.KentikApi
+	tooBig       chan int
+	tagMap       maps.TagMapper
+	vpc          vpc.VpcImpl
+	nfs          *flow.KentikDriver
+	rule         *rule.RuleSet
 }
 
 type CustomMapper struct {

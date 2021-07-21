@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bmatsuo/lmdb-go/lmdb"
-
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/cdn"
 	patricia "github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
@@ -28,6 +26,13 @@ func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (string, error) {
 		return kc.geo.SearchBestFromHostGeo(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
 	}
 	return kc.geo.SearchBestFromHostGeo(net.IP(ipv6))
+}
+
+func (kc *KTranslate) lookupAsn(ipv4 uint32, ipv6 []byte) (uint32, string, error) {
+	if ipv4 != 0 {
+		return kc.asn.SearchBestFromHostAsn(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
+	}
+	return kc.geo.SearchBestFromHostAsn(net.IP(ipv6))
 }
 
 func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
@@ -54,22 +59,22 @@ func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
 	if kc.asn != nil {
 		if src.CHF.SrcAs() == 0 {
 			ipv6, _ := src.CHF.Ipv6SrcAddr()
-			if resultsFound, asn, err := kc.asn.FindBestMatch(src.CHF.Ipv4SrcAddr(), ipv6); resultsFound && err == nil {
+			if asn, name, err := kc.lookupAsn(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
 				src.CHF.SetSrcAs(asn)
-				srcName = kc.asn.GetName(asn)
+				srcName = name
 			}
 		} else {
-			srcName = kc.asn.GetName(src.CHF.SrcAs())
+			srcName = kc.asn.FromMap(src.CHF.SrcAs())
 		}
 
 		if src.CHF.DstAs() == 0 {
 			ipv6, _ := src.CHF.Ipv6DstAddr()
-			if resultsFound, asn, err := kc.asn.FindBestMatch(src.CHF.Ipv4DstAddr(), ipv6); resultsFound && err == nil {
+			if asn, name, err := kc.lookupAsn(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
 				src.CHF.SetDstAs(asn)
-				dstName = kc.asn.GetName(asn)
+				dstName = name
 			}
 		} else {
-			dstName = kc.asn.GetName(src.CHF.DstAs())
+			dstName = kc.asn.FromMap(src.CHF.DstAs())
 		}
 	}
 
@@ -182,10 +187,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.CompanyId = kt.Cid(src.CompanyId)
 	dst.SrcNextHopAs = src.CHF.SrcNextHopAs()
 	dst.DstNextHopAs = src.CHF.DstNextHopAs()
-	dst.SrcGeoRegion = lookupRegionName(regioncache, src.CHF.SrcGeoRegion(), kc.envCode2Region)
-	dst.DstGeoRegion = lookupRegionName(regioncache, src.CHF.DstGeoRegion(), kc.envCode2Region)
-	dst.SrcGeoCity = lookupCityName(citycache, src.CHF.SrcGeoCity(), kc.envCode2City)
-	dst.DstGeoCity = lookupCityName(citycache, src.CHF.DstGeoCity(), kc.envCode2City)
 	dst.SrcSecondAsn = src.CHF.SrcSecondAsn()
 	dst.DstSecondAsn = src.CHF.DstSecondAsn()
 	dst.SrcThirdAsn = src.CHF.SrcThirdAsn()
@@ -447,52 +448,6 @@ func int2ip(nn uint32) net.IP {
 	return ip
 }
 
-func lookupCityName(citycache map[uint32]string, code uint32, env *lmdb.Env) string {
-	if n, ok := citycache[code]; ok {
-		return n
-	}
-	n := lookupGeoName(code, env)
-	citycache[code] = n
-	return n
-}
-
-func lookupRegionName(regioncache map[uint32]string, code uint32, env *lmdb.Env) string {
-	if n, ok := regioncache[code]; ok {
-		return n
-	}
-	n := lookupGeoName(code, env)
-	regioncache[code] = n
-	return n
-}
-
-func lookupGeoName(code uint32, env *lmdb.Env) string {
-	if env != nil {
-		txn, err := env.BeginTxn(nil, lmdb.Readonly)
-		if err != nil {
-			return ""
-		}
-		defer txn.Abort()
-
-		dbi, err := txn.OpenRoot(0)
-		if err != nil {
-			return ""
-		}
-		defer env.CloseDBI(dbi)
-
-		key := []byte(strconv.FormatUint(uint64(code), 10))
-		v, err := txn.Get(dbi, key)
-		switch {
-		case lmdb.IsNotFound(err):
-			return ""
-		case err != nil:
-			return ""
-		}
-		return string(v)
-	}
-
-	return ""
-}
-
 var (
 	synResultTypes = map[int32]string{
 		0: "error",
@@ -533,7 +488,7 @@ var (
 )
 
 // Updates asn and geo if set for any of these inputs.
-func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map[uint32]string, msgs []*kt.JCHF) {
+func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, msgs []*kt.JCHF) {
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)
@@ -569,15 +524,15 @@ func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map
 		// And set our own asn also if not set.
 		if kc.asn != nil {
 			if sip != nil && !setSip {
-				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(sip); resultsFound && err == nil {
+				if asn, name, err := kc.asn.SearchBestFromHostAsn(sip); err == nil {
 					msg.SrcAs = asn
-					msg.CustomStr["src_as_name"] = kc.asn.GetName(asn)
+					msg.CustomStr["src_as_name"] = name
 				}
 			}
 			if dip != nil && !setDip {
-				if resultsFound, asn, err := kc.asn.FindBestMatchFromIP(dip); resultsFound && err == nil {
+				if asn, name, err := kc.asn.SearchBestFromHostAsn(dip); err == nil {
 					msg.DstAs = asn
-					msg.CustomStr["dst_as_name"] = kc.asn.GetName(asn)
+					msg.CustomStr["dst_as_name"] = name
 				}
 			}
 		}
@@ -591,6 +546,12 @@ func (kc *KTranslate) doEnrichments(citycache map[uint32]string, regioncache map
 			if app, ok := service.Services[service.Port{Number: msg.L4DstPort, Protocol: ic.PROTO_NUMS[msg.Protocol]}]; ok {
 				msg.CustomStr["application"] = app
 			}
+		}
+
+		// If there's a resolver, try to resolve to hostnames.
+		if kc.resolver != nil {
+			msg.CustomStr["src_host"] = kc.resolver.Resolve(ctx, msg.SrcAddr)
+			msg.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, msg.DstAddr)
 		}
 	}
 }
