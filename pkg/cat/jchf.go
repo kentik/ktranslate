@@ -13,7 +13,6 @@ import (
 	patricia "github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/ic"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
-	"github.com/kentik/ktranslate/pkg/util/service"
 )
 
 var (
@@ -535,11 +534,11 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]st
 
 		// See if we know what service this is based on proto and port.
 		if msg.L4SrcPort < msg.L4DstPort {
-			if app, ok := service.Services[service.Port{Number: msg.L4SrcPort, Protocol: ic.PROTO_NUMS[msg.Protocol]}]; ok {
+			if app, ok := kc.rule.GetService(sip, msg.L4SrcPort, ic.PROTO_NUMS[msg.Protocol]); ok {
 				msg.CustomStr["application"] = app
 			}
 		} else {
-			if app, ok := service.Services[service.Port{Number: msg.L4DstPort, Protocol: ic.PROTO_NUMS[msg.Protocol]}]; ok {
+			if app, ok := kc.rule.GetService(dip, msg.L4DstPort, ic.PROTO_NUMS[msg.Protocol]); ok {
 				msg.CustomStr["application"] = app
 			}
 		}

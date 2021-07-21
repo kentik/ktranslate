@@ -1,10 +1,13 @@
 package rule
 
 import (
+	"io/ioutil"
 	"net"
 	"strings"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/util/service"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -33,13 +36,24 @@ var (
 type RuleSet struct {
 	log            logger.ContextL
 	ipAddressRules *IPAddressRules
+	portRules      map[uint32]string
+}
+
+type CustomRule struct {
+	Ports []uint32 `yaml:"ports"`
+	Name  string   `yaml:"name"`
+}
+
+type CustomRuleSet struct {
+	Applications []CustomRule `yaml:"applications"`
 }
 
 // NewRuleSet returns a new RuleSet
-func NewRuleSet(appMap string, log logger.ContextL) *RuleSet {
+func NewRuleSet(appMap string, log logger.ContextL) (*RuleSet, error) {
 	rs := RuleSet{
 		log:            log,
 		ipAddressRules: NewIPAddressRules(),
+		portRules:      map[uint32]string{},
 	}
 
 	for _, line := range INTERNAL_IPS {
@@ -49,7 +63,27 @@ func NewRuleSet(appMap string, log logger.ContextL) *RuleSet {
 		}
 	}
 
-	return &rs
+	// If there's a custom set, get these here.
+	if appMap != "" {
+		customs := CustomRuleSet{}
+		byc, err := ioutil.ReadFile(appMap)
+		if err != nil {
+			return nil, err
+		}
+		err = yaml.Unmarshal(byc, &customs)
+		if err != nil {
+			return nil, err
+		}
+
+		log.Infof("Loaded %d custom rules.", len(customs.Applications))
+		for _, custom := range customs.Applications {
+			for _, port := range custom.Ports {
+				rs.portRules[port] = custom.Name
+			}
+		}
+	}
+
+	return &rs, nil
 }
 
 // check whether the AS matches against our static list of private ASNs
@@ -77,4 +111,20 @@ func (r *RuleSet) IsInternal(ip net.IP, as uint32) bool {
 	}
 
 	return false
+}
+
+// IP is for future proofing if there's demand.
+func (r *RuleSet) GetService(ip net.IP, port uint32, protocol uint8) (string, bool) {
+	// first see if we have a custom mapping here.
+	if app, ok := r.portRules[port]; ok {
+		return app, true
+	}
+
+	// If we don't, see if there's a global definition.
+	if app, ok := service.Services[service.Port{Number: port, Protocol: protocol}]; ok {
+		return app, true
+	}
+
+	// We couldn't find anything.
+	return "", false
 }

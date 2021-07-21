@@ -173,7 +173,11 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	}
 
 	// IP based rules
-	kc.rule = rule.NewRuleSet(config.AppMap, log)
+	rule, err := rule.NewRuleSet(config.AppMap, log)
+	if err != nil {
+		return nil, err
+	}
+	kc.rule = rule
 
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")
