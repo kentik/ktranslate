@@ -8,13 +8,19 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-COPY config/ /etc/ktranslate/
+RUN set -eux; \
+	groupadd --gid 1000 ktranslate; \
+	useradd --home-dir /etc/ktranslate --gid ktranslate --no-create-home --uid 1000 ktranslate
+
+COPY --chown=ktranslate:ktranslate config/ /etc/ktranslate/
 
 # add backwards compatibility symlinks for folks using an snmp.yml from the older image (and "ls" to verify the symlinks are correct and working)
 RUN set -eux; ln -sv ktranslate/profiles ktranslate/mibs.db /etc/; ls -l /etc/profiles/ /etc/mibs.db/
+RUN set -eux; ln -sv /etc/ktranslate/mibs.db /etc/mib.db; ls -l /etc/mib.db/
 
 COPY bin/ktranslate /usr/local/bin/
 
+USER ktranslate
 ENTRYPOINT ["ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
 
 EXPOSE 8082

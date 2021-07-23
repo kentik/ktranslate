@@ -124,8 +124,12 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 			_, ok := SNMP_Interface_OIDS.Get(oid)
 			if !ok {
 				mib := interfaceMetadataMibs[oid]
-				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, mib.Name)
-				SNMP_Interface_OIDS.Set(oid, mib.Name)
+				name := mib.Name
+				if strings.HasPrefix(name, "if") {
+					name = name[2:]
+				}
+				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, name)
+				SNMP_Interface_OIDS.Set(oid, name)
 			}
 		}
 	}
@@ -420,6 +424,14 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 				case SNMP_ifLastChange:
 					val := gosnmp.ToBigInt(variable.Value).Uint64()
 					data.ExtraInfo[SNMP_ifLastChange] = strconv.Itoa(int(val))
+				default:
+					switch variable.Type {
+					case gosnmp.OctetString:
+						data.ExtraInfo[oidName] = string(variable.Value.([]byte))
+					case gosnmp.Integer:
+						val := gosnmp.ToBigInt(variable.Value).Uint64()
+						data.ExtraInfo[oidName] = strconv.Itoa(int(val))
+					}
 				}
 			}
 		}
