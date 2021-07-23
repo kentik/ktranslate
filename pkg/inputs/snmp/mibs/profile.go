@@ -12,41 +12,42 @@ import (
 )
 
 type OID struct {
-	Oid  string           `yaml:"OID"`
-	Name string           `yaml:"name"`
-	Enum map[string]int64 `yaml:"enum"`
-	Tag  string           `yaml:"tag"`
+	Oid  string           `yaml:"OID,omitempty"`
+	Name string           `yaml:"name,omitempty"`
+	Enum map[string]int64 `yaml:"enum,omitempty"`
+	Tag  string           `yaml:"tag,omitempty"`
+	Desc string           `yaml:"description,omitempty"`
 }
 
 type Tag struct {
-	Column OID    `yaml:"column"`
-	Tag    string `yaml:"tag"`
-	Symbol string `yaml:"symbol"`
-	Index  int    `yaml:"index"`
+	Column OID    `yaml:"column,omitempty"`
+	Tag    string `yaml:"tag,omitempty"`
+	Symbol string `yaml:"symbol,omitempty"`
+	Index  int    `yaml:"index,omitempty"`
 }
 
 type MIB struct {
-	Mib        string `yaml:"MIB"`
-	Table      OID    `yaml:"table"`
-	Symbols    []OID  `yaml:"symbols"`
-	MetricTags []Tag  `yaml:"metric_tags"`
-	ForcedType string `yaml:"forced_type"`
-	Symbol     OID    `yaml:"symbol"`
+	Mib        string `yaml:"MIB,omitempty"`
+	Table      OID    `yaml:"table,omitempty"`
+	Symbols    []OID  `yaml:"symbols,omitempty"`
+	MetricTags []Tag  `yaml:"metric_tags,omitempty"`
+	ForcedType string `yaml:"forced_type,omitempty"`
+	Symbol     OID    `yaml:"symbol,omitempty"`
 }
 
 type Device struct {
-	Vendor string `yaml:"vendor"`
+	Vendor string `yaml:"vendor,omitempty"`
 }
 
 type Profile struct {
-	logger.ContextL
-	Metrics     []MIB          `yaml:"metrics"`
-	Extends     []string       `yaml:"extends"`
-	Device      Device         `yaml:"device"`
-	MetricTags  []Tag          `yaml:"metric_tags"`
-	Sysobjectid kt.StringArray `yaml:"sysobjectid"`
-	extended    bool
-	From        string
+	logger.ContextL `yaml:"-"`
+	Metrics         []MIB          `yaml:"metrics,omitempty"`
+	Extends         []string       `yaml:"extends,omitempty"`
+	Device          Device         `yaml:"device,omitempty"`
+	MetricTags      []Tag          `yaml:"metric_tags,omitempty"`
+	Sysobjectid     kt.StringArray `yaml:"sysobjectid,omitempty"`
+	From            string         `yaml:"from,omitempty"`
+	extended        bool
 }
 
 func (p *Profile) extend(extends map[string]*Profile) error {
