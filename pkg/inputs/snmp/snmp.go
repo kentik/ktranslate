@@ -28,6 +28,7 @@ var (
 	mibdb        *mibs.MibDB // Global singleton instance here.
 	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
 	flowOnly     = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
+	jsonToYaml   = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
@@ -35,6 +36,10 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	conf, _, _, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil { // If no global, we're turning off all snmp polling.
 		return err
+	}
+
+	if *jsonToYaml != "" { // If this flag is set, convert a passed in json mib file to a yaml profile and call it a day.
+		return mibs.ConvertJson2Yaml(*jsonToYaml, log)
 	}
 
 	// Load a mibdb if we have one.
