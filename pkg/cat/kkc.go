@@ -34,7 +34,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	go_metrics "github.com/kentik/go-metrics"
-	old_logger "github.com/kentik/golog/logger"
 
 	capn "zombiezen.com/go/capnproto2"
 )
@@ -55,7 +54,7 @@ var (
 	RollupsSendDuration = 15 * time.Second
 )
 
-func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Registry, version string, ol *old_logger.Logger, sinks string) (*KTranslate, error) {
+func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks string) (*KTranslate, error) {
 	kc := &KTranslate{
 		log:      log,
 		registry: registry,
@@ -74,7 +73,6 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		alphaChans: make([]chan *Flow, config.Threads),
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
 		msgsc:      make(chan *kt.Output, 60),
-		ol:         ol,
 		tooBig:     make(chan int, CHAN_SLACK),
 	}
 
@@ -135,7 +133,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load up a geo file if one is passed in.
 	if config.GeoMapping != "" {
-		geo, err := patricia.NewMapFromMM(config.GeoMapping, ol)
+		geo, err := patricia.NewMapFromMM(config.GeoMapping, log)
 		if err != nil {
 			kc.log.Errorf("Error with geo service: %v", err)
 			return nil, err
@@ -146,7 +144,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	// Load asn mapper if set.
 	if config.AsnMapping != "" {
-		asn, err := patricia.NewMapFromMM(config.AsnMapping, ol)
+		asn, err := patricia.NewMapFromMM(config.AsnMapping, log)
 		if err != nil {
 			kc.log.Errorf("Error with asn service %v", err)
 			return nil, err

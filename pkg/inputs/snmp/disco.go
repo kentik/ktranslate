@@ -5,15 +5,15 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
-	"strings"
-	"sync"
+	//"strings"
+	//"sync"
 	"time"
 
-	"github.com/liamg/furious/scan" // Discovery
+	//"github.com/liamg/furious/scan" // Discovery
 	"gopkg.in/yaml.v2"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
+	//"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -65,6 +65,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
 	for _, ipr := range conf.Disco.Cidrs {
 		log.Infof("Discovering snmp speaking devices on %s", ipr)
+		/**
 		targetIterator := scan.NewTargetIterator(ipr)
 		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 		scanner := scan.NewDeviceScanner(targetIterator, timeout)
@@ -88,6 +89,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		}
 		wg.Wait()
 		log.Infof("Checked %d ips in %v", len(results), time.Now().Sub(st))
+		*/
 	}
 
 	if conf.Disco.AddDevices {
@@ -100,6 +102,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	return nil
 }
 
+/**
 func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, mux *sync.RWMutex, wg *sync.WaitGroup,
 	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, log logger.ContextL) {
 
@@ -205,6 +208,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	defer mux.Unlock()
 	foundDevices[result.Host.String()] = &device
 }
+*/
 
 func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) error {
 	// Now add the new.

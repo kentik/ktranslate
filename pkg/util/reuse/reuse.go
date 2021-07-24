@@ -5,8 +5,6 @@ import (
 	"net"
 	"syscall"
 	"time"
-
-	"golang.org/x/sys/unix"
 )
 
 var (
@@ -17,16 +15,6 @@ var (
 )
 
 func onConnSetup(_ string, _ string, c syscall.RawConn) (err error) {
-	c.Control(func(fd uintptr) {
-		err = syscall.SetsockoptInt(int(fd), syscall.SOL_SOCKET, unix.SO_REUSEPORT, 1)
-		// ENOPROTOOPT means that SO_REUSEPORT is not implemented in the current
-		// kernel.  All we can do is shrug and move on.  Should only happen in
-		// chfagent (which doesn't do handoffs), on fairly old (pre-2013) Linux
-		// kernels.
-		if errno, ok := err.(syscall.Errno); ok && errno == syscall.ENOPROTOOPT {
-			err = nil
-		}
-	})
 	return
 }
 

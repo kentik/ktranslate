@@ -27,9 +27,9 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/features"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
 
-	"github.com/kentik/golog/logger"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
 	"github.com/kentik/ktranslate/pkg/util/healthcheck"
+	"github.com/kentik/ktranslate/pkg/util/logger"
 )
 
 const (

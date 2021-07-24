@@ -11,7 +11,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/kentik/golog/logger"
+	"github.com/kentik/ktranslate/pkg/util/logger"
 	"github.com/kentik/ktranslate/pkg/util/reuse"
 )
 

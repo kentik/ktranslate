@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/signal"
+	//"os/signal"
 	"strings"
-	"syscall"
+	//"syscall"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -117,7 +117,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 
 	// Now, wait for sigusr1 to re-do.
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGUSR2)
+	//signal.Notify(c, syscall.SIGUSR2)
 
 	// Block here
 	_ = <-c
