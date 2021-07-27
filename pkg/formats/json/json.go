@@ -46,10 +46,14 @@ func NewFormat(log logger.Underlying, compression kt.Compression, doFlatten bool
 func (f *JsonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	var target []byte
 	if f.doFlatten {
-		msgsNew := make([]map[string]interface{}, len(msgs))
-		for i, msg := range msgs {
-			msgsNew[i] = msg.Flatten()
-			strip(msgsNew[i])
+		msgsNew := make([]map[string]interface{}, 0, len(msgs))
+		for _, msg := range msgs {
+			if msg.EventType == kt.KENTIK_EVENT_SNMP {
+				continue
+			}
+			mm := msg.Flatten()
+			strip(mm)
+			msgsNew = append(msgsNew, mm)
 		}
 		t, err := json.Marshal(msgsNew)
 		if err != nil {
