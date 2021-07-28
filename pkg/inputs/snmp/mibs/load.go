@@ -104,7 +104,7 @@ func (db *MibDB) GetForOid(oid string, profile string, description string) (map[
 
 	getProvider := func(moid string) (kt.Provider, bool) {
 		if prov, ok := db.checkForProvider(moid, profile, description); ok {
-			db.log.Infof("Provider: %s -> %s", moid, prov)
+			db.log.Infof("Provider: %s %s %s %s -> %s", oid, moid, profile, description, prov)
 			return prov, true
 		}
 		return "", false
@@ -191,6 +191,9 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	}
 	if strings.Contains(combo, "firewall") {
 		return kt.ProviderFirewall, true
+	}
+	if strings.Contains(profile, "base.yml") {
+		return kt.ProviderDefault, true
 	}
 	if strings.Contains(profile, "ups") || (strings.Contains(combo, "ups") && !strings.Contains(combo, "groups")) {
 		return kt.ProviderUPS, true
