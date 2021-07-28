@@ -33,6 +33,7 @@ type MIB struct {
 	MetricTags []Tag  `yaml:"metric_tags,omitempty"`
 	ForcedType string `yaml:"forced_type,omitempty"`
 	Symbol     OID    `yaml:"symbol,omitempty"`
+	sortKey    string
 }
 
 type Device struct {
