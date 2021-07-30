@@ -147,6 +147,9 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		for k, v := range dm.conf.UserTags {
 			dst.CustomStr[k] = v
 		}
+		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+		}
 
 		if dmr.juniperOperatingDRAMSize > 0 {
 			dst.CustomBigInt["juniperOperatingDRAMSize"] = dmr.juniperOperatingDRAMSize
@@ -317,6 +320,9 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		for k, v := range dm.conf.UserTags {
 			dst.CustomStr[k] = v
 		}
+		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+		}
 
 		// Memory can be compound value so need to do it here if present but not already set.
 		if _, ok := dst.CustomBigInt["MemoryUtilization"]; !ok {
@@ -349,6 +355,9 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
 		for k, v := range dm.conf.UserTags {
 			dst.CustomStr[k] = v
+		}
+		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}
 		flows = append(flows, dst)
 	}

@@ -28,6 +28,7 @@ var (
 		"appl_latency_ms":         true,
 		"server_nw_latency_ms":    true,
 		"connection_id":           true,
+		"service_name":            true,
 	}
 )
 

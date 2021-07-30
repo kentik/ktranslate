@@ -69,7 +69,8 @@ const (
 	CollectorName = "ktranslate"
 	SnmpCollector = "snmp"
 
-	SendBatchDuration = 1 * time.Second
+	SendBatchDuration     = 1 * time.Second
+	DefaultProfileMessage = "Missing matched profile. See overview page for details."
 )
 
 type IntId uint64
