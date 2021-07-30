@@ -59,6 +59,7 @@ func TestSeriToJsonFlatten(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(len(kt.InputTesting), len(out))
 	for i, _ := range out {
-		assert.Equal(kt.InputTesting[i].Timestamp, out[i]["timestamp"])
+		assert.Equal(kt.InputTesting[i].SrcAddr, out[i]["src_addr"])
+		assert.Equal(int(0), int(out[i]["timestamp"].(int64)))
 	}
 }
