@@ -191,12 +191,12 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
 	// like maintaining separate GoSNMP structs for the two goroutines is safe.
-	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, log)
+	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 		return err
 	}
-	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, log)
+	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 		return err
