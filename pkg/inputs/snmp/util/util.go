@@ -3,12 +3,15 @@ package util
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
-	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/gosnmp"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 var (
@@ -161,4 +164,49 @@ func GetDeviceManufacturer(server snmpWalker, log logger.ContextL) string {
 	// Strip the leading & trailing quotes that QuoteToASCII adds.
 	deviceManufacturer = deviceManufacturer[1 : len(deviceManufacturer)-1]
 	return deviceManufacturer
+}
+
+func PrettyPrint(pdu gosnmp.SnmpPDU) string {
+	switch pdu.Type {
+	case gosnmp.OctetString:
+		src := pdu.Value.([]byte)
+		if utf8.Valid(src) {
+			v, _ := ReadOctetString(pdu, false)
+			return v
+		} else {
+			return fmt.Sprintf("%v", src)
+		}
+	case gosnmp.IPAddress:
+		return pdu.Value.(string)
+	case gosnmp.ObjectIdentifier:
+		return pdu.Value.(string)
+	default:
+		v := ToInt64(pdu.Value)
+		return strconv.Itoa(int(v))
+	}
+}
+
+// Does a walk of the targeted device and exits.
+func DoWalk(device string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, log logger.ContextL) error {
+	dconf := conf.Devices[device]
+	if dconf == nil {
+		return fmt.Errorf("No such device found in snmp config: %s", device)
+	}
+
+	server, err := InitSNMP(dconf, connectTimeout, retries, "", log)
+	if err != nil {
+		return err
+	}
+
+	res, err := WalkOID(".1.3.6.1", server, log, "")
+	if err != nil {
+		return err
+	}
+
+	for _, variable := range res {
+		log.Infof("%s snmpwalk result: %s = %v: %s", device, variable.Name, variable.Type, PrettyPrint(variable))
+	}
+
+	time.Sleep(200 * time.Millisecond)
+	return fmt.Errorf("ok")
 }
