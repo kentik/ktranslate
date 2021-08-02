@@ -39,6 +39,12 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		return fmt.Errorf("Add a global section and mib profile directory %+v", conf)
 	}
 
+	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
+		if err := addDevices(nil, snmpFile, conf, true, log); err != nil {
+			return fmt.Errorf("Can not write snmp config file %s - %v", snmpFile, err)
+		}
+	}
+
 	if len(conf.Disco.Ports) == 0 {
 		conf.Disco.Ports = []int{int(snmp_util.SNMP_PORT)}
 	}
@@ -85,7 +91,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	if conf.Disco.AddDevices {
-		err := addDevices(foundDevices, snmpFile, conf, log)
+		err := addDevices(foundDevices, snmpFile, conf, false, log)
 		if err != nil {
 			return err
 		}
@@ -200,7 +206,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	foundDevices[result.Host.String()] = &device
 }
 
-func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, log logger.ContextL) error {
+func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) error {
 	// Now add the new.
 	added := 0
 	replaced := 0
@@ -221,7 +227,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 			}
 		}
 	}
-	log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
+	if !isTest {
+		log.Infof("Adding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
+	}
 
 	// Fill up list of mibs to run on here.
 	if conf.Disco.AddAllMibs {
