@@ -195,10 +195,10 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(profile, "base.yml") {
 		return kt.ProviderDefault, true
 	}
-	if strings.Contains(profile, "ups") || (strings.Contains(combo, "ups") && !strings.Contains(combo, "groups")) {
+	if strings.Contains(profile, "ups") {
 		return kt.ProviderUPS, true
 	}
-	if strings.Contains(profile, "pdu") || (strings.Contains(combo, "pdu") && !strings.Contains(profile, "router")) {
+	if strings.Contains(profile, "pdu") {
 		return kt.ProviderPDU, true
 	}
 	if strings.Contains(profile, "fc-switch") {

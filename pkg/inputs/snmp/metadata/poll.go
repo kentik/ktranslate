@@ -206,11 +206,14 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 
 		// Compute vendor int here.
-		if strings.HasPrefix(dst.CustomStr["SysObjectID"], vendorPrefix) {
-			pts := strings.SplitN(dst.CustomStr["SysObjectID"][len(vendorPrefix):], ".", 2)
-			if vendorId, err := strconv.Atoi(pts[0]); err == nil {
-				dst.CustomInt["sysoid_vendor"] = int32(vendorId)
+		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+			if strings.HasPrefix(dst.CustomStr["SysObjectID"], vendorPrefix) {
+				pts := strings.SplitN(dst.CustomStr["SysObjectID"][len(vendorPrefix):], ".", 2)
+				if vendorId, err := strconv.Atoi(pts[0]); err == nil {
+					dst.CustomInt["sysoid_vendor"] = int32(vendorId)
+				}
 			}
+			dst.CustomStr["sysoid_profile"] = p.conf.MibProfile
 		}
 	}
 
