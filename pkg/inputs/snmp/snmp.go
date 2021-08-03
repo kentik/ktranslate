@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	//"os/signal"
+	"os/signal"
 	"strings"
-	//"syscall"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -115,9 +114,9 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 		log.Errorf("Error running snmp polling: %v", err)
 	}
 
-	// Now, wait for sigusr1 to re-do.
+	// Now, wait for sigusr2 to re-do.
 	c := make(chan os.Signal, 1)
-	//signal.Notify(c, syscall.SIGUSR2)
+	signal.Notify(c, kt.SIGUSR2)
 
 	// Block here
 	_ = <-c
