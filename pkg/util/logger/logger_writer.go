@@ -227,7 +227,7 @@ func Drain() {
 }
 
 func setup() {
-	stdhdl = nil
+	SetStdOut()
 	messages = make(chan *logMessage, NumMessages)
 	freeMessages = make(chan *logMessage, NumMessages)
 	msgArr := make([]logMessage, NumMessages)
