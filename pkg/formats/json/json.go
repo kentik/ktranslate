@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 
+	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
@@ -165,6 +166,9 @@ func strip(in map[string]interface{}) {
 			if tv == 0 {
 				delete(in, k)
 			}
+		}
+		if _, ok := util.DroppedAttrs[k]; ok {
+			delete(in, k)
 		}
 	}
 	in["instrumentation.provider"] = kt.InstProvider  // Let them know who sent this.

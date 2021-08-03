@@ -77,7 +77,7 @@ func (l logWrapper) Printf(format string, v ...interface{}) {
 	l.printf(format, v...)
 }
 
-func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries int, log logger.ContextL) (*gosnmp.GoSNMP, error) {
+func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries int, posit string, log logger.ContextL) (*gosnmp.GoSNMP, error) {
 
 	if (device.Community == "" && device.V3 == nil) || device.DeviceIP == "" {
 		return nil, fmt.Errorf("community or server IP not set")
@@ -112,10 +112,10 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 	if device.V3 == nil {
 		server.Community = device.Community
 		if device.UseV1 {
-			log.Infof("Running with SNMP v1")
+			log.Infof("%s Running with SNMP v1", posit)
 			server.Version = gosnmp.Version1
 		} else {
-			log.Infof("Running with SNMP v2c")
+			log.Infof("%s Running with SNMP v2c", posit)
 			server.Version = gosnmp.Version2c
 		}
 	} else {
@@ -124,7 +124,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 			return nil, err
 		}
 
-		log.Infof("Running with SNMP v3")
+		log.Infof("%s Running with SNMP v3", posit)
 		server.Version = gosnmp.Version3
 		server.ContextEngineID = contextEngineID
 		server.ContextName = contextName

@@ -46,7 +46,7 @@ func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, e
 
 	if mibpath != "" {
 		log.Infof("Loading db from %s", mibpath)
-		db, err := leveldb.OpenFile(mibpath, &opt.Options{})
+		db, err := leveldb.OpenFile(mibpath, &opt.Options{ReadOnly: true})
 		if err != nil {
 			return nil, err
 		}

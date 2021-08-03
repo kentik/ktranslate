@@ -99,12 +99,12 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 
 	udr, ok := dst.CustomStr[UDR_TYPE]
 	if !ok { // Return this right away.
-		return kt.ProviderRouter
+		return kt.ProviderFlowDevice
 	}
 
 	// Or maybe its a host.
 	if udr == "kprobe" || udr == "kappa" {
-		return kt.ProviderHost
+		return kt.ProviderFlowDevice
 	}
 
 	// Else, if its synth, return this.
@@ -117,8 +117,8 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 		return kt.ProviderVPC
 	}
 
-	// Default to router.
-	return kt.ProviderRouter
+	// Default to provider.
+	return kt.ProviderFlowDevice
 }
 
 func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {

@@ -29,17 +29,22 @@ var (
 	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
 	flowOnly     = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
 	jsonToYaml   = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
+	snmpWalk     = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
 	// Do this once here just to see if we need to exit right away.
-	conf, _, _, err := initSnmp(ctx, snmpFile, log)
+	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil { // If no global, we're turning off all snmp polling.
 		return err
 	}
 
 	if *jsonToYaml != "" { // If this flag is set, convert a passed in json mib file to a yaml profile and call it a day.
 		return mibs.ConvertJson2Yaml(*jsonToYaml, log)
+	}
+
+	if *snmpWalk != "" { // If this flag is set, do just a snmp walk on the targeted device and exit.
+		return snmp_util.DoWalk(*snmpWalk, conf, connectTimeout, retries, log)
 	}
 
 	// Load a mibdb if we have one.
@@ -191,12 +196,12 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
 	// like maintaining separate GoSNMP structs for the two goroutines is safe.
-	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, log)
+	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 		return err
 	}
-	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, log)
+	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
 		return err
