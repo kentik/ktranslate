@@ -2,7 +2,6 @@ package cmetrics
 
 import (
 	"log"
-	"log/syslog"
 	"net"
 	"os"
 	"strings"
@@ -13,7 +12,6 @@ import (
 )
 
 var (
-	SYSLOG_FILE_PATH    = "/dev/log"
 	MAX_HTTP_REQ        = 3 // # in-flight metric calls
 	CH_HTTP_LOCAL_PROXY = "CH_HTTP_LOCAL_PROXY"
 )
@@ -37,12 +35,6 @@ func SetConfWithRegistry(conf string, l Logger, log_prefix string, tsdb_prefix s
 
 	if conf != "none" {
 		switch conf {
-		case "syslog":
-			if w, err := syslog.New(syslog.LOG_INFO, "metrics"); err == nil && w != nil {
-				go metrics.Syslog(registry, 60e9, w)
-			} else {
-				l.Errorf(log_prefix, "Could not start syslog metrics: %v", err)
-			}
 		case "stderr":
 			go metrics.Log(registry, 60e9, log.New(os.Stderr, "metrics: ", log.Lmicroseconds))
 		case "jchf":

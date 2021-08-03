@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"sync"
-	"syscall"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -64,7 +63,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 	go func() {
 		// Listen for signals to print or not.
 		sigCh := make(chan os.Signal, 2)
-		signal.Notify(sigCh, syscall.SIGUSR1)
+		signal.Notify(sigCh, kt.SIGUSR1)
 		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
 		s.Infof("File out -- Write is now: %v, dumping on %v", s.doWrite, time.Duration(*FlushDurSec)*time.Second)
 		defer dumpTick.Stop()
@@ -73,7 +72,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 			select {
 			case sig := <-sigCh:
 				switch sig {
-				case syscall.SIGUSR1: // Toggles print.
+				case kt.SIGUSR1: // Toggles print. Note -- doesn't work in windows.
 					s.doWrite = !s.doWrite
 					s.Infof("Write is now: %v", s.doWrite)
 					if s.doWrite {

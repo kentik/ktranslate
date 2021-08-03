@@ -3,6 +3,8 @@ package metadata
 import (
 	"context"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/kentik/gosnmp"
@@ -30,6 +32,7 @@ type Poller struct {
 
 const (
 	DEFUALT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
+	vendorPrefix     = ".1.3.6.1.4.1."
 )
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -200,6 +203,17 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 		if len(dd.DeviceMetricsMetadata.Tables) > 0 {
 			dst.CustomTables = dd.DeviceMetricsMetadata.Tables
+		}
+
+		// Compute vendor int here.
+		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+			if strings.HasPrefix(dst.CustomStr["SysObjectID"], vendorPrefix) {
+				pts := strings.SplitN(dst.CustomStr["SysObjectID"][len(vendorPrefix):], ".", 2)
+				if vendorId, err := strconv.Atoi(pts[0]); err == nil {
+					dst.CustomInt["sysoid_vendor"] = int32(vendorId)
+				}
+			}
+			dst.CustomStr["sysoid_profile"] = p.conf.MibProfile
 		}
 	}
 

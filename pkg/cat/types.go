@@ -4,7 +4,6 @@ import (
 	"database/sql"
 
 	go_metrics "github.com/kentik/go-metrics"
-	old_logger "github.com/kentik/golog/logger"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/api"
@@ -83,7 +82,6 @@ type KTranslate struct {
 	udrMapr      *UDRMapper
 	pgdb         *sql.DB
 	msgsc        chan *kt.Output
-	ol           *old_logger.Logger
 	sinks        map[sinks.Sink]sinks.SinkImpl
 	format       formats.Formatter
 	formatRollup formats.Formatter
