@@ -201,6 +201,9 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 	if strings.Contains(profile, "pdu") || (strings.Contains(combo, "pdu") && !strings.Contains(profile, "router")) {
 		return kt.ProviderPDU, true
 	}
+	if strings.Contains(profile, "fc-switch") {
+		return kt.ProviderFibreChannel, true
+	}
 	if strings.Contains(combo, "iot") {
 		return kt.ProviderIOT, true
 	}

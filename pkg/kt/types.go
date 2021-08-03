@@ -63,6 +63,7 @@ const (
 	ProviderNas                Provider = "kentik-nas"
 	ProviderSan                Provider = "kentik-san"
 	ProviderAgent              Provider = "kentik-agent"
+	ProviderFibreChannel       Provider = "kentik-fibre-channel"
 )
 
 const (
