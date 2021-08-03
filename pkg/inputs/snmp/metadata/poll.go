@@ -185,7 +185,6 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	dst.DeviceName = p.conf.DeviceName
 	dst.SrcAddr = p.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
-
 	if dd.DeviceMetricsMetadata != nil {
 		dst.CustomStr["SysName"] = dd.DeviceMetricsMetadata.SysName
 		dst.CustomStr["SysObjectID"] = dd.DeviceMetricsMetadata.SysObjectID
