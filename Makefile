@@ -2,6 +2,14 @@
 all:
 	go build -tags dynamic -o bin/ktranslate ./cmd/ktranslate
 
+.PHONY: windows
+windows:
+	GOOS=windows GOARCH=amd64 go build -tags dynamic -o bin/ktranslate.exe ./cmd/ktranslate
+
+.PHONY: arm
+arm:
+	GOOS=linux GOARCH=arm64 go build -tags dynamic -o bin/ktranslate-arm ./cmd/ktranslate
+
 .PHONY: test
 test:
 	go test ./cmd/... ./pkg/...

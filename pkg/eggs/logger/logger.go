@@ -6,7 +6,7 @@ import (
 
 // At the lowest level we have a logger.Underlying.
 
-// Implemented by github.com/kentik/golog/logger
+// Implemented by github.com/kentik/ktranslate/pkg/util/logger
 // Don't use this directly.
 type Underlying interface {
 	Debugf(lp string, f string, params ...interface{})
@@ -149,5 +149,3 @@ func NewContextLFromUnderlying(lc Context, ul Underlying) ContextL {
 		L:       &LoggerImpl{UL: ul},
 	}
 }
-
-

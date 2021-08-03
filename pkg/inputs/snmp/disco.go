@@ -65,6 +65,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
 	for _, ipr := range conf.Disco.Cidrs {
 		log.Infof("Discovering snmp speaking devices on %s", ipr)
+		stb := time.Now()
 		targetIterator := scan.NewTargetIterator(ipr)
 		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 		scanner := scan.NewDeviceScanner(targetIterator, timeout)
@@ -87,7 +88,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 			}
 		}
 		wg.Wait()
-		log.Infof("Checked %d ips in %v", len(results), time.Now().Sub(st))
+		log.Infof("Checked %d ips in %v (from start: %v)", len(results), time.Now().Sub(st), time.Now().Sub(stb))
 	}
 
 	if conf.Disco.AddDevices {

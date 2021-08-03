@@ -27,9 +27,8 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/features"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
 
-	"github.com/kentik/golog/logger"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
-	"github.com/kentik/ktranslate/pkg/util/healthcheck"
+	"github.com/kentik/ktranslate/pkg/util/logger"
 )
 
 const (
@@ -68,9 +67,6 @@ type BaseServerConfiguration struct {
 	HealthCheckPeriod       time.Duration
 	HealthCheckTimeout      time.Duration
 
-	// legacy healthcheck
-	LegacyHealthCheckListen string
-
 	// for tests
 	SkipParseFlags bool
 
@@ -86,7 +82,6 @@ var BaseServerConfigurationDefaults = BaseServerConfiguration{
 	LogLevel:                "debug",
 	MetricsDestination:      "syslog",
 	MetaListen:              "localhost:0",
-	LegacyHealthCheckListen: "",
 	ShutdownSettleTime:      1 * time.Second,
 	HealthCheckStartupDelay: 5 * time.Second,
 	HealthCheckPeriod:       30 * time.Second,
@@ -182,7 +177,6 @@ func (bs *BaseServer) ParseFlags() {
 	flag.CommandLine.BoolVar(&bs.LogToStdout, "stdout", bs.LogToStdout, "Log to stdout")
 	flag.CommandLine.StringVar(&bs.MetricsDestination, "metrics", bs.MetricsDestination, "Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003")
 	flag.CommandLine.StringVar(&bs.MetaListen, "metalisten", bs.MetaListen, "HTTP port to bind on")
-	flag.CommandLine.StringVar(&bs.LegacyHealthCheckListen, "healthcheck", bs.LegacyHealthCheckListen, "Bind to this interface to allow healthchecks")
 	flag.CommandLine.StringVar(&bs.OllyDataset, "olly_dataset", bs.OllyDataset, "Olly dataset name")
 	flag.CommandLine.StringVar(&bs.OllyWriteKey, "olly_write_key", bs.OllyWriteKey, "Olly dataset name")
 
@@ -393,10 +387,6 @@ func (bs *BaseServer) spawnHealthCheck(ctx context.Context, service Service) {
 // Start legacy healthcheck if needed. Called as part of Init()
 func (bs *BaseServer) spawnLegacyHealthCheck(ctx context.Context, service Service) {
 	setReady(ctx)
-	if bs.LegacyHealthCheckListen != "" {
-		// todo: check if the service implements healthcheck command handling and pass handleCmd accordingly
-		go healthcheck.Run(bs.LegacyHealthCheckListen, service.GetStatus, nil, bs.Logger)
-	}
 }
 
 func (bs *BaseServer) spawnMetaServer(ctx context.Context, service Service) {

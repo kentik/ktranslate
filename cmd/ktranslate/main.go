@@ -138,7 +138,7 @@ func main() {
 		cat.RollupsSendDuration = time.Duration(*dumpRollups) * time.Second
 	}
 
-	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, bs.Logger, *sinks)
+	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, *sinks)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("Cannot start ktranslate: %v", err))
 	}
@@ -177,7 +177,12 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.flow":
 		setNr()
+	case "nr1.snmp": // Tune for snmp sending.
+		flag.Set("compression", "gzip")
+		flag.Set("sinks", "new_relic")
+		flag.Set("format", "new_relic_metric")
+		flag.Set("max_flows_per_message", "100")
 	default:
-		bs.Fail("Invalid mode " + mode + ". Options = nr1.vpc|nr1.flow|vpc|flow")
+		bs.Fail("Invalid mode " + mode + ". Options = nr1.vpc|nr1.flow|nr1.snmp|vpc|flow")
 	}
 }

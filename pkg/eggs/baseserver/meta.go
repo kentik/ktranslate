@@ -8,25 +8,17 @@ import (
 	"net/http/pprof"
 	"os"
 	"runtime"
-	"strconv"
 	"strings"
 
 	"context"
 	"fmt"
 
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/features"
 	"github.com/kentik/ktranslate/pkg/eggs/version"
-	go_metrics "github.com/kentik/go-metrics"
-	"github.com/kentik/golog/logger"
+	"github.com/kentik/ktranslate/pkg/util/logger"
 
 	"github.com/gorilla/mux"
-	gopsutil_cpu "github.com/shirou/gopsutil/cpu"
-	gopsutil_disk "github.com/shirou/gopsutil/disk"
-	gopsutil_host "github.com/shirou/gopsutil/host"
-	gopsutil_load "github.com/shirou/gopsutil/load"
-	gopsutil_mem "github.com/shirou/gopsutil/mem"
-	gopsutil_net "github.com/shirou/gopsutil/net"
-	gopsutil_process "github.com/shirou/gopsutil/process"
 )
 
 const (
@@ -237,46 +229,10 @@ func (ms *MetaServer) endpoint_environment(w http.ResponseWriter, r *http.Reques
 
 func (ms *MetaServer) endpoint_system(w http.ResponseWriter, r *http.Request) {
 	ms.writeCommonHeaders(w)
-	cpuInfo, _ := gopsutil_cpu.Info()
-	diskInfo, _ := gopsutil_disk.Partitions(true)
-	hostInfo, _ := gopsutil_host.Info()
-	loadInfo, _ := gopsutil_load.Avg()
-	memInfo, _ := gopsutil_mem.VirtualMemory()
-	netInfo, _ := gopsutil_net.IOCounters(true)
-	result := map[string]interface{}{
-		"cpu":  cpuInfo,
-		"disk": diskInfo,
-		"host": hostInfo,
-		"load": loadInfo,
-		"mem":  memInfo,
-		"net":  netInfo,
-	}
-	ms.writeResponse(r, w, result)
 }
 
 func (ms *MetaServer) endpointPS(w http.ResponseWriter, r *http.Request) {
 	ms.writeCommonHeaders(w)
-
-	pid, err := strconv.Atoi(mux.Vars(r)["pid"])
-	if err != nil {
-		pid = os.Getpid()
-	}
-
-	var processInfo = make(map[string]interface{})
-	if process, err := gopsutil_process.NewProcess(int32(pid)); err == nil {
-		processInfo["name"], _ = process.Name()
-		processInfo["exe"], _ = process.Exe()
-		processInfo["cmdline"], _ = process.Cmdline()
-		processInfo["cpuAffinity"], _ = process.CPUAffinity()
-		processInfo["createTime"], _ = process.CreateTime()
-		processInfo["numFDs"], _ = process.NumFDs()
-		processInfo["numThreads"], _ = process.NumThreads()
-		processInfo["memInfo"], _ = process.MemoryInfo()
-		processInfo["memInfoEx"], _ = process.MemoryInfoEx()
-		processInfo["netIOCounters"], _ = process.NetIOCounters(true)
-		processInfo["mmap"], _ = process.MemoryMaps(true)
-	}
-	ms.writeResponse(r, w, processInfo)
 }
 
 func (ms *MetaServer) endpoint_version(w http.ResponseWriter, r *http.Request) {

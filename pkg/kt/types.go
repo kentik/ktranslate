@@ -3,6 +3,7 @@ package kt
 import (
 	"regexp"
 	"strconv"
+	"syscall"
 	"time"
 )
 
@@ -62,6 +63,7 @@ const (
 	ProviderNas                Provider = "kentik-nas"
 	ProviderSan                Provider = "kentik-san"
 	ProviderAgent              Provider = "kentik-agent"
+	ProviderFibreChannel       Provider = "kentik-fibre-channel"
 )
 
 const (
@@ -71,6 +73,8 @@ const (
 
 	SendBatchDuration     = 1 * time.Second
 	DefaultProfileMessage = "Missing matched profile. See overview page for details."
+	SIGUSR1               = syscall.Signal(0xa) // Because windows doesn't have this.
+	SIGUSR2               = syscall.Signal(0xc) // Because windows doesn't have this.
 )
 
 type IntId uint64
