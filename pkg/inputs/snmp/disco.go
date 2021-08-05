@@ -202,10 +202,6 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		device.Provider = provider
 	}
 
-	if device.DeviceName == "CN56GV70C7" {
-		device.DeviceName = "CN56GV703W"
-	}
-
 	mux.Lock()
 	defer mux.Unlock()
 	foundDevices[result.Host.String()] = &device
