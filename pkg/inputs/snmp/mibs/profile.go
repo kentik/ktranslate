@@ -1,6 +1,7 @@
 package mibs
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -172,17 +173,21 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 	return nil
 }
 
-func (p *Profile) validate() {
+func (p *Profile) validate() error {
+	hasErr := false
 	for _, metric := range p.Metrics {
 		if metric.Symbol.Oid == "" && len(metric.Symbols) == 0 {
 			p.Warnf("Possibly corrupted table? %s %s %v", p.From, metric.Mib, metric)
+			hasErr = true
 		}
 		if metric.Symbol.Oid != "" && metric.Symbol.Name == "" {
 			p.Warnf("Possibly corrupted symbol oid? %s %s %v", p.From, metric.Mib, metric.Symbol.Oid)
+			hasErr = true
 		}
 		for _, s := range metric.Symbols {
 			if s.Oid != "" && s.Name == "" {
 				p.Warnf("Possibly corrupted symbols oid? %s %s %v", p.From, metric.Mib, s.Oid)
+				hasErr = true
 			}
 		}
 	}
@@ -190,9 +195,11 @@ func (p *Profile) validate() {
 	for _, tag := range p.MetricTags {
 		if tag.Column.Oid == "" {
 			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+			hasErr = true
 		}
 		if tag.Column.Oid != "" && tag.Column.Name == "" {
 			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+			hasErr = true
 		}
 	}
 
@@ -200,9 +207,15 @@ func (p *Profile) validate() {
 		for _, tag := range metric.MetricTags {
 			if tag.Column.Oid != "" && tag.Column.Name == "" {
 				p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+				hasErr = true
 			}
 		}
 	}
+
+	if hasErr {
+		return fmt.Errorf("Error in %s profile", p.From)
+	}
+	return nil
 }
 
 func (p *Profile) DumpOids(log logger.ContextL) {

@@ -8,7 +8,7 @@ windows:
 
 .PHONY: arm
 arm:
-	GOOS=linux GOARCH=arm64 go build -tags dynamic -o bin/ktranslate-arm ./cmd/ktranslate
+	CGO_LDFLAGS="-L./lib" CGO_ENABLED=1 CC_FOR_TARGET=gcc-aarch64-linux-gnu CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build -o bin/ktranslate-arm ./cmd/ktranslate
 
 .PHONY: test
 test:
