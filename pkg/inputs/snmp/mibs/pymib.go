@@ -18,6 +18,14 @@ const (
 	permissions = 0644
 )
 
+type Constraint struct {
+	Enumeration map[string]int64 `json:"enumeration"`
+}
+
+type Type struct {
+	Constraints Constraint `json:"constraints"`
+}
+
 type PySyntax struct {
 	Type  string `json:"type"`
 	Class string `json:"class"`
@@ -30,6 +38,7 @@ type PySMIMib struct {
 	Desc     string   `json:"description"`
 	Class    string   `json:"class"`
 	Nodetype string   `json:"nodetype"`
+	Type     Type     `json:"type"`
 }
 
 type PySysidMap map[string][]string
@@ -93,7 +102,7 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 			}
 
 			// Else, try to convert this into a mib set.
-			mb := ToMib(mibName, mib, log)
+			mb := ToMib(*pmib, mibName, mib, log)
 			if mb != nil {
 				if mb.Table.Oid != "" {
 					tables[mb.Table.Oid] = mb
@@ -127,7 +136,9 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 
 	// Copy the tables to finals.
 	for _, table := range tables {
-		finals = append(finals, *table)
+		if len(table.Symbols) > 0 || table.Symbol.Oid != "" {
+			finals = append(finals, *table)
+		}
 	}
 
 	// Sort the mibs.
@@ -137,9 +148,18 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 	pro := Profile{
 		Metrics:     finals,
 		Sysobjectid: sysoids,
+		ContextL:    log,
+		From:        name,
+	}
+
+	// Does this profile make sense?
+	if err := pro.validate(); err != nil {
+		time.Sleep(200 * time.Millisecond)
+		return err
 	}
 
 	// Now, write out the profile.
+	pro.From = ""
 	t, err := yaml.Marshal(pro)
 	if err != nil {
 		return err
@@ -156,7 +176,6 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 	}
 
 	time.Sleep(200 * time.Millisecond)
-
 	return fmt.Errorf("ok")
 }
 
@@ -218,7 +237,7 @@ func (mdb *MibDB) LoadPyMibSet(profileDir string) (int, error) {
 				if _, ok := mibset[name]; !ok {
 					mibset[name] = []MIB{}
 				}
-				mb := ToMib(name, mib, mdb.log)
+				mb := ToMib(*pmib, name, mib, mdb.log)
 				if mb != nil {
 					mibset[name] = append(mibset[name], *mb)
 				}
@@ -247,7 +266,7 @@ func (mdb *MibDB) LoadPyMibSet(profileDir string) (int, error) {
 	return len(mibset), nil
 }
 
-func ToMib(mibName string, pm *PySMIMib, log logger.ContextL) *MIB {
+func ToMib(mibSet map[string]*PySMIMib, mibName string, pm *PySMIMib, log logger.ContextL) *MIB {
 	if strings.HasSuffix(pm.Name, "Table") {
 		mib := MIB{
 			Mib: mibName,
@@ -261,6 +280,11 @@ func ToMib(mibName string, pm *PySMIMib, log logger.ContextL) *MIB {
 			sortKey:    pm.Name,
 		}
 		return &mib
+	}
+
+	// If there's no oid, return right away.
+	if pm.Oid == "" {
+		return nil
 	}
 
 	switch pm.Syntax.Type {
@@ -320,7 +344,21 @@ func ToMib(mibName string, pm *PySMIMib, log logger.ContextL) *MIB {
 		}
 		return &mib
 	default:
-		log.Warnf("Skipping type %s for %s", pm.Syntax.Type, pm.Name)
+		if ms, ok := mibSet[pm.Syntax.Type]; ok {
+			mib := MIB{
+				Mib: mibName,
+				Symbol: OID{
+					Oid:  pm.Oid,
+					Name: pm.Name,
+					Desc: pm.Desc,
+					Enum: ms.Type.Constraints.Enumeration,
+				},
+				sortKey: pm.Name,
+			}
+			return &mib
+		} else {
+			log.Warnf("Skipping type %s for %s", pm.Syntax.Type, pm.Name)
+		}
 	}
 
 	return nil
