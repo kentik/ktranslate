@@ -202,6 +202,10 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		device.Provider = provider
 	}
 
+	if device.DeviceName == "CN56GV70C7" {
+		device.DeviceName = "CN56GV703W"
+	}
+
 	mux.Lock()
 	defer mux.Unlock()
 	foundDevices[result.Host.String()] = &device
@@ -214,17 +218,27 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	if conf.Devices == nil {
 		conf.Devices = map[string]*kt.SnmpDeviceConfig{}
 	}
+	byIP := map[string]*kt.SnmpDeviceConfig{}
+	for _, d := range conf.Devices {
+		byIP[d.DeviceIP] = d
+	}
 
-	for _, d := range foundDevices {
-		if conf.Devices[d.DeviceName] == nil {
-			conf.Devices[d.DeviceName] = d
+	for dip, d := range foundDevices {
+		key := d.DeviceName
+		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
+			log.Warnf("Common device name found with different IPs. %s has %s and %s", d.DeviceName, dip, conf.Devices[d.DeviceName].DeviceIP)
+			key = d.DeviceName + "-" + dip
+		}
+
+		if conf.Devices[key] == nil {
+			conf.Devices[key] = d
 			added++
 		} else {
 			if conf.Disco.ReplaceDevices {
-				conf.Devices[d.DeviceName] = d
+				conf.Devices[key] = d
 				replaced++
 			} else {
-				conf.Devices[d.DeviceName].Checked = time.Now()
+				conf.Devices[key].Checked = time.Now()
 			}
 		}
 	}
