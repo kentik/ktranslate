@@ -158,7 +158,11 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 
 		switch variable.Type {
 		case gosnmp.OctetString:
-			md.Tables[idx].Customs[oidName] = string(variable.Value.([]byte))
+			value := string(variable.Value.([]byte))
+			if mib.Conversion != "" { // Adjust for any hard coded values here.
+				value = snmp_util.GetFromConv(variable, mib.Conversion, log)
+			}
+			md.Tables[idx].Customs[oidName] = value
 		case gosnmp.IPAddress: // Does this work?
 			switch val := variable.Value.(type) {
 			case string:

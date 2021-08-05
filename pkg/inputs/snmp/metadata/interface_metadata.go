@@ -415,11 +415,7 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 				case SNMP_ifPhysAddress:
 					switch variable.Type {
 					case gosnmp.OctetString:
-						b := variable.Value.([]byte)
-						if len(b) > 0 {
-							value := "0x" + hex.EncodeToString(b)
-							data.ExtraInfo[SNMP_ifPhysAddress] = value
-						}
+						data.ExtraInfo[SNMP_ifPhysAddress] = snmp_util.GetFromConv(variable, "hwaddr", im.log)
 					}
 				case SNMP_ifLastChange:
 					val := gosnmp.ToBigInt(variable.Value).Uint64()
