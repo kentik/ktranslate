@@ -24,11 +24,13 @@ import (
 )
 
 var (
-	mibdb        *mibs.MibDB // Global singleton instance here.
-	dumpMibTable = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
-	flowOnly     = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
-	jsonToYaml   = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
-	snmpWalk     = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
+	mibdb          *mibs.MibDB // Global singleton instance here.
+	dumpMibTable   = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
+	flowOnly       = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
+	jsonToYaml     = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
+	snmpWalk       = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
+	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1", "Walk this oid if -snmp_do_walk is set.")
+	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
@@ -43,7 +45,7 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	}
 
 	if *snmpWalk != "" { // If this flag is set, do just a snmp walk on the targeted device and exit.
-		return snmp_util.DoWalk(*snmpWalk, conf, connectTimeout, retries, log)
+		return snmp_util.DoWalk(*snmpWalk, *snmpWalkOid, *snmpWalkFormat, conf, connectTimeout, retries, log)
 	}
 
 	// Load a mibdb if we have one.

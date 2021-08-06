@@ -13,11 +13,12 @@ import (
 )
 
 type OID struct {
-	Oid  string           `yaml:"OID,omitempty"`
-	Name string           `yaml:"name,omitempty"`
-	Enum map[string]int64 `yaml:"enum,omitempty"`
-	Tag  string           `yaml:"tag,omitempty"`
-	Desc string           `yaml:"description,omitempty"`
+	Oid        string           `yaml:"OID,omitempty"`
+	Name       string           `yaml:"name,omitempty"`
+	Enum       map[string]int64 `yaml:"enum,omitempty"`
+	Tag        string           `yaml:"tag,omitempty"`
+	Desc       string           `yaml:"description,omitempty"`
+	Conversion string           `yaml:"conversion,omitempty"`
 }
 
 type Tag struct {
@@ -294,11 +295,12 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 		// TODO -- so we want to collase Symbol and Symbols?
 		if metric.Symbol.Oid != "" {
 			mib := &kt.Mib{
-				Oid:  metric.Symbol.Oid,
-				Name: metric.Symbol.Name,
-				Type: otype,
-				Enum: metric.Symbol.Enum,
-				Tag:  metric.Symbol.Tag,
+				Oid:        metric.Symbol.Oid,
+				Name:       metric.Symbol.Name,
+				Type:       otype,
+				Enum:       metric.Symbol.Enum,
+				Tag:        metric.Symbol.Tag,
+				Conversion: metric.Symbol.Conversion,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -316,11 +318,12 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 
 		for _, s := range metric.Symbols {
 			mib := &kt.Mib{
-				Oid:  s.Oid,
-				Name: s.Name,
-				Type: otype,
-				Enum: s.Enum,
-				Tag:  s.Tag,
+				Oid:        s.Oid,
+				Name:       s.Name,
+				Type:       otype,
+				Enum:       s.Enum,
+				Tag:        s.Tag,
+				Conversion: s.Conversion,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -367,10 +370,11 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 	for _, tag := range p.MetricTags {
 		if tag.Column.Oid != "" {
 			mib := &kt.Mib{
-				Oid:  tag.Column.Oid,
-				Name: tag.Column.Name,
-				Type: kt.String,
-				Tag:  tag.Tag,
+				Oid:        tag.Column.Oid,
+				Name:       tag.Column.Name,
+				Type:       kt.String,
+				Tag:        tag.Tag,
+				Conversion: tag.Column.Conversion,
 			}
 			deviceMetadata[tag.Column.Oid] = mib
 		}
@@ -390,10 +394,11 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 		for _, t := range metric.MetricTags {
 			if t.Column.Oid != "" {
 				mib := &kt.Mib{
-					Oid:  t.Column.Oid,
-					Name: t.Column.Name,
-					Type: kt.String,
-					Tag:  t.Tag,
+					Oid:        t.Column.Oid,
+					Name:       t.Column.Name,
+					Type:       kt.String,
+					Tag:        t.Tag,
+					Conversion: t.Column.Conversion,
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib
