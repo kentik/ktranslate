@@ -3,11 +3,12 @@ package util
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 	"time"
-	"unicode/utf8"
 
 	"github.com/kentik/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -166,16 +167,10 @@ func GetDeviceManufacturer(server snmpWalker, log logger.ContextL) string {
 	return deviceManufacturer
 }
 
-func PrettyPrint(pdu gosnmp.SnmpPDU) string {
+func PrettyPrint(pdu gosnmp.SnmpPDU, format string, log logger.ContextL) string {
 	switch pdu.Type {
 	case gosnmp.OctetString:
-		src := pdu.Value.([]byte)
-		if utf8.Valid(src) {
-			v, _ := ReadOctetString(pdu, false)
-			return v
-		} else {
-			return fmt.Sprintf("%v", src)
-		}
+		return GetFromConv(pdu, format, log)
 	case gosnmp.IPAddress:
 		return pdu.Value.(string)
 	case gosnmp.ObjectIdentifier:
@@ -187,7 +182,7 @@ func PrettyPrint(pdu gosnmp.SnmpPDU) string {
 }
 
 // Does a walk of the targeted device and exits.
-func DoWalk(device string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, log logger.ContextL) error {
+func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, log logger.ContextL) error {
 	dconf := conf.Devices[device]
 	if dconf == nil {
 		return fmt.Errorf("No such device found in snmp config: %s", device)
@@ -198,15 +193,72 @@ func DoWalk(device string, conf *kt.SnmpConfig, connectTimeout time.Duration, re
 		return err
 	}
 
-	res, err := WalkOID(".1.3.6.1", server, log, "")
+	res, err := WalkOID(baseOid, server, log, "")
 	if err != nil {
 		return err
 	}
 
 	for _, variable := range res {
-		log.Infof("%s snmpwalk result: %s = %v: %s", device, variable.Name, variable.Type, PrettyPrint(variable))
+		log.Infof("%s snmpwalk result: %s = %v: %s", device, variable.Name, variable.Type, PrettyPrint(variable, format, log))
 	}
 
 	time.Sleep(200 * time.Millisecond)
 	return fmt.Errorf("ok")
+}
+
+// Handle the case of wierd ints encoded as byte arrays.
+func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) string {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Warnf("Invalid Conversion: %s %v %v", pdu.Name, pdu.Value, r)
+		}
+	}()
+
+	bv, ok := pdu.Value.([]byte)
+	if !ok || len(bv) == 0 {
+		return ""
+	}
+
+	// If there's an encoded mac addr here.
+	if conv == "hwaddr" {
+		return net.HardwareAddr(bv).String()
+	}
+
+	// Otherwise, try out some custom conversions.
+	split := strings.Split(conv, ":")
+	if split[0] == "hextoint" && len(split) == 3 {
+		endian := split[1]
+		bit := split[2]
+
+		if endian == "LittleEndian" {
+			switch bit {
+			case "uint64":
+				return fmt.Sprintf("%d", binary.LittleEndian.Uint64(bv))
+			case "uint32":
+				return fmt.Sprintf("%d", binary.LittleEndian.Uint32(bv))
+			case "uint16":
+				return fmt.Sprintf("%d", binary.LittleEndian.Uint16(bv))
+			default:
+				log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
+				return ""
+			}
+		} else if endian == "BigEndian" {
+			switch bit {
+			case "uint64":
+				return fmt.Sprintf("%d", binary.BigEndian.Uint64(bv))
+			case "uint32":
+				return fmt.Sprintf("%d", binary.BigEndian.Uint32(bv))
+			case "uint16":
+				return fmt.Sprintf("%d", binary.BigEndian.Uint16(bv))
+			default:
+				log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
+				return ""
+			}
+		} else {
+			log.Errorf("invalid Endian value (%s) for hex to int conversion", endian)
+			return ""
+		}
+	}
+
+	return string(bv) // Default down to here.
 }

@@ -270,6 +270,9 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 		switch variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
+			if mib.Conversion != "" { // Adjust for any hard coded values here.
+				value = snmp_util.GetFromConv(variable, mib.Conversion, dm.log)
+			}
 			if mib.Enum != nil {
 				dmr.customStr[kt.StringPrefix+oidName] = value // Save the string valued field as an attribute.
 				if val, ok := mib.Enum[strings.ToLower(value)]; ok {
