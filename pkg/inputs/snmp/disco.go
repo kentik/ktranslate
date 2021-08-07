@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -187,6 +188,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				device.DiscoveredMibs[i] = m
 				i++
 			}
+			sort.Strings(device.DiscoveredMibs) // Put them in a common ordering.
 		}
 	}
 
