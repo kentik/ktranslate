@@ -444,8 +444,12 @@ func (mdb *MibDB) parseMibFromYml(fname string, file os.DirEntry, extends map[st
 		if strings.HasPrefix(sysid, ".") {
 			sysid = sysid[1:] // Strip this out if we start with .
 		}
-		mdb.profiles[sysid] = &t
-		mdb.log.Debugf("Adding profile for %s: %s %s", sysid, t.Device.Vendor, t.From)
+		if op, ok := mdb.profiles[sysid]; !ok {
+			mdb.profiles[sysid] = &t
+			mdb.log.Debugf("Adding profile for %s: %s %s", sysid, t.Device.Vendor, t.From)
+		} else {
+			mdb.log.Errorf("Profile for %s already exists. New file %s, Old file %s", sysid, t.From, op.From)
+		}
 	}
 
 	return nil
