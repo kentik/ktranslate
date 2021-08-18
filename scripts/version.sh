@@ -1,8 +1,8 @@
 #!/bin/bash
 # Called by go generate
 
-ver=`kbt deb-version 2>/dev/null`
-if test $? -ne 0; then
+ver="${KENTIK_KTRANSLATE_VERSION:-}"
+if [[ "$ver" = "" ]]; then
 	ver=`git rev-parse HEAD`
 	if test -n "$(git status --porcelain)"; then
 		ver="dirty-$ver"
