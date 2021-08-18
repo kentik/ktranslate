@@ -8,13 +8,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      KENTIK_KTRANSLATE_VERSION: `date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"`
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Set Version
+        run: |
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
 
       - name: Setup Go
         uses: actions/setup-go@v2
@@ -42,7 +44,8 @@ jobs:
 
       - name: Run build
         run: |
-          make
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make
 
       - name: Run vet & lint
         run: |
