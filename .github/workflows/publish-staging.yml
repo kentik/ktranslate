@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      KENTIK_KTRANSLATE_VERSION: `date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"`
     steps:
       - uses: actions/checkout@v2
         with:
@@ -17,7 +19,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: '1.16.6'
+          go-version: '1.16.7'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -40,7 +42,7 @@ jobs:
 
       - name: Run build
         run: |
-          KENTIK_KTRANSLATE_VERSION=`date +"ktranslate-%Y-%m-%d"` make
+          make
 
       - name: Run vet & lint
         run: |
