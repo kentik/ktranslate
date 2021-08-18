@@ -114,6 +114,7 @@ type SnmpDeviceConfig struct {
 	Retries                int               `yaml:"retries"`
 	MatchAttr              map[string]string `yaml:"match_attributes"`
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
+	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
 }
 
 type SnmpTrapConfig struct {

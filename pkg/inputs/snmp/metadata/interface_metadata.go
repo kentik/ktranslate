@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"context"
 	"encoding/hex"
 	"fmt"
 	"net"
@@ -139,7 +140,7 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 	}
 }
 
-func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.InterfaceData, string, error) {
+func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig, server *gosnmp.GoSNMP) (map[string]*kt.InterfaceData, string, error) {
 
 	// map from ifIndex (as a string) to interface definitions
 	intLine := make(map[string]*kt.InterfaceData)
@@ -154,7 +155,7 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 		oidVal := el.Key.(string)
 		oidName := el.Value.(string)
 
-		results, err := snmp_util.WalkOID(oidVal, server, im.log, "Interface")
+		results, err := snmp_util.WalkOID(ctx, conf, oidVal, server, im.log, "Interface")
 		if err != nil {
 			return nil, "", err
 		}
@@ -438,7 +439,7 @@ func (im *InterfaceMetadata) Poll(server *gosnmp.GoSNMP) (map[string]*kt.Interfa
 	isNokia := snmp_util.ContainsAny(lowerManufacturer, "timos", "nokia")
 
 	if isNokia || lowerManufacturer == "" {
-		if err := im.pollNokiaInterfaceOids(server, intLine, interfacesByDescription); err != nil {
+		if err := im.pollNokiaInterfaceOids(ctx, conf, server, intLine, interfacesByDescription); err != nil {
 			return nil, "", err
 		}
 	}
@@ -522,7 +523,7 @@ func parentInterfaceDescriptionFromDescription(description string) string {
 	return ""
 }
 
-func (im *InterfaceMetadata) pollNokiaInterfaceOids(server *gosnmp.GoSNMP,
+func (im *InterfaceMetadata) pollNokiaInterfaceOids(ctx context.Context, conf *kt.SnmpDeviceConfig, server *gosnmp.GoSNMP,
 	intLine, interfacesByDescription map[string]*kt.InterfaceData) error {
 
 	im.log.Debugf("Querying Nokia OIDs")
@@ -538,7 +539,7 @@ func (im *InterfaceMetadata) pollNokiaInterfaceOids(server *gosnmp.GoSNMP,
 		// does, this needs to change, since walkOID will try the OID three
 		// different ways, and if it just doesn't exist on the device, it'll
 		// never work.
-		results, err := snmp_util.WalkOID(oidVal, server, im.log, "Nokia-Interface")
+		results, err := snmp_util.WalkOID(ctx, conf, oidVal, server, im.log, "Nokia-Interface")
 		if err != nil {
 			im.log.Debugf("Error '%v' on %s/%s", err, oidVal, oidName)
 			return err

@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 	"strings"
@@ -92,11 +93,11 @@ var (
 	sysUpTime = "1.3.6.1.2.1.1.3.0"
 )
 
-func (dm *DeviceMetrics) Poll(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
+func (dm *DeviceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 
 	// If there's mibs passed in, use these directly.
 	if len(dm.conf.DeviceOids) > 0 {
-		return dm.pollFromConfig(server)
+		return dm.pollFromConfig(ctx, server)
 	}
 
 	// Otherwise, do it in a hard coded way.
@@ -106,14 +107,14 @@ func (dm *DeviceMetrics) Poll(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 	var dmrs []*deviceMetricRow
 	switch {
 	case snmp_util.ContainsAny(deviceManufacturer, "juniper", "junos"):
-		dmrs = dm.getJuniperDeviceMetrics(dm.log, server)
+		dmrs = dm.getJuniperDeviceMetrics(ctx, dm.log, server)
 	case snmp_util.ContainsAny(deviceManufacturer, "cisco"):
-		dmrs = dm.getCiscoDeviceMetrics(dm.log, server)
+		dmrs = dm.getCiscoDeviceMetrics(ctx, dm.log, server)
 	case snmp_util.ContainsAny(deviceManufacturer, "arista"):
-		dmrs = dm.getAristaDeviceMetrics(dm.log, server)
+		dmrs = dm.getAristaDeviceMetrics(ctx, dm.log, server)
 	default:
 		// Since we don't have any specific metrics here, go ahead and get the very basics with pollfromconfig
-		return dm.pollFromConfig(server)
+		return dm.pollFromConfig(ctx, server)
 	}
 	flows := dm.convertDMToCHF(dmrs)
 	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))
@@ -189,12 +190,12 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 	return flows
 }
 
-func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
+func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
 	var results []gosnmp.SnmpPDU
 	m := map[string]*deviceMetricRow{}
 
 	for oid, mib := range dm.conf.DeviceOids {
-		oidResults, err := snmp_util.WalkOID(oid, server, dm.log, "CustomDeviceMetrics")
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetrics")
 		if err != nil {
 			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{
 				Error:        fmt.Sprintf("Walking %s: %v", oid, err),
@@ -211,7 +212,7 @@ func (dm *DeviceMetrics) pollFromConfig(server *gosnmp.GoSNMP) ([]*kt.JCHF, erro
 
 	// Get uptime manually here.
 	var uptime int64
-	uptimeResults, err := snmp_util.WalkOID(sysUpTime, server, dm.log, "CustomDeviceMetrics")
+	uptimeResults, err := snmp_util.WalkOID(ctx, dm.conf, sysUpTime, server, dm.log, "CustomDeviceMetrics")
 	if err == nil {
 		// You might think that if err == nil then you definitely got back some
 		// results.  Not exactly.  The result might be "No such object", which
@@ -394,14 +395,14 @@ var jnxOids = []string{
 
 // getJuniperDeviceMetrics embeds any errors encountered in the deviceMetricRow.Error
 // field and stores them as flow.
-func (dm *DeviceMetrics) getJuniperDeviceMetrics(log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
+func (dm *DeviceMetrics) getJuniperDeviceMetrics(ctx context.Context, log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
 	m := map[string]*deviceMetricRow{}
 
 	var results []gosnmp.SnmpPDU
 
 	for i, oid := range jnxOids {
 		// Strip trailing dot from the OID being polled.
-		oidResults, err := snmp_util.WalkOID(oid[:len(oid)-1], server, log, "JuniperDeviceMetrics")
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid[:len(oid)-1], server, log, "JuniperDeviceMetrics")
 		if err != nil {
 			m[fmt.Sprintf("err-%d", i)] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", oid, err)}
 			dm.metrics.Errors.Mark(1)
@@ -412,7 +413,7 @@ func (dm *DeviceMetrics) getJuniperDeviceMetrics(log logger.ContextL, server *go
 	}
 
 	var uptime int64
-	uptimeResults, err := snmp_util.WalkOID(sysUpTime, server, log, "JuniperDeviceMetrics")
+	uptimeResults, err := snmp_util.WalkOID(ctx, dm.conf, sysUpTime, server, log, "JuniperDeviceMetrics")
 	if err == nil {
 		// You might think that if err == nil then you definitely got back some
 		// results.  Not exactly.  The result might be "No such object", which
@@ -502,26 +503,26 @@ const (
 
 // getCiscoDeviceMetrics embeds any errors encountered in the deviceMetricRow.Error
 // field and stores them as flow.
-func (dm *DeviceMetrics) getCiscoDeviceMetrics(log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
+func (dm *DeviceMetrics) getCiscoDeviceMetrics(ctx context.Context, log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
 	m := map[string]*deviceMetricRow{}
 
-	cpuResults, err := snmp_util.WalkOID(cpmCPUTree, server, log, "CiscoDeviceMetrics")
+	cpuResults, err := snmp_util.WalkOID(ctx, dm.conf, cpmCPUTree, server, log, "CiscoDeviceMetrics")
 	if err != nil {
 		m["err1"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", cpmCPUTree, err)}
 	}
 
-	physNameResults, err := snmp_util.WalkOID(entPhysicalName, server, log, "CiscoDeviceMetrics")
+	physNameResults, err := snmp_util.WalkOID(ctx, dm.conf, entPhysicalName, server, log, "CiscoDeviceMetrics")
 	if err != nil {
 		m["err2"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", entPhysicalName, err)}
 	}
 
-	memResults, err := snmp_util.WalkOID(ciscoMemoryTree, server, log, "CiscoDeviceMetrics")
+	memResults, err := snmp_util.WalkOID(ctx, dm.conf, ciscoMemoryTree, server, log, "CiscoDeviceMetrics")
 	if err != nil {
 		m["err3"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", ciscoMemoryTree, err)}
 	}
 
 	var uptime int64
-	uptimeResults, err := snmp_util.WalkOID(sysUpTime, server, log, "CiscoDeviceMetrics")
+	uptimeResults, err := snmp_util.WalkOID(ctx, dm.conf, sysUpTime, server, log, "CiscoDeviceMetrics")
 	if err == nil {
 		// You might think that if err == nil then you definitely got back some
 		// results.  Not exactly.  The result might be "No such object", which
@@ -674,22 +675,22 @@ const (
 
 // getAristaDeviceMetrics embeds any errors encountered in the deviceMetricRow.Error
 // field and stores them as flow.
-func (dm *DeviceMetrics) getAristaDeviceMetrics(log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
+func (dm *DeviceMetrics) getAristaDeviceMetrics(ctx context.Context, log logger.ContextL, server *gosnmp.GoSNMP) []*deviceMetricRow {
 	m := map[string]*deviceMetricRow{}
 
 	// Walk the CPU tree first
-	processorTreeResults, err := snmp_util.WalkOID(hrProcessorTree, server, log, "AristaDeviceMetrics")
+	processorTreeResults, err := snmp_util.WalkOID(ctx, dm.conf, hrProcessorTree, server, log, "AristaDeviceMetrics")
 	if err != nil {
 		m["err2"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", hrProcessorTree, err)}
 	}
 
-	deviceTreeResults, err := snmp_util.WalkOID(hrDeviceTree, server, log, "AristaDeviceMetrics")
+	deviceTreeResults, err := snmp_util.WalkOID(ctx, dm.conf, hrDeviceTree, server, log, "AristaDeviceMetrics")
 	if err != nil {
 		m["err1"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", hrDeviceTree, err)}
 	}
 
 	var uptime int64
-	uptimeResults, err := snmp_util.WalkOID(sysUpTime, server, log, "AristaDeviceMetrics")
+	uptimeResults, err := snmp_util.WalkOID(ctx, dm.conf, sysUpTime, server, log, "AristaDeviceMetrics")
 	if err == nil {
 		// You might think that if err == nil then you definitely got back some
 		// results.  Not exactly.  The result might be "No such object", which
