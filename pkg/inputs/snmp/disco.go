@@ -263,6 +263,8 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		conf.Global.MibsEnabled = mibList
 	}
 
+	sort.Strings(conf.Global.MibsEnabled) // Put them in a common ordering.
+
 	// Write out to seperate files any sections which need this.
 	if conf.Disco.CidrOrig != "" {
 		t, err := yaml.Marshal(conf.Disco.Cidrs)
