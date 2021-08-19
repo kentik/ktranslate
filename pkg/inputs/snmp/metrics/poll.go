@@ -92,7 +92,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					continue
 				}
 
-				flows, err := p.Poll()
+				flows, err := p.Poll(ctx)
 				if err != nil {
 					p.log.Warnf("Issue polling SNMP Counter: %v", err)
 
@@ -129,11 +129,11 @@ func (p *Poller) StartLoop(ctx context.Context) {
 }
 
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
-func (p *Poller) Poll() ([]*kt.JCHF, error) {
+func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 
-	deviceFlows, err := p.deviceMetrics.Poll(p.server)
+	deviceFlows, err := p.deviceMetrics.Poll(ctx, p.server)
 
-	flows, err := p.interfaceMetrics.Poll(p.server, deviceFlows)
+	flows, err := p.interfaceMetrics.Poll(ctx, p.server, deviceFlows)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"context"
 	"strconv"
 	"strings"
 	"sync"
@@ -127,14 +128,14 @@ var (
 )
 
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
-func (im *InterfaceMetrics) Poll(server *gosnmp.GoSNMP, lastDeviceMetrics []*kt.JCHF) ([]*kt.JCHF, error) {
+func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, lastDeviceMetrics []*kt.JCHF) ([]*kt.JCHF, error) {
 	im.mux.Lock()
 	defer im.mux.Unlock()
 
 	deltas := map[string]map[string]uint64{}
 
 	for oid, varName := range im.oidMap {
-		results, err := snmp_util.WalkOID(oid, server, im.log, "Counter")
+		results, err := snmp_util.WalkOID(ctx, im.conf, oid, server, im.log, "Counter")
 		if err != nil {
 			im.metrics.Errors.Mark(1)
 			return nil, err

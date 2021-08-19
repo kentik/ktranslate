@@ -90,7 +90,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 	interfaceCheck := tick.NewJitterTicker(p.interval, 25, 100)
 	runPoll := func() {
 		p.log.Infof("Start: Polling SNMP Interface")
-		deviceDataNew, err := p.PollSNMPMetadata()
+		deviceDataNew, err := p.PollSNMPMetadata(ctx)
 		if err != nil {
 			p.log.Warnf("Issue polling SNMP Interface: %v", err)
 			p.metrics.Errors.Mark(1)
@@ -124,8 +124,8 @@ func (p *Poller) StartLoop(ctx context.Context) {
 }
 
 // PollSNMPMetadata checks for relatively static metadata about devices and interfaces
-func (p *Poller) PollSNMPMetadata() (*kt.DeviceData, error) {
-	intLine, deviceManufacturer, err := p.interfaceMetadata.Poll(p.server)
+func (p *Poller) PollSNMPMetadata(ctx context.Context) (*kt.DeviceData, error) {
+	intLine, deviceManufacturer, err := p.interfaceMetadata.Poll(ctx, p.conf, p.server)
 	if err != nil {
 		return nil, err
 	}

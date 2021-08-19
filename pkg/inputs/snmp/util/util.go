@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"encoding/binary"
 	"fmt"
@@ -16,7 +17,7 @@ import (
 )
 
 var (
-	SNMP_POLL_SLEEP_TIME = 60 * time.Second
+	SNMP_POLL_SLEEP_TIME = 10 * time.Second
 
 	// Device Manufacturer aka sysDescr
 	SNMP_DEVICE_MANUFACTURER_OID = "1.3.6.1.2.1.1.1"
@@ -87,7 +88,7 @@ func GetIndex(value, prefix string) string {
 }
 
 // walk the OID subtree under a root, returning a slice of varbinds
-func WalkOID(oid string, server *gosnmp.GoSNMP, log logger.ContextL, logName string) ([]gosnmp.SnmpPDU, error) {
+func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, server *gosnmp.GoSNMP, log logger.ContextL, logName string) ([]gosnmp.SnmpPDU, error) {
 
 	// New strategy -- for each varbind, we'll try three times:
 	//   first, with GetBulk
@@ -106,6 +107,11 @@ func WalkOID(oid string, server *gosnmp.GoSNMP, log logger.ContextL, logName str
 		pollTry{walk: server.BulkWalkAll, sleep: time.Duration(0)},
 		pollTry{walk: server.WalkAll, sleep: time.Duration(0)},
 		pollTry{walk: server.WalkAll, sleep: SNMP_POLL_SLEEP_TIME},
+	}
+
+	// If the device says to not use bulkwalkall, trim this out now.
+	if device.NoUseBulkWalkAll {
+		tries = tries[1:]
 	}
 
 	var err error
@@ -193,7 +199,7 @@ func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, c
 		return err
 	}
 
-	res, err := WalkOID(baseOid, server, log, "")
+	res, err := WalkOID(context.Background(), dconf, baseOid, server, log, "")
 	if err != nil {
 		return err
 	}

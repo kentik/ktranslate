@@ -220,7 +220,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 		// NOTE: we run this poll even if the customer has opted for Minimum SNMP polling
 		// ALSO: we throw away the CHFs returned here, since they can't possibly have non-zero
 		// delta values yet.
-		_, err := metricPoller.Poll()
+		_, err := metricPoller.Poll(ctx)
 		if err != nil {
 			log.Warnf("Init Issue polling SNMP counters: %v", err)
 		}
