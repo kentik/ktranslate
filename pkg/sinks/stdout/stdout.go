@@ -41,13 +41,13 @@ func (s *StdoutSink) HttpInfo() map[string]float64 {
 }
 
 func (s *StdoutSink) watchLogs(ctx context.Context) {
-	s.Infof("Watching for logs")
+	s.Infof("Receiving logs...")
 	for {
 		select {
 		case log := <-s.logTee:
 			s.Send(ctx, kt.NewOutput([]byte(log)))
 		case <-ctx.Done():
-			s.Infof("Watching for logs done")
+			s.Infof("Logs received")
 			return
 		}
 	}

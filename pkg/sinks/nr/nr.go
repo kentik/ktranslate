@@ -275,7 +275,7 @@ func (s *NRSink) checkForEvents(ctx context.Context) {
 
 // Forwards any logs recieved to the NR log API.
 func (s *NRSink) watchLogs(ctx context.Context) {
-	s.Infof("Watching for logs")
+	s.Infof("Receiving logs...")
 	logTicker := time.NewTicker(1 * time.Second)
 	defer logTicker.Stop()
 	batch := make([]string, 0, 100)
@@ -291,7 +291,7 @@ func (s *NRSink) watchLogs(ctx context.Context) {
 				go s.sendLogBatch(ctx, ob)
 			}
 		case <-ctx.Done():
-			s.Infof("Watching for logs done")
+			s.Infof("Logs received")
 			return
 		}
 	}

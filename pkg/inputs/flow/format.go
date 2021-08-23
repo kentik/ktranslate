@@ -269,7 +269,7 @@ func (t *KentikDriver) run(ctx context.Context) {
 			}
 		case <-deviceTicker.C:
 			go func() {
-				t.Infof("updating device list for flow")
+				t.Infof("Updating the network flow device list.")
 				t.devices = t.apic.GetDevicesAsMap(0)
 			}()
 		case <-ctx.Done():

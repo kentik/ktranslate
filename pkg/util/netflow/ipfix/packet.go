@@ -55,7 +55,7 @@ func (m *Message) UnmarshalSets(r io.Reader, s session.Session, t *Translate) er
 	readSize := int(m.Header.Length) - m.Header.Len()
 	if readSize <= 0 {
 		if debug {
-			fmt.Errorf("ipfix message has illegal size %d bytes", m.Header.Length)
+			fmt.Printf("ipfix message has illegal size %d bytes", m.Header.Length)
 		}
 		return fmt.Errorf("ipfix message has illegal size %d bytes", m.Header.Length)
 	}

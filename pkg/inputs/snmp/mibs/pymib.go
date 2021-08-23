@@ -34,7 +34,7 @@ type PySyntax struct {
 type PySMIMib struct {
 	Name     string   `json:"name"`
 	Oid      string   `json:"oid"`
-	Syntax   PySyntax `json:"nodetype`
+	Syntax   PySyntax `json:"syntax"`
 	Desc     string   `json:"description"`
 	Class    string   `json:"class"`
 	Nodetype string   `json:"nodetype"`
