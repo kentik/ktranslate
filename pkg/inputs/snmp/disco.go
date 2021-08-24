@@ -241,7 +241,7 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		}
 	}
 	if !isTest {
-		log.Infof("Adding the %s new SNMP device to the configurationAdding %d new snmp devices to the config, %d replaced from %d", added, replaced, len(foundDevices))
+		log.Infof("Adding %d new SNMP devices to the configuration. %d replaced from %d.", added, replaced, len(foundDevices))
 	}
 
 	// Fill up list of mibs to run on here.
