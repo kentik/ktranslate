@@ -364,20 +364,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	for k, _ := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
-		} else {
-			switch tr := attr[k].(type) {
-			case int:
-				// Force this to string.
-				attr[k] = strconv.Itoa(tr)
-			case int32:
-				// Force this to string.
-				attr[k] = strconv.Itoa(int(tr))
-			case int64:
-				// Force this to string.
-				attr[k] = strconv.Itoa(int(tr))
-			default:
-				// noop.
-			}
 		}
 	}
 
@@ -398,6 +384,8 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	if sent > 0 {
+		attr["sent"] = sent
+		attr["lost"] = lost
 		ms = append(ms, NRMetric{
 			Name:       "kentik.synth.lost_pct",
 			Type:       NR_GAUGE_TYPE,
