@@ -319,7 +319,7 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 		f.Infof("New Metadata for %s", in.DeviceName)
 		f.lastMetadata[in.DeviceName] = lm
 	} else {
-		f.Infof("Not replaceing metadata for %s. Smaller attribute size. new=%d < old=%d, Missing: %v",
+		f.Infof("The metadata for %s was not updated since the attribute size is smaller. New = %d < Old = %d, Size difference = %v.",
 			in.DeviceName, lm.Size(), f.lastMetadata[in.DeviceName].Size(), f.lastMetadata[in.DeviceName].Missing(lm))
 	}
 
@@ -364,20 +364,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	for k, _ := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
-		} else {
-			switch tr := attr[k].(type) {
-			case int:
-				// Force this to string.
-				attr[k] = strconv.Itoa(tr)
-			case int32:
-				// Force this to string.
-				attr[k] = strconv.Itoa(int(tr))
-			case int64:
-				// Force this to string.
-				attr[k] = strconv.Itoa(int(tr))
-			default:
-				// noop.
-			}
 		}
 	}
 
@@ -398,6 +384,8 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	if sent > 0 {
+		attr["sent"] = sent
+		attr["lost"] = lost
 		ms = append(ms, NRMetric{
 			Name:       "kentik.synth.lost_pct",
 			Type:       NR_GAUGE_TYPE,

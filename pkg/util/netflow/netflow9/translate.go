@@ -46,7 +46,7 @@ func (t *Translate) Record(templateID uint16, fields Fields, fss FieldSpecifiers
 		f.Translated = &TranslatedField{}
 		f.Translated.Type = field.Type
 
-		if element, ok := t.Translate.Key(translate.Key{0, field.Type}); ok {
+		if element, ok := t.Translate.Key(translate.Key{EnterpriseID: 0, FieldID: field.Type}); ok {
 			f.Translated.Name = element.Name
 			f.Translated.Value = translate.Bytes(fields[i].Bytes, element.Type)
 		} else if debug {

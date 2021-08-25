@@ -191,6 +191,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
 		dst.DeviceName = d.Name
 		dst.CustomStr[UDR_TYPE] = d.DeviceSubtype
+		dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		if i, ok := d.Interfaces[dst.InputPort]; ok {
 			dst.InputIntDesc = i.InterfaceDescription
 			dst.InputIntAlias = i.SnmpAlias
@@ -428,6 +429,11 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 			dst.CustomStr[n] = v
 			delete(dst.CustomStr, k)
 		}
+	}
+
+	// Fill in as needed.
+	if _, ok := dst.CustomStr["Type"]; !ok {
+		dst.CustomStr["Type"] = "kflow"
 	}
 
 	// Set the type dynamically here to help out processing.

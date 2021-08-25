@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
 	"strings"
@@ -124,7 +125,17 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	s.compression = compression
 
 	s.tr = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 	}
 	s.client = &http.Client{Transport: s.tr}
 
@@ -215,7 +226,6 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 	}
 
 	req.Header.Set("Api-Key", s.NRApiKey)
-	req.Header.Set("X-Insert-Key", s.NRApiKey)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("NR-Data-Provider", NR_DATA_PROVIDER)
 	req.Header.Set("NR-Data-Type", payload.GetDataType())
@@ -275,7 +285,7 @@ func (s *NRSink) checkForEvents(ctx context.Context) {
 
 // Forwards any logs recieved to the NR log API.
 func (s *NRSink) watchLogs(ctx context.Context) {
-	s.Infof("Watching for logs")
+	s.Infof("Receiving logs...")
 	logTicker := time.NewTicker(1 * time.Second)
 	defer logTicker.Stop()
 	batch := make([]string, 0, 100)
@@ -291,7 +301,7 @@ func (s *NRSink) watchLogs(ctx context.Context) {
 				go s.sendLogBatch(ctx, ob)
 			}
 		case <-ctx.Done():
-			s.Infof("Watching for logs done")
+			s.Infof("Logs received")
 			return
 		}
 	}

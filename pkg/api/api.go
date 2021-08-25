@@ -366,7 +366,7 @@ func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfi
 	for _, c := range api.devices {
 		for _, d := range c {
 			if d.Name == dname {
-				api.Infof("Device %s already exists in Kentik.")
+				api.Infof("The %s device already exists in Kentik.")
 				return nil // No need to keep going.
 			}
 		}
@@ -376,7 +376,7 @@ func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfi
 	if len(desc) > 128 {
 		desc = desc[0:127]
 	}
-	api.Infof("Creating device %s in Kentik.", dname)
+	api.Infof("Adding the %s device in Kentik.", dname)
 	dev := &deviceCreate{
 		Name:        dname,
 		Type:        "router",
