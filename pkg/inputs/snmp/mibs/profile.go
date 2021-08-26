@@ -50,6 +50,7 @@ type Profile struct {
 	MetricTags      []Tag          `yaml:"metric_tags,omitempty"`
 	Sysobjectid     kt.StringArray `yaml:"sysobjectid,omitempty"`
 	From            string         `yaml:"from,omitempty"`
+	Provider        kt.Provider    `yaml:"provider,omitempty"`
 	extended        bool
 }
 
