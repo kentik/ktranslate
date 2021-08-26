@@ -42,6 +42,12 @@ jobs:
         run: |
           MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
 
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config/profiles
+
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
@@ -62,8 +68,8 @@ jobs:
         run: |
           docker tag ktranslate:v2 kentik/ktranslate:staging
           docker push kentik/ktranslate:staging
-          docker tag ktranslate:v2 kentik/ktranslate:`date +"%m-%d-%y"`
-          docker push kentik/ktranslate:`date +"%m-%d-%y"`
+          docker tag ktranslate:v2 kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}
+          docker push kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}
 
       - name: Publish binary
         uses: actions/upload-artifact@v2

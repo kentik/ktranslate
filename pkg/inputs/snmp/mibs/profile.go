@@ -50,6 +50,7 @@ type Profile struct {
 	MetricTags      []Tag          `yaml:"metric_tags,omitempty"`
 	Sysobjectid     kt.StringArray `yaml:"sysobjectid,omitempty"`
 	From            string         `yaml:"from,omitempty"`
+	Provider        kt.Provider    `yaml:"provider,omitempty"`
 	extended        bool
 }
 
@@ -113,6 +114,11 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 	// Load each profile into a parsed form.
 	for _, file := range files {
 		fname := profileDir + string(os.PathSeparator) + file.Name()
+
+		// Ignore hidden files.
+		if file.Name()[0:1] == "." {
+			continue
+		}
 
 		// Now, recurse down if this file actually a directory
 		info, err := os.Stat(fname)
