@@ -42,6 +42,12 @@ jobs:
         run: |
           MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
 
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config
+
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}

@@ -201,7 +201,12 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		if first && conf.Disco.AddFromMibDB {
 			device.DeviceOids = mibs
 		}
-		device.Provider = provider
+		// Use the profile's provider if it is set.
+		if mibProfile.Provider != "" {
+			device.Provider = mibProfile.Provider
+		} else {
+			device.Provider = provider
+		}
 	}
 
 	mux.Lock()
