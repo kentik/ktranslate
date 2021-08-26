@@ -175,7 +175,13 @@ type SnmpDeviceMetric struct {
 	InterfaceMetrics go_metrics.Meter
 	Metadata         go_metrics.Meter
 	Errors           go_metrics.Meter
+	Fail             go_metrics.Gauge
 }
+
+const (
+	SNMP_GOOD = 1
+	SNMP_BAD  = 2
+)
 
 func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpDeviceMetric {
 	sm := SnmpDeviceMetric{
@@ -183,7 +189,9 @@ func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpD
 		InterfaceMetrics: go_metrics.GetOrRegisterMeter("interface_metrics^device_name="+deviceName, registry),
 		Metadata:         go_metrics.GetOrRegisterMeter("metadata^device_name="+deviceName, registry),
 		Errors:           go_metrics.GetOrRegisterMeter("snmp_errors^device_name="+deviceName, registry),
+		Fail:             go_metrics.GetOrRegisterGauge("snmp_fail^device_name="+deviceName, registry),
 	}
+	sm.Fail.Update(SNMP_GOOD) // 1 means that this device is not failing.
 	return &sm
 }
 

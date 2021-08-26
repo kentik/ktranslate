@@ -89,6 +89,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					p.log.Warnf("Skipping a counter datapoint for the period %v -- poll scheduled for %v, but only dequeued at %v",
 						scheduledTime.Truncate(counterAlignment), scheduledTime, startTime)
 					p.interfaceMetrics.DiscardDeltaState()
+					p.metrics.Fail.Update(kt.SNMP_BAD)
 					continue
 				}
 
@@ -132,14 +133,26 @@ func (p *Poller) StartLoop(ctx context.Context) {
 func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 
 	deviceFlows, err := p.deviceMetrics.Poll(ctx, p.server)
+	if err != nil {
+		p.log.Warnf("Cannot poll device metrics: %v", err)
+		p.metrics.Fail.Update(kt.SNMP_BAD)
+	}
 
 	flows, err := p.interfaceMetrics.Poll(ctx, p.server, deviceFlows)
 	if err != nil {
+		p.metrics.Fail.Update(kt.SNMP_BAD)
 		return nil, err
 	}
 
 	// Marshal device metrics data into flow and append them to the list.
 	flows = append(flows, deviceFlows...)
+
+	// Since we didn't error and got some flows from this, set the value to GOOD.
+	if len(flows) > 0 {
+		p.metrics.Fail.Update(kt.SNMP_GOOD)
+	} else {
+		p.metrics.Fail.Update(kt.SNMP_BAD) // Otherwise, set to bad because there's no data coming out of this device.
+	}
 
 	return flows, nil
 }
