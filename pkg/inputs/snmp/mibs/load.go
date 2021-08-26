@@ -184,7 +184,7 @@ func (db *MibDB) checkForProvider(name string, profile string, description strin
 
 	combo := name + "^" + description
 	if !strings.Contains(profile, "cisco-catalyst") && (strings.Contains(combo, "router") || strings.Contains(combo, "ios xr") ||
-		strings.Contains(combo, "freebsd") || strings.Contains(profile, "cisco-asa")) {
+		strings.Contains(combo, "freebsd") || strings.Contains(profile, "cisco-asr")) {
 		return kt.ProviderRouter, true
 	}
 	if strings.Contains(combo, "switch") || strings.Contains(profile, "cisco-catalyst") {

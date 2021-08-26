@@ -56,7 +56,7 @@ func TestFullProvider(t *testing.T) {
 		".1.3.6.1.4.1.9.1.1287":       []string{"cisco-catalyst.yml", "Cisco ios xr"},
 		".1.3.6.1.4.1.8072.3.2.10":    []string{"base.yml", "Linux"},
 		".1.3.6.1.4.1.1588.2.1.1.1.1": []string{"brocade-fc-switch.yml", "Brocade"},
-		".1.3.6.1.4.1.9.1.671":        []string{"cisco-asa.yml", "Cisco IOS Software"},
+		".1.3.6.1.4.1.9.1.46":         []string{"cisco-asr.yml", "Cisco IOS Software"},
 	}
 
 	inputs := map[string]kt.Provider{
@@ -74,7 +74,7 @@ func TestFullProvider(t *testing.T) {
 		".1.3.6.1.4.1.9.1.275":        kt.ProviderSwitch,
 		".1.3.6.1.4.1.9.1.1287":       kt.ProviderSwitch,
 		".1.3.6.1.4.1.1588.2.1.1.1.1": kt.ProviderFibreChannel,
-		".1.3.6.1.4.1.9.1.671":        kt.ProviderRouter,
+		".1.3.6.1.4.1.9.1.46":         kt.ProviderRouter,
 	}
 
 	for input, prov := range inputs {
