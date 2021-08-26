@@ -115,6 +115,11 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 	for _, file := range files {
 		fname := profileDir + string(os.PathSeparator) + file.Name()
 
+		// Ignore hidden files.
+		if file.Name()[0:1] == "." {
+			continue
+		}
+
 		// Now, recurse down if this file actually a directory
 		info, err := os.Stat(fname)
 		if err != nil {
