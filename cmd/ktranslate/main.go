@@ -138,6 +138,11 @@ func main() {
 		cat.RollupsSendDuration = time.Duration(*dumpRollups) * time.Second
 	}
 
+	// If running a disco, turn off metalisten
+	if *snmpDisco {
+		flag.Set("metalisten", "")
+	}
+
 	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, *sinks)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("Cannot start ktranslate: %v", err))
