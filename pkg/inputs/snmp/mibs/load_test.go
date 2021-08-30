@@ -65,7 +65,7 @@ func TestFullProvider(t *testing.T) {
 		".1.3.6.1.4.1.9.1.1639":       kt.ProviderRouter,
 		".1.3.6.1.4.1.9.1.449":        kt.ProviderSwitch,
 		".1.3.6.1.4.1.318":            kt.ProviderUPS,
-		".1.3.6.1.4.1.8072.3.2.8":     kt.ProviderRouter,
+		".1.3.6.1.4.1.8072.3.2.8":     kt.ProviderDefault,
 		".1.3.6.1.4.1.318.1.3.5.4":    kt.ProviderUPS,
 		".1.3.6.1.4.1.318.1.3.27":     kt.ProviderUPS,
 		".1.3.6.1.4.1.318.1.3.4.6":    kt.ProviderPDU,
