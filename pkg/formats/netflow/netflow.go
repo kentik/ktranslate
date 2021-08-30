@@ -108,11 +108,11 @@ func NewFormat(log logger.Underlying, comp kt.Compression) (*NetflowFormat, erro
 	case "netflow9":
 		ipf.version = netflow9.Version
 	default:
-		return nil, fmt.Errorf("Invalid netflow version: %s. Supported (netflow9|ipfix)", *Version)
+		return nil, fmt.Errorf("You used an unsupported netflow version: %s. Use netflow9 or ipfix.", *Version)
 	}
 
 	if comp != kt.CompressionNone {
-		return nil, fmt.Errorf("IPFix format does not work with any compression")
+		return nil, fmt.Errorf("You cannot use compression on IPFix data.")
 	}
 
 	ipf.Infof("Netflow formatter running with version %d", ipf.version)
@@ -127,7 +127,7 @@ func (f *NetflowFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	case ipfix.Version:
 		return f.packIpfix(msgs, serBuf)
 	default:
-		return nil, fmt.Errorf("Invalid version")
+		return nil, fmt.Errorf("You used an unsupported version.")
 	}
 }
 

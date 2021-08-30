@@ -260,7 +260,7 @@ func (ms *MetaServer) endpointGetFeature(w http.ResponseWriter, r *http.Request)
 	ms.writeCommonHeaders(w)
 	featureName := mux.Vars(r)["featureName"]
 	if !features.IsValidFeatureName(featureName) {
-		ms.writeError(w, fmt.Errorf("Invalid feature name: %s", featureName), http.StatusNotFound)
+		ms.writeError(w, fmt.Errorf("You used an unsupported feature name: %s.", featureName), http.StatusNotFound)
 		return
 	}
 	enabledGlobally := GetGlobalBaseServer().GetFeatureService().EnabledGlobally(featureName)
@@ -430,7 +430,7 @@ func (ms *MetaServer) getLogLevelFromRequest(r *http.Request) (logger.Level, str
 
 	level, ok := logger.CfgLevels[levelString]
 	if !ok {
-		return level, levelString, fmt.Errorf("log level not found: %s", levelString)
+		return level, levelString, fmt.Errorf("Invalid log level: %s.", levelString)
 	}
 	return level, levelString, nil
 }

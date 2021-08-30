@@ -33,16 +33,16 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	if conf.Disco == nil {
-		return fmt.Errorf("Missing the discovery config %+v", conf)
+		return fmt.Errorf("The discovery configuration is not set: %+v.", conf)
 	}
 
 	if conf.Global == nil || conf.Global.MibProfileDir == "" {
-		return fmt.Errorf("Add a global section and mib profile directory %+v", conf)
+		return fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
 	}
 
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
 		if err := addDevices(nil, snmpFile, conf, true, log); err != nil {
-			return fmt.Errorf("Can not write snmp config file %s - %v", snmpFile, err)
+			return fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err)
 		}
 	}
 
@@ -59,7 +59,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	// Use this for auto-discovering metrics to pull.
 	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 	if err != nil {
-		return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
+		return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 	}
 	defer mdb.Close()
 
@@ -129,7 +129,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		}
 		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
 		if err != nil {
-			log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+			log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 			return
 		}
 		md, err = metadata.GetDeviceMetadata(log, serv, nil)
@@ -151,7 +151,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			}
 			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
 			if err != nil {
-				log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 				return
 			}
 			md, err = metadata.GetDeviceMetadata(log, serv, nil)
@@ -196,7 +196,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	// TODO, actually store this mibs.
 	mibs, provider, first, err := mdb.GetForOidRecur(md.SysObjectID, device.MibProfile, device.Description)
 	if err != nil {
-		log.Warnf("Issue loading mibs: %v", err)
+		log.Warnf("There was an error when loading the mibs: %v.", err)
 	} else {
 		if first && conf.Disco.AddFromMibDB {
 			device.DeviceOids = mibs

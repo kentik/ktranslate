@@ -64,7 +64,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 		if len(pts) > 1 {
 			nr.headers[strings.TrimSpace(pts[0])] = strings.TrimSpace(pts[1])
 		} else {
-			return nil, fmt.Errorf("Invalid header: %s", header)
+			return nil, fmt.Errorf("The %s header contains unsupported content.", header)
 		}
 	}
 
@@ -114,7 +114,7 @@ func (s *HttpSink) HttpInfo() map[string]float64 {
 func (s *HttpSink) sendHttp(ctx context.Context, payload []byte) {
 	req, err := http.NewRequestWithContext(ctx, "POST", s.TargetUrl, bytes.NewBuffer(payload))
 	if err != nil {
-		s.Errorf("Cannot create HTTP request: %v", err)
+		s.Errorf("There was an error when creating an HTTP request: %v.", err)
 		return
 	}
 
@@ -124,17 +124,17 @@ func (s *HttpSink) sendHttp(ctx context.Context, payload []byte) {
 
 	resp, err := s.client.Do(req)
 	if err != nil {
-		s.Errorf("Cannot write to HTTP: %v, creating new client", err)
+		s.Errorf("There was an error when converting to HTTP: %v.", err)
 		s.client = &http.Client{Transport: s.tr}
 	} else {
 		defer resp.Body.Close()
 		bdy, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			s.Errorf("Cannot get resp body from HTTP: %v", err)
+			s.Errorf("There was an error when getting the HTTP response body: %v.", err)
 			s.metrics.DeliveryErr.Mark(1)
 		} else {
 			if resp.StatusCode >= 400 {
-				s.Errorf("Cannot write to HTTP, status code %d, bdy: %s", resp.StatusCode, string(bdy))
+				s.Errorf("There was an error when converting to HTTP: %d. Body: %s.", resp.StatusCode, string(bdy))
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
 				s.metrics.DeliveryWin.Mark(1)

@@ -44,7 +44,7 @@ func AssertUniqueStrings(s []string) []string {
 	for i := 0; i < len(s); i++ {
 		for j := i + 1; j < len(s); j++ {
 			if s[i] == s[j] {
-				panic(fmt.Errorf("duplicate elements found in sequence '%+v'", s))
+				panic(fmt.Errorf("You used duplicated elements in sequence: '%+v'.", s))
 			}
 		}
 	}

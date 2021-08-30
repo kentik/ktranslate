@@ -52,11 +52,11 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCloudSink, 
 func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	rand.Seed(time.Now().UnixNano())
 	if s.Bucket == "" {
-		return fmt.Errorf("Not writing to gcloud -- no bucket set, use -gcloud_bucket flag")
+		return fmt.Errorf("No bucket was set for gcloud. Use the -gcloud_bucket option to set one up.")
 	}
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("Cannot create gcloud client -- %v", err)
+		return fmt.Errorf("There was an error when creating the gcloud client: %v.", err)
 	}
 	s.client = client
 
@@ -73,11 +73,11 @@ func (s *GCloudSink) send(ctx context.Context, payload []byte) {
 	wc := s.client.Bucket(s.Bucket).Object(fmt.Sprintf("%s/%d_%d", s.prefix, time.Now().Unix(), rand.Intn(100000))).NewWriter(ctx)
 	wc.ContentType = s.contentType
 	if _, err := wc.Write(payload); err != nil {
-		s.Errorf("Cannot upload to gcloud: %v", err)
+		s.Errorf("There was an error when uploading to gcloud: %v.", err)
 		s.metrics.DeliveryErr.Mark(1)
 	}
 	if err := wc.Close(); err != nil {
-		s.Errorf("Cannot close upload to gcloud: %v", err)
+		s.Errorf("There was an error when uploading to gcloud: %v.", err)
 		s.metrics.DeliveryErr.Mark(1)
 	}
 	s.metrics.DeliveryWin.Mark(1)

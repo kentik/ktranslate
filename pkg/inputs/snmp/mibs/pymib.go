@@ -182,13 +182,13 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 func loadJson(fname string, log logger.ContextL) (*PySMIMibFile, error) {
 	data, err := os.ReadFile(fname)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot read file %s %v", fname, err)
+		return nil, fmt.Errorf("There was an error when accessing the %s file: %v.", fname, err)
 	}
 
 	pmib := PySMIMibFile{}
 	err = json.Unmarshal(data, &pmib)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot unmarshal file %s", fname)
+		return nil, fmt.Errorf("There was an error when unmarshalling the %s file: %v.", fname, err)
 	}
 
 	return &pmib, nil
@@ -212,13 +212,13 @@ func (mdb *MibDB) LoadPyMibSet(profileDir string) (int, error) {
 		if file.Name() == SysidMap { // Special file which maps loads mids to sysoid markers.
 			data, err := os.ReadFile(fname)
 			if err != nil {
-				mdb.log.Errorf("Cannot read file %s %v", fname, err)
+				mdb.log.Errorf("There was an error when accessing the %s file: %v.", fname, err)
 				continue
 			}
 
 			err = json.Unmarshal(data, &psysmap)
 			if err != nil {
-				mdb.log.Errorf("Cannot unmarshal sysmap file %s %v", fname, err)
+				mdb.log.Errorf("There was an error when marshalling the %s sysmap file: %v.", fname, err)
 			}
 			continue
 		} else {

@@ -213,12 +213,12 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 				// index is two integer elements -- first is ifIndex of the "higher" layer, second is ifIndex of the "lower" layer
 				index := strings.Split(oidIdx, ".")
 				if len(index) != 2 {
-					im.log.Warnf("incorrectly-indexed ifStackStatus instance: %s -> %v", variable.Name, variable.Value)
+					im.log.Warnf("You used an unsupported value for the %s ifStackStatus variable: %v.", variable.Name, variable.Value)
 					continue
 				}
 				val := gosnmp.ToBigInt(variable.Value).Uint64()
 				if val != 1 && val != 2 {
-					im.log.Warnf("bad ifStackStatus value: %s -> %v", variable.Name, variable.Value)
+					im.log.Warnf("You used an unsupported value for the %s ifStackStatus instance: %v.", variable.Name, variable.Value)
 					continue
 				}
 
@@ -234,7 +234,7 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 				// recent TimeFilter value.
 				index := strings.Split(oidIdx, ".")
 				if len(index) != 3 {
-					im.log.Warnf("incorrectly-indexed lldpRemTable instance: %s -> %v", variable.Name, variable.Value)
+					im.log.Warnf("You used an unsupported value for the %s lldpRemTable variable: %v.", variable.Name, variable.Value)
 					continue
 				}
 
@@ -243,14 +243,14 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 					switch oidName {
 					case SNMP_lldpRemPortIdSubtype:
 						if variable.Type != gosnmp.Integer {
-							im.log.Warnf("unexpected type on lldpRemPortIdSubtype %v %v %v", variable.Name, variable.Type, variable.Value)
+							im.log.Warnf("You used an unsupported type for the %v variable: %v.", variable.Name, variable.Type, variable.Value)
 							break
 						}
 						data.ExtraInfo[oidName] = strconv.Itoa(int(gosnmp.ToBigInt(variable.Value).Uint64()))
 
 					case SNMP_lldpRemPortId:
 						if variable.Type != gosnmp.OctetString {
-							im.log.Warnf("unexpected type on lldpRemPortId %v %v %v", variable.Name, variable.Type, variable.Value)
+							im.log.Warnf("You used an unsupported type for the %v variable: %v.", variable.Name, variable.Type, variable.Value)
 							break
 						}
 						value := variable.Value.([]byte)
@@ -278,12 +278,12 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 							// the ifIndex of the interface we're connected to.  Just save it.
 							data.ExtraInfo[oidName] = string(value)
 						default:
-							im.log.Warnf("unexpected subtype for lldpRemPortId: %v %v %v %v", variable.Name, variable.Type, variable.Value, data.ExtraInfo[SNMP_lldpRemPortIdSubtype])
+							im.log.Warnf("You used an unexpected subtype for lldpRemPortId: %v %v %v %v.", variable.Name, variable.Type, variable.Value, data.ExtraInfo[SNMP_lldpRemPortIdSubtype])
 						}
 
 					case SNMP_lldpRemPortDesc, SNMP_lldpRemSysName:
 						if variable.Type != gosnmp.OctetString {
-							im.log.Warnf("unexpected type on %s %v %v %v", oidName, variable.Name, variable.Type, variable.Value)
+							im.log.Warnf("You used an unsupported type for the %s %v %v %v variable.", oidName, variable.Name, variable.Type, variable.Value)
 							break
 						}
 						data.ExtraInfo[oidName] = string(variable.Value.([]byte))

@@ -116,7 +116,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		*NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
-		return fmt.Errorf("Invalid NR region %s. Current regions: EU|US", *NrRegion)
+		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU or US.", *NrRegion)
 	}
 
 	s.NRAccount = *NrAccount
@@ -140,13 +140,13 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	s.client = &http.Client{Transport: s.tr}
 
 	if s.NRAccount == "" || s.NRApiKey == "" {
-		return fmt.Errorf("New Relic requires -nr_account_id flag and NEW_RELIC_API_KEY env var to be set")
+		return fmt.Errorf("You need to set up your New Relic One account ID in the -nr_account_id variable and your API key in the NEW_RELIC_API_KEY environment variable.")
 	}
-	if s.format != formats.FORMAT_NR && s.format != formats.FORMAT_JSON && s.format != formats.FORMAT_NRM {
-		return fmt.Errorf("New Relic only supports new_relic and json formats, not %s", s.format)
+	if s.format != formats.FORMAT_NR && s.format != formats.FORMAT_JSON_FLAT && s.format != formats.FORMAT_NRM {
+		return fmt.Errorf("You used the %s unsupported format. Use flat_json, new_relic, new_relic_metric.", s.format)
 	}
 	if s.compression != kt.CompressionGzip && s.compression != kt.CompressionNone {
-		return fmt.Errorf("New Relic only supports gzip and none compression, not %s", s.compression)
+		return fmt.Errorf("You used the %s unsupported compression format. Use gzip or no compression at all.", s.compression)
 	}
 
 	// Try to upcast the formater here. This lets us send events also.
@@ -182,7 +182,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 func (s *NRSink) Send(ctx context.Context, payload *kt.Output) {
 	if s.checkJson {
 		if err := s.doCheckJson(payload); err != nil {
-			s.Errorf("Invalid payload! Not sending -- len: %d, err: %v", len(payload.Body), err)
+			s.Errorf("You used an unsupported payload: %d. %v.", len(payload.Body), err)
 			return
 		}
 	}
@@ -220,7 +220,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload.Body))
 	if err != nil {
-		s.Errorf("Cannot create NR request: %v", err)
+		s.Errorf("There was an error when communicating to New Relic One: %v.", err)
 		cbErr = err
 		return
 	}
@@ -236,29 +236,29 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 
 	resp, err := s.client.Do(req)
 	if err != nil {
-		s.Errorf("Cannot write to NR: %v, creating new client", err)
+		s.Errorf("There was an error when creating a new client in New Relic One: %v.", err)
 		cbErr = err
 		s.client = &http.Client{Transport: s.tr}
 	} else {
 		defer resp.Body.Close()
 		bdy, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			s.Errorf("Cannot get resp body from NR: %v", err)
+			s.Errorf("There was an error when communicating to New Relic One: %v.", err)
 			cbErr = err
 			s.metrics.DeliveryErr.Mark(1)
 		} else {
 			if resp.StatusCode == 413 {
-				s.Errorf("Cannot write to NR, body too big. Adjusting max records down")
+				s.Errorf("There was an error when communicating to New Relic One. The message was too big.")
 				s.metrics.DeliveryErr.Mark(1)
 				s.tooBig <- len(payload.Body)
 			} else if resp.StatusCode >= 400 {
-				s.Errorf("Cannot write to NR, status code %d", resp.StatusCode)
+				s.Errorf("There was an error when communicating to New Relic One: %v.", resp.StatusCode)
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
 				var nr NRResponce
 				err = json.Unmarshal(bdy, &nr)
 				if err != nil {
-					s.Errorf("Cannot parse resp from NR: %v", err)
+					s.Errorf("There was an error when parsing the response from New Relic One: %v.", err)
 					cbErr = err
 					s.metrics.DeliveryErr.Mark(1)
 				} else {
@@ -342,7 +342,7 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 
 	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.
 	if err != nil {
-		s.Errorf("Cannot marshal log set: %v", err)
+		s.Errorf("There was an error with logs: %v.", err)
 		return
 	}
 
@@ -355,19 +355,19 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	buf.Reset()
 	zw, err := gzip.NewWriterLevel(buf, gzip.DefaultCompression)
 	if err != nil {
-		s.Errorf("Cannot gzip log set: %v", err)
+		s.Errorf("There was an error when compressing logs: %v.", err)
 		return
 	}
 
 	_, err = zw.Write(target)
 	if err != nil {
-		s.Errorf("Cannot write log set: %v", err)
+		s.Errorf("There was an error when writing logs: %v.", err)
 		return
 	}
 
 	err = zw.Close()
 	if err != nil {
-		s.Errorf("Cannot close log set: %v", err)
+		s.Errorf("There was an error when closing logs: %v.", err)
 		return
 	}
 

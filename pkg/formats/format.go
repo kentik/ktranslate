@@ -59,6 +59,6 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 	case FORMAT_DATADOG:
 		return ddog.NewFormat(log, compression)
 	default:
-		return nil, fmt.Errorf("Unknown format %v", format)
+		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}
 }

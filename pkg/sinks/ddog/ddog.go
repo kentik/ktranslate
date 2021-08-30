@@ -72,7 +72,7 @@ func (s *DDogSink) Init(ctx context.Context, format formats.Format, compression 
 	// Fill in some values from envs.
 	apiKey := os.Getenv(DD_API_KEY)
 	if apiKey == "" {
-		return fmt.Errorf("Missing env var %s", DD_API_KEY)
+		return fmt.Errorf("The %s environment variable is not set in your machine.", DD_API_KEY)
 	}
 	s.headers["DD-API-KEY"] = apiKey
 
@@ -101,7 +101,7 @@ func (s *DDogSink) HttpInfo() map[string]float64 {
 func (s *DDogSink) sendHttp(ctx context.Context, payload []byte) {
 	req, err := http.NewRequestWithContext(ctx, "POST", s.TargetUrl, bytes.NewBuffer(payload))
 	if err != nil {
-		s.Errorf("Cannot create HTTP request: %v", err)
+		s.Errorf("There was an error when creating an HTTP request: %v.", err)
 		return
 	}
 
@@ -111,17 +111,17 @@ func (s *DDogSink) sendHttp(ctx context.Context, payload []byte) {
 
 	resp, err := s.client.Do(req)
 	if err != nil {
-		s.Errorf("Cannot write to DDOG: %v, creating new client", err)
+		s.Errorf("There was an error when writing to DDOG: %v.", err)
 		s.client = &http.Client{Transport: s.tr}
 	} else {
 		defer resp.Body.Close()
 		bdy, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			s.Errorf("Cannot get resp body from DDOG: %v", err)
+			s.Errorf("There was an error when communitacting with DDOG: %v.", err)
 			s.metrics.DeliveryErr.Mark(1)
 		} else {
 			if resp.StatusCode >= 400 {
-				s.Errorf("Cannot write to DDOG, status code %d, bdy: %s", resp.StatusCode, string(bdy))
+				s.Errorf("There was an error when communitacting with DDOG: %d. Body: %s.", resp.StatusCode, string(bdy))
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
 				s.metrics.DeliveryWin.Mark(1)

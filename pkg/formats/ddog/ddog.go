@@ -48,7 +48,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*DDogFormat, 
 	case kt.CompressionGzip:
 		jf.doGz = true
 	default:
-		return nil, fmt.Errorf("Invalid compression (%s): format ddog only supports none|gzip", compression)
+		return nil, fmt.Errorf("You used an unsupported compression format: %s. For ddog, use gzip or no compression at all.", compression)
 	}
 
 	return jf, nil

@@ -156,7 +156,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 			return nil, err
 		}
 
-		log.Warnf("Could not connect to SNMP -- take %d", times)
+		log.Warnf("It was not possible to connect to the SNMP devices after %d times.", times)
 		time.Sleep(SNMP_POLL_SLEEP_TIME)
 		times++
 	}

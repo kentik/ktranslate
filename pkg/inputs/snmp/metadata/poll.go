@@ -92,7 +92,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 		p.log.Infof("Start: Polling SNMP Interface")
 		deviceDataNew, err := p.PollSNMPMetadata(ctx)
 		if err != nil {
-			p.log.Warnf("Issue polling SNMP Interface: %v", err)
+			p.log.Warnf("There was an error when polling for SNMP devices: %v.", err)
 			p.metrics.Errors.Mark(1)
 			return
 		}
@@ -101,7 +101,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 		flows, err := p.toFlows(deviceDataNew)
 		if err != nil {
 			p.metrics.Errors.Mark(1)
-			p.log.Warnf("Issue converting metadata: %v", err)
+			p.log.Warnf("There was an error when converting the metadata: %v.", err)
 			return
 		}
 		p.metrics.Metadata.Mark(1)
@@ -132,7 +132,7 @@ func (p *Poller) PollSNMPMetadata(ctx context.Context) (*kt.DeviceData, error) {
 
 	// If there's no interfaces, note this this might be an issue for some devices but keep on going.
 	if len(intLine) == 0 {
-		p.log.Warnf("SNMP: issue polling metadata: zero interfaces found")
+		p.log.Warnf("No SNMP devices were found when polling the metadata.")
 	}
 
 	deviceData := &kt.DeviceData{

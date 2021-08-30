@@ -16,17 +16,17 @@ type validatorFunc func(reflect.StructField, reflect.Value)
 var validators = map[string]validatorFunc{
 	"nil": func(field reflect.StructField, value reflect.Value) {
 		if !value.IsNil() {
-			panic(fmt.Errorf("Field %s must be nil", field.Name))
+			panic(fmt.Errorf("The %s field must be null.", field.Name))
 		}
 	},
 	"not_nil": func(field reflect.StructField, value reflect.Value) {
 		if value.IsNil() {
-			panic(fmt.Errorf("Field %s must not be nil", field.Name))
+			panic(fmt.Errorf("The %s field must not be null.", field.Name))
 		}
 	},
 	"not_empty": func(field reflect.StructField, value reflect.Value) {
 		if value.Len() == 0 {
-			panic(fmt.Errorf("Field %s must not be empty", field.Name))
+			panic(fmt.Errorf("You need to fill in the %s field.", field.Name))
 		}
 	},
 }

@@ -55,9 +55,9 @@ func (m *Message) UnmarshalSets(r io.Reader, s session.Session, t *Translate) er
 	readSize := int(m.Header.Length) - m.Header.Len()
 	if readSize <= 0 {
 		if debug {
-			fmt.Printf("ipfix message has illegal size %d bytes", m.Header.Length)
+			fmt.Printf("The IPFix message is too big: %d bytes.", m.Header.Length)
 		}
-		return fmt.Errorf("ipfix message has illegal size %d bytes", m.Header.Length)
+		return fmt.Errorf("The IPFix message is too big: %d bytes.", m.Header.Length)
 	}
 	data := make([]byte, readSize)
 	if ndata, err := io.ReadFull(r, data); err != nil {
@@ -82,7 +82,7 @@ func (m *Message) UnmarshalSets(r io.Reader, s session.Session, t *Translate) er
 			if debug {
 				debugLog.Printf("short read size of %d\n", readSize)
 			}
-			return fmt.Errorf("ipfix Set %d has illegal size %d bytes", i, readSize)
+			return fmt.Errorf("The %d IPFix message is too big: %d bytes.", i, readSize)
 		}
 
 		data := make([]byte, readSize)

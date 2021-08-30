@@ -76,7 +76,7 @@ func (s *NetSink) Init(ctx context.Context, format formats.Format, compression k
 func (s *NetSink) Send(ctx context.Context, payload *kt.Output) {
 	_, err := s.conn.Write(payload.Body)
 	if err != nil {
-		s.Errorf("Cannot write: %v", err)
+		s.Errorf("There was an error when writing: %v.", err)
 		s.metrics.DeliveryErr.Mark(1)
 	} else {
 		s.metrics.DeliveryWin.Mark(1)

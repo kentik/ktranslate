@@ -44,7 +44,7 @@ func (propsvc *stdPropertyService) GetProperty(name string) (string, bool) {
 
 func (propsvc *stdPropertyService) GetPropertySub(propertyName string, sub ...interface{}) (string, bool) {
 	if !IsValidPropertySubName(propertyName) {
-		panic(fmt.Errorf("Invalid property sub name '%s'", propertyName))
+		panic(fmt.Errorf("You used an unsupported property sub name: %s.", propertyName))
 	}
 
 	if len(sub)%2 != 0 {

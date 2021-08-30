@@ -62,13 +62,13 @@ func (p *Profile) extend(extends map[string]*Profile) error {
 
 	for _, name := range p.Extends {
 		if ep, ok := extends[name]; !ok {
-			p.Errorf("Missing extended profile %s", name)
+			p.Errorf("You must set the %s extended profile.", name)
 			continue
 		} else {
 			// Verify this guy is extended.
 			err := ep.extend(extends) // recursive, watch out.
 			if err != nil {
-				p.Errorf("Cannot extend profile %s %v", name, err)
+				p.Errorf("There was an error when extending the %s profile: %v.", name, err)
 				continue
 			}
 
@@ -123,14 +123,14 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 		// Now, recurse down if this file actually a directory
 		info, err := os.Stat(fname)
 		if err != nil {
-			mdb.log.Errorf("Cannot stat dir %s", fname)
+			mdb.log.Errorf("There was an error with the %s folder.", fname)
 			continue
 		}
 		if info.IsDir() {
 			mdb.log.Infof("Recursing into %s", fname)
 			err := mdb.loadProfileDir(fname, extends)
 			if err != nil {
-				mdb.log.Errorf("Cannot recurse into directory %s", fname)
+				mdb.log.Errorf("There was an error when accessing the following folder: %s: %v.", fname)
 				continue
 			}
 		}
@@ -140,12 +140,12 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 		case "xml":
 			err := mdb.parseMibFromXml(fname)
 			if err != nil {
-				mdb.log.Errorf("Cannot parse XML mib %s %v", fname, err)
+				mdb.log.Errorf("There was an error when parsing the %s XML mib: %v.", fname, err)
 			}
 		case "yaml", "yml":
 			err := mdb.parseMibFromYml(fname, file, extends)
 			if err != nil {
-				mdb.log.Errorf("Cannot parse Yaml mib %s %v", fname, err)
+				mdb.log.Errorf("There was an error when parsing the %s YAML mib: %v.", fname, err)
 			}
 		default:
 			if len(pts) > 1 {
@@ -184,16 +184,16 @@ func (p *Profile) validate() error {
 	hasErr := false
 	for _, metric := range p.Metrics {
 		if metric.Symbol.Oid == "" && len(metric.Symbols) == 0 {
-			p.Warnf("Possibly corrupted table? %s %s %v", p.From, metric.Mib, metric)
+			p.Warnf("There was an error in a table: %s %s %v.", p.From, metric.Mib, metric)
 			hasErr = true
 		}
 		if metric.Symbol.Oid != "" && metric.Symbol.Name == "" {
-			p.Warnf("Possibly corrupted symbol oid? %s %s %v", p.From, metric.Mib, metric.Symbol.Oid)
+			p.Warnf("You used an unsupported symbol for oid: %s %s %v.", p.From, metric.Mib, metric.Symbol.Oid)
 			hasErr = true
 		}
 		for _, s := range metric.Symbols {
 			if s.Oid != "" && s.Name == "" {
-				p.Warnf("Possibly corrupted symbols oid? %s %s %v", p.From, metric.Mib, s.Oid)
+				p.Warnf("You used unsupported symbols for oid: %s %s %v.", p.From, metric.Mib, s.Oid)
 				hasErr = true
 			}
 		}
@@ -201,11 +201,11 @@ func (p *Profile) validate() error {
 
 	for _, tag := range p.MetricTags {
 		if tag.Column.Oid == "" {
-			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+			p.Warnf("There was an error in a metadata table: %s %v.", p.From, tag)
 			hasErr = true
 		}
 		if tag.Column.Oid != "" && tag.Column.Name == "" {
-			p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+			p.Warnf("There was an error in a metadata table: %s %v.", p.From, tag)
 			hasErr = true
 		}
 	}
@@ -213,7 +213,7 @@ func (p *Profile) validate() error {
 	for _, metric := range p.Metrics {
 		for _, tag := range metric.MetricTags {
 			if tag.Column.Oid != "" && tag.Column.Name == "" {
-				p.Warnf("Possibly corrupted metadata table? %s %v", p.From, tag)
+				p.Warnf("There was an error in a metadata table: %s %v.", p.From, tag)
 				hasErr = true
 			}
 		}
