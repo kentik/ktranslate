@@ -306,7 +306,7 @@ func fetchVpcs(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, regi
 		return true
 	})
 	if err != nil {
-		return fmt.Errorf("Error fetching Vpcs: %s", err)
+		return fmt.Errorf("There was an error when fetching VPCS: %s.", err)
 	}
 	return nil
 }
@@ -314,7 +314,7 @@ func fetchVpcs(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, regi
 func fetchAvailabilityZones(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, regionName string, sleepTime time.Duration) error {
 	out, err := ec2cli.DescribeAvailabilityZonesWithContext(ctx, &ec2.DescribeAvailabilityZonesInput{})
 	if err != nil {
-		return fmt.Errorf("Error fetching availability zones: %s", err)
+		return fmt.Errorf("There was an error when fetching availability zones: %s.", err)
 	}
 	for _, az := range out.AvailabilityZones {
 		if az == nil || az.ZoneId == nil {
@@ -360,7 +360,7 @@ func fetchSubnets(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, r
 			return true
 		})
 	if err != nil {
-		return fmt.Errorf("Error fetching subnets: %s", err)
+		return fmt.Errorf("There was an error when fetching subnets: %s.", err)
 	}
 	return nil
 }
@@ -399,7 +399,7 @@ func fetchInternetGateways(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTo
 			return true
 		})
 	if err != nil {
-		return fmt.Errorf("Error fetching internet gateways: %s", err)
+		return fmt.Errorf("There was an error when fetching internet gateways: %s.", err)
 	}
 	return nil
 }
@@ -430,7 +430,7 @@ func fetchNATGateways(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopolog
 			return true
 		})
 	if err != nil {
-		return fmt.Errorf("Error fetching NAT gateways: %s", err)
+		return fmt.Errorf("There was an error when fetching NAT gateways: %s.", err)
 	}
 	return nil
 }
@@ -450,7 +450,7 @@ func fetchTransitGateways(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTop
 			return true
 		})
 	if err != nil {
-		return fmt.Errorf("Error fetching transit gateways: %s", err)
+		return fmt.Errorf("There was an error when fetching transit gateways: %s.", err)
 	}
 	return nil
 }
@@ -491,7 +491,7 @@ func fetchTransitGatewayAttachments(ctx context.Context, ec2cli *ec2.EC2, topolo
 			return true
 		})
 	if err != nil {
-		return fmt.Errorf("Error fetching transit gateway attachments: %s", err)
+		return fmt.Errorf("There was an error when fetching transit gateways attachments: %s.", err)
 	}
 	return nil
 }
@@ -499,7 +499,7 @@ func fetchTransitGatewayAttachments(ctx context.Context, ec2cli *ec2.EC2, topolo
 func fetchVPNGateways(ctx context.Context, ec2cli *ec2.EC2, topology *AWSTopology, regionName string, sleepTime time.Duration) error {
 	output, err := ec2cli.DescribeVpnGatewaysWithContext(ctx, &ec2.DescribeVpnGatewaysInput{})
 	if err != nil {
-		return fmt.Errorf("Error fetching VPN gateways: %s", err)
+		return fmt.Errorf("There was an error when fetching VPN gateways: %s.", err)
 	}
 
 	for _, gw := range output.VpnGateways {
@@ -534,7 +534,7 @@ func fetchVpcPeeringConnections(ctx context.Context, ec2cli *ec2.EC2, topology *
 		return true
 	})
 	if err != nil {
-		return fmt.Errorf("Error fetching VPC peering connections gateways: %s", err)
+		return fmt.Errorf("There was an error when fetching VPC peering connections gateways: %s.", err)
 	}
 	return nil
 }

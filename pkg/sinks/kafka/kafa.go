@@ -69,7 +69,7 @@ func (s *KafkaSink) Send(ctx context.Context, payload *kt.Output) {
 		Value: payload.Body,
 	})
 	if err != nil {
-		s.Errorf("Delivery failed: %v\n", err)
+		s.Errorf("There was an error with the delivery: %v.", err)
 		s.metrics.DeliveryErr.Mark(1)
 	} else {
 		s.metrics.DeliveryWin.Mark(1)

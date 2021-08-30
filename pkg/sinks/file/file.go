@@ -80,7 +80,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 						name := s.getName()
 						f, err := os.Create(name)
 						if err != nil {
-							s.Errorf("Cannot create file %s -> %v", name, err)
+							s.Errorf("There was an error when creating the %s file: %v.", name, err)
 						} else {
 							s.fd = f
 						}
@@ -101,7 +101,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 				name := s.getName()
 				f, err := os.Create(name)
 				if err != nil {
-					s.Errorf("Cannot create file %s -> %v", name, err)
+					s.Errorf("There was an error when creating the %s file: %v.", name, err)
 					s.fd = nil
 				} else {
 					s.fd = f

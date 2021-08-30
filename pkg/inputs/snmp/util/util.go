@@ -127,10 +127,10 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 			return results, nil
 		}
 
-		log.Warnf("%s SNMP retry %d, poll error '%v' walking OID %s", logName, i, err, oid)
+		log.Warnf("There was an SNMP polling error with the %s walking OID after %d retries:%v.", logName, i, err, oid)
 	}
 
-	log.Warnf("%s SNMP retry on OID %s failed - giving up", logName, oid)
+	log.Warnf("There was an error with the %s OID in the SNMP retry: %s.", logName, oid)
 	return nil, err
 }
 
@@ -191,7 +191,7 @@ func PrettyPrint(pdu gosnmp.SnmpPDU, format string, log logger.ContextL) string 
 func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, log logger.ContextL) error {
 	dconf := conf.Devices[device]
 	if dconf == nil {
-		return fmt.Errorf("No such device found in snmp config: %s", device)
+		return fmt.Errorf("The %s device was not found in the SNMP configuration file.", device)
 	}
 
 	server, err := InitSNMP(dconf, connectTimeout, retries, "", log)

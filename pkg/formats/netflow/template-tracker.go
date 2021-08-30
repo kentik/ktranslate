@@ -24,7 +24,7 @@ func (ipf *NetflowFormat) addTemplate(srcId uint32, templateId uint16, kind stri
 		if ipf.templateTracker[srcId][templateId] == "" {
 			ipf.Debugf("received new %s template for observation domain id %d, template id %d:  %s", kind, srcId, templateId, templateStr)
 		} else {
-			ipf.Warnf("received modified %s template for observation domain id %d, template id %d:  %s", kind, srcId, templateId, templateStr)
+			ipf.Warnf("The %s template was modified for the %d observation domain ID. Template ID %d: %s.", kind, srcId, templateId, templateStr)
 		}
 		ipf.templateTracker[srcId][templateId] = templateStr
 	}

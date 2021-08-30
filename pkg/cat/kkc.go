@@ -126,7 +126,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 
 	m, err := maps.LoadMapper(config.TagMapType, log.GetLogger().GetUnderlyingLogger())
 	if err != nil {
-		kc.log.Errorf("Cannot open tag service %v", err)
+		kc.log.Errorf("There was an error when opening the tag service: %v.", err)
 		return nil, err
 	}
 	kc.tagMap = m
@@ -135,7 +135,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if config.GeoMapping != "" {
 		geo, err := patricia.NewMapFromMM(config.GeoMapping, log)
 		if err != nil {
-			kc.log.Errorf("Error with geo service: %v", err)
+			kc.log.Errorf("There was an error with geo service: %v.", err)
 			return nil, err
 		} else {
 			kc.geo = geo
@@ -146,7 +146,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if config.AsnMapping != "" {
 		asn, err := patricia.NewMapFromMM(config.AsnMapping, log)
 		if err != nil {
-			kc.log.Errorf("Error with asn service %v", err)
+			kc.log.Errorf("There was an error with the asn service: &v.", err)
 			return nil, err
 		} else {
 			kc.asn = asn
@@ -396,7 +396,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Content-Encoding") == "gzip" {
 		z, err := gzip.NewReader(r.Body)
 		if err != nil {
-			kc.log.Errorf("Decompressing body: %+v", err)
+			kc.log.Errorf("There was an eror when decompressing the content: %+v.", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -416,7 +416,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	if contentLengthString != "" {
 		size, err := strconv.Atoi(contentLengthString)
 		if err != nil {
-			kc.log.Errorf("Reading content length: %+v", err)
+			kc.log.Errorf("There was an error when getting the content length: %v.", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -432,7 +432,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	_, err = bodyBuffer.ReadFrom(body)
 
 	if err != nil {
-		kc.log.Errorf("Reading body: %+v", err)
+		kc.log.Errorf("There was an error when reading the body content: %v.", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -561,7 +561,7 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 				if len(export) > 0 {
 					res, err := kc.formatRollup.Rollup(export)
 					if err != nil {
-						kc.log.Errorf("Cannot handle rollup: %v", err)
+						kc.log.Errorf("There was an error when handling rollup: %v.", err)
 					} else {
 						kc.msgsc <- res
 					}
@@ -621,7 +621,7 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 			}
 			ser, err := seri(msgs[last:batch], serBuf)
 			if err != nil {
-				kc.log.Errorf("Converting to native: %v", err)
+				kc.log.Errorf("There was an error when converting to native: %v.", err)
 			} else if ser != nil {
 				ser.CB = cb
 				kc.msgsc <- ser
@@ -722,7 +722,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 			}
 			ser, err := seri(msgs[0:keep], serBuf)
 			if err != nil {
-				kc.log.Errorf("Converting to native: %v", err)
+				kc.log.Errorf("There was an error when converting to native: %v.", err)
 			} else {
 				kc.msgsc <- ser
 			}
@@ -747,7 +747,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 			case jflow := <-kc.jchfChans[i]: // non blocking select on this chan.
 				err := kc.flowToJCHF(ctx, citycache, regioncache, jflow, f, currentTime, tagcache)
 				if err != nil {
-					kc.log.Errorf("Cannot convert to json: %v", err)
+					kc.log.Errorf("There was an error when converting to json: %v.", err)
 					jflow.Reset()
 					kc.jchfChans[i] <- jflow
 					continue
@@ -816,7 +816,7 @@ func (kc *KTranslate) listenHTTP() {
 
 	// err is always non-nil -- the http server stopped.
 	if err != http.ErrServerClosed {
-		kc.log.Errorf("While bringing up HTTP system on %s -- %v", kc.config.Listen, err)
+		kc.log.Errorf("There was an error when bringing up the HTTP system on %s: %v.", kc.config.Listen, err)
 		panic(err)
 	}
 	kc.log.Infof("HTTP server shut down on %s -- %v", kc.config.Listen, err)

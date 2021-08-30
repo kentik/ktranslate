@@ -83,7 +83,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 	if per, err := strconv.Atoi(dp); err == nil {
 		da := os.Getenv(DO_DEMO_AMP)
 		if amp, err := strconv.Atoi(da); err != nil {
-			return nil, fmt.Errorf("Bad value for demo amplitude: %s. Be sure to set %s", da, DO_DEMO_AMP)
+			return nil, fmt.Errorf("You used an unsupported value for demo amplitude: %s. Ensure you setup the %s variable.", da, DO_DEMO_AMP)
 		} else {
 			jf.demo = NewDemozer(jf, uint32(per), uint32(amp))
 			jf.Infof("Running Demo System with period of %d and amplitude of %d", per, amp)
@@ -96,7 +96,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*NRMFormat, e
 	case kt.CompressionGzip:
 		jf.doGz = true
 	default:
-		return nil, fmt.Errorf("Invalid compression (%s): format nrm only supports none|gzip", compression)
+		return nil, fmt.Errorf("You used an unsupported compression format: %s. For nrm, use gzip or no compression at all.", compression)
 	}
 
 	return jf, nil
@@ -207,7 +207,7 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {
 		// This is actually an event, send out as an event to sink directly.
 		err := events.SendEvent(in, f.doGz, f.EventChan)
 		if err != nil {
-			f.Errorf("Cannot send event on -- %v", err)
+			f.Errorf("There was an error when sending an event: %v.", err)
 		}
 	default:
 		f.mux.Lock()

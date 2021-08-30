@@ -82,11 +82,11 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) error {
 					}
 				}
 				if err := scanner.Err(); err != nil {
-					vpc.Warnf("cannot scan clear %s %s: %v", bucket, *mdata.Key, err)
+					vpc.Warnf("Could not scan %s %s: %v.", bucket, *mdata.Key, err)
 					return err
 				}
 			} else { // Can't un-gzip here.
-				vpc.Warnf("cannot gz %s %s: %v", bucket, *mdata.Key, err)
+				vpc.Warnf("Could not gz %s %s: %v.", bucket, *mdata.Key, err)
 				return err
 			}
 		} else {
@@ -114,11 +114,11 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) error {
 				}
 			}
 			if err := scanner.Err(); err != nil {
-				vpc.Warnf("cannot scan %s %s: %v", bucket, *mdata.Key, err)
+				vpc.Warnf("Could not close %s %s: %v.", bucket, *mdata.Key, err)
 				return err
 			}
 			if err := zr.Close(); err != nil {
-				vpc.Warnf("cannot close zr %s %s: %v", bucket, *mdata.Key, err)
+				vpc.Warnf("Could not close zr %s %s: %v.", bucket, *mdata.Key, err)
 				return err
 			}
 		}
@@ -132,7 +132,7 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) error {
 		// Pull out all the info we can from the key path.
 		err := record.ProcessKey(bucket, *mdata.Key)
 		if err != nil {
-			vpc.Warnf("cannot process %s %s: %v", bucket, *mdata.Key, err)
+			vpc.Warnf("Could not process %s %s: %v.", bucket, *mdata.Key, err)
 			return err
 		}
 
@@ -144,7 +144,7 @@ func (vpc *AwsVpc) processObject(bucket string, mdata *s3.Object) error {
 			vpc.metrics.DroppedFlows.Mark(int64(len(record.Lines)))
 		}
 	} else {
-		vpc.Warnf("No flows found for %s %s", bucket, *mdata.Key)
+		vpc.Warnf("No flow data devices found for %s %s.", bucket, *mdata.Key)
 	}
 
 	return nil

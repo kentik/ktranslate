@@ -34,7 +34,7 @@ func NewVpc(ctx context.Context, cloud CloudSource, log logger.Underlying, regis
 	case Gcp:
 		return gcp.NewVpc(ctx, log, registry, jchfChan, apic, maxBatchSize)
 	case Azure:
-		return nil, fmt.Errorf("Unimplemented vpc %v", cloud)
+		return nil, fmt.Errorf("Azure is not yet supported as a VPC: %v.", cloud)
 	}
-	return nil, fmt.Errorf("Unknown vpc %v", cloud)
+	return nil, fmt.Errorf("You used an unsupported VPC: %v.", cloud)
 }

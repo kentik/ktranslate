@@ -10,7 +10,7 @@ import (
 )
 
 func errInvalidVersion(v uint16) error {
-	return fmt.Errorf("version %d is not a valid IPFIX message version", v)
+	return fmt.Errorf("You used an unsupported IPFix message version: %d.", v)
 }
 
 func errProtocol(f string) error {
@@ -18,7 +18,7 @@ func errProtocol(f string) error {
 }
 
 func errTemplateNotFound(t uint16) error {
-	return fmt.Errorf("template with id=%d not found", t)
+	return fmt.Errorf("The template with the %d ID was not found.", t)
 }
 
 // Decoder can decode multiple IPFIX messages from a stream.

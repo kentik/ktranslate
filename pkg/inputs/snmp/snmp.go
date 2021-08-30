@@ -52,7 +52,7 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	if conf.Global != nil {
 		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 		if err != nil {
-			return fmt.Errorf("Cannot set up mibDB -- db: %s, profiles: %s -> %v", conf.Global.MibDB, conf.Global.MibProfileDir, err)
+			return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
 	} else {
@@ -113,7 +113,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	ctxSnmp, cancel := context.WithCancel(ctx)
 	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log)
 	if err != nil {
-		log.Errorf("Error running snmp polling: %v", err)
+		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
 	}
 
 	// Now, wait for sigusr2 to re-do.
@@ -199,13 +199,13 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	// like maintaining separate GoSNMP structs for the two goroutines is safe.
 	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
-		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 		metrics.Fail.Update(kt.SNMP_BAD)
 		return err
 	}
 	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
-		log.Warnf("Init Issue starting SNMP interface component -- %v", err)
+		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 		metrics.Fail.Update(kt.SNMP_BAD)
 		return err
 	}
@@ -225,7 +225,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 		_, err := metricPoller.Poll(ctx)
 		if err != nil {
 			metrics.Fail.Update(kt.SNMP_BAD)
-			log.Warnf("Init Issue polling SNMP counters: %v", err)
+			log.Warnf("There was an error when polling the SNMP counters: %v.", err)
 		}
 
 		// Having done that, we'll launch additional, separate goroutines for

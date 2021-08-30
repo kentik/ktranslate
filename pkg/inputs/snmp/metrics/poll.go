@@ -95,7 +95,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 
 				flows, err := p.Poll(ctx)
 				if err != nil {
-					p.log.Warnf("Issue polling SNMP Counter: %v", err)
+					p.log.Warnf("There was an error when polling the SNMP counter: %v.", err)
 
 					// We didn't collect all the metrics here, which means that our delta values are
 					// off, and we have to discard them.
