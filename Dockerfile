@@ -21,7 +21,6 @@ RUN set -eux; ln -sv /etc/ktranslate/mibs.db /etc/mib.db; ls -l /etc/mib.db/
 COPY bin/ktranslate /usr/local/bin/
 
 USER ktranslate
-ENTRYPOINT ["ktranslate", "-metalisten", "0.0.0.0:8083", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
+ENTRYPOINT ["ktranslate", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
 
 EXPOSE 8082
-EXPOSE 8083
