@@ -26,7 +26,7 @@ import (
 var (
 	mibdb          *mibs.MibDB // Global singleton instance here.
 	dumpMibTable   = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
-	flowOnly       = flag.Bool("snmp_flow_only", false, "If true, don't poll snmp devices.")
+	flowOnly       = flag.Bool("flow_only", false, "If true, don't poll snmp devices.")
 	jsonToYaml     = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
 	snmpWalk       = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
 	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1", "Walk this oid if -snmp_do_walk is set.")
