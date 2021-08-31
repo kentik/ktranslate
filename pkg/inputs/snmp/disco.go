@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"sort"
 	"strings"
 	"sync"
@@ -65,6 +66,19 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
 	for _, ipr := range conf.Disco.Cidrs {
+		_, _, err := net.ParseCIDR(ipr)
+		if err != nil {
+			// Try defaulting this to a /32.
+			ipr = ipr + "/32"
+			_, _, err := net.ParseCIDR(ipr)
+			if err != nil {
+				log.Errorf("Invalid cidr, skipping: %s", ipr)
+				continue
+			} else {
+				log.Infof("Defaulting to a /32 range for %s", ipr)
+			}
+		}
+
 		log.Infof("Discovering SNMP devices on %s.", ipr)
 		stb := time.Now()
 		targetIterator := scan.NewTargetIterator(ipr)
