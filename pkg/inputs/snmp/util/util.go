@@ -127,7 +127,7 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 			return results, nil
 		}
 
-		log.Warnf("There was an SNMP polling error with the %s walking OID after %d retries:%v.", logName, i, err, oid)
+		log.Warnf("There was an SNMP polling error with the %s walking OID %s after %d retries: %v.", logName, oid, i, err)
 	}
 
 	log.Warnf("There was an error with the %s OID in the SNMP retry: %s.", logName, oid)
