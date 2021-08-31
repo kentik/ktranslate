@@ -151,6 +151,10 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 	log.Infof("TableWalk Results: %s: %s -> %d", oidName, oid, len(results))
 	// Save as index -> oid -> value
 	for _, variable := range results {
+		if len(variable.Name) <= len(oid)+1 {
+			log.Warnf("Skipping invalid table, could not get index: %s -> %s", oid, variable.Name)
+			continue
+		}
 		idx := variable.Name[len(oid)+1:]
 		if _, ok := md.Tables[idx]; !ok {
 			md.Tables[idx] = kt.NewDeviceTableMetadata()

@@ -174,6 +174,8 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 		}
 	}
 
+	im.log.Infof("SNMP interface metric poll - found metrics for %d interfaces.", len(deltas))
+
 	// See if we have a uptime delta to work with
 	for _, dm := range lastDeviceMetrics {
 		intId := AllDeviceInterface
@@ -193,8 +195,6 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 
 	// send this off encoded as chf as well as via tsdb
 	flows := im.convertToCHF(deltas)
-
-	im.log.Infof("SNMP interface metric poll - found metrics for %d interfaces", len(deltas))
 	im.metrics.InterfaceMetrics.Mark(int64(len(flows)))
 
 	return flows, nil
