@@ -614,12 +614,12 @@ func copyAttrForSnmp(attr map[string]interface{}, name kt.MetricInfo) map[string
 			i++
 		}
 		sort.Strings(keys)
-		for _, k := range keys[MAX_ATTR_FOR_NR-2:] {
+		for _, k := range keys[MAX_ATTR_FOR_NR-3:] {
 			delete(attrNew, k)
 		}
 
 		// Force these to be back in.
-		attrNew["objectIdentifier"] = name
+		attrNew["objectIdentifier"] = name.Oid
 		attrNew["mib-name"] = name.Mib
 		attrNew["instrumentation.name"] = InstNameSNMP
 	}

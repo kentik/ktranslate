@@ -15,18 +15,18 @@ func TestCopyAttrforSNMP(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		input[fmt.Sprintf("XXX%d", i)] = i
 	}
-	name := "name"
+	name := kt.MetricInfo{Oid: "oid", Mib: "mib"}
 
 	res := copyAttrForSnmp(input, name)
-	assert.Equal(12, len(res)) // adds in two keys
-	assert.Equal("name", res["objectIdentifier"])
+	assert.Equal(len(input)+3, len(res)) // adds in three keys
+	assert.Equal("oid", res["objectIdentifier"])
 
 	for i := 0; i < MAX_ATTR_FOR_NR+10; i++ {
 		input[fmt.Sprintf("XXX%d", i)] = i
 	}
 	res = copyAttrForSnmp(input, name)
 	assert.Equal(MAX_ATTR_FOR_NR, len(res)) // truncated at MAX_ATTR_FOR_NR
-	assert.Equal("name", res["objectIdentifier"])
+	assert.Equal("oid", res["objectIdentifier"])
 
 	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
 	res = copyAttrForSnmp(input, name)
