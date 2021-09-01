@@ -307,6 +307,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Enum:       metric.Symbol.Enum,
 				Tag:        metric.Symbol.Tag,
 				Conversion: metric.Symbol.Conversion,
+				Mib:        metric.Mib,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -330,6 +331,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Enum:       s.Enum,
 				Tag:        s.Tag,
 				Conversion: s.Conversion,
+				Mib:        metric.Mib,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -405,6 +407,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Type:       kt.String,
 					Tag:        t.Tag,
 					Conversion: t.Column.Conversion,
+					Mib:        metric.Mib,
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib

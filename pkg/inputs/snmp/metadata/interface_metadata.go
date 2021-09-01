@@ -27,10 +27,8 @@ const (
 	SNMP_ipv6AddrPrefix     = "ipv6AddrPrefix"
 	SNMP_ifConnectorPresent = "ConnectorPresent"
 	SNMP_ifType             = "Type"
-	SNMP_ifMtu              = "Mtu"
 	SNMP_ifPhysAddress      = "PhysAddress"
 	SNMP_ifLastChange       = "LastChange"
-	SNMP_ifStackStatus      = "StackStatus"
 
 	SNMP_lldpRemPortIdSubtype = "lldpRemPortIdSubtype"
 	SNMP_lldpRemPortId        = "lldpRemPortId"
@@ -40,12 +38,6 @@ const (
 	SNMP_Nokia_vRtrIfGlobalIndex = "vRtrIfGlobalIndex"
 	SNMP_Nokia_vRtrIfName        = "vRtrIfName"
 	SNMP_Nokia_vRtrIfDescription = "vRtrIfDescription"
-
-	// VRFs McNuts
-	SNMP_vrfDescr = "mplsL3VpnVrfDescription"
-	SNMP_vrfIfIdx = "mplsL3VpnIfVpnClassification"
-	SNMP_vrfRD    = "mplsL3VpnVrfRD"
-	SNMP_vrfRT    = "mplsL3VpnVrfRT"
 
 	SNMP_HUAWEI_ID_MAP_OID     = "1.3.6.1.4.1.2011.5.25.110.1.2.1.2"
 	MIN_WORKING_HUAWEI_VERSION = 5
@@ -64,24 +56,9 @@ var (
 		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix) // Index ipv6IfIndex, ipv6Addr
 
-		// Fetch mplsL3VpnVrfDescription first
-		// for subsequent indexing in other vrf polling.
-		// VRFs McNuts
-		// mplsL3VpnVrfName bellow may be a system generated ID.
-		m.Set("1.3.6.1.2.1.10.166.11.1.2.2.1.3", SNMP_vrfDescr) // mplsL3VpnVrfDescription Index: mplsL3VpnVrfName
-		m.Set("1.3.6.1.2.1.10.166.11.1.2.2.1.4", SNMP_vrfRD)    // mplsL3VpnVrfRD RD Index: mplsL3VpnVrfName
-		m.Set("1.3.6.1.2.1.10.166.11.1.2.3.1.4", SNMP_vrfRT)    // mplsL3VpnVrfRT RT Index: mplsL3VpnVrfName, mplsL3VpnVrfRTIndex, mplsL3VpnVrfRTType
-		// Direct vrf->if mapping or vice-versa isn't
-		// available in standard mplsl3vpn MIB.
-		// Instead use IfVpnClassification OID to
-		// identify related interfaces.
-		m.Set("1.3.6.1.2.1.10.166.11.1.2.1.1.2", SNMP_vrfIfIdx)      // mplsL3VpnIfVpnClassification Index: mplsL3VpnVrfName
-		m.Set("1.3.6.1.2.1.31.1.1.1.17", SNMP_ifConnectorPresent)    // ifConnectorPresent, 1 if physical, 2 otherwise.
 		m.Set("1.3.6.1.2.1.2.2.1.3", SNMP_ifType)                    // (ifType)
-		m.Set("1.3.6.1.2.1.2.2.1.4", SNMP_ifMtu)                     // (ifMtu)
 		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)             // (ifPhysAddress)
 		m.Set("1.3.6.1.2.1.2.2.1.9", SNMP_ifLastChange)              // (ifLastChange)
-		m.Set("1.3.6.1.2.1.31.1.2.1.3", SNMP_ifStackStatus)          // (ifStackStatus, indexed by ifStackHigherLayer, ifStackLowerLayer)
 		m.Set("1.0.8802.1.1.2.1.4.1.1.6", SNMP_lldpRemPortIdSubtype) // lldpRemPortIdSubtype
 		m.Set("1.0.8802.1.1.2.1.4.1.1.7", SNMP_lldpRemPortId)        // lldpRemPortId
 		m.Set("1.0.8802.1.1.2.1.4.1.1.8", SNMP_lldpRemPortDesc)      // lldpRemPortDesc
@@ -100,19 +77,6 @@ var (
 
 	getHuaweiVersionRE = regexp.MustCompile(`Version (\d)\.(\d+)`)
 )
-
-type vrf struct {
-	Name  string
-	Descr string
-	RD    string // Route Distinguisher
-	RT    string // BGP Route Target
-	ExtRD uint64 // Route Distinguisher encoded as ext community RFC 4360
-}
-
-type id2vrf map[string]*vrf
-
-// TODO: global?  Really?
-var vrfs = make(id2vrf)
 
 type InterfaceMetadata struct {
 	log logger.ContextL
@@ -209,19 +173,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 						}
 					}
 				}
-			} else if oidName == SNMP_ifStackStatus {
-				// index is two integer elements -- first is ifIndex of the "higher" layer, second is ifIndex of the "lower" layer
-				index := strings.Split(oidIdx, ".")
-				if len(index) != 2 {
-					im.log.Warnf("You used an unsupported value for the %s ifStackStatus variable: %v.", variable.Name, variable.Value)
-					continue
-				}
-				val := gosnmp.ToBigInt(variable.Value).Uint64()
-				if val != 1 && val != 2 {
-					im.log.Warnf("You used an unsupported value for the %s ifStackStatus instance: %v.", variable.Name, variable.Value)
-					continue
-				}
-
 			} else if oidName == SNMP_lldpRemPortIdSubtype || oidName == SNMP_lldpRemPortId || oidName == SNMP_lldpRemPortDesc || oidName == SNMP_lldpRemSysName {
 				// these may contain details about what an interface is connected to:
 				//     PortId ~= ifIndex on the remote side, PortDesc ~= ifDescr, and SysName ~= sysName
@@ -297,10 +248,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 					data = &kt.InterfaceData{IPAddr: kt.IPAddr{}, Index: oidIdx, ExtraInfo: map[string]string{}}
 					switch oidName {
 					case SNMP_ipv6AddrPrefix:
-					case SNMP_vrfDescr:
-					case SNMP_vrfIfIdx:
-					case SNMP_vrfRD:
-					case SNMP_vrfRT:
 					default:
 						intLine[oidIdx] = data
 					}
@@ -355,50 +302,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 							}
 						}
 					}
-				case SNMP_vrfDescr:
-					if value, ok := snmp_util.ReadOctetString(variable, snmp_util.NO_TRUNCATE); ok {
-						vrfs[oidIdx] = &vrf{Name: value}
-					}
-				case SNMP_vrfRD:
-					if value, ok := snmp_util.ReadOctetString(variable, snmp_util.NO_TRUNCATE); ok {
-						if v, ok := vrfs[oidIdx]; ok {
-							v.RD = value
-							v.ExtRD = GetVRFExtRD(value)
-							if v.ExtRD == 0 {
-								im.log.Warnf("SNMP vrf: Invalid RD:%s", v.RD)
-							}
-						}
-					}
-				case SNMP_vrfRT:
-					if value, ok := snmp_util.ReadOctetString(variable, snmp_util.NO_TRUNCATE); ok {
-						// Strip off mplsL3VpnVrfRTIndex, mplsL3VpnVrfRTType
-						s := strings.Split(oidIdx, ".")
-						if len(s) > 3 {
-							vrfId := strings.Join(s[:len(s)-2], ".")
-							if v, ok := vrfs[vrfId]; ok {
-								v.RT = value
-							}
-						}
-					}
-				case SNMP_vrfIfIdx:
-					switch variable.Type {
-					case gosnmp.Integer:
-						s := strings.Split(oidIdx, ".")
-						if len(s) > 2 {
-							ifId := s[len(s)-1]
-							vrfId := strings.Join(s[:len(s)-1], ".")
-							im.log.Debugf("SNMP vrf:%s:%s", vrfId, ifId)
-							if vrf, ok := vrfs[vrfId]; ok {
-								if ifc, ok := intLine[ifId]; ok {
-									im.log.Debugf("SNMP vrf->if vrf:%+v if:%+v", vrf, ifc)
-									ifc.VrfName = vrf.Name
-									ifc.VrfRD = vrf.RD
-									ifc.VrfExtRD = vrf.ExtRD
-									ifc.VrfRT = vrf.RT
-								}
-							}
-						}
-					}
 				case SNMP_ifConnectorPresent:
 					switch gosnmp.ToBigInt(variable.Value).Uint64() {
 					case 1:
@@ -410,9 +313,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 					}
 				case SNMP_ifType:
 					data.Type = gosnmp.ToBigInt(variable.Value).Uint64()
-				case SNMP_ifMtu:
-					val := gosnmp.ToBigInt(variable.Value).Uint64()
-					data.ExtraInfo[SNMP_ifMtu] = strconv.Itoa(int(val))
 				case SNMP_ifPhysAddress:
 					switch variable.Type {
 					case gosnmp.OctetString:

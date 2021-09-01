@@ -221,6 +221,7 @@ type Mib struct {
 	Enum       map[string]int64
 	EnumRev    map[int64]string
 	Conversion string
+	Mib        string
 }
 
 func (mb Mib) String() string {

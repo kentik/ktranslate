@@ -203,10 +203,10 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 	for m, name := range metrics {
 		switch m {
 		case "error", "timeout":
-			ms[name] = 1
+			ms[name.Name] = 1
 		default:
 			if in.CustomInt["result_type"] > 1 {
-				ms[name] = int64(in.CustomInt[m])
+				ms[name.Name] = int64(in.CustomInt[m])
 			}
 		}
 	}
@@ -226,7 +226,7 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
+	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
