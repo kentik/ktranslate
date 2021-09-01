@@ -316,6 +316,10 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
 			}
+			if mib.Name == "" {
+				p.Warnf("Skipping mib with no name: %v", mib)
+				continue
+			}
 			if strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
 			} else {
@@ -339,6 +343,10 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			for k, v := range mib.Enum {
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
+			}
+			if mib.Name == "" {
+				p.Warnf("Skipping mib with no name: %v", mib)
+				continue
 			}
 			if strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
