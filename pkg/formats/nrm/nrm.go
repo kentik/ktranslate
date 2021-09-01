@@ -447,6 +447,10 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name)
 			ms = append(ms, NRMetric{
@@ -479,6 +483,10 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name)
 			ms = append(ms, NRMetric{
