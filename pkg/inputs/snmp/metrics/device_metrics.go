@@ -144,7 +144,7 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
-		metrics := map[string]string{"CPU": "", "MemoryUtilization": "", "Uptime": "sysUpTime", "MemoryFree": ""}
+		metrics := map[string]kt.MetricInfo{"CPU": kt.MetricInfo{}, "MemoryUtilization": kt.MetricInfo{}, "Uptime": kt.MetricInfo{Oid: "sysUpTime"}, "MemoryFree": kt.MetricInfo{}}
 		for k, v := range dm.conf.UserTags {
 			dst.CustomStr[k] = v
 		}
@@ -156,20 +156,20 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 			dst.CustomBigInt["juniperOperatingDRAMSize"] = dmr.juniperOperatingDRAMSize
 			dst.CustomBigInt["juniperOperatingMemory"] = dmr.juniperOperatingMemory
 			dst.CustomBigInt["juniperOperatingBuffer"] = dmr.juniperOperatingBuffer
-			metrics["juniperOperatingDRAMSize"] = jnxOperatingDRAMSize
-			metrics["juniperOperatingMemory"] = jnxOperatingMemory
-			metrics["juniperOperatingBuffer"] = jnxOperatingMemory
-			metrics["CPU"] = jnxOperatingCPU
+			metrics["juniperOperatingDRAMSize"] = kt.MetricInfo{Oid: jnxOperatingDRAMSize}
+			metrics["juniperOperatingMemory"] = kt.MetricInfo{Oid: jnxOperatingMemory}
+			metrics["juniperOperatingBuffer"] = kt.MetricInfo{Oid: jnxOperatingMemory}
+			metrics["CPU"] = kt.MetricInfo{Oid: jnxOperatingCPU}
 		}
 
 		if dmr.hrStorageAllocationUnits > 0 {
 			dst.CustomBigInt["hrStorageAllocationUnits"] = dmr.hrStorageAllocationUnits
 			dst.CustomBigInt["hrStorageSize"] = dmr.hrStorageSize
 			dst.CustomBigInt["hrStorageUsed"] = dmr.hrStorageUsed
-			metrics["hrStorageAllocationUnits"] = hrStorageAllocationUnits
-			metrics["hrStorageSize"] = hrStorageSize
-			metrics["hrStorageUsed"] = hrStorageUsed
-			metrics["CPU"] = hrProcessorTree
+			metrics["hrStorageAllocationUnits"] = kt.MetricInfo{Oid: hrStorageAllocationUnits}
+			metrics["hrStorageSize"] = kt.MetricInfo{Oid: hrStorageSize}
+			metrics["hrStorageUsed"] = kt.MetricInfo{Oid: hrStorageUsed}
+			metrics["CPU"] = kt.MetricInfo{Oid: hrProcessorTree}
 		}
 
 		if dmr.cpmCPUTotal5min > 0 {
@@ -177,11 +177,11 @@ func (dm *DeviceMetrics) convertDMToCHF(dmrs []*deviceMetricRow) []*kt.JCHF {
 			dst.CustomBigInt["cpmCPUTotal5min"] = dmr.cpmCPUTotal5min
 			dst.CustomBigInt["cpmCPUTotal5minRev"] = dmr.cpmCPUTotal5minRev
 			dst.CustomBigInt["cpmCPUMemoryFree"] = dmr.cpmCPUMemoryFree
-			metrics["cpmCPUTotal5min"] = cpmCPUTotal5min
-			metrics["cpmCPUTotal5minRev"] = cpmCPUTotal5minRev
-			metrics["cpmCPUMemoryFree"] = cpmCPUMemoryFree
-			metrics["CPU"] = cpmCPUTree
-			metrics["MemoryFree"] = ciscoMemoryPoolFree
+			metrics["cpmCPUTotal5min"] = kt.MetricInfo{Oid: cpmCPUTotal5min}
+			metrics["cpmCPUTotal5minRev"] = kt.MetricInfo{Oid: cpmCPUTotal5minRev}
+			metrics["cpmCPUMemoryFree"] = kt.MetricInfo{Oid: cpmCPUMemoryFree}
+			metrics["CPU"] = kt.MetricInfo{Oid: cpmCPUTree}
+			metrics["MemoryFree"] = kt.MetricInfo{Oid: ciscoMemoryPoolFree}
 		}
 
 		dst.CustomMetrics = metrics // Add this in so that we know what metrics to pull out down the road.
@@ -229,7 +229,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	}
 
 	// Map back into types we know about.
-	metricsFound := map[string]string{"Uptime": sysUpTime}
+	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime}}
 	for _, variable := range results {
 		if variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
@@ -267,7 +267,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[oidName] = mib.Oid
+		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib}
 		switch variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
@@ -336,7 +336,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				memoryTotal := memoryFree + memoryUsed
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = "computed"
+					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed"}
 				}
 			}
 		}

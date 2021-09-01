@@ -368,10 +368,10 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	for m, name := range metrics {
-		switch name {
+		switch name.Oid {
 		case "avg_rtt", "jit_rtt":
 			ms = append(ms, NRMetric{
-				Name:       "kentik.synth." + name,
+				Name:       "kentik.synth." + name.Oid,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomInt[m]),
 				Attributes: attr,
@@ -400,7 +400,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 func (f *NRMFormat) fromKflow(in *kt.JCHF) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
+	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
@@ -497,7 +497,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "computed")
+						attrNew := copyAttrForSnmp(attr, kt.MetricInfo{Oid: "computed", Mib: "computed"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -513,7 +513,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "computed")
+						attrNew := copyAttrForSnmp(attr, kt.MetricInfo{Oid: "computed", Mib: "computed"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -532,7 +532,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]string{"name": "", "value": "", "count": "", "one-minute": "", "95-percentile": "", "du": ""}
+	metrics := map[string]kt.MetricInfo{"name": kt.MetricInfo{}, "value": kt.MetricInfo{}, "count": kt.MetricInfo{}, "one-minute": kt.MetricInfo{}, "95-percentile": kt.MetricInfo{}, "du": kt.MetricInfo{}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
@@ -591,9 +591,10 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 	return ms
 }
 
-func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interface{} {
+func copyAttrForSnmp(attr map[string]interface{}, name kt.MetricInfo) map[string]interface{} {
 	attrNew := map[string]interface{}{
-		"objectIdentifier":     name,
+		"objectIdentifier":     name.Oid,
+		"mib-name":             name.Mib,
 		"instrumentation.name": InstNameSNMP,
 	}
 	for k, v := range attr {
@@ -619,7 +620,12 @@ func copyAttrForSnmp(attr map[string]interface{}, name string) map[string]interf
 
 		// Force these to be back in.
 		attrNew["objectIdentifier"] = name
+		attrNew["mib-name"] = name.Mib
 		attrNew["instrumentation.name"] = InstNameSNMP
+	}
+
+	if attrNew["mib-name"] == "" {
+		delete(attrNew, "mib-name")
 	}
 
 	return attrNew

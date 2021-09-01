@@ -231,7 +231,7 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}
 
-		metrics := map[string]string{}
+		metrics := map[string]kt.MetricInfo{}
 		for k, v := range cs {
 			mib := im.oidMibMap[im.nameOidMap[k][1:]]
 			if mib != nil && mib.EnumRev != nil {
@@ -243,7 +243,11 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 				}
 			}
 			dst.CustomBigInt[k] = int64(v)
-			metrics[k] = im.nameOidMap[k]
+			if mib != nil {
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib}
+			} else {
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k]}
+			}
 		}
 		if uptimeDelta > 0 {
 			dst.CustomBigInt[Uptime] = int64(uptimeDelta)

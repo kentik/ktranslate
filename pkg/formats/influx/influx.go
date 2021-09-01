@@ -176,10 +176,10 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	for m, name := range metrics {
 		switch m {
 		case "error", "timeout":
-			ms[name] = 1
+			ms[name.Oid] = 1
 		default:
 			if in.CustomInt["result_type"] > 1 {
-				ms[name] = int64(in.CustomInt[m])
+				ms[name.Oid] = int64(in.CustomInt[m])
 			}
 		}
 	}
@@ -195,7 +195,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]string{"in_bytes": "", "out_bytes": "", "in_pkts": "", "out_pkts": "", "latency_ms": ""}
+	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()

@@ -32,7 +32,7 @@ var (
 	}
 )
 
-func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]string, lastMetadata *kt.LastMetadata) {
+func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.MetricInfo, lastMetadata *kt.LastMetadata) {
 	mapr := in.Flatten()
 	for k, v := range mapr {
 		if DroppedAttrs[k] {
@@ -188,30 +188,33 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 }
 
 var (
-	synMetrics = map[int32]map[string]string{
-		0: map[string]string{"error": "error", "fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
-			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+	synMetrics = map[int32]map[string]kt.MetricInfo{
+		0: map[string]kt.MetricInfo{"error": kt.MetricInfo{Oid: "error"}, "fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "sent"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "lost"},
+			"fetch_size_|_ping_min_rtt": kt.MetricInfo{Oid: "min_rtt"}, "ping_max_rtt": kt.MetricInfo{Oid: "max_rtt"}, "ping_avg_rtt": kt.MetricInfo{Oid: "avg_rtt"}, "ping_std_rtt": kt.MetricInfo{Oid: "std_rtt"}, "ping_jit_rtt": kt.MetricInfo{Oid: "jit_rtt"}},
 
-		1: map[string]string{"timeout": "timeout", "fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
-			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+		1: map[string]kt.MetricInfo{"timeout": kt.MetricInfo{Oid: "timeout"}, "fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "sent"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "lost"},
+			"fetch_size_|_ping_min_rtt": kt.MetricInfo{Oid: "min_rtt"}, "ping_max_rtt": kt.MetricInfo{Oid: "max_rtt"}, "ping_avg_rtt": kt.MetricInfo{Oid: "avg_rtt"}, "ping_std_rtt": kt.MetricInfo{Oid: "std_rtt"},
+			"ping_jit_rtt": kt.MetricInfo{Oid: "jit_rtt"}},
 
-		2: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
-			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+		2: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "sent"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "lost"},
+			"fetch_size_|_ping_min_rtt": kt.MetricInfo{Oid: "min_rtt"}, "ping_max_rtt": kt.MetricInfo{Oid: "max_rtt"}, "ping_avg_rtt": kt.MetricInfo{Oid: "avg_rtt"},
+			"ping_std_rtt": kt.MetricInfo{Oid: "std_rtt"}, "ping_jit_rtt": kt.MetricInfo{Oid: "jit_rtt"}},
 
-		3: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "status", "fetch_ttlb_|_ping_lost": "ttlb",
-			"fetch_size_|_ping_min_rtt": "size"},
+		3: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "status"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "ttlb"},
+			"fetch_size_|_ping_min_rtt": kt.MetricInfo{Oid: "size"}},
 
-		4: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time"},
+		4: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "time"}},
 
-		5: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "sent", "fetch_ttlb_|_ping_lost": "lost",
-			"fetch_size_|_ping_min_rtt": "min_rtt", "ping_max_rtt": "max_rtt", "ping_avg_rtt": "avg_rtt", "ping_std_rtt": "std_rtt", "ping_jit_rtt": "jit_rtt"},
+		5: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "sent"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "lost"},
+			"fetch_size_|_ping_min_rtt": kt.MetricInfo{Oid: "min_rtt"}, "ping_max_rtt": kt.MetricInfo{Oid: "max_rtt"}, "ping_avg_rtt": kt.MetricInfo{Oid: "avg_rtt"},
+			"ping_std_rtt": kt.MetricInfo{Oid: "std_rtt"}, "ping_jit_rtt": kt.MetricInfo{Oid: "jit_rtt"}},
 
-		6: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time", "fetch_ttlb_|_ping_lost": "code"},
+		6: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "time"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Oid: "code"}},
 
-		7: map[string]string{"fetch_status_|_ping_sent_|_trace_time": "time", "lat/long_dest": "port"},
+		7: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Oid: "time"}, "lat/long_dest": kt.MetricInfo{Oid: "port"}},
 	}
 )
 
-func GetSynMetricNameSet(rt int32) map[string]string {
+func GetSynMetricNameSet(rt int32) map[string]kt.MetricInfo {
 	return synMetrics[rt]
 }
