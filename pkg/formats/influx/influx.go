@@ -176,10 +176,10 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	for m, name := range metrics {
 		switch m {
 		case "error", "timeout":
-			ms[name.Oid] = 1
+			ms[name.Name] = 1
 		default:
 			if in.CustomInt["result_type"] > 1 {
-				ms[name.Oid] = int64(in.CustomInt[m])
+				ms[name.Name] = int64(in.CustomInt[m])
 			}
 		}
 	}

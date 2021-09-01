@@ -368,10 +368,10 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	for m, name := range metrics {
-		switch name.Oid {
+		switch name.Name {
 		case "avg_rtt", "jit_rtt":
 			ms = append(ms, NRMetric{
-				Name:       "kentik.synth." + name.Oid,
+				Name:       "kentik.synth." + name.Name,
 				Type:       NR_GAUGE_TYPE,
 				Value:      int64(in.CustomInt[m]),
 				Attributes: attr,
