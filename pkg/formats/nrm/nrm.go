@@ -628,6 +628,10 @@ func copyAttrForSnmp(attr map[string]interface{}, name kt.MetricInfo) map[string
 		delete(attrNew, "mib-name")
 	}
 
+	// Delete a few attributes we don't want adding to cardinality.
+	delete(attrNew, "Uptime")
+	delete(attrNew, "if_LastChange")
+
 	return attrNew
 }
 
