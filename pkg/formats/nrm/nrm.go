@@ -448,7 +448,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, name)
+			attrNew := copyAttrForSnmp(attr, m, name)
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -480,7 +480,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, name)
+			attrNew := copyAttrForSnmp(attr, m, name)
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -497,7 +497,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, kt.MetricInfo{Oid: "computed", Mib: "computed"})
+						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -513,7 +513,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, kt.MetricInfo{Oid: "computed", Mib: "computed"})
+						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -591,13 +591,32 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 	return ms
 }
 
-func copyAttrForSnmp(attr map[string]interface{}, name kt.MetricInfo) map[string]interface{} {
+// List of attributes to not pass to NR.
+var removeAttrForSnmp = []string{
+	"Uptime",
+	"if_LastChange",
+	"SysServices",
+	"if_Mtu",
+	"if_ConnectorPresent",
+	"output_port",
+	"input_port",
+	"DropMetric",
+	"sysoid_vendor",
+}
+
+func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
 		"instrumentation.name": InstNameSNMP,
 	}
 	for k, v := range attr {
+		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
+			if strings.HasPrefix(k, "Sys") {
+				continue
+			}
+		}
+
 		if strings.HasPrefix(k, kt.StringPrefix) {
 			attrNew[k[len(kt.StringPrefix):]] = v
 		} else {
@@ -629,8 +648,9 @@ func copyAttrForSnmp(attr map[string]interface{}, name kt.MetricInfo) map[string
 	}
 
 	// Delete a few attributes we don't want adding to cardinality.
-	delete(attrNew, "Uptime")
-	delete(attrNew, "if_LastChange")
+	for _, key := range removeAttrForSnmp {
+		delete(attrNew, key)
+	}
 
 	return attrNew
 }
