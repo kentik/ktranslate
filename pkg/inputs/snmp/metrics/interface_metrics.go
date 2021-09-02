@@ -10,6 +10,7 @@ import (
 	"github.com/kentik/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/kt/counters"
@@ -47,13 +48,14 @@ type InterfaceMetrics struct {
 	// evolve, so let's be careful.
 	mux sync.Mutex
 
-	intValues  map[string]*counters.CounterSet
-	oidMap     map[string]string
-	nameOidMap map[string]string
-	oidMibMap  map[string]*kt.Mib
+	intValues   map[string]*counters.CounterSet
+	oidMap      map[string]string
+	nameOidMap  map[string]string
+	oidMibMap   map[string]*kt.Mib
+	profileName string
 }
 
-func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *InterfaceMetrics {
+func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *InterfaceMetrics {
 	oidMap := conf.InterfaceMetricsOidMap
 	if oidMap == nil {
 		oidMap = make(map[string]string)
@@ -84,14 +86,15 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 	}
 
 	return &InterfaceMetrics{
-		log:        log,
-		gconf:      gconf,
-		conf:       conf,
-		metrics:    metrics,
-		oidMap:     oidMap,
-		nameOidMap: nameOidMap,
-		oidMibMap:  profileMetrics,
-		intValues:  make(map[string]*counters.CounterSet),
+		log:         log,
+		gconf:       gconf,
+		conf:        conf,
+		metrics:     metrics,
+		oidMap:      oidMap,
+		nameOidMap:  nameOidMap,
+		oidMibMap:   profileMetrics,
+		intValues:   make(map[string]*counters.CounterSet),
+		profileName: profile.GetProfileName(),
 	}
 }
 
@@ -244,9 +247,9 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			}
 			dst.CustomBigInt[k] = int64(v)
 			if mib != nil {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName}
 			} else {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k]}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName}
 			}
 		}
 		if uptimeDelta > 0 {

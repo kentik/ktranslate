@@ -67,3 +67,18 @@ func TestPrune(t *testing.T) {
 	prune(mibs)
 	assert.Equal(t, 3, len(mibs))
 }
+
+func TestProfileName(t *testing.T) {
+	tests := map[string][]*Profile{
+		"foo-test": []*Profile{&Profile{From: "foo-test.yml"}},
+		"snmp":     []*Profile{nil, &Profile{}},
+		"noone":    []*Profile{&Profile{From: "noone"}},
+	}
+
+	for expected, profiles := range tests {
+		for _, profile := range profiles {
+			res := profile.GetProfileName()
+			assert.Equal(t, expected, res)
+		}
+	}
+}
