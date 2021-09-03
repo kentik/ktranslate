@@ -31,7 +31,6 @@ const (
 
 	InstNameVPCMetric     = "vpc-logs-metrics"
 	InstNameNetflowMetric = "netflow-metrics"
-	InstNameSNMP          = "snmp"
 	InstNameSynthetic     = "synthetic"
 	InstNameKtranslate    = "heartbeat"
 
@@ -482,11 +481,13 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	}
 
 	ms := make([]NRMetric, 0, len(metrics))
+	profileName := "snmp"
 	for m, name := range metrics {
 		if m == "" {
 			f.Errorf("Missing metric name, skipping %v", attr)
 			continue
 		}
+		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name)
 			ms = append(ms, NRMetric{
@@ -505,7 +506,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed"})
+						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -521,7 +522,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed"})
+						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -616,7 +617,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
-		"instrumentation.name": InstNameSNMP,
+		"instrumentation.name": name.Profile,
 	}
 	for k, v := range attr {
 		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
@@ -648,7 +649,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		// Force these to be back in.
 		attrNew["objectIdentifier"] = name.Oid
 		attrNew["mib-name"] = name.Mib
-		attrNew["instrumentation.name"] = InstNameSNMP
+		attrNew["instrumentation.name"] = name.Profile
 	}
 
 	if attrNew["mib-name"] == "" {

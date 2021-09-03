@@ -54,6 +54,17 @@ type Profile struct {
 	extended        bool
 }
 
+func (p *Profile) GetProfileName() string {
+	if p == nil {
+		return "snmp"
+	}
+	pts := strings.Split(p.From, ".")
+	if pts[0] != "" {
+		return pts[0]
+	}
+	return "snmp"
+}
+
 func (p *Profile) extend(extends map[string]*Profile) error {
 	if p.extended { // Don't extend multiple times, also halt recursion.
 		return nil

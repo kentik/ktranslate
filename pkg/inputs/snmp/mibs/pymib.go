@@ -141,12 +141,20 @@ func ConvertJson2Yaml(file string, log logger.ContextL) error {
 		}
 	}
 
+	// Remove any metrics with no metrics (just tags). Needed because otherwise validation will fail.
+	gm := []MIB{}
+	for _, metric := range finals {
+		if metric.Symbol.Oid != "" || len(metric.Symbols) > 0 {
+			gm = append(gm, metric)
+		}
+	}
+
 	// Sort the mibs.
-	sort.Sort(MibList(finals))
+	sort.Sort(MibList(gm))
 
 	// Make a profile.
 	pro := Profile{
-		Metrics:     finals,
+		Metrics:     gm,
 		Sysobjectid: sysoids,
 		ContextL:    log,
 		From:        name,

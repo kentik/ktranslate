@@ -56,6 +56,11 @@
                 <File Id="filCC765DB29D59E91AD84875370FB175D8" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/aruba/aruba.yml"/>
               </Component>
             </Directory>
+            <Directory Id="dir5424FE08AFD387F438440DA4CC5DCE55" Name="brocade">
+              <Component Id="cmp4463D2D7EF2E64D60B7165ED2C67921D" Guid="*">
+                <File Id="filF4A69B1D861A111861A00CBC726BEC45" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/brocade/brocade-fc-switch.yml"/>
+              </Component>
+            </Directory>
             <Directory Id="dir184326711F224C33A87911F499EC71C2" Name="apc">
               <Component Id="cmp73E19C142A042AAFF0DCE76003EFFEBB" Guid="*">
                 <File Id="fil223E3A8C3D00473AD3A5C3E7BB0A916C" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/apc/apc_ups.yml"/>
@@ -79,9 +84,17 @@
                 <File Id="fil963DD98235B75B78B64CCDB266A63EF9" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/generic/base.yml"/>
               </Component>
             </Directory>
+            <Directory Id="dirE120CB3AFB969BA1D1607DE3F0262F3D" Name="dell">
+              <Component Id="cmp93DFEBCE84E7942A476C36A274F90591" Guid="*">
+                <File Id="filEC5959567D8BA8F7AE7CAF0DF0A78AE6" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/dell/idrac.yml"/>
+              </Component>
+            </Directory>
             <Directory Id="dir339464D2982D6915DE83ABB5613157A1" Name="netgear">
               <Component Id="cmpD09A243C955CAF9F43EA7377874B6D13" Guid="*">
                 <File Id="filF01A5BC256064004B2D3CBD33FDCAC66" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/netgear/readynas.yml"/>
+              </Component>
+              <Component Id="cmp6A788D7A9CFF37ACBD09B30D33572D3A" Guid="*">
+                <File Id="filEADCA998EDCA37F70BA3DA5D65AC48A5" KeyPath="yes" Source="$(var.Path)/config/profiles/kentik_snmp/netgear/netgear-generic.yml"/>
               </Component>
             </Directory>
             <Directory Id="dirA24188538623D1A47393C1E3E3BDA301" Name="checkpoint">
@@ -228,6 +241,7 @@
         <Feature Id="MainApplication" Title="Main Application" Level="1">
           <ComponentRef Id="ktranslate.exe" />
         <ComponentRef Id="cmpB46AF4C0CF9C68FA9C458C1219F7C1D1" />
+              <ComponentRef Id="cmp4463D2D7EF2E64D60B7165ED2C67921D" />
               <ComponentRef Id="cmp6052E2C43A4DDBA643B6A03B0C5D3B39" />
               <ComponentRef Id="cmp73E19C142A042AAFF0DCE76003EFFEBB" />
               <ComponentRef Id="cmpC1F0A78F692AF501FBC57AA044D2BCF1" />
@@ -274,6 +288,8 @@
         <ComponentRef Id="cmp7EA4396B8D9EC67B7910D8A242FFCF57" />
         <ComponentRef Id="cmpB7CB43E39FFEAC4402F746BD2B4A43D4" />
         <ComponentRef Id="cmp34171BB83455309CBC625CC7B8309AD4" />
+        <ComponentRef Id="cmp93DFEBCE84E7942A476C36A274F90591" />
+        <ComponentRef Id="cmp6A788D7A9CFF37ACBD09B30D33572D3A" />
         </Feature>
 
     </Product>

@@ -171,9 +171,10 @@ type JCHF struct {
 }
 
 type MetricInfo struct {
-	Oid  string `json:"-"`
-	Mib  string `json:"-"`
-	Name string `json:"-"`
+	Oid     string `json:"-"`
+	Mib     string `json:"-"`
+	Name    string `json:"-"`
+	Profile string `json:"-"`
 }
 
 func NewJCHF() *JCHF {

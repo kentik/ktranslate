@@ -9,19 +9,21 @@ import (
 
 	"github.com/kentik/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 )
 
 type DeviceMetrics struct {
-	log     logger.ContextL
-	conf    *kt.SnmpDeviceConfig
-	gconf   *kt.SnmpGlobalConfig
-	metrics *kt.SnmpDeviceMetric
+	log         logger.ContextL
+	conf        *kt.SnmpDeviceConfig
+	gconf       *kt.SnmpGlobalConfig
+	metrics     *kt.SnmpDeviceMetric
+	profileName string
 }
 
-func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, log logger.ContextL) *DeviceMetrics {
+func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
 	if conf.DeviceOids == nil && len(profileMetrics) > 0 {
 		conf.DeviceOids = profileMetrics
 	} else if len(profileMetrics) > 0 {
@@ -45,10 +47,11 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 	}
 
 	return &DeviceMetrics{
-		gconf:   gconf,
-		log:     log,
-		conf:    conf,
-		metrics: metrics,
+		gconf:       gconf,
+		log:         log,
+		conf:        conf,
+		metrics:     metrics,
+		profileName: profile.GetProfileName(),
 	}
 }
 
@@ -115,7 +118,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	}
 
 	// Map back into types we know about.
-	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime}}
+	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Profile: dm.profileName}}
 	for _, variable := range results {
 		if variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
@@ -153,7 +156,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib}
+		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName}
 		switch variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
@@ -222,7 +225,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				memoryTotal := memoryFree + memoryUsed
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed"}
+					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
 				}
 			}
 		}
