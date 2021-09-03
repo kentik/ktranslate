@@ -94,7 +94,7 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		nameOidMap:  nameOidMap,
 		oidMibMap:   profileMetrics,
 		intValues:   make(map[string]*counters.CounterSet),
-		profileName: profile.GetProfileName(),
+		profileName: profile.GetProfileName(conf.InstrumentationName),
 	}
 }
 

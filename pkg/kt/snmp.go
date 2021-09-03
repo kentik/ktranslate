@@ -115,6 +115,7 @@ type SnmpDeviceConfig struct {
 	MatchAttr              map[string]string `yaml:"match_attributes"`
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
+	InstrumentationName    string            `yaml:"instrumentationName"`
 }
 
 type SnmpTrapConfig struct {

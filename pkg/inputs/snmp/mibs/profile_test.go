@@ -73,11 +73,15 @@ func TestProfileName(t *testing.T) {
 		"foo-test": []*Profile{&Profile{From: "foo-test.yml"}},
 		"snmp":     []*Profile{nil, &Profile{}},
 		"noone":    []*Profile{&Profile{From: "noone"}},
+		"override": []*Profile{&Profile{From: "lalalalala"}},
+	}
+	overrides := map[string]string{
+		"override": "override",
 	}
 
 	for expected, profiles := range tests {
 		for _, profile := range profiles {
-			res := profile.GetProfileName()
+			res := profile.GetProfileName(overrides[expected])
 			assert.Equal(t, expected, res)
 		}
 	}

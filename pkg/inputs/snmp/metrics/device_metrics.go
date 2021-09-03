@@ -51,7 +51,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		log:         log,
 		conf:        conf,
 		metrics:     metrics,
-		profileName: profile.GetProfileName(),
+		profileName: profile.GetProfileName(conf.InstrumentationName),
 	}
 }
 
