@@ -54,7 +54,11 @@ type Profile struct {
 	extended        bool
 }
 
-func (p *Profile) GetProfileName() string {
+func (p *Profile) GetProfileName(override string) string {
+	if override != "" { // This can override what is set as the profile name.
+		return override
+	}
+
 	if p == nil {
 		return "snmp"
 	}
