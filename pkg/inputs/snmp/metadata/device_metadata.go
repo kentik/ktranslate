@@ -78,7 +78,11 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		if !ok {
 			thing, ok := SNMP_device_metadata_oids.Get(oidVal)
 			if !ok {
-				log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v", oidVal)
+				if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
+					log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")
+				} else {
+					log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v %v", oidVal, value)
+				}
 				continue
 			}
 			oidName = thing.(string)
