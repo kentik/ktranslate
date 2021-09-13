@@ -132,7 +132,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 			return nil, err
 		}
 
-		log.Infof("%s Running with SNMP v3", posit)
+		log.Infof("%s Running with SNMP v3: Priv: %s Auth: %s", posit, params.PrivacyProtocol, params.AuthenticationProtocol)
 		server.Version = gosnmp.Version3
 		server.ContextEngineID = contextEngineID
 		server.ContextName = contextName
