@@ -11,7 +11,7 @@ import (
 
 	"github.com/elliotchance/orderedmap"
 
-	"github.com/kentik/gosnmp"
+	"github.com/gosnmp/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"

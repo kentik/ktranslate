@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kentik/gosnmp"
+	"github.com/gosnmp/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
