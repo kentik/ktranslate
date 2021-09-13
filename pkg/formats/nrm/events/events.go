@@ -8,6 +8,10 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
+const (
+	InstNameSnmpTrapEvent = "snmp-trap-events"
+)
+
 func SendEvent(msg *kt.JCHF, doGz bool, evts chan []byte) error {
 	res, err := toRawJson(msg, doGz)
 	if err != nil {
@@ -75,4 +79,6 @@ func strip(in map[string]interface{}) {
 		}
 	}
 	in["instrumentation.provider"] = kt.InstProvider // Let them know who sent this.
+	in["instrumentation.name"] = InstNameSnmpTrapEvent
+	in["collector.name"] = kt.CollectorName
 }
