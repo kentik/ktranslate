@@ -121,27 +121,38 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 
 		// Finally, drop any values which do not match the whitelist.
 		if lastMetadata.MatchAttr != nil {
-			dropOnAdminStatus := false
+			dropOnAdminStatus := false // Default this false.
+			keepForOtherMatch := false // We use inverse of this, so default is to allow flow.
+			seenAdminStatus := false
 			for k, re := range lastMetadata.MatchAttr {
 				if v, ok := attr[k]; ok {
 					if strv, ok := v.(string); ok {
 						if k == kt.AdminStatus { // If admin status is causing us to drop, drop right away.
+							seenAdminStatus = true
 							dropOnAdminStatus = !re.MatchString(strv)
 							if dropOnAdminStatus == true {
 								break
 							}
-						} else { // Otherwise, OR all the matches together.
-							attr[kt.DropMetric] = !re.MatchString(strv)
-							if attr[kt.DropMetric] == false {
-								break // Only keep going if we did not match. All matches are OR-d together.
+						} else { // Otherwise, OR all the matches together. Keep trying until we find an RE which matches.
+							if !keepForOtherMatch {
+								keepForOtherMatch = re.MatchString(strv)
 							}
 						}
 					}
 				}
 			}
+
 			// This is special cased as an AND to any other attributes.
 			if dropOnAdminStatus {
 				attr[kt.DropMetric] = true
+			} else {
+				if seenAdminStatus && len(lastMetadata.MatchAttr) > 1 {
+					attr[kt.DropMetric] = !keepForOtherMatch
+				} else if !seenAdminStatus && len(lastMetadata.MatchAttr) > 0 {
+					attr[kt.DropMetric] = !keepForOtherMatch
+				} else {
+					attr[kt.DropMetric] = false
+				}
 			}
 		}
 	}

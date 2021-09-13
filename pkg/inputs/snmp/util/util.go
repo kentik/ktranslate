@@ -199,7 +199,7 @@ func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, c
 		return err
 	}
 
-	res, err := WalkOID(context.Background(), dconf, baseOid, server, log, "")
+	res, err := WalkOID(context.Background(), dconf, baseOid, server, log, "DoWalk")
 	if err != nil {
 		return err
 	}
