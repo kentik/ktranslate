@@ -9,7 +9,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
-	"github.com/kentik/gosnmp"
+	"github.com/gosnmp/gosnmp"
 )
 
 type testWalker struct {

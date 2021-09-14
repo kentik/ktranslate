@@ -122,6 +122,40 @@ func TestSetAttrDrop(t *testing.T) {
 			},
 			false,
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+				"foo":          "bar",
+				"aaa":          "aaa",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"foo":          regexp.MustCompile("no"),
+					"aaa":          regexp.MustCompile("no"),
+					kt.AdminStatus: regexp.MustCompile("up"),
+				},
+			},
+			true, // Drop because neither foo or aaa match even though admin is up.
+		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+				"foo":          "bar",
+				"aaa":          "aaa",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"foo":          regexp.MustCompile("no"),
+					"aaa":          regexp.MustCompile("aa"),
+					kt.AdminStatus: regexp.MustCompile("up"),
+				},
+			},
+			false, // Keep because aaa matches and admin is up.
+		},
 	}
 
 	for i, test := range tests {

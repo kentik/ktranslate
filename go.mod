@@ -16,13 +16,13 @@ require (
 	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
+	github.com/gosnmp/gosnmp v1.32.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0 // indirect
 	github.com/honeycombio/libhoney-go v1.15.2
 	github.com/json-iterator/go v1.1.10
 	github.com/kentik/api-schema-public v0.0.0-20210428232153-25f1622f6b13
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/golog v0.0.0-20210617234020-0acbd1400e72 // indirect
-	github.com/kentik/gosnmp v0.0.0-20210316190950-425ee043d4b7
 	github.com/kentik/patricia v0.0.0-20201202224819-f9447a6e25f1
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.0

@@ -122,7 +122,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 		// Finally, drop any values which do not match the whitelist.
 		if lastMetadata.MatchAttr != nil {
 			dropOnAdminStatus := false // Default this false.
-			keepForOtherMatch := false // We use inverse of this, so default is to allow flow.
+			keepForOtherMatch := false // We use inverse of this, so default is to drop flow. BUT, need to have a match set else all flow passes.
 			seenAdminStatus := false
 			for k, re := range lastMetadata.MatchAttr {
 				if v, ok := attr[k]; ok {

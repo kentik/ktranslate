@@ -29,7 +29,7 @@ var (
 	flowOnly       = flag.Bool("flow_only", false, "If true, don't poll snmp devices.")
 	jsonToYaml     = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
 	snmpWalk       = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
-	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1", "Walk this oid if -snmp_do_walk is set.")
+	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1.2.1", "Walk this oid if -snmp_do_walk is set.")
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 )
 

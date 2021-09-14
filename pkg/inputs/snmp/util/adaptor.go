@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kentik/gosnmp"
+	"github.com/gosnmp/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -57,8 +57,16 @@ func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, go
 		params.AuthenticationProtocol = gosnmp.MD5
 	case "SHA":
 		params.AuthenticationProtocol = gosnmp.SHA
+	case "SHA224":
+		params.AuthenticationProtocol = gosnmp.SHA224
+	case "SHA256":
+		params.AuthenticationProtocol = gosnmp.SHA256
+	case "SHA384":
+		params.AuthenticationProtocol = gosnmp.SHA384
+	case "SHA512":
+		params.AuthenticationProtocol = gosnmp.SHA512
 	default:
-		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 authentication_protocol: %s. valid options: NoAuth|MD5|SHA", v3config.AuthenticationProtocol)
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 authentication_protocol: %s. valid options: NoAuth|MD5|SHA|SHA224|SHA256|SHA384|SHA512", v3config.AuthenticationProtocol)
 	}
 
 	return &params, flags, v3config.ContextEngineID, v3config.ContextName, nil
@@ -124,7 +132,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 			return nil, err
 		}
 
-		log.Infof("%s Running with SNMP v3", posit)
+		log.Infof("%s Running with SNMP v3: Priv: %s Auth: %s", posit, params.PrivacyProtocol, params.AuthenticationProtocol)
 		server.Version = gosnmp.Version3
 		server.ContextEngineID = contextEngineID
 		server.ContextName = contextName
@@ -134,14 +142,14 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 	}
 
 	if device.Debug {
-		server.Logger = logWrapper{
+		server.Logger = gosnmp.NewLogger(logWrapper{
 			print: func(v ...interface{}) {
 				log.Debugf("GoSNMP:" + fmt.Sprint(v...))
 			},
 			printf: func(format string, v ...interface{}) {
 				log.Debugf("GoSNMP:  "+format, v...)
 			},
-		}
+		})
 	}
 
 	// We have everything we need -- start connect.

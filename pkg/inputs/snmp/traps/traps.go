@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kentik/gosnmp"
+	"github.com/gosnmp/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
@@ -90,14 +90,14 @@ func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics 
 		return nil, fmt.Errorf("Invalid trap version: %s", conf.Trap.Version)
 	}
 
-	tl.Params.Logger = logWrapper{
+	tl.Params.Logger = gosnmp.NewLogger(logWrapper{
 		print: func(v ...interface{}) {
 			log.Debugf("GoSNMP Trap:" + fmt.Sprint(v...))
 		},
 		printf: func(format string, v ...interface{}) {
 			log.Debugf("GoSNMP Trap:  "+format, v...)
 		},
-	}
+	})
 	st.tl = tl
 
 	for _, device := range conf.Devices {
