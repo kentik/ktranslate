@@ -112,7 +112,17 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 			case string:
 				md.Customs[oidName] = vt
 			case []byte:
-				md.Customs[oidName] = string(vt)
+				if oid.Conversion != "" { // Adjust for any hard coded values here.
+					ival, sval := snmp_util.GetFromConv(pdu, oid.Conversion, log)
+					if ival > 0 {
+						md.CustomInts[oidName] = ival
+						md.Customs[kt.StringPrefix+oidName] = sval
+					} else {
+						md.Customs[oidName] = sval
+					}
+				} else {
+					md.Customs[oidName] = string(vt)
+				}
 			case net.IP:
 				md.Customs[oidName] = vt.String()
 			default:
@@ -168,7 +178,7 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 		case gosnmp.OctetString:
 			value := string(variable.Value.([]byte))
 			if mib.Conversion != "" { // Adjust for any hard coded values here.
-				value = snmp_util.GetFromConv(variable, mib.Conversion, log)
+				_, value = snmp_util.GetFromConv(variable, mib.Conversion, log)
 			}
 			md.Tables[idx].Customs[oidName] = value
 		case gosnmp.IPAddress: // Does this work?

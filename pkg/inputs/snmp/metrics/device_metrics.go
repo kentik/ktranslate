@@ -161,7 +161,14 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
 			if mib.Conversion != "" { // Adjust for any hard coded values here.
-				value = snmp_util.GetFromConv(variable, mib.Conversion, dm.log)
+				ival, sval := snmp_util.GetFromConv(variable, mib.Conversion, dm.log)
+				if ival > 0 {
+					dmr.customBigInt[oidName] = ival
+					dmr.customStr[kt.StringPrefix+oidName] = sval
+					continue // we have everything we need, no need to continue processing.
+				} else {
+					value = sval
+				}
 			}
 			if mib.Enum != nil {
 				dmr.customStr[kt.StringPrefix+oidName] = value // Save the string valued field as an attribute.
