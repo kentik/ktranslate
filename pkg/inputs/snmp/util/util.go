@@ -13,7 +13,14 @@ import (
 
 	"github.com/gosnmp/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/util/vendor"
 	"github.com/kentik/ktranslate/pkg/kt"
+)
+
+const (
+	CONV_HWADDR   = "hwaddr"
+	CONV_POWERSET = "powerset_status"
+	CONV_HEXTOINT = "hextoint"
 )
 
 var (
@@ -176,7 +183,8 @@ func GetDeviceManufacturer(server snmpWalker, log logger.ContextL) string {
 func PrettyPrint(pdu gosnmp.SnmpPDU, format string, log logger.ContextL) string {
 	switch pdu.Type {
 	case gosnmp.OctetString:
-		return GetFromConv(pdu, format, log)
+		_, s := GetFromConv(pdu, format, log)
+		return s
 	case gosnmp.IPAddress:
 		return pdu.Value.(string)
 	case gosnmp.ObjectIdentifier:
@@ -213,7 +221,7 @@ func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, c
 }
 
 // Handle the case of wierd ints encoded as byte arrays.
-func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) string {
+func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, string) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Warnf("Invalid Conversion: %s %v %v", pdu.Name, pdu.Value, r)
@@ -222,49 +230,51 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) string {
 
 	bv, ok := pdu.Value.([]byte)
 	if !ok || len(bv) == 0 {
-		return ""
+		return 0, ""
 	}
 
-	// If there's an encoded mac addr here.
-	if conv == "hwaddr" {
-		return net.HardwareAddr(bv).String()
-	}
+	switch conv {
+	case CONV_HWADDR: // If there's an encoded mac addr here.
+		return 0, net.HardwareAddr(bv).String()
+	case CONV_POWERSET:
+		return vendor.HandlePowersetStatus(bv)
+	default:
+		// Otherwise, try out some custom conversions.
+		split := strings.Split(conv, ":")
+		if split[0] == CONV_HEXTOINT && len(split) == 3 {
+			endian := split[1]
+			bit := split[2]
 
-	// Otherwise, try out some custom conversions.
-	split := strings.Split(conv, ":")
-	if split[0] == "hextoint" && len(split) == 3 {
-		endian := split[1]
-		bit := split[2]
-
-		if endian == "LittleEndian" {
-			switch bit {
-			case "uint64":
-				return fmt.Sprintf("%d", binary.LittleEndian.Uint64(bv))
-			case "uint32":
-				return fmt.Sprintf("%d", binary.LittleEndian.Uint32(bv))
-			case "uint16":
-				return fmt.Sprintf("%d", binary.LittleEndian.Uint16(bv))
-			default:
-				log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
-				return ""
+			if endian == "LittleEndian" {
+				switch bit {
+				case "uint64":
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint64(bv))
+				case "uint32":
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint32(bv))
+				case "uint16":
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint16(bv))
+				default:
+					log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
+					return 0, ""
+				}
+			} else if endian == "BigEndian" {
+				switch bit {
+				case "uint64":
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint64(bv))
+				case "uint32":
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint32(bv))
+				case "uint16":
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint16(bv))
+				default:
+					log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
+					return 0, ""
+				}
+			} else {
+				log.Errorf("invalid Endian value (%s) for hex to int conversion", endian)
+				return 0, ""
 			}
-		} else if endian == "BigEndian" {
-			switch bit {
-			case "uint64":
-				return fmt.Sprintf("%d", binary.BigEndian.Uint64(bv))
-			case "uint32":
-				return fmt.Sprintf("%d", binary.BigEndian.Uint32(bv))
-			case "uint16":
-				return fmt.Sprintf("%d", binary.BigEndian.Uint16(bv))
-			default:
-				log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
-				return ""
-			}
-		} else {
-			log.Errorf("invalid Endian value (%s) for hex to int conversion", endian)
-			return ""
 		}
 	}
 
-	return string(bv) // Default down to here.
+	return 0, string(bv) // Default down to here.
 }
