@@ -31,4 +31,24 @@ func TestCopyAttrforSNMP(t *testing.T) {
 	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
 	res = copyAttrForSnmp(input, "test", name)
 	assert.Equal("one", res["foo"], res)
+
+	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "noMatch"}
+	res = copyAttrForSnmp(input, "test", name)
+	assert.Equal(nil, res["foo"], res)
+
+	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "foo"}
+	res = copyAttrForSnmp(input, "test", name)
+	assert.Equal("one", res["foo"], res)
+
+	input = map[string]interface{}{"foo": "one"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "foo"}
+	res = copyAttrForSnmp(input, "test", name)
+	assert.Equal("one", res["foo"], res)
+
+	input = map[string]interface{}{"foo": "one"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "somethingElse"}
+	res = copyAttrForSnmp(input, "test", name)
+	assert.Equal(nil, res["foo"], res)
 }

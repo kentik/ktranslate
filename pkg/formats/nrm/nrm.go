@@ -512,7 +512,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
+						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -528,7 +528,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
+						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"})
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -627,8 +627,22 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 	}
 	for k, v := range attr {
 		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
-			if strings.HasPrefix(k, "Sys") {
+			if strings.HasPrefix(k, "Sys") || k == "src_addr" {
 				continue
+			}
+		}
+
+		if name.Table != "" {
+			attrNew["mib-table"] = name.Table
+			// If this metric comes from a specific table, only show attributes for this table.
+			if strings.HasPrefix(k, kt.StringPrefix) {
+				if !strings.HasPrefix(k, kt.StringPrefix+name.Table) {
+					continue
+				}
+			} else {
+				if !strings.HasPrefix(k, name.Table) {
+					continue
+				}
 			}
 		}
 
@@ -637,6 +651,11 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		} else {
 			attrNew[k] = v
 		}
+	}
+
+	// Delete a few attributes we don't want adding to cardinality.
+	for _, key := range removeAttrForSnmp {
+		delete(attrNew, key)
 	}
 
 	if len(attrNew) > MAX_ATTR_FOR_NR {
@@ -660,11 +679,6 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 
 	if attrNew["mib-name"] == "" {
 		delete(attrNew, "mib-name")
-	}
-
-	// Delete a few attributes we don't want adding to cardinality.
-	for _, key := range removeAttrForSnmp {
-		delete(attrNew, key)
 	}
 
 	return attrNew

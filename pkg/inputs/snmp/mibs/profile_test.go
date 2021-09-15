@@ -86,3 +86,20 @@ func TestProfileName(t *testing.T) {
 		}
 	}
 }
+
+func TestGetTableName(t *testing.T) {
+	tests := map[string]OID{
+		"physicalDisk": OID{Name: "physicalDiskTable"},
+		"systemSlot":   OID{Name: "systemSlotTable"},
+		"la":           OID{Name: "laTable"},
+		"diskIO":       OID{Name: "diskIOTable"},
+		"":             OID{Name: ""},
+		"diskio":       OID{Name: "diskiotable"},
+		"if":           OID{Name: "ifXTable"},
+	}
+
+	for expected, oid := range tests {
+		res := oid.GetTableName()
+		assert.Equal(t, expected, res)
+	}
+}
