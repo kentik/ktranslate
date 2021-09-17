@@ -94,8 +94,10 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			}
 		}
 
+		hasIf := false // True if we end up setting anything interface based.
 		if in.OutputPort != in.InputPort {
 			if ii, ok := lastMetadata.InterfaceInfo[in.InputPort]; ok {
+				hasIf = true
 				for k, v := range ii {
 					if v != "" {
 						attr["input_if_"+k] = v
@@ -103,6 +105,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				}
 			}
 			if ii, ok := lastMetadata.InterfaceInfo[in.OutputPort]; ok {
+				hasIf = true
 				for k, v := range ii {
 					if v != "" {
 						attr["output_if_"+k] = v
@@ -111,6 +114,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			}
 		} else {
 			if ii, ok := lastMetadata.InterfaceInfo[in.OutputPort]; ok {
+				hasIf = true
 				for k, v := range ii {
 					if v != "" {
 						attr["if_"+k] = v
@@ -123,22 +127,28 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 		if lastMetadata.MatchAttr != nil {
 			dropOnAdminStatus := false // Default this false.
 			keepForOtherMatch := false // We use inverse of this, so default is to drop flow. BUT, need to have a match set else all flow passes.
-			seenAdminStatus := false
+			seenNonAdmin := 0
 			for k, re := range lastMetadata.MatchAttr {
+				// If this is not an interface attribute, skip interface matches.
+				if !hasIf && (k == kt.AdminStatus || strings.HasPrefix(k, "if_") || strings.HasPrefix(k, "input_if_") || strings.HasPrefix(k, "output_if_")) {
+					continue
+				}
 				if v, ok := attr[k]; ok {
 					if strv, ok := v.(string); ok {
 						if k == kt.AdminStatus { // If admin status is causing us to drop, drop right away.
-							seenAdminStatus = true
 							dropOnAdminStatus = !re.MatchString(strv)
 							if dropOnAdminStatus == true {
 								break
 							}
 						} else { // Otherwise, OR all the matches together. Keep trying until we find an RE which matches.
+							seenNonAdmin++
 							if !keepForOtherMatch {
 								keepForOtherMatch = re.MatchString(strv)
 							}
 						}
 					}
+				} else {
+					seenNonAdmin++
 				}
 			}
 
@@ -146,9 +156,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			if dropOnAdminStatus {
 				attr[kt.DropMetric] = true
 			} else {
-				if seenAdminStatus && len(lastMetadata.MatchAttr) > 1 {
-					attr[kt.DropMetric] = !keepForOtherMatch
-				} else if !seenAdminStatus && len(lastMetadata.MatchAttr) > 0 {
+				if seenNonAdmin > 0 {
 					attr[kt.DropMetric] = !keepForOtherMatch
 				} else {
 					attr[kt.DropMetric] = false

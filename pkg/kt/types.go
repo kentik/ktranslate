@@ -292,6 +292,12 @@ func (j *JCHF) SetMap() {
 	j.avroSet = map[string]interface{}{}
 }
 
+func (j *JCHF) SetIFPorts(p IfaceID) *JCHF {
+	j.OutputPort = p
+	j.InputPort = p
+	return j
+}
+
 type AgentId IntId
 
 func NewAgentId(id string) AgentId {
