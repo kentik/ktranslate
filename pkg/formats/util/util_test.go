@@ -161,6 +161,41 @@ func TestSetAttrDrop(t *testing.T) {
 			},
 			false, // Keep because aaa matches and admin is up.
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+			},
+			kt.NewJCHF().SetIFPorts(20),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"if_Description": regexp.MustCompile("igb3"),
+					kt.AdminStatus:   regexp.MustCompile("up"),
+					"device_name":    regexp.MustCompile("bart"),
+				},
+				InterfaceInfo: map[kt.IfaceID]map[string]interface{}{
+					20: map[string]interface{}{
+						"Description": "igb2",
+					},
+				},
+			},
+			true, // Drop because desc doesn't match.
+		},
+		{
+			map[string]interface{}{
+				"mib-name": "UDP-MIB",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"if_Description": regexp.MustCompile("igb3"),
+					kt.AdminStatus:   regexp.MustCompile("up"),
+					"mib-name":       regexp.MustCompile("UDP"),
+				},
+			},
+			false, // keep because mib-name matches and no admin status.
+		},
 	}
 
 	for i, test := range tests {
