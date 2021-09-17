@@ -140,7 +140,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	for _, device := range conf.Devices {
 		if device.Provider == "" {
 			// Default provider to something we can work with.
-			device.Provider = kt.ProviderRouter
+			device.Provider = kt.ProviderDefault
 		}
 		if *flowOnly || device.FlowOnly {
 			continue

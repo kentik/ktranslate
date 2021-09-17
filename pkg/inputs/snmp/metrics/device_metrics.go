@@ -278,3 +278,26 @@ func assureDeviceMetrics(m map[string]*deviceMetricRow, index string) *deviceMet
 	}
 	return dm
 }
+
+// Return a flow with status of SNMP, reguardless of if the rest of the system is working.
+func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
+	dst := kt.NewJCHF()
+	dst.CustomStr = map[string]string{}
+	dst.CustomInt = map[string]int32{}
+	dst.CustomBigInt = map[string]int64{}
+	dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+	dst.Provider = dm.conf.Provider
+	dst.DeviceName = dm.conf.DeviceName
+	dst.SrcAddr = dm.conf.DeviceIP
+	dst.Timestamp = time.Now().Unix()
+	dst.CustomMetrics = map[string]kt.MetricInfo{"PollingHealth": kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}}
+	for k, v := range dm.conf.UserTags {
+		dst.CustomStr[k] = v
+	}
+	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+	}
+	dst.CustomBigInt["PollingHealth"] = dm.metrics.Fail.Value()
+	dst.CustomStr[kt.StringPrefix+"PollingHealth"] = kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
+	return []*kt.JCHF{dst}
+}

@@ -184,6 +184,13 @@ const (
 	SNMP_BAD  = 2
 )
 
+var (
+	SNMP_STATUS_MAP = map[int64]string{
+		1: "GOOD",
+		2: "BAD",
+	}
+)
+
 func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpDeviceMetric {
 	sm := SnmpDeviceMetric{
 		DeviceMetrics:    go_metrics.GetOrRegisterMeter("device_metrics^device_name="+deviceName, registry),
