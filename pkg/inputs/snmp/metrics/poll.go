@@ -12,6 +12,10 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
 
+const (
+	STATUS_CHECK_TIME = 60 * time.Second
+)
+
 type Poller struct {
 	log              logger.ContextL
 	server           *gosnmp.GoSNMP
@@ -71,6 +75,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 	jitterWindow := 15 * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
+	statusCheck := time.NewTicker(STATUS_CHECK_TIME)
 
 	p.log.Infof("snmpCounterPoll: First poll will be at %v. Polling every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
 
@@ -120,6 +125,9 @@ func (p *Poller) StartLoop(ctx context.Context) {
 				// Great!  We finished the poll in the same five-minute block we started it in!
 				// send the results to Sinks.
 				p.jchfChan <- flows
+
+			case _ = <-statusCheck.C: // Send in on a seperate timer status about how this system is working.
+				p.jchfChan <- p.deviceMetrics.GetStatusFlows()
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics Poll Done")
