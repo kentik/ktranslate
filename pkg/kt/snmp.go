@@ -21,12 +21,14 @@ type DeviceData struct {
 type DeviceTableMetadata struct {
 	Customs    map[string]string
 	CustomInts map[string]int64
+	TableName  string
 }
 
-func NewDeviceTableMetadata() DeviceTableMetadata {
+func NewDeviceTableMetadata(table string) DeviceTableMetadata {
 	return DeviceTableMetadata{
 		Customs:    map[string]string{},
 		CustomInts: map[string]int64{},
+		TableName:  table,
 	}
 }
 
@@ -242,6 +244,7 @@ type LastMetadata struct {
 	InterfaceInfo map[IfaceID]map[string]interface{}
 	Tables        map[string]DeviceTableMetadata
 	MatchAttr     map[string]*regexp.Regexp
+	XtraInfo      map[string]MetricInfo
 }
 
 func (lm *LastMetadata) Size() int {
@@ -266,6 +269,16 @@ func (lm *LastMetadata) Missing(new *LastMetadata) []string {
 	}
 
 	return missing
+}
+
+func (lm *LastMetadata) GetTableName(key string) (string, bool) {
+	if lm == nil {
+		return "", false
+	}
+	if i, ok := lm.XtraInfo[key]; ok {
+		return i.Table, true
+	}
+	return "", false
 }
 
 type DeviceMap map[string]*SnmpDeviceConfig

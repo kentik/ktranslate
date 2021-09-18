@@ -214,6 +214,7 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 	}
 	lm.Tables = in.CustomTables
 	lm.MatchAttr = in.MatchAttr
+	lm.XtraInfo = in.CustomMetrics
 
 	return &lm
 }

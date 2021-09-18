@@ -457,7 +457,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 			continue
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, m, name)
+			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -495,7 +495,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		}
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, m, name)
+			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -512,7 +512,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"})
+						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -528,7 +528,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"})
+						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -619,7 +619,7 @@ var removeAttrForSnmp = []string{
 	"sysoid_vendor",
 }
 
-func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo) map[string]interface{} {
+func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
@@ -634,14 +634,21 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 
 		if name.Table != "" {
 			attrNew["mib-table"] = name.Table
-			// If this metric comes from a specific table, only show attributes for this table.
-			if strings.HasPrefix(k, kt.StringPrefix) {
-				if !strings.HasPrefix(k, kt.StringPrefix+name.Table) {
+			// See if the metadata knows about this attribute.
+			if tableName, ok := lm.GetTableName(k); ok {
+				if tableName != name.Table {
 					continue
 				}
 			} else {
-				if !strings.HasPrefix(k, name.Table) {
-					continue
+				// If this metric comes from a specific table, only show attributes for this table.
+				if strings.HasPrefix(k, kt.StringPrefix) {
+					if !strings.HasPrefix(k, kt.StringPrefix+name.Table) {
+						continue
+					}
+				} else {
+					if !strings.HasPrefix(k, name.Table) {
+						continue
+					}
 				}
 			}
 		}
