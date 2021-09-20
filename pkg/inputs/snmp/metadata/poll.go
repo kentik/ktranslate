@@ -220,6 +220,18 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 	}
 
+	// Now, pass along lookup info if we find any.
+	for k, _ := range dst.CustomStr {
+		if mib, ok := p.lookupMib(k, false); ok {
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+		}
+	}
+	for k, _ := range dst.CustomInt {
+		if mib, ok := p.lookupMib(k, false); ok {
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+		}
+	}
+
 	for intr, id := range dd.InterfaceData {
 		dst.CustomStr["if."+intr+".Address"] = id.Address
 		dst.CustomStr["if."+intr+".Netmask"] = id.Netmask
@@ -234,18 +246,9 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		// And in anything extra which came out here.
 		for k, v := range id.ExtraInfo {
 			dst.CustomStr["if."+intr+"."+k] = v
-		}
-	}
-
-	// Now, pass along lookup info if we find any.
-	for k, _ := range dst.CustomStr {
-		if mib, ok := p.lookupMib(k); ok {
-			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
-		}
-	}
-	for k, _ := range dst.CustomInt {
-		if mib, ok := p.lookupMib(k); ok {
-			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+			if mib, ok := p.lookupMib(k, true); ok {
+				dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+			}
 		}
 	}
 
@@ -256,21 +259,24 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	return []*kt.JCHF{dst}, nil
 }
 
-func (p *Poller) lookupMib(key string) (*kt.Mib, bool) {
-	for _, mib := range p.deviceMetadataMibs {
-		if mib.Name == key {
-			return mib, true
+func (p *Poller) lookupMib(key string, isInterface bool) (*kt.Mib, bool) {
+	if !isInterface {
+		for _, mib := range p.deviceMetadataMibs {
+			if mib.Name == key {
+				return mib, true
+			}
+			if mib.Tag == key {
+				return mib, true
+			}
 		}
-		if mib.Tag == key {
-			return mib, true
-		}
-	}
-	for _, mib := range p.interfaceMetadataMibs {
-		if mib.Name == key {
-			return mib, true
-		}
-		if mib.Tag == key {
-			return mib, true
+	} else {
+		for _, mib := range p.interfaceMetadataMibs {
+			if mib.Name == key {
+				return mib, true
+			}
+			if mib.Tag == key {
+				return mib, true
+			}
 		}
 	}
 
