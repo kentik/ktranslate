@@ -383,12 +383,15 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	if sent > 0 {
-		attr["sent"] = sent
-		attr["lost"] = lost
 		ms = append(ms, NRMetric{
-			Name:       "kentik.synth.lost_pct",
-			Type:       NR_GAUGE_TYPE,
-			Value:      (lost / sent) * 100.,
+			Name: "kentik.synth.lost",
+			Type: NR_SUMMARY_TYPE,
+			Value: map[string]uint64{
+				"count": uint64(sent),
+				"sum":   uint64(lost),
+				"min":   uint64(lost),
+				"max":   uint64(lost),
+			},
 			Attributes: attr,
 		})
 	}
