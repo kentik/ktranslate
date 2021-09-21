@@ -368,7 +368,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 
 	for m, name := range metrics {
 		switch name.Name {
-		case "avg_rtt", "jit_rtt":
+		case "avg_rtt", "jit_rtt", "time", "code", "port", "status", "ttlb":
 			ms = append(ms, NRMetric{
 				Name:       "kentik.synth." + name.Name,
 				Type:       NR_GAUGE_TYPE,
@@ -383,12 +383,15 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	if sent > 0 {
-		attr["sent"] = sent
-		attr["lost"] = lost
 		ms = append(ms, NRMetric{
-			Name:       "kentik.synth.lost_pct",
-			Type:       NR_GAUGE_TYPE,
-			Value:      (lost / sent) * 100.,
+			Name: "kentik.synth.lost",
+			Type: NR_SUMMARY_TYPE,
+			Value: map[string]uint64{
+				"count": uint64(sent),
+				"sum":   uint64(lost),
+				"min":   uint64(lost),
+				"max":   uint64(lost),
+			},
 			Attributes: attr,
 		})
 	}
@@ -457,7 +460,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 			continue
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, m, name)
+			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -495,7 +498,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		}
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := copyAttrForSnmp(attr, m, name)
+			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -512,7 +515,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
+						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfInUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -528,7 +531,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 				if ispeed, ok := speed.(int32); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
-						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName})
+						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
 						ms = append(ms, NRMetric{
 							Name:       "kentik.snmp.IfOutUtilization",
 							Type:       NR_GAUGE_TYPE,
@@ -619,7 +622,14 @@ var removeAttrForSnmp = []string{
 	"sysoid_vendor",
 }
 
-func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo) map[string]interface{} {
+var keepAcrossTables = map[string]bool{
+	"device_name":    true,
+	"eventType":      true,
+	"provider":       true,
+	"sysoid_profile": true,
+}
+
+func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
@@ -627,16 +637,45 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 	}
 	for k, v := range attr {
 		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
-			if strings.HasPrefix(k, "Sys") {
+			if strings.HasPrefix(k, "Sys") || k == "src_addr" {
 				continue
 			}
 		}
 
+		newKey := k
 		if strings.HasPrefix(k, kt.StringPrefix) {
-			attrNew[k[len(kt.StringPrefix):]] = v
-		} else {
-			attrNew[k] = v
+			newKey = k[len(kt.StringPrefix):]
 		}
+
+		if name.Table != "" && metricName != newKey {
+			if _, ok := keepAcrossTables[newKey]; !ok { // If we want this attribute in every table, list it here.
+				attrNew["mib-table"] = name.Table
+				// See if the metadata knows about this attribute.
+				if tableName, ok := lm.GetTableName(newKey); ok {
+					if tableName != name.Table {
+						continue
+					}
+				} else {
+					// If this metric comes from a specific table, only show attributes for this table.
+					if strings.HasPrefix(newKey, kt.StringPrefix) {
+						if !strings.HasPrefix(newKey, kt.StringPrefix+name.Table) {
+							continue
+						}
+					} else {
+						if !strings.HasPrefix(newKey, name.Table) {
+							continue
+						}
+					}
+				}
+			}
+		}
+
+		attrNew[newKey] = v
+	}
+
+	// Delete a few attributes we don't want adding to cardinality.
+	for _, key := range removeAttrForSnmp {
+		delete(attrNew, key)
 	}
 
 	if len(attrNew) > MAX_ATTR_FOR_NR {
@@ -660,11 +699,6 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 
 	if attrNew["mib-name"] == "" {
 		delete(attrNew, "mib-name")
-	}
-
-	// Delete a few attributes we don't want adding to cardinality.
-	for _, key := range removeAttrForSnmp {
-		delete(attrNew, key)
 	}
 
 	return attrNew

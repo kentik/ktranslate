@@ -323,6 +323,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Tag:        metric.Symbol.Tag,
 				Conversion: metric.Symbol.Conversion,
 				Mib:        metric.Mib,
+				Table:      metric.Table.GetTableName(),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -351,6 +352,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				Tag:        s.Tag,
 				Conversion: s.Conversion,
 				Mib:        metric.Mib,
+				Table:      metric.Table.GetTableName(),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -431,6 +433,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Tag:        t.Tag,
 					Conversion: t.Column.Conversion,
 					Mib:        metric.Mib,
+					Table:      metric.Table.GetTableName(),
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib
@@ -607,4 +610,21 @@ func prune(mibs map[string]*kt.Mib) {
 			delete(mibs, oid)
 		}
 	}
+}
+
+func (o *OID) GetTableName() string {
+	if o == nil {
+		return ""
+	}
+	if o.Name == "" {
+		return ""
+	}
+	name := strings.ToLower(o.Name)
+	if strings.HasSuffix(name, "xtable") {
+		return o.Name[0 : len(o.Name)-6]
+	}
+	if strings.HasSuffix(name, "table") {
+		return o.Name[0 : len(o.Name)-5]
+	}
+	return o.Name
 }

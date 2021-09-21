@@ -90,6 +90,9 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 			if !ok {
 				mib := interfaceMetadataMibs[oid]
 				name := mib.Name
+				if mib.Tag != "" {
+					name = mib.Tag
+				}
 				if strings.HasPrefix(name, "if") {
 					name = name[2:]
 				}
@@ -555,52 +558,4 @@ func (im *InterfaceMetadata) UpdateForHuawei(server *gosnmp.GoSNMP, d *kt.Device
 	d.InterfaceData = idNewFinal
 
 	return nil
-}
-
-//
-//  0                   1                   2                   3
-//  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-//  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//  | 0x00          |   Format      |    Global Administrator       |
-//  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//  |                     Local Administrator                       |
-//  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-//
-// Format 0x00 - 2B Global ASN, 4B Local ASN
-// Format 0x01 - 4B IPv addr, 2B Local ASN
-// Format 0x02 - 4B Global ASN, 2B Local ASN
-//
-func GetVRFExtRD(rd string) uint64 {
-	s := strings.Split(rd, ":")
-	if len(s) != 2 {
-		return 0
-	}
-
-	extRD := uint64(0)
-	if ip := net.ParseIP(s[0]); ip == nil {
-		asn, err := strconv.ParseUint(s[0], 10, 32)
-		if err != nil {
-			return 0
-		}
-
-		if asn <= 0xffff {
-			extRD = uint64(0x0)<<48 | uint64(asn)<<32
-		} else {
-			extRD = uint64(0x2)<<48 | uint64(asn)<<16
-		}
-	} else {
-		if ip4 := ip.To4(); ip4 != nil {
-			extRD = uint64(0x1)<<48 | uint64(ip4[0])<<40 | uint64(ip4[1])<<32 | uint64(ip4[2])<<24 | uint64(ip4[3])<<16
-		} else {
-			return 0
-		}
-	}
-	ext, err := strconv.ParseUint(s[1], 10, 32)
-	if err != nil {
-		return 0
-	} else if ext > 0xffff && extRD>>48 != 0x0 {
-		return 0
-	}
-	extRD = extRD | ext
-	return extRD
 }

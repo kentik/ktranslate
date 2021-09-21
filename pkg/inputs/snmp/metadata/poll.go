@@ -16,18 +16,19 @@ import (
 )
 
 type Poller struct {
-	log                logger.ContextL
-	server             *gosnmp.GoSNMP
-	interval           time.Duration
-	interfaceMetadata  *InterfaceMetadata
-	gotDeviceMetadata  bool
-	lastDeviceMetadata *kt.DeviceMetricsMetadata
-	jchfChan           chan []*kt.JCHF
-	conf               *kt.SnmpDeviceConfig
-	metrics            *kt.SnmpDeviceMetric
-	gconf              *kt.SnmpGlobalConfig
-	deviceMetadataMibs map[string]*kt.Mib
-	matchAttr          map[string]*regexp.Regexp
+	log                   logger.ContextL
+	server                *gosnmp.GoSNMP
+	interval              time.Duration
+	interfaceMetadata     *InterfaceMetadata
+	gotDeviceMetadata     bool
+	lastDeviceMetadata    *kt.DeviceMetricsMetadata
+	jchfChan              chan []*kt.JCHF
+	conf                  *kt.SnmpDeviceConfig
+	metrics               *kt.SnmpDeviceMetric
+	gconf                 *kt.SnmpGlobalConfig
+	deviceMetadataMibs    map[string]*kt.Mib
+	interfaceMetadataMibs map[string]*kt.Mib
+	matchAttr             map[string]*regexp.Regexp
 }
 
 const (
@@ -72,17 +73,18 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	}
 
 	return &Poller{
-		gconf:              gconf,
-		conf:               conf,
-		log:                log,
-		server:             server,
-		interval:           DEFUALT_INTERVAL,
-		interfaceMetadata:  NewInterfaceMetadata(interfaceMetadataMibs, log),
-		gotDeviceMetadata:  false,
-		jchfChan:           jchfChan,
-		metrics:            metrics,
-		deviceMetadataMibs: deviceMetadataMibs,
-		matchAttr:          attrMap,
+		gconf:                 gconf,
+		conf:                  conf,
+		log:                   log,
+		server:                server,
+		interval:              DEFUALT_INTERVAL,
+		interfaceMetadata:     NewInterfaceMetadata(interfaceMetadataMibs, log),
+		gotDeviceMetadata:     false,
+		jchfChan:              jchfChan,
+		metrics:               metrics,
+		deviceMetadataMibs:    deviceMetadataMibs,
+		interfaceMetadataMibs: interfaceMetadataMibs,
+		matchAttr:             attrMap,
 	}
 }
 
@@ -178,6 +180,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	dst.CustomStr = make(map[string]string)
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
+	dst.CustomMetrics = make(map[string]kt.MetricInfo)
 	dst.EventType = kt.KENTIK_EVENT_SNMP_METADATA
 	dst.Provider = p.conf.Provider
 
@@ -203,6 +206,17 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 		if len(dd.DeviceMetricsMetadata.Tables) > 0 {
 			dst.CustomTables = dd.DeviceMetricsMetadata.Tables
+
+			for _, table := range dst.CustomTables {
+				if table.TableName != "" {
+					for k, _ := range table.Customs {
+						dst.CustomMetrics[k] = kt.MetricInfo{Table: table.TableName}
+					}
+					for k, _ := range table.CustomInts {
+						dst.CustomMetrics[k] = kt.MetricInfo{Table: table.TableName}
+					}
+				}
+			}
 		}
 
 		// Compute vendor int here.
@@ -214,6 +228,18 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 				}
 			}
 			dst.CustomStr["sysoid_profile"] = p.conf.MibProfile
+		}
+	}
+
+	// Now, pass along lookup info if we find any.
+	for k, _ := range dst.CustomStr {
+		if mib, ok := p.lookupMib(k, false); ok {
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+		}
+	}
+	for k, _ := range dst.CustomInt {
+		if mib, ok := p.lookupMib(k, false); ok {
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
 		}
 	}
 
@@ -231,6 +257,9 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		// And in anything extra which came out here.
 		for k, v := range id.ExtraInfo {
 			dst.CustomStr["if."+intr+"."+k] = v
+			if mib, ok := p.lookupMib(k, true); ok {
+				dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+			}
 		}
 	}
 
@@ -239,4 +268,28 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	}
 
 	return []*kt.JCHF{dst}, nil
+}
+
+func (p *Poller) lookupMib(key string, isInterface bool) (*kt.Mib, bool) {
+	if !isInterface {
+		for _, mib := range p.deviceMetadataMibs {
+			if mib.Name == key {
+				return mib, true
+			}
+			if mib.Tag == key {
+				return mib, true
+			}
+		}
+	} else {
+		for _, mib := range p.interfaceMetadataMibs {
+			if mib.Name == key {
+				return mib, true
+			}
+			if mib.Tag == key {
+				return mib, true
+			}
+		}
+	}
+
+	return nil, false
 }

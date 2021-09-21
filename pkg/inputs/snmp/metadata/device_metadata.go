@@ -171,7 +171,7 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 		}
 		idx := variable.Name[len(oid)+1:]
 		if _, ok := md.Tables[idx]; !ok {
-			md.Tables[idx] = kt.NewDeviceTableMetadata()
+			md.Tables[idx] = kt.NewDeviceTableMetadata(mib.Table)
 		}
 
 		switch variable.Type {
