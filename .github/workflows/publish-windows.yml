@@ -1,9 +1,12 @@
 name: Publish Windows
 
 on:
+  repository_dispatch:
+    types: [new-snmp-profiles]
+
   push:
     branches:
-      - pye-build-windows
+      - main
 
 jobs:
   build:
@@ -36,15 +39,6 @@ jobs:
           repository: kentik/snmp-profiles
           path: ./config/profiles
 
-      - name: Run build
-        run: |
-          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
-          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make windows
-
-      - name: Build MSI File
-        run: |
-          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
-
       - name: Run vet & lint
         run: |
           go vet .
@@ -53,7 +47,16 @@ jobs:
       - name: Run testing
         run: make test
 
-      - name: Publish msi
+      - name: Run build
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make windows
+
+      - name: Build MSI
+        run: |
+          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
+
+      - name: Publish MSI
         uses: actions/upload-artifact@v2
         with:
           name: ktranslate.msi
