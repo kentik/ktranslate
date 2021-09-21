@@ -2,7 +2,7 @@
 
 Listen for a feed of data to or from Kentik and pass on in a common form. Supports rollups and filtering as well.
 
-See the [Wiki](https://github.com/kentik/ktranslate/wiki) for more details.
+See the [Wiki](https://github.com/kentik/ktranslate/wiki) for more details. Come visit the [Discord](https://discord.gg/kentik) if you have any questions, need any assistance, or want to talk about the development of ktranslate.
 
 # Build:
 
