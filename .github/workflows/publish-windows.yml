@@ -1,0 +1,60 @@
+name: Publish Windows
+
+on:
+  push:
+    branches:
+      - pye-build-windows
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Set Version
+        run: |
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.8'
+
+      - name: Install dependencies
+        run: sudo apt-get install make libpcap-dev golint wixl wixl-data
+
+      - name: Install MM DBs
+        run: |
+          MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config/profiles
+
+      - name: Run build
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make windows
+
+      - name: Run vet & lint
+        run: |
+          go vet .
+          golint .
+
+      - name: Run testing
+        run: make test
+
+      - name: Build MSI File
+        run: |
+          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
+
+      - name: Publish msi
+        uses: actions/upload-artifact@v2
+        with:
+          name: ktranslate.msi
+          path: ktranslate.msi
