@@ -626,5 +626,5 @@ func (o *OID) GetTableName() string {
 	if strings.HasSuffix(name, "table") {
 		return o.Name[0 : len(o.Name)-5]
 	}
-	return ""
+	return o.Name
 }

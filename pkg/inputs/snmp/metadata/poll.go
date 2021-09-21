@@ -206,6 +206,17 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 		if len(dd.DeviceMetricsMetadata.Tables) > 0 {
 			dst.CustomTables = dd.DeviceMetricsMetadata.Tables
+
+			for _, table := range dst.CustomTables {
+				if table.TableName != "" {
+					for k, _ := range table.Customs {
+						dst.CustomMetrics[k] = kt.MetricInfo{Table: table.TableName}
+					}
+					for k, _ := range table.CustomInts {
+						dst.CustomMetrics[k] = kt.MetricInfo{Table: table.TableName}
+					}
+				}
+			}
 		}
 
 		// Compute vendor int here.

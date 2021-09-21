@@ -622,6 +622,13 @@ var removeAttrForSnmp = []string{
 	"sysoid_vendor",
 }
 
+var keepAcrossTables = map[string]bool{
+	"device_name":    true,
+	"eventType":      true,
+	"provider":       true,
+	"sysoid_profile": true,
+}
+
 func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
@@ -635,32 +642,35 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 			}
 		}
 
-		if name.Table != "" {
-			attrNew["mib-table"] = name.Table
-			// See if the metadata knows about this attribute.
-			if tableName, ok := lm.GetTableName(k); ok {
-				if tableName != name.Table {
-					continue
-				}
-			} else {
-				// If this metric comes from a specific table, only show attributes for this table.
-				if strings.HasPrefix(k, kt.StringPrefix) {
-					if !strings.HasPrefix(k, kt.StringPrefix+name.Table) {
+		newKey := k
+		if strings.HasPrefix(k, kt.StringPrefix) {
+			newKey = k[len(kt.StringPrefix):]
+		}
+
+		if name.Table != "" && metricName != newKey {
+			if _, ok := keepAcrossTables[newKey]; !ok { // If we want this attribute in every table, list it here.
+				attrNew["mib-table"] = name.Table
+				// See if the metadata knows about this attribute.
+				if tableName, ok := lm.GetTableName(newKey); ok {
+					if tableName != name.Table {
 						continue
 					}
 				} else {
-					if !strings.HasPrefix(k, name.Table) {
-						continue
+					// If this metric comes from a specific table, only show attributes for this table.
+					if strings.HasPrefix(newKey, kt.StringPrefix) {
+						if !strings.HasPrefix(newKey, kt.StringPrefix+name.Table) {
+							continue
+						}
+					} else {
+						if !strings.HasPrefix(newKey, name.Table) {
+							continue
+						}
 					}
 				}
 			}
 		}
 
-		if strings.HasPrefix(k, kt.StringPrefix) {
-			attrNew[k[len(kt.StringPrefix):]] = v
-		} else {
-			attrNew[k] = v
-		}
+		attrNew[newKey] = v
 	}
 
 	// Delete a few attributes we don't want adding to cardinality.
