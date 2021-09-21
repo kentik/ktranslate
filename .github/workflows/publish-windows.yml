@@ -41,6 +41,10 @@ jobs:
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make windows
 
+      - name: Build MSI File
+        run: |
+          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
+
       - name: Run vet & lint
         run: |
           go vet .
@@ -48,10 +52,6 @@ jobs:
 
       - name: Run testing
         run: make test
-
-      - name: Build MSI File
-        run: |
-          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
 
       - name: Publish msi
         uses: actions/upload-artifact@v2
