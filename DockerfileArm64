@@ -18,6 +18,9 @@ COPY --chown=ktranslate:ktranslate config/ /etc/ktranslate/
 RUN set -eux; ln -sv ktranslate/profiles ktranslate/mibs.db /etc/; ls -l /etc/profiles/ /etc/mibs.db/
 RUN set -eux; ln -sv /etc/ktranslate/mibs.db /etc/mib.db; ls -l /etc/mib.db/
 
+# Fix libpcap to work with how we built things.
+RUN set -eux; ln -sv /ln -s /usr/lib/aarch64-linux-gnu/libpcap.so.1.9.1 /usr/lib/aarch64-linux-gnu/libpcap.so.1; ls -l /usr/lib/aarch64-linux-gnu/libpcap.so.1
+
 COPY bin/ktranslate /usr/local/bin/
 
 USER ktranslate
