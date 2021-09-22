@@ -57,6 +57,14 @@ jobs:
           repository: kentik/snmp-profiles
           path: ./config/profiles
 
+      - name: Run vet & lint
+        run: |
+          go vet .
+          golint .
+
+      - name: Run testing
+        run: make test
+
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
