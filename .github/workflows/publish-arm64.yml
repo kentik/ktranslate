@@ -57,6 +57,11 @@ jobs:
           repository: kentik/snmp-profiles
           path: ./config/profiles
 
+      - name: Run build
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make arm
+
       - name: Run vet & lint
         run: |
           go vet .
@@ -64,11 +69,6 @@ jobs:
 
       - name: Run testing
         run: make test
-
-      - name: Run build
-        run: |
-          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
-          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make arm
 
       - name: Build and Publish Docker
         uses: docker/build-push-action@v2
