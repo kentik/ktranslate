@@ -1,0 +1,75 @@
+name: Publish Production - Arm64
+
+on:
+  repository_dispatch:
+    types: [new-snmp-profiles]
+
+  push:
+    branches:
+      - pye-build-aarch64
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Set Version
+        run: |
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.8'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: sudo apt-get install make libpcap-dev golint
+
+      - name: Install MM DBs
+        run: |
+          MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config/profiles
+
+      - name: Run build
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make arm
+
+      - name: Publish docker image - arm64
+        run: |
+	  docker pull arm64v8/ubuntu:20.04
+	  docker build -t kentik/ktranslate:v2arm64 -f DockerfileArm64 .
+          docker push kentik/ktranslate:v2arm64
+
+      - name: Publish binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: ktranslate
+          path: bin/ktranslate
