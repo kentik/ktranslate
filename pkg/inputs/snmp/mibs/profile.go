@@ -43,15 +43,16 @@ type Device struct {
 }
 
 type Profile struct {
-	logger.ContextL `yaml:"-"`
-	Metrics         []MIB          `yaml:"metrics,omitempty"`
-	Extends         []string       `yaml:"extends,omitempty"`
-	Device          Device         `yaml:"device,omitempty"`
-	MetricTags      []Tag          `yaml:"metric_tags,omitempty"`
-	Sysobjectid     kt.StringArray `yaml:"sysobjectid,omitempty"`
-	From            string         `yaml:"from,omitempty"`
-	Provider        kt.Provider    `yaml:"provider,omitempty"`
-	extended        bool
+	logger.ContextL  `yaml:"-"`
+	Metrics          []MIB          `yaml:"metrics,omitempty"`
+	Extends          []string       `yaml:"extends,omitempty"`
+	Device           Device         `yaml:"device,omitempty"`
+	MetricTags       []Tag          `yaml:"metric_tags,omitempty"`
+	Sysobjectid      kt.StringArray `yaml:"sysobjectid,omitempty"`
+	From             string         `yaml:"from,omitempty"`
+	Provider         kt.Provider    `yaml:"provider,omitempty"`
+	NoUseBulkWalkAll bool           `yaml:"no_use_bulkwalkall"`
+	extended         bool
 }
 
 func (p *Profile) GetProfileName(override string) string {

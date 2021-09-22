@@ -160,6 +160,11 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 				if *dumpMibTable {
 					profile.DumpOids(cl)
 				}
+
+				if profile.NoUseBulkWalkAll {
+					device.NoUseBulkWalkAll = true
+					log.Infof("Turning off BulkWalkAll for device via profile.")
+				}
 			}
 		}
 
