@@ -62,11 +62,15 @@ jobs:
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make arm
 
-      - name: Publish docker image - arm64
-        run: |
-          docker pull arm64v8/ubuntu:20.04
-          docker build -t kentik/ktranslate:v2arm64 -f DockerfileArm64 .
-          docker push kentik/ktranslate:v2arm64
+      - name: Build and Publish Docker
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: ./DockerfileArm64
+          platforms: linux/arm64
+          push: true
+          tags: kentik/ktranslate:v2arm64
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
