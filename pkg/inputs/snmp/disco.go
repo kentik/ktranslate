@@ -41,6 +41,11 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		return fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
 	}
 
+	if *snmpOutFile != "" { // If we want to write somewhere else, swap the output file in here.
+		snmpFile = *snmpOutFile
+		log.Infof("Writing snmp config file to %s.", snmpFile)
+	}
+
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
 		if err := addDevices(nil, snmpFile, conf, true, log); err != nil {
 			return fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err)
@@ -242,22 +247,29 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 
 	for dip, d := range foundDevices {
 		key := d.DeviceName
+		keyAlt := d.DeviceName + "__" + dip
 		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
 			log.Warnf("Common device name found with different IPs. %s has %s and %s", d.DeviceName, dip, conf.Devices[d.DeviceName].DeviceIP)
-			key = d.DeviceName + "__" + dip
+			key = keyAlt
 		}
 
-		if conf.Devices[key] == nil {
+		if conf.Devices[key] == nil && conf.Devices[keyAlt] == nil {
 			// Start adding new devices based on deviceName__ip
-			key = d.DeviceName + "__" + dip
-			conf.Devices[key] = d
+			conf.Devices[keyAlt] = d
 			added++
-		} else {
+		} else if conf.Devices[key] != nil {
 			if conf.Disco.ReplaceDevices { // But keep backwards compatible with existing devices and don't change their entries.
 				conf.Devices[key] = d
 				replaced++
 			} else {
 				conf.Devices[key].Checked = time.Now()
+			}
+		} else {
+			if conf.Disco.ReplaceDevices { // Else, new style keys all use keyAlt.
+				conf.Devices[keyAlt] = d
+				replaced++
+			} else {
+				conf.Devices[keyAlt].Checked = time.Now()
 			}
 		}
 	}

@@ -31,6 +31,7 @@ var (
 	snmpWalk       = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
 	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1.2.1", "Walk this oid if -snmp_do_walk is set.")
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
+	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
