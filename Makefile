@@ -11,7 +11,7 @@ windows:
 .PHONY: arm
 arm:
 	go generate ./cmd/version
-	CGO_LDFLAGS="-L./lib" CGO_ENABLED=1 CC_FOR_TARGET=gcc-aarch64-linux-gnu CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build -o bin/ktranslate-arm ./cmd/ktranslate
+	CGO_LDFLAGS="-L./lib" CGO_ENABLED=1 CC_FOR_TARGET=gcc-aarch64-linux-gnu CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o bin/ktranslate ./cmd/ktranslate
 
 .PHONY: test
 test:
