@@ -156,14 +156,14 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		if mibdb != nil {
 			profile = mibdb.FindProfile(device.OID)
 			if profile != nil {
-				log.Infof("Found profile for %s: %v", device.OID, profile.From)
+				cl.Infof("Found profile for %s: %v", device.OID, profile.From)
 				if *dumpMibTable {
 					profile.DumpOids(cl)
 				}
 
 				if profile.NoUseBulkWalkAll {
 					device.NoUseBulkWalkAll = true
-					log.Infof("Turning off BulkWalkAll for device via profile.")
+					cl.Infof("Turning off BulkWalkAll for device via profile.")
 				}
 			}
 		}
