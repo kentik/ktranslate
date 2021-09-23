@@ -244,14 +244,16 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		key := d.DeviceName
 		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
 			log.Warnf("Common device name found with different IPs. %s has %s and %s", d.DeviceName, dip, conf.Devices[d.DeviceName].DeviceIP)
-			key = d.DeviceName + "-" + dip
+			key = d.DeviceName + "__" + dip
 		}
 
 		if conf.Devices[key] == nil {
+			// Start adding new devices based on deviceName__ip
+			key = d.DeviceName + "__" + dip
 			conf.Devices[key] = d
 			added++
 		} else {
-			if conf.Disco.ReplaceDevices {
+			if conf.Disco.ReplaceDevices { // But keep backwards compatible with existing devices and don't change their entries.
 				conf.Devices[key] = d
 				replaced++
 			} else {
