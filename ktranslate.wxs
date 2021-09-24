@@ -9,10 +9,11 @@
 
 <?define Win64 = "yes" ?>
 <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+<?define UpgradeCode = "{9f8c4b67-4ea7-4273-a9c7-e62a97989a49}" ?>
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id="d28acc3c-82ae-492e-82d9-74712f81bf44"
-        UpgradeCode="9f8c4b67-4ea7-4273-a9c7-e62a97989a49"
+        UpgradeCode="$(var.UpgradeCode)"
         Name="ktranslate"
         Version="$(var.Version)"
         Manufacturer="Kentik Technologies, Inc."
@@ -20,15 +21,8 @@
 
       <Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" Platform="x64" InstallScope="perMachine"/>
 
+      <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
       <Media Id="1" Cabinet="ktranslate.cab" EmbedCab="yes"/>
-
-      <Upgrade Id="9f8c4b67-4ea7-4273-a9c7-e62a97989a49">
-<!--         <UpgradeVersion Minimum="$(var.Version)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED"/> -->
-         <UpgradeVersion Minimum="2021.08.01" Maximum="$(var.Version)" IncludeMinimum="yes" IncludeMaximum="no"
-                         Property="OLDERVERSIONBEINGUPGRADED"/>
-      </Upgrade>
-      <Condition Message="A newer version of this software is already installed.">NOT NEWERVERSIONDETECTED</Condition>
-
 
       <!-- Step 1: Define the directory structure -->
       <Directory Id="TARGETDIR" Name="SourceDir">
