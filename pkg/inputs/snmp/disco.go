@@ -221,7 +221,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			device.DeviceOids = mibs
 		}
 		// Use the profile's provider if it is set.
-		if mibProfile.Provider != "" {
+		if mibProfile != nil && mibProfile.Provider != "" {
 			device.Provider = mibProfile.Provider
 		} else {
 			device.Provider = provider

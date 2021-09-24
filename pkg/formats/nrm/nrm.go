@@ -393,6 +393,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 				"max":   uint64(lost),
 			},
 			Attributes: attr,
+			Interval:   60 * 1000000,
 		})
 	}
 
