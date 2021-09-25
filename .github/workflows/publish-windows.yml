@@ -1,9 +1,12 @@
 name: Publish Windows
 
 on:
+  repository_dispatch:
+    types: [new-snmp-profiles]
+
   push:
     branches:
-      - fix-windows
+      - main
 
 jobs:
   build:
