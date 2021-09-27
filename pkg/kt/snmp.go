@@ -39,6 +39,7 @@ type DeviceMetricsMetadata struct {
 	SysLocation string `yaml:"sys_location,omitempty"`
 	SysContact  string `yaml:"sys_contact,omitempty"`
 	SysServices int    `yaml:"sys_services,omitempty"`
+	EngineID    string `yaml:"-"`
 	Customs     map[string]string
 	CustomInts  map[string]int64
 	Tables      map[string]DeviceTableMetadata
@@ -114,6 +115,7 @@ type SnmpDeviceConfig struct {
 	PollTimeSec            int               `yaml:"poll_time_sec"`
 	TimeoutMS              int               `yaml:"timeout_ms"`
 	Retries                int               `yaml:"retries"`
+	EngineID               string            `yaml:"engine_id"`
 	MatchAttr              map[string]string `yaml:"match_attributes"`
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`

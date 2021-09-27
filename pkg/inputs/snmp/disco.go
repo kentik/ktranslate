@@ -192,6 +192,9 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	if md.SysName != "" && device.DeviceName == "" { // Swap this in.
 		device.DeviceName = md.SysName
 	}
+	if md.EngineID != "" {
+		device.EngineID = md.EngineID
+	}
 	log.Infof("%s Success connecting to %s -- %v", posit, result.Host.String(), md)
 
 	// Stick in the profile too for future use.
@@ -248,6 +251,11 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	for dip, d := range foundDevices {
 		key := d.DeviceName
 		keyAlt := d.DeviceName + "__" + dip
+		if d.EngineID != "" { // If the engine id is not nil, use this as the unique value over anything else.
+			key = d.EngineID
+			keyAlt = d.EngineID
+		}
+
 		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
 			log.Warnf("Common device name found with different IPs. %s has %s and %s", d.DeviceName, dip, conf.Devices[d.DeviceName].DeviceIP)
 			key = keyAlt
