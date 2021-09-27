@@ -248,17 +248,6 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	for _, d := range conf.Devices {
 		byIP[d.DeviceIP] = d
 	}
-	for dip, d := range conf.Devices {
-		if d.EngineID != "" {
-			if _, ok := byEngineID[d.EngineID]; ok {
-				// Someone else has this engine ID. Delete this device.
-				log.Warnf("Removing device %s because of duplicate EngineID %s", d.DeviceName, d.EngineID)
-				delete(conf.Devices, dip)
-			} else {
-				byEngineID[d.EngineID] = d
-			}
-		}
-	}
 
 	for dip, d := range foundDevices {
 		key := d.DeviceName
@@ -289,6 +278,19 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	}
 	if !isTest {
 		log.Infof("Adding %d new SNMP devices to the configuration. %d replaced from %d.", added, replaced, len(foundDevices))
+	}
+
+	// Remove any duplicate devices based on Engine ID here.
+	for dip, d := range conf.Devices {
+		if d.EngineID != "" {
+			if _, ok := byEngineID[d.EngineID]; ok {
+				// Someone else has this engine ID. Delete this device.
+				log.Warnf("Removing device %s because of duplicate EngineID %s", d.DeviceName, d.EngineID)
+				delete(conf.Devices, dip)
+			} else {
+				byEngineID[d.EngineID] = d
+			}
+		}
 	}
 
 	// Fill up list of mibs to run on here.
