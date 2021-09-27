@@ -175,7 +175,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			}
 			md, err = metadata.GetDeviceMetadata(log, serv, nil)
 			if err != nil {
-				log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
+				log.Warnf("Cannot get device metadata on %s: %v", result.Host.String(), err)
 				continue
 			}
 			break // We're good to go here.
