@@ -244,22 +244,29 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		conf.Devices = map[string]*kt.SnmpDeviceConfig{}
 	}
 	byIP := map[string]*kt.SnmpDeviceConfig{}
+	byEngineID := map[string]*kt.SnmpDeviceConfig{}
 	for _, d := range conf.Devices {
 		byIP[d.DeviceIP] = d
+	}
+	for dip, d := range conf.Devices {
+		if d.EngineID != "" {
+			if _, ok := byEngineID[d.EngineID]; ok {
+				// Someone else has this engine ID. Delete this device.
+				log.Warnf("Removing device %s because of duplicate EngineID %s", d.DeviceName, d.EngineID)
+				delete(conf, dip)
+			} else {
+				byEngineID[d.EngineID] = d
+			}
+		}
 	}
 
 	for dip, d := range foundDevices {
 		key := d.DeviceName
 		keyAlt := d.DeviceName + "__" + dip
-		if d.EngineID != "" { // If the engine id is not nil, use this as the unique value over anything else if possible.
-			keyAlt = d.DeviceName + "__" + d.EngineID
-		}
-
 		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
 			log.Warnf("Common device name found with different IPs. %s has %s and %s", d.DeviceName, dip, conf.Devices[d.DeviceName].DeviceIP)
 			key = keyAlt
 		}
-
 		if conf.Devices[key] == nil && conf.Devices[keyAlt] == nil {
 			// Start adding new devices based on deviceName__ip
 			conf.Devices[keyAlt] = d
