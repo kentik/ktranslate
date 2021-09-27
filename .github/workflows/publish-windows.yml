@@ -54,7 +54,7 @@ jobs:
 
       - name: Build MSI
         run: |
-          wixl --define Version=${{ env.KENTIK_KTRANSLATE_VERSION }} --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
+          wixl --define Version=`date +"%Y.%m.%d"` --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
 
       - name: Publish MSI
         uses: actions/upload-artifact@v2
