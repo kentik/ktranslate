@@ -251,9 +251,8 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	for dip, d := range foundDevices {
 		key := d.DeviceName
 		keyAlt := d.DeviceName + "__" + dip
-		if d.EngineID != "" { // If the engine id is not nil, use this as the unique value over anything else.
-			key = d.EngineID
-			keyAlt = d.EngineID
+		if d.EngineID != "" { // If the engine id is not nil, use this as the unique value over anything else if possible.
+			keyAlt = d.DeviceName + "__" + d.EngineID
 		}
 
 		if byIP[dip] == nil && conf.Devices[d.DeviceName] != nil {
