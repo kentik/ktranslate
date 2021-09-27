@@ -29,7 +29,7 @@ var (
 		m.Set(".1.3.6.1.2.1.1.5.0", SNMP_sysName)
 		m.Set(".1.3.6.1.2.1.1.6.0", SNMP_sysLocation)
 		m.Set(".1.3.6.1.2.1.1.7.0", SNMP_sysServices)
-		m.Set("1.3.6.1.6.3.10.2.1.1", SNMP_engineID)
+		m.Set(".1.3.6.1.6.3.10.2.1.1.0", SNMP_engineID)
 		return m
 	}()
 )
@@ -107,8 +107,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
 		case SNMP_engineID:
-			log.Infof("XXXXX %+v", value)
-			md.EngineID = string(value.([]byte))
+			_, md.EngineID = snmp_util.GetFromConv(pdu, snmp_util.CONV_HWADDR, log)
 		default:
 			if oid.Tag != "" {
 				oidName = oid.Tag
