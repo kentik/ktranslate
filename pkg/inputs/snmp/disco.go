@@ -153,7 +153,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		}
 		md, err = metadata.GetDeviceMetadata(log, serv, nil)
 		if err != nil {
-			log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
+			log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
 			return
 		}
 	} else { // Loop over all possibe v2c options here.
@@ -175,7 +175,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 			}
 			md, err = metadata.GetDeviceMetadata(log, serv, nil)
 			if err != nil {
-				log.Debugf("Cannot get device metadata on %s: %v", result.Host.String(), err)
+				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
 				continue
 			}
 			break // We're good to go here.
@@ -191,6 +191,9 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	device.Description = md.SysDescr
 	if md.SysName != "" && device.DeviceName == "" { // Swap this in.
 		device.DeviceName = md.SysName
+	}
+	if md.EngineID != "" {
+		device.EngineID = md.EngineID
 	}
 	log.Infof("%s Success connecting to %s -- %v", posit, result.Host.String(), md)
 
@@ -241,6 +244,7 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		conf.Devices = map[string]*kt.SnmpDeviceConfig{}
 	}
 	byIP := map[string]*kt.SnmpDeviceConfig{}
+	byEngineID := map[string]*kt.SnmpDeviceConfig{}
 	for _, d := range conf.Devices {
 		byIP[d.DeviceIP] = d
 	}
@@ -275,6 +279,19 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	}
 	if !isTest {
 		log.Infof("Adding %d new SNMP devices to the configuration. %d replaced from %d.", added, replaced, len(foundDevices))
+	}
+
+	// Remove any duplicate devices based on Engine ID here.
+	for dip, d := range conf.Devices {
+		if d.EngineID != "" {
+			if _, ok := byEngineID[d.EngineID]; ok {
+				// Someone else has this engine ID. Delete this device.
+				log.Warnf("Removing device %s because of duplicate EngineID %s.", d.DeviceName, d.EngineID)
+				delete(conf.Devices, dip)
+			} else {
+				byEngineID[d.EngineID] = d
+			}
+		}
 	}
 
 	// Fill up list of mibs to run on here.

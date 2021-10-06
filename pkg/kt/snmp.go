@@ -39,6 +39,7 @@ type DeviceMetricsMetadata struct {
 	SysLocation string `yaml:"sys_location,omitempty"`
 	SysContact  string `yaml:"sys_contact,omitempty"`
 	SysServices int    `yaml:"sys_services,omitempty"`
+	EngineID    string `yaml:"-"`
 	Customs     map[string]string
 	CustomInts  map[string]int64
 	Tables      map[string]DeviceTableMetadata
@@ -95,12 +96,12 @@ type V3SNMPConfig struct {
 type SnmpDeviceConfig struct {
 	DeviceName             string            `yaml:"device_name"`
 	DeviceIP               string            `yaml:"device_ip"`
-	Community              string            `yaml:"snmp_comm"`
+	Community              string            `yaml:"snmp_comm,omitempty"`
 	UseV1                  bool              `yaml:"use_snmp_v1"`
-	V3                     *V3SNMPConfig     `yaml:"snmp_v3"`
+	V3                     *V3SNMPConfig     `yaml:"snmp_v3,omitempty"`
 	Debug                  bool              `yaml:"debug"`
-	SampleRate             int64             `yaml:"sample_rate"` // Used for flow.
-	Port                   uint16            `yaml:"port"`
+	SampleRate             int64             `yaml:"sample_rate,omitempty"` // Used for flow.
+	Port                   uint16            `yaml:"port,omitempty"`
 	OID                    string            `yaml:"oid"`
 	Description            string            `yaml:"description"`
 	Checked                time.Time         `yaml:"last_checked"`
@@ -108,16 +109,17 @@ type SnmpDeviceConfig struct {
 	DeviceOids             map[string]*Mib   `yaml:"device_oids"`
 	MibProfile             string            `yaml:"mib_profile"`
 	Provider               Provider          `yaml:"provider"`
-	FlowOnly               bool              `yaml:"flow_only"`
+	FlowOnly               bool              `yaml:"flow_only,omitempty"`
 	UserTags               map[string]string `yaml:"user_tags"`
-	DiscoveredMibs         []string          `yaml:"discovered_mibs"`
-	PollTimeSec            int               `yaml:"poll_time_sec"`
-	TimeoutMS              int               `yaml:"timeout_ms"`
-	Retries                int               `yaml:"retries"`
+	DiscoveredMibs         []string          `yaml:"discovered_mibs,omitempty"`
+	PollTimeSec            int               `yaml:"poll_time_sec,omitempty"`
+	TimeoutMS              int               `yaml:"timeout_ms,omitempty"`
+	Retries                int               `yaml:"retries,omitempty"`
+	EngineID               string            `yaml:"engine_id,omitempty"`
 	MatchAttr              map[string]string `yaml:"match_attributes"`
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
-	InstrumentationName    string            `yaml:"instrumentationName"`
+	InstrumentationName    string            `yaml:"instrumentationName,omitempty"`
 }
 
 type SnmpTrapConfig struct {
