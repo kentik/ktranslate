@@ -138,6 +138,12 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 	deltas := map[string]map[string]uint64{}
 
 	for oid, varName := range im.oidMap {
+		if mib, ok := im.oidMibMap[oid]; ok {
+			if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
+				continue
+			}
+		}
+
 		results, err := snmp_util.WalkOID(ctx, im.conf, oid, server, im.log, "Counter")
 		if err != nil {
 			im.metrics.Errors.Mark(1)

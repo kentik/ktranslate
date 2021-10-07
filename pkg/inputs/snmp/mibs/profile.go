@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs/apc"
@@ -19,6 +20,7 @@ type OID struct {
 	Tag        string           `yaml:"tag,omitempty"`
 	Desc       string           `yaml:"description,omitempty"`
 	Conversion string           `yaml:"conversion,omitempty"`
+	PollTime   int              `yaml:"poll_time_sec,omitempty"`
 }
 
 type Tag struct {
@@ -333,6 +335,9 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
 			}
+			if metric.Symbol.PollTime > 0 {
+				mib.PollDur = time.Duration(metric.Symbol.PollTime) * time.Second
+			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
@@ -361,6 +366,9 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			for k, v := range mib.Enum {
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
+			}
+			if s.PollTime > 0 {
+				mib.PollDur = time.Duration(s.PollTime) * time.Second
 			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)

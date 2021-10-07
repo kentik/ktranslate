@@ -236,10 +236,22 @@ type Mib struct {
 	Conversion string
 	Mib        string
 	Table      string
+	PollDur    time.Duration
+	lastPoll   time.Time
 }
 
-func (mb Mib) String() string {
+func (mb *Mib) String() string {
 	return fmt.Sprintf("Name: %s, Oid: %s: Type: %d, Extra: %s", mb.Name, mb.Oid, mb.Type, mb.Extra)
+}
+
+func (mb *Mib) IsPollReady() bool { // If there's a poll duration, return false if not enough time has elapsed before this next poll.
+	if mb.PollDur == 0 { // If not set, just always return true
+		return true
+	}
+	now := time.Now()
+	ready := mb.lastPoll.Add(mb.PollDur).Before(now)
+	mb.lastPoll = now
+	return ready
 }
 
 type LastMetadata struct {
