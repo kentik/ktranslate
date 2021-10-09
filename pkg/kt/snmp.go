@@ -123,10 +123,11 @@ type SnmpDeviceConfig struct {
 }
 
 type SnmpTrapConfig struct {
-	Listen    string `yaml:"listen"`
-	Community string `yaml:"community"`
-	Version   string `yaml:"version"`
-	Transport string `yaml:"transport"`
+	Listen    string        `yaml:"listen"`
+	Community string        `yaml:"community"`
+	Version   string        `yaml:"version"`
+	Transport string        `yaml:"transport"`
+	V3        *V3SNMPConfig `yaml:"v3_config"`
 }
 
 type SnmpDiscoConfig struct {

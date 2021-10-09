@@ -15,7 +15,7 @@ const (
 	MAX_CONNECT_TRY = 10
 )
 
-func parseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, gosnmp.SnmpV3MsgFlags, string, string, error) {
+func ParseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, gosnmp.SnmpV3MsgFlags, string, string, error) {
 
 	if v3config == nil {
 		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid nil v3 config passed: %v", v3config)
@@ -127,7 +127,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 			server.Version = gosnmp.Version2c
 		}
 	} else {
-		params, flags, contextEngineID, contextName, err := parseV3Config(device.V3)
+		params, flags, contextEngineID, contextName, err := ParseV3Config(device.V3)
 		if err != nil {
 			return nil, err
 		}
