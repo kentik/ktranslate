@@ -65,10 +65,7 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		if !strings.HasPrefix(noid, ".") {
 			noid = "." + noid
 		}
-		oidName := m.Name
-		if m.Tag != "" {
-			oidName = m.Tag
-		}
+		oidName := m.GetName()
 		log.Infof("Adding interface metric %s -> %s", noid, oidName)
 		oidMap[noid] = oidName
 	}
@@ -138,6 +135,12 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 	deltas := map[string]map[string]uint64{}
 
 	for oid, varName := range im.oidMap {
+		if mib, ok := im.oidMibMap[oid[1:]]; ok {
+			if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
+				continue
+			}
+		}
+
 		results, err := snmp_util.WalkOID(ctx, im.conf, oid, server, im.log, "Counter")
 		if err != nil {
 			im.metrics.Errors.Mark(1)

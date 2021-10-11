@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs/apc"
@@ -19,6 +20,7 @@ type OID struct {
 	Tag        string           `yaml:"tag,omitempty"`
 	Desc       string           `yaml:"description,omitempty"`
 	Conversion string           `yaml:"conversion,omitempty"`
+	PollTime   int              `yaml:"poll_time_sec,omitempty"`
 }
 
 type Tag struct {
@@ -273,7 +275,7 @@ func (p *Profile) DumpOids(log logger.ContextL) {
 // IF-MIB | ifXTable monotonic_count { } This is an interface metric because it starts with a if
 // UDP-MIB |  monotonic_count {1.3.6.1.2.1.7.8.0 udpHCInDatagrams} This is a device metrics because it does't, but still is a counter.
 
-func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[string]*kt.Mib) {
+func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[string]*kt.Mib, map[string]*kt.Mib) {
 	deviceMetrics := map[string]*kt.Mib{}
 	interfaceMetrics := map[string]*kt.Mib{}
 
@@ -333,6 +335,14 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
 			}
+			if metric.Symbol.PollTime > 0 {
+				if counterTimeSec > metric.Symbol.PollTime {
+					p.Errorf("SNMP: mib poll time of %d is less than device time of %d. Ignoring this custom time.", metric.Symbol.PollTime, counterTimeSec)
+				} else {
+					mib.PollDur = time.Duration(metric.Symbol.PollTime) * time.Second
+					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
+				}
+			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
@@ -361,6 +371,14 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			for k, v := range mib.Enum {
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
+			}
+			if s.PollTime > 0 {
+				if counterTimeSec > s.PollTime {
+					p.Errorf("SNMP: mib poll time of %d is less than device time of %d. Ignoring this custom time.", s.PollTime, counterTimeSec)
+				} else {
+					mib.PollDur = time.Duration(s.PollTime) * time.Second
+					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
+				}
 			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)

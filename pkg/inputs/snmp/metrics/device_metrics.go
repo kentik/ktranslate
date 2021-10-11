@@ -84,6 +84,9 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	m := map[string]*deviceMetricRow{}
 
 	for oid, mib := range dm.conf.DeviceOids {
+		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
+			continue
+		}
 		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetrics")
 		if err != nil {
 			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{
@@ -150,10 +153,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				continue
 			}
 		}
-		oidName := mib.Name
-		if mib.Tag != "" {
-			oidName = mib.Tag
-		}
+		oidName := mib.GetName()
 
 		dmr := assureDeviceMetrics(m, idx)
 		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName, Table: mib.Table}
