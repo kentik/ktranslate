@@ -3,8 +3,6 @@ package traps
 import (
 	"fmt"
 	"net"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 
@@ -63,17 +61,10 @@ func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics 
 		conf.Global.TimeoutMS = 5000
 	}
 
-	pts := strings.Split(conf.Trap.Listen, ":")
-	port := 161
-	if len(pts) > 1 {
-		port, _ = strconv.Atoi(pts[1])
-	}
-
 	// Now set things up.
 	tl := gosnmp.NewTrapListener()
 	tl.OnNewTrap = st.handle
 	tl.Params = &gosnmp.GoSNMP{
-		Port:               uint16(port),
 		Transport:          conf.Trap.Transport,
 		Community:          conf.Trap.Community,
 		Timeout:            time.Duration(conf.Global.TimeoutMS) * time.Millisecond,
@@ -82,10 +73,21 @@ func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics 
 		MaxOids:            gosnmp.MaxOids,
 	}
 	switch conf.Trap.Version {
+	case "v1":
+		tl.Params.Version = gosnmp.Version1
 	case "v2c", "":
 		tl.Params.Version = gosnmp.Version2c
 	case "v3":
+		params, flags, contextEngineID, contextName, err := snmp_util.ParseV3Config(conf.Trap.V3)
+		if err != nil {
+			return nil, err
+		}
 		tl.Params.Version = gosnmp.Version3
+		tl.Params.SecurityModel = gosnmp.UserSecurityModel
+		tl.Params.MsgFlags = flags
+		tl.Params.SecurityParameters = params
+		tl.Params.ContextEngineID = contextEngineID
+		tl.Params.ContextName = contextName
 	default:
 		return nil, fmt.Errorf("Invalid trap version: %s", conf.Trap.Version)
 	}
@@ -99,6 +101,7 @@ func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics 
 		},
 	})
 	st.tl = tl
+	log.Infof("Trap listener setup with version %s on %s.", conf.Trap.Version, conf.Trap.Listen)
 
 	for _, device := range conf.Devices {
 		st.deviceMap[device.DeviceIP] = device
