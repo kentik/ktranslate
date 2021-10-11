@@ -337,6 +337,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			}
 			if metric.Symbol.PollTime > 0 {
 				mib.PollDur = time.Duration(metric.Symbol.PollTime) * time.Second
+				p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)
@@ -369,6 +370,7 @@ func (p *Profile) GetMetrics(enabledMibs []string) (map[string]*kt.Mib, map[stri
 			}
 			if s.PollTime > 0 {
 				mib.PollDur = time.Duration(s.PollTime) * time.Second
+				p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 			}
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)

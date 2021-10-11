@@ -153,10 +153,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				continue
 			}
 		}
-		oidName := mib.Name
-		if mib.Tag != "" {
-			oidName = mib.Tag
-		}
+		oidName := mib.GetName()
 
 		dmr := assureDeviceMetrics(m, idx)
 		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName, Table: mib.Table}
