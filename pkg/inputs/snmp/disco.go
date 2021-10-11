@@ -283,7 +283,7 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 
 	// Remove any duplicate devices based on Engine ID here.
 	for dip, d := range conf.Devices {
-		if d.EngineID != "" {
+		if !conf.Disco.NoDedup && d.EngineID != "" {
 			if _, ok := byEngineID[d.EngineID]; ok {
 				// Someone else has this engine ID. Delete this device.
 				log.Warnf("Removing device %s because of duplicate EngineID %s.", d.DeviceName, d.EngineID)
