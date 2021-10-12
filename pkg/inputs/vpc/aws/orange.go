@@ -44,10 +44,11 @@ type OrangeMetric struct {
 }
 
 var (
-	IamRole  = flag.String("iam_role", "", "IAM Role to use for processing flow")
-	SqsName  = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
-	Regions  = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
-	IsLambda = flag.Bool("aws_lambda", kt.LookupEnvBool("AWS_IS_LAMBDA", false), "Run as a AWS Lambda function")
+	IamRole   = flag.String("iam_role", "", "IAM Role to use for processing flow")
+	SqsName   = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
+	Regions   = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
+	IsLambda  = flag.Bool("aws_lambda", kt.LookupEnvBool("AWS_IS_LAMBDA", false), "Run as a AWS Lambda function")
+	localFile = flag.String("aws_local_file", "", "If set, process this local file and exit")
 
 	ERROR_SLEEP_TIME     = 20 * time.Second
 	MappingCheckDuration = 30 * 60 * time.Second
@@ -73,6 +74,9 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		vpc.lambdaHandler = lambdaHandler
 		go lambda.Start(vpc.handleLamdba)
 		vpc.Infof("Running as a lamdba function")
+	} else if *localFile != "" {
+		vpc.Infof("Running on %s directly.", *localFile)
+		go vpc.handleLocal(*localFile)
 	} else {
 		if vpc.awsQUrl == "" {
 			return nil, fmt.Errorf("Flag --sqs_name required")

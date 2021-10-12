@@ -27,6 +27,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/features"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
 
+	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
 	"github.com/kentik/ktranslate/pkg/util/logger"
 )
@@ -187,6 +188,9 @@ func (bs *BaseServer) ParseFlags() {
 			bs.VersionInfo.Platform, bs.VersionInfo.Distro, bs.VersionInfo.Date)
 		os.Exit(0)
 	}
+
+	// We need the log level checked after so that the env var takes precedince from the flag.
+	bs.LogLevel = kt.LookupEnvString("KENTIK_LOG_LEVEL", bs.LogLevel)
 
 	// validate our configuration
 	if bs.ServiceName == "" {
