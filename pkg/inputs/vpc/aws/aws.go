@@ -473,16 +473,17 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		in.SampleRate = m.Sample
 	}
 
-	in.SrcAddr = m.SrcAddr.String()
-	in.DstAddr = m.DstAddr.String()
-	in.CustomStr["source_pkt_addr"] = m.SrcPktAddr.String()
-	in.CustomStr["dest_pkt_addr"] = m.DstPktAddr.String()
+	in.SrcAddr = getAddr(m.SrcAddr)
+	in.DstAddr = getAddr(m.DstAddr)
+	in.CustomStr["source_pkt_addr"] = getAddr(m.SrcPktAddr)
+	in.CustomStr["dest_pkt_addr"] = getAddr(m.DstPktAddr)
 	in.CustomStr["sublocation_type"] = m.SublocationType
 	in.CustomStr["sublocation_id"] = m.SublocationID
 	in.CustomStr["source_pkt_service"] = m.SrcPktService
 	in.CustomStr["dest_pkt_service"] = m.DstPktService
 	in.CustomStr["flow_direction"] = m.FlowDirection
 	in.CustomStr["traffic_path"] = m.TrafficPath
+	in.CustomStr["account_id"] = m.AccountID
 	in.CustomBigInt["start_time"] = m.StartTime.Unix()
 	in.CustomBigInt["end_time"] = m.EndTime.Unix()
 
@@ -544,6 +545,10 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 		}
 	}
 
+	// Now add some combo fields.
+	in.CustomStr["src_endpoint"] = in.SrcAddr + ":" + strconv.Itoa(int(in.L4SrcPort))
+	in.CustomStr["dst_endpoint"] = in.DstAddr + ":" + strconv.Itoa(int(in.L4DstPort))
+
 	return in
 }
 
@@ -590,4 +595,11 @@ func getDeviceKey(bucket, path string) (string, error) {
 		return bucket, nil
 	}
 	return "", fmt.Errorf("incorrectly formatted path [%s]", path)
+}
+
+func getAddr(addr net.IP) string {
+	if addr != nil {
+		return addr.String()
+	}
+	return ""
 }

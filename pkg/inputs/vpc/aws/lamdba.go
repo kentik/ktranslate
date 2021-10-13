@@ -21,6 +21,7 @@ func (vpc *AwsVpc) handleLamdba(ctx context.Context, s3Event events.S3Event) err
 		wg.Done()
 	}
 
+	lines := 0
 	for _, record := range s3Event.Records {
 		if record.EventName != "ObjectCreated:Put" {
 			vpc.Warnf("Skipping non put operation: %s", record.EventName)
@@ -39,6 +40,7 @@ func (vpc *AwsVpc) handleLamdba(ctx context.Context, s3Event events.S3Event) err
 
 		dst := make([]*kt.JCHF, len(rec.Lines))
 		vpc.Debugf("Found %d logs to send", len(rec.Lines))
+		lines += len(rec.Lines)
 		for i, l := range rec.Lines {
 			dst[i] = l.ToFlow(vpc, vpc.topo)
 		}
@@ -49,7 +51,7 @@ func (vpc *AwsVpc) handleLamdba(ctx context.Context, s3Event events.S3Event) err
 		}
 	}
 
-	vpc.Infof("Waiting on %d records to finish sending", len(s3Event.Records))
+	vpc.Infof("Waiting on %d records with %d lines to finish sending", len(s3Event.Records), lines)
 	wg.Wait()
 
 	return nil

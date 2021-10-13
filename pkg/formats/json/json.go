@@ -14,7 +14,7 @@ import (
 
 const (
 	InstNameNetflowEvent = "netflow-events"
-	InstNameVPCEvent     = "vpc-logs-events"
+	InstNameVPCEvent     = "vpc-flow-events"
 )
 
 type JsonFormat struct {
@@ -171,7 +171,11 @@ func strip(in map[string]interface{}) {
 			delete(in, k)
 		}
 	}
-	in["instrumentation.provider"] = kt.InstProvider  // Let them know who sent this.
-	in["instrumentation.name"] = InstNameNetflowEvent // @TODO -- think about how to handle VPC
+	in["instrumentation.provider"] = kt.InstProvider // Let them know who sent this.
+	if in["provider"] == kt.ProviderVPC {
+		in["instrumentation.name"] = InstNameVPCEvent
+	} else {
+		in["instrumentation.name"] = InstNameNetflowEvent
+	}
 	in["collector.name"] = kt.CollectorName
 }

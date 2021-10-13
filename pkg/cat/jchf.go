@@ -438,6 +438,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 		dst.CustomStr["Type"] = "kflow"
 	}
 
+	// Now add some combo fields.
+	dst.CustomStr["src_endpoint"] = dst.SrcAddr + ":" + strconv.Itoa(int(dst.L4SrcPort))
+	dst.CustomStr["dst_endpoint"] = dst.DstAddr + ":" + strconv.Itoa(int(dst.L4DstPort))
+
 	// Set the type dynamically here to help out processing.
 	dst.EventType = kc.getEventType(dst)
 	dst.Provider = kc.getProviderType(dst)
