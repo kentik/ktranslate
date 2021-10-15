@@ -2,8 +2,11 @@ package kt
 
 import (
 	"fmt"
+	"os"
+	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -366,11 +369,28 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		if err != nil {
 			return err
 		}
-		if single == "@global_v3" {
+		if single == "@global_v3" { // Should this be hard coded like this?
 			conf.useGlobal = true
 		}
 		*a = V3SNMPConfig(conf)
 	} else {
+		// Now, see if we need to map in any ENV vars.
+		fields := reflect.VisibleFields(reflect.TypeOf(conf))
+		ps := reflect.ValueOf(&conf)
+		for _, field := range fields {
+			if field.Type.Kind() == reflect.String {
+				s := ps.Elem()
+				f := s.FieldByName(field.Name)
+				if f.IsValid() && f.CanSet() {
+					if sval, ok := f.Interface().(string); ok {
+						if strings.HasPrefix(sval, "${") { // Expecting values of the form ${V3_AUTH_PROTOCOL}
+							f.SetString(os.Getenv(sval[2 : len(sval)-1]))
+						}
+					}
+				}
+			}
+		}
+		// And pop back what we created.
 		*a = V3SNMPConfig(conf)
 	}
 	return nil
