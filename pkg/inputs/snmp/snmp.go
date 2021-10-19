@@ -292,6 +292,21 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 		ms.Devices = fullDevices
 	}
 
+	// If there's a global v3, map it in for any disco, trap and device settings.
+	if ms.Global != nil && ms.Global.GlobalV3 != nil {
+		if ms.Disco != nil && ms.Disco.DefaultV3.InheritGlobal() {
+			ms.Disco.DefaultV3 = ms.Global.GlobalV3
+		}
+		if ms.Trap != nil && ms.Trap.V3.InheritGlobal() {
+			ms.Trap.V3 = ms.Global.GlobalV3
+		}
+		for _, device := range ms.Devices {
+			if device.V3.InheritGlobal() {
+				device.V3 = ms.Global.GlobalV3
+			}
+		}
+	}
+
 	return &ms, nil
 }
 

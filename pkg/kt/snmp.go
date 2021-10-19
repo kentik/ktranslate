@@ -2,8 +2,11 @@ package kt
 
 import (
 	"fmt"
+	"os"
+	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -91,6 +94,7 @@ type V3SNMPConfig struct {
 	PrivacyPassphrase        string `yaml:"privacy_passphrase"`
 	ContextEngineID          string `yaml:"context_engine_id"`
 	ContextName              string `yaml:"context_name"`
+	useGlobal                bool
 }
 
 type SnmpDeviceConfig struct {
@@ -147,13 +151,14 @@ type SnmpDiscoConfig struct {
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int      `yaml:"poll_time_sec"`
-	DropIfOutside bool     `yaml:"drop_if_outside_poll"`
-	MibProfileDir string   `yaml:"mib_profile_dir"`
-	MibDB         string   `yaml:"mibs_db"`
-	MibsEnabled   []string `yaml:"mibs_enabled"`
-	TimeoutMS     int      `yaml:"timeout_ms"`
-	Retries       int      `yaml:"retries"`
+	PollTimeSec   int           `yaml:"poll_time_sec"`
+	DropIfOutside bool          `yaml:"drop_if_outside_poll"`
+	MibProfileDir string        `yaml:"mib_profile_dir"`
+	MibDB         string        `yaml:"mibs_db"`
+	MibsEnabled   []string      `yaml:"mibs_enabled"`
+	TimeoutMS     int           `yaml:"timeout_ms"`
+	Retries       int           `yaml:"retries"`
+	GlobalV3      *V3SNMPConfig `yaml:"global_v3"`
 }
 
 type SnmpConfig struct {
@@ -350,4 +355,50 @@ func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		*a = multi
 	}
 	return nil
+}
+
+type V3SNMP V3SNMPConfig // Need a 2nd type alias to avoid stack overflow on parsing.
+
+// This lets the config get overriden by a global_v3 string.
+func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var conf = V3SNMP{}
+	err := unmarshal(&conf)
+	if err != nil {
+		var single string
+		err := unmarshal(&single)
+		if err != nil {
+			return err
+		}
+		if single == "@global_v3" { // Should this be hard coded like this?
+			conf.useGlobal = true
+		}
+		*a = V3SNMPConfig(conf)
+	} else {
+		// Now, see if we need to map in any ENV vars.
+		fields := reflect.VisibleFields(reflect.TypeOf(conf))
+		ps := reflect.ValueOf(&conf)
+		for _, field := range fields {
+			if field.Type.Kind() == reflect.String {
+				s := ps.Elem()
+				f := s.FieldByName(field.Name)
+				if f.IsValid() && f.CanSet() {
+					if sval, ok := f.Interface().(string); ok {
+						if strings.HasPrefix(sval, "${") { // Expecting values of the form ${V3_AUTH_PROTOCOL}
+							f.SetString(os.Getenv(sval[2 : len(sval)-1]))
+						}
+					}
+				}
+			}
+		}
+		// And pop back what we created.
+		*a = V3SNMPConfig(conf)
+	}
+	return nil
+}
+
+func (a *V3SNMPConfig) InheritGlobal() bool {
+	if a == nil {
+		return false
+	}
+	return a.useGlobal
 }
