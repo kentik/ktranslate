@@ -83,6 +83,11 @@ var (
 			"metrics": "https://metric-api.eu.newrelic.com/metric/v1",
 			"logs":    "https://log-api.eu.newrelic.com/log/v1",
 		},
+		"gov": map[string]string{
+			"events":  "https://gov-insights-collector.newrelic.com/v1/accounts/%s/events",
+			"metrics": "https://gov-metric-api.newrelic.com/metric/v1",
+			"logs":    "https://gov-log-api.newrelic.com/log/v1",
+		},
 	}
 )
 
@@ -111,12 +116,12 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	rval := strings.ToLower(*NrRegion)
 	switch rval {
 	case "": // noop
-	case "eu", "us":
+	case "eu", "us", "gov":
 		*NrUrl = regions[rval]["events"]
 		*NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
-		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU or US.", *NrRegion)
+		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, and GOV.", *NrRegion)
 	}
 
 	s.NRAccount = *NrAccount
