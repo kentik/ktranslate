@@ -64,7 +64,7 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log)
 
 	// Run a trap listener?
-	if conf.Trap != nil {
+	if conf.Trap != nil && !*flowOnly {
 		err := launchSnmpTrap(conf, jchfChan, metrics, log)
 		if err != nil {
 			return err

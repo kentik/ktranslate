@@ -24,6 +24,6 @@ RUN set -eux; ln -sv /usr/lib/aarch64-linux-gnu/libpcap.so.1.9.1 /usr/lib/aarch6
 COPY bin/ktranslate /usr/local/bin/
 
 USER ktranslate
-ENTRYPOINT ["ktranslate", "-listen", "0.0.0.0:8082", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
+ENTRYPOINT ["ktranslate", "-listen", "off", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
 
 EXPOSE 8082
