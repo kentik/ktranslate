@@ -804,6 +804,11 @@ func (kc *KTranslate) getRouter() http.Handler {
 }
 
 func (kc *KTranslate) listenHTTP() {
+	if kc.config.Listen == "off" {
+		kc.log.Infof("Turning off HTTP server.")
+		return
+	}
+
 	server := &http.Server{Addr: kc.config.Listen, Handler: kc.getRouter()}
 	var err error
 	if kc.config.SslCertFile != "" {
