@@ -22,16 +22,33 @@ type DeviceData struct {
 }
 
 type DeviceTableMetadata struct {
-	Customs    map[string]string
-	CustomInts map[string]int64
-	TableName  string
+	Customs map[string]MetaValue
 }
 
-func NewDeviceTableMetadata(table string) DeviceTableMetadata {
+type MetaValue struct {
+	TableName string
+	StringVal string
+	IntVal    int64
+}
+
+func (mv *MetaValue) GetValue() interface{} {
+	if mv.IntVal != 0 {
+		return mv.IntVal
+	}
+	return mv.StringVal
+}
+
+func NewDeviceTableMetadata() DeviceTableMetadata {
 	return DeviceTableMetadata{
-		Customs:    map[string]string{},
-		CustomInts: map[string]int64{},
-		TableName:  table,
+		Customs: map[string]MetaValue{},
+	}
+}
+
+func NewMetaValue(table string, sv string, iv int64) MetaValue {
+	return MetaValue{
+		TableName: table,
+		StringVal: sv,
+		IntVal:    iv,
 	}
 }
 
