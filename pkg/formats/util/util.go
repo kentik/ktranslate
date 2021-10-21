@@ -73,10 +73,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			}
 			if table, ok := lastMetadata.Tables[idx]; ok {
 				for k, v := range table.Customs {
-					attr[k] = v
-				}
-				for k, v := range table.CustomInts {
-					attr[k] = v
+					attr[k] = v.GetValue()
 				}
 			}
 			// If the index is longer, see if there's a parent table to look into also.
@@ -85,10 +82,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				parent := strings.Join(pts[0:len(pts)-1], ".")
 				if table, ok := lastMetadata.Tables[parent]; ok {
 					for k, v := range table.Customs {
-						attr[k] = v
-					}
-					for k, v := range table.CustomInts {
-						attr[k] = v
+						attr[k] = v.GetValue()
 					}
 				}
 			}
