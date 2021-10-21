@@ -18,6 +18,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
+	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/maps"
@@ -934,6 +935,16 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		kc.nfs = nfs
+	}
+
+	// If we're looking for syslog flows coming in
+	if kc.config.SyslogSource != "" {
+		assureInput()
+		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry)
+		if err != nil {
+			return err
+		}
+		kc.syslog = ss
 	}
 
 	// If we're sending self metrics via a chan to sinks.
