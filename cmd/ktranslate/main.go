@@ -55,6 +55,7 @@ func main() {
 		flowSource     = flag.String("nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow")
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
 		appMap         = flag.String("application_map", "", "File containing custom application mappings")
+		syslog         = flag.String("syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
 	)
 
 	metricsChan := make(chan []*kt.JCHF, cat.CHAN_SLACK)
@@ -62,9 +63,8 @@ func main() {
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
 
 	// Set up NR logging if configured.
-	var logTee chan string
+	logTee := make(chan string, cat.CHAN_SLACK)
 	if *teeLog {
-		logTee = make(chan string, cat.CHAN_SLACK)
 		bs.SetLogTee(logTee)
 	}
 
@@ -102,6 +102,7 @@ func main() {
 		TagMapType:        maps.Mapper(*tagMapType),
 		VpcSource:         vpc.CloudSource(*vpcSource),
 		FlowSource:        flow.FlowSource(*flowSource),
+		SyslogSource:      *syslog,
 		AppMap:            *appMap,
 		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
