@@ -2,7 +2,6 @@ package syslog
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"strings"
@@ -196,6 +195,16 @@ func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
 
 	msg["message"] = msg["content"] // Swap these around for NR.
 	delete(msg, "content")
+
+	// Remove any empty strings.
+	for k, v := range msg {
+		if vs, ok := v.(string); ok {
+			if vs == "" {
+				delete(msg, k)
+			}
+		}
+	}
+
 	b, err := json.Marshal(msg)
 	if err != nil {
 		return nil, err
