@@ -209,6 +209,9 @@ func (kc *KTranslate) cleanup() {
 	if kc.nfs != nil {
 		kc.nfs.Close()
 	}
+	if kc.syslog != nil {
+		kc.syslog.Close()
+	}
 }
 
 // GetStatus implements the baseserver.Service interface.
@@ -271,6 +274,9 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 	}
 	if kc.nfs != nil {
 		h.Inputs["flow"] = kc.nfs.HttpInfo()
+	}
+	if kc.syslog != nil {
+		h.Inputs["syslog"] = kc.syslog.HttpInfo()
 	}
 
 	b, err := json.Marshal(h)
@@ -940,7 +946,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for syslog flows coming in
 	if kc.config.SyslogSource != "" {
 		assureInput()
-		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.LogTee, kc.registry)
+		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.LogTee, kc.registry, kc.apic)
 		if err != nil {
 			return err
 		}
