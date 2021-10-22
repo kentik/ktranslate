@@ -187,6 +187,13 @@ func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
 		}
 	}
 
+	// Fall back to hostname if this is set.
+	if _, ok := msg["device_name"]; !ok {
+		if _, ok := msg["hostname"]; ok {
+			msg["device_name"] = msg["hostname"]
+		}
+	}
+
 	msg["message"] = msg["content"] // Swap these around for NR.
 	delete(msg, "content")
 	b, err := json.Marshal(msg)
