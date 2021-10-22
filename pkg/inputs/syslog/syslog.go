@@ -18,6 +18,11 @@ type KentikSyslog struct {
 	handler *syslog.ChannelHandler
 	channel syslog.LogPartsChannel
 	logchan chan string
+	metrics SyslogMetric
+}
+
+type SyslogMetric struct {
+	Messages go_metrics.Meter
 }
 
 var (
@@ -31,6 +36,7 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 	ss := KentikSyslog{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Syslog"}, log),
 		logchan:  logchan,
+		metrics:  SyslogMetric{Messages: go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog.messages"), registry)},
 	}
 
 	if logchan == nil {
@@ -94,6 +100,7 @@ func (ks *KentikSyslog) run(ctx context.Context, host string) {
 
 	go func(channel syslog.LogPartsChannel) {
 		for logParts := range channel {
+			ks.metrics.Messages.Mark(1)
 			msg, err := formatMessage(logParts)
 			if err != nil {
 				ks.Errorf("Cannot format syslog: %v", err)
