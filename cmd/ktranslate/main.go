@@ -63,9 +63,8 @@ func main() {
 	bs.BaseServerConfiguration.SkipEnvDump = true // Turn off dumping the envs on panic
 
 	// Set up NR logging if configured.
-	var logTee chan string
+	logTee := make(chan string, cat.CHAN_SLACK)
 	if *teeLog {
-		logTee = make(chan string, cat.CHAN_SLACK)
 		bs.SetLogTee(logTee)
 	}
 

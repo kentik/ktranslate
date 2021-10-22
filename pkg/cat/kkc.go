@@ -940,7 +940,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for syslog flows coming in
 	if kc.config.SyslogSource != "" {
 		assureInput()
-		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry)
+		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.LogTee, kc.registry)
 		if err != nil {
 			return err
 		}
