@@ -131,7 +131,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		*NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
-		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, and GOV.", *NrRegion)
+		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", *NrRegion)
 	}
 
 	s.NRAccount = *NrAccount
