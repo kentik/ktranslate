@@ -178,6 +178,9 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.flow":
 		setNr()
+	case "nr1.syslog": // Tune for syslog.
+		flag.Set("compression", "gzip")
+		flag.Set("sinks", "new_relic")
 	case "nr1.snmp": // Tune for snmp sending.
 		flag.Set("compression", "gzip")
 		flag.Set("sinks", "new_relic")
