@@ -69,7 +69,7 @@ func main() {
 	}
 
 	// If we're running in a given mode, set the flags accordingly.
-	setMode(bs, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0)), *sample)
+	setMode(bs, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0)), *sample, *syslog)
 
 	if *listenIPPort == "" {
 		bs.Fail("Invalid --listen value")
@@ -149,7 +149,7 @@ func main() {
 	bs.Run(kc)
 }
 
-func setMode(bs *baseserver.BaseServer, mode string, sample int) {
+func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) {
 	setNr := func() { // Specific settings for NR
 		flag.Set("format", "new_relic")
 		flag.Set("max_before_sample", "100")
@@ -181,6 +181,9 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int) {
 	case "nr1.syslog": // Tune for syslog.
 		flag.Set("compression", "gzip")
 		flag.Set("sinks", "new_relic")
+		if syslog == "" {
+			flag.Set("syslog.source", "0.0.0.0:5143")
+		}
 	case "nr1.snmp": // Tune for snmp sending.
 		flag.Set("compression", "gzip")
 		flag.Set("sinks", "new_relic")
