@@ -181,6 +181,7 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) 
 	case "nr1.syslog": // Tune for syslog.
 		flag.Set("compression", "gzip")
 		flag.Set("sinks", "new_relic")
+		flag.Set("format", "new_relic_metric")
 		if syslog == "" {
 			flag.Set("syslog.source", "0.0.0.0:5143")
 		}
