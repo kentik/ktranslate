@@ -462,16 +462,17 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
+			mtype := name.GetType()
 			if name.Format == kt.FloatMS {
 				ms = append(ms, NRMetric{
-					Name:       "kentik.snmp." + m,
+					Name:       "kentik." + mtype + "." + m,
 					Type:       NR_GAUGE_TYPE,
 					Value:      float64(float64(in.CustomBigInt[m]) / 1000),
 					Attributes: attrNew,
 				})
 			} else {
 				ms = append(ms, NRMetric{
-					Name:       "kentik.snmp." + m,
+					Name:       "kentik." + mtype + "." + m,
 					Type:       NR_GAUGE_TYPE,
 					Value:      int64(in.CustomBigInt[m]),
 					Attributes: attrNew,
@@ -676,6 +677,15 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 							continue
 						}
 					}
+				}
+			}
+		}
+
+		// Case where metric has no table.
+		if name.Table == "" {
+			if tableName, ok := lm.GetTableName(newKey); ok {
+				if tableName != "" {
+					continue
 				}
 			}
 		}

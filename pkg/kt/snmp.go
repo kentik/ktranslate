@@ -47,7 +47,7 @@ func NewDeviceTableMetadata() DeviceTableMetadata {
 func NewMetaValue(table string, sv string, iv int64) MetaValue {
 	return MetaValue{
 		TableName: table,
-		StringVal: sv,
+		StringVal: strings.TrimSpace(sv),
 		IntVal:    iv,
 	}
 }
@@ -141,7 +141,7 @@ type SnmpDeviceConfig struct {
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName    string            `yaml:"instrumentationName,omitempty"`
-	RunPing                bool              `yaml:"response_time"`
+	RunPing                bool              `yaml:"response_time,omitempty"`
 }
 
 type SnmpTrapConfig struct {

@@ -182,6 +182,14 @@ type MetricInfo struct {
 	Profile string `json:"-"`
 	Table   string `json:"-"`
 	Format  string `json:"-"`
+	Type    string `json:"-"`
+}
+
+func (m *MetricInfo) GetType() string {
+	if m.Type != "" {
+		return m.Type
+	}
+	return "snmp"
 }
 
 func NewJCHF() *JCHF {

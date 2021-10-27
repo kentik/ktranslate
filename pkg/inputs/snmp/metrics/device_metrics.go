@@ -219,7 +219,6 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.CustomBigInt = dmr.customBigInt
 		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
 		dst.Provider = dm.conf.Provider
-		dst.CustomBigInt["Uptime"] = uptime
 		dst.CustomStr["Error"] = dmr.Error
 		dst.CustomStr[kt.IndexVar] = idx
 		dst.DeviceName = dm.conf.DeviceName
@@ -245,50 +244,38 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				}
 			}
 		}
-
-		if stats != nil {
-			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-		}
-
 		flows = append(flows, dst)
 	}
 
-	// In this case, we need to send just a blank line with the uptime and stats.
-	if len(m) == 0 {
-		dst := kt.NewJCHF()
-		dst.CustomStr = map[string]string{}
-		dst.CustomInt = map[string]int32{}
-		dst.CustomBigInt = map[string]int64{}
-		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
-		dst.Provider = dm.conf.Provider
-		dst.CustomBigInt["Uptime"] = uptime
-		dst.DeviceName = dm.conf.DeviceName
-		dst.SrcAddr = dm.conf.DeviceIP
-		dst.Timestamp = time.Now().Unix()
-		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
-		for k, v := range dm.conf.UserTags {
-			dst.CustomStr[k] = v
-		}
-		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
-			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
-		}
-
-		if stats != nil {
-			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
-		}
-
-		flows = append(flows, dst)
+	// And a one off for uptime and RTT stats.
+	dst := kt.NewJCHF()
+	dst.CustomStr = map[string]string{}
+	dst.CustomInt = map[string]int32{}
+	dst.CustomBigInt = map[string]int64{}
+	dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+	dst.Provider = dm.conf.Provider
+	dst.CustomBigInt["Uptime"] = uptime
+	dst.DeviceName = dm.conf.DeviceName
+	dst.SrcAddr = dm.conf.DeviceIP
+	dst.Timestamp = time.Now().Unix()
+	dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
+	for k, v := range dm.conf.UserTags {
+		dst.CustomStr[k] = v
 	}
+	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
+		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+	}
+
+	if stats != nil {
+		dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
+		dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+		dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
+		dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+		dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
+		dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+	}
+
+	flows = append(flows, dst)
 
 	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))
 	return flows, nil
