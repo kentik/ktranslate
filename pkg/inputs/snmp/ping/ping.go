@@ -31,7 +31,7 @@ func NewPinger(log logger.ContextL, target string, inter time.Duration) (*Pinger
 
 	pinger.Interval = inter
 	if os.Getenv(KENTIK_PING_PRIV) == "true" {
-		log.Infof("Running ping service in priviedged mode.")
+		log.Infof("Running ping service in privileged mode.")
 		pinger.SetPrivileged(true)
 	}
 	go pinger.Run()
