@@ -348,11 +348,18 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 		},
 		Logs: make([]log, len(logs)),
 	}
+	hasSyslog := false
 	for i, l := range logs {
 		ls.Logs[i] = log{
 			Timestamp: ts,
 			Message:   l,
 		}
+		if !hasSyslog && strings.Contains(l, kt.PluginSyslog) {
+			hasSyslog = true
+		}
+	}
+	if !hasSyslog {
+		ls.Common.Attributes["plugin.type"] = kt.PluginHealth
 	}
 
 	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.
