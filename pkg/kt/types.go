@@ -180,6 +180,7 @@ type MetricInfo struct {
 	Name    string `json:"-"`
 	Profile string `json:"-"`
 	Table   string `json:"-"`
+	Format  string `json:"-"`
 }
 
 func NewJCHF() *JCHF {

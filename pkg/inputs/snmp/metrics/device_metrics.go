@@ -7,9 +7,12 @@ import (
 	"strings"
 	"time"
 
+	gp "github.com/go-ping/ping"
 	"github.com/gosnmp/gosnmp"
+
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/ping"
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
@@ -75,11 +78,11 @@ var (
 	sysUpTime = "1.3.6.1.2.1.1.3.0"
 )
 
-func (dm *DeviceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
-	return dm.pollFromConfig(ctx, server)
+func (dm *DeviceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, pinger *ping.Pinger) ([]*kt.JCHF, error) {
+	return dm.pollFromConfig(ctx, server, pinger)
 }
 
-func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSNMP) ([]*kt.JCHF, error) {
+func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSNMP, pinger *ping.Pinger) ([]*kt.JCHF, error) {
 	var results []gosnmp.SnmpPDU
 	m := map[string]*deviceMetricRow{}
 
@@ -118,6 +121,12 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			customInt:    map[string]int32{},
 			customBigInt: map[string]int64{},
 		}
+	}
+
+	// Get ping stats here if we have a service running.
+	var stats *gp.Statistics
+	if pinger != nil {
+		stats = pinger.Statistics()
 	}
 
 	// Map back into types we know about.
@@ -237,6 +246,15 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			}
 		}
 
+		if stats != nil {
+			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
+			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
+			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
+			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+		}
+
 		flows = append(flows, dst)
 	}
 
@@ -259,6 +277,16 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}
+
+		if stats != nil {
+			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
+			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
+			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
+			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+		}
+
 		flows = append(flows, dst)
 	}
 

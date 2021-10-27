@@ -141,6 +141,7 @@ type SnmpDeviceConfig struct {
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName    string            `yaml:"instrumentationName,omitempty"`
+	RunPing                bool              `yaml:"response_time"`
 }
 
 type SnmpTrapConfig struct {
@@ -176,6 +177,7 @@ type SnmpGlobalConfig struct {
 	TimeoutMS     int           `yaml:"timeout_ms"`
 	Retries       int           `yaml:"retries"`
 	GlobalV3      *V3SNMPConfig `yaml:"global_v3"`
+	RunPing       bool          `yaml:"response_time"`
 }
 
 type SnmpConfig struct {
