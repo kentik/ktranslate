@@ -79,6 +79,7 @@ const (
 
 	PluginSyslog = "ktranslate-syslog"
 	PluginHealth = "ktranslate-health"
+	FloatMS      = "float_ms"
 )
 
 type IntId uint64

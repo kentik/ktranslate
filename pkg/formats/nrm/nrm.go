@@ -462,7 +462,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
-			if name.Format == "float_ms" {
+			if name.Format == kt.FloatMS {
 				ms = append(ms, NRMetric{
 					Name:       "kentik.snmp." + m,
 					Type:       NR_GAUGE_TYPE,

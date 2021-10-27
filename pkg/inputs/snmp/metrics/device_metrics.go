@@ -248,17 +248,17 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 		if stats != nil {
 			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 		}
 
 		flows = append(flows, dst)
 	}
 
-	// In this case, we need to send just a blank line with the uptime.
+	// In this case, we need to send just a blank line with the uptime and stats.
 	if len(m) == 0 {
 		dst := kt.NewJCHF()
 		dst.CustomStr = map[string]string{}
@@ -280,11 +280,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 		if stats != nil {
 			dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 			dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 			dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: "float_ms", Profile: dm.profileName}
+			dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName}
 		}
 
 		flows = append(flows, dst)
