@@ -427,6 +427,14 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				Type:       kt.String,
 				Tag:        tag.Tag,
 				Conversion: tag.Column.Conversion,
+				Enum:       tag.Column.Enum,
+			}
+			if len(mib.Enum) > 0 {
+				mib.EnumRev = make(map[int64]string)
+			}
+			for k, v := range mib.Enum {
+				mib.Enum[strings.ToLower(k)] = v
+				mib.EnumRev[v] = k
 			}
 			deviceMetadata[tag.Column.Oid] = mib
 		}
@@ -453,6 +461,14 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Conversion: t.Column.Conversion,
 					Mib:        metric.Mib,
 					Table:      metric.Table.GetTableName(),
+					Enum:       t.Column.Enum,
+				}
+				if len(mib.Enum) > 0 {
+					mib.EnumRev = make(map[int64]string)
+				}
+				for k, v := range mib.Enum {
+					mib.Enum[strings.ToLower(k)] = v
+					mib.EnumRev[v] = k
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib

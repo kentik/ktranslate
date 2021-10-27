@@ -44,9 +44,18 @@ func NewDeviceTableMetadata() DeviceTableMetadata {
 	}
 }
 
-func NewMetaValue(table string, sv string, iv int64) MetaValue {
+func NewMetaValue(mib *Mib, sv string, iv int64) MetaValue {
+	if mib.EnumRev != nil {
+		if nv, ok := mib.EnumRev[iv]; ok {
+			sv = nv
+		} else {
+			sv = InvalidEnum
+		}
+		iv = 0
+	}
+
 	return MetaValue{
-		TableName: table,
+		TableName: mib.Table,
 		StringVal: strings.TrimSpace(sv),
 		IntVal:    iv,
 	}

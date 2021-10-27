@@ -246,6 +246,7 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 					dst.CustomStr[kt.StringPrefix+k] = ev
 				} else {
 					im.log.Warnf("Missing enum value for interface metric %s %d", k, v)
+					dst.CustomStr[kt.StringPrefix+k] = kt.InvalidEnum
 				}
 			}
 			dst.CustomBigInt[k] = int64(v)

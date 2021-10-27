@@ -181,19 +181,19 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 			if mib.Conversion != "" { // Adjust for any hard coded values here.
 				_, value = snmp_util.GetFromConv(variable, mib.Conversion, log)
 			}
-			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib.Table, value, 0)
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, value, 0)
 		case gosnmp.IPAddress: // Does this work?
 			switch val := variable.Value.(type) {
 			case string:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib.Table, val, 0)
+				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, val, 0)
 			case []byte:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib.Table, string(val), 0)
+				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, string(val), 0)
 			case net.IP:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib.Table, val.String(), 0)
+				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, val.String(), 0)
 			}
 		default:
 			// Try to just use as a number
-			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib.Table, "", gosnmp.ToBigInt(variable.Value).Int64())
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, "", gosnmp.ToBigInt(variable.Value).Int64())
 		}
 	}
 

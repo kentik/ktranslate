@@ -80,6 +80,7 @@ const (
 	PluginSyslog = "ktranslate-syslog"
 	PluginHealth = "ktranslate-health"
 	FloatMS      = "float_ms"
+	InvalidEnum  = "invalid enum"
 )
 
 type IntId uint64

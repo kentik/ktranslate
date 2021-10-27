@@ -204,6 +204,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 					dmr.customStr[kt.StringPrefix+oidName] = val // Save this string version as a attribute.
 				} else {
 					dm.log.Warnf("Missing enum value for device metric %s %d", oidName, value)
+					dmr.customStr[kt.StringPrefix+oidName] = kt.InvalidEnum
 				}
 			}
 			dmr.customBigInt[oidName] = snmp_util.ToInt64(variable.Value)
