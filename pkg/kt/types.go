@@ -76,6 +76,9 @@ const (
 	DefaultProfileMessage = "Missing matched profile. See overview page for details."
 	SIGUSR1               = syscall.Signal(0xa) // Because windows doesn't have this.
 	SIGUSR2               = syscall.Signal(0xc) // Because windows doesn't have this.
+
+	PluginSyslog = "ktranslate-syslog"
+	PluginHealth = "ktranslate-health"
 )
 
 type IntId uint64

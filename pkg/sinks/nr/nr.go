@@ -26,6 +26,11 @@ const (
 
 	NR_DATA_PROVIDER = "kentik"
 	NR_USER_AGENT    = "kentik-ktranslate/0.1.0"
+
+	REGION_EU         = "eu"
+	REGION_US         = "us"
+	REGION_GOV        = "gov"
+	REGION_US_STAGING = "us_stage"
 )
 
 type NRSink struct {
@@ -73,20 +78,25 @@ var (
 	NrCheckJson  = flag.Bool("nr_check_json", false, "Verify body is valid json before sending on")
 
 	regions = map[string]map[string]string{
-		"us": map[string]string{
+		REGION_US: map[string]string{
 			"events":  "https://insights-collector.newrelic.com/v1/accounts/%s/events",
 			"metrics": "https://metric-api.newrelic.com/metric/v1",
 			"logs":    "https://log-api.newrelic.com/log/v1",
 		},
-		"eu": map[string]string{
+		REGION_EU: map[string]string{
 			"events":  "https://insights-collector.eu01.nr-data.net/v1/accounts/%s/events",
 			"metrics": "https://metric-api.eu.newrelic.com/metric/v1",
 			"logs":    "https://log-api.eu.newrelic.com/log/v1",
 		},
-		"gov": map[string]string{
+		REGION_GOV: map[string]string{
 			"events":  "https://gov-insights-collector.newrelic.com/v1/accounts/%s/events",
 			"metrics": "https://gov-metric-api.newrelic.com/metric/v1",
 			"logs":    "https://gov-log-api.newrelic.com/log/v1",
+		},
+		REGION_US_STAGING: map[string]string{
+			"events":  "https://staging-insights-collector.newrelic.com/v1/accounts/%s/events",
+			"metrics": "https://staging-metric-api.newrelic.com/metric/v1",
+			"logs":    "https://staging-log-api.newrelic.com/log/v1",
 		},
 	}
 )
@@ -116,12 +126,12 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	rval := strings.ToLower(*NrRegion)
 	switch rval {
 	case "": // noop
-	case "eu", "us", "gov":
+	case REGION_US, REGION_EU, REGION_GOV, REGION_US_STAGING:
 		*NrUrl = regions[rval]["events"]
 		*NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
-		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, and GOV.", *NrRegion)
+		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", *NrRegion)
 	}
 
 	s.NRAccount = *NrAccount
@@ -338,11 +348,18 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 		},
 		Logs: make([]log, len(logs)),
 	}
+	hasSyslog := false
 	for i, l := range logs {
 		ls.Logs[i] = log{
 			Timestamp: ts,
 			Message:   l,
 		}
+		if !hasSyslog && strings.Contains(l, kt.PluginSyslog) {
+			hasSyslog = true
+		}
+	}
+	if !hasSyslog {
+		ls.Common.Attributes["plugin.type"] = kt.PluginHealth
 	}
 
 	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.

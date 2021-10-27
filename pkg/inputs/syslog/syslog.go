@@ -195,6 +195,7 @@ func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
 
 	msg["message"] = msg["content"] // Swap these around for NR.
 	delete(msg, "content")
+	msg["plugin.type"] = kt.PluginSyslog // NR Processing.
 
 	// Remove any empty strings.
 	for k, v := range msg {
