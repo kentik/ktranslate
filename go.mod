@@ -14,6 +14,7 @@ require (
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect
 	github.com/elliotchance/orderedmap v1.4.0
 	github.com/go-ole/go-ole v1.2.5 // indirect
+	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd // indirect
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gosnmp/gosnmp v1.32.0 // indirect

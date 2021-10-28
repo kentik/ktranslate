@@ -8,6 +8,7 @@ import (
 	"github.com/gosnmp/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/ping"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
@@ -25,6 +26,7 @@ type Poller struct {
 	metrics          *kt.SnmpDeviceMetric
 	counterTimeSec   int
 	dropIfOutside    bool
+	pinger           *ping.Pinger
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -53,7 +55,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		deviceMetricMibs, interfaceMetricMibs = profile.GetMetrics(gconf.MibsEnabled, counterTimeSec)
 	}
 
-	return &Poller{
+	poller := Poller{
 		jchfChan:         jchfChan,
 		log:              log,
 		metrics:          metrics,
@@ -63,6 +65,18 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		counterTimeSec:   counterTimeSec,
 		dropIfOutside:    dropIfOutside,
 	}
+
+	if gconf.RunPing || conf.RunPing {
+		p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second)
+		if err != nil {
+			log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
+		} else {
+			poller.pinger = p
+			log.Infof("Enabling responce time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
+		}
+	}
+
+	return &poller
 }
 
 func (p *Poller) StartLoop(ctx context.Context) {
@@ -140,7 +154,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
 func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 
-	deviceFlows, err := p.deviceMetrics.Poll(ctx, p.server)
+	deviceFlows, err := p.deviceMetrics.Poll(ctx, p.server, p.pinger)
 	if err != nil {
 		p.log.Warnf("Cannot poll device metrics: %v", err)
 		p.metrics.Fail.Update(kt.SNMP_BAD)

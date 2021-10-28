@@ -44,10 +44,19 @@ func NewDeviceTableMetadata() DeviceTableMetadata {
 	}
 }
 
-func NewMetaValue(table string, sv string, iv int64) MetaValue {
+func NewMetaValue(mib *Mib, sv string, iv int64) MetaValue {
+	if mib.EnumRev != nil {
+		if nv, ok := mib.EnumRev[iv]; ok {
+			sv = nv
+		} else {
+			sv = InvalidEnum
+		}
+		iv = 0
+	}
+
 	return MetaValue{
-		TableName: table,
-		StringVal: sv,
+		TableName: mib.Table,
+		StringVal: strings.TrimSpace(sv),
 		IntVal:    iv,
 	}
 }
@@ -141,6 +150,7 @@ type SnmpDeviceConfig struct {
 	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName    string            `yaml:"instrumentationName,omitempty"`
+	RunPing                bool              `yaml:"response_time,omitempty"`
 }
 
 type SnmpTrapConfig struct {
@@ -176,6 +186,7 @@ type SnmpGlobalConfig struct {
 	TimeoutMS     int           `yaml:"timeout_ms"`
 	Retries       int           `yaml:"retries"`
 	GlobalV3      *V3SNMPConfig `yaml:"global_v3"`
+	RunPing       bool          `yaml:"response_time"`
 }
 
 type SnmpConfig struct {

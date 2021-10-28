@@ -79,6 +79,8 @@ const (
 
 	PluginSyslog = "ktranslate-syslog"
 	PluginHealth = "ktranslate-health"
+	FloatMS      = "float_ms"
+	InvalidEnum  = "invalid enum"
 )
 
 type IntId uint64
@@ -180,6 +182,15 @@ type MetricInfo struct {
 	Name    string `json:"-"`
 	Profile string `json:"-"`
 	Table   string `json:"-"`
+	Format  string `json:"-"`
+	Type    string `json:"-"`
+}
+
+func (m *MetricInfo) GetType() string {
+	if m.Type != "" {
+		return m.Type
+	}
+	return "snmp"
 }
 
 func NewJCHF() *JCHF {
