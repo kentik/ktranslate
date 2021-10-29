@@ -77,10 +77,11 @@ const (
 	SIGUSR1               = syscall.Signal(0xa) // Because windows doesn't have this.
 	SIGUSR2               = syscall.Signal(0xc) // Because windows doesn't have this.
 
-	PluginSyslog = "ktranslate-syslog"
-	PluginHealth = "ktranslate-health"
-	FloatMS      = "float_ms"
-	InvalidEnum  = "invalid enum"
+	PluginSyslog   = "ktranslate-syslog"
+	PluginHealth   = "ktranslate-health"
+	FloatMS        = "float_ms"
+	InvalidEnum    = "invalid enum"
+	DeviceTagTable = "KT_Device_Tag"
 )
 
 type IntId uint64

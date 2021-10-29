@@ -2,6 +2,7 @@ package util
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -9,20 +10,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSetAttrDrop(t *testing.T) {
+func TestDropOnFilter(t *testing.T) {
 	tests := []struct {
 		attr    map[string]interface{}
 		in      *kt.JCHF
 		metrics map[string]kt.MetricInfo
 		lm      kt.LastMetadata
-		drop    interface{}
+		drop    bool
 	}{
 		{
 			map[string]interface{}{},
 			kt.NewJCHF(),
 			map[string]kt.MetricInfo{},
 			kt.LastMetadata{},
-			nil,
+			false,
 		},
 		{
 			map[string]interface{}{
@@ -112,7 +113,7 @@ func TestSetAttrDrop(t *testing.T) {
 					kt.AdminStatus: regexp.MustCompile("up"),
 				},
 			},
-			true,
+			false, // Let through because status is up and fooAAA doesn't exist in the attribute list.
 		},
 		{
 			map[string]interface{}{
@@ -200,6 +201,13 @@ func TestSetAttrDrop(t *testing.T) {
 
 	for i, test := range tests {
 		SetAttr(test.attr, test.in, test.metrics, &test.lm)
-		assert.Equal(t, test.drop, test.attr[kt.DropMetric], "Test %d", i)
+		isIf := false
+		for k, _ := range test.attr {
+			if strings.HasPrefix(k, "if_") {
+				isIf = true
+			}
+		}
+		drop := DropOnFilter(test.attr, &test.lm, isIf)
+		assert.Equal(t, test.drop, drop, "Test %d", i)
 	}
 }

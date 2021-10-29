@@ -238,6 +238,12 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 	}
 
+	// Also any device level tags
+	for k, v := range p.conf.UserTags {
+		dst.CustomStr[k] = v
+		dst.CustomMetrics[k] = kt.MetricInfo{Table: kt.DeviceTagTable}
+	}
+
 	for intr, id := range dd.InterfaceData {
 		dst.CustomStr["if."+intr+".Address"] = id.Address
 		dst.CustomStr["if."+intr+".Netmask"] = id.Netmask
