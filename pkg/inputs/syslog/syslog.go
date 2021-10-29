@@ -51,9 +51,9 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Syslog"}, log),
 		logchan:  logchan,
 		metrics: SyslogMetric{
-			Messages: go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog.messages"), registry),
-			Errors:   go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog.errors"), registry),
-			Queue:    go_metrics.GetOrRegisterGauge(fmt.Sprintf("syslog.queue"), registry),
+			Messages: go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog_messages"), registry),
+			Errors:   go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog_errors"), registry),
+			Queue:    go_metrics.GetOrRegisterGauge(fmt.Sprintf("syslog_queue"), registry),
 		},
 		apic:    apic,
 		devices: apic.GetDevicesAsMap(0),
