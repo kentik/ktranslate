@@ -9,6 +9,11 @@ require (
 	github.com/aws/aws-lambda-go v1.24.0
 	github.com/aws/aws-sdk-go v1.37.32
 	github.com/bmatsuo/lmdb-go v1.8.0
+	github.com/bufbuild/buf v0.56.0 // indirect
+	github.com/coreos/bbolt v1.3.2 // indirect
+	github.com/coreos/etcd v3.3.13+incompatible // indirect
+	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
+	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/cornelk/hashmap v1.0.1 // indirect
 	github.com/dchest/siphash v1.2.2
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect
@@ -17,8 +22,9 @@ require (
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/gosnmp/gosnmp v1.32.0
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
 	github.com/honeycombio/libhoney-go v1.15.2
 	github.com/json-iterator/go v1.1.11
 	github.com/kentik/api-schema-public v0.0.0-20210428232153-25f1622f6b13
@@ -32,13 +38,16 @@ require (
 	github.com/netsampler/goflow2 v1.0.4
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/prometheus/client_golang v1.11.0
+	github.com/prometheus/tsdb v0.7.1 // indirect
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.10
 	github.com/shirou/gopsutil v3.21.2+incompatible
 	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
-	google.golang.org/grpc v1.38.0
+	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
+	google.golang.org/grpc v1.41.0-dev.0.20210907181116-2f3355d2244e
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.0 // indirect
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	zombiezen.com/go/capnproto2 v2.18.0+incompatible
