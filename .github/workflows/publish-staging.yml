@@ -61,13 +61,14 @@ jobs:
       - name: Run testing
         run: make test
 
-      - name: Create docker image
-        run: make docker
-
-      - name: Publish docker image
-        run: |
-          docker tag ktranslate:v2 kentik/ktranslate:staging
-          docker push kentik/ktranslate:staging
+      - name: Build and Publish Docker
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          platforms: linux/amd64, linux/arm64
+          push: true
+          tags: kentik/ktranslate:staging
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
