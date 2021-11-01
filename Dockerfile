@@ -1,6 +1,6 @@
 # build ktranslate
-FROM golang:1.17 as build
-RUN apt-get update && apt-get install -y libpcap-dev
+FROM golang:1.17-alpine as build
+RUN apk add -U libpcap-dev alpine-sdk bash
 COPY . /src
 WORKDIR /src
 RUN make
@@ -23,17 +23,13 @@ RUN apk add -U git
 RUN git clone https://github.com/kentik/snmp-profiles /snmp
 
 # main image
-FROM ubuntu:20.04
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-		ca-certificates \
-		libpcap0.8 \
-	; \
-	rm -rf /var/lib/apt/lists/*
-RUN set -eux; \
-	groupadd --gid 1000 ktranslate; \
-	useradd --home-dir /etc/ktranslate --gid ktranslate --no-create-home --uid 1000 ktranslate
+FROM alpine:3.14
+RUN apk add -U --no-cache ca-certificates libpcap
+RUN addgroup -g 1000 ktranslate && \
+	adduser -D -u 1000 -G ktranslate -H -h /etc/ktranslate ktranslate
+#RUN set -eux; \
+#	groupadd --gid 1000 ktranslate; \
+#	useradd --home-dir /etc/ktranslate --gid ktranslate --no-create-home --uid 1000 ktranslate
 
 COPY --chown=ktranslate:ktranslate config/ /etc/ktranslate/
 COPY --chown=ktranslate:ktranslate lib/ /etc/ktranslate/
@@ -42,7 +38,7 @@ COPY --chown=ktranslate:ktranslate lib/ /etc/ktranslate/
 COPY --from=maxmind /GeoLite2-Country.mmdb /etc/ktranslate/
 COPY --from=maxmind /GeoLite2-ASN.mmdb /etc/ktranslate/
 # snmp
-COPY --from=snmp /snmp/profiles /etc/ktranslate/profiles/profiles
+COPY --from=snmp /snmp/profiles /etc/ktranslate/profiles
 
 # add backwards compatibility symlinks for folks using an snmp.yml from the older image (and "ls" to verify the symlinks are correct and working)
 RUN ls -lah /etc/ktranslate ; ln -sv /etc/ktranslate /etc/profiles ; ls -lah /etc/profiles/
