@@ -225,10 +225,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
-		dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
-		for k, v := range dm.conf.UserTags {
-			dst.CustomStr[k] = v
-		}
+		dst.CustomMetrics = metricsFound        // Add this in so that we know what metrics to pull out down the road.
 		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}
@@ -236,9 +233,16 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		// Memory can be compound value so need to do it here if present but not already set.
 		if _, ok := dst.CustomBigInt["MemoryUtilization"]; !ok {
 			memoryUsed, oku := dst.CustomBigInt["MemoryUsed"]
-			memoryFree, okt := dst.CustomBigInt["MemoryFree"]
-			if oku && okt {
+			memoryFree, okf := dst.CustomBigInt["MemoryFree"]
+			memoryTotal, okt := dst.CustomBigInt["MemoryTotal"]
+			if oku && okf {
 				memoryTotal := memoryFree + memoryUsed
+				if memoryTotal > 0 {
+					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
+					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+				}
+			} else if okt && okf {
+				memoryUsed = memoryTotal - memoryFree
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
 					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
@@ -259,10 +263,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	dst.DeviceName = dm.conf.DeviceName
 	dst.SrcAddr = dm.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
-	dst.CustomMetrics = metricsFound // Add this in so that we know what metrics to pull out down the road.
-	for k, v := range dm.conf.UserTags {
-		dst.CustomStr[k] = v
-	}
+	dst.CustomMetrics = metricsFound        // Add this in so that we know what metrics to pull out down the road.
 	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}

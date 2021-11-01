@@ -448,12 +448,6 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 		f.Debugf("Missing device metadata for %s", in.DeviceName)
 	}
 
-	if drop, ok := attr[kt.DropMetric]; ok {
-		if drop.(bool) {
-			return nil // This Metric isn't in the white list so lets drop it.
-		}
-	}
-
 	ms := make([]NRMetric, 0, len(metrics))
 	for m, name := range metrics {
 		if m == "" {
@@ -462,6 +456,10 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+
 			mtype := name.GetType()
 			if name.Format == kt.FloatMS {
 				ms = append(ms, NRMetric{
@@ -494,12 +492,6 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		f.Debugf("Missing interface metadata for %s", in.DeviceName)
 	}
 
-	if drop, ok := attr[kt.DropMetric]; ok {
-		if drop.(bool) {
-			return nil // This Metric isn't in the white list so lets drop it.
-		}
-	}
-
 	ms := make([]NRMetric, 0, len(metrics))
 	profileName := "snmp"
 	for m, name := range metrics {
@@ -510,6 +502,9 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := copyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
 			ms = append(ms, NRMetric{
 				Name:       "kentik.snmp." + m,
 				Type:       NR_GAUGE_TYPE,
@@ -527,12 +522,14 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
 						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
-						ms = append(ms, NRMetric{
-							Name:       "kentik.snmp.IfInUtilization",
-							Type:       NR_GAUGE_TYPE,
-							Value:      float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed),
-							Attributes: attrNew,
-						})
+						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+							ms = append(ms, NRMetric{
+								Name:       "kentik.snmp.IfInUtilization",
+								Type:       NR_GAUGE_TYPE,
+								Value:      float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed),
+								Attributes: attrNew,
+							})
+						}
 					}
 				}
 			}
@@ -543,12 +540,14 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
 					if uptimeSpeed > 0 {
 						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, nil)
-						ms = append(ms, NRMetric{
-							Name:       "kentik.snmp.IfOutUtilization",
-							Type:       NR_GAUGE_TYPE,
-							Value:      float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed),
-							Attributes: attrNew,
-						})
+						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+							ms = append(ms, NRMetric{
+								Name:       "kentik.snmp.IfOutUtilization",
+								Type:       NR_GAUGE_TYPE,
+								Value:      float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed),
+								Attributes: attrNew,
+							})
+						}
 					}
 				}
 			}
@@ -661,9 +660,10 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		if name.Table != "" && metricName != newKey {
 			if _, ok := keepAcrossTables[newKey]; !ok { // If we want this attribute in every table, list it here.
 				attrNew["mib-table"] = name.Table
+
 				// See if the metadata knows about this attribute.
 				if tableName, ok := lm.GetTableName(newKey); ok {
-					if tableName != name.Table {
+					if tableName != name.Table && tableName != kt.DeviceTagTable {
 						continue
 					}
 				} else {
@@ -684,7 +684,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		// Case where metric has no table.
 		if name.Table == "" {
 			if tableName, ok := lm.GetTableName(newKey); ok {
-				if tableName != "" {
+				if tableName != "" && tableName != kt.DeviceTagTable {
 					continue
 				}
 			}
