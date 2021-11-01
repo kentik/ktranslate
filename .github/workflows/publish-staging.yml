@@ -38,16 +38,6 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get install make libpcap-dev golint
 
-      - name: Install MM DBs
-        run: |
-          MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
-
-      - name: Install SNMP Profiles
-        uses: actions/checkout@main
-        with:
-          repository: kentik/snmp-profiles
-          path: ./config/profiles
-
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
@@ -61,13 +51,16 @@ jobs:
       - name: Run testing
         run: make test
 
-      - name: Create docker image
-        run: make docker
-
-      - name: Publish docker image
-        run: |
-          docker tag ktranslate:v2 kentik/ktranslate:staging
-          docker push kentik/ktranslate:staging
+      - name: Build and Publish Docker
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          platforms: linux/amd64, linux/arm64
+          push: true
+          tags: kentik/ktranslate:staging
+          secrets: |
+            "MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}"
 
       - name: Publish binary
         uses: actions/upload-artifact@v2
