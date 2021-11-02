@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  host-sflow:
+    image: sflow/host-sflow
+    container_name: host-sflow
+    restart: unless-stopped
+    environment:
+      - COLLECTOR=127.0.0.1
+      - PORT=6343
+      - NET=${NETWORK}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: host
+
+  ktranslate:
+    image: kentik/ktranslate:v2
+    container_name: ktranslate
+    restart: unless-stopped
+    environment:
+      - NEW_RELIC_API_KEY=${NR_INSIGHTS_INSERT_KEY}
+    command:
+      - --metalisten=127.0.0.1:8083
+      - --nr_account_id=${NR_ACCOUNT_ID}
+      - --nf.source=sflow
+      - --nf.addr=127.0.0.1
+      - --nf.port=6343
+      - --tee_logs=true
+      - nr1.flow
+    network_mode: host
