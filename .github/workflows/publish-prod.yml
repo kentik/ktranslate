@@ -61,9 +61,10 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:latest
+          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:latest, kentik/ktranslate:v2
           build-args: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
 

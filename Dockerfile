@@ -3,6 +3,7 @@ FROM golang:1.17-alpine as build
 RUN apk add -U libpcap-dev alpine-sdk bash
 COPY . /src
 WORKDIR /src
+ARG KENTIK_KTRANSLATE_VERSION
 RUN make
 
 # maxmind dbs
@@ -50,4 +51,3 @@ EXPOSE 8082
 
 USER ktranslate
 ENTRYPOINT ["ktranslate", "-listen", "off", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info"]
-
