@@ -571,7 +571,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 
 	switch in.CustomStr["type"] {
 	case "counter":
-		if in.CustomBigInt["count"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["count"] > 0 {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
@@ -580,7 +580,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			})
 		}
 	case "gauge":
-		if in.CustomBigInt["value"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
@@ -589,7 +589,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			})
 		}
 	case "histogram":
-		if in.CustomBigInt["95-percentile"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
@@ -598,7 +598,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			})
 		}
 	case "meter":
-		if in.CustomBigInt["one-minute"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["one-minute"] > 0 {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
@@ -607,7 +607,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			})
 		}
 	case "timer":
-		if in.CustomBigInt["value"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
 			ms = append(ms, NRMetric{
 				Name:       "kentik.ktranslate." + in.CustomStr["95-percentile"],
 				Type:       NR_GAUGE_TYPE,

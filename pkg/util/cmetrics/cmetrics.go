@@ -127,6 +127,8 @@ func SetConfWithRegistry(conf string, l Logger, log_prefix string, tsdb_prefix s
 				} else {
 					l.Errorf(log_prefix, "Only HTTP|TCP|UDP endpoint for influx currently supported")
 				}
+			default:
+				l.Errorf(log_prefix, "Unknown metrics config: %v", conf)
 			}
 		}
 	}
