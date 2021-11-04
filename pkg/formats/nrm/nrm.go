@@ -637,6 +637,7 @@ var keepAcrossTables = map[string]bool{
 	"eventType":      true,
 	"provider":       true,
 	"sysoid_profile": true,
+	kt.IndexVar:      true,
 }
 
 func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
@@ -668,14 +669,8 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 					}
 				} else {
 					// If this metric comes from a specific table, only show attributes for this table.
-					if strings.HasPrefix(newKey, kt.StringPrefix) {
-						if !strings.HasPrefix(newKey, kt.StringPrefix+name.Table) {
-							continue
-						}
-					} else {
-						if !strings.HasPrefix(newKey, name.Table) {
-							continue
-						}
+					if !strings.HasPrefix(newKey, name.Table) {
+						continue
 					}
 				}
 			}
