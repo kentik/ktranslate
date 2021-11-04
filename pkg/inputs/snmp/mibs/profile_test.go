@@ -23,30 +23,94 @@ func TestFindProfile(t *testing.T) {
 			"1.3.6.1.4.1.8072.3.2.8":      &Profile{Device: Device{Vendor: "freebsd"}},
 			"1.3.6.1.4.1.318.1.3.4.*":     &Profile{Device: Device{Vendor: "pdu"}},
 			"1.3.6.1.4.1.318.1.3.*":       &Profile{Device: Device{Vendor: "ups"}},
+			"1.3.6.1.4.1.8072.3.2.*":      &Profile{Matches: map[string]string{"^barracuda": "barracuda.yml"}, Device: Device{Vendor: "net-bsd"}},
+			"1.3.6.1.4.1.1588.2.1.1.*":    &Profile{From: "barracuda.yml", Device: Device{Vendor: "barracuda"}},
+			"1.3.6.1.4.1.2.3.4":           &Profile{From: "direct", Device: Device{Vendor: "direct"}},
 		},
 	}
 
-	inputs := map[string]string{
-		".1.3.6.1.4.1.2435.2.3.9.1":      "generic",
-		".1.3.5.1.4.5":                   "nil",
-		".1.3.6.1.4.1.2636.1.1.1.2.65":   "juniper",
-		".1.3.6.1.4.1.29671.2.65":        "meraki",
-		".1.3.6.1.4.1.2636.1.1.1.2.65.2": "generic",
-		".1.3.6.1.4.1.29671":             "meraki",
-		".1.3.6.1.4.1.318":               "apc",
-		".1.3.6.1.4.1.8072.3.2.8":        "freebsd",
-		".1.3.6.1.4.1.318.1.3.27":        "ups",
-		".1.3.6.1.4.1.318.1.3.5.4":       "ups",
-		".1.3.6.1.4.1.318.1.3.4.5":       "pdu",
-		".1.3.6.1.4.1.318.1.3.4.6":       "pdu",
+	inputs := []struct {
+		Sysoid   string
+		Sysdesc  string
+		Profile  string
+		Expected string
+	}{
+		{
+			Sysoid:   ".1.3.6.1.4.1.2435.2.3.9.1",
+			Expected: "generic",
+		},
+		{
+			Sysoid:   ".1.3.5.1.4.5",
+			Expected: "nil",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.2636.1.1.1.2.65",
+			Expected: "juniper",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.29671.2.65",
+			Expected: "meraki",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.2636.1.1.1.2.65.2",
+			Expected: "generic",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.29671",
+			Expected: "meraki",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318",
+			Expected: "apc",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.8072.3.2.8",
+			Expected: "freebsd",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318.1.3.27",
+			Expected: "ups",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318.1.3.5.4",
+			Expected: "ups",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318.1.3.4.5",
+			Expected: "pdu",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318.1.3.4.6",
+			Expected: "pdu",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.318.1.3.4.6",
+			Expected: "pdu",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.8072.3.2.10",
+			Expected: "barracuda",
+			Sysdesc:  "Barracuda Email Security Gateway",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.8072.3.2.10",
+			Expected: "barracuda",
+			Sysdesc:  "Barracuda Email Security Gateway",
+		},
+		{
+			Sysoid:   "",
+			Expected: "direct",
+			Sysdesc:  "Barracuda Email Security Gateway",
+			Profile:  "!direct",
+		},
 	}
 
-	for sysid, vendor := range inputs {
-		res := mdb.FindProfile(sysid)
-		if vendor == "nil" {
+	for _, in := range inputs {
+		res := mdb.FindProfile(in.Sysoid, in.Sysdesc, in.Profile)
+		if in.Expected == "nil" {
 			assert.Nil(t, res)
 		} else {
-			assert.Equal(t, vendor, res.Device.Vendor, "sysid: %s", sysid)
+			assert.Equal(t, in.Expected, res.Device.Vendor, "sysid: %s", in.Sysoid)
 		}
 	}
 }
