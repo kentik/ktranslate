@@ -38,6 +38,8 @@ const (
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
 
+	attrMap := map[string]*regexp.Regexp{} // List of attributes to pass though, if empty all are passed.
+
 	// If there's a profile passed in, look at the mibs set for this.
 	var deviceMetadataMibs, interfaceMetadataMibs map[string]*kt.Mib
 	if profile != nil {
@@ -46,18 +48,23 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 			log.Infof("Custom device metadata")
 			for n, d := range deviceMetadataMibs {
 				log.Infof("   -> : %s -> %s", n, d.Name)
+				for k, v := range d.MatchAttr {
+					attrMap[k] = v
+				}
 			}
 		}
 		if len(interfaceMetadataMibs) > 0 {
 			log.Infof("Custom interface metadata")
 			for n, d := range interfaceMetadataMibs {
 				log.Infof("   -> : %s -> %s", n, d.Name)
+				for k, v := range d.MatchAttr {
+					attrMap[k] = v
+				}
 			}
 		}
 	}
 
 	// Load any attribute level whiltelist info here.
-	attrMap := map[string]*regexp.Regexp{}
 	for attr, restr := range conf.MatchAttr {
 		re, err := regexp.Compile(restr)
 		if err != nil {
