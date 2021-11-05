@@ -69,7 +69,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 				log.Infof("Trying to walk %s -> %s as a table", oidInfo.Name, oidVal)
 				err := getTable(log, server, oidVal, oidInfo, &md)
 				if err != nil {
-					log.Warnf("Dropping %s because of nil value or missing object: %+v", oidVal, pdu)
+					log.Warnf("Dropping %s because of nil value or missing object: %+v %v", oidVal, pdu, err)
 				}
 			}
 			continue

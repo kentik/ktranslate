@@ -155,9 +155,9 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		cl := logger.NewSubContextL(logger.SContext{S: device.DeviceName}, log)
 		var profile *mibs.Profile
 		if mibdb != nil {
-			profile = mibdb.FindProfile(device.OID)
+			profile = mibdb.FindProfile(device.OID, device.Description, device.MibProfile)
 			if profile != nil {
-				cl.Infof("Found profile for %s: %v", device.OID, profile.From)
+				cl.Infof("Found profile for %s: %v %s", device.OID, profile.From, device.MibProfile)
 				if *dumpMibTable {
 					profile.DumpOids(cl)
 				}

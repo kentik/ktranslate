@@ -3,6 +3,7 @@ package mibs
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -46,14 +47,15 @@ type Device struct {
 
 type Profile struct {
 	logger.ContextL  `yaml:"-"`
-	Metrics          []MIB          `yaml:"metrics,omitempty"`
-	Extends          []string       `yaml:"extends,omitempty"`
-	Device           Device         `yaml:"device,omitempty"`
-	MetricTags       []Tag          `yaml:"metric_tags,omitempty"`
-	Sysobjectid      kt.StringArray `yaml:"sysobjectid,omitempty"`
-	From             string         `yaml:"from,omitempty"`
-	Provider         kt.Provider    `yaml:"provider,omitempty"`
-	NoUseBulkWalkAll bool           `yaml:"no_use_bulkwalkall"`
+	Metrics          []MIB             `yaml:"metrics,omitempty"`
+	Extends          []string          `yaml:"extends,omitempty"`
+	Device           Device            `yaml:"device,omitempty"`
+	MetricTags       []Tag             `yaml:"metric_tags,omitempty"`
+	Sysobjectid      kt.StringArray    `yaml:"sysobjectid,omitempty"`
+	From             string            `yaml:"from,omitempty"`
+	Provider         kt.Provider       `yaml:"provider,omitempty"`
+	NoUseBulkWalkAll bool              `yaml:"no_use_bulkwalkall"`
+	Matches          map[string]string `yaml:"matches"`
 	extended         bool
 }
 
@@ -175,14 +177,23 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 	return nil
 }
 
-func (mdb *MibDB) FindProfile(sysid string) *Profile {
+func (mdb *MibDB) FindProfile(sysid string, sysdesc string, mibProfile string) *Profile {
+	if strings.HasPrefix(mibProfile, "!") { // Force the use of this particular profile if it starts with !
+		for _, p := range mdb.profiles {
+			if p.From == mibProfile[1:] {
+				return p
+			}
+		}
+		mdb.log.Errorf("No profile matching %s found", mibProfile[1:])
+	}
+
 	if strings.HasPrefix(sysid, ".") {
 		sysid = sysid[1:] // Strip this out if we start with .
 	}
 
 	// If we have one directly matching, just return this.
 	if p, ok := mdb.profiles[sysid]; ok {
-		return p
+		return mdb.checkMatch(p, sysdesc)
 	}
 
 	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
@@ -190,12 +201,31 @@ func (mdb *MibDB) FindProfile(sysid string) *Profile {
 	for i := len(pts); i > 0; i-- {
 		check := strings.Join(pts[0:i], ".") + ".*"
 		if p, ok := mdb.profiles[check]; ok {
-			return p
+			return mdb.checkMatch(p, sysdesc)
 		}
 	}
 
 	// Didn't match anything so return nil
 	return nil
+}
+
+func (mdb *MibDB) checkMatch(pro *Profile, sysdesc string) *Profile {
+	for m, target := range pro.Matches {
+		r, err := regexp.Compile(m)
+		if err != nil {
+			mdb.log.Errorf("Invalid Regex for Match: %s %s", pro.From, m)
+			return nil
+		}
+		if r.MatchString(strings.ToLower(sysdesc)) {
+			for _, p := range mdb.profiles {
+				if p.From == target {
+					return p
+				}
+			}
+			mdb.log.Errorf("No profile matching %s found", target)
+		}
+	}
+	return pro
 }
 
 func (p *Profile) validate() error {

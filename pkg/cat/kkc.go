@@ -684,6 +684,23 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 	}
 }
 
+func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+	kc.log.Infof("monitorMetricsInput Starting")
+	serBuf := make([]byte, 0)
+	citycache := map[uint32]string{}
+	regioncache := map[uint32]string{}
+
+	for {
+		select {
+		case msgs := <-kc.config.MetricsChan:
+			kc.handleInput(ctx, msgs, serBuf, citycache, regioncache, nil, seri)
+		case <-ctx.Done():
+			kc.log.Infof("monitorMetricsInput Done")
+			return
+		}
+	}
+}
+
 func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	cacheTicker := time.NewTicker(CacheInvalidateDuration)
 	defer cacheTicker.Stop()
@@ -953,15 +970,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.syslog = ss
 	}
 
-	// If we're sending self metrics via a chan to sinks.
+	// If we're sending self metrics via a chan to sinks. This one always get sent via nrm.
 	if kc.config.MetricsChan != nil {
-		assureInput()
-		go func() {
-			for {
-				o := <-kc.config.MetricsChan
-				kc.inputChan <- o
-			}
-		}()
+		// Set up formatter
+		fmtr, err := formats.NewFormat(formats.FORMAT_NRM, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.Compression)
+		if err != nil {
+			return err
+		}
+		go kc.monitorMetricsInput(ctx, fmtr.To)
 	}
 
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1 after %d", kc.config.Format, kc.config.Compression, kc.config.MaxFlowPerMessage, kc.config.SampleRate, kc.config.MaxBeforeSample)

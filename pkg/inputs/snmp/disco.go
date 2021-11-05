@@ -198,7 +198,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	log.Infof("%s Success connecting to %s -- %v", posit, result.Host.String(), md)
 
 	// Stick in the profile too for future use.
-	mibProfile := mdb.FindProfile(md.SysObjectID)
+	mibProfile := mdb.FindProfile(md.SysObjectID, md.SysDescr, "")
 	if mibProfile != nil {
 		log.Infof("Found profile for %s: %v", md.SysObjectID, mibProfile)
 		device.MibProfile = mibProfile.From

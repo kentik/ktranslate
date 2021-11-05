@@ -111,7 +111,7 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	}
 
 	if _, ok := t.metrics[in.DeviceName]; !ok {
-		t.metrics[in.DeviceName] = &FlowMetric{Flows: go_metrics.GetOrRegisterMeter(fmt.Sprintf("netflow.flows^fmt=%s^device_name=%s", string(t.proto), in.DeviceName), t.registry)}
+		t.metrics[in.DeviceName] = &FlowMetric{Flows: go_metrics.GetOrRegisterMeter(fmt.Sprintf("netflow.flows^fmt=%s^device_name=%s^force=true", string(t.proto), in.DeviceName), t.registry)}
 	}
 	t.metrics[in.DeviceName].Flows.Mark(1)
 
