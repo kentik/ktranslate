@@ -271,6 +271,7 @@ type Mib struct {
 	Mib        string
 	Table      string
 	PollDur    time.Duration
+	MatchAttr  map[string]*regexp.Regexp
 	lastPoll   time.Time
 }
 

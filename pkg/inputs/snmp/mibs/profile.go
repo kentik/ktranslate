@@ -22,6 +22,7 @@ type OID struct {
 	Desc       string           `yaml:"description,omitempty"`
 	Conversion string           `yaml:"conversion,omitempty"`
 	PollTime   int              `yaml:"poll_time_sec,omitempty"`
+	MatchAttr  []string         `yaml:"match_attributes,omitempty"`
 }
 
 type Tag struct {
@@ -466,6 +467,17 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				mib.Enum[strings.ToLower(k)] = v
 				mib.EnumRev[v] = k
 			}
+			if len(tag.Column.MatchAttr) > 0 {
+				mib.MatchAttr = map[string]*regexp.Regexp{}
+				for _, restr := range tag.Column.MatchAttr {
+					re, err := regexp.Compile(restr)
+					if err != nil {
+						p.Errorf("Ignoring Match Attribute on %s: %s -- invalid regex %v", mib.Name, restr, err)
+					} else {
+						mib.MatchAttr[mib.GetName()] = re
+					}
+				}
+			}
 			deviceMetadata[tag.Column.Oid] = mib
 		}
 	}
@@ -499,6 +511,17 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				for k, v := range mib.Enum {
 					mib.Enum[strings.ToLower(k)] = v
 					mib.EnumRev[v] = k
+				}
+				if len(t.Column.MatchAttr) > 0 {
+					mib.MatchAttr = map[string]*regexp.Regexp{}
+					for _, restr := range t.Column.MatchAttr {
+						re, err := regexp.Compile(restr)
+						if err != nil {
+							p.Errorf("Ignoring Match Attribute on %s: %s -- invalid regex %v", mib.Name, restr, err)
+						} else {
+							mib.MatchAttr[mib.GetName()] = re
+						}
+					}
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
 					interfaceMetadata[t.Column.Oid] = mib
