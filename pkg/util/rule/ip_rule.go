@@ -47,16 +47,15 @@ func (r *IPAddressRules) AddIPAddress(ipAddress string, matchType Match) error {
 func (r *IPAddressRules) Check(ip net.IP) Match {
 	ret := uint32(0)
 	var found bool
-	var err error
 
 	if ipv4 := ip.To4(); ipv4 != nil {
 		address := patricia.NewIPv4AddressFromBytes(ipv4, 32)
-		found, ret, err = r.treeV4.FindDeepestTag(address)
+		found, ret = r.treeV4.FindDeepestTag(address)
 	} else {
 		address := patricia.NewIPv6Address(ip.To16(), 128)
-		found, ret, err = r.treeV6.FindDeepestTag(address)
+		found, ret = r.treeV6.FindDeepestTag(address)
 	}
-	if err == nil && found {
+	if found {
 		return NewMatch(ret)
 	}
 

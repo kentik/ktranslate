@@ -3,52 +3,42 @@ module github.com/kentik/ktranslate
 go 1.16
 
 require (
-	cloud.google.com/go/pubsub v1.11.0
-	cloud.google.com/go/storage v1.14.0
-	github.com/DataDog/datadog-api-client-go v1.0.0-beta.20
-	github.com/aws/aws-lambda-go v1.24.0
-	github.com/aws/aws-sdk-go v1.37.32
-	github.com/bmatsuo/lmdb-go v1.8.0
-	github.com/bufbuild/buf v0.56.0 // indirect
-	github.com/coreos/bbolt v1.3.2 // indirect
-	github.com/coreos/etcd v3.3.13+incompatible // indirect
-	github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e // indirect
-	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
-	github.com/cornelk/hashmap v1.0.1 // indirect
+	cloud.google.com/go/pubsub v1.17.1
+	cloud.google.com/go/storage v1.18.2
+	github.com/DataDog/datadog-api-client-go v1.5.0
+	github.com/aws/aws-lambda-go v1.27.0
+	github.com/aws/aws-sdk-go v1.41.19
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dchest/siphash v1.2.2
 	github.com/dgryski/go-bits v0.0.0-20180113010104-bd8a69a71dc2 // indirect
 	github.com/elliotchance/orderedmap v1.4.0
-	github.com/go-ole/go-ole v1.2.5 // indirect
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
-	github.com/google/uuid v1.2.0
+	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/gosnmp/gosnmp v1.32.0
+	github.com/gosnmp/gosnmp v1.33.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
-	github.com/honeycombio/libhoney-go v1.15.2
-	github.com/json-iterator/go v1.1.11
-	github.com/kentik/api-schema-public v0.0.0-20210428232153-25f1622f6b13
+	github.com/honeycombio/libhoney-go v1.15.6
+	github.com/json-iterator/go v1.1.12
+	github.com/kentik/api-schema-public v0.0.0-20211011204132-acc22cb40b78
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
-	github.com/kentik/golog v0.0.0-20210617234020-0acbd1400e72 // indirect
-	github.com/kentik/patricia v0.0.0-20201202224819-f9447a6e25f1
+	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
-	github.com/linkedin/goavro/v2 v2.10.0
-	github.com/miekg/dns v1.1.25 // indirect
+	github.com/linkedin/goavro/v2 v2.10.1
 	github.com/montanaflynn/stats v0.6.6
-	github.com/netsampler/goflow2 v1.0.4
+	github.com/netsampler/goflow2 v1.0.5-0.20211105161634-8fd64006ef3c
+	github.com/onsi/gomega v1.13.0 // indirect
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/prometheus/client_golang v1.11.0
-	github.com/prometheus/tsdb v0.7.1 // indirect
+	github.com/prometheus/common v0.30.0 // indirect
+	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
-	github.com/segmentio/kafka-go v0.4.10
-	github.com/shirou/gopsutil v3.21.2+incompatible
+	github.com/segmentio/kafka-go v0.4.23
 	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
-	github.com/tklauser/go-sysconf v0.3.5 // indirect
-	github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5 // indirect
-	google.golang.org/grpc v1.41.0-dev.0.20210907181116-2f3355d2244e
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.0 // indirect
+	github.com/tinylib/msgp v1.1.6 // indirect
+	google.golang.org/grpc v1.42.0
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v2 v2.4.0
-	zombiezen.com/go/capnproto2 v2.18.0+incompatible
+	zombiezen.com/go/capnproto2 v2.18.2+incompatible
 )
