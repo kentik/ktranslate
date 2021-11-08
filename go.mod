@@ -5,7 +5,6 @@ go 1.16
 require (
 	cloud.google.com/go/pubsub v1.17.1
 	cloud.google.com/go/storage v1.18.2
-	github.com/DataDog/datadog-api-client-go v1.5.0
 	github.com/aws/aws-lambda-go v1.27.0
 	github.com/aws/aws-sdk-go v1.41.19
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
