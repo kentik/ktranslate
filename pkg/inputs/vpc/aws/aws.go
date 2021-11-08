@@ -415,7 +415,7 @@ func (m *AWSLogLine) lookupTopo(ip net.IP, topo *AWSTopology) (subnet *ec2.Subne
 	if topo != nil {
 		if ip.To4() == nil {
 			address := patricia.NewIPv6Address(ip.To16(), 128)
-			found, val, _ := topo.Hierarchy.SubnetTrieV6.FindDeepestTag(address)
+			found, val := topo.Hierarchy.SubnetTrieV6.FindDeepestTag(address)
 			if found {
 				if s, ok := topo.Entities.Subnets[val]; ok {
 					subnet = &s
@@ -430,7 +430,7 @@ func (m *AWSLogLine) lookupTopo(ip net.IP, topo *AWSTopology) (subnet *ec2.Subne
 			}
 		} else {
 			address := patricia.NewIPv4AddressFromBytes(ip.To4(), 32)
-			found, val, _ := topo.Hierarchy.SubnetTrieV4.FindDeepestTag(address)
+			found, val := topo.Hierarchy.SubnetTrieV4.FindDeepestTag(address)
 			if found {
 				if s, ok := topo.Entities.Subnets[val]; ok {
 					subnet = &s
