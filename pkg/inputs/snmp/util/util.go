@@ -21,6 +21,8 @@ const (
 	CONV_HWADDR   = "hwaddr"
 	CONV_POWERSET = "powerset_status"
 	CONV_HEXTOINT = "hextoint"
+
+	NRUserTagPrefix = "tags."
 )
 
 var (
