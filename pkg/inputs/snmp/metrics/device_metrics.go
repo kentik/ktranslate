@@ -247,6 +247,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
 					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
 				}
+			} else if okt && oku {
+				if memoryTotal > 0 {
+					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
+					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+				}
 			}
 		}
 		flows = append(flows, dst)
@@ -309,7 +314,11 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{"PollingHealth": kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}}
 	for k, v := range dm.conf.UserTags {
-		dst.CustomStr[k] = v
+		key := k
+		if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
+			key = snmp_util.NRUserTagPrefix + k
+		}
+		dst.CustomStr[key] = v
 	}
 	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage

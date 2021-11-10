@@ -33,13 +33,14 @@ type Tag struct {
 }
 
 type MIB struct {
-	Mib        string `yaml:"MIB,omitempty"`
-	Table      OID    `yaml:"table,omitempty"`
-	Symbols    []OID  `yaml:"symbols,omitempty"`
-	MetricTags []Tag  `yaml:"metric_tags,omitempty"`
-	ForcedType string `yaml:"forced_type,omitempty"`
-	Symbol     OID    `yaml:"symbol,omitempty"`
-	sortKey    string
+	Mib          string `yaml:"MIB,omitempty"`
+	Table        OID    `yaml:"table,omitempty"`
+	Symbols      []OID  `yaml:"symbols,omitempty"`
+	MetricTags   []Tag  `yaml:"metric_tags,omitempty"`
+	ForcedType   string `yaml:"forced_type,omitempty"`
+	Symbol       OID    `yaml:"symbol,omitempty"`
+	sortKey      string
+	fromExtended bool
 }
 
 type Device struct {
@@ -102,7 +103,10 @@ func (p *Profile) extend(extends map[string]*Profile) error {
 }
 
 func (p *Profile) merge(ep *Profile) {
-	p.Metrics = append(p.Metrics, ep.Metrics...)
+	for _, m := range ep.Metrics {
+		m.fromExtended = true
+		p.Metrics = append(p.Metrics, m)
+	}
 	p.MetricTags = append(p.MetricTags, ep.MetricTags...)
 }
 
@@ -350,14 +354,15 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 		// TODO -- so we want to collase Symbol and Symbols?
 		if metric.Symbol.Oid != "" {
 			mib := &kt.Mib{
-				Oid:        metric.Symbol.Oid,
-				Name:       metric.Symbol.Name,
-				Type:       otype,
-				Enum:       metric.Symbol.Enum,
-				Tag:        metric.Symbol.Tag,
-				Conversion: metric.Symbol.Conversion,
-				Mib:        metric.Mib,
-				Table:      metric.Table.GetTableName(),
+				Oid:          metric.Symbol.Oid,
+				Name:         metric.Symbol.Name,
+				Type:         otype,
+				Enum:         metric.Symbol.Enum,
+				Tag:          metric.Symbol.Tag,
+				Conversion:   metric.Symbol.Conversion,
+				Mib:          metric.Mib,
+				Table:        metric.Table.GetTableName(),
+				FromExtended: metric.fromExtended,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -387,14 +392,15 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 
 		for _, s := range metric.Symbols {
 			mib := &kt.Mib{
-				Oid:        s.Oid,
-				Name:       s.Name,
-				Type:       otype,
-				Enum:       s.Enum,
-				Tag:        s.Tag,
-				Conversion: s.Conversion,
-				Mib:        metric.Mib,
-				Table:      metric.Table.GetTableName(),
+				Oid:          s.Oid,
+				Name:         s.Name,
+				Type:         otype,
+				Enum:         s.Enum,
+				Tag:          s.Tag,
+				Conversion:   s.Conversion,
+				Mib:          metric.Mib,
+				Table:        metric.Table.GetTableName(),
+				FromExtended: metric.fromExtended,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -670,18 +676,24 @@ func newProfileFromApc(ap *apc.APC, file string, log logger.ContextL) []*Profile
 // Sometimes the same tag can be in multiple mibs. Run down the list and keep the longest oid if there are any collisions.
 func prune(mibs map[string]*kt.Mib) {
 	seenNames := map[string]string{}
+	fromExtended := map[string]bool{}
 
 	for oid, mib := range mibs {
-		oidName := mib.Name
-		if mib.Tag != "" {
-			oidName = mib.Tag
-		}
+		oidName := mib.GetName()
 		if _, ok := seenNames[oidName]; !ok { // We haven't seen this name yet so mark that we have it.
 			seenNames[oidName] = oid
+			fromExtended[oidName] = mib.FromExtended
 		} else {
-			// There's a conflict. Keep the longest oid.
-			if len(oid) > len(seenNames[oidName]) {
+			// There's a conflict. If this mib is not fromextended and the other one is, swap.
+			if fromExtended[oidName] && !mib.FromExtended {
 				seenNames[oidName] = oid
+				fromExtended[oidName] = mib.FromExtended
+			} else if mib.FromExtended && !fromExtended[oidName] { // Else, if this mib is fromextended, keep the other one.
+				// Noop.
+			} else {
+				if len(oid) > len(seenNames[oidName]) { // Finally, keep the mib with the longest oid.
+					seenNames[oidName] = oid
+				}
 			}
 		}
 	}

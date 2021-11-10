@@ -260,19 +260,20 @@ const (
 )
 
 type Mib struct {
-	Oid        string
-	Name       string
-	Type       Oidtype
-	Extra      string
-	Tag        string
-	Enum       map[string]int64
-	EnumRev    map[int64]string
-	Conversion string
-	Mib        string
-	Table      string
-	PollDur    time.Duration
-	MatchAttr  map[string]*regexp.Regexp
-	lastPoll   time.Time
+	Oid          string
+	Name         string
+	Type         Oidtype
+	Extra        string
+	Tag          string
+	Enum         map[string]int64
+	EnumRev      map[int64]string
+	Conversion   string
+	Mib          string
+	Table        string
+	PollDur      time.Duration
+	MatchAttr    map[string]*regexp.Regexp
+	lastPoll     time.Time
+	FromExtended bool
 }
 
 func (mb *Mib) String() string {

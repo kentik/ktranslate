@@ -11,6 +11,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
@@ -34,7 +35,6 @@ type Poller struct {
 const (
 	DEFUALT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
 	vendorPrefix     = ".1.3.6.1.4.1."
-	NRUserTagPrefix  = "tags."
 )
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -249,8 +249,8 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	// Also any device level tags
 	for k, v := range p.conf.UserTags {
 		key := k
-		if !strings.HasPrefix(key, NRUserTagPrefix) {
-			key = NRUserTagPrefix + k
+		if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
+			key = snmp_util.NRUserTagPrefix + k
 		}
 		dst.CustomStr[key] = v
 		dst.CustomMetrics[key] = kt.MetricInfo{Table: kt.DeviceTagTable}

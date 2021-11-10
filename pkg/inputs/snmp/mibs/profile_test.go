@@ -124,12 +124,25 @@ func TestPrune(t *testing.T) {
 
 	mibs = map[string]*kt.Mib{
 		".1.3.6.1.4.1.9.9.48.1.1.1.5":     &kt.Mib{Tag: "MemoryUsed"},
-		"1.3.6.1.4.1.9.9.305.1.1.1":       &kt.Mib{Tag: "CPU"},
+		".1.3.6.1.4.1.9.9.305.1.1.1":      &kt.Mib{Tag: "CPU"},
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.7":  &kt.Mib{Tag: "CPU"},
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.13": &kt.Mib{Name: "cpmCPUMemoryFree"},
 	}
 	prune(mibs)
 	assert.Equal(t, 3, len(mibs))
+	assert.Nil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
+	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.109.1.1.1.1.7"], len(mibs))
+
+	mibs = map[string]*kt.Mib{
+		".1.3.6.1.4.1.9.9.48.1.1.1.5":     &kt.Mib{Tag: "MemoryUsed"},
+		".1.3.6.1.4.1.9.9.305.1.1.1":      &kt.Mib{Tag: "CPU"},
+		".1.3.6.1.4.1.9.9.109.1.1.1.1.7":  &kt.Mib{Tag: "CPU", FromExtended: true},
+		".1.3.6.1.4.1.9.9.109.1.1.1.1.13": &kt.Mib{Name: "cpmCPUMemoryFree"},
+	}
+	prune(mibs)
+	assert.Equal(t, 3, len(mibs))
+	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
+	assert.Nil(t, mibs[".1.3.6.1.4.1.9.9.109.1.1.1.1.7"], len(mibs))
 }
 
 func TestProfileName(t *testing.T) {
