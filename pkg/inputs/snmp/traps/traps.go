@@ -3,6 +3,7 @@ package traps
 import (
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 	"time"
 
@@ -134,7 +135,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		dst.DeviceName = dev.DeviceName
 		dst.Provider = dev.Provider
 		for k, v := range dev.UserTags {
-			dst.CustomStr[k] = v
+			key := k
+			if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
+				key = snmp_util.NRUserTagPrefix + k
+			}
+			dst.CustomStr[key] = v
 		}
 	} else {
 		dst.DeviceName = addr.IP.String()
@@ -155,20 +160,20 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		case gosnmp.OctetString:
 			if value, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok {
 				if res != nil {
-					dst.CustomStr[res.Name] = value
+					dst.CustomStr[res.GetName()] = value
 				} else {
 					dst.CustomStr[v.Name] = value
 				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32:
 			if res != nil {
-				dst.CustomBigInt[res.Name] = gosnmp.ToBigInt(v.Value).Int64()
+				dst.CustomBigInt[res.GetName()] = gosnmp.ToBigInt(v.Value).Int64()
 			} else {
 				dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
 			}
 		case gosnmp.ObjectIdentifier:
 			if res != nil {
-				dst.CustomStr[res.Name] = v.Value.(string)
+				dst.CustomStr[res.GetName()] = v.Value.(string)
 			} else {
 				dst.CustomStr[v.Name] = v.Value.(string)
 			}
