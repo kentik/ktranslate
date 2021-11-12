@@ -16,6 +16,7 @@ import (
 type MibDB struct {
 	db       *leveldb.DB
 	profiles map[string]*Profile
+	traps    map[string]*kt.Mib
 	log      logger.ContextL
 }
 
@@ -42,6 +43,7 @@ func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, e
 	mdb := &MibDB{
 		log:      log,
 		profiles: map[string]*Profile{},
+		traps:    map[string]*kt.Mib{},
 	}
 
 	if mibpath != "" {
@@ -71,6 +73,10 @@ func (db *MibDB) Close() {
 }
 
 func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
+	if res, ok := db.traps[oid]; ok {
+		return res, nil
+	}
+
 	if db.db == nil { // We might not have set up a db here.
 		return nil, nil
 	}

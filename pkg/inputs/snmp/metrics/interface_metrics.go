@@ -230,9 +230,6 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 		dst.DeviceName = im.conf.DeviceName
 		dst.SrcAddr = im.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
-		for k, v := range im.conf.UserTags {
-			dst.CustomStr[k] = v
-		}
 		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}

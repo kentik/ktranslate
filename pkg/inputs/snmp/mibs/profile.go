@@ -160,6 +160,14 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 			}
 		}
 
+		if file.Name() == "traps.yaml" || file.Name() == "traps.yml" { // Traps are pulled out into seperate files.
+			err := mdb.parseTrapsFromYml(fname, file, extends)
+			if err != nil {
+				mdb.log.Errorf("There was an error when parsing the %s trap file: %v.", fname, err)
+			}
+			continue
+		}
+
 		pts := strings.Split(fname, ".")
 		switch pts[len(pts)-1] {
 		case "xml":

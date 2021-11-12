@@ -13,6 +13,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/ic"
 
@@ -104,7 +105,11 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		in.CompanyId = dev.CompanyID
 		in.SampleRate = dev.SampleRate
 		for k, v := range dev.UserTags {
-			in.CustomStr[k] = v
+			key := k
+			if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
+				key = snmp_util.NRUserTagPrefix + k
+			}
+			in.CustomStr[key] = v
 		}
 	} else {
 		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
