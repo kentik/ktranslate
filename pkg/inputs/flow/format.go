@@ -236,6 +236,14 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastTTL)
 		case "MPLSLastLabel":
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastLabel)
+		case "CustomInteger1":
+			in.CustomBigInt[field] = int64(fmsg.CustomInteger1)
+		case "CustomInteger2":
+			in.CustomBigInt[field] = int64(fmsg.CustomInteger2)
+		case "CustomBytes1":
+			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes1)
+		case "CustomBytes2":
+			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes2)
 		}
 	}
 
