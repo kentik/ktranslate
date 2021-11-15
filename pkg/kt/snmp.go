@@ -178,15 +178,17 @@ type SnmpDiscoConfig struct {
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int           `yaml:"poll_time_sec"`
-	DropIfOutside bool          `yaml:"drop_if_outside_poll"`
-	MibProfileDir string        `yaml:"mib_profile_dir"`
-	MibDB         string        `yaml:"mibs_db"`
-	MibsEnabled   []string      `yaml:"mibs_enabled"`
-	TimeoutMS     int           `yaml:"timeout_ms"`
-	Retries       int           `yaml:"retries"`
-	GlobalV3      *V3SNMPConfig `yaml:"global_v3"`
-	RunPing       bool          `yaml:"response_time"`
+	PollTimeSec   int               `yaml:"poll_time_sec"`
+	DropIfOutside bool              `yaml:"drop_if_outside_poll"`
+	MibProfileDir string            `yaml:"mib_profile_dir"`
+	MibDB         string            `yaml:"mibs_db"`
+	MibsEnabled   []string          `yaml:"mibs_enabled"`
+	TimeoutMS     int               `yaml:"timeout_ms"`
+	Retries       int               `yaml:"retries"`
+	GlobalV3      *V3SNMPConfig     `yaml:"global_v3"`
+	RunPing       bool              `yaml:"response_time"`
+	UserTags      map[string]string `yaml:"user_tags"`
+	MatchAttr     map[string]string `yaml:"match_attributes"`
 }
 
 type SnmpConfig struct {

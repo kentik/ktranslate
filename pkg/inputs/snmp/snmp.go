@@ -307,6 +307,30 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 		}
 	}
 
+	// If there's a global user tags and match, add them in here.
+	if ms.Global != nil {
+		for k, v := range ms.Global.UserTags {
+			for _, device := range ms.Devices {
+				if device.UserTags == nil {
+					device.UserTags = map[string]string{}
+				}
+				if _, ok := device.UserTags[k]; !ok {
+					device.UserTags[k] = v
+				}
+			}
+		}
+		for k, v := range ms.Global.MatchAttr {
+			for _, device := range ms.Devices {
+				if device.MatchAttr == nil {
+					device.MatchAttr = map[string]string{}
+				}
+				if _, ok := device.MatchAttr[k]; !ok {
+					device.MatchAttr[k] = v
+				}
+			}
+		}
+	}
+
 	return &ms, nil
 }
 
