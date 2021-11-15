@@ -25,7 +25,7 @@ require (
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.1
 	github.com/montanaflynn/stats v0.6.6
-	github.com/netsampler/goflow2 v1.0.5-0.20211105161634-8fd64006ef3c
+	github.com/netsampler/goflow2 v1.0.5-0.20211114004132-de5e75172982
 	github.com/onsi/gomega v1.13.0 // indirect
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/prometheus/client_golang v1.11.0
