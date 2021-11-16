@@ -36,6 +36,7 @@ var ENV_BLACKLIST = []string{
 	"pg_write_connection",
 	"mailer",
 	"alert_connection",
+	"new_relic_api_key",
 }
 
 type MetaServer struct {
