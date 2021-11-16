@@ -80,9 +80,9 @@ type BaseServerConfiguration struct {
 
 var BaseServerConfigurationDefaults = BaseServerConfiguration{
 	LogToStdout:             true,
-	LogLevel:                "debug",
-	MetricsDestination:      "syslog",
-	MetaListen:              "localhost:0",
+	LogLevel:                "info",
+	MetricsDestination:      "none",
+	MetaListen:              "",
 	ShutdownSettleTime:      1 * time.Second,
 	HealthCheckStartupDelay: 5 * time.Second,
 	HealthCheckPeriod:       30 * time.Second,
@@ -177,7 +177,7 @@ func (bs *BaseServer) ParseFlags() {
 	flag.CommandLine.StringVar(&bs.LogLevel, "log_level", bs.LogLevel, "Logging Level")
 	flag.CommandLine.BoolVar(&bs.LogToStdout, "stdout", bs.LogToStdout, "Log to stdout")
 	flag.CommandLine.StringVar(&bs.MetricsDestination, "metrics", bs.MetricsDestination, "Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003")
-	flag.CommandLine.StringVar(&bs.MetaListen, "metalisten", bs.MetaListen, "HTTP port to bind on")
+	flag.CommandLine.StringVar(&bs.MetaListen, "metalisten", bs.MetaListen, "HTTP interface and port to bind on")
 	flag.CommandLine.StringVar(&bs.OllyDataset, "olly_dataset", bs.OllyDataset, "Olly dataset name")
 	flag.CommandLine.StringVar(&bs.OllyWriteKey, "olly_write_key", bs.OllyWriteKey, "Olly dataset name")
 
@@ -394,6 +394,10 @@ func (bs *BaseServer) spawnLegacyHealthCheck(ctx context.Context, service Servic
 }
 
 func (bs *BaseServer) spawnMetaServer(ctx context.Context, service Service) {
+	if bs.MetaListen == "" { // This is turned off for now.
+		return
+	}
+
 	if bs.hce == nil {
 		bs.Fail("initMetaServer: hce cannot be nil")
 	}
