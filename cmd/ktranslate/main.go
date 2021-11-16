@@ -166,7 +166,7 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) 
 		return // noop
 	case "nr1.vpc.lambda":
 		setNr() // Here, we only send the flow in as events to NR.
-		flag.Set("vpcSource", "aws")
+		flag.Set("vpc", "aws")
 		flag.Set("aws_lambda", "true")
 	case "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
