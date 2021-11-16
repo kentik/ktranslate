@@ -142,3 +142,19 @@ func TestHexToInt(t *testing.T) {
 		assert.Equal(expt, str, "%s", in)
 	}
 }
+
+func TestHexToIP(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+
+	tests := map[string][]byte{
+		"10.0.100.10": []byte{0x00, 0x0a, 0x00, 0x00, 0x00, 0x64, 0x00, 0x0a},
+		"10.0.100.11": []byte{0x0a, 0x00, 0x64, 0x0b},
+	}
+
+	for expt, in := range tests {
+		pdu := gosnmp.SnmpPDU{Value: in}
+		_, str := GetFromConv(pdu, CONV_HEXTOIP, l)
+		assert.Equal(expt, str, "%s", in)
+	}
+}

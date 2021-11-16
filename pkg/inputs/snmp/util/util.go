@@ -21,6 +21,7 @@ const (
 	CONV_HWADDR   = "hwaddr"
 	CONV_POWERSET = "powerset_status"
 	CONV_HEXTOINT = "hextoint"
+	CONV_HEXTOIP  = "hextoip"
 
 	NRUserTagPrefix = "tags."
 )
@@ -240,6 +241,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 		return 0, net.HardwareAddr(bv).String()
 	case CONV_POWERSET:
 		return vendor.HandlePowersetStatus(bv)
+	case CONV_HEXTOIP:
+		return hexToIP(bv)
 	default:
 		// Otherwise, try out some custom conversions.
 		split := strings.Split(conv, ":")
@@ -279,4 +282,32 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 	}
 
 	return 0, string(bv) // Default down to here.
+}
+
+/**
+Some OID's don't store IP as a string, they store it as a hex value that we are going to want to translate.
+I need to take this:
+.1.3.6.1.4.1.9.9.42.1.2.2.1.2.1 = Hex-String: 0A00640A
+and display it as a string 10.0.100.10
+*/
+func hexToIP(bv []byte) (int64, string) {
+	switch len(bv) {
+	case 8:
+		return 0, fmt.Sprintf("%d.%d.%d.%d",
+			binary.BigEndian.Uint16(bv[0:2]),
+			binary.BigEndian.Uint16(bv[2:4]),
+			binary.BigEndian.Uint16(bv[4:6]),
+			binary.BigEndian.Uint16(bv[6:8]),
+		)
+	case 4:
+		nv := []byte{0x00, bv[0], 0x00, bv[1], 0x00, bv[2], 0x00, bv[3]}
+		return 0, fmt.Sprintf("%d.%d.%d.%d",
+			binary.BigEndian.Uint16(nv[0:2]),
+			binary.BigEndian.Uint16(nv[2:4]),
+			binary.BigEndian.Uint16(nv[4:6]),
+			binary.BigEndian.Uint16(nv[6:8]),
+		)
+	default:
+		return 0, ""
+	}
 }
