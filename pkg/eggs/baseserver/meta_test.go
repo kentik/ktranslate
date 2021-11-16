@@ -30,6 +30,7 @@ func TestMetaServer(t *testing.T) {
 	BaseServerConfigurationDefaults.HealthCheckStartupDelay = 50 * time.Millisecond
 	BaseServerConfigurationDefaults.HealthCheckPeriod = 1 * time.Second
 	BaseServerConfigurationDefaults.HealthCheckTimeout = 1 * time.Second
+	BaseServerConfigurationDefaults.MetaListen = "localhost:0"
 
 	bs := Boilerplate("dumdum", versionInfo, nil, nil)
 	assert.NotNil(t, bs, "Boilerplate should return a non-nil value")
