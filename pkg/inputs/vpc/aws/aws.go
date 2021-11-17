@@ -36,7 +36,7 @@ version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstadd
 */
 
 const (
-	MIN_AWS_FIELD = 12
+	MIN_AWS_FIELD = 7
 	ADDR_LEN      = 17
 
 	AWS_LOG_PREFIX = "AWSLogs"
