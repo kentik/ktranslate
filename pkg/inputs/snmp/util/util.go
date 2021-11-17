@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"net"
 	"strconv"
@@ -18,10 +19,11 @@ import (
 )
 
 const (
-	CONV_HWADDR   = "hwaddr"
-	CONV_POWERSET = "powerset_status"
-	CONV_HEXTOINT = "hextoint"
-	CONV_HEXTOIP  = "hextoip"
+	CONV_HWADDR    = "hwaddr"
+	CONV_POWERSET  = "powerset_status"
+	CONV_HEXTOINT  = "hextoint"
+	CONV_HEXTOIP   = "hextoip"
+	CONV_ENGINE_ID = "engine_id"
 
 	NRUserTagPrefix = "tags."
 )
@@ -243,6 +245,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 		return vendor.HandlePowersetStatus(bv)
 	case CONV_HEXTOIP:
 		return hexToIP(bv)
+	case CONV_ENGINE_ID:
+		return engineID(bv)
 	default:
 		// Otherwise, try out some custom conversions.
 		split := strings.Split(conv, ":")
@@ -310,4 +314,14 @@ func hexToIP(bv []byte) (int64, string) {
 	default:
 		return 0, ""
 	}
+}
+
+func engineID(bv []byte) (int64, string) {
+	buf := make([]byte, 0, 3*len(bv))
+	x := buf[1*len(bv) : 3*len(bv)]
+	hex.Encode(x, bv)
+	for i := 0; i < len(x); i += 2 {
+		buf = append(buf, x[i], x[i+1], ':')
+	}
+	return 0, string(buf[:len(buf)-1])
 }

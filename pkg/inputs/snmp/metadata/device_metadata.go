@@ -107,7 +107,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
 		case SNMP_engineID:
-			_, md.EngineID = snmp_util.GetFromConv(pdu, snmp_util.CONV_HWADDR, log)
+			_, md.EngineID = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
 		default:
 			if oid.Tag != "" {
 				oidName = oid.Tag
