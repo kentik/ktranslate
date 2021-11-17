@@ -44,8 +44,6 @@ Usage of ./bin/ktranslate:
     	City mapping file
   -compression string
     	compression algo to use (none|gzip|snappy|deflate|null) (default "none")
-  -ddog_url string
-    	URL to post to (default "https://api.datadoghq.com/api/v1/series")
   -dns string
     	Resolve IPs at this ip:port
   -file_flush_sec int
@@ -57,9 +55,9 @@ Usage of ./bin/ktranslate:
   -filters value
     	Any filters to use. Format: type dimension operator value
   -format string
-    	Format to convert kflow to: (json|flat_json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog) (default "json")
+	Format to convert kflow to: (json|flat_json|avro|netflow|influx|prometheus|new_relic|new_relic_metric) (default "json")
   -format_rollup string
-    	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|ddog)
+	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric)
   -gcloud_bucket string
     	GCloud Storage Bucket to write flows to
   -gcloud_content_type string
@@ -175,7 +173,7 @@ Usage of ./bin/ktranslate:
   -service_name string
     	Service identifier (default "ktranslate")
   -sinks string
-    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog) (default "stdout")
+	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|prometheus|file|s3|gcloud) (default "stdout")
   -snmp string
     	yaml file containing snmp config to use
   -snmp_discovery

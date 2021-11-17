@@ -33,6 +33,12 @@ const (
 	REGION_US_STAGING = "us_stage"
 )
 
+var (
+	NrUrl        = "https://insights-collector.newrelic.com/v1/accounts/%s/events"
+	NrMetricsUrl = "https://metric-api.newrelic.com/metric/v1"
+	NrLogUrl     = "https://log-api.newrelic.com/log/v1"
+)
+
 type NRSink struct {
 	logger.ContextL
 	NRAccount   string
@@ -70,9 +76,6 @@ type NRResponce struct {
 
 var (
 	NrAccount    = flag.String("nr_account_id", kt.LookupEnvString("NR_ACCOUNT_ID", ""), "If set, sends flow to New Relic")
-	NrUrl        = flag.String("nr_url", "https://insights-collector.newrelic.com/v1/accounts/%s/events", "URL to use to send into NR")
-	NrMetricsUrl = flag.String("nr_metrics_url", "https://metric-api.newrelic.com/metric/v1", "URL to use to send into NR Metrics API")
-	NrLogUrl     = flag.String("nr_log_url", "https://log-api.newrelic.com/log/v1", "URL to use to logs into NR")
 	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
 	NrRegion     = flag.String("nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU")
 	NrCheckJson  = flag.Bool("nr_check_json", false, "Verify body is valid json before sending on")
@@ -127,15 +130,15 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 	switch rval {
 	case "": // noop
 	case REGION_US, REGION_EU, REGION_GOV, REGION_US_STAGING:
-		*NrUrl = regions[rval]["events"]
-		*NrMetricsUrl = regions[rval]["metrics"]
+		NrUrl = regions[rval]["events"]
+		NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
 		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", *NrRegion)
 	}
 
 	s.NRAccount = *NrAccount
-	s.NRUrl = *NrUrl
+	s.NRUrl = NrUrl
 	s.format = format
 	s.compression = compression
 
@@ -150,7 +153,7 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig:       &tls.Config{InsecureSkipVerify: false}, // TODO, any time that we want this to be false?
 	}
 	s.client = &http.Client{Transport: s.tr}
 
@@ -175,13 +178,13 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
 	}
 	s.NRUrlEvent = s.NRUrl
-	s.NRUrlMetric = *NrMetricsUrl
+	s.NRUrlMetric = NrMetricsUrl
 	if s.format == formats.FORMAT_NRM {
-		s.NRUrl = *NrMetricsUrl
+		s.NRUrl = NrMetricsUrl
 	}
 
 	if s.NRUrlLog == "" {
-		s.NRUrlLog = *NrLogUrl
+		s.NRUrlLog = NrLogUrl
 	}
 
 	// Send logs on to NR if this is set.
@@ -370,6 +373,7 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 
 	if s.compression != kt.CompressionGzip {
 		s.sendNR(ctx, kt.NewOutput(target), s.NRUrlLog)
+		return
 	}
 
 	serBuf := []byte{}
