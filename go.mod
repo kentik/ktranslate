@@ -15,7 +15,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	github.com/gosnmp/gosnmp v1.33.0
+	github.com/gosnmp/gosnmp v1.34.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
 	github.com/honeycombio/libhoney-go v1.15.6
 	github.com/json-iterator/go v1.1.12
