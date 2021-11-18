@@ -45,14 +45,14 @@ func (vpc *AwsVpc) handleLamdba(ctx context.Context, s3Event events.S3Event) err
 			dst[i] = l.ToFlow(vpc, vpc.topo)
 		}
 
-		if len(dst) > 0 {
-			wg.Add(1)
-			vpc.lambdaHandler(dst, outputCB) // Decrement in the callback.
-		}
+		wg.Add(1)
+		vpc.lambdaHandler(dst, outputCB) // Decrement in the callback.
 	}
 
-	vpc.Infof("Waiting on %d records with %d lines to finish sending", len(s3Event.Records), lines)
-	wg.Wait()
+	if lines > 0 {
+		vpc.Infof("Waiting on %d records with %d lines to finish sending", len(s3Event.Records), lines)
+		wg.Wait()
+	}
 
 	return nil
 }
