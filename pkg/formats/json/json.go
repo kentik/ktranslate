@@ -175,9 +175,12 @@ func strip(in map[string]interface{}) {
 	in["instrumentation.provider"] = kt.InstProvider // Let them know who sent this.
 	switch in["provider"] {
 	case kt.ProviderVPC:
-		in["instrumentation.name"] = InstNameVPCEvent
-	case kt.ProviderAWSVPC:
-		in["instrumentation.name"] = InstNameAWSVPCEvent
+		switch in["kt.from"] {
+		case kt.FromLambda:
+			in["instrumentation.name"] = InstNameAWSVPCEvent
+		default:
+			in["instrumentation.name"] = InstNameVPCEvent
+		}
 	default:
 		in["instrumentation.name"] = InstNameNetflowEvent
 	}

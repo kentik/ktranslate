@@ -51,7 +51,6 @@ const (
 	ProviderRouter             Provider = "kentik-router"
 	ProviderDefault            Provider = "kentik-default"
 	ProviderVPC                Provider = "kentik-vpc"
-	ProviderAWSVPC             Provider = "kentik-aws-vpc"
 	ProviderSynth              Provider = "kentik-network-synthetic"
 	ProviderSwitch             Provider = "kentik-switch"
 	ProviderFirewall           Provider = "kentik-firewall"
@@ -83,6 +82,7 @@ const (
 	FloatMS        = "float_ms"
 	InvalidEnum    = "invalid enum"
 	DeviceTagTable = "KT_Device_Tag"
+	FromLambda     = "awslambda"
 )
 
 type IntId uint64

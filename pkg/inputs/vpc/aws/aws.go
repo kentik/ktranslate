@@ -456,7 +456,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.CustomInt = make(map[string]int32)
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
-	in.Provider = kt.ProviderAWSVPC
+	in.Provider = kt.ProviderVPC
 	in.Timestamp = m.StartTime.Unix()
 	in.InBytes = m.Bytes
 	in.InPkts = m.Packets
@@ -467,6 +467,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.TcpFlags = m.TcpFlags
 	in.CustomStr["action"] = m.Action
 	in.CustomStr["status"] = m.Status
+	in.CustomStr["kt.from"] = kt.FromLambda
 	in.DeviceName = m.VPCID
 
 	if m.Sample > 0 { // Set sample rate here if we are switching.
