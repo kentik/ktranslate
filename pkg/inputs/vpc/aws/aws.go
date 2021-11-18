@@ -456,7 +456,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.CustomInt = make(map[string]int32)
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
-	in.Provider = kt.ProviderVPC
+	in.Provider = kt.ProviderAWSVPC
 	in.Timestamp = m.StartTime.Unix()
 	in.InBytes = m.Bytes
 	in.InPkts = m.Packets

@@ -51,6 +51,7 @@ const (
 	ProviderRouter             Provider = "kentik-router"
 	ProviderDefault            Provider = "kentik-default"
 	ProviderVPC                Provider = "kentik-vpc"
+	ProviderAWSVPC             Provider = "kentik-aws-vpc"
 	ProviderSynth              Provider = "kentik-network-synthetic"
 	ProviderSwitch             Provider = "kentik-switch"
 	ProviderFirewall           Provider = "kentik-firewall"
