@@ -467,6 +467,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.TcpFlags = m.TcpFlags
 	in.CustomStr["action"] = m.Action
 	in.CustomStr["status"] = m.Status
+	in.CustomStr["kt.from"] = kt.FromLambda
 	in.DeviceName = m.VPCID
 
 	if m.Sample > 0 { // Set sample rate here if we are switching.

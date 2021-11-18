@@ -82,6 +82,7 @@ const (
 	FloatMS        = "float_ms"
 	InvalidEnum    = "invalid enum"
 	DeviceTagTable = "KT_Device_Tag"
+	FromLambda     = "awslambda"
 )
 
 type IntId uint64

@@ -65,8 +65,16 @@ jobs:
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
 
-      - name: Publish binary
-        uses: actions/upload-artifact@v2
+      - name: Build and Publish Docker (AWS Lambda)
+        uses: docker/build-push-action@v2
         with:
-          name: ktranslate
-          path: bin/ktranslate
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: kentik/ktranslate:stagingarm64
+          build-args: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
+          secrets: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
