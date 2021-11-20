@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	snmpTrapOID = ".1.3.6.1.6.3.1.1.4.1"
+	snmpTrapOID   = ".1.3.6.1.6.3.1.1.4.1"
+	snmpTrapOID_0 = ".1.3.6.1.6.3.1.1.4.1.0"
 )
 
 type SnmpTrap struct {
@@ -156,7 +157,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	// What trap is this from?
 	var trap *mibs.Trap
 	for _, v := range packet.Variables {
-		if v.Name == snmpTrapOID || v.Name == snmpTrapOID+".0" {
+		if v.Name == snmpTrapOID || v.Name == snmpTrapOID_0 {
 			if v.Type == gosnmp.ObjectIdentifier {
 				toid := v.Value.(string)
 				trap = s.mibdb.GetTrap(toid)
@@ -169,7 +170,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	}
 
 	for _, v := range packet.Variables {
-		if v.Name == snmpTrapOID || v.Name == snmpTrapOID+".0" {
+		if v.Name == snmpTrapOID || v.Name == snmpTrapOID_0 {
 			continue
 		}
 
