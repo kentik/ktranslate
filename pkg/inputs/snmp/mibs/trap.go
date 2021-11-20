@@ -11,15 +11,30 @@ import (
 )
 
 type Trap struct {
-	Oid    string `yaml:"trap_oid"`
-	Name   string `yaml:"trap_name"`
-	Events []OID  `yaml:"events"`
+	Oid           string `yaml:"trap_oid"`
+	Name          string `yaml:"trap_name"`
+	DropUndefined bool   `yaml:"drop_undefined"`
+	Events        []OID  `yaml:"events"`
 }
 
 type TrapBase struct {
 	logger.ContextL `yaml:"-"`
 	Traps           []Trap `yaml:"traps"`
 	From            string `yaml:"from,omitempty"`
+}
+
+func (t *Trap) DropUndefinedVars() bool {
+	if t == nil {
+		return false
+	}
+	return t.DropUndefined
+}
+
+func normalizeOid(oid string) string {
+	if strings.HasPrefix(oid, ".") {
+		return oid
+	}
+	return "." + oid
 }
 
 func (mdb *MibDB) parseTrapsFromYml(fname string, file os.DirEntry, extends map[string]*Profile) error {
@@ -54,15 +69,12 @@ func (mdb *MibDB) parseTrapsFromYml(fname string, file os.DirEntry, extends map[
 				mib.EnumRev[v] = k
 			}
 			added++
-			oid := mib.Oid // Normalize to having a . prefix.
-			if !strings.HasPrefix(oid, ".") {
-				oid = "." + oid
-			}
-			mdb.traps[oid] = mib
+			mdb.trapMibs[normalizeOid(mib.Oid)] = mib
 		}
+		mdb.traps[normalizeOid(trap.Oid)] = trap
 	}
 
-	mdb.log.Infof("Loading %d snmp trap data points from %s.", added, fname)
+	mdb.log.Infof("Loading %d snmp trap data points and %d traps from %s.", added, len(mdb.traps), fname)
 
 	return nil
 }

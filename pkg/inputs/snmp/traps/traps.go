@@ -15,6 +15,10 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
+const (
+	snmpTrapOID = ".1.3.6.1.6.3.1.1.4.1"
+)
+
 type SnmpTrap struct {
 	log       logger.ContextL
 	jchfChan  chan []*kt.JCHF
@@ -149,11 +153,35 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
 
+	// What trap is this from?
+	var trap *mibs.Trap
 	for _, v := range packet.Variables {
+		if v.Name == snmpTrapOID || v.Name == snmpTrapOID+".0" {
+			if v.Type == gosnmp.ObjectIdentifier {
+				toid := v.Value.(string)
+				trap = s.mibdb.GetTrap(toid)
+				dst.CustomStr["TrapOID"] = toid
+				if trap != nil {
+					dst.CustomStr["TrapName"] = trap.Name
+				}
+			}
+		}
+	}
+
+	for _, v := range packet.Variables {
+		if v.Name == snmpTrapOID || v.Name == snmpTrapOID+".0" {
+			continue
+		}
+
 		// Do we know this guy?
 		res, err := s.mibdb.GetForKey(v.Name)
 		if err != nil {
 			s.log.Errorf("Cannot look up OID in trap: %v", err)
+		}
+
+		// If we don't want undefined vars, pass along here.
+		if res == nil && trap.DropUndefinedVars() {
+			continue
 		}
 
 		switch v.Type {
