@@ -197,6 +197,37 @@ func TestDropOnFilter(t *testing.T) {
 			},
 			false, // keep because mib-name matches and no admin status.
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+				"if_Alias":     "foo",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!if_Description": regexp.MustCompile("igb3"),
+					kt.AdminStatus:    regexp.MustCompile("up"),
+				},
+			},
+			true, // drop because missing desciption.
+		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus:   "up",
+				"if_Alias":       "foo",
+				"if_Description": "igb3",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!if_Description": regexp.MustCompile("igb3"),
+					kt.AdminStatus:    regexp.MustCompile("up"),
+				},
+			},
+			false, // keep because matching desciption.
+		},
 	}
 
 	for i, test := range tests {
