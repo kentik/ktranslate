@@ -79,31 +79,32 @@ var (
 )
 
 type InterfaceMetadata struct {
-	log logger.ContextL
+	log  logger.ContextL
+	mibs map[string]*kt.Mib
 }
 
 func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL) *InterfaceMetadata {
+	mibs := map[string]*kt.Mib{}
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
 		for _, oid := range oids {
 			_, ok := SNMP_Interface_OIDS.Get(oid)
 			if !ok {
 				mib := interfaceMetadataMibs[oid]
-				name := mib.Name
-				if mib.Tag != "" {
-					name = mib.Tag
-				}
+				name := mib.GetName()
 				if strings.HasPrefix(name, "if") {
 					name = name[2:]
 				}
 				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, name)
 				SNMP_Interface_OIDS.Set(oid, name)
+				mibs[name] = mib
 			}
 		}
 	}
 
 	return &InterfaceMetadata{
-		log: log,
+		log:  log,
+		mibs: mibs,
 	}
 }
 
@@ -121,6 +122,7 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
 		oidVal := el.Key.(string)
 		oidName := el.Value.(string)
+		mib := im.mibs[oidName]
 
 		results, err := snmp_util.WalkOID(ctx, conf, oidVal, server, im.log, "Interface")
 		if err != nil {
@@ -331,7 +333,15 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 						data.ExtraInfo[oidName] = string(variable.Value.([]byte))
 					case gosnmp.Integer:
 						val := gosnmp.ToBigInt(variable.Value).Uint64()
-						data.ExtraInfo[oidName] = strconv.Itoa(int(val))
+						if mib != nil && mib.EnumRev != nil {
+							if ev, ok := mib.EnumRev[int64(val)]; ok {
+								data.ExtraInfo[oidName] = ev
+							} else {
+								data.ExtraInfo[oidName] = strconv.Itoa(int(val))
+							}
+						} else {
+							data.ExtraInfo[oidName] = strconv.Itoa(int(val))
+						}
 					}
 				}
 			}

@@ -34,7 +34,7 @@ const (
 	StringPrefix     = "ks_"
 	PrivateIP        = "Private IP"
 	DropMetric       = "DropMetric"
-	AdminStatus      = "ifAdminStatus"
+	AdminStatus      = "if_AdminStatus"
 )
 
 type OutputType string

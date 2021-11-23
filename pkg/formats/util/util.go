@@ -135,6 +135,7 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 			if !isIfMetric && (k == kt.AdminStatus || strings.HasPrefix(k, "if_") || strings.HasPrefix(k, "input_if_") || strings.HasPrefix(k, "output_if_")) {
 				continue
 			}
+
 			if v, ok := attr[k]; ok {
 				if strv, ok := v.(string); ok {
 					if k == kt.AdminStatus { // If admin status is causing us to drop, drop right away.

@@ -35,10 +35,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 			if !strings.HasPrefix(noid, ".") {
 				noid = "." + noid
 			}
-			oidName := m.Name
-			if m.Tag != "" {
-				oidName = m.Tag
-			}
+			oidName := m.GetName()
 			log.Infof("Adding device metric %s -> %s", noid, oidName)
 			conf.DeviceOids[noid] = m
 		}
