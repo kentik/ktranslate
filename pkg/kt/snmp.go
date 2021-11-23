@@ -417,6 +417,8 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 					if sval, ok := f.Interface().(string); ok {
 						if strings.HasPrefix(sval, "${") { // Expecting values of the form ${V3_AUTH_PROTOCOL}
 							f.SetString(os.Getenv(sval[2 : len(sval)-1]))
+						} else if strings.HasPrefix(sval, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+							f.SetString(loadViaAWSSecrets(sval[len(AwsSmPrefix):]))
 						}
 					}
 				}

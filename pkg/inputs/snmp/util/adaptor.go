@@ -3,6 +3,7 @@ package util
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gosnmp/gosnmp"
@@ -67,6 +68,14 @@ func ParseV3Config(v3config *kt.V3SNMPConfig) (*gosnmp.UsmSecurityParameters, go
 		params.AuthenticationProtocol = gosnmp.SHA512
 	default:
 		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("invalid v3 authentication_protocol: %s. valid options: NoAuth|MD5|SHA|SHA224|SHA256|SHA384|SHA512", v3config.AuthenticationProtocol)
+	}
+
+	// If there is an invalid AWS defined string, error here.
+	if strings.HasPrefix(params.AuthenticationPassphrase, kt.AWSErrPrefix) {
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("Invalid AuthenticationPassphrase: %s", params.AuthenticationPassphrase)
+	}
+	if strings.HasPrefix(params.PrivacyPassphrase, kt.AWSErrPrefix) {
+		return nil, gosnmp.AuthNoPriv, "", "", fmt.Errorf("Invalid PrivacyPassphrase: %s", params.PrivacyPassphrase)
 	}
 
 	return &params, flags, v3config.ContextEngineID, v3config.ContextName, nil
