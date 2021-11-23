@@ -148,10 +148,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		}
 	} else {
 		dst.DeviceName = addr.IP.String()
-		dst.Provider = kt.ProviderDefault
-	}
-	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
-		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+		dst.Provider = kt.ProviderTrapUnknown
 	}
 
 	// What trap is this from?
