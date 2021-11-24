@@ -79,16 +79,24 @@ var (
 )
 
 type InterfaceMetadata struct {
-	log  logger.ContextL
-	mibs map[string]*kt.Mib
+	log           logger.ContextL
+	mibs          map[string]*kt.Mib
+	interfaceOids *orderedmap.OrderedMap
 }
 
 func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL) *InterfaceMetadata {
 	mibs := map[string]*kt.Mib{}
+	m := orderedmap.NewOrderedMap()
+
+	// Copy the global values into this map which is per device.
+	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
+		m.Set(el.Key, el.Value)
+	}
+
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
 		for _, oid := range oids {
-			_, ok := SNMP_Interface_OIDS.Get(oid)
+			_, ok := m.Get(oid)
 			if !ok {
 				mib := interfaceMetadataMibs[oid]
 				name := mib.GetName()
@@ -96,15 +104,16 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 					name = name[2:]
 				}
 				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, name)
-				SNMP_Interface_OIDS.Set(oid, name)
+				m.Set(oid, name)
 				mibs[name] = mib
 			}
 		}
 	}
 
 	return &InterfaceMetadata{
-		log:  log,
-		mibs: mibs,
+		log:           log,
+		mibs:          mibs,
+		interfaceOids: m,
 	}
 }
 
@@ -119,7 +128,7 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 	// map from ifDescr to interface definition (same structs as in intLine)
 	interfacesByDescription := make(map[string]*kt.InterfaceData)
 
-	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
+	for el := im.interfaceOids.Front(); el != nil; el = el.Next() {
 		oidVal := el.Key.(string)
 		oidName := el.Value.(string)
 		mib := im.mibs[oidName]
