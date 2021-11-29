@@ -340,6 +340,8 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 					switch variable.Type {
 					case gosnmp.OctetString:
 						data.ExtraInfo[oidName] = string(variable.Value.([]byte))
+					case gosnmp.ObjectIdentifier:
+						data.ExtraInfo[oidName] = string(variable.Value.(string))
 					case gosnmp.Integer:
 						val := gosnmp.ToBigInt(variable.Value).Uint64()
 						if mib != nil && mib.EnumRev != nil {

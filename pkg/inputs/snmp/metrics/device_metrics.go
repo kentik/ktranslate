@@ -236,18 +236,18 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				memoryTotal := memoryFree + memoryUsed
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryFree"]
 				}
 			} else if okt && okf {
 				memoryUsed = memoryTotal - memoryFree
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryFree"]
 				}
 			} else if okt && oku {
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryTotal"]
 				}
 			}
 		}
