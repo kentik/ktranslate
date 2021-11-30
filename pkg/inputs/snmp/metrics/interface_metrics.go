@@ -251,20 +251,20 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			}
 			dst.CustomBigInt[k] = int64(v)
 			if mib != nil {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: kt.CountMetric}
 			} else {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName, Format: kt.CountMetric}
 			}
 		}
 
 		// Drop in Error %s here if appicable.
 		if dst.CustomBigInt[SNMP_ifHCInUcastPkts] > 0 {
 			dst.CustomBigInt[SNMP_ifInErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifInErrors]) / float64(dst.CustomBigInt[SNMP_ifHCInUcastPkts]) * 100.)
-			metrics[SNMP_ifInErrorsPercent] = kt.MetricInfo{Profile: im.profileName}
+			metrics[SNMP_ifInErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric}
 		}
 		if dst.CustomBigInt[SNMP_ifHCOutUcastPkts] > 0 {
 			dst.CustomBigInt[SNMP_ifOutErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifOutErrors]) / float64(dst.CustomBigInt[SNMP_ifHCOutUcastPkts]) * 100.)
-			metrics[SNMP_ifOutErrorsPercent] = kt.MetricInfo{Profile: im.profileName}
+			metrics[SNMP_ifOutErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric}
 		}
 
 		if uptimeDelta > 0 {

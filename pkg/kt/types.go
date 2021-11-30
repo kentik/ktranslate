@@ -84,6 +84,8 @@ const (
 	InvalidEnum    = "invalid enum"
 	DeviceTagTable = "KT_Device_Tag"
 	FromLambda     = "awslambda"
+	GaugeMetric    = "gauge"
+	CountMetric    = "count"
 )
 
 type IntId uint64
