@@ -32,6 +32,9 @@ const (
 	SNMP_ifHCInMulticastPkts  = "ifHCInMulticastPkts"
 	SNMP_ifHCInBroadcastPkts  = "ifHCInBroadcastPkts"
 
+	SNMP_ifInErrorsPercent  = "ifInErrorPercent"
+	SNMP_ifOutErrorsPercent = "ifOutErrorPercent"
+
 	AllDeviceInterface = "device"
 	Uptime             = "Uptime"
 )
@@ -253,6 +256,17 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName}
 			}
 		}
+
+		// Drop in Error %s here if appicable.
+		if dst.CustomBigInt[SNMP_ifHCInUcastPkts] > 0 {
+			dst.CustomBigInt[SNMP_ifInErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifInErrors]) / float64(dst.CustomBigInt[SNMP_ifHCInUcastPkts]) * 100.)
+			metrics[SNMP_ifInErrorsPercent] = kt.MetricInfo{Profile: im.profileName}
+		}
+		if dst.CustomBigInt[SNMP_ifHCOutUcastPkts] > 0 {
+			dst.CustomBigInt[SNMP_ifOutErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifOutErrors]) / float64(dst.CustomBigInt[SNMP_ifHCOutUcastPkts]) * 100.)
+			metrics[SNMP_ifOutErrorsPercent] = kt.MetricInfo{Profile: im.profileName}
+		}
+
 		if uptimeDelta > 0 {
 			dst.CustomBigInt[Uptime] = int64(uptimeDelta)
 		}
