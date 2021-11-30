@@ -175,3 +175,19 @@ func TestEngineID(t *testing.T) {
 		assert.Equal(expt, str, "%s", in)
 	}
 }
+
+func TestRegex(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+
+	tests := map[int64][]byte{
+		62: []byte("    5 Secs ( 96.3762%)   60 Secs ( 62.8549%)  300 Secs ( 25.2877%)"),
+		64: []byte("    5 Secs ( 96.3762%)   60 Secs ( 64.8549%)  300 Secs ( 25.2877%)"),
+	}
+
+	for expt, in := range tests {
+		pdu := gosnmp.SnmpPDU{Value: in}
+		ival, _ := GetFromConv(pdu, CONV_REGEXP+`:60 Secs.*?(\d+)`, l)
+		assert.Equal(expt, ival, "%s", in)
+	}
+}
