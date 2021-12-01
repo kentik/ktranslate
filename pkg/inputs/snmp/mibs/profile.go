@@ -14,6 +14,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	PollAdjustTime = 5
+)
+
 type OID struct {
 	Oid        string           `yaml:"OID,omitempty"`
 	Name       string           `yaml:"name,omitempty"`
@@ -318,9 +322,10 @@ func (p *Profile) DumpOids(log logger.ContextL) {
 // IF-MIB | ifXTable monotonic_count { } This is an interface metric because it starts with a if
 // UDP-MIB |  monotonic_count {1.3.6.1.2.1.7.8.0 udpHCInDatagrams} This is a device metrics because it does't, but still is a counter.
 
-func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[string]*kt.Mib, map[string]*kt.Mib) {
+func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[string]*kt.Mib, map[string]*kt.Mib, int) {
 	deviceMetrics := map[string]*kt.Mib{}
 	interfaceMetrics := map[string]*kt.Mib{}
+	minCounterTime := counterTimeSec
 
 	enabled := map[string]bool{}
 	enabledTables := map[string]map[string]bool{}
@@ -381,9 +386,11 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			}
 			if metric.Symbol.PollTime > 0 {
 				if counterTimeSec > metric.Symbol.PollTime {
-					p.Errorf("SNMP: mib poll time of %d is less than device time of %d. Ignoring this custom time.", metric.Symbol.PollTime, counterTimeSec)
+					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", metric.Symbol.Name, metric.Symbol.PollTime, counterTimeSec)
+					minCounterTime = metric.Symbol.PollTime
+					mib.PollDur = time.Duration(metric.Symbol.PollTime-PollAdjustTime) * time.Second
 				} else {
-					mib.PollDur = time.Duration(metric.Symbol.PollTime) * time.Second
+					mib.PollDur = time.Duration(metric.Symbol.PollTime-PollAdjustTime) * time.Second
 					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
@@ -419,9 +426,11 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			}
 			if s.PollTime > 0 {
 				if counterTimeSec > s.PollTime {
-					p.Errorf("SNMP: mib poll time of %d is less than device time of %d. Ignoring this custom time.", s.PollTime, counterTimeSec)
+					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", s.Name, s.PollTime, counterTimeSec)
+					minCounterTime = s.PollTime
+					mib.PollDur = time.Duration(s.PollTime-PollAdjustTime) * time.Second
 				} else {
-					mib.PollDur = time.Duration(s.PollTime) * time.Second
+					mib.PollDur = time.Duration(s.PollTime-PollAdjustTime) * time.Second
 					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
@@ -438,10 +447,10 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 	}
 
 	// If we have any duplicate names, keep the longest OID.
-	prune(deviceMetrics)
-	prune(interfaceMetrics)
+	prune(deviceMetrics, counterTimeSec, minCounterTime)
+	prune(interfaceMetrics, counterTimeSec, minCounterTime)
 
-	return deviceMetrics, interfaceMetrics
+	return deviceMetrics, interfaceMetrics, minCounterTime
 }
 
 func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[string]*kt.Mib) {
@@ -547,8 +556,8 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 	}
 
 	// If we have any duplicate names, keep the longest OID.
-	prune(deviceMetadata)
-	prune(interfaceMetadata)
+	prune(deviceMetadata, 0, 0)
+	prune(interfaceMetadata, 0, 0)
 
 	return deviceMetadata, interfaceMetadata
 }
@@ -682,7 +691,7 @@ func newProfileFromApc(ap *apc.APC, file string, log logger.ContextL) []*Profile
 }
 
 // Sometimes the same tag can be in multiple mibs. Run down the list and keep the longest oid if there are any collisions.
-func prune(mibs map[string]*kt.Mib) {
+func prune(mibs map[string]*kt.Mib, counterTimeSec int, minCounterTime int) {
 	seenNames := map[string]string{}
 	fromExtended := map[string]bool{}
 
@@ -713,9 +722,14 @@ func prune(mibs map[string]*kt.Mib) {
 	}
 
 	// Lastly, delete if we're not keeping.
-	for oid, _ := range mibs {
+	for oid, mib := range mibs {
 		if !keepNames[oid] {
 			delete(mibs, oid)
+		}
+
+		// Also, if we are adjusting to run faster, set the duration on any non changed mibs to the original duration.
+		if mib.PollDur == 0 && counterTimeSec != minCounterTime {
+			mib.PollDur = time.Duration(counterTimeSec-PollAdjustTime) * time.Second
 		}
 	}
 }

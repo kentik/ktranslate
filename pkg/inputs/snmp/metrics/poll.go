@@ -52,7 +52,12 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	// If there's a profile passed in, look at the mibs set for this.
 	var deviceMetricMibs, interfaceMetricMibs map[string]*kt.Mib
 	if profile != nil {
-		deviceMetricMibs, interfaceMetricMibs = profile.GetMetrics(gconf.MibsEnabled, counterTimeSec)
+		minCounterTime := counterTimeSec
+		deviceMetricMibs, interfaceMetricMibs, minCounterTime = profile.GetMetrics(gconf.MibsEnabled, counterTimeSec)
+		if counterTimeSec != minCounterTime {
+			counterTimeSec = minCounterTime
+			log.Warnf("%d poll time adjusting to new one base on mibs", counterTimeSec)
+		}
 	}
 
 	poller := Poller{
