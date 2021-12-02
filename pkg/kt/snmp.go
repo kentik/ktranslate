@@ -77,6 +77,7 @@ type DeviceMetricsMetadata struct {
 const (
 	LOGICAL_INTERFACE  = "logical"
 	PHYSICAL_INTERFACE = "physical"
+	PollAdjustTime     = 5
 )
 
 var (

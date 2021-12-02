@@ -658,6 +658,13 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		"mib-name":             name.Mib,
 		"instrumentation.name": name.Profile,
 	}
+
+	// If set, add this in.
+	durSec := name.PollDur.Seconds()
+	if durSec > 0 {
+		attrNew["poll_duration_sec"] = name.PollDur.Seconds() + kt.PollAdjustTime
+	}
+
 	for k, v := range attr {
 		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
 			if strings.HasPrefix(k, "Sys") || k == "src_addr" {

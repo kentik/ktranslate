@@ -14,10 +14,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const (
-	PollAdjustTime = 5
-)
-
 type OID struct {
 	Oid        string           `yaml:"OID,omitempty"`
 	Name       string           `yaml:"name,omitempty"`
@@ -388,9 +384,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				if counterTimeSec > metric.Symbol.PollTime {
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", metric.Symbol.Name, metric.Symbol.PollTime, counterTimeSec)
 					minCounterTime = metric.Symbol.PollTime
-					mib.PollDur = time.Duration(metric.Symbol.PollTime-PollAdjustTime) * time.Second
+					mib.PollDur = time.Duration(metric.Symbol.PollTime-kt.PollAdjustTime) * time.Second
 				} else {
-					mib.PollDur = time.Duration(metric.Symbol.PollTime-PollAdjustTime) * time.Second
+					mib.PollDur = time.Duration(metric.Symbol.PollTime-kt.PollAdjustTime) * time.Second
 					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
@@ -428,9 +424,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				if counterTimeSec > s.PollTime {
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", s.Name, s.PollTime, counterTimeSec)
 					minCounterTime = s.PollTime
-					mib.PollDur = time.Duration(s.PollTime-PollAdjustTime) * time.Second
+					mib.PollDur = time.Duration(s.PollTime-kt.PollAdjustTime) * time.Second
 				} else {
-					mib.PollDur = time.Duration(s.PollTime-PollAdjustTime) * time.Second
+					mib.PollDur = time.Duration(s.PollTime-kt.PollAdjustTime) * time.Second
 					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
@@ -729,7 +725,7 @@ func prune(mibs map[string]*kt.Mib, counterTimeSec int, minCounterTime int) {
 
 		// Also, if we are adjusting to run faster, set the duration on any non changed mibs to the original duration.
 		if mib.PollDur == 0 && counterTimeSec != minCounterTime {
-			mib.PollDur = time.Duration(counterTimeSec-PollAdjustTime) * time.Second
+			mib.PollDur = time.Duration(counterTimeSec-kt.PollAdjustTime) * time.Second
 		}
 	}
 }

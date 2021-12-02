@@ -149,7 +149,7 @@ func TestPrune(t *testing.T) {
 	prune(mibs, 60, 30)
 	assert.Equal(t, 3, len(mibs))
 	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
-	assert.Equal(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"].PollDur, time.Duration(60-PollAdjustTime)*time.Second)
+	assert.Equal(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"].PollDur, time.Duration(60-kt.PollAdjustTime)*time.Second)
 }
 
 func TestProfileName(t *testing.T) {

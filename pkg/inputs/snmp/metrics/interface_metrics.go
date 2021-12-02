@@ -251,7 +251,7 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			}
 			dst.CustomBigInt[k] = int64(v)
 			if mib != nil {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: kt.CountMetric}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: kt.CountMetric, PollDur: mib.PollDur}
 			} else {
 				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName, Format: kt.CountMetric}
 			}
