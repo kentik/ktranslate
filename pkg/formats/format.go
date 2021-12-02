@@ -6,6 +6,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
+	"github.com/kentik/ktranslate/pkg/formats/elasticsearch"
 	"github.com/kentik/ktranslate/pkg/formats/influx"
 	"github.com/kentik/ktranslate/pkg/formats/json"
 	"github.com/kentik/ktranslate/pkg/formats/netflow"
@@ -25,21 +26,24 @@ type Formatter interface {
 type Format string
 
 const (
-	FORMAT_AVRO      Format = "avro"
-	FORMAT_JSON             = "json"
-	FORMAT_JSON_FLAT        = "flat_json"
-	FORMAT_NETFLOW          = "netflow"
-	FORMAT_INFLUX           = "influx"
-	FORMAT_PROM             = "prometheus"
-	FORMAT_NR               = "new_relic"
-	FORMAT_NRM              = "new_relic_metric"
-	FORMAT_SPLUNK           = "splunk"
+	FORMAT_AVRO          Format = "avro"
+	FORMAT_ELASTICSEARCH        = "elasticsearch"
+	FORMAT_JSON                 = "json"
+	FORMAT_JSON_FLAT            = "flat_json"
+	FORMAT_NETFLOW              = "netflow"
+	FORMAT_INFLUX               = "influx"
+	FORMAT_PROM                 = "prometheus"
+	FORMAT_NR                   = "new_relic"
+	FORMAT_NRM                  = "new_relic_metric"
+	FORMAT_SPLUNK               = "splunk"
 )
 
 func NewFormat(format Format, log logger.Underlying, compression kt.Compression) (Formatter, error) {
 	switch format {
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
+	case FORMAT_ELASTICSEARCH:
+		return elasticsearch.NewFormat(log, compression)
 	case FORMAT_JSON:
 		return json.NewFormat(log, compression, false)
 	case FORMAT_NETFLOW:
