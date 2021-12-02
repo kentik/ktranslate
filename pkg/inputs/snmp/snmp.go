@@ -150,6 +150,12 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		log.Infof("Client SNMP: Running SNMP for %s on %s (type=%s)", device.DeviceName, device.DeviceIP, device.Provider)
 		metrics.Mux.Lock()
 		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
+
+		// Check for duplicate device names here.
+		if _, ok := metrics.Devices[device.DeviceName]; ok {
+			log.Errorf("Duplicate device name detected (%s). Is this a misconfiguration?", device.DeviceName)
+		}
+
 		metrics.Devices[device.DeviceName] = nm
 		metrics.Mux.Unlock()
 		cl := logger.NewSubContextL(logger.SContext{S: device.DeviceName}, log)
