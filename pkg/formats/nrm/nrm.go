@@ -505,12 +505,24 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
-			ms = append(ms, NRMetric{
-				Name:       "kentik.snmp." + m,
-				Type:       NR_GAUGE_TYPE,
-				Value:      int64(in.CustomBigInt[m]),
-				Attributes: attrNew,
-			})
+			switch name.Format {
+			case kt.CountMetric:
+				ms = append(ms, NRMetric{
+					Name:       "kentik.snmp." + m,
+					Type:       NR_COUNT_TYPE,
+					Value:      int64(in.CustomBigInt[m]),
+					Attributes: attrNew,
+					Interval:   in.CustomBigInt["Uptime"] * 10, // Values are in 100's of a second, so multiply by 10 to get milliseconds.
+				})
+			default:
+				ms = append(ms, NRMetric{
+					Name:       "kentik.snmp." + m,
+					Type:       NR_GAUGE_TYPE,
+					Value:      int64(in.CustomBigInt[m]),
+					Attributes: attrNew,
+					Interval:   in.CustomBigInt["Uptime"] * 10, // Values are in 100's of a second, so multiply by 10 to get milliseconds.
+				})
+			}
 		}
 	}
 
@@ -519,7 +531,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := copyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName])
 						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
@@ -537,7 +549,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := copyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName])
 						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
@@ -646,6 +658,13 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		"mib-name":             name.Mib,
 		"instrumentation.name": name.Profile,
 	}
+
+	// If set, add this in.
+	durSec := name.PollDur.Seconds()
+	if durSec > 0 {
+		attrNew["poll_duration_sec"] = name.PollDur.Seconds() + kt.PollAdjustTime
+	}
+
 	for k, v := range attr {
 		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
 			if strings.HasPrefix(k, "Sys") || k == "src_addr" {

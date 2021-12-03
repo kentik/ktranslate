@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	gp "github.com/go-ping/ping"
 	"github.com/gosnmp/gosnmp"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -35,10 +34,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 			if !strings.HasPrefix(noid, ".") {
 				noid = "." + noid
 			}
-			oidName := m.Name
-			if m.Tag != "" {
-				oidName = m.Tag
-			}
+			oidName := m.GetName()
 			log.Infof("Adding device metric %s -> %s", noid, oidName)
 			conf.DeviceOids[noid] = m
 		}
@@ -123,12 +119,6 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 	}
 
-	// Get ping stats here if we have a service running.
-	var stats *gp.Statistics
-	if pinger != nil {
-		stats = pinger.Statistics()
-	}
-
 	// Map back into types we know about.
 	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Profile: dm.profileName}}
 	for _, variable := range results {
@@ -165,7 +155,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		oidName := mib.GetName()
 
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName, Table: mib.Table}
+		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName, Table: mib.Table, PollDur: mib.PollDur}
 		switch variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(variable.Value.([]byte))
@@ -239,18 +229,18 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				memoryTotal := memoryFree + memoryUsed
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryFree"]
 				}
 			} else if okt && okf {
 				memoryUsed = memoryTotal - memoryFree
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryFree"]
 				}
 			} else if okt && oku {
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
-					dst.CustomMetrics["MemoryUtilization"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryTotal"]
 				}
 			}
 		}
@@ -273,13 +263,20 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
 
-	if stats != nil {
-		dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-		dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
-		dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-		dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
-		dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-		dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+	// If we are running an active check, add it in here now.
+	if pinger != nil {
+		pings, err := dm.GetPingStats(ctx, pinger)
+		if err != nil {
+			return nil, err
+		}
+		if len(pings) > 0 {
+			dst.CustomBigInt["MinRttMs"] = pings[0].CustomBigInt["MinRttMs"]
+			dst.CustomMetrics["MinRttMs"] = pings[0].CustomMetrics["MinRttMs"]
+			dst.CustomBigInt["MaxRttMs"] = pings[0].CustomBigInt["MaxRttMs"]
+			dst.CustomMetrics["MaxRttMs"] = pings[0].CustomMetrics["MaxRttMs"]
+			dst.CustomBigInt["AvgRttMs"] = pings[0].CustomBigInt["AvgRttMs"]
+			dst.CustomMetrics["AvgRttMs"] = pings[0].CustomMetrics["AvgRttMs"]
+		}
 	}
 
 	flows = append(flows, dst)
@@ -326,4 +323,30 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	dst.CustomBigInt["PollingHealth"] = dm.metrics.Fail.Value()
 	dst.CustomStr[kt.StringPrefix+"PollingHealth"] = kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
 	return []*kt.JCHF{dst}
+}
+
+func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) ([]*kt.JCHF, error) {
+	if pinger == nil {
+		return nil, nil
+	}
+
+	stats := pinger.Statistics()
+	dst := kt.NewJCHF()
+	dst.CustomStr = map[string]string{}
+	dst.CustomInt = map[string]int32{}
+	dst.CustomBigInt = map[string]int64{}
+	dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+	dst.Provider = dm.conf.Provider
+	dst.DeviceName = dm.conf.DeviceName
+	dst.SrcAddr = dm.conf.DeviceIP
+	dst.Timestamp = time.Now().Unix()
+	dst.CustomMetrics = map[string]kt.MetricInfo{}
+	dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
+	dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+	dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
+	dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+	dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
+	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: dm.profileName, Type: "ping"}
+
+	return []*kt.JCHF{dst}, nil
 }

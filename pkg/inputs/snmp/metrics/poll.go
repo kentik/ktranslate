@@ -52,7 +52,12 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	// If there's a profile passed in, look at the mibs set for this.
 	var deviceMetricMibs, interfaceMetricMibs map[string]*kt.Mib
 	if profile != nil {
-		deviceMetricMibs, interfaceMetricMibs = profile.GetMetrics(gconf.MibsEnabled, counterTimeSec)
+		minCounterTime := counterTimeSec
+		deviceMetricMibs, interfaceMetricMibs, minCounterTime = profile.GetMetrics(gconf.MibsEnabled, counterTimeSec)
+		if counterTimeSec != minCounterTime {
+			counterTimeSec = minCounterTime
+			log.Warnf("%d poll time adjusting to new one base on mibs", counterTimeSec)
+		}
 	}
 
 	poller := Poller{
@@ -66,7 +71,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		dropIfOutside:    dropIfOutside,
 	}
 
-	if gconf.RunPing || conf.RunPing {
+	if gconf.RunPing || conf.RunPing || conf.PingOnly {
 		p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second)
 		if err != nil {
 			log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
@@ -177,4 +182,38 @@ func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 	}
 
 	return flows, nil
+}
+
+// Simpler loop which only runs on ping data, no actual snmp polling.
+func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
+	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
+	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
+	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
+	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
+	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
+	jitterWindow := 15 * time.Second
+	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
+	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
+
+	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
+
+	go func() {
+		for {
+			select {
+			case _ = <-counterCheck.C:
+				flows, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+				if err != nil {
+					p.log.Warnf("There was an error when getting ping stats: %v.", err)
+					continue
+				}
+
+				// Send data on.
+				p.jchfChan <- flows
+
+			case <-ctx.Done():
+				p.log.Infof("Metrics PingOnly Done")
+				return
+			}
+		}
+	}()
 }

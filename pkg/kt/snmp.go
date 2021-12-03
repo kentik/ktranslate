@@ -77,6 +77,7 @@ type DeviceMetricsMetadata struct {
 const (
 	LOGICAL_INTERFACE  = "logical"
 	PHYSICAL_INTERFACE = "physical"
+	PollAdjustTime     = 5
 )
 
 var (
@@ -140,6 +141,7 @@ type SnmpDeviceConfig struct {
 	MibProfile             string            `yaml:"mib_profile"`
 	Provider               Provider          `yaml:"provider"`
 	FlowOnly               bool              `yaml:"flow_only,omitempty"`
+	PingOnly               bool              `yaml:"ping_only,omitempty"`
 	UserTags               map[string]string `yaml:"user_tags"`
 	DiscoveredMibs         []string          `yaml:"discovered_mibs,omitempty"`
 	PollTimeSec            int               `yaml:"poll_time_sec,omitempty"`

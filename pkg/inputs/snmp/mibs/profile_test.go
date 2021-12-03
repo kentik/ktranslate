@@ -2,6 +2,7 @@ package mibs
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
@@ -119,7 +120,7 @@ func TestPrune(t *testing.T) {
 	mibs := map[string]*kt.Mib{
 		".1.3.6.1.4.1.9.9.48.1.1.1.5": &kt.Mib{Tag: "MemoryUsed"},
 	}
-	prune(mibs)
+	prune(mibs, 0, 0)
 	assert.Equal(t, 1, len(mibs))
 
 	mibs = map[string]*kt.Mib{
@@ -128,7 +129,7 @@ func TestPrune(t *testing.T) {
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.7":  &kt.Mib{Tag: "CPU"},
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.13": &kt.Mib{Name: "cpmCPUMemoryFree"},
 	}
-	prune(mibs)
+	prune(mibs, 0, 0)
 	assert.Equal(t, 3, len(mibs))
 	assert.Nil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
 	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.109.1.1.1.1.7"], len(mibs))
@@ -139,10 +140,16 @@ func TestPrune(t *testing.T) {
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.7":  &kt.Mib{Tag: "CPU", FromExtended: true},
 		".1.3.6.1.4.1.9.9.109.1.1.1.1.13": &kt.Mib{Name: "cpmCPUMemoryFree"},
 	}
-	prune(mibs)
+	prune(mibs, 0, 0)
 	assert.Equal(t, 3, len(mibs))
 	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
 	assert.Nil(t, mibs[".1.3.6.1.4.1.9.9.109.1.1.1.1.7"], len(mibs))
+	assert.Equal(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"].PollDur, time.Duration(0)*time.Second)
+
+	prune(mibs, 60, 30)
+	assert.Equal(t, 3, len(mibs))
+	assert.NotNil(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"], len(mibs))
+	assert.Equal(t, mibs[".1.3.6.1.4.1.9.9.305.1.1.1"].PollDur, time.Duration(60-kt.PollAdjustTime)*time.Second)
 }
 
 func TestProfileName(t *testing.T) {

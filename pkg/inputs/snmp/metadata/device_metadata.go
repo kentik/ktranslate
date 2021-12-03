@@ -191,6 +191,12 @@ func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md
 			case net.IP:
 				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, val.String(), 0)
 			}
+		case gosnmp.ObjectIdentifier:
+			value := string(variable.Value.(string))
+			if mib.Conversion != "" { // Adjust for any hard coded values here.
+				_, value = snmp_util.GetFromConv(variable, mib.Conversion, log)
+			}
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, value, 0)
 		default:
 			// Try to just use as a number
 			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, "", gosnmp.ToBigInt(variable.Value).Int64())

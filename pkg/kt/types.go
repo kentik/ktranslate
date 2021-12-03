@@ -34,7 +34,7 @@ const (
 	StringPrefix     = "ks_"
 	PrivateIP        = "Private IP"
 	DropMetric       = "DropMetric"
-	AdminStatus      = "ifAdminStatus"
+	AdminStatus      = "if_AdminStatus"
 )
 
 type OutputType string
@@ -84,6 +84,8 @@ const (
 	InvalidEnum    = "invalid enum"
 	DeviceTagTable = "KT_Device_Tag"
 	FromLambda     = "awslambda"
+	GaugeMetric    = "gauge"
+	CountMetric    = "count"
 )
 
 type IntId uint64
@@ -180,13 +182,14 @@ type JCHF struct {
 }
 
 type MetricInfo struct {
-	Oid     string `json:"-"`
-	Mib     string `json:"-"`
-	Name    string `json:"-"`
-	Profile string `json:"-"`
-	Table   string `json:"-"`
-	Format  string `json:"-"`
-	Type    string `json:"-"`
+	Oid     string        `json:"-"`
+	Mib     string        `json:"-"`
+	Name    string        `json:"-"`
+	Profile string        `json:"-"`
+	Table   string        `json:"-"`
+	Format  string        `json:"-"`
+	Type    string        `json:"-"`
+	PollDur time.Duration `json:"-"`
 }
 
 func (m *MetricInfo) GetType() string {

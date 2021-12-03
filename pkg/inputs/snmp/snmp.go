@@ -150,6 +150,12 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		log.Infof("Client SNMP: Running SNMP for %s on %s (type=%s)", device.DeviceName, device.DeviceIP, device.Provider)
 		metrics.Mux.Lock()
 		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
+
+		// Check for duplicate device names here.
+		if _, ok := metrics.Devices[device.DeviceName]; ok {
+			log.Errorf("Duplicate device name detected (%s). Is this a misconfiguration?", device.DeviceName)
+		}
+
 		metrics.Devices[device.DeviceName] = nm
 		metrics.Mux.Unlock()
 		cl := logger.NewSubContextL(logger.SContext{S: device.DeviceName}, log)
@@ -199,6 +205,10 @@ func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.S
 }
 
 func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
+	// Sometimes this device is pinging only. In this case, start the ping loop and return.
+	if device.PingOnly {
+		return launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
+	}
 
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
@@ -332,6 +342,28 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 	}
 
 	return &ms, nil
+}
+
+/**
+Handle the case where we're only doing a ping loop of a device.
+*/
+func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
+	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
+	if err != nil {
+		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
+		metrics.Fail.Update(kt.SNMP_BAD)
+		return err
+	}
+
+	metricPoller := snmp_metrics.NewPoller(metricsServer, conf, device, jchfChan, metrics, profile, log)
+
+	// We've now done everything we can do synchronously -- return to the client initialization
+	// code, and do everything else in the background
+	go func() {
+		metricPoller.StartPingOnlyLoop(ctx)
+	}()
+
+	return nil
 }
 
 // Public wrapper for calling this other places.

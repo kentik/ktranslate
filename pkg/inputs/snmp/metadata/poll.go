@@ -33,7 +33,7 @@ type Poller struct {
 }
 
 const (
-	DEFUALT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
+	DEFAULT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
 	vendorPrefix     = ".1.3.6.1.4.1."
 )
 
@@ -85,7 +85,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		conf:                  conf,
 		log:                   log,
 		server:                server,
-		interval:              DEFUALT_INTERVAL,
+		interval:              DEFAULT_INTERVAL,
 		interfaceMetadata:     NewInterfaceMetadata(interfaceMetadataMibs, log),
 		gotDeviceMetadata:     false,
 		jchfChan:              jchfChan,

@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +25,7 @@ const (
 	CONV_HEXTOINT  = "hextoint"
 	CONV_HEXTOIP   = "hextoip"
 	CONV_ENGINE_ID = "engine_id"
+	CONV_REGEXP    = "regexp"
 
 	NRUserTagPrefix = "tags."
 )
@@ -33,6 +35,9 @@ var (
 
 	// Device Manufacturer aka sysDescr
 	SNMP_DEVICE_MANUFACTURER_OID = "1.3.6.1.2.1.1.1"
+
+	// Keep a cache of seen regexps seen to speed things up.
+	reCache = map[string]*regexp.Regexp{}
 )
 
 func ContainsAny(s string, substrs ...string) bool {
@@ -282,6 +287,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 				log.Errorf("invalid Endian value (%s) for hex to int conversion", endian)
 				return 0, ""
 			}
+		} else if split[0] == CONV_REGEXP && len(split) >= 2 {
+			return fromRegexp(bv, strings.Join(split[1:], ":")) // Put back together just in case RE has a : in it.
 		}
 	}
 
@@ -324,4 +331,34 @@ func engineID(bv []byte) (int64, string) {
 		buf = append(buf, x[i], x[i+1], ':')
 	}
 	return 0, string(buf[:len(buf)-1])
+}
+
+/**
+Ubiquity and maybe others can be annoying in returning a string version of CPU.
+This lets people parse it out.
+
+	agentSwitchCpuProcessTotalUtilization
+	1.3.6.1.4.1.4413.1.1.1.1.4.9.0 = STRING: "    5 Secs ( 96.3762%)   60 Secs ( 62.8549%)  300 Secs ( 25.2877%)"
+*/
+func fromRegexp(bv []byte, reg string) (int64, string) {
+	r := reCache[reg]
+	if r == nil {
+		rn, err := regexp.Compile(reg)
+		if err != nil {
+			return 0, ""
+		}
+		reCache[reg] = rn
+		r = rn
+	}
+
+	// Now, lets run some regexps.
+	res := r.FindSubmatch(bv)
+	if len(res) < 2 {
+		return 0, ""
+	}
+	ival, err := strconv.Atoi(string(res[1]))
+	if err != nil { // If we can't parse as int, return as string.
+		return 0, string(res[1])
+	}
+	return int64(ival), string(res[1]) // Parsed as int but return both just in case.
 }
