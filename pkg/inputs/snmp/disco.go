@@ -216,13 +216,10 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 
 	// Now, see what mibs this sucker can use.
 	// TODO, actually store this mibs.
-	mibs, provider, first, err := mdb.GetForOidRecur(md.SysObjectID, device.MibProfile, device.Description)
+	_, provider, _, err := mdb.GetForOidRecur(md.SysObjectID, device.MibProfile, device.Description)
 	if err != nil {
 		log.Warnf("There was an error when loading the mibs: %v.", err)
 	} else {
-		if first && conf.Disco.AddFromMibDB {
-			device.DeviceOids = mibs
-		}
 		// Use the profile's provider if it is set.
 		if mibProfile != nil && mibProfile.Provider != "" {
 			device.Provider = mibProfile.Provider

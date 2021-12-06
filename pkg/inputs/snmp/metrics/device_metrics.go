@@ -23,21 +23,19 @@ type DeviceMetrics struct {
 	gconf       *kt.SnmpGlobalConfig
 	metrics     *kt.SnmpDeviceMetric
 	profileName string
+	oids        map[string]*kt.Mib
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
-	if conf.DeviceOids == nil && len(profileMetrics) > 0 {
-		conf.DeviceOids = profileMetrics
-	} else if len(profileMetrics) > 0 {
-		for oid, m := range profileMetrics {
-			noid := oid
-			if !strings.HasPrefix(noid, ".") {
-				noid = "." + noid
-			}
-			oidName := m.GetName()
-			log.Infof("Adding device metric %s -> %s", noid, oidName)
-			conf.DeviceOids[noid] = m
+	oidMap := make(map[string]*kt.Mib)
+	for oid, m := range profileMetrics {
+		noid := oid
+		if !strings.HasPrefix(noid, ".") {
+			noid = "." + noid
 		}
+		oidName := m.GetName()
+		log.Infof("Adding device metric %s -> %s", noid, oidName)
+		oidMap[noid] = m
 	}
 
 	// These are defined per device in the yaml conf.
@@ -51,6 +49,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		conf:        conf,
 		metrics:     metrics,
 		profileName: profile.GetProfileName(conf.InstrumentationName),
+		oids:        oidMap,
 	}
 }
 
@@ -82,7 +81,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	var results []gosnmp.SnmpPDU
 	m := map[string]*deviceMetricRow{}
 
-	for oid, mib := range dm.conf.DeviceOids {
+	for oid, mib := range dm.oids {
 		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 			continue
 		}
@@ -128,7 +127,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 		var mib *kt.Mib = nil
 		idx := ""
-		for oid, m := range dm.conf.DeviceOids {
+		for oid, m := range dm.oids {
 			if strings.HasPrefix(variable.Name, oid) {
 				idx = snmp_util.GetIndex(variable.Name, oid)
 				mib = m
@@ -138,7 +137,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 		if mib == nil {
 			if variable.Name[0:1] == "." { // Try again, this time not having a leading .
-				for oid, m := range dm.conf.DeviceOids {
+				for oid, m := range dm.oids {
 					if strings.HasPrefix(variable.Name[1:], oid) {
 						idx = snmp_util.GetIndex(variable.Name[1:], oid)
 						mib = m
