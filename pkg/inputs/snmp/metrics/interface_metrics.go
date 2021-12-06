@@ -59,10 +59,7 @@ type InterfaceMetrics struct {
 }
 
 func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *InterfaceMetrics {
-	oidMap := conf.InterfaceMetricsOidMap
-	if oidMap == nil {
-		oidMap = make(map[string]string)
-	}
+	oidMap := make(map[string]string)
 	for oid, m := range profileMetrics {
 		noid := oid
 		if !strings.HasPrefix(noid, ".") {
@@ -71,13 +68,6 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 		oidName := m.GetName()
 		log.Infof("Adding interface metric %s -> %s", noid, oidName)
 		oidMap[noid] = oidName
-	}
-
-	if len(oidMap) == 0 {
-		oidMap = defaultOidMap
-		log.Infof("Using default interface metric set")
-	} else {
-		log.Infof("Using custom interface metric set")
 	}
 
 	nameOidMap := map[string]string{} // Reverse the polled oids here.
@@ -107,27 +97,6 @@ func (im *InterfaceMetrics) DiscardDeltaState() {
 
 var (
 	MAX_COUNTER_INTS = 250
-
-	// TODO: ideally, this guy is the source of truth for SNMP_ifHCInOctets, etc,
-	// currently defined in common.go
-
-	// See https://tools.ietf.org/html/rfc2863.html and (for example)
-	// http://www.oid-info.com/get/1.3.6.1.2.1.31.1.1.1 for explanations about
-	// these and other snmp OIDs.
-	defaultOidMap = map[string]string{
-		"1.3.6.1.2.1.31.1.1.1.6":  SNMP_ifHCInOctets,     // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.7":  SNMP_ifHCInUcastPkts,  // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.10": SNMP_ifHCOutOctets,    // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.11": SNMP_ifHCOutUcastPkts, // 64 bit
-		"1.3.6.1.2.1.2.2.1.14":    SNMP_ifInErrors,
-		"1.3.6.1.2.1.2.2.1.20":    SNMP_ifOutErrors,
-		"1.3.6.1.2.1.2.2.1.13":    SNMP_ifInDiscards,         // 32 bit in SNMP, 64 in ST; using 64 bit flex column
-		"1.3.6.1.2.1.2.2.1.19":    SNMP_ifOutDiscards,        // same
-		"1.3.6.1.2.1.31.1.1.1.12": SNMP_ifHCOutMulticastPkts, // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.13": SNMP_ifHCOutBroadcastPkts, // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.8":  SNMP_ifHCInMulticastPkts,  // 64 bit
-		"1.3.6.1.2.1.31.1.1.1.9":  SNMP_ifHCInBroadcastPkts,  // 64 bit
-	}
 )
 
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
@@ -259,12 +228,20 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 
 		// Drop in Error %s here if appicable.
 		if dst.CustomBigInt[SNMP_ifHCInUcastPkts] > 0 {
-			dst.CustomBigInt[SNMP_ifInErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifInErrors]) / float64(dst.CustomBigInt[SNMP_ifHCInUcastPkts]) * 100.)
-			metrics[SNMP_ifInErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric}
+			if idi, ok := im.nameOidMap[SNMP_ifInErrors]; ok {
+				if mib, ok := im.oidMibMap[idi[1:]]; ok {
+					dst.CustomBigInt[SNMP_ifInErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifInErrors]) / float64(dst.CustomBigInt[SNMP_ifHCInUcastPkts]) * 100.)
+					metrics[SNMP_ifInErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric, Table: mib.Table, PollDur: mib.PollDur, Mib: mib.Mib}
+				}
+			}
 		}
 		if dst.CustomBigInt[SNMP_ifHCOutUcastPkts] > 0 {
-			dst.CustomBigInt[SNMP_ifOutErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifOutErrors]) / float64(dst.CustomBigInt[SNMP_ifHCOutUcastPkts]) * 100.)
-			metrics[SNMP_ifOutErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric}
+			if ido, ok := im.nameOidMap[SNMP_ifOutErrors]; ok {
+				if mib, ok := im.oidMibMap[ido[1:]]; ok {
+					dst.CustomBigInt[SNMP_ifOutErrorsPercent] = int64(float64(dst.CustomBigInt[SNMP_ifOutErrors]) / float64(dst.CustomBigInt[SNMP_ifHCOutUcastPkts]) * 100.)
+					metrics[SNMP_ifOutErrorsPercent] = kt.MetricInfo{Profile: im.profileName, Format: kt.GaugeMetric, Table: mib.Table, PollDur: mib.PollDur, Mib: mib.Mib}
+				}
+			}
 		}
 
 		if uptimeDelta > 0 {

@@ -125,34 +125,32 @@ type V3SNMPConfig struct {
 }
 
 type SnmpDeviceConfig struct {
-	DeviceName             string            `yaml:"device_name"`
-	DeviceIP               string            `yaml:"device_ip"`
-	Community              string            `yaml:"snmp_comm,omitempty"`
-	UseV1                  bool              `yaml:"use_snmp_v1"`
-	V3                     *V3SNMPConfig     `yaml:"snmp_v3,omitempty"`
-	Debug                  bool              `yaml:"debug"`
-	SampleRate             int64             `yaml:"sample_rate,omitempty"` // Used for flow.
-	Port                   uint16            `yaml:"port,omitempty"`
-	OID                    string            `yaml:"oid"`
-	Description            string            `yaml:"description"`
-	Checked                time.Time         `yaml:"last_checked"`
-	InterfaceMetricsOidMap map[string]string `yaml:"interface_metrics_oids"`
-	DeviceOids             map[string]*Mib   `yaml:"device_oids"`
-	MibProfile             string            `yaml:"mib_profile"`
-	Provider               Provider          `yaml:"provider"`
-	FlowOnly               bool              `yaml:"flow_only,omitempty"`
-	PingOnly               bool              `yaml:"ping_only,omitempty"`
-	UserTags               map[string]string `yaml:"user_tags"`
-	DiscoveredMibs         []string          `yaml:"discovered_mibs,omitempty"`
-	PollTimeSec            int               `yaml:"poll_time_sec,omitempty"`
-	TimeoutMS              int               `yaml:"timeout_ms,omitempty"`
-	Retries                int               `yaml:"retries,omitempty"`
-	EngineID               string            `yaml:"engine_id,omitempty"`
-	MatchAttr              map[string]string `yaml:"match_attributes"`
-	MonitorAdminShut       bool              `yaml:"monitor_admin_shut"`
-	NoUseBulkWalkAll       bool              `yaml:"no_use_bulkwalkall"`
-	InstrumentationName    string            `yaml:"instrumentationName,omitempty"`
-	RunPing                bool              `yaml:"response_time,omitempty"`
+	DeviceName          string            `yaml:"device_name"`
+	DeviceIP            string            `yaml:"device_ip"`
+	Community           string            `yaml:"snmp_comm,omitempty"`
+	UseV1               bool              `yaml:"use_snmp_v1"`
+	V3                  *V3SNMPConfig     `yaml:"snmp_v3,omitempty"`
+	Debug               bool              `yaml:"debug"`
+	SampleRate          int64             `yaml:"sample_rate,omitempty"` // Used for flow.
+	Port                uint16            `yaml:"port,omitempty"`
+	OID                 string            `yaml:"oid"`
+	Description         string            `yaml:"description"`
+	Checked             time.Time         `yaml:"last_checked"`
+	MibProfile          string            `yaml:"mib_profile"`
+	Provider            Provider          `yaml:"provider"`
+	FlowOnly            bool              `yaml:"flow_only,omitempty"`
+	PingOnly            bool              `yaml:"ping_only,omitempty"`
+	UserTags            map[string]string `yaml:"user_tags"`
+	DiscoveredMibs      []string          `yaml:"discovered_mibs,omitempty"`
+	PollTimeSec         int               `yaml:"poll_time_sec,omitempty"`
+	TimeoutMS           int               `yaml:"timeout_ms,omitempty"`
+	Retries             int               `yaml:"retries,omitempty"`
+	EngineID            string            `yaml:"engine_id,omitempty"`
+	MatchAttr           map[string]string `yaml:"match_attributes"`
+	MonitorAdminShut    bool              `yaml:"monitor_admin_shut"`
+	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
+	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
+	RunPing             bool              `yaml:"response_time,omitempty"`
 }
 
 type SnmpTrapConfig struct {
@@ -174,7 +172,6 @@ type SnmpDiscoConfig struct {
 	AddAllMibs         bool          `yaml:"add_mibs"`
 	Threads            int           `yaml:"threads"`
 	ReplaceDevices     bool          `yaml:"replace_devices"`
-	AddFromMibDB       bool          `yaml:"add_from_mibdb"`
 	NoDedup            bool          `yaml:"no_dedup_engine_id,omitempty"`
 	CidrOrig           string        `yaml:"-"`
 }

@@ -77,7 +77,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 			log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 		} else {
 			poller.pinger = p
-			log.Infof("Enabling responce time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
+			log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
 		}
 	}
 

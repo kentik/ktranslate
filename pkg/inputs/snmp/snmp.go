@@ -348,14 +348,7 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 Handle the case where we're only doing a ping loop of a device.
 */
 func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
-	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
-	if err != nil {
-		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-		metrics.Fail.Update(kt.SNMP_BAD)
-		return err
-	}
-
-	metricPoller := snmp_metrics.NewPoller(metricsServer, conf, device, jchfChan, metrics, profile, log)
+	metricPoller := snmp_metrics.NewPoller(nil, conf, device, jchfChan, metrics, profile, log)
 
 	// We've now done everything we can do synchronously -- return to the client initialization
 	// code, and do everything else in the background
