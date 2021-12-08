@@ -103,6 +103,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		return nil, err
 	}
 	kc.filters = filters
+	kc.doFilter = len(filters) > 0
 
 	// Grab the custom data directly from a file.
 	if config.MappingFile != "" {
@@ -593,6 +594,11 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 		kc.doEnrichments(ctx, citycache, regioncache, msgs)
 	}
 
+	// If we are filtering, cut any out here.
+	if kc.doFilter {
+		msgs = kc.reduce(msgs)
+	}
+
 	// If we have any rollups defined, send here instead of directly to the output format.
 	if kc.doRollups {
 		rv := make([]map[string]interface{}, len(msgs))
@@ -699,6 +705,26 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 			return
 		}
 	}
+}
+
+// Removes any flows which don't pass the filters.
+// This is On*f -- is there a better way?
+func (kc *KTranslate) reduce(in []*kt.JCHF) []*kt.JCHF {
+	out := make([]*kt.JCHF, 0, len(in))
+	for _, msg := range in {
+		keep := true
+		for _, f := range kc.filters {
+			if !f.Filter(msg) {
+				keep = false
+				break
+			}
+		}
+		if keep {
+			out = append(out, msg)
+		}
+	}
+
+	return out
 }
 
 func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
