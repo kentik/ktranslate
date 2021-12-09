@@ -94,12 +94,7 @@ type InterfaceData struct {
 	Speed       uint64            `yaml:"speed"`
 	Description string            `yaml:"desc"`
 	Alias       string            `yaml:"alias"`
-	Type        uint64            `yaml:"type"`
-	VrfName     string            `yaml:"vrf_name"`
-	VrfDescr    string            `yaml:"vrf_desc"`
-	VrfRD       string            `yaml:"vrf_rd"`
-	VrfExtRD    uint64            `yaml:"vrf_ext_rd"`
-	VrfRT       string            `yaml:"vrf_rt"`
+	Type        string            `yaml:"type"`
 	ExtraInfo   map[string]string `yaml:"extra_info"`
 }
 
