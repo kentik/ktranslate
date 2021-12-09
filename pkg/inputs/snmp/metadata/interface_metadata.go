@@ -45,10 +45,9 @@ var (
 		m.Set("1.3.6.1.2.1.4.20.1.2", SNMP_ipAdEntIfIndex)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix) // Index ipv6IfIndex, ipv6Addr
-
-		m.Set("1.3.6.1.2.1.2.2.1.3", SNMP_ifType)        // (ifType)
-		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress) // (ifPhysAddress)
-		m.Set("1.3.6.1.2.1.2.2.1.9", SNMP_ifLastChange)  // (ifLastChange)
+		m.Set("1.3.6.1.2.1.2.2.1.3", SNMP_ifType)            // (ifType)
+		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)     // (ifPhysAddress)
+		m.Set("1.3.6.1.2.1.2.2.1.9", SNMP_ifLastChange)      // (ifLastChange)
 		return m
 	}()
 
