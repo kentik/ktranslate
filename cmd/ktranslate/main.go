@@ -179,6 +179,7 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) 
 		flag.Set("rollups", "s_sum,pkts.xmt,in_pkts+out_pkts,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.flow":
+		flag.Set("flow_only", "true")
 		setNr()
 	case "nr1.syslog": // Tune for syslog.
 		flag.Set("compression", "gzip")

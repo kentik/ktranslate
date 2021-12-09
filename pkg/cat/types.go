@@ -90,6 +90,7 @@ type KTranslate struct {
 	kentik       *kentik.KentikSink // This one gets special handling
 	rollups      []rollup.Roller
 	doRollups    bool
+	doFilter     bool
 	filters      []filter.Filter
 	geo          *patricia.MMMap
 	asn          *patricia.MMMap
