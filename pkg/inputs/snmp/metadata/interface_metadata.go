@@ -70,6 +70,9 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 		for _, oid := range oids {
 			mib := interfaceMetadataMibs[oid]
 			name := mib.GetName()
+			if strings.HasPrefix(name, "if_") {
+				name = name[3:]
+			}
 			if strings.HasPrefix(name, "if") {
 				name = name[2:]
 			}
