@@ -139,7 +139,6 @@ func (ks *KentikHttpListener) HttpInfo() map[string]float64 {
 	msgs := map[string]float64{
 		"messages": ks.metrics.Messages.Rate1(),
 		"errors":   ks.metrics.Errors.Rate1(),
-		"queue":    float64(ks.metrics.Queue.Value()),
 	}
 	return msgs
 }
