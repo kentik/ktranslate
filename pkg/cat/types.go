@@ -19,6 +19,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
+	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/rule"
 
@@ -72,6 +73,7 @@ type Config struct {
 	MetricsChan       chan []*kt.JCHF
 	AppMap            string
 	HttpInput         string
+	Enricher          string
 }
 
 type KTranslate struct {
@@ -106,6 +108,7 @@ type KTranslate struct {
 	rule         *rule.RuleSet
 	syslog       *syslog.KentikSyslog
 	http         *http.KentikHttpListener
+	enricher     *enrich.Enricher
 }
 
 type CustomMapper struct {

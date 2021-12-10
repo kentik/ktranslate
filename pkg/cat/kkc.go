@@ -26,6 +26,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
+	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
 	"github.com/kentik/ktranslate/pkg/util/rule"
@@ -179,6 +180,15 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 		return nil, err
 	}
 	kc.rule = rule
+
+	// External Enrichment.
+	if config.Enricher != "" {
+		en, err := enrich.NewEnricher(config.Enricher, log.GetLogger().GetUnderlyingLogger())
+		if err != nil {
+			return nil, err
+		}
+		kc.enricher = en
+	}
 
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")
