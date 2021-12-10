@@ -2,7 +2,6 @@ package metadata
 
 import (
 	"context"
-	"encoding/hex"
 	"fmt"
 	"net"
 	"regexp"
@@ -30,15 +29,6 @@ const (
 	SNMP_ifPhysAddress      = "PhysAddress"
 	SNMP_ifLastChange       = "LastChange"
 
-	SNMP_lldpRemPortIdSubtype = "lldpRemPortIdSubtype"
-	SNMP_lldpRemPortId        = "lldpRemPortId"
-	SNMP_lldpRemPortDesc      = "lldpRemPortDesc"
-	SNMP_lldpRemSysName       = "lldpRemSysName"
-
-	SNMP_Nokia_vRtrIfGlobalIndex = "vRtrIfGlobalIndex"
-	SNMP_Nokia_vRtrIfName        = "vRtrIfName"
-	SNMP_Nokia_vRtrIfDescription = "vRtrIfDescription"
-
 	SNMP_HUAWEI_ID_MAP_OID     = "1.3.6.1.4.1.2011.5.25.110.1.2.1.2"
 	MIN_WORKING_HUAWEI_VERSION = 5
 )
@@ -49,29 +39,11 @@ var (
 		// change the order unless you know what you're doing.  Add new ones on
 		// the end.
 		m := orderedmap.NewOrderedMap()
-		m.Set("1.3.6.1.2.1.2.2.1.2", SNMP_ifDescr)           // Index ifIndex
-		m.Set("1.3.6.1.2.1.31.1.1.1.18", SNMP_ifAlias)       // Index ifIndex
 		m.Set("1.3.6.1.2.1.31.1.1.1.15", SNMP_ifSpeed)       // Index ifIndex
 		m.Set("1.3.6.1.2.1.4.20.1.2", SNMP_ipAdEntIfIndex)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix) // Index ipv6IfIndex, ipv6Addr
-
-		m.Set("1.3.6.1.2.1.2.2.1.3", SNMP_ifType)                    // (ifType)
-		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)             // (ifPhysAddress)
-		m.Set("1.3.6.1.2.1.2.2.1.9", SNMP_ifLastChange)              // (ifLastChange)
-		m.Set("1.0.8802.1.1.2.1.4.1.1.6", SNMP_lldpRemPortIdSubtype) // lldpRemPortIdSubtype
-		m.Set("1.0.8802.1.1.2.1.4.1.1.7", SNMP_lldpRemPortId)        // lldpRemPortId
-		m.Set("1.0.8802.1.1.2.1.4.1.1.8", SNMP_lldpRemPortDesc)      // lldpRemPortDesc
-		m.Set("1.0.8802.1.1.2.1.4.1.1.9", SNMP_lldpRemSysName)       // lldpRemSysName
-		return m
-	}()
-
-	// aka TiMetra oids
-	SNMP_Nokia_oids = func() *orderedmap.OrderedMap {
-		m := orderedmap.NewOrderedMap()
-		m.Set("1.3.6.1.4.1.6527.3.1.2.3.4.1.63", SNMP_Nokia_vRtrIfGlobalIndex)
-		m.Set("1.3.6.1.4.1.6527.3.1.2.3.4.1.4", SNMP_Nokia_vRtrIfName)
-		m.Set("1.3.6.1.4.1.6527.3.1.2.3.4.1.34", SNMP_Nokia_vRtrIfDescription)
+		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)     // (ifPhysAddress)
 		return m
 	}()
 
@@ -96,16 +68,20 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
 		for _, oid := range oids {
+			mib := interfaceMetadataMibs[oid]
+			name := mib.GetName()
+			if strings.HasPrefix(name, "if_") {
+				name = name[3:]
+			}
+			if strings.HasPrefix(name, "if") {
+				name = name[2:]
+			}
+			mibs[name] = mib
 			_, ok := m.Get(oid)
 			if !ok {
-				mib := interfaceMetadataMibs[oid]
-				name := mib.GetName()
-				if strings.HasPrefix(name, "if") {
-					name = name[2:]
-				}
 				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, name)
 				m.Set(oid, name)
-				mibs[name] = mib
+
 			}
 		}
 	}
@@ -187,73 +163,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 						}
 					}
 				}
-			} else if oidName == SNMP_lldpRemPortIdSubtype || oidName == SNMP_lldpRemPortId || oidName == SNMP_lldpRemPortDesc || oidName == SNMP_lldpRemSysName {
-				// these may contain details about what an interface is connected to:
-				//     PortId ~= ifIndex on the remote side, PortDesc ~= ifDescr, and SysName ~= sysName
-				//
-				// index is three integer elements -- first is a TimeFilter (rfc2021), second is the lldpPortNumber (which is probaby an ifIndex),
-				// third is just an incrementing sequence of changes to the lldpRemoteTable.
-				// So we'll split the index, walk it from oldest TimeFilter to newestTimeFilter, setting
-				// the InterfaceData for any lldpPortNumbers that correspond to ifIndex values to this varbind's value.
-				// At the end, every ifIndex that appeared in the list at all should have the value from its most
-				// recent TimeFilter value.
-				index := strings.Split(oidIdx, ".")
-				if len(index) != 3 {
-					im.log.Warnf("You used an unsupported value for the %s lldpRemTable variable: %v.", variable.Name, variable.Value)
-					continue
-				}
-
-				data, ok := intLine[index[1]]
-				if ok {
-					switch oidName {
-					case SNMP_lldpRemPortIdSubtype:
-						if variable.Type != gosnmp.Integer {
-							im.log.Warnf("You used an unsupported type for the %v variable: %v.", variable.Name, variable.Type, variable.Value)
-							break
-						}
-						data.ExtraInfo[oidName] = strconv.Itoa(int(gosnmp.ToBigInt(variable.Value).Uint64()))
-
-					case SNMP_lldpRemPortId:
-						if variable.Type != gosnmp.OctetString {
-							im.log.Warnf("You used an unsupported type for the %v variable: %v.", variable.Name, variable.Type, variable.Value)
-							break
-						}
-						value := variable.Value.([]byte)
-
-						// the contents of this variable depend on the
-						// subtype value we should have gotten on the previous walk;
-						// for values, see the lldpPortIdSubtype definition in
-						// http://www.ieee802.org/1/files/public/MIBs/LLDP-MIB-200505060000Z.txt
-						switch data.ExtraInfo[SNMP_lldpRemPortIdSubtype] {
-						case "":
-							// we got lldpRemPortId for this interface, but no lldpRemPortIdSubtype --
-							// log and skip
-							im.log.Warnf("lldpRemPortId present, but not lldpRemPortIdSubtype: %v %v %v", variable.Name, variable.Type, variable.Value)
-						case "1":
-							// interfaceAlias -- save the value as-is
-							data.ExtraInfo[oidName] = string(value)
-						case "3":
-							// macAddress
-							data.ExtraInfo[oidName] = "0x" + hex.EncodeToString(value)
-						case "5":
-							// interfaceName -- save the value as-is
-							data.ExtraInfo[oidName] = string(value)
-						case "7":
-							// local -- at least on some Juniper devices, this seems to be
-							// the ifIndex of the interface we're connected to.  Just save it.
-							data.ExtraInfo[oidName] = string(value)
-						default:
-							im.log.Warnf("You used an unexpected subtype for lldpRemPortId: %v %v %v %v.", variable.Name, variable.Type, variable.Value, data.ExtraInfo[SNMP_lldpRemPortIdSubtype])
-						}
-
-					case SNMP_lldpRemPortDesc, SNMP_lldpRemSysName:
-						if variable.Type != gosnmp.OctetString {
-							im.log.Warnf("You used an unsupported type for the %s %v %v %v variable.", oidName, variable.Name, variable.Type, variable.Value)
-							break
-						}
-						data.ExtraInfo[oidName] = string(variable.Value.([]byte))
-					}
-				}
 			} else {
 				// intLine is indexed with ifIndex.
 				// Ignore OIDs with secondary indices, ie. SNMP_ipv6AddrPrefix.
@@ -326,7 +235,16 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 						im.log.Warnf("SNMP_ifConnectorPresent: Unexpected value %d", gosnmp.ToBigInt(variable.Value).Uint64())
 					}
 				case SNMP_ifType:
-					data.Type = gosnmp.ToBigInt(variable.Value).Uint64()
+					val := gosnmp.ToBigInt(variable.Value).Int64()
+					if mib != nil && mib.EnumRev != nil {
+						if ev, ok := mib.EnumRev[val]; ok {
+							data.Type = ev
+						} else {
+							data.Type = fmt.Sprintf("unknown: %d", val)
+						}
+					} else {
+						data.Type = fmt.Sprintf("%d", val)
+					}
 				case SNMP_ifPhysAddress:
 					switch variable.Type {
 					case gosnmp.OctetString:
@@ -361,13 +279,6 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 
 	deviceManufacturer := snmp_util.GetDeviceManufacturer(server, im.log)
 	lowerManufacturer := strings.ToLower(deviceManufacturer)
-	isNokia := snmp_util.ContainsAny(lowerManufacturer, "timos", "nokia")
-
-	if isNokia || lowerManufacturer == "" {
-		if err := im.pollNokiaInterfaceOids(ctx, conf, server, intLine, interfacesByDescription); err != nil {
-			return nil, "", err
-		}
-	}
 
 	im.copyInterfaces(intLine, interfacesByDescription, lowerManufacturer)
 
@@ -446,77 +357,6 @@ func parentInterfaceDescriptionFromDescription(description string) string {
 	}
 	// no parent
 	return ""
-}
-
-func (im *InterfaceMetadata) pollNokiaInterfaceOids(ctx context.Context, conf *kt.SnmpDeviceConfig, server *gosnmp.GoSNMP,
-	intLine, interfacesByDescription map[string]*kt.InterfaceData) error {
-
-	im.log.Debugf("Querying Nokia OIDs")
-
-	// key is localIndex
-	toGlobalIndex := map[string]string{}
-
-	for el := SNMP_Nokia_oids.Front(); el != nil; el = el.Next() {
-		oidVal := el.Key.(string)
-		oidName := el.Value.(string)
-
-		// I'm not sure "oid not found" counts as an error or not.  If it
-		// does, this needs to change, since walkOID will try the OID three
-		// different ways, and if it just doesn't exist on the device, it'll
-		// never work.
-		results, err := snmp_util.WalkOID(ctx, conf, oidVal, server, im.log, "Nokia-Interface")
-		if err != nil {
-			im.log.Debugf("Error '%v' on %s/%s", err, oidVal, oidName)
-			return err
-		}
-
-		if len(results) == 0 {
-			im.log.Debugf("No results on %s/%s", oidVal, oidName)
-			break
-		}
-
-		for _, variable := range results {
-			parts := strings.Split(variable.Name, oidVal)
-			im.log.Debugf("SNMP %v:%+v", variable.Name, variable.Value)
-			if len(parts) != 2 || len(parts[1]) == 0 {
-				im.log.Debugf("Could not parse %v", variable.Name)
-				continue
-			}
-
-			// localIndex is <vRtrId>.<vRtrIfIndex>
-			localIndex := parts[1][1:]
-			im.log.Debugf("%v localIndex is %s", variable.Name, localIndex)
-
-			switch oidName {
-			case SNMP_Nokia_vRtrIfGlobalIndex:
-				globalIndex := fmt.Sprintf("%v", variable.Value)
-				intLine[globalIndex] = &kt.InterfaceData{
-					IPAddr:    kt.IPAddr{},
-					Index:     globalIndex,
-					ExtraInfo: map[string]string{},
-				}
-				toGlobalIndex[localIndex] = globalIndex
-				im.log.Debugf("%v -> globalIndex %v", localIndex, globalIndex)
-			case SNMP_Nokia_vRtrIfName: // same as SNMP_ifDescr above
-				if data, ok := intLine[toGlobalIndex[localIndex]]; ok {
-					if value, ok := snmp_util.ReadOctetString(variable, snmp_util.TRUNCATE); ok {
-						im.log.Debugf("globalIndex %v ifName: %s", toGlobalIndex[localIndex], value)
-						data.Description = value
-						interfacesByDescription[value] = data
-					}
-				}
-			case SNMP_Nokia_vRtrIfDescription: // same as SNMP_ifAlias above
-				if data, ok := intLine[toGlobalIndex[localIndex]]; ok {
-					if value, ok := snmp_util.ReadOctetString(variable, snmp_util.TRUNCATE); ok {
-						im.log.Debugf("globalIndex %v ifDescription: %s", toGlobalIndex[localIndex], value)
-						data.Alias = value
-					}
-				}
-			}
-		}
-	}
-
-	return nil
 }
 
 func isBrokenHuawei(manufacturer string) bool {

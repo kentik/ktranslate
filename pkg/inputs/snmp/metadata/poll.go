@@ -263,9 +263,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomInt["if."+intr+".Speed"] = int32(id.Speed)
 		dst.CustomStr["if."+intr+".Description"] = id.Description
 		dst.CustomStr["if."+intr+".Alias"] = id.Alias
-		dst.CustomStr["if."+intr+".VrfName"] = id.VrfName
-		dst.CustomStr["if."+intr+".VrfDescr"] = id.VrfDescr
-		dst.CustomStr["if."+intr+".VrfRD"] = id.VrfRD
+		dst.CustomStr["if."+intr+".Type"] = id.Type
 
 		// And in anything extra which came out here.
 		for k, v := range id.ExtraInfo {
