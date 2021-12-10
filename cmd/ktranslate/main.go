@@ -56,6 +56,7 @@ func main() {
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
 		appMap         = flag.String("application_map", "", "File containing custom application mappings")
 		syslog         = flag.String("syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
+		httpInput      = flag.String("http.source", "", "Listen for content sent via http. telegraph")
 	)
 
 	metricsChan := make(chan []*kt.JCHF, cat.CHAN_SLACK)
@@ -104,6 +105,7 @@ func main() {
 		FlowSource:        flow.FlowSource(*flowSource),
 		SyslogSource:      *syslog,
 		AppMap:            *appMap,
+		HttpInput:         *httpInput,
 		Kentik: &kt.KentikConfig{
 			ApiEmail: *kentikEmail,
 			ApiToken: os.Getenv(kt.KentikAPIToken),

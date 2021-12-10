@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
+	"github.com/kentik/ktranslate/pkg/inputs/http"
 	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -70,6 +71,7 @@ type Config struct {
 	LogTee            chan string
 	MetricsChan       chan []*kt.JCHF
 	AppMap            string
+	HttpInput         string
 }
 
 type KTranslate struct {
@@ -103,6 +105,7 @@ type KTranslate struct {
 	nfs          *flow.KentikDriver
 	rule         *rule.RuleSet
 	syslog       *syslog.KentikSyslog
+	http         *http.KentikHttpListener
 }
 
 type CustomMapper struct {

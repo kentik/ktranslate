@@ -17,6 +17,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
+	ihttp "github.com/kentik/ktranslate/pkg/inputs/http"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
@@ -849,6 +850,9 @@ func (kc *KTranslate) getRouter() http.Handler {
 	if kc.auth != nil {
 		kc.auth.RegisterRoutes(r)
 	}
+	if kc.http != nil {
+		kc.http.RegisterRoutes(r)
+	}
 
 	return r
 }
@@ -994,6 +998,16 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		kc.syslog = ss
+	}
+
+	// If we're looking for json over http
+	if kc.config.HttpInput != "" {
+		assureInput()
+		sh, err := ihttp.NewHttpListener(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
+		if err != nil {
+			return err
+		}
+		kc.http = sh
 	}
 
 	// If we're sending self metrics via a chan to sinks. This one always get sent via nrm.
