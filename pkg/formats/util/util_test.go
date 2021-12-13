@@ -228,6 +228,22 @@ func TestDropOnFilter(t *testing.T) {
 			},
 			false, // keep because matching desciption.
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus:   "up",
+				"if_Description": "igb4",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!if_Alias":      regexp.MustCompile("igb3"),
+					"if_Description": regexp.MustCompile("igb4"),
+					kt.AdminStatus:   regexp.MustCompile("up"),
+				},
+			},
+			true, // drop because alias is missing.
+		},
 	}
 
 	for i, test := range tests {

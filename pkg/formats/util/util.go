@@ -153,6 +153,7 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 				if forceMatch {
 					seenNonAdmin++
 					keepForOtherMatch = false
+					break
 				}
 			}
 		}
