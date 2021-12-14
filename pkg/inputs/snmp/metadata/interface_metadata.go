@@ -81,7 +81,6 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 			if !ok {
 				log.Infof("Adding custom interface metadata oid: %s -> %s", oid, name)
 				m.Set(oid, name)
-
 			}
 		}
 	}

@@ -146,6 +146,9 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 						seenNonAdmin++
 						if !keepForOtherMatch {
 							keepForOtherMatch = re.MatchString(strv)
+							if !keepForOtherMatch && forceMatch { // In this case, we failed the force match so break right now.
+								break
+							}
 						}
 					}
 				}
@@ -153,6 +156,7 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 				if forceMatch {
 					seenNonAdmin++
 					keepForOtherMatch = false
+					break
 				}
 			}
 		}
