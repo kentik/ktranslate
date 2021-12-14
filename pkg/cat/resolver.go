@@ -3,6 +3,8 @@ package cat
 import (
 	"context"
 	"net"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -10,7 +12,13 @@ import (
 )
 
 const (
-	CacheClearDuration = 60 * 60 * time.Second
+	CacheClearDuration  = 60 * 60 * time.Second
+	MAX_CACHE_SIZE_NAME = "KentikMaxDnsCacheSize"
+	RESOLVE_TIME_MAX    = time.Duration(time.Millisecond * 80)
+)
+
+var (
+	MAX_CACHE_SIZE = 10000 // Cache up to 10K ips.
 )
 
 type Resolver struct {
@@ -36,6 +44,13 @@ func NewResolver(ctx context.Context, log logger.Underlying, dsnHost string) (*R
 		cache: map[string]string{},
 	}
 
+	if val, ok := os.LookupEnv(MAX_CACHE_SIZE_NAME); ok {
+		if ival, err := strconv.Atoi(val); err == nil {
+			MAX_CACHE_SIZE = ival
+		}
+	}
+	res.Infof("Running dns with a cache size of %d ips.", MAX_CACHE_SIZE)
+
 	go res.clearCache(ctx)
 
 	return res, nil
@@ -47,8 +62,16 @@ func (r *Resolver) Resolve(ctx context.Context, ip string) string {
 		return final
 	}
 
-	// Else, look it up on the network.
-	if ans, err := r.resolver.LookupAddr(ctx, ip); err == nil {
+	// Else, look it up on the network, unless we are full.
+	if len(r.cache) > MAX_CACHE_SIZE {
+		return ""
+	}
+
+	// Cap the time we spend searching for an answer here.
+	ctxC, cancel := context.WithTimeout(ctx, RESOLVE_TIME_MAX)
+	defer cancel()
+
+	if ans, err := r.resolver.LookupAddr(ctxC, ip); err == nil {
 		if len(ans) > 0 {
 			final = ans[0]
 			if final[len(final)-1:] == "." {
