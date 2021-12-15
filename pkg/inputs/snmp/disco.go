@@ -118,6 +118,8 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		}
 	}
 
+	time.Sleep(1 * time.Second) // Give logs time to get sent back.
+
 	return nil
 }
 

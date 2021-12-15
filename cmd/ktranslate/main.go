@@ -181,6 +181,9 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) 
 	case "nr1.flow":
 		flag.Set("flow_only", "true")
 		setNr()
+	case "nr1.discovery":
+		flag.Set("snmp_discovery", "true")
+		setNr()
 	case "nr1.syslog": // Tune for syslog.
 		flag.Set("compression", "gzip")
 		flag.Set("sinks", "new_relic")
