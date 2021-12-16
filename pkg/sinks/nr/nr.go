@@ -363,6 +363,7 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	}
 	if !hasSyslog {
 		ls.Common.Attributes["plugin.type"] = kt.PluginHealth
+		ls.Common.Attributes["logtype"] = "ktranslate-health"
 	}
 
 	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.
