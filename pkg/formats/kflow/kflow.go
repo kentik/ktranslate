@@ -14,21 +14,20 @@ import (
 )
 
 const (
-	MSG_KEY_PREFIX    = 80 // This many bytes in every rcv message are for the key.
-	KFLOW_VERSION_ONE = '1'
+	MSG_KEY_PREFIX       = 80 // This many bytes in every rcv message are for the key.
+	KFLOW_VERSION_ONE    = '1'
+	START_FIELD_ID       = 100
+	KTRANSLATE_PROTO     = 100
+	KTRANSLATE_MAP_PROTO = 101
 )
 
 type KflowFormat struct {
 	logger.ContextL
-	ids    map[string]uint32
-	nextID uint32
 }
 
 func NewFormat(log logger.Underlying) (*KflowFormat, error) {
 	kf := &KflowFormat{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kflowFormat"}, log),
-		ids:      map[string]uint32{},
-		nextID:   100,
 	}
 
 	return kf, nil
@@ -49,11 +48,15 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, err
 	}
 
-	msgs, err := root.NewMsgs(int32(len(flows)))
+	msgs, err := root.NewMsgs(int32(len(flows) + 1)) // +1 for the encoded mapping flow.
 	if err != nil {
 		return nil, err
 	}
 
+	ids, err := f.getIds(flows, msgs.At(0), seg) // Set the first msg to be the mapping one.
+	if err != nil {
+		return nil, err
+	}
 	for i, flow := range flows {
 		var list model.Custom_List
 		n := len(flow.CustomStr) + len(flow.CustomInt) + len(flow.CustomBigInt)
@@ -63,7 +66,7 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			}
 		}
 
-		f.pack(flow, msgs.At(i), list)
+		f.pack(flow, msgs.At(i+1), list, ids) // Offset by 1 here because the first flow is the map.
 	}
 
 	root.SetMsgs(msgs)
@@ -91,7 +94,8 @@ func (f *KflowFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	return nil, nil
 }
 
-func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List) error {
+func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List, ids map[string]uint32) error {
+	kflow.SetAppProtocol(KTRANSLATE_PROTO)
 	kflow.SetTimestamp(f.Timestamp)
 	kflow.SetDstAs(f.DstAs)
 	kflow.SetHeaderLen(f.HeaderLen)
@@ -125,19 +129,19 @@ func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List)
 	next := 0
 	for key, val := range f.CustomStr {
 		kc := list.At(next)
-		kc.SetId(ff.getId(key))
+		kc.SetId(ids[key])
 		kc.Value().SetStrVal(val)
 		next++
 	}
 	for key, val := range f.CustomInt {
 		kc := list.At(next)
-		kc.SetId(ff.getId(key))
+		kc.SetId(ids[key])
 		kc.Value().SetUint32Val(uint32(val))
 		next++
 	}
 	for key, val := range f.CustomBigInt {
 		kc := list.At(next)
-		kc.SetId(ff.getId(key))
+		kc.SetId(ids[key])
 		kc.Value().SetUint64Val(uint64(val))
 		next++
 	}
@@ -145,13 +149,49 @@ func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List)
 	return nil
 }
 
-// @TODO, make this work in a thread safe way and across restarts?
-func (ff *KflowFormat) getId(key string) uint32 {
-	if id, ok := ff.ids[key]; ok {
-		return id
+func (ff *KflowFormat) getIds(flows []*kt.JCHF, kflow model.CHF, seg *capn.Segment) (map[string]uint32, error) {
+	ids := map[string]uint32{}
+	nextID := uint32(START_FIELD_ID)
+
+	for _, flow := range flows {
+		for key, _ := range flow.CustomStr {
+			if _, ok := ids[key]; ok {
+				continue
+			}
+			ids[key] = nextID
+			nextID++
+		}
+		for key, _ := range flow.CustomInt {
+			if _, ok := ids[key]; ok {
+				continue
+			}
+			ids[key] = nextID
+			nextID++
+		}
+		for key, _ := range flow.CustomBigInt {
+			if _, ok := ids[key]; ok {
+				continue
+			}
+			ids[key] = nextID
+			nextID++
+		}
 	}
 
-	ff.ids[key] = ff.nextID
-	ff.nextID++
-	return ff.ids[key]
+	// Now, set up our mapping flow.
+	list, err := model.NewCustom_List(seg, int32(len(ids)))
+	if err != nil {
+		return nil, err
+	}
+
+	kflow.SetAppProtocol(KTRANSLATE_MAP_PROTO)
+	next := 0
+	for k, id := range ids {
+		kc := list.At(next)
+		kc.SetId(id)
+		kc.Value().SetStrVal(k)
+		next++
+	}
+
+	// And return the map we used.
+	return ids, nil
 }
