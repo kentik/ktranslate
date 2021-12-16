@@ -224,6 +224,8 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			memoryUsed, oku := dst.CustomBigInt["MemoryUsed"]
 			memoryFree, okf := dst.CustomBigInt["MemoryFree"]
 			memoryTotal, okt := dst.CustomBigInt["MemoryTotal"]
+			memoryBuffer, okb := dst.CustomBigInt["MemoryBuffer"]
+			memoryCache, okc := dst.CustomBigInt["MemoryCache"]
 			if oku && okf {
 				memoryTotal := memoryFree + memoryUsed
 				if memoryTotal > 0 {
@@ -239,6 +241,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			} else if okt && oku {
 				if memoryTotal > 0 {
 					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryUsed) / float32(memoryTotal) * 100)
+					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryTotal"]
+				}
+			} else if okt && okb && okc {
+				if memoryTotal > 0 {
+					dst.CustomBigInt["MemoryUtilization"] = int64(float32(memoryTotal-(memoryBuffer+memoryCache)) / float32(memoryTotal) * 100)
 					dst.CustomMetrics["MemoryUtilization"] = dst.CustomMetrics["MemoryTotal"]
 				}
 			}
