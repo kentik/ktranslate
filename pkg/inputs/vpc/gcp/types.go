@@ -12,16 +12,17 @@ import (
 )
 
 const (
-	RECV_WINDOW = -1 * 5 * 60 * time.Second
+	RECV_WINDOW  = -1 * 5 * 60 * time.Second
+	GCP_VPC_TYPE = "GCP_VPC"
 )
 
 type GCELogLine struct {
 	InsertID  string    `json:"insertId"`
 	Payload   *Payload  `json:"jsonPayload"`
 	LogName   string    `json:"logName"`
-	RecvTs    string    `json:"receiveTimestamp"`
+	RecvTs    time.Time `json:"receiveTimestamp"`
 	Resource  *Resource `json:"resource"`
-	Timestamp string    `json:"timestamp"`
+	Timestamp time.Time `json:"timestamp"`
 	BytesRaw  int64     `json:"bytesRaw"`
 }
 
@@ -53,13 +54,13 @@ type Payload struct {
 	SrcInstance  *Instance   `json:"src_instance"`
 	DestVPC      *VPC        `json:"dest_vpc"`
 	SrcVPC       *VPC        `json:"src_vpc"`
-	EndTime      string      `json:"end_time"`
+	EndTime      time.Time   `json:"end_time"`
 	Pkts         string      `json:"packets_sent"`
 	Reporter     string      `json:"reporter"`
 	RTT          string      `json:"rtt_msec"`
 	SrcLocation  *Location   `json:"src_location"`
 	DstLocation  *Location   `json:"dest_location"`
-	StartTime    string      `json:"start_time"`
+	StartTime    time.Time   `json:"start_time"`
 }
 
 type Location struct {
@@ -79,11 +80,6 @@ type Labels struct {
 	ProjectID      string `json:"project_id"`
 	SubnetworkID   string `json:"subnetwork_id"`
 	SubnetworkName string `json:"subnetwork_name"`
-}
-
-func (m *GCELogLine) GetTimestamp() time.Time {
-	t, _ := time.Parse(time.RFC3339, m.Payload.EndTime)
-	return t
 }
 
 func (m *GCELogLine) GetVMName() (host string, err error) {
@@ -108,8 +104,7 @@ func (m *GCELogLine) GetVMName() (host string, err error) {
 
 func (m *GCELogLine) IsValid() bool {
 	if m.Payload != nil {
-		t := m.GetTimestamp()
-		return t.After(time.Now().Add(RECV_WINDOW))
+		return m.Payload.EndTime.After(time.Now().Add(RECV_WINDOW))
 	}
 
 	return false
@@ -145,7 +140,7 @@ func (m *GCELogLine) ToFlow(log logger.ContextL) (in *kt.JCHF, err error) {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderVPC
-	in.Timestamp = m.GetTimestamp().Unix()
+	in.Timestamp = m.Payload.StartTime.Unix()
 	in.InBytes = getUInt64(m.Payload.Bytes)
 	in.InPkts = getUInt64(m.Payload.Pkts)
 	in.L4DstPort = uint32(m.Payload.Connection.DestPort)
@@ -157,9 +152,31 @@ func (m *GCELogLine) ToFlow(log logger.ContextL) (in *kt.JCHF, err error) {
 	vmname, _ := m.GetVMName()
 	in.DeviceName = vmname
 
+	in.CustomStr["kt.from"] = kt.FromGCP
+	in.CustomStr["type"] = GCP_VPC_TYPE
 	in.CustomBigInt["rtt_msec"] = getInt64(m.Payload.RTT)
 	in.CustomStr["reporter"] = m.Payload.Reporter
+	in.CustomStr["insert_id"] = m.InsertID
+	in.CustomStr["log_name"] = m.LogName
+	in.CustomBigInt["rcv_time"] = m.RecvTs.Unix()
 
+	in.CustomBigInt["start_time"] = m.Payload.StartTime.Unix()
+	in.CustomBigInt["end_time"] = m.Payload.EndTime.Unix()
+
+	/**
+	Connection   *Connection `json:"connection"`
+	DestInstance *Instance   `json:"dest_instance"`
+	SrcInstance  *Instance   `json:"src_instance"`
+	DestVPC      *VPC        `json:"dest_vpc"`
+	SrcVPC       *VPC        `json:"src_vpc"`
+	EndTime      time.Time   `json:"end_time"`
+	Pkts         string      `json:"packets_sent"`
+	Reporter     string      `json:"reporter"`
+	RTT          string      `json:"rtt_msec"`
+	SrcLocation  *Location   `json:"src_location"`
+	DstLocation  *Location   `json:"dest_location"`
+	StartTime    time.Time   `json:"start_time"`
+	*/
 	return in, err
 }
 

@@ -86,6 +86,7 @@ const (
 	FromLambda     = "awslambda"
 	GaugeMetric    = "gauge"
 	CountMetric    = "count"
+	FromGCP        = "gcppubsub"
 )
 
 type IntId uint64

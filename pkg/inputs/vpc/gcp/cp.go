@@ -26,7 +26,6 @@ type GcpVpc struct {
 
 type GcpMetric struct {
 	FlowsIn     go_metrics.Meter
-	FlowsOut    go_metrics.Meter
 	RateInvalid go_metrics.Meter
 	RateError   go_metrics.Meter
 }
@@ -46,7 +45,6 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		maxBatchSize: maxBatchSize,
 		metrics: &GcpMetric{
 			FlowsIn:     go_metrics.GetOrRegisterMeter("flows_in", registry),
-			FlowsOut:    go_metrics.GetOrRegisterMeter("flows_out", registry),
 			RateInvalid: go_metrics.GetOrRegisterMeter("rate_invalid", registry),
 			RateError:   go_metrics.GetOrRegisterMeter("rate_error", registry),
 		},
@@ -79,7 +77,6 @@ func (vpc *GcpVpc) Close() {}
 func (vpc *GcpVpc) HttpInfo() map[string]float64 {
 	return map[string]float64{
 		"FlowsIn":     vpc.metrics.FlowsIn.Rate1(),
-		"FlowsOut":    vpc.metrics.FlowsOut.Rate1(),
 		"RateInvalid": vpc.metrics.RateInvalid.Rate1(),
 		"RateError":   vpc.metrics.RateError.Rate1(),
 	}
@@ -103,7 +100,6 @@ func (vpc *GcpVpc) runSubscription(ctx context.Context, sub *pubsub.Subscription
 		if err := sub.Receive(ctx, func(ctx context.Context, m *pubsub.Message) {
 			m.Ack()
 			var data GCELogLine
-
 			if err := json.Unmarshal(m.Data, &data); err != nil {
 				vpc.metrics.RateError.Mark(1)
 				vpc.Errorf("Error reading log line: %v", err)
@@ -125,7 +121,7 @@ func (vpc *GcpVpc) runSubscription(ctx context.Context, sub *pubsub.Subscription
 				}
 			}
 		}); err != nil {
-			vpc.Warnf("Err0r on sub system receive, waiting -- %v", sleepTime)
+			vpc.Warnf("Err0r on sub system receive, waiting %v -- %v", sleepTime, err)
 			time.Sleep(sleepTime)
 		}
 	}
