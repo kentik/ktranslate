@@ -385,9 +385,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", metric.Symbol.Name, metric.Symbol.PollTime, counterTimeSec)
 					minCounterTime = metric.Symbol.PollTime
 					mib.PollDur = time.Duration(metric.Symbol.PollTime-kt.PollAdjustTime) * time.Second
-				} else {
+				} else if counterTimeSec < metric.Symbol.PollTime {
+					p.Infof("SNMP: Custom poll time of %v for %s", time.Duration(metric.Symbol.PollTime)*time.Second, mib.Name)
 					mib.PollDur = time.Duration(metric.Symbol.PollTime-kt.PollAdjustTime) * time.Second
-					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
 			if mib.Name == "" {
@@ -425,9 +425,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", s.Name, s.PollTime, counterTimeSec)
 					minCounterTime = s.PollTime
 					mib.PollDur = time.Duration(s.PollTime-kt.PollAdjustTime) * time.Second
-				} else {
+				} else if counterTimeSec < s.PollTime {
+					p.Infof("SNMP: Custom poll time of %v for %s", time.Duration(s.PollTime)*time.Second, mib.Name)
 					mib.PollDur = time.Duration(s.PollTime-kt.PollAdjustTime) * time.Second
-					p.Infof("SNMP: Custom poll time of %v for %s", mib.PollDur, mib.Name)
 				}
 			}
 			if mib.Name == "" {

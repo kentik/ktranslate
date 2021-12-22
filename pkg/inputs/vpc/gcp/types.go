@@ -71,11 +71,11 @@ type Location struct {
 }
 
 type Resource struct {
-	Labels *Labels `json:"labels"`
-	Type   string  `json:"type"`
+	Labels *Label `json:"labels"`
+	Type   string `json:"type"`
 }
 
-type Labels struct {
+type Label struct {
 	Location       string `json:"location"`
 	ProjectID      string `json:"project_id"`
 	SubnetworkID   string `json:"subnetwork_id"`
@@ -140,44 +140,109 @@ func (m *GCELogLine) ToFlow(log logger.ContextL) (in *kt.JCHF, err error) {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderVPC
-	in.Timestamp = m.Payload.StartTime.Unix()
-	in.InBytes = getUInt64(m.Payload.Bytes)
-	in.InPkts = getUInt64(m.Payload.Pkts)
-	in.L4DstPort = uint32(m.Payload.Connection.DestPort)
-	in.L4SrcPort = uint32(m.Payload.Connection.SrcPort)
-	in.Protocol = ic.PROTO_NAMES[uint16(uint32(m.Payload.Connection.Protocol))]
-	in.SrcAddr = m.Payload.Connection.SrcIP
-	in.DstAddr = m.Payload.Connection.DestIP
 	in.SampleRate = 1
 	vmname, _ := m.GetVMName()
 	in.DeviceName = vmname
 
 	in.CustomStr["kt.from"] = kt.FromGCP
 	in.CustomStr["type"] = GCP_VPC_TYPE
-	in.CustomBigInt["rtt_msec"] = getInt64(m.Payload.RTT)
-	in.CustomStr["reporter"] = m.Payload.Reporter
 	in.CustomStr["insert_id"] = m.InsertID
 	in.CustomStr["log_name"] = m.LogName
 	in.CustomBigInt["rcv_time"] = m.RecvTs.Unix()
 
-	in.CustomBigInt["start_time"] = m.Payload.StartTime.Unix()
-	in.CustomBigInt["end_time"] = m.Payload.EndTime.Unix()
+	m.Payload.Save(in)
+	m.Resource.Save(in)
 
-	/**
-	Connection   *Connection `json:"connection"`
-	DestInstance *Instance   `json:"dest_instance"`
-	SrcInstance  *Instance   `json:"src_instance"`
-	DestVPC      *VPC        `json:"dest_vpc"`
-	SrcVPC       *VPC        `json:"src_vpc"`
-	EndTime      time.Time   `json:"end_time"`
-	Pkts         string      `json:"packets_sent"`
-	Reporter     string      `json:"reporter"`
-	RTT          string      `json:"rtt_msec"`
-	SrcLocation  *Location   `json:"src_location"`
-	DstLocation  *Location   `json:"dest_location"`
-	StartTime    time.Time   `json:"start_time"`
-	*/
 	return in, err
+}
+
+func (l *Label) Save(in *kt.JCHF) {
+	if l == nil {
+		return
+	}
+
+	in.CustomStr["label_location"] = l.Location
+	in.CustomStr["label_project_id"] = l.ProjectID
+	in.CustomStr["label_subnetwork_id"] = l.SubnetworkID
+	in.CustomStr["label_subnetwork_name"] = l.SubnetworkName
+}
+
+func (r *Resource) Save(in *kt.JCHF) {
+	if r == nil {
+		return
+	}
+
+	in.CustomStr["type"] = r.Type
+	r.Labels.Save(in)
+}
+
+func (c *Connection) Save(in *kt.JCHF) {
+	if c == nil {
+		return
+	}
+
+	in.L4DstPort = uint32(c.DestPort)
+	in.L4SrcPort = uint32(c.SrcPort)
+	in.Protocol = ic.PROTO_NAMES[uint16(uint32(c.Protocol))]
+	in.SrcAddr = c.SrcIP
+	in.DstAddr = c.DestIP
+}
+
+func (i *Instance) Save(in *kt.JCHF, direction string) {
+	if i == nil {
+		return
+	}
+
+	in.CustomStr[direction+"instance_project_id"] = i.ProjectID
+	in.CustomStr[direction+"instance_region"] = i.Region
+	in.CustomStr[direction+"instance_vm_name"] = i.VMName
+	in.CustomStr[direction+"instance_zone"] = i.Zone
+}
+
+func (v *VPC) Save(in *kt.JCHF, direction string) {
+	if v == nil {
+		return
+	}
+
+	in.CustomStr[direction+"vpc_project_id"] = v.ProjectID
+	in.CustomStr[direction+"vpc_subnetwork_name"] = v.SubnetworkName
+	in.CustomStr[direction+"vpc_name"] = v.Name
+}
+
+func (l *Location) Save(in *kt.JCHF, direction string) {
+	if l == nil {
+		return
+	}
+
+	in.CustomStr[direction+"city"] = l.City
+	in.CustomStr[direction+"continent"] = l.Continent
+	in.CustomStr[direction+"country"] = l.Country
+	in.CustomStr[direction+"region"] = l.Region
+}
+
+func (p *Payload) Save(in *kt.JCHF) {
+	if p == nil {
+		return
+	}
+
+	in.InBytes = getUInt64(p.Bytes)
+	in.InPkts = getUInt64(p.Pkts)
+	in.CustomBigInt["rtt_msec"] = getInt64(p.RTT)
+	in.CustomStr["reporter"] = p.Reporter
+
+	// Do we want all these times?
+	in.Timestamp = p.StartTime.Unix()
+	in.CustomBigInt["start_time"] = p.StartTime.Unix()
+	in.CustomBigInt["end_time"] = p.EndTime.Unix()
+
+	// Now save the rest.
+	p.Connection.Save(in)
+	p.DestInstance.Save(in, "dst_")
+	p.SrcInstance.Save(in, "src_")
+	p.DestVPC.Save(in, "dst_")
+	p.SrcVPC.Save(in, "src_")
+	p.DstLocation.Save(in, "dst_")
+	p.SrcLocation.Save(in, "src_")
 }
 
 func getUInt32(s string) uint32 {
