@@ -430,3 +430,14 @@ func (a *V3SNMPConfig) InheritGlobal() bool {
 	}
 	return a.useGlobal
 }
+
+// Save any hard coded parts of this profile which might get overriten by an automatic process.
+func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig) {
+	if old == nil {
+		return
+	}
+
+	if strings.HasPrefix(old.MibProfile, "!") {
+		d.MibProfile = old.MibProfile
+	}
+}
