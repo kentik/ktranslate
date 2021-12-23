@@ -77,8 +77,14 @@ func (dm *DeviceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, pinger
 	return dm.pollFromConfig(ctx, server, pinger)
 }
 
+type wrapper struct {
+	variable gosnmp.SnmpPDU
+	mib      *kt.Mib
+	oid      string
+}
+
 func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSNMP, pinger *ping.Pinger) ([]*kt.JCHF, error) {
-	var results []gosnmp.SnmpPDU
+	var results []wrapper
 	m := map[string]*deviceMetricRow{}
 
 	for oid, mib := range dm.oids {
@@ -97,7 +103,9 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			continue
 		}
 
-		results = append(results, oidResults...)
+		for _, result := range oidResults {
+			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
+		}
 	}
 
 	// Get uptime manually here.
@@ -120,46 +128,25 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 	// Map back into types we know about.
 	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Profile: dm.profileName}}
-	for _, variable := range results {
-		if variable.Value == nil { // You can get nil w/out getting an error, though.
+	for _, wrapper := range results {
+		if wrapper.variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
 		}
 
-		var mib *kt.Mib = nil
-		idx := ""
-		for oid, m := range dm.oids {
-			if strings.HasPrefix(variable.Name, oid) {
-				idx = snmp_util.GetIndex(variable.Name, oid)
-				mib = m
-				break
-			}
+		idx := snmp_util.GetIndex(wrapper.variable.Name[1:], wrapper.oid)
+		if wrapper.mib == nil {
+			dm.log.Warnf("Missing Custom oid: %+v, Value: %T %+v", wrapper.variable, wrapper.variable.Value, wrapper.variable.Value)
+			continue
 		}
-
-		if mib == nil {
-			if variable.Name[0:1] == "." { // Try again, this time not having a leading .
-				for oid, m := range dm.oids {
-					if strings.HasPrefix(variable.Name[1:], oid) {
-						idx = snmp_util.GetIndex(variable.Name[1:], oid)
-						mib = m
-						break
-					}
-				}
-			}
-
-			if mib == nil {
-				dm.log.Warnf("Missing Custom oid: %+v, Value: %T %+v", variable, variable.Value, variable.Value)
-				continue
-			}
-		}
-		oidName := mib.GetName()
+		oidName := wrapper.mib.GetName()
 
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[oidName] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Profile: dm.profileName, Table: mib.Table, PollDur: mib.PollDur}
-		switch variable.Type {
+		metricsFound[oidName] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
+		switch wrapper.variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
-			value := string(variable.Value.([]byte))
-			if mib.Conversion != "" { // Adjust for any hard coded values here.
-				ival, sval := snmp_util.GetFromConv(variable, mib.Conversion, dm.log)
+			value := string(wrapper.variable.Value.([]byte))
+			if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
+				ival, sval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
 				if ival > 0 {
 					dmr.customBigInt[oidName] = ival
 					dmr.customStr[kt.StringPrefix+oidName] = sval
@@ -168,9 +155,9 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 					value = sval
 				}
 			}
-			if mib.Enum != nil {
+			if wrapper.mib.Enum != nil {
 				dmr.customStr[kt.StringPrefix+oidName] = value // Save the string valued field as an attribute.
-				if val, ok := mib.Enum[strings.ToLower(value)]; ok {
+				if val, ok := wrapper.mib.Enum[strings.ToLower(value)]; ok {
 					dmr.customBigInt[oidName] = val
 				} else {
 					dm.log.Warnf("Missing enum value for device metric %s %s", oidName, value)
@@ -187,16 +174,16 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				}
 			}
 		default:
-			if mib.EnumRev != nil {
-				value := snmp_util.ToInt64(variable.Value)
-				if val, ok := mib.EnumRev[value]; ok {
+			if wrapper.mib.EnumRev != nil {
+				value := snmp_util.ToInt64(wrapper.variable.Value)
+				if val, ok := wrapper.mib.EnumRev[value]; ok {
 					dmr.customStr[kt.StringPrefix+oidName] = val // Save this string version as a attribute.
 				} else {
-					dm.log.Warnf("Missing enum value for device metric %s %d", oidName, value)
+					dm.log.Warnf("Missing enum value for device metric %s %d %s %s", oidName, value, idx, wrapper.variable.Name)
 					dmr.customStr[kt.StringPrefix+oidName] = kt.InvalidEnum
 				}
 			}
-			dmr.customBigInt[oidName] = snmp_util.ToInt64(variable.Value)
+			dmr.customBigInt[oidName] = snmp_util.ToInt64(wrapper.variable.Value)
 		}
 	}
 
