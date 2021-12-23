@@ -17,7 +17,6 @@ import (
 
 const (
 	MSG_KEY_PREFIX                    = 80 // This many bytes in every rcv message are for the key.
-	KFLOW_VERSION_ONE                 = '1'
 	KTRANSLATE_PROTO                  = 100
 	KTRANSLATE_MAP_PROTO              = 101
 	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
