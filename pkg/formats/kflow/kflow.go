@@ -3,6 +3,8 @@ package kflow
 import (
 	"bytes"
 	"compress/gzip"
+	"fmt"
+	"hash/crc32"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -14,20 +16,25 @@ import (
 )
 
 const (
-	MSG_KEY_PREFIX       = 80 // This many bytes in every rcv message are for the key.
-	KFLOW_VERSION_ONE    = '1'
-	START_FIELD_ID       = 100
-	KTRANSLATE_PROTO     = 100
-	KTRANSLATE_MAP_PROTO = 101
+	MSG_KEY_PREFIX                    = 80 // This many bytes in every rcv message are for the key.
+	KFLOW_VERSION_ONE                 = '1'
+	KTRANSLATE_PROTO                  = 100
+	KTRANSLATE_MAP_PROTO              = 101
+	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
 )
 
 type KflowFormat struct {
 	logger.ContextL
 }
 
-func NewFormat(log logger.Underlying) (*KflowFormat, error) {
+func NewFormat(log logger.Underlying, compression kt.Compression) (*KflowFormat, error) {
 	kf := &KflowFormat{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kflowFormat"}, log),
+	}
+
+	// For now, we force gzip in the kflow case.
+	if compression != kt.CompressionGzip {
+		return nil, fmt.Errorf("Invalid compression (%s): format kflow only supports gzip", compression)
 	}
 
 	return kf, nil
@@ -71,7 +78,7 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	root.SetMsgs(msgs)
 
-	cid := [80]byte{}
+	cid := [MSG_KEY_PREFIX]byte{}
 	buf := bytes.NewBuffer(serBuf)
 	z := gzip.NewWriter(buf)
 	z.Reset(buf)
@@ -83,11 +90,83 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 
 	z.Close()
-	return kt.NewOutputWithProvider(serBuf, flows[0].Provider, kt.EventOutput), nil
+	return kt.NewOutputWithProvider(buf.Bytes(), flows[0].Provider, kt.EventOutput), nil
 }
 
 func (f *KflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
-	return nil, nil
+	z, err := gzip.NewReader(bytes.NewBuffer(raw.Body))
+	if err != nil {
+		return nil, err
+	}
+	defer z.Close()
+
+	var bodyBufferBytes []byte
+	bodyBuffer := bytes.NewBuffer(bodyBufferBytes)
+	_, err = bodyBuffer.ReadFrom(z)
+	if err != nil {
+		return nil, err
+	}
+	evt := bodyBuffer.Bytes()
+
+	decoder := capn.NewPackedDecoder(bytes.NewBuffer(evt[MSG_KEY_PREFIX:]))
+	decoder.MaxMessageSize = kentikDefaultCapnprotoDecodeLimit
+	capnprotoMessage, err := decoder.Decode()
+	if err != nil {
+		return nil, err
+	}
+
+	// unpack flow messages and pass them down
+	packedCHF, err := model.ReadRootPackedCHF(capnprotoMessage)
+	if err != nil {
+		return nil, err
+	}
+
+	messages, err := packedCHF.Msgs()
+	if err != nil {
+		return nil, err
+	}
+
+	out := []map[string]interface{}{}
+	customMap := map[uint32]string{}
+	for i := 0; i < messages.Len(); i++ {
+		msg := messages.At(i)
+		switch msg.AppProtocol() {
+		case KTRANSLATE_PROTO:
+			flow := map[string]interface{}{
+				"timestamp": msg.Timestamp(),
+			}
+			customs, _ := msg.Custom()
+			for i, customsLen := 0, customs.Len(); i < customsLen; i++ {
+				cust := customs.At(i)
+				val := cust.Value()
+				if key, ok := customMap[cust.Id()]; !ok {
+					continue // Skip because we don't have a key for this.
+				} else {
+					switch val.Which() {
+					case model.Custom_value_Which_uint32Val:
+						flow[key] = val.Uint32Val()
+					case model.Custom_value_Which_uint64Val:
+						flow[key] = val.Uint64Val()
+					case model.Custom_value_Which_strVal:
+						sv, _ := val.StrVal()
+						flow[key] = sv
+					}
+				}
+			}
+			out = append(out, flow)
+
+		case KTRANSLATE_MAP_PROTO:
+			customs, _ := msg.Custom()
+			for i, customsLen := 0, customs.Len(); i < customsLen; i++ {
+				cust := customs.At(i)
+				val := cust.Value()
+				sv, _ := val.StrVal()
+				customMap[cust.Id()] = sv
+			}
+		}
+	}
+
+	return out, nil
 }
 
 func (f *KflowFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
@@ -146,34 +225,34 @@ func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List,
 		next++
 	}
 
+	if next > 0 {
+		kflow.SetCustom(list)
+	}
+
 	return nil
 }
 
 func (ff *KflowFormat) getIds(flows []*kt.JCHF, kflow model.CHF, seg *capn.Segment) (map[string]uint32, error) {
 	ids := map[string]uint32{}
-	nextID := uint32(START_FIELD_ID)
 
 	for _, flow := range flows {
 		for key, _ := range flow.CustomStr {
 			if _, ok := ids[key]; ok {
 				continue
 			}
-			ids[key] = nextID
-			nextID++
+			ids[key] = crc32.ChecksumIEEE([]byte(key))
 		}
 		for key, _ := range flow.CustomInt {
 			if _, ok := ids[key]; ok {
 				continue
 			}
-			ids[key] = nextID
-			nextID++
+			ids[key] = crc32.ChecksumIEEE([]byte(key))
 		}
 		for key, _ := range flow.CustomBigInt {
 			if _, ok := ids[key]; ok {
 				continue
 			}
-			ids[key] = nextID
-			nextID++
+			ids[key] = crc32.ChecksumIEEE([]byte(key))
 		}
 	}
 
@@ -191,6 +270,7 @@ func (ff *KflowFormat) getIds(flows []*kt.JCHF, kflow model.CHF, seg *capn.Segme
 		kc.Value().SetStrVal(k)
 		next++
 	}
+	kflow.SetCustom(list) // Don't forget to save this into the kflow itself.
 
 	// And return the map we used.
 	return ids, nil

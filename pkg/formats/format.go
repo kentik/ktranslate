@@ -61,7 +61,7 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 	case FORMAT_SPLUNK:
 		return splunk.NewFormat(log, compression)
 	case FORMAT_KFLOW:
-		return kflow.NewFormat(log)
+		return kflow.NewFormat(log, compression)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}

@@ -17,6 +17,10 @@ import (
 	capn "zombiezen.com/go/capnproto2"
 )
 
+const (
+	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
+)
+
 // Handler for json data, useful for testing mostly. Requires you to set content-type: application/json
 func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 	serBuf := make([]byte, 0)

@@ -37,12 +37,11 @@ import (
 // By default at the time of this writing the library would have used 64MiB.
 // Feel free to change if appropriate.
 const (
-	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
-	CHAN_SLACK                        = 8000      // Up to this many messages / sec
-	MetricsCheckDuration              = 60 * time.Second
-	CacheInvalidateDuration           = 8 * time.Hour
-	MDB_NO_LOCK                       = 0x400000
-	MDB_PERMS                         = 0666
+	CHAN_SLACK              = 8000 // Up to this many messages / sec
+	MetricsCheckDuration    = 60 * time.Second
+	CacheInvalidateDuration = 8 * time.Hour
+	MDB_NO_LOCK             = 0x400000
+	MDB_PERMS               = 0666
 )
 
 var (
