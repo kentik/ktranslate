@@ -31,7 +31,7 @@ func pollOnce(ctx context.Context, tdevice string, conf *kt.SnmpConfig, connectT
 
 	profile := mibdb.FindProfile(device.OID, device.Description, device.MibProfile)
 	if profile == nil {
-		return fmt.Errorf("No profile found for %s", device)
+		return fmt.Errorf("No profile found for %s", tdevice)
 	}
 
 	// We need two of these, to avoid concurrent access by the two pollers.
