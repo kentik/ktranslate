@@ -194,6 +194,12 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 
 	s.Infof("Exporting to New Relic at main: %s, events: %s, metrics: %s, logs %s", s.NRUrl, s.NRUrlEvent, s.NRUrlMetric, s.NRUrlLog)
 
+	err := s.test(ctx)
+	if err != nil {
+		return err
+	}
+	s.Infof("New Relic sink connection confirmed good.")
+
 	return nil
 }
 
@@ -226,10 +232,33 @@ func (s *NRSink) HttpInfo() map[string]float64 {
 	}
 }
 
+func (s *NRSink) test(ctx context.Context) error {
+	urls := []string{s.NRUrlEvent, s.NRUrlMetric, s.NRUrlLog}
+	payload := kt.NewOutput([]byte("{}"))
+	errChan := make(chan error)
+	cb := func(err error) {
+		go func() { // We're still in the same thread as below so need to get a new one.
+			errChan <- err
+		}()
+	}
+	payload.CB = cb // sendNR uses a callback system instead of returning directly.
+	for _, url := range urls {
+		s.sendNR(ctx, payload, url)
+		err := <-errChan
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 	var cbErr error = nil
 	if payload.CB != nil { // Let anyone who asked know that this has been sent
-		defer payload.CB(cbErr)
+		defer func() {
+			payload.CB(cbErr) // This needs to get wrapped in its own function to get cbErr right.
+		}()
 	}
 
 	s.metrics.DeliveryMetrics.Mark(1) // Compression will effect this, but we can do our best.
@@ -271,6 +300,7 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 				s.tooBig <- len(payload.Body)
 			} else if resp.StatusCode >= 400 {
 				s.Errorf("There was an error when communicating to New Relic One: %v.", resp.StatusCode)
+				cbErr = fmt.Errorf("There was an error when communicating to New Relic One: %v.", resp.StatusCode)
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
 				var nr NRResponce
