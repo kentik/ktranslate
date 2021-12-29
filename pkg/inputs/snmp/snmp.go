@@ -32,6 +32,7 @@ var (
 	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1.2.1", "Walk this oid if -snmp_do_walk is set.")
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
+	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
@@ -58,6 +59,11 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		mibdb = mdb
 	} else {
 		log.Infof("Skipping configurable mibs")
+	}
+
+	// If we just want to poll one device and exit, do this here.
+	if *snmpPollNow != "" {
+		return pollOnce(ctx, *snmpPollNow, conf, connectTimeout, retries, jchfChan, metrics, registry, log)
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
