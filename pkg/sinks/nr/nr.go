@@ -246,7 +246,7 @@ func (s *NRSink) test(ctx context.Context) error {
 		s.sendNR(ctx, payload, url)
 		err := <-errChan
 		if err != nil {
-			return err
+			return fmt.Errorf("Error testing %s: %v", url, err)
 		}
 	}
 
