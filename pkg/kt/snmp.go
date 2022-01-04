@@ -11,6 +11,7 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"gopkg.in/yaml.v2"
 )
 
 // DeviceData holds information about a device, sent via ST, and sent
@@ -397,6 +398,16 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 		if single == "@global_v3" { // Should this be hard coded like this?
 			conf.useGlobal = true
+		} else if strings.HasPrefix(single, "${") { // get the whole yaml block out of an env var.
+			raw := os.Getenv(single[2 : len(single)-1])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+			raw := loadViaAWSSecrets(single[len(AwsSmPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
 		}
 		*a = V3SNMPConfig(conf)
 	} else {
