@@ -149,7 +149,16 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	vals := r.URL.Query()
 	senderId := vals.Get(HttpSenderID)
 	cidBase := vals.Get(HttpCompanyID)
-	cid, _ := strconv.Atoi(cidBase)
+	cid := 0
+	if cidBase != "" {
+		if c, err := strconv.Atoi(cidBase); err != nil {
+			kc.log.Errorf("There was an error when getting cid paramiter: %s %v.", cidBase, err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		} else {
+			cid = c
+		}
+	}
 
 	// Allocate a buffer for the expected size of the incoming data.
 	var bodyBufferBytes []byte

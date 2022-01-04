@@ -1,6 +1,7 @@
 package http
 
 import (
+	"compress/gzip"
 	"context"
 	"fmt"
 	"net/http"
@@ -70,7 +71,18 @@ type batch struct {
 func (ks *KentikHttpListener) readBatch(w http.ResponseWriter, r *http.Request) {
 	var wrapper batch
 
-	if err := json.NewDecoder(r.Body).Decode(&wrapper); err != nil {
+	// Decode body in gzip format if the request header is set this way.
+	body := r.Body
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		z, err := gzip.NewReader(r.Body)
+		if err != nil {
+			panic(http.StatusInternalServerError)
+		}
+		body = z
+	}
+	defer body.Close()
+
+	if err := json.NewDecoder(body).Decode(&wrapper); err != nil {
 		panic(http.StatusInternalServerError)
 	}
 	w.WriteHeader(http.StatusOK)
@@ -88,7 +100,18 @@ func (ks *KentikHttpListener) readBatch(w http.ResponseWriter, r *http.Request) 
 func (ks *KentikHttpListener) readStandard(w http.ResponseWriter, r *http.Request) {
 	var wrapper basic
 
-	if err := json.NewDecoder(r.Body).Decode(&wrapper); err != nil {
+	// Decode body in gzip format if the request header is set this way.
+	body := r.Body
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		z, err := gzip.NewReader(r.Body)
+		if err != nil {
+			panic(http.StatusInternalServerError)
+		}
+		body = z
+	}
+	defer body.Close()
+
+	if err := json.NewDecoder(body).Decode(&wrapper); err != nil {
 		panic(http.StatusInternalServerError)
 	}
 	w.WriteHeader(http.StatusOK)
