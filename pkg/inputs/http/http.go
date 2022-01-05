@@ -53,8 +53,8 @@ func NewHttpListener(ctx context.Context, host string, log logger.Underlying, re
 }
 
 func (ks *KentikHttpListener) RegisterRoutes(r *kmux.Router) {
-	r.HandleFunc(Listen+"/standard", ks.wrap(ks.readStandard))
-	r.HandleFunc(Listen+"/batch", ks.wrap(ks.readBatch))
+	r.HandleFunc(Listen+"/telegraf/standard", ks.wrap(ks.readStandard))
+	r.HandleFunc(Listen+"/telegraf/batch", ks.wrap(ks.readBatch))
 }
 
 type basic struct {
@@ -203,7 +203,7 @@ func (ks *KentikHttpListener) run(ctx context.Context) {
 	deviceTicker := time.NewTicker(DeviceUpdateDuration)
 	defer deviceTicker.Stop()
 
-	ks.Infof("kentik http running")
+	ks.Infof("kentik http running, registered at %s", Listen)
 	for {
 		select {
 		case <-deviceTicker.C:
