@@ -14,6 +14,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	UserTagPrefix = "tags."
+)
+
 // DeviceData holds information about a device, sent via ST, and sent
 // to the portal in writeSNMPWrapper.
 type DeviceData struct {
@@ -147,6 +151,7 @@ type SnmpDeviceConfig struct {
 	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
+	allUserTags         map[string]string
 }
 
 type SnmpTrapConfig struct {
@@ -451,4 +456,38 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig) {
 	if strings.HasPrefix(old.MibProfile, "!") {
 		d.MibProfile = old.MibProfile
 	}
+}
+
+func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
+	d.allUserTags = map[string]string{}
+	if serviceName != "ktranslate" {
+		d.UserTags["container_service"] = serviceName
+	}
+
+	for k, v := range d.UserTags {
+		key := k
+		if !strings.HasPrefix(key, UserTagPrefix) {
+			key = UserTagPrefix + k
+		}
+		d.allUserTags[key] = v
+	}
+}
+
+func (d *SnmpDeviceConfig) SetUserTags(in map[string]string) {
+	for k, v := range d.allUserTags {
+		in[k] = v
+	}
+}
+
+func (d *SnmpDeviceConfig) GetUserTags() map[string]string {
+	if d.allUserTags == nil {
+		return nil
+	}
+
+	out := map[string]string{}
+	for k, v := range d.allUserTags {
+		out[k] = v
+	}
+
+	return out
 }

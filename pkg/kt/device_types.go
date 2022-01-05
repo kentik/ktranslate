@@ -1,6 +1,8 @@
 package kt
 
 import (
+	sfmt "gopkg.in/mcuadros/go-syslog.v2/format"
+
 	"net"
 )
 
@@ -27,7 +29,7 @@ type Device struct {
 	MaxFlowRate   int                   `json:"max_flow_rate"`
 	Customs       []Column              `json:"custom_column_data,omitempty"`
 	CustomStr     string                `json:"custom_columns"`
-	UserTags      map[string]string     `json:"-"`
+	allUserTags   map[string]string
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents
@@ -112,4 +114,20 @@ type Column struct {
 	ID   uint64 `json:"field_id,string"`
 	Name string `json:"col_name"`
 	Type string `json:"col_type"`
+}
+
+func (d *Device) InitUserTags(tags map[string]string) {
+	d.allUserTags = tags
+}
+
+func (d *Device) SetMsgUserTags(in sfmt.LogParts) {
+	for k, v := range d.allUserTags {
+		in[k] = v
+	}
+}
+
+func (d *Device) SetUserTags(in map[string]string) {
+	for k, v := range d.allUserTags {
+		in[k] = v
+	}
 }

@@ -3,7 +3,6 @@ package traps
 import (
 	"fmt"
 	"net"
-	"strings"
 	"sync"
 	"time"
 
@@ -139,13 +138,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	if dev != nil {
 		dst.DeviceName = dev.DeviceName
 		dst.Provider = dev.Provider
-		for k, v := range dev.UserTags {
-			key := k
-			if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
-				key = snmp_util.NRUserTagPrefix + k
-			}
-			dst.CustomStr[key] = v
-		}
+		dev.SetUserTags(dst.CustomStr)
 	} else {
 		dst.DeviceName = addr.IP.String()
 		dst.Provider = kt.ProviderTrapUnknown
