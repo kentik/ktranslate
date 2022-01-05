@@ -13,7 +13,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -134,13 +133,7 @@ func (ks *KentikHttpListener) getJCHF(wrapper *basic, remoteIP string) *kt.JCHF 
 		in.DeviceId = dev.ID
 		in.CompanyId = dev.CompanyID
 		in.SampleRate = dev.SampleRate
-		for k, v := range dev.UserTags {
-			key := k
-			if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
-				key = snmp_util.NRUserTagPrefix + k
-			}
-			in.CustomStr[key] = v
-		}
+		dev.SetUserTags(in.CustomStr)
 	} else {
 		in.DeviceName = remoteIP
 	}
