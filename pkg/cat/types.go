@@ -72,7 +72,7 @@ type Config struct {
 	LogTee            chan string
 	MetricsChan       chan []*kt.JCHF
 	AppMap            string
-	HttpInput         string
+	HttpInput         bool
 	Enricher          string
 }
 

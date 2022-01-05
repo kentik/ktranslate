@@ -56,7 +56,7 @@ func main() {
 		teeLog         = flag.Bool("tee_logs", false, "Tee log messages to sink")
 		appMap         = flag.String("application_map", "", "File containing custom application mappings")
 		syslog         = flag.String("syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
-		httpInput      = flag.String("http.source", "", "Listen for content sent via http. telegraph")
+		httpInput      = flag.Bool("http.source", false, "Listen for content sent via http.")
 		enricher       = flag.String("enricher", "", "Send data to this http url for enrichment.")
 	)
 

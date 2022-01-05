@@ -668,7 +668,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// If we're looking for json over http
-	if kc.config.HttpInput != "" {
+	if kc.config.HttpInput {
 		assureInput()
 		sh, err := ihttp.NewHttpListener(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
 		if err != nil {
