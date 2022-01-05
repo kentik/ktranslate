@@ -21,7 +21,7 @@ func TestFilter(t *testing.T) {
 			FType:     "string",
 		},
 		FilterDef{
-			Dimension: "custom_bigint.foo",
+			Dimension: "custom_bigint.fooII",
 			Operator:  "==",
 			Value:     "12",
 			FType:     "int",

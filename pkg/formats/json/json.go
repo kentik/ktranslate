@@ -16,6 +16,7 @@ const (
 	InstNameNetflowEvent = "netflow-events"
 	InstNameVPCEvent     = "vpc-flow-events"
 	InstNameAWSVPCEvent  = "aws-vpc-flow-events"
+	InstNameHttpEvent    = "http-events"
 )
 
 type JsonFormat struct {
@@ -181,6 +182,8 @@ func strip(in map[string]interface{}) {
 		default:
 			in["instrumentation.name"] = InstNameVPCEvent
 		}
+	case kt.ProviderHttpDevice:
+		in["instrumentation.name"] = InstNameHttpEvent
 	default:
 		in["instrumentation.name"] = InstNameNetflowEvent
 	}

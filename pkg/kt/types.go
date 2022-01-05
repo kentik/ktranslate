@@ -66,6 +66,7 @@ const (
 	ProviderAgent              Provider = "kentik-agent"
 	ProviderFibreChannel       Provider = "kentik-fibre-channel"
 	ProviderTrapUnknown        Provider = "kentik-trap-device"
+	ProviderHttpDevice         Provider = "kentik-http"
 )
 
 const (

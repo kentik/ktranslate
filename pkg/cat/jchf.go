@@ -561,4 +561,14 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]st
 			msg.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, msg.DstAddr)
 		}
 	}
+
+	// If there's an outside enrichment service, send over here.
+	if kc.enricher != nil {
+		new, err := kc.enricher.Enrich(ctx, msgs)
+		if err != nil {
+			kc.log.Errorf("Cannot enrich: %v", err)
+		} else {
+			msgs = new
+		}
+	}
 }

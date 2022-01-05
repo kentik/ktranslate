@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
+	"github.com/kentik/ktranslate/pkg/inputs/http"
 	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -18,6 +19,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
+	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/rule"
 
@@ -70,6 +72,8 @@ type Config struct {
 	LogTee            chan string
 	MetricsChan       chan []*kt.JCHF
 	AppMap            string
+	HttpInput         bool
+	Enricher          string
 }
 
 type KTranslate struct {
@@ -103,6 +107,8 @@ type KTranslate struct {
 	nfs          *flow.KentikDriver
 	rule         *rule.RuleSet
 	syslog       *syslog.KentikSyslog
+	http         *http.KentikHttpListener
+	enricher     *enrich.Enricher
 }
 
 type CustomMapper struct {
