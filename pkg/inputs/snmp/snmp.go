@@ -33,6 +33,7 @@ var (
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
+	ServiceName    = ""
 )
 
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
@@ -345,6 +346,11 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 				}
 			}
 		}
+	}
+
+	// Correctly format all the user tags needed here:
+	for _, device := range ms.Devices {
+		device.InitUserTags(ServiceName)
 	}
 
 	return &ms, nil

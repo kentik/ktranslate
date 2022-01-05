@@ -139,7 +139,7 @@ func main() {
 		cat.RollupsSendDuration = time.Duration(*dumpRollups) * time.Second
 	}
 
-	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, *sinks)
+	kc, err := cat.NewKTranslate(&conf, lc, go_metrics.DefaultRegistry, version.Version.Version, *sinks, bs.ServiceName)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("Cannot start ktranslate: %v", err))
 	}

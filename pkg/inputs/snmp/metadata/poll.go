@@ -11,7 +11,6 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
-	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
@@ -247,13 +246,11 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	}
 
 	// Also any device level tags
-	for k, v := range p.conf.UserTags {
-		key := k
-		if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
-			key = snmp_util.NRUserTagPrefix + k
-		}
-		dst.CustomStr[key] = v
-		dst.CustomMetrics[key] = kt.MetricInfo{Table: kt.DeviceTagTable}
+	cs := map[string]string{}
+	p.conf.SetUserTags(cs)
+	for k, v := range cs {
+		dst.CustomStr[k] = v
+		dst.CustomMetrics[k] = kt.MetricInfo{Table: kt.DeviceTagTable}
 	}
 
 	for intr, id := range dd.InterfaceData {

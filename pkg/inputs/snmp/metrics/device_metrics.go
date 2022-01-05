@@ -303,13 +303,7 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	dst.SrcAddr = dm.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{"PollingHealth": kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}}
-	for k, v := range dm.conf.UserTags {
-		key := k
-		if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
-			key = snmp_util.NRUserTagPrefix + k
-		}
-		dst.CustomStr[key] = v
-	}
+	dm.conf.SetUserTags(dst.CustomStr)
 	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}

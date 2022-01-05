@@ -71,11 +71,11 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 					CompanyID:     root.CompanyID,
 					Customs:       root.Customs,
 					CustomStr:     root.CustomStr,
-					UserTags:      d.UserTags,
 				}
 				if nd.SampleRate == 0 {
 					nd.SampleRate = 1
 				}
+				nd.InitUserTags(d.GetUserTags())
 				s.devicesByName[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}

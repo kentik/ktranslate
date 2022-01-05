@@ -13,7 +13,6 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -181,13 +180,7 @@ func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
 		pts := strings.Split(client, ":")
 		if dev, ok := ks.devices[pts[0]]; ok {
 			msg["device_name"] = dev.Name // Copy in any of these info we get
-			for k, v := range dev.UserTags {
-				key := k
-				if !strings.HasPrefix(key, snmp_util.NRUserTagPrefix) {
-					key = snmp_util.NRUserTagPrefix + k
-				}
-				msg[key] = v
-			}
+			dev.SetMsgUserTags(msg)
 		}
 	}
 

@@ -11,6 +11,11 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"gopkg.in/yaml.v2"
+)
+
+const (
+	UserTagPrefix = "tags."
 )
 
 // DeviceData holds information about a device, sent via ST, and sent
@@ -146,6 +151,7 @@ type SnmpDeviceConfig struct {
 	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
+	allUserTags         map[string]string
 }
 
 type SnmpTrapConfig struct {
@@ -397,6 +403,16 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		}
 		if single == "@global_v3" { // Should this be hard coded like this?
 			conf.useGlobal = true
+		} else if strings.HasPrefix(single, "${") { // get the whole yaml block out of an env var.
+			raw := os.Getenv(single[2 : len(single)-1])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+			raw := loadViaAWSSecrets(single[len(AwsSmPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
 		}
 		*a = V3SNMPConfig(conf)
 	} else {
@@ -440,4 +456,38 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig) {
 	if strings.HasPrefix(old.MibProfile, "!") {
 		d.MibProfile = old.MibProfile
 	}
+}
+
+func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
+	d.allUserTags = map[string]string{}
+	if serviceName != "ktranslate" {
+		d.UserTags["container_service"] = serviceName
+	}
+
+	for k, v := range d.UserTags {
+		key := k
+		if !strings.HasPrefix(key, UserTagPrefix) {
+			key = UserTagPrefix + k
+		}
+		d.allUserTags[key] = v
+	}
+}
+
+func (d *SnmpDeviceConfig) SetUserTags(in map[string]string) {
+	for k, v := range d.allUserTags {
+		in[k] = v
+	}
+}
+
+func (d *SnmpDeviceConfig) GetUserTags() map[string]string {
+	if d.allUserTags == nil {
+		return nil
+	}
+
+	out := map[string]string{}
+	for k, v := range d.allUserTags {
+		out[k] = v
+	}
+
+	return out
 }

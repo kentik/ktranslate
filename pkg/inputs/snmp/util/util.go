@@ -26,8 +26,6 @@ const (
 	CONV_HEXTOIP   = "hextoip"
 	CONV_ENGINE_ID = "engine_id"
 	CONV_REGEXP    = "regexp"
-
-	NRUserTagPrefix = "tags."
 )
 
 var (

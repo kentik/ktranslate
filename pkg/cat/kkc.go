@@ -55,7 +55,7 @@ var (
 	RollupsSendDuration = 15 * time.Second
 )
 
-func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks string) (*KTranslate, error) {
+func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks string, serviceName string) (*KTranslate, error) {
 	kc := &KTranslate{
 		log:      log,
 		registry: registry,
@@ -182,6 +182,9 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 	if len(kc.sinks) == 0 {
 		return nil, fmt.Errorf("No sinks set")
 	}
+
+	// Set snmp know what the service name is:
+	snmp.ServiceName = serviceName
 
 	// Get some randomness
 	rand.Seed(time.Now().UnixNano())

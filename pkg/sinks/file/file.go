@@ -22,6 +22,8 @@ type FileSink struct {
 	location string
 	fd       *os.File
 	mux      sync.RWMutex
+	suffix   string
+	written  int
 }
 
 var (
@@ -40,7 +42,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*FileSink, er
 }
 
 func (s *FileSink) getName() string {
-	return fmt.Sprintf("%s/%d_%d", s.location, time.Now().Unix(), rand.Intn(100000))
+	return fmt.Sprintf("%s/%d_%d%s", s.location, time.Now().Unix(), rand.Intn(100000), s.suffix)
 }
 
 func (s *FileSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
@@ -48,6 +50,11 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 	_, err := os.Stat(*FileDir)
 	if err != nil {
 		return err
+	}
+
+	switch format {
+	case formats.FORMAT_JSON, formats.FORMAT_JSON_FLAT, formats.FORMAT_NRM, formats.FORMAT_NR, formats.FORMAT_ELASTICSEARCH:
+		s.suffix = ".json"
 	}
 
 	// Set up a file first.
@@ -94,10 +101,16 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 				}
 
 				s.mux.Lock()
+				oldName := s.fd.Name()
 				if s.fd != nil {
 					s.fd.Sync()
 					s.fd.Close()
 				}
+				if s.written == 0 {
+					os.Remove(oldName)
+				}
+
+				s.written = 0
 				name := s.getName()
 				f, err := os.Create(name)
 				if err != nil {
@@ -124,16 +137,21 @@ func (s *FileSink) Send(ctx context.Context, payload *kt.Output) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	if s.doWrite && s.fd != nil {
-		_, err := s.fd.Write(payload.Body)
+		written, err := s.fd.Write(payload.Body)
 		if err != nil {
 			s.Infof("Cannot write to %s, %v", s.location, err)
 		}
+		s.written += written
 	}
 }
 
 func (s *FileSink) Close() {
 	if s.fd != nil {
+		oldName := s.fd.Name()
 		s.fd.Close()
+		if s.written == 0 {
+			os.Remove(oldName)
+		}
 	}
 }
 
