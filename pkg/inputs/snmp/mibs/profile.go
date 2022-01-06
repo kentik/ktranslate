@@ -543,9 +543,17 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					}
 				}
 				if strings.HasPrefix(t.Column.Name, "if") {
-					interfaceMetadata[t.Column.Oid] = mib
+					if em, ok := interfaceMetadata[t.Column.Oid]; ok {
+						em.Extend(mib)
+					} else {
+						interfaceMetadata[t.Column.Oid] = mib
+					}
 				} else {
-					deviceMetadata[t.Column.Oid] = mib
+					if em, ok := deviceMetadata[t.Column.Oid]; ok {
+						em.Extend(mib)
+					} else {
+						deviceMetadata[t.Column.Oid] = mib
+					}
 				}
 			}
 		}

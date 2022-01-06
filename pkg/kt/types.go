@@ -184,14 +184,15 @@ type JCHF struct {
 }
 
 type MetricInfo struct {
-	Oid     string        `json:"-"`
-	Mib     string        `json:"-"`
-	Name    string        `json:"-"`
-	Profile string        `json:"-"`
-	Table   string        `json:"-"`
-	Format  string        `json:"-"`
-	Type    string        `json:"-"`
-	PollDur time.Duration `json:"-"`
+	Oid     string          `json:"-"`
+	Mib     string          `json:"-"`
+	Name    string          `json:"-"`
+	Profile string          `json:"-"`
+	Table   string          `json:"-"`
+	Format  string          `json:"-"`
+	Type    string          `json:"-"`
+	PollDur time.Duration   `json:"-"`
+	Tables  map[string]bool `json:"-"`
 }
 
 func (m *MetricInfo) GetType() string {
