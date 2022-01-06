@@ -682,8 +682,8 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 				attrNew["mib-table"] = name.Table
 
 				// See if the metadata knows about this attribute.
-				if tableName, ok := lm.GetTableName(newKey); ok {
-					if tableName != name.Table && tableName != kt.DeviceTagTable {
+				if tableName, allNames, ok := lm.GetTableName(newKey); ok {
+					if !allNames[name.Table] && tableName != kt.DeviceTagTable {
 						continue
 					}
 				} else {
@@ -697,7 +697,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 
 		// Case where metric has no table.
 		if name.Table == "" {
-			if tableName, ok := lm.GetTableName(newKey); ok {
+			if tableName, _, ok := lm.GetTableName(newKey); ok {
 				if tableName != "" && tableName != kt.DeviceTagTable {
 					continue
 				}

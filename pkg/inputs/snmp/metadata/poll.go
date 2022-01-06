@@ -216,7 +216,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 
 			for _, table := range dst.CustomTables {
 				for k, v := range table.Customs {
-					dst.CustomMetrics[k] = kt.MetricInfo{Table: v.TableName}
+					dst.CustomMetrics[k] = kt.MetricInfo{Table: v.TableName, Tables: v.TableNames}
 				}
 			}
 		}

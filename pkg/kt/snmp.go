@@ -31,9 +31,10 @@ type DeviceTableMetadata struct {
 }
 
 type MetaValue struct {
-	TableName string
-	StringVal string
-	IntVal    int64
+	TableName  string
+	TableNames map[string]bool
+	StringVal  string
+	IntVal     int64
 }
 
 func (mv *MetaValue) GetValue() interface{} {
@@ -59,11 +60,18 @@ func NewMetaValue(mib *Mib, sv string, iv int64) MetaValue {
 		iv = 0
 	}
 
-	return MetaValue{
-		TableName: mib.Table,
-		StringVal: strings.TrimSpace(sv),
-		IntVal:    iv,
+	mv := MetaValue{
+		TableName:  mib.Table,
+		TableNames: map[string]bool{mib.Table: true},
+		StringVal:  strings.TrimSpace(sv),
+		IntVal:     iv,
 	}
+
+	for k, _ := range mib.OtherTables {
+		mv.TableNames[k] = true
+	}
+
+	return mv
 }
 
 type DeviceMetricsMetadata struct {
@@ -122,6 +130,7 @@ type V3SNMPConfig struct {
 	ContextEngineID          string `yaml:"context_engine_id"`
 	ContextName              string `yaml:"context_name"`
 	useGlobal                bool
+	origStr                  string
 }
 
 type SnmpDeviceConfig struct {
@@ -276,6 +285,7 @@ type Mib struct {
 	MatchAttr    map[string]*regexp.Regexp
 	lastPoll     time.Time
 	FromExtended bool
+	OtherTables  map[string]bool
 }
 
 func (mb *Mib) String() string {
@@ -299,6 +309,15 @@ func (mb *Mib) IsPollReady() bool { // If there's a poll duration, return false 
 		mb.lastPoll = now
 	}
 	return ready
+}
+
+func (mb *Mib) Extend(nm *Mib) {
+	if mb.OtherTables == nil {
+		mb.OtherTables = map[string]bool{}
+	}
+	if mb.Table != nm.Table {
+		mb.OtherTables[nm.Table] = true
+	}
 }
 
 type LastMetadata struct {
@@ -333,14 +352,14 @@ func (lm *LastMetadata) Missing(new *LastMetadata) []string {
 	return missing
 }
 
-func (lm *LastMetadata) GetTableName(key string) (string, bool) {
+func (lm *LastMetadata) GetTableName(key string) (string, map[string]bool, bool) {
 	if lm == nil {
-		return "", false
+		return "", nil, false
 	}
 	if i, ok := lm.XtraInfo[key]; ok {
-		return i.Table, true
+		return i.Table, i.Tables, true
 	}
-	return "", false
+	return "", nil, false
 }
 
 type DeviceMap map[string]*SnmpDeviceConfig
@@ -391,6 +410,14 @@ func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 type V3SNMP V3SNMPConfig // Need a 2nd type alias to avoid stack overflow on parsing.
 
+// Make sure that things serialize back to how they were.
+func (a *V3SNMPConfig) MarshalYAML() (interface{}, error) {
+	if a.origStr != "" {
+		return a.origStr, nil
+	}
+	return a, nil
+}
+
 // This lets the config get overriden by a global_v3 string.
 func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var conf = V3SNMP{}
@@ -414,6 +441,7 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				return err
 			}
 		}
+		conf.origStr = single // Let us know where this came from.
 		*a = V3SNMPConfig(conf)
 	} else {
 		// Now, see if we need to map in any ENV vars.
