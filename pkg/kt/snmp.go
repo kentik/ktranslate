@@ -122,6 +122,7 @@ type V3SNMPConfig struct {
 	ContextEngineID          string `yaml:"context_engine_id"`
 	ContextName              string `yaml:"context_name"`
 	useGlobal                bool
+	origStr                  string
 }
 
 type SnmpDeviceConfig struct {
@@ -391,6 +392,14 @@ func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 type V3SNMP V3SNMPConfig // Need a 2nd type alias to avoid stack overflow on parsing.
 
+// Make sure that things serialize back to how they were.
+func (a *V3SNMPConfig) MarshalYAML() (interface{}, error) {
+	if a.origStr != "" {
+		return a.origStr, nil
+	}
+	return a, nil
+}
+
 // This lets the config get overriden by a global_v3 string.
 func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var conf = V3SNMP{}
@@ -414,6 +423,7 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				return err
 			}
 		}
+		conf.origStr = single // Let us know where this came from.
 		*a = V3SNMPConfig(conf)
 	} else {
 		// Now, see if we need to map in any ENV vars.
