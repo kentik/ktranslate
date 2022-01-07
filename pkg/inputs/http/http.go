@@ -57,10 +57,10 @@ func (ks *KentikHttpListener) RegisterRoutes(r *kmux.Router) {
 }
 
 type basic struct {
-	Fields    map[string]int64  `json:"fields"`
-	Name      string            `json:"name"`
-	Tags      map[string]string `json:"tags"`
-	Timestamp int64             `json:"timestamp"`
+	Fields    map[string]float64 `json:"fields"`
+	Name      string             `json:"name"`
+	Tags      map[string]string  `json:"tags"`
+	Timestamp int64              `json:"timestamp"`
 }
 
 type batch struct {
@@ -125,8 +125,14 @@ func (ks *KentikHttpListener) getJCHF(wrapper *basic, remoteIP string) *kt.JCHF 
 	in.CustomStr = make(map[string]string)
 	in.CustomInt = make(map[string]int32)
 	in.CustomBigInt = make(map[string]int64)
-	in.EventType = wrapper.Name
+	in.EventType = strings.ReplaceAll(wrapper.Name, ".", "_")
 	in.Provider = kt.ProviderHttpDevice
+	in.SrcAddr = remoteIP
+
+	// Use host for device_name if its set.
+	if host, ok := wrapper.Tags["host"]; ok {
+		remoteIP = host
+	}
 
 	if dev, ok := ks.devices[remoteIP]; ok {
 		in.DeviceName = dev.Name // Copy in any of these info we get
@@ -134,8 +140,6 @@ func (ks *KentikHttpListener) getJCHF(wrapper *basic, remoteIP string) *kt.JCHF 
 		in.CompanyId = dev.CompanyID
 		in.SampleRate = dev.SampleRate
 		dev.SetUserTags(in.CustomStr)
-	} else {
-		in.DeviceName = remoteIP
 	}
 
 	in.Timestamp = wrapper.Timestamp
@@ -143,7 +147,7 @@ func (ks *KentikHttpListener) getJCHF(wrapper *basic, remoteIP string) *kt.JCHF 
 		in.CustomStr[t] = v
 	}
 	for f, v := range wrapper.Fields {
-		in.CustomBigInt[f] = v
+		in.CustomBigInt[f] = int64(v)
 	}
 
 	return in
