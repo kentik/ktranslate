@@ -131,6 +131,7 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 		if device.UseV1 {
 			log.Infof("%s Running with SNMP v1", posit)
 			server.Version = gosnmp.Version1
+			device.NoUseBulkWalkAll = true // v1 snmp doesn't support this.
 		} else {
 			log.Infof("%s Running with SNMP v2c", posit)
 			server.Version = gosnmp.Version2c
