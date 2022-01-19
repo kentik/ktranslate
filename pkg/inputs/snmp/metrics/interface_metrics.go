@@ -107,10 +107,12 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 	deltas := map[string]map[string]uint64{}
 
 	for oid, varName := range im.oidMap {
+		var omib *kt.Mib
 		if mib, ok := im.oidMibMap[oid[1:]]; ok {
 			if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 				continue
 			}
+			omib = mib
 		}
 
 		results, err := snmp_util.WalkOID(ctx, im.conf, oid, server, im.log, "Counter")
@@ -140,14 +142,18 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 				delta = map[string]uint64{}
 				deltas[intId] = delta
 			}
-			switch variable.Type {
-			case gosnmp.Integer:
-				// Since its just an int, keep it without computing a delta.
+			if omib != nil && omib.Format == kt.GaugeMetric {
 				delta[varName] = value
-			default:
-				// Treat as a counter
-				// Calculate the different of this counter here.
-				delta[varName] = im.intValues[intId].SetValueAndReturnDelta(varName, value)
+			} else {
+				switch variable.Type {
+				case gosnmp.Integer:
+					// Since its just an int, keep it without computing a delta.
+					delta[varName] = value
+				default:
+					// Treat as a counter
+					// Calculate the different of this counter here.
+					delta[varName] = im.intValues[intId].SetValueAndReturnDelta(varName, value)
+				}
 			}
 		}
 	}
@@ -220,7 +226,11 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			}
 			dst.CustomBigInt[k] = int64(v)
 			if mib != nil {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: kt.CountMetric, PollDur: mib.PollDur}
+				format := kt.CountMetric
+				if mib.Format != "" {
+					format = mib.Format
+				}
+				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: format, PollDur: mib.PollDur}
 			} else {
 				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName, Format: kt.CountMetric}
 			}

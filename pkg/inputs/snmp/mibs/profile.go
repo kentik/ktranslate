@@ -23,6 +23,7 @@ type OID struct {
 	Conversion string           `yaml:"conversion,omitempty"`
 	PollTime   int              `yaml:"poll_time_sec,omitempty"`
 	MatchAttr  []string         `yaml:"match_attributes,omitempty"`
+	Format     string           `yaml:"format,omitempty"`
 }
 
 type Tag struct {
@@ -373,6 +374,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Mib:          metric.Mib,
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
+				Format:       metric.Symbol.Format,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -413,6 +415,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Mib:          metric.Mib,
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
+				Format:       s.Format,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)

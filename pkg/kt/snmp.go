@@ -286,6 +286,7 @@ type Mib struct {
 	lastPoll     time.Time
 	FromExtended bool
 	OtherTables  map[string]bool
+	Format       string
 }
 
 func (mb *Mib) String() string {
