@@ -286,6 +286,7 @@ type Mib struct {
 	lastPoll     time.Time
 	FromExtended bool
 	OtherTables  map[string]bool
+	Format       string
 }
 
 func (mb *Mib) String() string {
@@ -313,11 +314,9 @@ func (mb *Mib) IsPollReady() bool { // If there's a poll duration, return false 
 
 func (mb *Mib) Extend(nm *Mib) {
 	if mb.OtherTables == nil {
-		mb.OtherTables = map[string]bool{}
+		mb.OtherTables = map[string]bool{mb.Table: true}
 	}
-	if mb.Table != nm.Table {
-		mb.OtherTables[nm.Table] = true
-	}
+	mb.OtherTables[nm.Table] = true
 }
 
 type LastMetadata struct {

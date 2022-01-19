@@ -650,6 +650,7 @@ var keepAcrossTables = map[string]bool{
 	"provider":       true,
 	"sysoid_profile": true,
 	kt.IndexVar:      true,
+	"if_Index":       true,
 }
 
 func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
@@ -682,7 +683,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 				attrNew["mib-table"] = name.Table
 
 				// See if the metadata knows about this attribute.
-				if tableName, allNames, ok := lm.GetTableName(newKey); ok {
+				if tableName, allNames, ok := lm.GetTableName(newKey); ok && len(allNames) > 0 {
 					if !allNames[name.Table] && tableName != kt.DeviceTagTable {
 						continue
 					}

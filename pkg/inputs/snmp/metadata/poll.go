@@ -236,12 +236,12 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	// Now, pass along lookup info if we find any.
 	for k, _ := range dst.CustomStr {
 		if mib, ok := p.lookupMib(k, false); ok {
-			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
 		}
 	}
 	for k, _ := range dst.CustomInt {
 		if mib, ok := p.lookupMib(k, false); ok {
-			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+			dst.CustomMetrics[k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
 		}
 	}
 
@@ -266,7 +266,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		for k, v := range id.ExtraInfo {
 			dst.CustomStr["if."+intr+"."+k] = v
 			if mib, ok := p.lookupMib(k, true); ok {
-				dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table}
+				dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
 			}
 		}
 	}
@@ -290,10 +290,10 @@ func (p *Poller) lookupMib(key string, isInterface bool) (*kt.Mib, bool) {
 		}
 	} else {
 		for _, mib := range p.interfaceMetadataMibs {
-			if mib.Name == key {
+			if mib.Name == key || mib.Name == "if_"+key {
 				return mib, true
 			}
-			if mib.Tag == key {
+			if mib.Tag == key || mib.Tag == "if_"+key {
 				return mib, true
 			}
 		}

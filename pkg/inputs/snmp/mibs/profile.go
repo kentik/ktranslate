@@ -23,6 +23,7 @@ type OID struct {
 	Conversion string           `yaml:"conversion,omitempty"`
 	PollTime   int              `yaml:"poll_time_sec,omitempty"`
 	MatchAttr  []string         `yaml:"match_attributes,omitempty"`
+	Format     string           `yaml:"format,omitempty"`
 }
 
 type Tag struct {
@@ -39,6 +40,7 @@ type MIB struct {
 	MetricTags   []Tag  `yaml:"metric_tags,omitempty"`
 	ForcedType   string `yaml:"forced_type,omitempty"`
 	Symbol       OID    `yaml:"symbol,omitempty"`
+	IsInterface  bool   `yaml:"is_interface,omitempty"`
 	sortKey      string
 	fromExtended bool
 }
@@ -372,6 +374,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Mib:          metric.Mib,
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
+				Format:       metric.Symbol.Format,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -394,7 +397,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
 			}
-			if strings.HasPrefix(metric.Symbol.Name, "if") {
+			if metric.IsInterface || strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
 			} else {
 				deviceMetrics[metric.Symbol.Oid] = mib
@@ -412,6 +415,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Mib:          metric.Mib,
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
+				Format:       s.Format,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -434,7 +438,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
 			}
-			if strings.HasPrefix(s.Name, "if") {
+			if metric.IsInterface || strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
 			} else {
 				deviceMetrics[s.Oid] = mib
@@ -542,7 +546,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 						}
 					}
 				}
-				if strings.HasPrefix(t.Column.Name, "if") {
+				if metric.IsInterface || strings.HasPrefix(t.Column.Name, "if") {
 					if em, ok := interfaceMetadata[t.Column.Oid]; ok {
 						em.Extend(mib)
 					} else {
