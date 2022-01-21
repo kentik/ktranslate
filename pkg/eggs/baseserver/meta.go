@@ -91,6 +91,10 @@ func NewMetaServer(listen string, serviceName string, version version.VersionInf
 	ms.mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
 	ms.mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	ms.mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	ms.mux.Handle("/debug/pprof/block", pprof.Handler("block"))
+	ms.mux.Handle("/debug/pprof/goroutine", pprof.Handler("goroutine"))
+	ms.mux.Handle("/debug/pprof/heap", pprof.Handler("heap"))
+	ms.mux.Handle("/debug/pprof/threadcreate", pprof.Handler("threadcreate"))
 	ms.mux.NewRoute().PathPrefix("/debug/pprof/").HandlerFunc(pprof.Index)
 
 	// info

@@ -73,12 +73,12 @@ func main() {
 	// If we're running in a given mode, set the flags accordingly.
 	setMode(bs, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0)), *sample, *syslog)
 
+	prefix := fmt.Sprintf("KTranslate")
+	lc := logger.NewContextLFromUnderlying(logger.SContext{S: prefix}, bs.Logger)
+
 	if *listenIPPort == "" {
 		bs.Fail("Invalid --listen value")
 	}
-
-	prefix := fmt.Sprintf("KTranslate")
-	lc := logger.NewContextLFromUnderlying(logger.SContext{S: prefix}, bs.Logger)
 
 	conf := cat.Config{
 		Listen:            *listenIPPort,
