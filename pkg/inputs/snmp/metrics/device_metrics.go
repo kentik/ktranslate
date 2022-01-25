@@ -103,6 +103,9 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			continue
 		}
 
+		if len(oidResults) == 0 {
+			dm.log.Warnf("OID failed to return results, Metric Name: %s, Profile: %s", mib.Name, dm.profileName)
+		}
 		for _, result := range oidResults {
 			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
