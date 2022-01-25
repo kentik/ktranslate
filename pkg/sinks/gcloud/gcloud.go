@@ -1,10 +1,12 @@
 package gcloud
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
 	"math/rand"
+	"sync"
 	"time"
 
 	"cloud.google.com/go/storage"
@@ -21,7 +23,10 @@ type GCloudSink struct {
 	registry    go_metrics.Registry
 	metrics     *GCloudMetric
 	prefix      string
+	suffix      string
 	contentType string
+	buf         *bytes.Buffer
+	mux         sync.RWMutex
 }
 
 type GCloudMetric struct {
@@ -33,6 +38,7 @@ var (
 	GCloudBucket      = flag.String("gcloud_bucket", "", "GCloud Storage Bucket to write flows to")
 	GCloudPrefix      = flag.String("gcloud_prefix", "/kentik", "GCloud Storage object prefix")
 	GCloudContentType = flag.String("gcloud_content_type", "application/json", "GCloud Storage Content Type")
+	FlushDurSec       = flag.Int("gcloud_flush_sec", 60, "Create a new output file every this many seconds")
 )
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCloudSink, error) {
@@ -46,6 +52,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCloudSink, 
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_gcloud", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_gcloud", registry),
 		},
+		buf: bytes.NewBuffer(make([]byte, 0)),
 	}, nil
 }
 
@@ -60,17 +67,57 @@ func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compressio
 	}
 	s.client = client
 
-	s.Infof("System connected to gcloud, bucket is %s", s.Bucket)
+	switch compression {
+	case kt.CompressionNone, kt.CompressionNull:
+		s.suffix = ""
+	case kt.CompressionGzip:
+		s.suffix = ".gz"
+	default:
+		s.suffix = "." + string(compression)
+	}
+
+	s.Infof("System connected to gcloud, bucket is %s, dumping on %v", s.Bucket, time.Duration(*FlushDurSec)*time.Second)
+
+	go func() {
+		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
+		defer dumpTick.Stop()
+
+		for {
+			select {
+			case _ = <-dumpTick.C:
+				s.mux.Lock()
+				if s.buf.Len() == 0 {
+					s.mux.Unlock()
+					continue
+				}
+				ob := s.buf
+				s.buf = bytes.NewBuffer(make([]byte, 0, ob.Len()))
+				go s.send(ctx, ob.Bytes())
+				s.mux.Unlock()
+
+			case <-ctx.Done():
+				s.Infof("gcloudSink Done")
+				return
+			}
+		}
+	}()
 
 	return nil
 }
 
 func (s *GCloudSink) Send(ctx context.Context, payload *kt.Output) {
-	go s.send(ctx, payload.Body)
+	s.mux.Lock()
+	defer s.mux.Unlock()
+	s.buf.Write(payload.Body)
+}
+
+func (s *GCloudSink) getName() string {
+	now := time.Now()
+	return fmt.Sprintf("%s/%s/%d_%d%s", s.prefix, now.Format("2006/01/02/15/04"), now.Unix(), rand.Intn(100000), s.suffix)
 }
 
 func (s *GCloudSink) send(ctx context.Context, payload []byte) {
-	wc := s.client.Bucket(s.Bucket).Object(fmt.Sprintf("%s/%d_%d", s.prefix, time.Now().Unix(), rand.Intn(100000))).NewWriter(ctx)
+	wc := s.client.Bucket(s.Bucket).Object(s.getName()).NewWriter(ctx)
 	wc.ContentType = s.contentType
 	if _, err := wc.Write(payload); err != nil {
 		s.Errorf("There was an error when uploading to gcloud: %v.", err)
