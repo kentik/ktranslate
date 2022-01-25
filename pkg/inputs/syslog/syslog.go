@@ -44,7 +44,7 @@ var (
 const (
 	CHAN_SLACK           = 10000
 	DeviceUpdateDuration = 1 * time.Hour
-	InstNameSyslog       = "syslog"
+	InstNameSyslog       = "ktranslate-syslog"
 )
 
 func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi) (*KentikSyslog, error) {
