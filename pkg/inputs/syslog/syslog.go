@@ -44,6 +44,7 @@ var (
 const (
 	CHAN_SLACK           = 10000
 	DeviceUpdateDuration = 1 * time.Hour
+	InstNameSyslog       = "syslog"
 )
 
 func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi) (*KentikSyslog, error) {
@@ -193,7 +194,8 @@ func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
 
 	msg["message"] = msg["content"] // Swap these around for NR.
 	delete(msg, "content")
-	msg["plugin.type"] = kt.PluginSyslog // NR Processing.
+	msg["plugin.type"] = kt.PluginSyslog         // NR Processing.
+	msg["instrumentation.name"] = InstNameSyslog // NR Processing.
 
 	// Remove any empty strings.
 	for k, v := range msg {
