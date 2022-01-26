@@ -653,6 +653,13 @@ var keepAcrossTables = map[string]bool{
 	"if_Index":       true,
 }
 
+var allowSysAttr = map[string]bool{
+	"Uptime":   true,
+	"MinRttMs": true,
+	"MaxRttMs": true,
+	"AvgRttMs": true,
+}
+
 func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
@@ -667,7 +674,7 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 	}
 
 	for k, v := range attr {
-		if metricName != "Uptime" { // Only allow Sys* attributes on uptime.
+		if !allowSysAttr[metricName] { // Only allow Sys* attributes on specific metrics.
 			if strings.HasPrefix(k, "Sys") || k == "src_addr" {
 				continue
 			}
