@@ -30,6 +30,9 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
 	"github.com/kentik/ktranslate/pkg/util/logger"
+
+	"github.com/judwhite/go-svc"
+	wsvc "golang.org/x/sys/windows/svc"
 )
 
 const (
@@ -244,6 +247,18 @@ func (bs *BaseServer) Run(service Service) {
 	bs.spawnHealthCheck(bs.readyAwareSubContext(bs.ctx, "health check"), service)
 	bs.spawnLegacyHealthCheck(bs.readyAwareSubContext(bs.ctx, "legacy health check"), service)
 	bs.spawnMetaServer(bs.readyAwareSubContext(bs.ctx, "metaserver"), service)
+
+	// If windows, turn over to windows process here
+	isWin, err := wsvc.IsWindowsService()
+	if err != nil {
+		bs.Fail(fmt.Sprintf("windows service check error: %v", err))
+	}
+	if isWin {
+		if err := svc.Run(service); err != nil {
+			bs.Fail(fmt.Sprintf("windows service run error: %v", err))
+		}
+		return
+	}
 
 	// run the actual service
 	go func(ctx context.Context) {
