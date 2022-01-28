@@ -52,9 +52,36 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		oids = getFromCustomMap(deviceMetadataMibs)
 	}
 
+	hasDataFull := false
+	max := gosnmp.MaxOids // Some profiles can get pretty big. @TODO, make max user selectable?
+	for i := 0; i < len(oids); i += max {
+		limit := i + max
+		if limit > len(oids) {
+			limit = len(oids)
+		}
+		hasData, err := pollDevice(oids[i:limit], log, server, deviceMetadataMibs, &md)
+		if err != nil {
+			return nil, err
+		}
+		if hasData {
+			hasDataFull = hasData
+		}
+	}
+
+	// If no fields in md were set, return nil.  (Trust me on the (). :)
+	if !hasDataFull {
+		log.Infof("SNMP Device Metadata: No data received")
+		return nil, nil
+	}
+	log.Infof("SNMP Device Metadata: Data received: %+v", md)
+
+	return &md, nil
+}
+
+func pollDevice(oids []string, log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadataMibs map[string]*kt.Mib, md *kt.DeviceMetricsMetadata) (bool, error) {
 	result, err := server.Get(oids)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
 	hasData := false
@@ -67,7 +94,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		if value == nil || pdu.Type == gosnmp.NoSuchObject {
 			if oidInfo, ok := deviceMetadataMibs[oidVal[1:]]; ok {
 				log.Infof("Trying to walk %s -> %s as a table", oidInfo.Name, oidVal)
-				err := getTable(log, server, oidVal, oidInfo, &md)
+				err := getTable(log, server, oidVal, oidInfo, md)
 				if err != nil {
 					log.Warnf("Dropping %s because of nil value or missing object: %+v %v", oidVal, pdu, err)
 				}
@@ -135,14 +162,7 @@ func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadat
 		}
 	}
 
-	// If no fields in md were set, return nil.  (Trust me on the (). :)
-	if !hasData {
-		log.Infof("SNMP Device Metadata: No data received")
-		return nil, nil
-	}
-	log.Infof("SNMP Device Metadata: Data received: %+v", md)
-
-	return &md, nil
+	return hasData, nil
 }
 
 func getFromCustomMap(mibs map[string]*kt.Mib) []string {
