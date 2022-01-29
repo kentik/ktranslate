@@ -696,10 +696,6 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	return kc.sendToSinks(ctx)
 }
 
-func (kc *KTranslate) Close() {
-	// this service uses the ctx object passed in Run, do nothing here
-}
-
 // These are needed in case we are running under windows.
 func (kc *KTranslate) Init(env svc.Environment) error {
 	return nil

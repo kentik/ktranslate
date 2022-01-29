@@ -123,7 +123,7 @@ func (m *GCELogLine) ToJson() []byte {
 	return j
 }
 
-func (m *GCELogLine) ToFlow(log logger.ContextL) (in *kt.JCHF, err error) {
+func (m *GCELogLine) ToFlow(log logger.ContextL, flowSample uint32) (in *kt.JCHF, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			if j, e := json.Marshal(m); e != nil {
@@ -140,7 +140,7 @@ func (m *GCELogLine) ToFlow(log logger.ContextL) (in *kt.JCHF, err error) {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderVPC
-	in.SampleRate = 1
+	in.SampleRate = flowSample
 	vmname, _ := m.GetVMName()
 	in.DeviceName = vmname
 

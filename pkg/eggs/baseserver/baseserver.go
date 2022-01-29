@@ -19,6 +19,7 @@ import (
 
 	"github.com/google/uuid"
 	libhoney "github.com/honeycombio/libhoney-go"
+	"github.com/judwhite/go-svc"
 	"github.com/kentik/ktranslate/pkg/eggs/olly"
 
 	"github.com/kentik/ktranslate/pkg/eggs/concurrent"
@@ -30,9 +31,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
 	"github.com/kentik/ktranslate/pkg/util/logger"
-
-	"github.com/judwhite/go-svc"
-	wsvc "golang.org/x/sys/windows/svc"
 )
 
 const (
@@ -249,13 +247,10 @@ func (bs *BaseServer) Run(service Service) {
 	bs.spawnMetaServer(bs.readyAwareSubContext(bs.ctx, "metaserver"), service)
 
 	// If windows, turn over to windows process here
-	isWin, err := wsvc.IsWindowsService()
-	if err != nil {
-		bs.Fail(fmt.Sprintf("windows service check error: %v", err))
-	}
-	if isWin {
+	if runtime.GOOS == "windows" {
+		defer bs.cancel()
 		if err := svc.Run(service); err != nil {
-			bs.Fail(fmt.Sprintf("windows service run error: %v", err))
+			bs.Fail(fmt.Sprintf("service Run() error: %v", err))
 		}
 		return
 	}
@@ -283,7 +278,6 @@ func (bs *BaseServer) Run(service Service) {
 		select {
 		case <-bs.ctx.Done():
 			olly.QuickC(bs, olly.Op("baseserver.stop"))
-			service.Close()
 			bs.finish()
 			return
 		case sig := <-s:
