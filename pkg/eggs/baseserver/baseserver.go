@@ -248,6 +248,7 @@ func (bs *BaseServer) Run(service Service) {
 
 	// If windows, turn over to windows process here
 	if runtime.GOOS == "windows" {
+		bs.Logger.Infof(bs.LogPrefix, "Running in Windows mode")
 		defer bs.cancel()
 		if err := svc.Run(service); err != nil {
 			bs.Fail(fmt.Sprintf("service Run() error: %v", err))
