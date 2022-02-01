@@ -697,7 +697,9 @@ func copyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 				} else {
 					// If this metric comes from a specific table, only show attributes for this table.
 					if !strings.HasPrefix(newKey, name.Table) {
-						continue
+						if !allNames[name.Table] && tableName != kt.DeviceTagTable {
+							continue
+						}
 					}
 				}
 			}
