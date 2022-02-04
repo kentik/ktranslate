@@ -141,7 +141,12 @@ func pollDevice(oids []string, log logger.ContextL, server *gosnmp.GoSNMP, devic
 			}
 			switch vt := value.(type) {
 			case string:
-				md.Customs[oidName] = vt
+				if oid.Conversion != "" {
+					_, sval := snmp_util.GetFromConv(pdu, oid.Conversion, log)
+					md.Customs[oidName] = sval
+				} else {
+					md.Customs[oidName] = vt
+				}
 			case []byte:
 				if oid.Conversion != "" { // Adjust for any hard coded values here.
 					ival, sval := snmp_util.GetFromConv(pdu, oid.Conversion, log)

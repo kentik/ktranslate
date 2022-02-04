@@ -119,6 +119,7 @@ func TestHWAddr(t *testing.T) {
 
 	tests := map[string][]byte{
 		"39:30:3a:36:31:3a:61:65:3a:66:62:3a:63:32:3a:31:39": []byte("90:61:ae:fb:c2:19"),
+		"3d:48:ef:bf:bd": []byte{0x3d, 0x48, 0xef, 0xbf, 0xbd},
 	}
 
 	for expt, in := range tests {
