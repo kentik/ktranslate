@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/judwhite/go-svc"
 	"github.com/kentik/ktranslate/pkg/eggs/version"
 	"github.com/stretchr/testify/assert"
 )
@@ -53,13 +54,24 @@ func (dumdum *DummyService) RunHealthCheck(ctx context.Context, result *HealthCh
 	dumdum.t.Log("DummyService.RunHealthCheck returning")
 }
 
-func (dumdum *DummyService) Close() {
-	dumdum.t.Log("DummyService.Close returning")
-}
-
 func (dumdum *DummyService) HttpInfo(w http.ResponseWriter, req *http.Request) {
 	// Noop
 	dumdum.t.Log("DummyService.HttpInfo returning")
+}
+
+func (dumdum *DummyService) Init(env svc.Environment) error {
+	dumdum.t.Log("DummyService.Init returning")
+	return nil
+}
+
+func (dumdum *DummyService) Start() error {
+	dumdum.t.Log("DummyService.Start returning")
+	return nil
+}
+
+func (dumdum *DummyService) Stop() error {
+	dumdum.t.Log("DummyService.Stop returning")
+	return nil
 }
 
 func TestBoilerplateAndShutdown(t *testing.T) {

@@ -19,6 +19,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
 	github.com/honeycombio/libhoney-go v1.15.6
 	github.com/json-iterator/go v1.1.12
+	github.com/judwhite/go-svc v1.2.1 // indirect
 	github.com/kentik/api-schema-public v0.0.0-20211011204132-acc22cb40b78
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
@@ -36,6 +37,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/tinylib/msgp v1.1.6 // indirect
+	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
 	google.golang.org/grpc v1.42.0
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v2 v2.4.0

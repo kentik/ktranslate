@@ -3,6 +3,8 @@ package baseserver
 import (
 	"context"
 	"net/http"
+
+	"github.com/judwhite/go-svc"
 )
 
 // Service interface - baseserver/metaserver use these methods to interact with actual services
@@ -13,7 +15,12 @@ type Service interface {
 	GetStatus() []byte                                             // for legacy healthcheck
 	RunHealthCheck(ctx context.Context, result *HealthCheckResult) // new style healthcheck
 
-	Close() // deprecated; select fron ctx.Done() in Run() instead
-
 	HttpInfo(w http.ResponseWriter, req *http.Request) // Hook to provide http info via metaserver
+
+	// These are needed in case we are running under windows.
+	Init(svc.Environment) error
+
+	Start() error
+
+	Stop() error
 }

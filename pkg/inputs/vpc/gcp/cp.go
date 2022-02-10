@@ -31,8 +31,9 @@ type GcpMetric struct {
 }
 
 var (
-	ProjectID = flag.String("gcp.project", "", "Google ProjectID to listen for flows on")
-	SourceSub = flag.String("gcp.sub", "", "Google Sub to listen for flows on")
+	ProjectID  = flag.String("gcp.project", "", "Google ProjectID to listen for flows on")
+	SourceSub  = flag.String("gcp.sub", "", "Google Sub to listen for flows on")
+	SampleRate = flag.Float64("gcp.sample", 1, "Sample rate of the vpc export (as defined in the VPC setup)")
 
 	ERROR_SLEEP_TIME = 20 * time.Second
 )
@@ -64,10 +65,13 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 		return nil, fmt.Errorf("GCP Subscription not found: %s", *SourceSub)
 	}
 
-	go vpc.runSubscription(ctx, sub, client)
-	go vpc.checkQOut(ctx)
+	// Calulate how much to adjust sample rate. This needs to be an int for us, from the % based input which google uses.
+	flowSample := getSampleRate(*SampleRate)
 
-	vpc.Infof("Running GCP subscription on project: %s, sub: %s", *ProjectID, *SourceSub)
+	go vpc.runSubscription(ctx, sub, client)
+	go vpc.checkQOut(ctx, flowSample)
+
+	vpc.Infof("Running GCP subscription on project: %s, sub: %s, sampleRate %d", *ProjectID, *SourceSub, flowSample)
 
 	return vpc, nil
 }
@@ -127,7 +131,7 @@ func (vpc *GcpVpc) runSubscription(ctx context.Context, sub *pubsub.Subscription
 	}
 }
 
-func (vpc *GcpVpc) checkQOut(ctx context.Context) {
+func (vpc *GcpVpc) checkQOut(ctx context.Context, flowSample uint32) {
 	sendTicker := time.NewTicker(kt.SendBatchDuration)
 	defer sendTicker.Stop()
 	batch := make([]*kt.JCHF, 0, vpc.maxBatchSize)
@@ -136,7 +140,7 @@ func (vpc *GcpVpc) checkQOut(ctx context.Context) {
 	for {
 		select {
 		case rec := <-vpc.recs:
-			log, err := rec.ToFlow(vpc)
+			log, err := rec.ToFlow(vpc, flowSample)
 			if err != nil {
 				vpc.Errorf("Cannot process VPC flow: %v", err)
 				continue
@@ -158,4 +162,34 @@ func (vpc *GcpVpc) checkQOut(ctx context.Context) {
 			return
 		}
 	}
+}
+
+// Convert from a % based sampling number to a 1:X style one.
+func getSampleRate(sr float64) uint32 {
+	if sr > 1 { // Doesn't make sense if more than 1 but just assume 1.
+		return 1
+	}
+	if sr < 0.00001 { // Lower bound check to make math easier.
+		return 100000
+	}
+
+	// x / y = sr, solve for x. Then reduce down to smallest y.
+	top := sr * 10000.0
+	bottom := 10000.0
+	x := int(top)
+	y := int(bottom)
+
+	// Now, reduce to lowest terms
+	//Calculate GCD
+	c := x % y
+	for {
+		if c <= 0 {
+			break
+		}
+		y = x
+		x = c
+		c = x % y
+	}
+	gcd := float64(x)
+	return uint32(bottom / gcd)
 }

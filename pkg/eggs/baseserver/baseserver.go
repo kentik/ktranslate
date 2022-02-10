@@ -19,6 +19,7 @@ import (
 
 	"github.com/google/uuid"
 	libhoney "github.com/honeycombio/libhoney-go"
+	"github.com/judwhite/go-svc"
 	"github.com/kentik/ktranslate/pkg/eggs/olly"
 
 	"github.com/kentik/ktranslate/pkg/eggs/concurrent"
@@ -245,6 +246,16 @@ func (bs *BaseServer) Run(service Service) {
 	bs.spawnLegacyHealthCheck(bs.readyAwareSubContext(bs.ctx, "legacy health check"), service)
 	bs.spawnMetaServer(bs.readyAwareSubContext(bs.ctx, "metaserver"), service)
 
+	// If windows, turn over to windows process here
+	if runtime.GOOS == "windows" {
+		bs.Logger.Infof(bs.LogPrefix, "Running in Windows mode")
+		defer bs.cancel()
+		if err := svc.Run(service); err != nil {
+			bs.Fail(fmt.Sprintf("service Run() error: %v", err))
+		}
+		return
+	}
+
 	// run the actual service
 	go func(ctx context.Context) {
 		setReady(ctx)
@@ -268,7 +279,6 @@ func (bs *BaseServer) Run(service Service) {
 		select {
 		case <-bs.ctx.Done():
 			olly.QuickC(bs, olly.Op("baseserver.stop"))
-			service.Close()
 			bs.finish()
 			return
 		case sig := <-s:
