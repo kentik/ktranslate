@@ -24,6 +24,7 @@ type DeviceMetrics struct {
 	metrics     *kt.SnmpDeviceMetric
 	profileName string
 	oids        map[string]*kt.Mib
+	missing     map[string]bool
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -50,6 +51,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		metrics:     metrics,
 		profileName: profile.GetProfileName(conf.InstrumentationName),
 		oids:        oidMap,
+		missing:     map[string]bool{},
 	}
 }
 
@@ -87,6 +89,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	var results []wrapper
 	m := map[string]*deviceMetricRow{}
 
+	missing := int64(0)
 	for oid, mib := range dm.oids {
 		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 			continue
@@ -104,12 +107,21 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 
 		if len(oidResults) == 0 {
-			dm.log.Warnf("OID %s failed to return results, Metric Name: %s, Profile: %s", oid, mib.Name, dm.profileName)
+			missing++
+			if _, ok := dm.missing[oid]; ok {
+				dm.log.Debugf("OID %s failed to return results, Metric Name: %s, Profile: %s", oid, mib.Name, dm.profileName)
+			} else {
+				dm.missing[oid] = true
+				dm.log.Warnf("OID %s failed to return results, Metric Name: %s, Profile: %s", oid, mib.Name, dm.profileName)
+			}
 		}
 		for _, result := range oidResults {
 			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
 	}
+
+	// Update the number of missing metrics metric here.
+	dm.metrics.Missing.Update(missing)
 
 	// Get uptime manually here.
 	var uptime int64
