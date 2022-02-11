@@ -349,6 +349,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dm.conf.SetUserTags(dst.CustomStr)
 
 	return []*kt.JCHF{dst}, nil
 }
