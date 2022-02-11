@@ -1,6 +1,6 @@
 # build ktranslate
 FROM golang:1.17-alpine as build
-RUN apk add -U libpcap-dev alpine-sdk bash
+RUN apk add -U libpcap-dev alpine-sdk bash libcap
 COPY . /src
 WORKDIR /src
 ARG KENTIK_KTRANSLATE_VERSION
@@ -46,6 +46,9 @@ RUN ls -lah /etc/ktranslate ; ln -sv /etc/ktranslate /etc/profiles ; ls -lah /et
 RUN ln -sv /etc/ktranslate/mibs.db /etc/mib.db ; ls -lah /etc/mib.db/
 
 COPY --from=build /src/bin/ktranslate /usr/local/bin/ktranslate
+COPY --from=build /usr/sbin/setcap /usr/sbin/setcap
+COPY --from=build /usr/lib/libcap.so.2 /usr/lib/libcap.so.2
+RUN setcap cap_net_raw=+ep /usr/local/bin/ktranslate
 
 EXPOSE 8082
 
