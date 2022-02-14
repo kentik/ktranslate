@@ -38,6 +38,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to Quay.IO
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_LOGIN_TOKEN }}
+
       - name: Install dependencies
         run: sudo apt-get install make libpcap-dev golint
 
@@ -61,7 +68,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:latest, kentik/ktranslate:v2
+          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:latest, kentik/ktranslate:v2 quay.io/kentik/ktranslate:v2, quay.io/kentik/ktranslate:latest
           build-args: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
             KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
