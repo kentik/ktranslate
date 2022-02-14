@@ -284,6 +284,10 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			dst.CustomMetrics["MaxRttMs"] = pings[0].CustomMetrics["MaxRttMs"]
 			dst.CustomBigInt["AvgRttMs"] = pings[0].CustomBigInt["AvgRttMs"]
 			dst.CustomMetrics["AvgRttMs"] = pings[0].CustomMetrics["AvgRttMs"]
+			dst.CustomBigInt["StdDevRtt"] = pings[0].CustomBigInt["StdDevRtt"]
+			dst.CustomMetrics["StdDevRtt"] = pings[0].CustomMetrics["StdDevRtt"]
+			dst.CustomBigInt["PacketLossPct"] = pings[0].CustomBigInt["PacketLossPct"]
+			dst.CustomMetrics["PacketLossPct"] = pings[0].CustomMetrics["PacketLossPct"]
 		}
 	}
 
@@ -349,6 +353,10 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
+	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomBigInt["PacketLossPct"] = int64(stats.PacketLoss * 1000.)
+	dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dm.conf.SetUserTags(dst.CustomStr)
 
 	return []*kt.JCHF{dst}, nil
