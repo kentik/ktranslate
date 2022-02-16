@@ -66,8 +66,8 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		// See if there's a device comment for this profile.
 		dev := profile.GetDeviceSysComment(conf.OID)
 		if dev != "" {
-			log.Infof("Adding model tag %s", dev)
-			conf.AddUserTag("kt.model", dev)
+			log.Debugf("Adding model tag %s", dev)
+			conf.AddUserTag("kentik.model", dev)
 		}
 	}
 
