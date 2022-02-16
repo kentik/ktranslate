@@ -1,6 +1,8 @@
 package mibs
 
 import (
+	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"regexp"
@@ -60,8 +62,13 @@ type Profile struct {
 	Provider         kt.Provider       `yaml:"provider,omitempty"`
 	NoUseBulkWalkAll bool              `yaml:"no_use_bulkwalkall"`
 	Matches          map[string]string `yaml:"matches"`
+	SysMap           map[string]string
 	extended         bool
 }
+
+var (
+	commentRE = regexp.MustCompile(`\- (.*?)\#(.*)$`)
+)
 
 func (p *Profile) GetProfileName(override string) string {
 	if override != "" { // This can override what is set as the profile name.
@@ -110,6 +117,9 @@ func (p *Profile) merge(ep *Profile) {
 		p.Metrics = append(p.Metrics, m)
 	}
 	p.MetricTags = append(p.MetricTags, ep.MetricTags...)
+	for k, v := range ep.SysMap {
+		p.SysMap[k] = v
+	}
 }
 
 func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
@@ -570,6 +580,28 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 	return deviceMetadata, interfaceMetadata
 }
 
+func (p *Profile) GetDeviceSysComment(sysid string) string {
+	if strings.HasPrefix(sysid, ".") {
+		sysid = sysid[1:]
+	}
+
+	// If we have one directly matching, just return this.
+	if p, ok := p.SysMap[sysid]; ok {
+		return p
+	}
+
+	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
+	pts := strings.Split(sysid, ".")
+	for i := len(pts); i > 0; i-- {
+		check := strings.Join(pts[0:i], ".") + ".*"
+		if p, ok := p.SysMap[check]; ok {
+			return p
+		}
+	}
+
+	return ""
+}
+
 func (p *Profile) GetMibs() map[string]bool {
 	mibs := map[string]bool{}
 	for _, metric := range p.Metrics {
@@ -592,6 +624,20 @@ func (mdb *MibDB) parseMibFromYml(fname string, file os.DirEntry, extends map[st
 
 	// Keep this in case someone references this file
 	extends[file.Name()] = &t
+
+	// We also want to pull out any commends on these sysoids to use as attributes.
+	sysidComments := map[string]string{}
+	scanner := bufio.NewScanner(bytes.NewBuffer(data))
+	for scanner.Scan() {
+		matches := commentRE.FindSubmatch(scanner.Bytes())
+		if len(matches) >= 3 {
+			sysidComments[string(bytes.TrimSpace(matches[1]))] = string(bytes.TrimSpace(matches[2]))
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		mdb.log.Errorf("Error with scanning file: %s %v", file.Name(), err)
+	}
+	t.SysMap = sysidComments
 
 	// For each sysobjid listed, add this file into our map.
 	for _, sysid := range t.Sysobjectid {

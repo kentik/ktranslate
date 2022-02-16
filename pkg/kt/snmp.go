@@ -487,6 +487,17 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig) {
 	}
 }
 
+func (d *SnmpDeviceConfig) AddUserTag(k string, v string) {
+	if d.allUserTags == nil {
+		d.allUserTags = map[string]string{}
+	}
+	key := k
+	if !strings.HasPrefix(key, UserTagPrefix) {
+		key = UserTagPrefix + k
+	}
+	d.allUserTags[key] = v
+}
+
 func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
 	d.allUserTags = map[string]string{}
 	if serviceName != "ktranslate" {

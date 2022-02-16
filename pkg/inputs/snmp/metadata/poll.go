@@ -62,6 +62,13 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 				}
 			}
 		}
+
+		// See if there's a device comment for this profile.
+		dev := profile.GetDeviceSysComment(conf.OID)
+		if dev != "" {
+			log.Infof("Adding model tag %s", dev)
+			conf.AddUserTag("kt.model", dev)
+		}
 	}
 
 	// Load any attribute level whiltelist info here.
