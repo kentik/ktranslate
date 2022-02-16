@@ -137,26 +137,37 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	var device kt.SnmpDeviceConfig
 	var md *kt.DeviceMetricsMetadata
 	var err error
-	if conf.Disco.DefaultV3 != nil {
-		device = kt.SnmpDeviceConfig{
-			DeviceName: result.Name,
-			DeviceIP:   result.Host.String(),
-			Community:  "", // Run using v3 here.
-			UseV1:      conf.Disco.UseV1,
-			V3:         conf.Disco.DefaultV3,
-			Debug:      conf.Disco.Debug,
-			Port:       uint16(conf.Disco.Ports[0]),
-			Checked:    time.Now(),
+	if conf.Disco.DefaultV3 != nil || len(conf.Disco.OtherV3s) > 0 {
+		v3configs := conf.Disco.OtherV3s // Need to keep default seperate for backwords compatibility.
+		if v3configs == nil {
+			v3configs = make([]*kt.V3SNMPConfig, 0)
 		}
-		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
-		if err != nil {
-			log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-			return
+		if conf.Disco.DefaultV3 != nil {
+			v3configs = append(v3configs, conf.Disco.DefaultV3)
 		}
-		md, err = metadata.GetDeviceMetadata(log, serv, nil)
-		if err != nil {
-			log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
-			return
+
+		for _, config := range v3configs { // Now loop over all the possible configs.
+			testConfig := config // Capture this as a local var.
+			device = kt.SnmpDeviceConfig{
+				DeviceName: result.Name,
+				DeviceIP:   result.Host.String(),
+				Community:  "", // Run using v3 here.
+				UseV1:      conf.Disco.UseV1,
+				V3:         testConfig,
+				Debug:      conf.Disco.Debug,
+				Port:       uint16(conf.Disco.Ports[0]),
+				Checked:    time.Now(),
+			}
+			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
+			if err != nil {
+				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
+				return
+			}
+			md, err = metadata.GetDeviceMetadata(log, serv, nil)
+			if err != nil {
+				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
+				continue
+			}
 		}
 	} else { // Loop over all possibe v2c options here.
 		for _, community := range conf.Disco.DefaultCommunities {
@@ -165,7 +176,6 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				DeviceIP:   result.Host.String(),
 				Community:  community,
 				UseV1:      conf.Disco.UseV1,
-				V3:         conf.Disco.DefaultV3,
 				Debug:      conf.Disco.Debug,
 				Port:       uint16(conf.Disco.Ports[0]),
 				Checked:    time.Now(),

@@ -172,18 +172,19 @@ type SnmpTrapConfig struct {
 }
 
 type SnmpDiscoConfig struct {
-	Cidrs              StringArray   `yaml:"cidrs"`
-	Debug              bool          `yaml:"debug"`
-	Ports              []int         `yaml:"ports"`
-	DefaultCommunities []string      `yaml:"default_communities"`
-	UseV1              bool          `yaml:"use_snmp_v1"`
-	DefaultV3          *V3SNMPConfig `yaml:"default_v3"`
-	AddDevices         bool          `yaml:"add_devices"`
-	AddAllMibs         bool          `yaml:"add_mibs"`
-	Threads            int           `yaml:"threads"`
-	ReplaceDevices     bool          `yaml:"replace_devices"`
-	NoDedup            bool          `yaml:"no_dedup_engine_id,omitempty"`
-	CidrOrig           string        `yaml:"-"`
+	Cidrs              StringArray     `yaml:"cidrs"`
+	Debug              bool            `yaml:"debug"`
+	Ports              []int           `yaml:"ports"`
+	DefaultCommunities []string        `yaml:"default_communities"`
+	UseV1              bool            `yaml:"use_snmp_v1"`
+	DefaultV3          *V3SNMPConfig   `yaml:"default_v3"`
+	OtherV3s           []*V3SNMPConfig `yaml:"other_v3s,omitempty"`
+	AddDevices         bool            `yaml:"add_devices"`
+	AddAllMibs         bool            `yaml:"add_mibs"`
+	Threads            int             `yaml:"threads"`
+	ReplaceDevices     bool            `yaml:"replace_devices"`
+	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
+	CidrOrig           string          `yaml:"-"`
 }
 
 type SnmpGlobalConfig struct {
