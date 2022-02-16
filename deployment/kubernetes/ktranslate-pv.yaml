@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ktranslate-discovery
+spec:
+  selector:
+    matchLabels:
+      app: ktranslate-discovery
+  template:
+    metadata:
+      labels:
+        app: ktranslate-discovery
+    spec:
+      containers:
+      - name: discovery
+        image: docker.io/kentik/ktranslate:v2
+        imagePullPolicy: Always
+        args:
+          - -snmp
+          - /data/snmp.yaml
+          - -log_level=info
+          - -snmp_discovery=true
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+          requests:
+            cpu: 500m
+            memory: 128Mi
+        volumeMounts:
+          - name: ktranslate-discovery-claim
+            mountPath: /data
+      volumes:
+        - name: ktranslate-discovery-claim
+          hostPath:
+            path: /mnt/data/
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ktranslate
+spec:
+  selector:
+    matchLabels:
+      app: ktranslate
+  template:
+    metadata:
+      labels:
+        app: ktranslate
+    spec:
+      containers:
+      - name: ktranslate
+        image: docker.io/kentik/ktranslate:v2
+        imagePullPolicy: Always
+        args:
+          - --listen=0.0.0.0:8082
+          - --metalisten=0.0.0.0:8083
+          - --snmp=/data/snmp.yaml
+          - --log_level=info
+          - --nf.source=sflow
+          - --nf.addr=0.0.0.0
+          - --nf.port=6343
+          - --sinks=prometheus
+          - --format=prometheus
+          - --prom_listen=:8084
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+          requests:
+            cpu: 500m
+            memory: 128Mi
+        ports:
+        - name: firehose
+          containerPort: 8082
+        - name: metadata
+          containerPort: 8083
+        - name: prometheus
+          containerPort: 8084
+        - name: sflow
+          containerPort: 6343
+          protocol: UDP
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metadata
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metadata
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+          - name: ktranslate-discovery-claim
+            mountPath: /data
+      volumes:
+        - name: ktranslate-discovery-claim
+          hostPath:
+            path: /mnt/data/
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-firehose
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 8082
+    name: firehose
+    targetPort: 8082
+    protocol: TCP
+  selector:
+    app: ktranslate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-metadata
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 8083
+    name: metadata
+    targetPort: 8083
+    protocol: TCP
+  selector:
+    app: ktranslate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-prom
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 8084
+    name: prom
+    targetPort: 8084
+    protocol: TCP
+  selector:
+    app: ktranslate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-sflow
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 6343
+    name: sflow
+    targetPort: 6343
+    protocol: UDP
+  selector:
+    app: ktranslate
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ktranslate-discovery-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ktranslate-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
