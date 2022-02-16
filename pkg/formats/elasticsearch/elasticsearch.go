@@ -207,8 +207,10 @@ func strip(in map[string]interface{}) {
 			continue // Always pass along even if 0.
 		}
 		if k == "timestamp" { // Convert to the ES native timestamp format.
-			ts := time.Unix(v.(int64), 0)
-			in[k] = ts.Format(time.RFC3339)
+			if ints, ok := v.(int64); ok {
+				ts := time.Unix(ints, 0)
+				in["timestamp_str"] = ts.Format(time.RFC3339)
+			}
 			continue
 		}
 		switch tv := v.(type) {
