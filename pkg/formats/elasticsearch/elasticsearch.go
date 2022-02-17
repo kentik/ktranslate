@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -142,8 +143,8 @@ func (f *ElasticsearchFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) 
 func (f *ElasticsearchFormat) handleSynth(in *kt.JCHF) map[string]interface{} {
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := in.Flatten()
-	strip(attr)
 
+	// Map metrics to better names.
 	for m, name := range metrics {
 		if _, ok := attr[m]; ok {
 			attr[name.Name] = attr[m]
@@ -159,6 +160,8 @@ func (f *ElasticsearchFormat) handleSynth(in *kt.JCHF) map[string]interface{} {
 			delete(attr, "error_cause/trace_route")
 		}
 	}
+
+	strip(attr) // Take out the rest here.
 
 	return attr
 }
@@ -187,12 +190,28 @@ var (
 		"trf_termination":     true,
 		"simple_trf_prof":     true,
 	}
+
+	KeepAttrs = map[string]bool{
+		"lost": true,
+		"sent": true,
+	}
 )
 
 func strip(in map[string]interface{}) {
 	for k, v := range in {
 		if DroppedAttrs[k] {
 			delete(in, k) // Skip.
+			continue
+		}
+		if KeepAttrs[k] {
+			continue // Always pass along even if 0.
+		}
+		if k == "timestamp" { // Convert to the ES native timestamp format.
+			if ints, ok := v.(int64); ok {
+				ts := time.Unix(ints, 0)
+				in["timestamp_str"] = ts.Format(time.RFC3339)
+			}
+			continue
 		}
 		switch tv := v.(type) {
 		case string:
