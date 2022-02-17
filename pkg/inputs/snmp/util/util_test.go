@@ -191,3 +191,19 @@ func TestRegex(t *testing.T) {
 		assert.Equal(expt, ival, "%s", in)
 	}
 }
+
+func TestToOne(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+
+	tests := map[string]int64{
+		"lalalalaal": 1,
+		"foofoffofo": 1,
+	}
+
+	for in, expt := range tests {
+		pdu := gosnmp.SnmpPDU{Value: []byte(in)}
+		ival, _ := GetFromConv(pdu, CONV_ONE, l)
+		assert.Equal(expt, ival, "%s", in)
+	}
+}

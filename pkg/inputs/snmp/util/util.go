@@ -26,6 +26,7 @@ const (
 	CONV_HEXTOIP   = "hextoip"
 	CONV_ENGINE_ID = "engine_id"
 	CONV_REGEXP    = "regexp"
+	CONV_ONE       = "to_one"
 )
 
 var (
@@ -250,6 +251,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 		return hexToIP(bv)
 	case CONV_ENGINE_ID:
 		return engineID(bv)
+	case CONV_ONE:
+		return toOne(bv)
 	default:
 		// Otherwise, try out some custom conversions.
 		split := strings.Split(conv, ":")
@@ -359,4 +362,9 @@ func fromRegexp(bv []byte, reg string) (int64, string) {
 		return 0, string(res[1])
 	}
 	return int64(ival), string(res[1]) // Parsed as int but return both just in case.
+}
+
+// This one is used for certain string valued oids which we want to poll as metrics. Just converts to 1.
+func toOne(bv []byte) (int64, string) {
+	return 1, string(bv)
 }
