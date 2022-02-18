@@ -20,8 +20,6 @@ type Poller struct {
 	server                *gosnmp.GoSNMP
 	interval              time.Duration
 	interfaceMetadata     *InterfaceMetadata
-	gotDeviceMetadata     bool
-	lastDeviceMetadata    *kt.DeviceMetricsMetadata
 	jchfChan              chan []*kt.JCHF
 	conf                  *kt.SnmpDeviceConfig
 	metrics               *kt.SnmpDeviceMetric
@@ -93,7 +91,6 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		server:                server,
 		interval:              DEFAULT_INTERVAL,
 		interfaceMetadata:     NewInterfaceMetadata(interfaceMetadataMibs, log),
-		gotDeviceMetadata:     false,
 		jchfChan:              jchfChan,
 		metrics:               metrics,
 		deviceMetadataMibs:    deviceMetadataMibs,
@@ -170,20 +167,12 @@ func (p *Poller) PollSNMPMetadata(ctx context.Context) (*kt.DeviceData, error) {
 		}
 	}
 
-	// Get device-level metadata -- sysDescr and the like, but only once.
-	// (But retry on failure or blank data.)
-	if !p.gotDeviceMetadata {
-		deviceMetadata, err := GetDeviceMetadata(p.log, p.server, p.deviceMetadataMibs)
-		if err != nil {
-			return nil, err
-		}
-		if deviceMetadata != nil {
-			p.gotDeviceMetadata = true
-			p.lastDeviceMetadata = deviceMetadata
-			deviceData.DeviceMetricsMetadata = deviceMetadata
-		}
-	} else {
-		deviceData.DeviceMetricsMetadata = p.lastDeviceMetadata
+	deviceMetadata, err := GetDeviceMetadata(p.log, p.server, p.deviceMetadataMibs)
+	if err != nil {
+		return nil, err
+	}
+	if deviceMetadata != nil {
+		deviceData.DeviceMetricsMetadata = deviceMetadata
 	}
 
 	return deviceData, nil
