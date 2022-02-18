@@ -207,6 +207,9 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	if md.EngineID != "" {
 		device.EngineID = md.EngineID
 	}
+	if device.DeviceName == "" { // If for whatever reason we can't get a name, fall back to IP.
+		device.DeviceName = device.DeviceIP
+	}
 	log.Infof("%s Success connecting to %s -- %v", posit, result.Host.String(), md)
 
 	// Stick in the profile too for future use.
