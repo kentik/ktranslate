@@ -65,7 +65,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		log:              log,
 		metrics:          metrics,
 		server:           server,
-		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, interfaceMetricMibs, profile, log),
+		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, interfaceMetricMibs, profile, counterTimeSec, log),
 		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, deviceMetricMibs, profile, log),
 		counterTimeSec:   counterTimeSec,
 		dropIfOutside:    dropIfOutside,

@@ -51,14 +51,15 @@ type InterfaceMetrics struct {
 	// evolve, so let's be careful.
 	mux sync.Mutex
 
-	intValues   map[string]*counters.CounterSet
-	oidMap      map[string]string
-	nameOidMap  map[string]string
-	oidMibMap   map[string]*kt.Mib
-	profileName string
+	intValues    map[string]*counters.CounterSet
+	oidMap       map[string]string
+	nameOidMap   map[string]string
+	oidMibMap    map[string]*kt.Mib
+	profileName  string
+	tickDuration int
 }
 
-func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *InterfaceMetrics {
+func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, tickDurationSec int, log logger.ContextL) *InterfaceMetrics {
 	oidMap := make(map[string]string)
 	for oid, m := range profileMetrics {
 		noid := oid
@@ -76,15 +77,16 @@ func NewInterfaceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, 
 	}
 
 	return &InterfaceMetrics{
-		log:         log,
-		gconf:       gconf,
-		conf:        conf,
-		metrics:     metrics,
-		oidMap:      oidMap,
-		nameOidMap:  nameOidMap,
-		oidMibMap:   profileMetrics,
-		intValues:   make(map[string]*counters.CounterSet),
-		profileName: profile.GetProfileName(conf.InstrumentationName),
+		log:          log,
+		gconf:        gconf,
+		conf:         conf,
+		metrics:      metrics,
+		oidMap:       oidMap,
+		nameOidMap:   nameOidMap,
+		oidMibMap:    profileMetrics,
+		intValues:    make(map[string]*counters.CounterSet),
+		profileName:  profile.GetProfileName(conf.InstrumentationName),
+		tickDuration: tickDurationSec * 100, // Convert to 100's of sec.
 	}
 }
 
@@ -256,6 +258,8 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 
 		if uptimeDelta > 0 {
 			dst.CustomBigInt[Uptime] = int64(uptimeDelta)
+		} else {
+			dst.CustomBigInt[Uptime] = int64(im.tickDuration)
 		}
 
 		dst.CustomMetrics = metrics // Add this in so that we know what metrics to pull out down the road.
