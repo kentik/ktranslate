@@ -34,7 +34,7 @@ var (
 	}()
 )
 
-// Poll device-level metadata, which we only need once(?).  Works for (at least) Juniper, Cisco, and Arista.
+// Poll device-level metadata.
 func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadataMibs map[string]*kt.Mib) (*kt.DeviceMetricsMetadata, error) {
 	md := kt.DeviceMetricsMetadata{
 		Customs:    map[string]string{},
