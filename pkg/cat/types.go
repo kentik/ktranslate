@@ -135,7 +135,7 @@ type hc struct {
 	JCHFQ          int64
 	AlphaQDrop     float64
 	InputQ         float64
-	InputQLen      float64
+	InputQLen      int64
 	Sinks          map[sinks.Sink]map[string]float64
 	SnmpDeviceData map[string]map[string]float64
 	Inputs         map[string]map[string]float64
@@ -155,6 +155,6 @@ type KKCMetric struct {
 	JCHFQ          go_metrics.Gauge
 	AlphaQDrop     go_metrics.Meter
 	InputQ         go_metrics.Meter
-	InputQLen      go_metrics.Meter
+	InputQLen      go_metrics.Gauge
 	SnmpDeviceData *kt.SnmpMetricSet
 }
