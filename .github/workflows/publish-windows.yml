@@ -52,11 +52,36 @@ jobs:
 
       - name: Run testing
         run: make test
+        
+      - name: Archive binary and config artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: win-build-artifacts
+          path: |
+            config
+            bin
 
+  build-msi:
+    runs-on: windows-2019
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0   
+      
+      - name: Fetch artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: win-build-artifacts
+          path: "."
+          
       - name: Build MSI
         run: |
-          wixl --define Version=`date +"%Y.%m.%d"` --define Platform=x86 --define Path=./ --output ktranslate.msi ktranslate.wxs
-
+          $env:ProductCode = [guid]::NewGuid().ToString()
+          & "C:\Program Files (x86)\WiX Toolset v3.11\bin\candle.exe" -dVersion="$(Get-Date -Format 'yy.MM.dd')" -dPath="./" -out ktranslate.wixobj  -ext WixUtilExtension -ext WixUIExtension ktranslate.wxs -nologo
+          & "C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe" ktranslate.wixobj -out ktranslate.msi  -ext WixUtilExtension  -ext WixUIExtension -nologo
+      
       - name: Publish MSI
         uses: actions/upload-artifact@v2
         with:
