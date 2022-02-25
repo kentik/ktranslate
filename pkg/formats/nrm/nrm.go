@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/kentik/ktranslate/pkg/formats/nrm/events"
 	"github.com/kentik/ktranslate/pkg/formats/util"
@@ -45,6 +46,7 @@ type NRMFormat struct {
 	invalids     map[string]bool
 	mux          sync.RWMutex
 	demo         *Demozer
+	seenInvalid  bool
 
 	EventChan chan []byte
 }
@@ -117,6 +119,10 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.
 	if err != nil {
 		return nil, err
+	}
+
+	if !utf8.Valid(target) {
+		return f.handleInvalid(msgs, target)
 	}
 
 	if !f.doGz {
@@ -567,6 +573,20 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	}
 
 	return ms
+}
+
+// If there's an invalid char, error out here.
+func (f *NRMFormat) handleInvalid(in []*kt.JCHF, output []byte) (*kt.Output, error) {
+	msg := "Invalid utf8 char found in new relic output."
+	if len(in) > 0 {
+		msg = in[0].DeviceName + ": " + msg
+	}
+
+	if !f.seenInvalid {
+		f.seenInvalid = true
+		msg = fmt.Sprintf("%s (%v)", msg, string(output))
+	}
+	return nil, fmt.Errorf(msg)
 }
 
 func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
