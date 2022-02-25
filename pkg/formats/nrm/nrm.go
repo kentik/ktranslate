@@ -579,7 +579,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 func (f *NRMFormat) handleInvalid(in []*kt.JCHF, output []byte) (*kt.Output, error) {
 	msg := "Invalid utf8 char found in new relic output."
 	if len(in) > 0 {
-		msg = in[0].DeviceName + ": " + msg
+		msg = fmt.Sprintf("device=%s provider=%s: %s", in[0].DeviceName, in[0].Provider, msg)
 	}
 
 	if !f.seenInvalid {
