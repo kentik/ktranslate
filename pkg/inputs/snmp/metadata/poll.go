@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gosnmp/gosnmp"
 
@@ -202,7 +203,9 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 			dst.DeviceName = dd.DeviceMetricsMetadata.SysName
 		}
 		for k, v := range dd.DeviceMetricsMetadata.Customs {
-			dst.CustomStr[k] = v
+			if utf8.ValidString(v) {
+				dst.CustomStr[k] = v
+			}
 		}
 		for k, v := range dd.DeviceMetricsMetadata.CustomInts {
 			dst.CustomInt[k] = int32(v)
@@ -260,9 +263,11 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 
 		// And in anything extra which came out here.
 		for k, v := range id.ExtraInfo {
-			dst.CustomStr["if."+intr+"."+k] = v
-			if mib, ok := p.lookupMib(k, true); ok {
-				dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
+			if utf8.ValidString(v) {
+				dst.CustomStr["if."+intr+"."+k] = v
+				if mib, ok := p.lookupMib(k, true); ok {
+					dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
+				}
 			}
 		}
 	}
