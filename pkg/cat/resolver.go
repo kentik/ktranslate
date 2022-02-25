@@ -27,21 +27,29 @@ type Resolver struct {
 	cache    map[string]string
 }
 
-func NewResolver(ctx context.Context, log logger.Underlying, dsnHost string) (*Resolver, error) {
+func NewResolver(ctx context.Context, log logger.Underlying, dnsHost string) (*Resolver, error) {
 	res := &Resolver{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "resolver"}, log),
-		resolver: &net.Resolver{
+		cache:    map[string]string{},
+	}
+
+	if dnsHost == "local" {
+		res.resolver = &net.Resolver{
+			PreferGo:     false,
+			StrictErrors: false, // This should use the direct local resolver.
+		}
+	} else {
+		res.resolver = &net.Resolver{
 			PreferGo:     true,
 			StrictErrors: false,
 			Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 				if dead, ok := ctx.Deadline(); ok {
-					return net.DialTimeout(network, dsnHost, dead.Sub(time.Now()))
+					return net.DialTimeout(network, dnsHost, dead.Sub(time.Now()))
 				} else {
-					return net.DialTimeout(network, dsnHost, 1*time.Second)
+					return net.DialTimeout(network, dnsHost, 1*time.Second)
 				}
 			},
-		},
-		cache: map[string]string{},
+		}
 	}
 
 	if val, ok := os.LookupEnv(MAX_CACHE_SIZE_NAME); ok {

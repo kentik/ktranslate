@@ -63,7 +63,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			AlphaQDrop:   go_metrics.GetOrRegisterMeter("alphaq_drop", registry),
 			JCHFQ:        go_metrics.GetOrRegisterGauge("jchfq", registry),
 			InputQ:       go_metrics.GetOrRegisterMeter("inputq", registry),
-			InputQLen:    go_metrics.GetOrRegisterMeter("inputq_len", registry),
+			InputQLen:    go_metrics.GetOrRegisterGauge("inputq_len^force=true", registry),
 		},
 		alphaChans: make([]chan *Flow, config.Threads),
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
@@ -252,7 +252,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		JCHFQ:          kc.metrics.JCHFQ.Value(),
 		AlphaQDrop:     kc.metrics.AlphaQDrop.Rate1(),
 		InputQ:         kc.metrics.InputQ.Rate1(),
-		InputQLen:      kc.metrics.InputQLen.Rate1(),
+		InputQLen:      kc.metrics.InputQLen.Value(),
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 		Inputs:         map[string]map[string]float64{},
@@ -450,7 +450,7 @@ func (kc *KTranslate) watchInput(ctx context.Context, seri func([]*kt.JCHF, []by
 					kc.config.ThreadsInput++
 				}
 			}
-			kc.metrics.InputQLen.Mark(int64(len(kc.inputChan)))
+			kc.metrics.InputQLen.Update(int64(len(kc.inputChan)))
 		case <-ctx.Done():
 			kc.log.Infof("watchInput Done")
 			return

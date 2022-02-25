@@ -172,10 +172,12 @@ func setMode(bs *baseserver.BaseServer, mode string, sample int, syslog string) 
 		setNr() // Here, we only send the flow in as events to NR.
 		flag.Set("vpc", "aws")
 		flag.Set("aws_lambda", "true")
+		flag.Set("dns", "local")
 	case "vpc":
 		flag.Set("rollups", "s_sum,vpc.xmt.bytes,out_bytes,custom_str.source_vpc,custom_str.application_type,custom_str.source_account,custom_str.source_region,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
 		flag.Set("rollups", "s_sum,vpc.rcv.bytes,in_bytes,custom_str.dest_vpc,custom_str.application_type,custom_str.dest_account,custom_str.dest_region,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.vpc":
+		flag.Set("dns", "local")
 		setNr()
 	case "flow":
 		flag.Set("rollups", "s_sum,bytes.xmt,in_bytes+out_bytes,device_name,src_addr,custom_str.src_as_name,src_geo,l4_src_port,protocol")
