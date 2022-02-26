@@ -179,6 +179,12 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 					device.NoUseBulkWalkAll = true
 					cl.Infof("Turning off BulkWalkAll for device via profile.")
 				}
+
+				// Use the profile's provider if it is set.
+				if profile.Provider != "" {
+					device.Provider = profile.Provider
+					cl.Infof("Setting profile of %s for device %s.", device.Provider, device.DeviceName)
+				}
 			}
 		}
 
