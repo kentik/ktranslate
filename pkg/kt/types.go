@@ -314,6 +314,9 @@ func (j *JCHF) ToMap() map[string]interface{} {
 
 func (j *JCHF) SetMap() {
 	j.avroSet = map[string]interface{}{}
+	if j.CustomStr == nil {
+		j.CustomStr = map[string]string{}
+	}
 }
 
 func (j *JCHF) SetIFPorts(p IfaceID) *JCHF {

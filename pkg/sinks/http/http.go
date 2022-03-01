@@ -20,11 +20,12 @@ type HttpSink struct {
 	logger.ContextL
 	TargetUrl string
 
-	client   *http.Client
-	tr       *http.Transport
-	registry go_metrics.Registry
-	metrics  *HttpMetric
-	headers  map[string]string
+	client     *http.Client
+	tr         *http.Transport
+	registry   go_metrics.Registry
+	metrics    *HttpMetric
+	headers    map[string]string
+	targetUrls []string
 }
 
 type HttpMetric struct {
@@ -44,8 +45,9 @@ func (h *HeaderFlag) Set(value string) error {
 }
 
 var (
-	TargetUrl = flag.String("http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
-	headers   HeaderFlag
+	TargetUrl          = flag.String("http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
+	InsecureSkipVerify = flag.Bool("http_insecure", false, "Allow insecure urls.")
+	headers            HeaderFlag
 )
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (*HttpSink, error) {
@@ -56,7 +58,8 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_http", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_http", registry),
 		},
-		headers: map[string]string{},
+		headers:    map[string]string{},
+		targetUrls: []string{},
 	}
 
 	for _, header := range headers {
@@ -82,18 +85,19 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 }
 
 func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	s.TargetUrl = *TargetUrl
+	for _, url := range strings.Split(*TargetUrl, ",") {
+		s.targetUrls = append(s.targetUrls, url)
+		s.Infof("Exporting HTTP to %s", url)
+	}
 
 	s.tr = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: *InsecureSkipVerify},
 	}
 	s.client = &http.Client{Transport: s.tr}
 
 	if compression == kt.CompressionGzip {
 		s.headers["Content-Encoding"] = "GZIP"
 	}
-
-	s.Infof("Exporting to Http at %s", s.TargetUrl)
 
 	return nil
 }
@@ -112,32 +116,34 @@ func (s *HttpSink) HttpInfo() map[string]float64 {
 }
 
 func (s *HttpSink) sendHttp(ctx context.Context, payload []byte) {
-	req, err := http.NewRequestWithContext(ctx, "POST", s.TargetUrl, bytes.NewBuffer(payload))
-	if err != nil {
-		s.Errorf("There was an error when creating an HTTP request: %v.", err)
-		return
-	}
-
-	for k, v := range s.headers {
-		req.Header.Set(k, v)
-	}
-
-	resp, err := s.client.Do(req)
-	if err != nil {
-		s.Errorf("There was an error when converting to HTTP: %v.", err)
-		s.client = &http.Client{Transport: s.tr}
-	} else {
-		defer resp.Body.Close()
-		bdy, err := ioutil.ReadAll(resp.Body)
+	for _, url := range s.targetUrls {
+		req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 		if err != nil {
-			s.Errorf("There was an error when getting the HTTP response body: %v.", err)
-			s.metrics.DeliveryErr.Mark(1)
+			s.Errorf("There was an error when creating an HTTP request: %v.", err)
+			return
+		}
+
+		for k, v := range s.headers {
+			req.Header.Set(k, v)
+		}
+
+		resp, err := s.client.Do(req)
+		if err != nil {
+			s.Errorf("There was an error when converting to HTTP at %s: %v.", url, err)
+			s.client = &http.Client{Transport: s.tr}
 		} else {
-			if resp.StatusCode >= 400 {
-				s.Errorf("There was an error when converting to HTTP: %d. Body: %s.", resp.StatusCode, string(bdy))
+			defer resp.Body.Close()
+			bdy, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				s.Errorf("There was an error when getting the HTTP at %s response body: %v.", url, err)
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
-				s.metrics.DeliveryWin.Mark(1)
+				if resp.StatusCode >= 400 {
+					s.Errorf("There was an error when converting to HTTP at %s: %d. Body: %s.", url, resp.StatusCode, string(bdy))
+					s.metrics.DeliveryErr.Mark(1)
+				} else {
+					s.metrics.DeliveryWin.Mark(1)
+				}
 			}
 		}
 	}
