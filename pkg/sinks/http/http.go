@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	nurl "net/url"
 	"strings"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -20,12 +22,13 @@ type HttpSink struct {
 	logger.ContextL
 	TargetUrl string
 
-	client     *http.Client
-	tr         *http.Transport
-	registry   go_metrics.Registry
-	metrics    *HttpMetric
-	headers    map[string]string
-	targetUrls []string
+	client          *http.Client
+	tr              *http.Transport
+	registry        go_metrics.Registry
+	metrics         *HttpMetric
+	headers         map[string]string
+	targetUrls      []string
+	sendMaxDuration time.Duration
 }
 
 type HttpMetric struct {
@@ -47,6 +50,7 @@ func (h *HeaderFlag) Set(value string) error {
 var (
 	TargetUrl          = flag.String("http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
 	InsecureSkipVerify = flag.Bool("http_insecure", false, "Allow insecure urls.")
+	TimeoutSec         = flag.Int("http_timeout_sec", 30, "Timeout each request after this long.")
 	headers            HeaderFlag
 )
 
@@ -58,8 +62,9 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_http", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_http", registry),
 		},
-		headers:    map[string]string{},
-		targetUrls: []string{},
+		headers:         map[string]string{},
+		targetUrls:      []string{},
+		sendMaxDuration: time.Duration(*TimeoutSec) * time.Second,
 	}
 
 	for _, header := range headers {
@@ -86,6 +91,10 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 
 func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	for _, url := range strings.Split(*TargetUrl, ",") {
+		_, err := nurl.Parse(url)
+		if err != nil {
+			return fmt.Errorf("Invalid url for http sink: %s", url)
+		}
 		s.targetUrls = append(s.targetUrls, url)
 		s.Infof("Exporting HTTP to %s", url)
 	}
@@ -103,7 +112,13 @@ func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression 
 }
 
 func (s *HttpSink) Send(ctx context.Context, payload *kt.Output) {
-	go s.sendHttp(ctx, payload.Body)
+	for _, url := range s.targetUrls {
+		go func(u string) {
+			ctxC, cancel := context.WithTimeout(ctx, s.sendMaxDuration)
+			defer cancel()
+			s.sendHttp(ctxC, payload.Body, u)
+		}(url)
+	}
 }
 
 func (s *HttpSink) Close() {}
@@ -115,35 +130,33 @@ func (s *HttpSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *HttpSink) sendHttp(ctx context.Context, payload []byte) {
-	for _, url := range s.targetUrls {
-		req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
-		if err != nil {
-			s.Errorf("There was an error when creating an HTTP request: %v.", err)
-			return
-		}
+func (s *HttpSink) sendHttp(ctx context.Context, payload []byte, url string) {
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
+	if err != nil {
+		s.Errorf("There was an error when creating an HTTP request: %v.", err)
+		return
+	}
 
-		for k, v := range s.headers {
-			req.Header.Set(k, v)
-		}
+	for k, v := range s.headers {
+		req.Header.Set(k, v)
+	}
 
-		resp, err := s.client.Do(req)
+	resp, err := s.client.Do(req)
+	if err != nil {
+		s.Errorf("There was an error when sending via HTTP at %s: %v.", url, err)
+		s.client = &http.Client{Transport: s.tr}
+	} else {
+		defer resp.Body.Close()
+		bdy, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			s.Errorf("There was an error when converting to HTTP at %s: %v.", url, err)
-			s.client = &http.Client{Transport: s.tr}
+			s.Errorf("There was an error when getting the HTTP at %s response body: %v.", url, err)
+			s.metrics.DeliveryErr.Mark(1)
 		} else {
-			defer resp.Body.Close()
-			bdy, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				s.Errorf("There was an error when getting the HTTP at %s response body: %v.", url, err)
+			if resp.StatusCode >= 400 {
+				s.Errorf("There was an error when converting to HTTP at %s: %d. Body: %s.", url, resp.StatusCode, string(bdy))
 				s.metrics.DeliveryErr.Mark(1)
 			} else {
-				if resp.StatusCode >= 400 {
-					s.Errorf("There was an error when converting to HTTP at %s: %d. Body: %s.", url, resp.StatusCode, string(bdy))
-					s.metrics.DeliveryErr.Mark(1)
-				} else {
-					s.metrics.DeliveryWin.Mark(1)
-				}
+				s.metrics.DeliveryWin.Mark(1)
 			}
 		}
 	}
