@@ -90,7 +90,7 @@ func Close() {
 func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.SnmpConfig, time.Duration, int, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("Client SNMP: Running SNMP interface polling, loading config from %s", snmpFile)
-	conf, err := parseConfig(snmpFile, log)
+	conf, err := parseConfig(ctx, snmpFile, log)
 	if err != nil {
 		return nil, 0, 0, err
 	}
@@ -266,9 +266,9 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	return nil
 }
 
-func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
+func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 	ms := kt.SnmpConfig{}
-	by, err := ioutil.ReadFile(file)
+	by, err := snmp_util.LoadFile(ctx, file)
 	if err != nil {
 		return nil, err
 	}
@@ -379,5 +379,5 @@ func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.S
 
 // Public wrapper for calling this other places.
 func ParseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
-	return parseConfig(file, log)
+	return parseConfig(context.Background(), file, log)
 }

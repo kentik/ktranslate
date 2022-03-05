@@ -28,7 +28,7 @@ const (
 func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	// First, parse the config file and see what we're doing.
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
-	conf, err := parseConfig(snmpFile, log)
+	conf, err := parseConfig(ctx, snmpFile, log)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
-		if err := addDevices(nil, snmpFile, conf, true, log); err != nil {
+		if err := addDevices(ctx, nil, snmpFile, conf, true, log); err != nil {
 			return fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err)
 		}
 	}
@@ -112,7 +112,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 
 	if conf.Disco.AddDevices {
-		err := addDevices(foundDevices, snmpFile, conf, false, log)
+		err := addDevices(ctx, foundDevices, snmpFile, conf, false, log)
 		if err != nil {
 			return err
 		}
@@ -248,7 +248,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	foundDevices[result.Host.String()] = &device
 }
 
-func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) error {
+func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) error {
 	// Now add the new.
 	added := 0
 	replaced := 0
@@ -368,5 +368,5 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		t = bytes.Replace(t, []byte("devices: {}"), []byte(`devices: "@`+conf.DeviceOrig+`"`), 1)
 	}
 
-	return ioutil.WriteFile(snmpFile, t, permissions)
+	return snmp_util.WriteFile(ctx, snmpFile, t, permissions)
 }
