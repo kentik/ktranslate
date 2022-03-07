@@ -275,7 +275,7 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 			added++
 		} else if conf.Devices[key] != nil {
 			if conf.Disco.ReplaceDevices { // But keep backwards compatible with existing devices and don't change their entries.
-				d.UpdateFrom(conf.Devices[key])
+				d.UpdateFrom(conf.Devices[key], conf)
 				conf.Devices[key] = d
 				replaced++
 			} else {
@@ -283,7 +283,7 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 			}
 		} else {
 			if conf.Disco.ReplaceDevices { // Else, new style keys all use keyAlt.
-				d.UpdateFrom(conf.Devices[keyAlt])
+				d.UpdateFrom(conf.Devices[keyAlt], conf)
 				conf.Devices[keyAlt] = d
 				replaced++
 			} else {
