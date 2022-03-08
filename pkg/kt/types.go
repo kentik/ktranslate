@@ -208,7 +208,6 @@ func NewJCHF() *JCHF {
 
 func (j *JCHF) Reset() {
 	j.hasSetAvro = false
-	//j.SetMap() @TODO -- don't think this is needed?
 }
 
 func (j *JCHF) Flatten() map[string]interface{} {
@@ -314,6 +313,12 @@ func (j *JCHF) ToMap() map[string]interface{} {
 
 func (j *JCHF) SetMap() {
 	j.avroSet = map[string]interface{}{}
+	j.CustomStr = map[string]string{}
+	j.CustomInt = map[string]int32{}
+	j.CustomBigInt = map[string]int64{}
+	j.CustomMetrics = map[string]MetricInfo{}
+	j.CustomTables = map[string]DeviceTableMetadata{}
+	j.MatchAttr = map[string]*regexp.Regexp{}
 }
 
 func (j *JCHF) SetIFPorts(p IfaceID) *JCHF {
