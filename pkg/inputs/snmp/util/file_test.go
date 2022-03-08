@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -56,6 +57,23 @@ func TestWriteFile(t *testing.T) {
 	assert := assert.New(t)
 	content := []byte("aaaa") // Set some test content.
 
+	fileWeb, err := ioutil.TempFile("", "")
+	if err != nil {
+		t.FailNow()
+	}
+	defer os.Remove(fileWeb.Name())
+
+	// Some test server
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body := r.Body
+		defer body.Close()
+		bb := []byte{}
+		bodyBuffer := bytes.NewBuffer(bb)
+		_, err = bodyBuffer.ReadFrom(body)
+		ioutil.WriteFile(fileWeb.Name(), bodyBuffer.Bytes(), 0644)
+	}))
+	defer svr.Close()
+
 	// Save test data to local.
 	file, err := ioutil.TempFile("", "")
 	if err != nil {
@@ -63,19 +81,20 @@ func TestWriteFile(t *testing.T) {
 	}
 
 	defer os.Remove(file.Name())
-	tests := map[string]bool{
-		":foo":      false,
-		file.Name(): true,
+	tests := map[string]string{
+		":foo":      "",
+		file.Name(): file.Name(),
+		svr.URL:     fileWeb.Name(),
 	}
 
 	ctx := context.Background()
-	for target, good := range tests {
+	for target, local := range tests {
 		err := WriteFile(ctx, target, content, 0644)
-		if !good {
+		if local == "" {
 			assert.Error(err)
 		} else {
 			assert.NoError(err)
-			c, _ := ioutil.ReadFile(target) // This one assumes that we're writting locally.
+			c, _ := ioutil.ReadFile(local) // This one assumes that we're writting locally.
 			assert.Equal(string(content), string(c), "failed %s", target)
 		}
 	}

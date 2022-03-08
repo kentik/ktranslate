@@ -41,7 +41,7 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 
 	switch u.Scheme {
 	case "http", "https":
-		return fmt.Errorf("Not supported scheme: %s", u.Scheme)
+		return writeToHttp(ctx, file, payload)
 	case "s3":
 		return writeToS3(ctx, u, payload)
 	default:
@@ -66,6 +66,28 @@ func loadFromHttp(ctx context.Context, file string) ([]byte, error) {
 		return nil, err
 	}
 	return body, nil
+}
+
+func writeToHttp(ctx context.Context, file string, payload []byte) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, file, bytes.NewBuffer(payload))
+	if err != nil {
+		return err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	_, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("Cannot send to %s: %d", file, resp.StatusCode)
+	}
+	return nil
 }
 
 func loadFromS3(ctx context.Context, url *url.URL) ([]byte, error) {
