@@ -33,6 +33,7 @@ var (
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
+	snmpDiscoDur   = flag.Int("snmp_discovery_sec", 0, "If set, run snmp discovery on this interval (in seconds).")
 	ServiceName    = ""
 )
 
@@ -68,7 +69,7 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log)
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0)
 
 	// Run a trap listener?
 	if conf.Trap != nil && !*flowOnly {
@@ -117,16 +118,19 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
-func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) {
+func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int) {
 	ctxSnmp, cancel := context.WithCancel(ctx)
-	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log)
+	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount)
 	if err != nil {
 		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
 	}
 
-	// Now, wait for sigusr2 to re-do.
+	// Now, wait for sigusr2 to re-do or if there's a discovery with new devices.
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
+	if *snmpDiscoDur > 0 { // If we are re-running snmp discovery every interval, start the ticker here.
+		go RunDiscoOnTimer(ctxSnmp, c, snmpFile, log, *snmpDiscoDur)
+	}
 
 	// Block here
 	_ = <-c
@@ -134,10 +138,10 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// If we got this signal, redo the snmp system.
 	cancel()
 
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log)
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1) // Track how many times through here we've been.
 }
 
-func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int) error {
 	// Parse again to make sure nothing's changed.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
@@ -155,16 +159,21 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		}
 
 		log.Infof("Client SNMP: Running SNMP for %s on %s (type=%s)", device.DeviceName, device.DeviceIP, device.Provider)
-		metrics.Mux.Lock()
-		nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
 
 		// Check for duplicate device names here.
+		metrics.Mux.Lock()
+		var nm *kt.SnmpDeviceMetric
 		if _, ok := metrics.Devices[device.DeviceName]; ok {
-			log.Errorf("Duplicate device name detected (%s). Is this a misconfiguration?", device.DeviceName)
+			nm = metrics.Devices[device.DeviceName]
+			if restartCount == 0 {
+				log.Errorf("Duplicate device name detected (%s). Is this a misconfiguration?", device.DeviceName)
+			}
+		} else {
+			nm = kt.NewSnmpDeviceMetric(registry, device.DeviceName)
+			metrics.Devices[device.DeviceName] = nm
 		}
-
-		metrics.Devices[device.DeviceName] = nm
 		metrics.Mux.Unlock()
+
 		cl := logger.NewSubContextL(logger.SContext{S: device.DeviceName}, log)
 		var profile *mibs.Profile
 		if mibdb != nil {
