@@ -26,20 +26,26 @@ const (
 	permissions = 0644
 )
 
-func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error, int, int, int) {
+type SnmpDiscoDeviceStat struct {
+	added    int
+	replaced int
+	delta    int
+}
+
+func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
 	conf, err := parseConfig(ctx, snmpFile, log)
 	if err != nil {
-		return err, 0, 0, 0
+		return nil, err
 	}
 
 	if conf.Disco == nil {
-		return fmt.Errorf("The discovery configuration is not set: %+v.", conf), 0, 0, 0
+		return nil, fmt.Errorf("The discovery configuration is not set: %+v.", conf)
 	}
 
 	if conf.Global == nil || conf.Global.MibProfileDir == "" {
-		return fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf), 0, 0, 0
+		return nil, fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
 	}
 
 	if *snmpOutFile != "" { // If we want to write somewhere else, swap the output file in here.
@@ -48,8 +54,8 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error,
 	}
 
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
-		if err, _, _, _ := addDevices(ctx, nil, snmpFile, conf, true, log); err != nil {
-			return fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err), 0, 0, 0
+		if _, err := addDevices(ctx, nil, snmpFile, conf, true, log); err != nil {
+			return nil, fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err)
 		}
 	}
 
@@ -66,7 +72,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error,
 	// Use this for auto-discovering metrics to pull.
 	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
 	if err != nil {
-		return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err), 0, 0, 0
+		return nil, fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 	}
 	defer mdb.Close()
 
@@ -91,11 +97,11 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error,
 		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 		scanner := scan.NewDeviceScanner(targetIterator, timeout)
 		if err := scanner.Start(); err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		results, err := scanner.Scan(ctx, conf.Disco.Ports)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		var wg sync.WaitGroup
 		var mux sync.RWMutex
@@ -112,17 +118,17 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error,
 		log.Infof("Checked %d ips in %v (from start: %v)", len(results), time.Now().Sub(st), time.Now().Sub(stb))
 	}
 
-	var added, replaced, deviceDelta int
+	var stats *SnmpDiscoDeviceStat
 	if conf.Disco.AddDevices {
-		err, added, replaced, deviceDelta = addDevices(ctx, foundDevices, snmpFile, conf, false, log)
+		stats, err = addDevices(ctx, foundDevices, snmpFile, conf, false, log)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 	}
 
 	time.Sleep(2 * time.Second) // Give logs time to get sent back.
 
-	return nil, added, replaced, deviceDelta
+	return stats, nil
 }
 
 func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeMin int) {
@@ -133,15 +139,15 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log
 	for {
 		select {
 		case _ = <-discoCheck.C:
-			err, added, replaced, deviceDelta := Discover(ctx, snmpFile, log)
+			stats, err := Discover(ctx, snmpFile, log)
 			if err != nil {
 				log.Errorf("Discovery SNMP Error: %v", err)
 			} else {
-				if deviceDelta != 0 || added > 0 { // Only restart if there's a different configuration.
-					log.Infof("Discovery SNMP reloading: added: %d replaced: %d delta: %d", added, replaced, deviceDelta)
+				if stats.delta != 0 || stats.added > 0 { // Only restart if there's a different configuration.
+					log.Infof("Discovery SNMP reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
 					c <- kt.SIGUSR2 // Restart the main loop with a new config.
 				} else {
-					log.Infof("Discovery SNMP no change so not reloading: added: %d replaced: %d delta: %d", added, replaced, deviceDelta)
+					log.Infof("Discovery SNMP no change so not reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
 				}
 			}
 		case <-ctx.Done():
@@ -276,10 +282,9 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	foundDevices[result.Host.String()] = &device
 }
 
-func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) (error, int, int, int) {
+func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) (*SnmpDiscoDeviceStat, error) {
 	// Now add the new.
-	added := 0
-	replaced := 0
+	stats := SnmpDiscoDeviceStat{}
 	if conf.Devices == nil {
 		conf.Devices = map[string]*kt.SnmpDeviceConfig{}
 	}
@@ -301,12 +306,12 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 		if conf.Devices[key] == nil && conf.Devices[keyAlt] == nil {
 			// Start adding new devices based on deviceName__ip
 			conf.Devices[keyAlt] = d
-			added++
+			stats.added++
 		} else if conf.Devices[key] != nil {
 			if conf.Disco.ReplaceDevices { // But keep backwards compatible with existing devices and don't change their entries.
 				d.UpdateFrom(conf.Devices[key], conf)
 				conf.Devices[key] = d
-				replaced++
+				stats.replaced++
 			} else {
 				conf.Devices[key].Checked = time.Now()
 			}
@@ -314,7 +319,7 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 			if conf.Disco.ReplaceDevices { // Else, new style keys all use keyAlt.
 				d.UpdateFrom(conf.Devices[keyAlt], conf)
 				conf.Devices[keyAlt] = d
-				replaced++
+				stats.replaced++
 			} else {
 				conf.Devices[keyAlt].Checked = time.Now()
 			}
@@ -328,7 +333,7 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 				// Someone else has this engine ID. Delete this device.
 				log.Warnf("Removing device %s because of duplicate EngineID %s.", d.DeviceName, d.EngineID)
 				delete(conf.Devices, dip)
-				added--
+				stats.added--
 			} else {
 				byEngineID[d.EngineID] = d
 			}
@@ -336,9 +341,9 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	}
 
 	// Calculate total number of new devices.
-	deviceDelta := origCount - len(conf.Devices)
+	stats.delta = origCount - len(conf.Devices)
 	if !isTest {
-		log.Infof("Adding %d new SNMP devices to the configuration. %d replaced from %d. Delta: %d", added, replaced, len(foundDevices), deviceDelta)
+		log.Infof("Adding %d new SNMP devices to the configuration. %d replaced from %d. Delta: %d", stats.added, stats.replaced, len(foundDevices), stats.delta)
 	}
 
 	// Fill up list of mibs to run on here.
@@ -366,11 +371,11 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	if conf.Disco.CidrOrig != "" {
 		t, err := yaml.Marshal(conf.Disco.Cidrs)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		err = ioutil.WriteFile(conf.Disco.CidrOrig, t, permissions)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		conf.Disco.Cidrs = nil
 	}
@@ -378,11 +383,11 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	if conf.DeviceOrig != "" {
 		t, err := yaml.Marshal(conf.Devices)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		err = ioutil.WriteFile(conf.DeviceOrig, t, permissions)
 		if err != nil {
-			return err, 0, 0, 0
+			return nil, err
 		}
 		conf.Devices = nil
 	}
@@ -390,7 +395,7 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	// Save out the config file.
 	t, err := yaml.Marshal(conf)
 	if err != nil {
-		return err, 0, 0, 0
+		return nil, err
 	}
 
 	// Swap for our external sections.
@@ -401,5 +406,5 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 		t = bytes.Replace(t, []byte("devices: {}"), []byte(`devices: "@`+conf.DeviceOrig+`"`), 1)
 	}
 
-	return snmp_util.WriteFile(ctx, snmpFile, t, permissions), added, replaced, deviceDelta
+	return &stats, snmp_util.WriteFile(ctx, snmpFile, t, permissions)
 }
