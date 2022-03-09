@@ -33,7 +33,7 @@ var (
 	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
-	snmpDiscoDur   = flag.Int("snmp_discovery_sec", 0, "If set, run snmp discovery on this interval (in seconds).")
+	snmpDiscoDur   = flag.Int("snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
 	ServiceName    = ""
 )
 

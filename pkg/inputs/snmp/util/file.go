@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"io/fs"
 	"io/ioutil"
 	"net/http"
@@ -26,7 +27,9 @@ func LoadFile(ctx context.Context, file string) ([]byte, error) {
 	case "http", "https":
 		return loadFromHttp(ctx, file)
 	case "s3":
-		return loadFromS3(ctx, u)
+		return loadFromS3(ctx, u, getS3Downloader())
+	case "s3m":
+		return loadFromS3(ctx, u, getMockS3Client())
 	default:
 		return ioutil.ReadFile(file)
 	}
@@ -43,7 +46,9 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 	case "http", "https":
 		return writeToHttp(ctx, file, payload)
 	case "s3":
-		return writeToS3(ctx, u, payload)
+		return writeToS3(ctx, u, payload, getS3Uploader())
+	case "s3m":
+		return writeToS3(ctx, u, payload, getMockS3Client())
 	default:
 		return ioutil.WriteFile(file, payload, perms)
 	}
@@ -90,9 +95,7 @@ func writeToHttp(ctx context.Context, file string, payload []byte) error {
 	return nil
 }
 
-func loadFromS3(ctx context.Context, url *url.URL) ([]byte, error) {
-	sess := session.Must(session.NewSession())
-	client := s3manager.NewDownloader(sess)
+func loadFromS3(ctx context.Context, url *url.URL, client s3ClientDown) ([]byte, error) {
 	buf := aws.NewWriteAtBuffer([]byte{})
 	size, err := client.DownloadWithContext(ctx, buf, &s3.GetObjectInput{
 		Bucket: aws.String(url.Host),
@@ -106,13 +109,58 @@ func loadFromS3(ctx context.Context, url *url.URL) ([]byte, error) {
 	return bufr[0:size], nil
 }
 
-func writeToS3(ctx context.Context, url *url.URL, payload []byte) error {
-	sess := session.Must(session.NewSession())
-	client := s3manager.NewUploader(sess)
+func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3ClientUp) error {
 	_, err := client.UploadWithContext(ctx, &s3manager.UploadInput{
 		Bucket: aws.String(url.Host),
 		Body:   bytes.NewBuffer(payload),
 		Key:    aws.String(url.Path),
 	})
 	return err
+}
+
+type s3ClientDown interface {
+	DownloadWithContext(aws.Context, io.WriterAt, *s3.GetObjectInput, ...func(*s3manager.Downloader)) (int64, error)
+}
+
+type s3ClientUp interface {
+	UploadWithContext(aws.Context, *s3manager.UploadInput, ...func(*s3manager.Uploader)) (*s3manager.UploadOutput, error)
+}
+
+type s3Full interface {
+	s3ClientUp
+	s3ClientDown
+}
+
+func getS3Downloader() s3ClientDown {
+	sess := session.Must(session.NewSession())
+	client := s3manager.NewDownloader(sess)
+	return client
+}
+
+func getS3Uploader() s3ClientUp {
+	sess := session.Must(session.NewSession())
+	client := s3manager.NewUploader(sess)
+	return client
+}
+
+type mockS3 struct {
+	lastContent []byte
+}
+
+var (
+	sMock *mockS3
+)
+
+func (m *mockS3) UploadWithContext(ctx aws.Context, in *s3manager.UploadInput, opts ...func(*s3manager.Uploader)) (*s3manager.UploadOutput, error) {
+	m.lastContent = in.Body.(*bytes.Buffer).Bytes()
+	return nil, nil
+}
+
+func (m *mockS3) DownloadWithContext(ctx aws.Context, w io.WriterAt, in *s3.GetObjectInput, options ...func(*s3manager.Downloader)) (int64, error) {
+	w.WriteAt(m.lastContent, 0)
+	return int64(len(m.lastContent)), nil
+}
+
+func getMockS3Client() s3Full {
+	return sMock
 }

@@ -125,8 +125,8 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (error,
 	return nil, added, replaced, deviceDelta
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeSec int) {
-	pt := time.Duration(pollTimeSec) * time.Second
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeMin int) {
+	pt := time.Duration(pollTimeMin) * time.Minute
 	log.Infof("Running SNMP Discovery Loop every %v", pt)
 	discoCheck := time.NewTicker(pt)
 	defer discoCheck.Stop()

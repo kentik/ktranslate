@@ -23,11 +23,16 @@ func TestLoadFile(t *testing.T) {
 	}))
 	defer svr.Close()
 
+	sMock = &mockS3{
+		lastContent: content,
+	}
+
 	tests := map[string][]byte{
-		":foo":               nil,
-		svr.URL:              content,
-		"s3://foo/bar/a/one": nil,
-		"S3://foo/bar/a/two": nil,
+		":foo":                nil,
+		svr.URL:               content,
+		"s3://foo/bar/a/one":  nil,
+		"S3://foo/bar/a/two":  nil,
+		"s3m://foo/bar/a/one": content,
 	}
 
 	// Save test data to local.
@@ -80,11 +85,16 @@ func TestWriteFile(t *testing.T) {
 		t.FailNow()
 	}
 
+	sMock = &mockS3{
+		lastContent: nil,
+	}
+
 	defer os.Remove(file.Name())
 	tests := map[string]string{
-		":foo":      "",
-		file.Name(): file.Name(),
-		svr.URL:     fileWeb.Name(),
+		":foo":                "",
+		file.Name():           file.Name(),
+		svr.URL:               fileWeb.Name(),
+		"s3m://foo/bar/a/one": string(content),
 	}
 
 	ctx := context.Background()
@@ -94,7 +104,10 @@ func TestWriteFile(t *testing.T) {
 			assert.Error(err)
 		} else {
 			assert.NoError(err)
-			c, _ := ioutil.ReadFile(local) // This one assumes that we're writting locally.
+			c, err := ioutil.ReadFile(local) // This one assumes that we're writting locally.
+			if err != nil {
+				c = sMock.lastContent
+			}
 			assert.Equal(string(content), string(c), "failed %s", target)
 		}
 	}
