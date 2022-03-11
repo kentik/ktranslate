@@ -21,6 +21,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	model "github.com/kentik/ktranslate/pkg/util/kflow2"
@@ -98,7 +99,7 @@ type KTranslate struct {
 	filters      []filter.Filter
 	geo          *patricia.MMMap
 	asn          *patricia.MMMap
-	resolver     *Resolver
+	resolver     *resolv.Resolver
 	auth         *auth.Server
 	apic         *api.KentikApi
 	tooBig       chan int

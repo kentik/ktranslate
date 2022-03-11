@@ -28,6 +28,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	"github.com/judwhite/go-svc"
@@ -557,7 +558,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 
 	// DNS mapper if set.
 	if kc.config.DnsResolver != "" {
-		res, err := NewResolver(ctx, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.DnsResolver)
+		res, err := resolv.NewResolver(ctx, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.DnsResolver)
 		if err != nil {
 			return err
 		}
@@ -664,7 +665,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for syslog flows coming in
 	if kc.config.SyslogSource != "" {
 		assureInput()
-		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.LogTee, kc.registry, kc.apic)
+		ss, err := syslog.NewSyslogSource(ctx, kc.config.SyslogSource, kc.log.GetLogger().GetUnderlyingLogger(), kc.config.LogTee, kc.registry, kc.apic, kc.resolver)
 		if err != nil {
 			return err
 		}

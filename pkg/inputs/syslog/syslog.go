@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net"
 	"strings"
 	"time"
 
@@ -14,17 +15,19 @@ import (
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 )
 
 type KentikSyslog struct {
 	logger.ContextL
-	server  *syslog.Server
-	handler *syslog.ChannelHandler
-	channel syslog.LogPartsChannel
-	logchan chan string
-	metrics SyslogMetric
-	apic    *api.KentikApi
-	devices map[string]*kt.Device
+	server   *syslog.Server
+	handler  *syslog.ChannelHandler
+	channel  syslog.LogPartsChannel
+	logchan  chan string
+	metrics  SyslogMetric
+	apic     *api.KentikApi
+	devices  map[string]*kt.Device
+	resolver *resolv.Resolver
 }
 
 type SyslogMetric struct {
@@ -47,7 +50,7 @@ const (
 	InstNameSyslog       = "ktranslate-syslog"
 )
 
-func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi) (*KentikSyslog, error) {
+func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi, resolver *resolv.Resolver) (*KentikSyslog, error) {
 	ks := KentikSyslog{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Syslog"}, log),
 		logchan:  logchan,
@@ -56,8 +59,9 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 			Errors:   go_metrics.GetOrRegisterMeter(fmt.Sprintf("syslog_errors^force=true"), registry),
 			Queue:    go_metrics.GetOrRegisterGauge(fmt.Sprintf("syslog_queue^force=true"), registry),
 		},
-		apic:    apic,
-		devices: apic.GetDevicesAsMap(0),
+		apic:     apic,
+		devices:  apic.GetDevicesAsMap(0),
+		resolver: resolver,
 	}
 
 	if logchan == nil {
@@ -138,7 +142,7 @@ func (ks *KentikSyslog) process(ctx context.Context, id int, channel syslog.LogP
 		select {
 		case logParts := <-channel:
 			ks.metrics.Messages.Mark(1)
-			msg, err := ks.formatMessage(logParts)
+			msg, err := ks.formatMessage(ctx, logParts)
 			if err != nil {
 				ks.Errorf("Cannot format syslog: %v", err)
 			}
@@ -176,20 +180,38 @@ func (ks *KentikSyslog) run(ctx context.Context, host string) {
 	ks.server.Wait()
 }
 
-func (ks *KentikSyslog) formatMessage(msg sfmt.LogParts) ([]byte, error) {
+func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([]byte, error) {
 	if client, ok := msg["client"].(string); ok { // Look up device_name here.
 		pts := strings.Split(client, ":")
 		if dev, ok := ks.devices[pts[0]]; ok {
 			msg["device_name"] = dev.Name // Copy in any of these info we get
 			dev.SetMsgUserTags(msg)
 		}
+		if ks.resolver != nil {
+			msg["client_name"] = ks.resolver.Resolve(ctx, pts[0])
+		}
 	}
 
 	// Fall back to hostname if this is set.
 	if _, ok := msg["device_name"]; !ok {
-		if _, ok := msg["hostname"]; ok {
-			msg["device_name"] = msg["hostname"]
+		if hostname, ok := msg["hostname"]; ok {
+			if hs, ok := hostname.(string); ok {
+				if ipr := net.ParseIP(hs); ipr != nil {
+					if ks.resolver != nil {
+						msg["device_name"] = ks.resolver.Resolve(ctx, hs)
+					} else {
+						msg["device_name"] = hs
+					}
+				} else {
+					msg["device_name"] = hs
+				}
+			}
 		}
+	}
+
+	// One more time for sure.
+	if _, ok := msg["device_name"]; !ok {
+		msg["device_name"] = msg["client_name"]
 	}
 
 	msg["message"] = msg["content"] // Swap these around for NR.
