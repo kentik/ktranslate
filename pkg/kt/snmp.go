@@ -229,6 +229,7 @@ type SnmpDeviceMetric struct {
 	Errors           go_metrics.Meter
 	Fail             go_metrics.Gauge
 	Missing          go_metrics.Gauge
+	MissingMeta      go_metrics.Gauge
 }
 
 const (
@@ -251,6 +252,7 @@ func NewSnmpDeviceMetric(registry go_metrics.Registry, deviceName string) *SnmpD
 		Errors:           go_metrics.GetOrRegisterMeter("snmp_errors^device_name="+deviceName, registry),
 		Fail:             go_metrics.GetOrRegisterGauge("snmp_fail^device_name="+deviceName, registry),
 		Missing:          go_metrics.GetOrRegisterGauge("snmp_missing^force=true^device_name="+deviceName, registry),
+		MissingMeta:      go_metrics.GetOrRegisterGauge("snmp_missing_meta^force=true^device_name="+deviceName, registry),
 	}
 	sm.Fail.Update(SNMP_GOOD) // 1 means that this device is not failing.
 	return &sm
