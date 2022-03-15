@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"context"
 	"net"
 	"sort"
 	"unicode/utf8"
@@ -35,92 +36,250 @@ var (
 	}()
 )
 
+type DeviceMetadata struct {
+	log     logger.ContextL
+	mibs    map[string]*kt.Mib
+	conf    *kt.SnmpDeviceConfig
+	metrics *kt.SnmpDeviceMetric
+	missing map[string]bool
+	basic   map[string]string
+}
+
+func NewDeviceMetadata(deviceMetadataMibs map[string]*kt.Mib, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetadata {
+	mibs := map[string]*kt.Mib{}
+	basic := map[string]string{}
+	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
+		basic[el.Key.(string)] = el.Value.(string)
+	}
+
+	if len(deviceMetadataMibs) > 0 {
+		oids := getFromCustomMap(deviceMetadataMibs)
+		for _, oid := range oids {
+			mib := deviceMetadataMibs[oid]
+			mibs[oid] = mib
+			log.Infof("Adding custom device metadata oid: %s -> %s %v", oid, mib.GetName(), mib.OtherTables)
+		}
+	} else {
+		// Copy the global values into this map which is per device.
+		for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
+			mibs[el.Key.(string)] = nil
+		}
+	}
+
+	return &DeviceMetadata{
+		log:     log,
+		mibs:    mibs,
+		conf:    conf,
+		basic:   basic,
+		metrics: metrics,
+		missing: map[string]bool{},
+	}
+}
+
 // Poll device-level metadata.
-func GetDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadataMibs map[string]*kt.Mib) (*kt.DeviceMetricsMetadata, error) {
+func (dm *DeviceMetadata) Poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.DeviceMetricsMetadata, error) {
+	return dm.poll(ctx, server)
+}
+
+type wrapper struct {
+	variable gosnmp.SnmpPDU
+	mib      *kt.Mib
+	oid      string
+}
+
+func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.DeviceMetricsMetadata, error) {
+	var results []wrapper
 	md := kt.DeviceMetricsMetadata{
 		Customs:    map[string]string{},
 		CustomInts: map[string]int64{},
 		Tables:     map[string]kt.DeviceTableMetadata{},
 	}
 
-	var oids []string
-	if len(deviceMetadataMibs) == 0 {
-		for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
-			oids = append(oids, el.Key.(string))
+	missing := int64(0)
+	for oid, mib := range dm.mibs {
+		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
+			continue
 		}
-	} else {
-		log.Infof("Getting device metadata from custom map: %v", deviceMetadataMibs)
-		oids = getFromCustomMap(deviceMetadataMibs)
-	}
-
-	hasDataFull := false
-	max := gosnmp.MaxOids // Some profiles can get pretty big. @TODO, make max user selectable?
-	for i := 0; i < len(oids); i += max {
-		limit := i + max
-		if limit > len(oids) {
-			limit = len(oids)
-		}
-		hasData, err := pollDevice(oids[i:limit], log, server, deviceMetadataMibs, &md)
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetadata")
 		if err != nil {
-			return nil, err
+			dm.metrics.Errors.Mark(1)
+			continue
 		}
-		if hasData {
-			hasDataFull = hasData
+
+		if len(oidResults) == 0 {
+			missing++
+			if _, ok := dm.missing[oid]; ok {
+				dm.log.Debugf("OID %s failed to return results, Metric Name: %s", oid, mib.Name)
+			} else {
+				dm.missing[oid] = true
+				dm.log.Warnf("OID %s failed to return results, Metric Name: %s", oid, mib.Name)
+			}
+		}
+		for _, result := range oidResults {
+			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
 	}
 
-	// If no fields in md were set, return nil.  (Trust me on the (). :)
-	if !hasDataFull {
-		log.Infof("SNMP Device Metadata: No data received")
-		return nil, nil
+	// Update the number of missing metrics metric here.
+	dm.metrics.MissingMeta.Update(missing)
+
+	// Map back into types we know about.
+	for _, wrapper := range results {
+		if wrapper.variable.Value == nil { // You can get nil w/out getting an error, though.
+			continue
+		}
+
+		// Calculate the index first out here.
+		idx := snmp_util.GetIndex(wrapper.variable.Name[1:], wrapper.oid)
+
+		oidName := ""
+		if name, ok := dm.basic[wrapper.variable.Name]; ok {
+			oidName = name
+		} else if wrapper.mib != nil {
+			oidName = wrapper.mib.GetName()
+		}
+		if oidName == "" {
+			dm.log.Warnf("Missing metadata name: %s", wrapper.oid)
+			continue
+		}
+
+		value := wrapper.variable.Value
+		switch oidName {
+		case SNMP_sysDescr:
+			md.SysDescr = string(value.([]byte))
+		case SNMP_sysObjectID:
+			md.SysObjectID = value.(string)
+		case SNMP_sysContact:
+			md.SysContact = string(value.([]byte))
+		case SNMP_sysName:
+			md.SysName = string(value.([]byte))
+		case SNMP_sysLocation:
+			md.SysLocation = string(value.([]byte))
+		case SNMP_sysServices:
+			md.SysServices = int(snmp_util.ToInt64(value))
+		case SNMP_engineID:
+			_, md.EngineID = snmp_util.GetFromConv(wrapper.variable, snmp_util.CONV_ENGINE_ID, dm.log)
+		default:
+			// Now we're actually in the range of custom fields.
+			if wrapper.mib == nil { // This should never happen here.
+				dm.log.Warnf("Missing Custom metadata oid: %+v, Value: %T %+v", wrapper.variable, wrapper.variable.Value, wrapper.variable.Value)
+				continue
+			}
+
+			if idx != "" {
+				dm.handleTable(idx, wrapper, oidName, &md)
+			} else {
+				switch vt := value.(type) {
+				case string:
+					md.Customs[oidName] = vt
+				case []byte:
+					if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
+						ival, sval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
+						if ival > 0 {
+							md.CustomInts[oidName] = ival
+							md.Customs[kt.StringPrefix+oidName] = sval
+						} else {
+							md.Customs[oidName] = sval
+						}
+					} else {
+						md.Customs[oidName] = string(vt)
+					}
+				case net.IP:
+					md.Customs[oidName] = vt.String()
+				default:
+					md.CustomInts[oidName] = snmp_util.ToInt64(value)
+				}
+			}
+		}
 	}
-	log.Infof("SNMP Device Metadata: Data received: %+v", md)
 
 	return &md, nil
 }
 
-func pollDevice(oids []string, log logger.ContextL, server *gosnmp.GoSNMP, deviceMetadataMibs map[string]*kt.Mib, md *kt.DeviceMetricsMetadata) (bool, error) {
-	result, err := server.Get(oids)
-	if err != nil {
-		return false, err
+func getFromCustomMap(mibs map[string]*kt.Mib) []string {
+	keys := []string{}
+	for k, _ := range mibs {
+		keys = append(keys, k)
 	}
 
-	hasData := false
+	sort.Strings(keys)
+	return keys
+}
+
+func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string, md *kt.DeviceMetricsMetadata) {
+	if idx[0:1] == "." {
+		idx = idx[1:]
+	}
+	if _, ok := md.Tables[idx]; !ok {
+		md.Tables[idx] = kt.NewDeviceTableMetadata()
+	}
+	switch value.variable.Type {
+	case gosnmp.OctetString:
+		val := string(value.variable.Value.([]byte))
+		if value.mib.Conversion != "" { // Adjust for any hard coded values here.
+			_, val = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
+		}
+		if utf8.ValidString(val) {
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
+		}
+	case gosnmp.IPAddress: // Does this work?
+		switch val := value.variable.Value.(type) {
+		case string:
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
+		case []byte:
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, string(val), 0)
+		case net.IP:
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val.String(), 0)
+		}
+	case gosnmp.ObjectIdentifier:
+		val := string(value.variable.Value.(string))
+		if value.mib.Conversion != "" { // Adjust for any hard coded values here.
+			_, val = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
+		}
+		if utf8.ValidString(val) {
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
+		}
+	default:
+		// Try to just use as a number
+		md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", gosnmp.ToBigInt(value.variable.Value).Int64())
+	}
+}
+
+// Super basic loop to get info for discovery.
+func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.DeviceMetricsMetadata, error) {
+	md := kt.DeviceMetricsMetadata{}
+
+	var oids []string
+	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
+		oids = append(oids, el.Key.(string))
+	}
+
+	result, err := server.Get(oids)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, pdu := range result.Variables {
 		log.Debugf("pdu: %+v", pdu)
-
 		oidVal, value := pdu.Name, pdu.Value
 
 		// You can get a nil value w/out getting an error.
 		if value == nil || pdu.Type == gosnmp.NoSuchObject {
-			if oidInfo, ok := deviceMetadataMibs[oidVal[1:]]; ok {
-				log.Infof("Trying to walk %s -> %s as a table", oidInfo.Name, oidVal)
-				err := getTable(log, server, oidVal, oidInfo, md)
-				if err != nil {
-					log.Warnf("Dropping %s because of nil value or missing object: %+v %v", oidVal, pdu, err)
-				}
-			}
 			continue
 		}
 
 		var oidName string
-		oid, ok := deviceMetadataMibs[oidVal[1:]]
+		thing, ok := SNMP_device_metadata_oids.Get(oidVal)
 		if !ok {
-			thing, ok := SNMP_device_metadata_oids.Get(oidVal)
-			if !ok {
-				if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
-					log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")
-				} else {
-					log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v %v", oidVal, value)
-				}
-				continue
+			if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
+				log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")
+			} else {
+				log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v %v", oidVal, value)
 			}
-			oidName = thing.(string)
-		} else {
-			oidName = oid.Name
+			continue
 		}
+		oidName = thing.(string)
 
-		hasData = true
 		switch oidName {
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
@@ -136,97 +295,8 @@ func pollDevice(oids []string, log logger.ContextL, server *gosnmp.GoSNMP, devic
 			md.SysServices = int(snmp_util.ToInt64(value))
 		case SNMP_engineID:
 			_, md.EngineID = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
-		default:
-			if oid.Tag != "" {
-				oidName = oid.Tag
-			}
-			switch vt := value.(type) {
-			case string:
-				md.Customs[oidName] = vt
-			case []byte:
-				if oid.Conversion != "" { // Adjust for any hard coded values here.
-					ival, sval := snmp_util.GetFromConv(pdu, oid.Conversion, log)
-					if ival > 0 {
-						md.CustomInts[oidName] = ival
-						md.Customs[kt.StringPrefix+oidName] = sval
-					} else {
-						md.Customs[oidName] = sval
-					}
-				} else {
-					md.Customs[oidName] = string(vt)
-				}
-			case net.IP:
-				md.Customs[oidName] = vt.String()
-			default:
-				md.CustomInts[oidName] = snmp_util.ToInt64(value)
-			}
 		}
 	}
 
-	return hasData, nil
-}
-
-func getFromCustomMap(mibs map[string]*kt.Mib) []string {
-	keys := []string{}
-	for k, _ := range mibs {
-		keys = append(keys, k)
-	}
-
-	sort.Strings(keys)
-	return keys
-}
-
-func getTable(log logger.ContextL, g *gosnmp.GoSNMP, oid string, mib *kt.Mib, md *kt.DeviceMetricsMetadata) error {
-	results, err := g.WalkAll(oid)
-	if err != nil {
-		return err
-	}
-
-	oidName := mib.GetName()
-
-	log.Infof("TableWalk Results: %s: %s -> %d", oidName, oid, len(results))
-	// Save as index -> oid -> value
-	for _, variable := range results {
-		if len(variable.Name) <= len(oid)+1 {
-			log.Warnf("Skipping invalid table, could not get index: %s -> %s", oid, variable.Name)
-			continue
-		}
-		idx := variable.Name[len(oid)+1:]
-		if _, ok := md.Tables[idx]; !ok {
-			md.Tables[idx] = kt.NewDeviceTableMetadata()
-		}
-
-		switch variable.Type {
-		case gosnmp.OctetString:
-			value := string(variable.Value.([]byte))
-			if mib.Conversion != "" { // Adjust for any hard coded values here.
-				_, value = snmp_util.GetFromConv(variable, mib.Conversion, log)
-			}
-			if utf8.ValidString(value) {
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, value, 0)
-			}
-		case gosnmp.IPAddress: // Does this work?
-			switch val := variable.Value.(type) {
-			case string:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, val, 0)
-			case []byte:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, string(val), 0)
-			case net.IP:
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, val.String(), 0)
-			}
-		case gosnmp.ObjectIdentifier:
-			value := string(variable.Value.(string))
-			if mib.Conversion != "" { // Adjust for any hard coded values here.
-				_, value = snmp_util.GetFromConv(variable, mib.Conversion, log)
-			}
-			if utf8.ValidString(value) {
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, value, 0)
-			}
-		default:
-			// Try to just use as a number
-			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(mib, "", gosnmp.ToBigInt(variable.Value).Int64())
-		}
-	}
-
-	return nil
+	return &md, nil
 }

@@ -21,6 +21,7 @@ type Poller struct {
 	server                *gosnmp.GoSNMP
 	interval              time.Duration
 	interfaceMetadata     *InterfaceMetadata
+	deviceMetadata        *DeviceMetadata
 	jchfChan              chan []*kt.JCHF
 	conf                  *kt.SnmpDeviceConfig
 	metrics               *kt.SnmpDeviceMetric
@@ -92,6 +93,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		server:                server,
 		interval:              DEFAULT_INTERVAL,
 		interfaceMetadata:     NewInterfaceMetadata(interfaceMetadataMibs, log),
+		deviceMetadata:        NewDeviceMetadata(deviceMetadataMibs, conf, metrics, log),
 		jchfChan:              jchfChan,
 		metrics:               metrics,
 		deviceMetadataMibs:    deviceMetadataMibs,
@@ -168,7 +170,7 @@ func (p *Poller) PollSNMPMetadata(ctx context.Context) (*kt.DeviceData, error) {
 		}
 	}
 
-	deviceMetadata, err := GetDeviceMetadata(p.log, p.server, p.deviceMetadataMibs)
+	deviceMetadata, err := p.deviceMetadata.Poll(ctx, p.server)
 	if err != nil {
 		return nil, err
 	}

@@ -21,6 +21,8 @@ const (
 	LOG_DEBUG   = 1
 	LOG_ERR     = 4
 	LOG_WARNING = 3
+
+	reclaimThreshold int = 5120 // Seems to be around p99
 )
 
 // container for a pending log message
@@ -95,7 +97,11 @@ func SetLogName(p string) (err error) {
 
 // freeMsg releases the message back to be reused
 func freeMsg(msg *logMessage) (err error) {
-	msg.Reset()
+	if msg.Buffer.Cap() > reclaimThreshold {
+		msg.Buffer = *bytes.NewBuffer(make([]byte, 0, reclaimThreshold))
+	} else {
+		msg.Reset()
+	}
 	select {
 	case freeMessages <- msg: // no-op
 	default:

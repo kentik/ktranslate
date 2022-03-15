@@ -163,7 +163,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 				return
 			}
-			md, err = metadata.GetDeviceMetadata(log, serv, nil)
+			md, err = metadata.GetBasicDeviceMetadata(log, serv)
 			if err != nil {
 				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
 				continue
@@ -185,7 +185,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
 				return
 			}
-			md, err = metadata.GetDeviceMetadata(log, serv, nil)
+			md, err = metadata.GetBasicDeviceMetadata(log, serv)
 			if err != nil {
 				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
 				continue
