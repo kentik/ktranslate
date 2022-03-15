@@ -355,8 +355,10 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketLossPct"] = int64(stats.PacketLoss * 1000.)
-	dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	if stats.PacketLoss >= 0.0 {
+		dst.CustomBigInt["PacketLossPct"] = int64(stats.PacketLoss * 1000.)
+		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	}
 	dm.conf.SetUserTags(dst.CustomStr)
 
 	return []*kt.JCHF{dst}, nil
