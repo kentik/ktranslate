@@ -26,6 +26,7 @@ type OID struct {
 	PollTime   int              `yaml:"poll_time_sec,omitempty"`
 	MatchAttr  []string         `yaml:"match_attributes,omitempty"`
 	Format     string           `yaml:"format,omitempty"`
+	AllowDup   bool             `yaml:"allow_duplicate,omitempty"`
 }
 
 type Tag struct {
@@ -385,6 +386,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
 				Format:       metric.Symbol.Format,
+				AllowDup:     metric.Symbol.AllowDup,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -426,6 +428,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Table:        metric.Table.GetTableName(),
 				FromExtended: metric.fromExtended,
 				Format:       s.Format,
+				AllowDup:     s.AllowDup,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -492,6 +495,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				Tag:        tag.Tag,
 				Conversion: tag.Column.Conversion,
 				Enum:       tag.Column.Enum,
+				AllowDup:   tag.Column.AllowDup,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -537,6 +541,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Mib:        metric.Mib,
 					Table:      metric.Table.GetTableName(),
 					Enum:       t.Column.Enum,
+					AllowDup:   t.Column.AllowDup,
 				}
 				if len(mib.Enum) > 0 {
 					mib.EnumRev = make(map[int64]string)
@@ -777,7 +782,7 @@ func prune(mibs map[string]*kt.Mib, counterTimeSec int, minCounterTime int) {
 
 	// Lastly, delete if we're not keeping.
 	for oid, mib := range mibs {
-		if !keepNames[oid] {
+		if !keepNames[oid] && !mib.AllowDup {
 			delete(mibs, oid)
 		}
 
