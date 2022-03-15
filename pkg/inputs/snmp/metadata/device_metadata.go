@@ -193,8 +193,6 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		}
 	}
 
-	dm.log.Infof("XXX %+v", md)
-
 	return &md, nil
 }
 
