@@ -339,7 +339,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		if err != nil {
 			return err
 		}
-		conf.Disco.Cidrs = nil
+		if !isTest {
+			conf.Disco.Cidrs = nil
+		}
 	}
 
 	if conf.DeviceOrig != "" {
@@ -351,7 +353,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		if err != nil {
 			return err
 		}
-		conf.Devices = nil
+		if !isTest {
+			conf.Devices = nil
+		}
 	}
 
 	// Save out the config file.
