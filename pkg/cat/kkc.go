@@ -626,7 +626,8 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.
 	if kc.config.SNMPFile != "" {
 		if kc.config.SNMPDisco { // Here, we're just returning the list of devices on the network which might speak snmp.
-			return snmp.Discover(ctx, kc.config.SNMPFile, kc.log)
+			_, err := snmp.Discover(ctx, kc.config.SNMPFile, kc.log)
+			return err
 		}
 		assureInput()
 		kc.metrics.SnmpDeviceData = kt.NewSnmpMetricSet(kc.registry)

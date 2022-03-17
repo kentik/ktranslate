@@ -482,13 +482,60 @@ func (a *V3SNMPConfig) InheritGlobal() bool {
 }
 
 // Save any hard coded parts of this profile which might get overriten by an automatic process.
-func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig) {
+func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	if old == nil {
 		return
 	}
 
 	if strings.HasPrefix(old.MibProfile, "!") {
 		d.MibProfile = old.MibProfile
+	}
+	if old.SampleRate > 0 {
+		d.SampleRate = old.SampleRate
+	}
+	if old.FlowOnly {
+		d.FlowOnly = old.FlowOnly
+	}
+	if old.PingOnly {
+		d.PingOnly = old.PingOnly
+	}
+	if old.PollTimeSec > 0 {
+		d.PollTimeSec = old.PollTimeSec
+	}
+	if old.TimeoutMS > 0 {
+		d.TimeoutMS = old.TimeoutMS
+	}
+	if old.Retries > 0 {
+		d.Retries = old.Retries
+	}
+	if old.MonitorAdminShut {
+		d.MonitorAdminShut = old.MonitorAdminShut
+	}
+	if old.NoUseBulkWalkAll {
+		d.NoUseBulkWalkAll = old.NoUseBulkWalkAll
+	}
+	if old.RunPing {
+		d.RunPing = old.RunPing
+	}
+	if d.UserTags == nil && old.UserTags != nil {
+		d.UserTags = map[string]string{}
+	}
+	for k, v := range old.UserTags {
+		if _, ok := d.UserTags[k]; !ok {
+			if _, ok := conf.Global.UserTags[k]; !ok {
+				d.UserTags[k] = v
+			}
+		}
+	}
+	if d.MatchAttr == nil && old.MatchAttr != nil {
+		d.MatchAttr = map[string]string{}
+	}
+	for k, v := range old.MatchAttr {
+		if _, ok := d.MatchAttr[k]; !ok {
+			if _, ok := conf.Global.MatchAttr[k]; !ok {
+				d.MatchAttr[k] = v
+			}
+		}
 	}
 }
 
