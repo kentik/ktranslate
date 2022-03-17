@@ -69,6 +69,11 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 	}
 	defer mdb.Close()
 
+	ignoreMap := map[string]bool{}
+	for _, ip := range conf.Disco.IgnoreList {
+		ignoreMap[ip] = true
+	}
+
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
 	for _, ipr := range conf.Disco.Cidrs {
 		_, _, err := net.ParseCIDR(ipr)
@@ -102,6 +107,9 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) error {
 		log.Infof("Starting to check %d ips in %s", len(results), ipr)
 		for i, result := range results {
 			if strings.HasSuffix(ipr, "/32") || result.IsHostUp() {
+				if ignoreMap[result.Host.String()] { // If we have marked this ip as to be ignored, don't do anything more with it.
+					continue
+				}
 				wg.Add(1)
 				posit := fmt.Sprintf("%d/%d)", i+1, len(results))
 				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, log)
@@ -344,6 +352,20 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		}
 	}
 
+	if conf.Disco.IgnoreOrig != "" {
+		t, err := yaml.Marshal(conf.Disco.IgnoreList)
+		if err != nil {
+			return err
+		}
+		err = ioutil.WriteFile(conf.Disco.IgnoreOrig, t, permissions)
+		if err != nil {
+			return err
+		}
+		if !isTest {
+			conf.Disco.IgnoreList = nil
+		}
+	}
+
 	if conf.DeviceOrig != "" {
 		t, err := yaml.Marshal(conf.Devices)
 		if err != nil {
@@ -367,6 +389,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	// Swap for our external sections.
 	if conf.Disco.CidrOrig != "" {
 		t = bytes.Replace(t, []byte("cidrs: []"), []byte(`cidrs: "@`+conf.Disco.CidrOrig+`"`), 1)
+	}
+	if conf.Disco.IgnoreOrig != "" {
+		t = bytes.Replace(t, []byte("ignore_list: []"), []byte(`ignore_list: "@`+conf.Disco.IgnoreOrig+`"`), 1)
 	}
 	if conf.DeviceOrig != "" {
 		t = bytes.Replace(t, []byte("devices: {}"), []byte(`devices: "@`+conf.DeviceOrig+`"`), 1)

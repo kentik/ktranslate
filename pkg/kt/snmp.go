@@ -173,6 +173,7 @@ type SnmpTrapConfig struct {
 
 type SnmpDiscoConfig struct {
 	Cidrs              StringArray     `yaml:"cidrs"`
+	IgnoreList         StringArray     `yaml:"ignore_list"`
 	Debug              bool            `yaml:"debug"`
 	Ports              []int           `yaml:"ports"`
 	DefaultCommunities []string        `yaml:"default_communities"`
@@ -185,6 +186,7 @@ type SnmpDiscoConfig struct {
 	ReplaceDevices     bool            `yaml:"replace_devices"`
 	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
 	CidrOrig           string          `yaml:"-"`
+	IgnoreOrig         string          `yaml:"-"`
 }
 
 type SnmpGlobalConfig struct {
