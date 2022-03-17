@@ -359,7 +359,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		if err != nil {
 			return err
 		}
-		conf.Disco.IgnoreList = nil
+		if !isTest {
+			conf.Disco.IgnoreList = nil
+		}
 	}
 
 	if conf.DeviceOrig != "" {
@@ -383,6 +385,9 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 	// Swap for our external sections.
 	if conf.Disco.CidrOrig != "" {
 		t = bytes.Replace(t, []byte("cidrs: []"), []byte(`cidrs: "@`+conf.Disco.CidrOrig+`"`), 1)
+	}
+	if conf.Disco.IgnoreOrig != "" {
+		t = bytes.Replace(t, []byte("ignore_list: []"), []byte(`ignore_list: "@`+conf.Disco.IgnoreOrig+`"`), 1)
 	}
 	if conf.DeviceOrig != "" {
 		t = bytes.Replace(t, []byte("devices: {}"), []byte(`devices: "@`+conf.DeviceOrig+`"`), 1)

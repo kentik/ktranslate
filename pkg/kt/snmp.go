@@ -173,7 +173,7 @@ type SnmpTrapConfig struct {
 
 type SnmpDiscoConfig struct {
 	Cidrs              StringArray     `yaml:"cidrs"`
-	IgnoreList         StringArray     `yaml:"ignore_list,omitempty"`
+	IgnoreList         StringArray     `yaml:"ignore_list"`
 	Debug              bool            `yaml:"debug"`
 	Ports              []int           `yaml:"ports"`
 	DefaultCommunities []string        `yaml:"default_communities"`
