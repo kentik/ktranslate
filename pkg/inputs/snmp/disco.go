@@ -350,6 +350,18 @@ func addDevices(foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, c
 		conf.Disco.Cidrs = nil
 	}
 
+	if conf.Disco.IgnoreOrig != "" {
+		t, err := yaml.Marshal(conf.Disco.IgnoreList)
+		if err != nil {
+			return err
+		}
+		err = ioutil.WriteFile(conf.Disco.IgnoreOrig, t, permissions)
+		if err != nil {
+			return err
+		}
+		conf.Disco.IgnoreList = nil
+	}
+
 	if conf.DeviceOrig != "" {
 		t, err := yaml.Marshal(conf.Devices)
 		if err != nil {

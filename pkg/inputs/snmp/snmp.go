@@ -292,6 +292,20 @@ func parseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 		ms.Disco.Cidrs = cidrList
 	}
 
+	if ms.Disco != nil && len(ms.Disco.IgnoreList) > 0 && strings.HasPrefix(ms.Disco.IgnoreList[0], "@") {
+		ignoreList := []string{}
+		byc, err := ioutil.ReadFile(ms.Disco.IgnoreList[0][1:])
+		if err != nil {
+			return nil, err
+		}
+		err = yaml.Unmarshal(byc, &ignoreList)
+		if err != nil {
+			return nil, err
+		}
+		ms.Disco.IgnoreOrig = ms.Disco.IgnoreList[0][1:]
+		ms.Disco.IgnoreList = ignoreList
+	}
+
 	fullDevices := map[string]*kt.SnmpDeviceConfig{}
 	for name, devFile := range ms.Devices {
 		if strings.HasPrefix(name, "file_") && strings.HasPrefix(devFile.DeviceName, "@") {
