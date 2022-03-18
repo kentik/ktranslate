@@ -309,7 +309,7 @@ func (mb *Mib) GetName() string { // Tag takes precedince over name if it is pre
 }
 
 func (mb *Mib) IsPollReady() bool { // If there's a poll duration, return false if not enough time has elapsed before this next poll.
-	if mb.PollDur == 0 { // If not set, just always return true
+	if mb == nil || mb.PollDur == 0 { // If not set, just always return true
 		return true
 	}
 	now := time.Now()
