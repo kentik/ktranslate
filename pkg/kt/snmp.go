@@ -294,6 +294,7 @@ type Mib struct {
 	FromExtended bool
 	OtherTables  map[string]bool
 	Format       string
+	AllowDup     bool
 }
 
 func (mb *Mib) String() string {

@@ -393,11 +393,11 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	if conf.Disco.IgnoreOrig != "" {
 		t, err := yaml.Marshal(conf.Disco.IgnoreList)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		err = ioutil.WriteFile(conf.Disco.IgnoreOrig, t, permissions)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if !isTest {
 			conf.Disco.IgnoreList = nil
