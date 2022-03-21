@@ -47,6 +47,12 @@ func NewHttpListener(ctx context.Context, host string, log logger.Underlying, re
 		devices: apic.GetDevicesAsMap(0),
 	}
 
+	err := connect(ks)
+	if err != nil {
+		return nil, err
+	}
+	ks.Infof("XXX Connected!")
+
 	go ks.run(ctx)
 	return &ks, nil
 }
