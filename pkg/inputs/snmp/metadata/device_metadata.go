@@ -109,10 +109,10 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		if len(oidResults) == 0 {
 			missing++
 			if _, ok := dm.missing[oid]; ok {
-				dm.log.Debugf("OID %s failed to return results, Metric Name: %s", oid, mib.Name)
+				dm.log.Debugf("OID %s failed to return results, Metric Name: %s", oid, mib.GetName())
 			} else {
 				dm.missing[oid] = true
-				dm.log.Warnf("OID %s failed to return results, Metric Name: %s", oid, mib.Name)
+				dm.log.Warnf("OID %s failed to return results, Metric Name: %s", oid, mib.GetName())
 			}
 		}
 		for _, result := range oidResults {

@@ -100,7 +100,11 @@ func ToInt64(val interface{}) int64 {
 // topology-demo/devicemetrics/main.go.  Prefix must occur in value, otherwise
 // results are undefined (aka "wrong").
 func GetIndex(value, prefix string) string {
-	return value[strings.Index(value, prefix)+len(prefix):]
+	posit := strings.Index(value, prefix) + len(prefix)
+	if len(value) > posit {
+		return value[posit:]
+	}
+	return ""
 }
 
 // walk the OID subtree under a root, returning a slice of varbinds
@@ -125,8 +129,10 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 		pollTry{walk: server.WalkAll, sleep: SNMP_POLL_SLEEP_TIME},
 	}
 
-	// If the device says to not use bulkwalkall, trim this out now.
-	if device.NoUseBulkWalkAll {
+	// If we are overriding with a test set.
+	if walker := device.GetTestWalker(); walker != nil {
+		tries = []pollTry{pollTry{walk: walker.WalkAll, sleep: time.Duration(0)}}
+	} else if device.NoUseBulkWalkAll { // If the device says to not use bulkwalkall, trim this out now.
 		tries = tries[1:]
 	}
 

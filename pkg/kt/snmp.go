@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gosnmp/gosnmp"
 	go_metrics "github.com/kentik/go-metrics"
 	"gopkg.in/yaml.v2"
 )
@@ -161,6 +162,7 @@ type SnmpDeviceConfig struct {
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
 	allUserTags         map[string]string
+	walker              SNMPTestWalker
 }
 
 type SnmpTrapConfig struct {
@@ -302,6 +304,9 @@ func (mb *Mib) String() string {
 }
 
 func (mb *Mib) GetName() string { // Tag takes precedince over name if it is present.
+	if mb == nil {
+		return "missing_mib"
+	}
 	if mb.Tag != "" {
 		return mb.Tag
 	}
@@ -586,4 +591,16 @@ func (d *SnmpDeviceConfig) GetUserTags() map[string]string {
 	}
 
 	return out
+}
+
+func (d *SnmpDeviceConfig) GetTestWalker() SNMPTestWalker {
+	return d.walker
+}
+
+func (d *SnmpDeviceConfig) SetTestWalker(w SNMPTestWalker) {
+	d.walker = w
+}
+
+type SNMPTestWalker interface {
+	WalkAll(string) ([]gosnmp.SnmpPDU, error)
 }

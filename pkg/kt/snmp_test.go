@@ -20,3 +20,17 @@ func TestIsPollReady(t *testing.T) {
 	assert.False(t, mib.IsPollReady()) // Skip the 2nd.
 	assert.False(t, mib.IsPollReady()) // Skip the 2nd.
 }
+
+func TestGetName(t *testing.T) {
+	mib := &Mib{
+		Tag:  "foo",
+		Name: "name",
+	}
+	assert.Equal(t, "foo", mib.GetName())
+	mib = nil
+	assert.Equal(t, "missing_mib", mib.GetName())
+	mib = &Mib{
+		Name: "bar",
+	}
+	assert.Equal(t, "bar", mib.GetName())
+}
