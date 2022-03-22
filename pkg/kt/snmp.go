@@ -134,6 +134,19 @@ type V3SNMPConfig struct {
 	origStr                  string
 }
 
+type EAPIConfig struct {
+	Host      string `yaml:"host"`
+	Username  string `yaml:"username"`
+	Password  string `yaml:"password"`
+	Transport string `yaml:"transport"`
+	Port      int    `yaml:"port"`
+}
+
+// Contain various extensions to snmp which can be used to get data.
+type ExtensionSet struct {
+	EAPIConfig *EAPIConfig `yaml:"eapi_config,omitempty"` // Arista eAPI.
+}
+
 type SnmpDeviceConfig struct {
 	DeviceName          string            `yaml:"device_name"`
 	DeviceIP            string            `yaml:"device_ip"`
@@ -161,6 +174,7 @@ type SnmpDeviceConfig struct {
 	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
+	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }
