@@ -2,6 +2,7 @@ package arista
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aristanetworks/goeapi"
@@ -86,6 +87,11 @@ var (
 		true:  "true",
 		false: "false",
 	}
+
+	shutdownMap = map[string]int64{
+		"true":  1,
+		"false": 2,
+	}
 )
 
 func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
@@ -95,11 +101,11 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 		return nil, err
 	}
 
-	res := make([]*kt.JCHF, 0)
-
 	// Testing.
-	sum = getfake()
+	// sum = getfake()
 
+	// Each VFR + peer combo is a unique point to record for a metric.
+	res := make([]*kt.JCHF, 0)
 	for _, vrf := range sum.VRFs {
 		for peer, state := range vrf.Peers {
 			dst := kt.NewJCHF()
@@ -159,7 +165,34 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 }
 
 func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
-	return nil, nil
+	mlag := module.Mlag(c.client)
+	config := mlag.Get()
+	if config == nil {
+		return nil, fmt.Errorf("Could not get a mlag config")
+	}
+
+	// This is just a dumb system right now. @TODO, is there more info to pull out?
+	dst := kt.NewJCHF()
+	dst.CustomStr = map[string]string{
+		"domain_id":       config.DomainID(),
+		"local_interface": config.LocalInterface(),
+		"peer_address":    config.PeerAddress(),
+		"peer_link":       config.PeerLink(),
+		"shutdown":        config.Shutdown(),
+	}
+	dst.CustomInt = map[string]int32{}
+	dst.CustomBigInt = map[string]int64{}
+	dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+	dst.Provider = c.conf.Provider
+	dst.DeviceName = c.conf.DeviceName
+	dst.SrcAddr = c.conf.DeviceIP
+	dst.Timestamp = time.Now().Unix()
+	dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+	dst.CustomBigInt["MLAGShutdown"] = shutdownMap[config.Shutdown()]
+	dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+
+	return []*kt.JCHF{dst}, nil
 }
 
 func getfake() module.ShowIPBGPSummary {
