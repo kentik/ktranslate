@@ -2,7 +2,6 @@ package arista
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/aristanetworks/goeapi"
@@ -92,6 +91,22 @@ var (
 		"true":  1,
 		"false": 2,
 	}
+
+	mlag_strings = map[string]int64{
+		"consistent": 1,
+		"up":         1,
+		"connected":  1,
+		"active":     1,
+		"primary":    1,
+		"secondary":  2,
+		"disabled":   0,
+		"unknown":    3,
+	}
+
+	mlag_bool = map[bool]int64{
+		true:  1,
+		false: 0,
+	}
 )
 
 func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
@@ -130,31 +145,31 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
 
 			dst.CustomBigInt["MsgSent"] = int64(state.MsgSent)
-			dst.CustomMetrics["MsgSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["MsgSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bpg", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["InMsgQueue"] = int64(state.InMsgQueue)
-			dst.CustomMetrics["InMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["InMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PrefixReceived"] = int64(state.PrefixReceived)
-			dst.CustomMetrics["PrefixReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["PrefixReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["UpDownTime"] = int64(state.UpDownTime)
-			dst.CustomMetrics["UpDownTime"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["UpDownTime"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["Version"] = int64(state.Version)
-			dst.CustomMetrics["Version"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["Version"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["MsgReceived"] = int64(state.MsgReceived)
-			dst.CustomMetrics["MsgReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["MsgReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PrefixAccepted"] = int64(state.PrefixAccepted)
-			dst.CustomMetrics["PrefixAccepted"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["PrefixAccepted"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PeerState"] = stateMap[state.PeerState]
-			dst.CustomMetrics["PeerState"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["PeerState"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["OutMsgQueue"] = int64(state.OutMsgQueue)
-			dst.CustomMetrics["OutMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["OutMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			c.conf.SetUserTags(dst.CustomStr)
 			res = append(res, dst)
@@ -164,21 +179,84 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 	return res, nil
 }
 
+type MLAGPorts struct {
+	Disabled      int64 `json:"Disabled"`
+	ActivePartial int64 `json:"Active-partial"`
+	Inactive      int64 `json:"Inactive"`
+	Configured    int64 `json:"Configured"`
+	ActiveFull    int64 `json:"ActiveFull"`
+}
+
+type MLAGDetail struct {
+	FailoverCauseList            []string `json:"failoverCauseList"`
+	UdpHeartbeatsSent            int64    `json:"udpHeartbeatsSent"`
+	LacpStandby                  bool     `json:"lacpStandby"`
+	MlagState                    string   `json:"mlagState"`
+	HeartbeatInterval            int      `json:"heartbeatInterval"`
+	EffectiveHeartbeatInterval   int      `json:"effectiveHeartbeatInterval"`
+	HeartbeatTimeout             int      `json:"heartbeatTimeout"`
+	StateChanges                 int      `json:"stateChanges"`
+	FastMacRedirectionEnabled    bool     `json:"fastMacRedirectionEnabled"`
+	PeerPortsErrdisabled         bool     `json:"peerPortsErrdisabled"`
+	MlagHwReady                  bool     `json:"mlagHwReady"`
+	UdpHeartbeatAlive            bool     `json:"udpHeartbeatAlive"`
+	FailoverInitiated            bool     `json:"failoverInitiated"`
+	PeerMlagState                string   `json:"peerMlagState"`
+	SecondaryFromFailover        bool     `json:"secondaryFromFailover"`
+	PrimaryPriority              int      `json:"primaryPriority"`
+	Failover                     bool     `json:"failover"`
+	Enabled                      bool     `json:"enabled"`
+	PeerMacRoutingSupported      bool     `json:"peerMacRoutingSupported"`
+	PeerPrimaryPriority          int      `json:"peerPrimaryPriority"`
+	udpHeartbeatsReceived        int64    `json:"udpHeartbeatsReceived"`
+	PeerMacAddress               string   `json:"peerMacAddress"`
+	MountChanges                 int      `json:"mountChanges"`
+	HeartbeatTimeoutsSinceReboot int64    `json:"heartbeatTimeoutsSinceReboot"`
+}
+
+type ShowMlag struct {
+	ConfigSanity                string     `json:"configSanity"`
+	DomainId                    string     `json:"domainId"`
+	LocalIntfStatus             string     `json:"localIntfStatus"`
+	LocalInterface              string     `json:"localInterface"`
+	State                       string     `json:"state"`
+	ReloadDelay                 int        `json:"reloadDelay"`
+	PeerLink                    string     `json:"peerLink"`
+	NegStatus                   string     `json:"negStatus"`
+	PeerAddress                 string     `json:"peerAddress"`
+	PeerLinkStatus              string     `json:"peerLinkStatus"`
+	SystemId                    string     `json:"systemId"`
+	DualPrimaryDetectionState   string     `json:"dualPrimaryDetectionState"`
+	ReloadDelayNonMlag          int        `json:"reloadDelayNonMlag"`
+	MlagPorts                   MLAGPorts  `json:"mlagPorts"`
+	PortsErrdisabled            bool       `json:"portsErrdisabled"`
+	DualPrimaryPortsErrdisabled bool       `json:"dualPrimaryPortsErrdisabled"`
+	Detail                      MLAGDetail `json:"detail"`
+}
+
+func (s *ShowMlag) GetCmd() string {
+	return "show mlag detail"
+}
+
 func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
-	mlag := module.Mlag(c.client)
-	config := mlag.Get()
-	if config == nil {
-		return nil, fmt.Errorf("Could not get a mlag config")
+	sv := &ShowMlag{}
+	handle, _ := c.client.GetHandle("json")
+	handle.AddCommand(sv)
+	if err := handle.Call(); err != nil {
+		return nil, err
 	}
 
-	// This is just a dumb system right now. @TODO, is there more info to pull out?
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{
-		"domain_id":       config.DomainID(),
-		"local_interface": config.LocalInterface(),
-		"peer_address":    config.PeerAddress(),
-		"peer_link":       config.PeerLink(),
-		"shutdown":        config.Shutdown(),
+		"config_sanity":     sv.ConfigSanity,
+		"local_intf_status": sv.LocalIntfStatus,
+		"neg_status":        sv.NegStatus,
+		"peer_link_status":  sv.PeerLinkStatus,
+		"state":             sv.State,
+		"domain_id":         sv.DomainId,
+		"local_interface":   sv.LocalInterface,
+		"peer_address":      sv.PeerAddress,
+		"peer_link":         sv.PeerLink,
 	}
 	dst.CustomInt = map[string]int32{}
 	dst.CustomBigInt = map[string]int64{}
@@ -189,10 +267,69 @@ func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{}
 
-	dst.CustomBigInt["MLAGShutdown"] = shutdownMap[config.Shutdown()]
-	dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+	dst.CustomBigInt["ConfigSanity"] = mlag_strings[sv.ConfigSanity]
+	dst.CustomMetrics["ConfigSanity"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["LocalIntfStatus"] = mlag_strings[sv.LocalIntfStatus]
+	dst.CustomMetrics["LocalIntfStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["NegStatus"] = mlag_strings[sv.NegStatus]
+	dst.CustomMetrics["NegStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PeerLinkStatus"] = mlag_strings[sv.PeerLinkStatus]
+	dst.CustomMetrics["PeerLinkStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsErrdisabled"] = mlag_bool[sv.PortsErrdisabled]
+	dst.CustomMetrics["PortsErrdisabled"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["State"] = mlag_strings[sv.State]
+	dst.CustomMetrics["State"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsDisabled"] = sv.MlagPorts.Disabled
+	dst.CustomMetrics["PortsDisabled"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsActivePartial"] = sv.MlagPorts.ActivePartial
+	dst.CustomMetrics["PortsActivePartial"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsInactive"] = sv.MlagPorts.Inactive
+	dst.CustomMetrics["PortsInactive"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsConfigured"] = sv.MlagPorts.Configured
+	dst.CustomMetrics["PortsConfigured"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+
+	dst.CustomBigInt["PortsActiveFull"] = sv.MlagPorts.ActiveFull
+	dst.CustomMetrics["PortsActiveFull"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	return []*kt.JCHF{dst}, nil
+	// Old system, using the mlag module.
+	/*
+		mlag := module.Mlag(c.client)
+		config := mlag.Get()
+		if config == nil {
+			return nil, fmt.Errorf("Could not get a mlag config")
+		}
+
+			// This is just a dumb system right now. @TODO, is there more info to pull out?
+			dst := kt.NewJCHF()
+			dst.CustomStr = map[string]string{
+				"domain_id":       config.DomainID(),
+				"local_interface": config.LocalInterface(),
+				"peer_address":    config.PeerAddress(),
+				"peer_link":       config.PeerLink(),
+				"shutdown":        config.Shutdown(),
+			}
+			dst.CustomInt = map[string]int32{}
+			dst.CustomBigInt = map[string]int64{}
+			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+			dst.Provider = c.conf.Provider
+			dst.DeviceName = c.conf.DeviceName
+			dst.SrcAddr = c.conf.DeviceIP
+			dst.Timestamp = time.Now().Unix()
+			dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+			dst.CustomBigInt["MLAGShutdown"] = shutdownMap[config.Shutdown()]
+			dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+	*/
 }
 
 func getfake() module.ShowIPBGPSummary {
