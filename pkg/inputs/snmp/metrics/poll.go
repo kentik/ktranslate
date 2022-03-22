@@ -150,6 +150,8 @@ func (p *Poller) StartLoop(ctx context.Context) {
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics Poll Done")
+				statusCheck.Stop()
+				counterCheck.Stop()
 				return
 			}
 		}
