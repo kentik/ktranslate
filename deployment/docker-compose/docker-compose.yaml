@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  ktranslate:
+    image: kentik/ktranslate:v2
+    container_name: ktranslate
+    restart: unless-stopped
+    volumes:
+      - ${KT_SNMP_PATH}:/snmp.yaml ## Make KT_SNMP_PATH a path to your local snmp.yaml config.
+    environment: ## Set these env vars
+      - NEW_RELIC_API_KEY=${NEW_RELIC_API_KEY}
+      - NR_ACCOUNT_ID=${NR_ACCOUNT_ID}
+      - NR_REGION=${NR_REGION}
+    command:
+      - -snmp=/snmp.yaml
+      - -metrics=jchf
+      - -tee_logs=true
+      - nr1.snmp
+    network_mode: host
