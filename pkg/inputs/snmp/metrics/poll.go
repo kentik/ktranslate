@@ -214,6 +214,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
+				counterCheck.Stop()
 				return
 			}
 		}
