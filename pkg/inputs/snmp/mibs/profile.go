@@ -86,7 +86,7 @@ func (p *Profile) GetProfileName(override string) string {
 	return "snmp"
 }
 
-func (p *Profile) extend(extends map[string]*Profile) error {
+func (p *Profile) extend(extends map[string]*Profile, validate bool) error {
 	if p.extended { // Don't extend multiple times, also halt recursion.
 		return nil
 	}
@@ -95,12 +95,18 @@ func (p *Profile) extend(extends map[string]*Profile) error {
 	for _, name := range p.Extends {
 		if ep, ok := extends[name]; !ok {
 			p.Errorf("You must set the %s extended profile.", name)
+			if validate {
+				return fmt.Errorf("You must set the %s extended profile.", name)
+			}
 			continue
 		} else {
 			// Verify this guy is extended.
-			err := ep.extend(extends) // recursive, watch out.
+			err := ep.extend(extends, validate) // recursive, watch out.
 			if err != nil {
 				p.Errorf("There was an error when extending the %s profile: %v.", name, err)
+				if validate {
+					return err
+				}
 				continue
 			}
 
@@ -127,7 +133,7 @@ func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
 	extends := map[string]*Profile{}
 
 	// Recursively get all the profiles found.
-	mdb.log.Infof("Looking at mib profiles in %s", profileDir)
+	mdb.log.Infof("Looking at mib profiles in %s, validate=%v", profileDir, mdb.validate)
 	err := mdb.loadProfileDir(profileDir, extends)
 	if err != nil {
 		return 0, err
@@ -136,8 +142,12 @@ func (mdb *MibDB) LoadProfiles(profileDir string) (int, error) {
 	// Merge any extended data into the referenced profiles
 	mdb.log.Infof("Now trying to extend profiles")
 	for _, pro := range mdb.profiles {
-		pro.extend(extends)
-		pro.validate()
+		if err := pro.extend(extends, mdb.validate); err != nil && mdb.validate {
+			return 0, err
+		}
+		if err := pro.validate(); err != nil && mdb.validate {
+			return 0, err
+		}
 	}
 
 	return len(mdb.profiles), nil
@@ -161,14 +171,20 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 		// Now, recurse down if this file actually a directory
 		info, err := os.Stat(fname)
 		if err != nil {
-			mdb.log.Errorf("There was an error with the %s folder.", fname)
+			mdb.log.Errorf("There was an error with the %s folder. %v", fname, err)
+			if mdb.validate {
+				return fmt.Errorf("There was an error with the %s folder. %v", fname, err)
+			}
 			continue
 		}
 		if info.IsDir() {
 			mdb.log.Infof("Recursing into %s", fname)
 			err := mdb.loadProfileDir(fname, extends)
 			if err != nil {
-				mdb.log.Errorf("There was an error when accessing the following folder: %s: %v.", fname)
+				mdb.log.Errorf("There was an error when accessing the following folder: %s.", fname)
+				if mdb.validate {
+					return err
+				}
 				continue
 			}
 		}
@@ -177,6 +193,9 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 			err := mdb.parseTrapsFromYml(fname, file, extends)
 			if err != nil {
 				mdb.log.Errorf("There was an error when parsing the %s trap file: %v.", fname, err)
+				if mdb.validate {
+					return fmt.Errorf("There was an error when parsing the %s trap file: %v.", fname, err)
+				}
 			}
 			continue
 		}
@@ -187,11 +206,17 @@ func (mdb *MibDB) loadProfileDir(profileDir string, extends map[string]*Profile)
 			err := mdb.parseMibFromXml(fname)
 			if err != nil {
 				mdb.log.Errorf("There was an error when parsing the %s XML mib: %v.", fname, err)
+				if mdb.validate {
+					return err
+				}
 			}
 		case "yaml", "yml":
 			err := mdb.parseMibFromYml(fname, file, extends)
 			if err != nil {
 				mdb.log.Errorf("There was an error when parsing the %s YAML mib: %v.", fname, err)
+				if mdb.validate {
+					return fmt.Errorf("There was an error when parsing the %s YAML mib: %v.", fname, err)
+				}
 			}
 		default:
 			if len(pts) > 1 {

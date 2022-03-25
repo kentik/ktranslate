@@ -19,6 +19,7 @@ type MibDB struct {
 	trapMibs map[string]*kt.Mib
 	traps    map[string]Trap
 	log      logger.ContextL
+	validate bool // Error out if a profile is not correct.
 }
 
 var (
@@ -40,12 +41,13 @@ var (
 	}
 )
 
-func NewMibDB(mibpath string, profileDir string, log logger.ContextL) (*MibDB, error) {
+func NewMibDB(mibpath string, profileDir string, validate bool, log logger.ContextL) (*MibDB, error) {
 	mdb := &MibDB{
 		log:      log,
 		profiles: map[string]*Profile{},
 		traps:    map[string]Trap{},
 		trapMibs: map[string]*kt.Mib{},
+		validate: validate,
 	}
 
 	if mibpath != "" {

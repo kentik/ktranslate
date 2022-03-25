@@ -34,6 +34,7 @@ var (
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
 	snmpDiscoDur   = flag.Int("snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
+	validateMib    = flag.Bool("snmp_validate", false, "If true, validate mib profiles and exit.")
 	ServiceName    = ""
 )
 
@@ -54,11 +55,15 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 
 	// Load a mibdb if we have one.
 	if conf.Global != nil {
-		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, log)
+		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, *validateMib, log)
 		if err != nil {
 			return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
+		if *validateMib {
+			// We just want to validate that this was ok so time to exit now.
+			os.Exit(0)
+		}
 	} else {
 		log.Infof("Skipping configurable mibs")
 	}
