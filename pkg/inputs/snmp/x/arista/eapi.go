@@ -145,31 +145,31 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
 
 			dst.CustomBigInt["MsgSent"] = int64(state.MsgSent)
-			dst.CustomMetrics["MsgSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bpg", Type: "eapi.bgp"}
+			dst.CustomMetrics["MsgSent"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bpg", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["InMsgQueue"] = int64(state.InMsgQueue)
-			dst.CustomMetrics["InMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["InMsgQueue"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PrefixReceived"] = int64(state.PrefixReceived)
-			dst.CustomMetrics["PrefixReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["PrefixReceived"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["UpDownTime"] = int64(state.UpDownTime)
-			dst.CustomMetrics["UpDownTime"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["UpDownTime"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["Version"] = int64(state.Version)
-			dst.CustomMetrics["Version"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["Version"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["MsgReceived"] = int64(state.MsgReceived)
-			dst.CustomMetrics["MsgReceived"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["MsgReceived"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PrefixAccepted"] = int64(state.PrefixAccepted)
-			dst.CustomMetrics["PrefixAccepted"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["PrefixAccepted"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["PeerState"] = stateMap[state.PeerState]
-			dst.CustomMetrics["PeerState"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["PeerState"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["OutMsgQueue"] = int64(state.OutMsgQueue)
-			dst.CustomMetrics["OutMsgQueue"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.bgp", Type: "eapi.bgp"}
+			dst.CustomMetrics["OutMsgQueue"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			c.conf.SetUserTags(dst.CustomStr)
 			res = append(res, dst)
@@ -268,37 +268,37 @@ func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
 	dst.CustomMetrics = map[string]kt.MetricInfo{}
 
 	dst.CustomBigInt["ConfigSanity"] = mlag_strings[sv.ConfigSanity]
-	dst.CustomMetrics["ConfigSanity"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["ConfigSanity"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["LocalIntfStatus"] = mlag_strings[sv.LocalIntfStatus]
-	dst.CustomMetrics["LocalIntfStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["LocalIntfStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["NegStatus"] = mlag_strings[sv.NegStatus]
-	dst.CustomMetrics["NegStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["NegStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PeerLinkStatus"] = mlag_strings[sv.PeerLinkStatus]
-	dst.CustomMetrics["PeerLinkStatus"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PeerLinkStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsErrdisabled"] = mlag_bool[sv.PortsErrdisabled]
-	dst.CustomMetrics["PortsErrdisabled"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsErrdisabled"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["State"] = mlag_strings[sv.State]
-	dst.CustomMetrics["State"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["State"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsDisabled"] = sv.MlagPorts.Disabled
-	dst.CustomMetrics["PortsDisabled"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsDisabled"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsActivePartial"] = sv.MlagPorts.ActivePartial
-	dst.CustomMetrics["PortsActivePartial"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsActivePartial"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsInactive"] = sv.MlagPorts.Inactive
-	dst.CustomMetrics["PortsInactive"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsInactive"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsConfigured"] = sv.MlagPorts.Configured
-	dst.CustomMetrics["PortsConfigured"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsConfigured"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsActiveFull"] = sv.MlagPorts.ActiveFull
-	dst.CustomMetrics["PortsActiveFull"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi.mlag", Type: "eapi.mlag"}
+	dst.CustomMetrics["PortsActiveFull"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	return []*kt.JCHF{dst}, nil
 	// Old system, using the mlag module.
@@ -328,7 +328,7 @@ func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
 
 			dst.CustomBigInt["MLAGShutdown"] = shutdownMap[config.Shutdown()]
-			dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "eapi", Type: "eapi"}
+			dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi", Type: "eapi"}
 	*/
 }
 
