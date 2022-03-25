@@ -133,6 +133,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 
 			case <-ctx.Done():
 				p.log.Infof("Metadata Poll Done")
+				interfaceCheck.Stop()
 				return
 			}
 		}

@@ -150,6 +150,8 @@ func (p *Poller) StartLoop(ctx context.Context) {
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics Poll Done")
+				statusCheck.Stop()
+				counterCheck.Stop()
 				return
 			}
 		}
@@ -212,6 +214,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
+				counterCheck.Stop()
 				return
 			}
 		}
