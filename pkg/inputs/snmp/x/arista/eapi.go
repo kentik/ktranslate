@@ -2,6 +2,7 @@ package arista
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/aristanetworks/goeapi"
@@ -89,11 +90,6 @@ var (
 	boolMap = map[bool]string{
 		true:  "true",
 		false: "false",
-	}
-
-	shutdownMap = map[string]int64{
-		"true":  1,
-		"false": 2,
 	}
 
 	mlag_strings = map[string]int64{
@@ -200,7 +196,7 @@ func (c *EAPIClient) parseBGP(sv *ShowBGP) ([]*kt.JCHF, error) {
 			dst.CustomBigInt["PrefixAccepted"] = int64(state.PrefixAccepted)
 			dst.CustomMetrics["PrefixAccepted"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
-			dst.CustomBigInt["PeerState"] = stateMap[state.PeerState]
+			dst.CustomBigInt["PeerState"] = stateMap[strings.ToLower(state.PeerState)]
 			dst.CustomMetrics["PeerState"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["OutMsgQueue"] = int64(state.OutMsgQueue)
@@ -306,22 +302,22 @@ func (c *EAPIClient) parseMLAG(sv *ShowMlag) ([]*kt.JCHF, error) {
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{}
 
-	dst.CustomBigInt["ConfigSanity"] = mlag_strings[sv.ConfigSanity]
+	dst.CustomBigInt["ConfigSanity"] = mlag_strings[strings.ToLower(sv.ConfigSanity)]
 	dst.CustomMetrics["ConfigSanity"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
-	dst.CustomBigInt["LocalIntfStatus"] = mlag_strings[sv.LocalIntfStatus]
+	dst.CustomBigInt["LocalIntfStatus"] = mlag_strings[strings.ToLower(sv.LocalIntfStatus)]
 	dst.CustomMetrics["LocalIntfStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
-	dst.CustomBigInt["NegStatus"] = mlag_strings[sv.NegStatus]
+	dst.CustomBigInt["NegStatus"] = mlag_strings[strings.ToLower(sv.NegStatus)]
 	dst.CustomMetrics["NegStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
-	dst.CustomBigInt["PeerLinkStatus"] = mlag_strings[sv.PeerLinkStatus]
+	dst.CustomBigInt["PeerLinkStatus"] = mlag_strings[strings.ToLower(sv.PeerLinkStatus)]
 	dst.CustomMetrics["PeerLinkStatus"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsErrdisabled"] = mlag_bool[sv.PortsErrdisabled]
 	dst.CustomMetrics["PortsErrdisabled"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
-	dst.CustomBigInt["State"] = mlag_strings[sv.State]
+	dst.CustomBigInt["State"] = mlag_strings[strings.ToLower(sv.State)]
 	dst.CustomMetrics["State"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	dst.CustomBigInt["PortsDisabled"] = sv.MlagPorts.Disabled

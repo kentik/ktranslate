@@ -91,7 +91,7 @@ func TestParseBGP(t *testing.T) {
               "version": 4,
               "prefixAccepted": 2,
               "msgReceived": 703019,
-              "peerState": "Established",
+              "peerState": "Connect",
               "outMsgQueue": 0,
               "underMaintenance": false,
               "asn": "6"
@@ -118,8 +118,10 @@ func TestParseBGP(t *testing.T) {
 		assert.True(t, r.CustomBigInt["InMsgQueue"] > 0, r.CustomBigInt)
 		assert.True(t, r.CustomBigInt["OutMsgQueue"] == 0, r.CustomBigInt)
 		assert.True(t, r.CustomStr["asn"] == "100", r.CustomStr)
+		if r.CustomStr["peer"] == "1.78.112.3" {
+			assert.Equal(t, int(stateMap["connect"]), int(r.CustomBigInt["PeerState"]), r.CustomStr)
+		}
 	}
-
 }
 
 func TestParseMLAG(t *testing.T) {
