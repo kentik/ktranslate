@@ -13,7 +13,8 @@ import (
 
 func TestParseBGP(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	testIn := []byte(`    {
+	testIn := []byte(`
+    {
       "vrfs": {
         "default": {
           "routerId": "10.192.255.3",
@@ -119,4 +120,68 @@ func TestParseBGP(t *testing.T) {
 		assert.True(t, r.CustomStr["asn"] == "100", r.CustomStr)
 	}
 
+}
+
+func TestParseMLAG(t *testing.T) {
+	l := lt.NewTestContextL(logger.NilContext, t)
+	testIn := []byte(`
+    {
+      "localInterface": "",
+      "state": "connected",
+      "reloadDelay": 300,
+      "peerLink": "",
+      "dualPrimaryDetectionState": "disabled",
+      "reloadDelayNonMlag": 300,
+      "mlagPorts": {
+        "Disabled": 0,
+        "Active-partial": 0,
+        "Inactive": 0,
+        "Configured": 0,
+        "Active-full": 2
+      },
+      "portsErrdisabled": false,
+      "dualPrimaryPortsErrdisabled": false,
+      "detail": {
+        "failoverCauseList": [
+          "Unknown"
+        ],
+        "udpHeartbeatsSent": 0,
+        "lacpStandby": false,
+        "mlagState": "disabled",
+        "heartbeatInterval": 4000,
+        "effectiveHeartbeatInterval": 0,
+        "heartbeatTimeout": 0,
+        "stateChanges": 0,
+        "fastMacRedirectionEnabled": false,
+        "peerPortsErrdisabled": false,
+        "mlagHwReady": true,
+        "udpHeartbeatAlive": false,
+        "failoverInitiated": false,
+        "peerMlagState": "unknown",
+        "secondaryFromFailover": false,
+        "primaryPriority": 32767,
+        "failover": false,
+        "enabled": false,
+        "peerMacRoutingSupported": false,
+        "peerPrimaryPriority": 0,
+        "udpHeartbeatsReceived": 0,
+        "peerMacAddress": "00:00:00:00:00:00",
+        "mountChanges": 0,
+        "heartbeatTimeoutsSinceReboot": 0
+      }
+    }`)
+
+	sv := ShowMlag{}
+	err := json.Unmarshal(testIn, &sv)
+	assert.NoError(t, err)
+
+	c := &EAPIClient{
+		log:  l,
+		conf: &kt.SnmpDeviceConfig{Provider: "provider"},
+	}
+	res, err := c.parseMLAG(&sv)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(res)) // 6 results, because 6 peers.
+	assert.Equal(t, 1, int(res[0].CustomBigInt["State"]), res[0].CustomBigInt)
+	assert.Equal(t, 2, int(res[0].CustomBigInt["PortsActiveFull"]), res[0].CustomBigInt)
 }

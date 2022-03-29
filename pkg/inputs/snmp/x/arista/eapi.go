@@ -157,8 +157,7 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 
 func (c *EAPIClient) parseBGP(sv *ShowBGP) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
-
-	for v, vrf := range sv.VRFs {
+	for _, vrf := range sv.VRFs {
 		for peer, state := range vrf.Peers {
 			dst := kt.NewJCHF()
 			dst.CustomStr = map[string]string{
@@ -220,7 +219,7 @@ type MLAGPorts struct {
 	ActivePartial int64 `json:"Active-partial"`
 	Inactive      int64 `json:"Inactive"`
 	Configured    int64 `json:"Configured"`
-	ActiveFull    int64 `json:"ActiveFull"`
+	ActiveFull    int64 `json:"Active-full"`
 }
 
 type MLAGDetail struct {
