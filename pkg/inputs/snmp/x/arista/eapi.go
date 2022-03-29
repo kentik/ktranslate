@@ -45,6 +45,10 @@ func (c *EAPIClient) GetName() string {
 }
 
 func (c *EAPIClient) Run(ctx context.Context, dur time.Duration) {
+
+	c.getBGP()
+	c.getMLAG()
+
 	poll := time.NewTicker(dur)
 	defer poll.Stop()
 
@@ -109,19 +113,52 @@ var (
 	}
 )
 
+type Peer struct {
+	Description         string  `json:"description"`
+	MsgSent             int64   `json:"msgSent"`
+	InMsgQueue          int64   `json:"inMsgQueue"`
+	PrefixReceived      int64   `json:"prefixReceived"`
+	UpDownTime          float64 `json:"upDownTime"`
+	Version             int     `json:"version"`
+	PrefixAccepted      int64   `json:"prefixAccepted"`
+	MsgReceived         int64   `json:"msgReceived"`
+	PeerState           string  `json:"peerState"`
+	OutMsgQueue         int64   `json:"outMsgQueue"`
+	UnderMaintenance    bool    `json:"underMaintenance"`
+	ASN                 string  `json:"asn"`
+	PeerStateIdleReason string  `json:"peerStateIdleReason"`
+}
+
+type VRF struct {
+	RouterID string          `json:"routerId"`
+	Peers    map[string]Peer `json:"peers"`
+	VRF      string          `json:"vrf"`
+	ASN      string          `json:"asn"`
+}
+
+type ShowBGP struct {
+	VRFs map[string]VRF `json:"vrfs"`
+}
+
+func (s *ShowBGP) GetCmd() string {
+	return "show ip bgp summary vrf all"
+}
+
 func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
-	bgp := module.Show(c.client)
-	sum, err := bgp.ShowIPBGPSummary()
-	if err != nil {
+	sv := &ShowBGP{}
+	handle, _ := c.client.GetHandle("json")
+	handle.AddCommand(sv)
+	if err := handle.Call(); err != nil {
 		return nil, err
 	}
 
-	// Testing.
-	// sum = getfake()
+	return c.parseBGP(sv)
+}
 
-	// Each VFR + peer combo is a unique point to record for a metric.
+func (c *EAPIClient) parseBGP(sv *ShowBGP) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
-	for _, vrf := range sum.VRFs {
+
+	for v, vrf := range sv.VRFs {
 		for peer, state := range vrf.Peers {
 			dst := kt.NewJCHF()
 			dst.CustomStr = map[string]string{
@@ -131,12 +168,11 @@ func (c *EAPIClient) getBGP() ([]*kt.JCHF, error) {
 				"peer_state":             state.PeerState,
 				"under_maintenance":      boolMap[state.UnderMaintenance],
 				"peer_state_idle_reason": state.PeerStateIdleReason,
+				"asn":                    vrf.ASN,
+				"peer_asn":               state.ASN,
 			}
 			dst.CustomInt = map[string]int32{}
-			dst.CustomBigInt = map[string]int64{
-				"asn":      vrf.ASN,
-				"peer_asn": state.ASN,
-			}
+			dst.CustomBigInt = map[string]int64{}
 			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
 			dst.Provider = c.conf.Provider
 			dst.DeviceName = c.conf.DeviceName
@@ -246,6 +282,10 @@ func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
 		return nil, err
 	}
 
+	return c.parseMLAG(sv)
+}
+
+func (c *EAPIClient) parseMLAG(sv *ShowMlag) ([]*kt.JCHF, error) {
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{
 		"config_sanity":     sv.ConfigSanity,
@@ -301,74 +341,4 @@ func (c *EAPIClient) getMLAG() ([]*kt.JCHF, error) {
 	dst.CustomMetrics["PortsActiveFull"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.mlag", Type: "eapi.mlag"}
 
 	return []*kt.JCHF{dst}, nil
-	// Old system, using the mlag module.
-	/*
-		mlag := module.Mlag(c.client)
-		config := mlag.Get()
-		if config == nil {
-			return nil, fmt.Errorf("Could not get a mlag config")
-		}
-
-			// This is just a dumb system right now. @TODO, is there more info to pull out?
-			dst := kt.NewJCHF()
-			dst.CustomStr = map[string]string{
-				"domain_id":       config.DomainID(),
-				"local_interface": config.LocalInterface(),
-				"peer_address":    config.PeerAddress(),
-				"peer_link":       config.PeerLink(),
-				"shutdown":        config.Shutdown(),
-			}
-			dst.CustomInt = map[string]int32{}
-			dst.CustomBigInt = map[string]int64{}
-			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
-			dst.Provider = c.conf.Provider
-			dst.DeviceName = c.conf.DeviceName
-			dst.SrcAddr = c.conf.DeviceIP
-			dst.Timestamp = time.Now().Unix()
-			dst.CustomMetrics = map[string]kt.MetricInfo{}
-
-			dst.CustomBigInt["MLAGShutdown"] = shutdownMap[config.Shutdown()]
-			dst.CustomMetrics["MLAGShutdown"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi", Type: "eapi"}
-	*/
-}
-
-func getfake() module.ShowIPBGPSummary {
-	return module.ShowIPBGPSummary{
-		VRFs: map[string]module.VRF{
-			"one": module.VRF{
-				RouterID: "id.one",
-				VRF:      "one",
-				ASN:      1212,
-				Peers: map[string]module.BGPNeighborSummary{
-					"p1": module.BGPNeighborSummary{
-						MsgSent:    10,
-						InMsgQueue: 1,
-						PeerState:  "active",
-						ASN:        65555,
-					},
-					"p2": module.BGPNeighborSummary{
-						MsgSent:             101,
-						InMsgQueue:          2,
-						PeerState:           "idle",
-						ASN:                 65556,
-						PeerStateIdleReason: "lazy",
-						UnderMaintenance:    true,
-					},
-				},
-			},
-			"two": module.VRF{
-				RouterID: "id.two",
-				VRF:      "two",
-				ASN:      1215,
-				Peers: map[string]module.BGPNeighborSummary{
-					"p1": module.BGPNeighborSummary{
-						MsgSent:    999,
-						InMsgQueue: 1111,
-						PeerState:  "active",
-						ASN:        65555,
-					},
-				},
-			},
-		},
-	}
 }
