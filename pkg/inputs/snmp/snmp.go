@@ -235,6 +235,10 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	// Sometimes this device is pinging only. In this case, start the ping loop and return.
 	if device.PingOnly {
 		return launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
+	} else if conf.RunPing || device.RunPing {
+		if err := launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log); err != nil {
+			return err
+		}
 	}
 
 	// We need two of these, to avoid concurrent access by the two pollers.
@@ -394,7 +398,7 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 Handle the case where we're only doing a ping loop of a device.
 */
 func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
-	metricPoller := snmp_metrics.NewPoller(nil, conf, device, jchfChan, metrics, profile, log)
+	metricPoller := snmp_metrics.NewPollerForPing(conf, device, jchfChan, metrics, profile, log)
 
 	// We've now done everything we can do synchronously -- return to the client initialization
 	// code, and do everything else in the background
