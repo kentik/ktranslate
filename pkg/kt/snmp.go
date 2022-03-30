@@ -238,7 +238,6 @@ type SnmpDeviceMetric struct {
 
 const (
 	SNMP_GOOD                   = 1
-	SNMP_BAD                    = 2
 	SNMP_BAD_NO_FLOWS           = 3
 	SNMP_BAD_DEVICE_ERR         = 4
 	SNMP_BAD_INTERFACE_ERR      = 5
