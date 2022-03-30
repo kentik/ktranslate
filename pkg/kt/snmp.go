@@ -237,14 +237,28 @@ type SnmpDeviceMetric struct {
 }
 
 const (
-	SNMP_GOOD = 1
-	SNMP_BAD  = 2
+	SNMP_GOOD                   = 1
+	SNMP_BAD                    = 2
+	SNMP_BAD_NO_FLOWS           = 3
+	SNMP_BAD_DEVICE_ERR         = 4
+	SNMP_BAD_INTERFACE_ERR      = 5
+	SNMP_BAD_POLL_TIMEOUT       = 6
+	SNMP_BAD_INIT_METADATA      = 7
+	SNMP_BAD_INIT_METRICS       = 8
+	SNMP_BAD_FIRST_METRICS_POLL = 9
 )
 
 var (
 	SNMP_STATUS_MAP = map[int64]string{
-		1: "GOOD",
-		2: "BAD",
+		SNMP_GOOD:                   "GOOD",
+		SNMP_BAD:                    "BAD",
+		SNMP_BAD_NO_FLOWS:           "BAD: No flows",
+		SNMP_BAD_DEVICE_ERR:         "BAD: Device Error",
+		SNMP_BAD_INTERFACE_ERR:      "BAD: Interface Error",
+		SNMP_BAD_POLL_TIMEOUT:       "BAD: Poll Timeout",
+		SNMP_BAD_INIT_METADATA:      "BAD: Init Metadata",
+		SNMP_BAD_INIT_METRICS:       "BAD: Init Metrics",
+		SNMP_BAD_FIRST_METRICS_POLL: "BAD: Metrics Poll",
 	}
 )
 
