@@ -271,26 +271,6 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
 
-	// If we are running an active check, add it in here now.
-	if pinger != nil {
-		pings, err := dm.GetPingStats(ctx, pinger)
-		if err != nil {
-			return nil, err
-		}
-		if len(pings) > 0 {
-			dst.CustomBigInt["MinRttMs"] = pings[0].CustomBigInt["MinRttMs"]
-			dst.CustomMetrics["MinRttMs"] = pings[0].CustomMetrics["MinRttMs"]
-			dst.CustomBigInt["MaxRttMs"] = pings[0].CustomBigInt["MaxRttMs"]
-			dst.CustomMetrics["MaxRttMs"] = pings[0].CustomMetrics["MaxRttMs"]
-			dst.CustomBigInt["AvgRttMs"] = pings[0].CustomBigInt["AvgRttMs"]
-			dst.CustomMetrics["AvgRttMs"] = pings[0].CustomMetrics["AvgRttMs"]
-			dst.CustomBigInt["StdDevRtt"] = pings[0].CustomBigInt["StdDevRtt"]
-			dst.CustomMetrics["StdDevRtt"] = pings[0].CustomMetrics["StdDevRtt"]
-			dst.CustomBigInt["PacketLossPct"] = pings[0].CustomBigInt["PacketLossPct"]
-			dst.CustomMetrics["PacketLossPct"] = pings[0].CustomMetrics["PacketLossPct"]
-		}
-	}
-
 	flows = append(flows, dst)
 
 	dm.metrics.DeviceMetrics.Mark(int64(len(flows)))

@@ -71,14 +71,37 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		dropIfOutside:    dropIfOutside,
 	}
 
-	if gconf.RunPing || conf.RunPing || conf.PingOnly {
-		p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second)
-		if err != nil {
-			log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
-		} else {
-			poller.pinger = p
-			log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
-		}
+	return &poller
+}
+
+func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
+	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
+	counterTimeSec := 5 * 60
+	if conf != nil && conf.PollTimeSec > 0 {
+		counterTimeSec = conf.PollTimeSec
+	} else if gconf != nil && gconf.PollTimeSec > 0 {
+		counterTimeSec = gconf.PollTimeSec
+	}
+	// Lastly, enforece a min polling interval.
+	if counterTimeSec < 30 {
+		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
+		counterTimeSec = 30
+	}
+
+	poller := Poller{
+		jchfChan:       jchfChan,
+		log:            log,
+		metrics:        metrics,
+		counterTimeSec: counterTimeSec,
+		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
+	}
+
+	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second)
+	if err != nil {
+		log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
+	} else {
+		poller.pinger = p
+		log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
 	}
 
 	return &poller
@@ -188,6 +211,11 @@ func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 
 // Simpler loop which only runs on ping data, no actual snmp polling.
 func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
+	if p.pinger == nil {
+		p.log.Errorf("Missing pinger in ping loop.")
+		return
+	}
+
 	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
 	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
 	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
@@ -197,7 +225,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 
-	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
+	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v", firstCollection, counterAlignment)
 
 	go func() {
 		for {
