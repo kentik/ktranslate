@@ -238,7 +238,7 @@ type SnmpDeviceMetric struct {
 
 const (
 	SNMP_GOOD                   = 1
-	SNMP_BAD_NO_FLOWS           = 3
+	SNMP_BAD_NO_DATA            = 3
 	SNMP_BAD_DEVICE_ERR         = 4
 	SNMP_BAD_INTERFACE_ERR      = 5
 	SNMP_BAD_POLL_TIMEOUT       = 6
@@ -250,7 +250,7 @@ const (
 var (
 	SNMP_STATUS_MAP = map[int64]string{
 		SNMP_GOOD:                   "GOOD",
-		SNMP_BAD_NO_FLOWS:           "BAD: No flows",
+		SNMP_BAD_NO_DATA:            "BAD: No data",
 		SNMP_BAD_DEVICE_ERR:         "BAD: Device Error",
 		SNMP_BAD_INTERFACE_ERR:      "BAD: Interface Error",
 		SNMP_BAD_POLL_TIMEOUT:       "BAD: Poll Timeout",

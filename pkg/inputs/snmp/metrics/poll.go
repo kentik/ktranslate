@@ -180,7 +180,7 @@ func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 	if len(flows) > 0 {
 		p.metrics.Fail.Update(kt.SNMP_GOOD)
 	} else {
-		p.metrics.Fail.Update(kt.SNMP_BAD_NO_FLOWS) // Otherwise, set to bad because there's no data coming out of this device.
+		p.metrics.Fail.Update(kt.SNMP_BAD_NO_DATA) // Otherwise, set to bad because there's no data coming out of this device.
 	}
 
 	return flows, nil
