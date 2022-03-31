@@ -140,6 +140,7 @@ type EAPIConfig struct {
 	Password  string `yaml:"password"`
 	Transport string `yaml:"transport"`
 	Port      int    `yaml:"port"`
+	origStr   string
 }
 
 // Contain various extensions to snmp which can be used to get data.
@@ -629,4 +630,44 @@ func (d *SnmpDeviceConfig) SetTestWalker(w SNMPTestWalker) {
 
 type SNMPTestWalker interface {
 	WalkAll(string) ([]gosnmp.SnmpPDU, error)
+}
+
+type EAPIC EAPIConfig // Need a 2nd type alias to avoid stack overflow on parsing.
+
+// Make sure that things serialize back to how they were.
+func (a *EAPIConfig) MarshalYAML() (interface{}, error) {
+	if a.origStr != "" {
+		return a.origStr, nil
+	}
+	return a, nil
+}
+
+// This lets the config get overriden by a global_v3 string.
+func (a *EAPIConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var conf = EAPIC{}
+	err := unmarshal(&conf)
+	if err != nil {
+		var single string
+		err := unmarshal(&single)
+		if err != nil {
+			return err
+		}
+		if strings.HasPrefix(single, "${") { // get the whole yaml block out of an env var.
+			raw := os.Getenv(single[2 : len(single)-1])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+			raw := loadViaAWSSecrets(single[len(AwsSmPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		}
+		conf.origStr = single // Let us know where this came from.
+		*a = EAPIConfig(conf)
+	} else { // Just use the value directly.
+		*a = EAPIConfig(conf)
+	}
+
+	return nil
 }
