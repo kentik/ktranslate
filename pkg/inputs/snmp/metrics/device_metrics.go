@@ -307,7 +307,14 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
 	dst.CustomBigInt["PollingHealth"] = dm.metrics.Fail.Value()
-	dst.CustomStr[kt.StringPrefix+"PollingHealth"] = kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
+	reasonVal := kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
+	pts := strings.Split(reasonVal, ": ")
+	if len(pts) == 2 {
+		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = pts[0]
+		dst.CustomStr[kt.StringPrefix+"PollingHealthReason"] = pts[1]
+	} else {
+		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = reasonVal
+	}
 	return []*kt.JCHF{dst}
 }
 

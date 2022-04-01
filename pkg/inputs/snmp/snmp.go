@@ -247,13 +247,13 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	metadataServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-		metrics.Fail.Update(kt.SNMP_BAD)
+		metrics.Fail.Update(kt.SNMP_BAD_INIT_METADATA)
 		return err
 	}
 	metricsServer, err := snmp_util.InitSNMP(device, connectTimeout, retries, "", log)
 	if err != nil {
 		log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-		metrics.Fail.Update(kt.SNMP_BAD)
+		metrics.Fail.Update(kt.SNMP_BAD_INIT_METRICS)
 		return err
 	}
 
@@ -271,7 +271,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 		// delta values yet.
 		_, err := metricPoller.Poll(ctx)
 		if err != nil {
-			metrics.Fail.Update(kt.SNMP_BAD)
+			metrics.Fail.Update(kt.SNMP_BAD_FIRST_METRICS_POLL)
 			log.Warnf("There was an error when polling the SNMP counters: %v.", err)
 		}
 
