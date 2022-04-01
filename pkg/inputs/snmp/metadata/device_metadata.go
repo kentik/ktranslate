@@ -187,7 +187,16 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 				case net.IP:
 					md.Customs[oidName] = vt.String()
 				default:
-					md.CustomInts[oidName] = snmp_util.ToInt64(value)
+					val := snmp_util.ToInt64(value)
+					if wrapper.mib.EnumRev != nil {
+						if ev, ok := wrapper.mib.EnumRev[val]; ok {
+							md.Customs[oidName] = ev
+						} else {
+							md.CustomInts[oidName] = val
+						}
+					} else {
+						md.CustomInts[oidName] = val
+					}
 				}
 			}
 		}
@@ -240,8 +249,17 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
 		}
 	default:
-		// Try to just use as a number
-		md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", gosnmp.ToBigInt(value.variable.Value).Int64())
+		// Try to just use as a number, either via an enum or directly.
+		val := gosnmp.ToBigInt(value.variable.Value).Int64()
+		if value.mib != nil && value.mib.EnumRev != nil {
+			if ev, ok := value.mib.EnumRev[val]; ok {
+				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, ev, 0)
+			} else {
+				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", val)
+			}
+		} else {
+			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", val)
+		}
 	}
 }
 
