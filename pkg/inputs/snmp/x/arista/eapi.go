@@ -46,10 +46,6 @@ func (c *EAPIClient) GetName() string {
 }
 
 func (c *EAPIClient) Run(ctx context.Context, dur time.Duration) {
-
-	c.getBGP()
-	c.getMLAG()
-
 	poll := time.NewTicker(dur)
 	defer poll.Stop()
 
