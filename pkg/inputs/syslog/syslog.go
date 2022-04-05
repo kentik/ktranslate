@@ -214,8 +214,14 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 		msg["device_name"] = msg["client_name"]
 	}
 
-	msg["message"] = msg["content"] // Swap these around for NR.
-	delete(msg, "content")
+	// Swap these around for NR.
+	if _, ok := msg["message"]; !ok {
+		if _, ok := msg["content"]; ok {
+			msg["message"] = msg["content"]
+			delete(msg, "content")
+		}
+	}
+
 	msg["plugin.type"] = kt.PluginSyslog         // NR Processing.
 	msg["instrumentation.name"] = InstNameSyslog // NR Processing.
 
