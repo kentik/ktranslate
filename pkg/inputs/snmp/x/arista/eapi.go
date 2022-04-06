@@ -90,13 +90,13 @@ var (
 
 	mlag_strings = map[string]int64{
 		"consistent": 1,
-		"up":         1,
-		"connected":  1,
-		"active":     1,
-		"primary":    1,
-		"secondary":  2,
-		"disabled":   0,
-		"unknown":    3,
+		"up":         2,
+		"connected":  3,
+		"active":     4,
+		"primary":    5,
+		"secondary":  6,
+		"disabled":   7,
+		"unknown":    8,
 	}
 
 	mlag_bool = map[bool]int64{
