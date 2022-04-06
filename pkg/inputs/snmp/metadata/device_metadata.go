@@ -249,17 +249,8 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
 		}
 	default:
-		// Try to just use as a number, either via an enum or directly.
-		val := gosnmp.ToBigInt(value.variable.Value).Int64()
-		if value.mib != nil && value.mib.EnumRev != nil {
-			if ev, ok := value.mib.EnumRev[val]; ok {
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, ev, 0)
-			} else {
-				md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", val)
-			}
-		} else {
-			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", val)
-		}
+		// Try to just use as a number, either via an enum or directly. Enum handled in the NewMetaValue func.
+		md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", gosnmp.ToBigInt(value.variable.Value).Int64())
 	}
 }
 
