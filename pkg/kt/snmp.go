@@ -52,7 +52,7 @@ func NewDeviceTableMetadata() DeviceTableMetadata {
 }
 
 func NewMetaValue(mib *Mib, sv string, iv int64) MetaValue {
-	if mib.EnumRev != nil {
+	if mib != nil && mib.EnumRev != nil {
 		if nv, ok := mib.EnumRev[iv]; ok {
 			sv = nv
 		} else {
