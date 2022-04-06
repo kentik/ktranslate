@@ -184,6 +184,6 @@ func TestParseMLAG(t *testing.T) {
 	res, err := c.parseMLAG(&sv)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(res)) // 6 results, because 6 peers.
-	assert.Equal(t, 1, int(res[0].CustomBigInt["State"]), res[0].CustomBigInt)
+	assert.Equal(t, mlag_strings["connected"], res[0].CustomBigInt["State"], res[0].CustomBigInt)
 	assert.Equal(t, 2, int(res[0].CustomBigInt["PortsActiveFull"]), res[0].CustomBigInt)
 }
