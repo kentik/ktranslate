@@ -18,8 +18,8 @@ import (
 )
 
 type pingStatus struct {
-	sent     int64
-	recieved int64
+	sent     uint64
+	recieved uint64
 }
 
 type DeviceMetrics struct {
@@ -354,8 +354,8 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
 	// Calc these directly
-	sent := int64(stats.PacketsSent)
-	recieved := int64(stats.PacketsRecv)
+	sent := uint64(stats.PacketsSent)
+	recieved := uint64(stats.PacketsRecv)
 	diffSent := sent - dm.ping.sent
 	diffRecv := recieved - dm.ping.recieved
 	dm.ping.sent = sent
@@ -365,9 +365,9 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
 	}
 
-	dst.CustomBigInt["PacketsSent"] = diffSent
+	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
 	dst.CustomMetrics["PacketsSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketsRecv"] = diffRecv
+	dst.CustomBigInt["PacketsRecv"] = int64(diffRecv)
 	dst.CustomMetrics["PacketsRecv"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
 	if percnt >= 0.0 {
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
