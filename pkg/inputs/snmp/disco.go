@@ -113,7 +113,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpD
 		st := time.Now()
 		log.Infof("Starting to check %d ips in %s", len(results), ipr)
 		for i, result := range results {
-			if strings.HasSuffix(ipr, "/32") || result.IsHostUp() {
+			if strings.HasSuffix(ipr, "/32") || result.IsHostUp() || conf.Disco.CheckAll {
 				if ignoreMap[result.Host.String()] { // If we have marked this ip as to be ignored, don't do anything more with it.
 					continue
 				}

@@ -161,6 +161,7 @@ type SnmpDeviceConfig struct {
 	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
+	PingSec             int               `yaml:"ping_interval_sec,omitempty"`
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }
@@ -187,6 +188,7 @@ type SnmpDiscoConfig struct {
 	Threads            int             `yaml:"threads"`
 	ReplaceDevices     bool            `yaml:"replace_devices"`
 	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
+	CheckAll           bool            `yaml:"check_all_ips,omitempty"`
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`
 }

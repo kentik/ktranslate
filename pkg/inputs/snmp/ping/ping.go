@@ -14,25 +14,32 @@ const (
 )
 
 type Pinger struct {
-	log    logger.ContextL
-	target string
-	pinger *ping.Pinger
-	count  int
-	priv   bool
+	log      logger.ContextL
+	target   string
+	pinger   *ping.Pinger
+	count    int
+	priv     bool
+	num      int
+	interval time.Duration
 }
 
-func NewPinger(log logger.ContextL, target string, inter time.Duration) (*Pinger, error) {
+func NewPinger(log logger.ContextL, target string, inter time.Duration, pingSec int) (*Pinger, error) {
+	if pingSec == 0 { // Default to 1 here if not defined.
+		pingSec = 1
+	}
+
 	p := &Pinger{
-		log:    log,
-		target: target,
-		count:  int(inter.Seconds()), // Run 1 ping per sec, for this many seconds.
+		log:      log,
+		target:   target,
+		count:    int(inter.Seconds()),                 // Run pingSec ping interval, for this many seconds.
+		interval: time.Second * time.Duration(pingSec), // Send 1 ping every this many seconds.
 	}
 
 	if os.Getenv(KENTIK_PING_PRIV) == "true" {
-		log.Infof("Running ping service in privileged mode.")
+		log.Infof("Running ping service in privileged mode. Ping Interval: %v", p.interval)
 		p.priv = true
 	} else {
-		log.Infof("Running ping service in non privileged mode.")
+		log.Infof("Running ping service in non privileged mode. Ping Interval: %v", p.interval)
 	}
 
 	err := p.Reset()
@@ -49,11 +56,15 @@ func (p *Pinger) Reset() error {
 		return err
 	}
 
-	// pinger.Interval = inter // Run at 1 per second.
-	pinger.Count = p.count
+	pinger.Interval = p.interval // Sent 1 packet every X seconds. Default to 1.
+	//pinger.Count = p.count // Do not set a count here, just go forever.
 	pinger.SetPrivileged(p.priv)
-	p.pinger = pinger
+	pinger.OnFinish = func(stats *ping.Statistics) {
+		p.log.Infof("Ping run %d finished.", p.num)
+		p.num++
+	}
 
+	p.pinger = pinger
 	go func() {
 		err := p.pinger.Run()
 		if err != nil {
