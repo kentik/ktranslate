@@ -19,7 +19,7 @@ import (
 
 type pingStatus struct {
 	sent     uint64
-	recieved uint64
+	received uint64
 }
 
 type DeviceMetrics struct {
@@ -355,11 +355,11 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 
 	// Calc these directly
 	sent := uint64(stats.PacketsSent)
-	recieved := uint64(stats.PacketsRecv)
+	received := uint64(stats.PacketsRecv)
 	diffSent := sent - dm.ping.sent
-	diffRecv := recieved - dm.ping.recieved
+	diffRecv := received - dm.ping.received
 	dm.ping.sent = sent
-	dm.ping.recieved = recieved
+	dm.ping.received = received
 	percnt := 0.0
 	if diffSent > 0 {
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.

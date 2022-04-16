@@ -17,7 +17,6 @@ type Pinger struct {
 	log      logger.ContextL
 	target   string
 	pinger   *ping.Pinger
-	count    int
 	priv     bool
 	num      int
 	interval time.Duration
@@ -31,7 +30,6 @@ func NewPinger(log logger.ContextL, target string, inter time.Duration, pingSec 
 	p := &Pinger{
 		log:      log,
 		target:   target,
-		count:    int(inter.Seconds()),                 // Run pingSec ping interval, for this many seconds.
 		interval: time.Second * time.Duration(pingSec), // Send 1 ping every this many seconds.
 	}
 
@@ -57,7 +55,6 @@ func (p *Pinger) Reset() error {
 	}
 
 	pinger.Interval = p.interval // Sent 1 packet every X seconds. Default to 1.
-	//pinger.Count = p.count // Do not set a count here, just go forever.
 	pinger.SetPrivileged(p.priv)
 	pinger.OnFinish = func(stats *ping.Statistics) {
 		p.log.Infof("Ping run %d finished.", p.num)
