@@ -107,7 +107,7 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
 	}
 
-	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second)
+	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second, conf.PingSec)
 	if err != nil {
 		log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else {
@@ -239,6 +239,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	jitterWindow := 15 * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
+	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
 
 	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v", firstCollection, counterAlignment)
 

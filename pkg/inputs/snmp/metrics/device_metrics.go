@@ -17,6 +17,11 @@ import (
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 )
 
+type pingStatus struct {
+	sent     uint64
+	received uint64
+}
+
 type DeviceMetrics struct {
 	log         logger.ContextL
 	conf        *kt.SnmpDeviceConfig
@@ -25,6 +30,7 @@ type DeviceMetrics struct {
 	profileName string
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
+	ping        pingStatus
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -318,6 +324,10 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	return []*kt.JCHF{dst}
 }
 
+func (dm *DeviceMetrics) ResetPingStats() {
+	dm.ping = pingStatus{}
+}
+
 func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) ([]*kt.JCHF, error) {
 	if pinger == nil {
 		return nil, nil
@@ -342,20 +352,28 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketsSent"] = int64(stats.PacketsSent)
+
+	// Calc these directly
+	sent := uint64(stats.PacketsSent)
+	received := uint64(stats.PacketsRecv)
+	diffSent := sent - dm.ping.sent
+	diffRecv := received - dm.ping.received
+	dm.ping.sent = sent
+	dm.ping.received = received
+	percnt := 0.0
+	if diffSent > 0 {
+		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
+	}
+
+	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
 	dst.CustomMetrics["PacketsSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketsRecv"] = int64(stats.PacketsRecv)
+	dst.CustomBigInt["PacketsRecv"] = int64(diffRecv)
 	dst.CustomMetrics["PacketsRecv"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketsRecvDuplicates"] = int64(stats.PacketsRecvDuplicates)
-	dst.CustomMetrics["PacketsRecvDuplicates"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
-	if stats.PacketLoss >= 0.0 {
-		dst.CustomBigInt["PacketLossPct"] = int64(stats.PacketLoss * 1000.)
+	if percnt >= 0.0 {
+		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
 		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	}
 	dm.conf.SetUserTags(dst.CustomStr)
 
-	// Reset the stats system.
-	err := pinger.Reset()
-
-	return []*kt.JCHF{dst}, err
+	return []*kt.JCHF{dst}, nil
 }
