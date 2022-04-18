@@ -73,6 +73,15 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		dropIfOutside:    dropIfOutside,
 	}
 
+	// If we are extending the metrics for this device in any way, set it up now.
+	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
+	if err != nil {
+		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
+	} else if ext != nil {
+		poller.extension = ext
+		log.Infof("Enabling extension %s for %s -> %s", ext.GetName(), conf.DeviceIP, conf.DeviceName)
+	}
+
 	return &poller
 }
 
@@ -104,15 +113,6 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 	} else {
 		poller.pinger = p
 		log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
-	}
-
-	// If we are extending the metrics for this device in any way, set it up now.
-	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
-	if err != nil {
-		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
-	} else if ext != nil {
-		poller.extension = ext
-		log.Infof("Enabling extension %s for %s -> %s", ext.GetName(), conf.DeviceIP, conf.DeviceName)
 	}
 
 	return &poller
