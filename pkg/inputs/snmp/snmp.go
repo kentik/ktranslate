@@ -57,6 +57,7 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	if conf.Global != nil {
 		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, *validateMib, log)
 		if err != nil {
+			time.Sleep(2 * time.Second) // Give logs time to get sent back.
 			return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
