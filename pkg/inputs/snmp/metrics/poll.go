@@ -9,6 +9,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/ping"
+	extension "github.com/kentik/ktranslate/pkg/inputs/snmp/x"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
@@ -27,6 +28,7 @@ type Poller struct {
 	counterTimeSec   int
 	dropIfOutside    bool
 	pinger           *ping.Pinger
+	extension        extension.Extension
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -69,6 +71,15 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, deviceMetricMibs, profile, log),
 		counterTimeSec:   counterTimeSec,
 		dropIfOutside:    dropIfOutside,
+	}
+
+	// If we are extending the metrics for this device in any way, set it up now.
+	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
+	if err != nil {
+		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
+	} else if ext != nil {
+		poller.extension = ext
+		log.Infof("Enabling extension %s for %s -> %s", ext.GetName(), conf.DeviceIP, conf.DeviceName)
 	}
 
 	return &poller
@@ -120,7 +131,6 @@ func (p *Poller) StartLoop(ctx context.Context) {
 	statusCheck := time.NewTicker(STATUS_CHECK_TIME)
 
 	p.log.Infof("snmpCounterPoll: First poll will be at %v. Polling every %v, drop=%v", firstCollection, counterAlignment, p.dropIfOutside)
-
 	go func() {
 		for {
 			select {
@@ -179,6 +189,11 @@ func (p *Poller) StartLoop(ctx context.Context) {
 			}
 		}
 	}()
+
+	// If there's any extensions, start them here.
+	if p.extension != nil {
+		go p.extension.Run(ctx, counterAlignment)
+	}
 }
 
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
