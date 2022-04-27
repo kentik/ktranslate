@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ktranslate
+spec:
+  selector:
+    matchLabels:
+      app: ktranslate
+  template:
+    metadata:
+      labels:
+        app: ktranslate
+    spec:
+      containers:
+      - name: ktranslate
+        image: docker.io/kentik/ktranslate:v2
+        imagePullPolicy: Always
+        env:
+        - name: NEW_RELIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ktranslate-secret
+              key: nr_api_key
+        - name: NR_ACCOUNT_ID
+          valueFrom:
+            secretKeyRef:
+              name: ktranslate-secret
+              key: nr_account_id
+        args:
+          - --metalisten=0.0.0.0:8083
+          - --snmp=/etc/ktranslate/snmp.yml
+          - --metrics=jchf
+          - --tee_logs=true
+          - nr1.snmp
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+          requests:
+            cpu: 500m
+            memory: 128Mi
+        ports:
+        - name: metadata
+          containerPort: 8083
+        - name: snmp
+          containerPort: 1620
+          protocol: UDP
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metadata
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metadata
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+          - name: ktranslate-config
+            mountPath: /etc/ktranslate/snmp.yml
+            subPath: snmp.yml
+      volumes:
+        - name: ktranslate-config
+          configMap:
+            name: ktranslate-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-metadata
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 8083
+    name: metadata
+    targetPort: 8083
+    protocol: TCP
+  selector:
+    app: ktranslate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ktranslate-snmp
+  labels:
+    app: ktranslate
+spec:
+  ports:
+  - port: 1620
+    name: snmp
+    targetPort: 1620
+    protocol: UDP
+  selector:
+    app: ktranslate
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ktranslate-config
+data:
+  snmp.yml: |
+    devices:
+      switch:
+        device_name: switch
+        device_ip: 10.10.0.10
+        flow_only: true
+        user_tags: {}
+    trap:
+      listen: 0.0.0.0:1620
+      community: hello
+      version: ""
+      transport: ""
+    global:
+      poll_time_sec: 30
+      drop_if_outside_poll: false
+      mib_profile_dir: /etc/ktranslate/profiles
+      mibs_db: /etc/ktranslate/mibs.db
+      mibs_enabled:
+      - IF-MIB
+      timeout_ms: 3000
+      retries: 0
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ktranslate-secret
+data:
+  nr_account_id: bXktYXBw
+  nr_api_key: Mzk1MjgkdmRnN0pi
