@@ -139,25 +139,34 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpD
 	return stats, nil
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeMin int) {
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeMin int, checkNow bool) {
 	pt := time.Duration(pollTimeMin) * time.Minute
 	log.Infof("Running SNMP Discovery Loop every %v", pt)
 	discoCheck := time.NewTicker(pt)
 	defer discoCheck.Stop()
+
+	check := func() {
+		stats, err := Discover(ctx, snmpFile, log)
+		if err != nil {
+			log.Errorf("Discovery SNMP Error: %v", err)
+		} else {
+			if stats.delta != 0 || stats.added > 0 { // Only restart if there's a different configuration.
+				log.Infof("Discovery SNMP reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
+				c <- kt.SIGUSR2 // Restart the main loop with a new config.
+			} else {
+				log.Infof("Discovery SNMP no change so not reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
+			}
+		}
+	}
+
+	if checkNow {
+		check()
+	}
+
 	for {
 		select {
 		case _ = <-discoCheck.C:
-			stats, err := Discover(ctx, snmpFile, log)
-			if err != nil {
-				log.Errorf("Discovery SNMP Error: %v", err)
-			} else {
-				if stats.delta != 0 || stats.added > 0 { // Only restart if there's a different configuration.
-					log.Infof("Discovery SNMP reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
-					c <- kt.SIGUSR2 // Restart the main loop with a new config.
-				} else {
-					log.Infof("Discovery SNMP no change so not reloading: added: %d replaced: %d delta: %d", stats.added, stats.replaced, stats.delta)
-				}
-			}
+			check()
 		case <-ctx.Done():
 			log.Infof("Discovery Loop Done")
 			return

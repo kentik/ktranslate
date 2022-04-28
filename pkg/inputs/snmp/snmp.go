@@ -34,6 +34,7 @@ var (
 	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
 	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
 	snmpDiscoDur   = flag.Int("snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
+	snmpDiscoSt    = flag.Bool("snmp_discovery_on_start", false, "If set, run snmp discovery on application start.")
 	validateMib    = flag.Bool("snmp_validate", false, "If true, validate mib profiles and exit.")
 	ServiceName    = ""
 )
@@ -135,7 +136,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
 	if *snmpDiscoDur > 0 { // If we are re-running snmp discovery every interval, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, snmpFile, log, *snmpDiscoDur)
+		go RunDiscoOnTimer(ctxSnmp, c, snmpFile, log, *snmpDiscoDur, *snmpDiscoSt)
 	}
 
 	// Block here
