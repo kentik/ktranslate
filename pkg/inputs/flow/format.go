@@ -15,6 +15,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/ic"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 
 	flowmessage "github.com/netsampler/goflow2/pb"
 )
@@ -34,13 +35,15 @@ type KentikDriver struct {
 	inputs       chan *kt.JCHF
 	proto        FlowSource
 	registry     go_metrics.Registry
+	resolv       *resolv.Resolver
+	ctx          context.Context
 }
 
 type FlowMetric struct {
 	Flows go_metrics.Meter
 }
 
-func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string) *KentikDriver {
+func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string, resolv *resolv.Resolver) *KentikDriver {
 	kt := KentikDriver{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
 		jchfChan:     jchfChan,
@@ -52,6 +55,8 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 		inputs:       make(chan *kt.JCHF, maxBatchSize),
 		proto:        proto,
 		registry:     registry,
+		resolv:       resolv,
+		ctx:          ctx,
 	}
 	go kt.run(ctx) // Process flows and send them on.
 	return &kt
@@ -106,6 +111,12 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		dev.SetUserTags(in.CustomStr)
 	} else {
 		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
+		if t.resolv != nil {
+			dm := t.resolv.Resolve(t.ctx, in.DeviceName)
+			if dm != "" {
+				in.DeviceName = dm
+			}
+		}
 	}
 
 	if _, ok := t.metrics[in.DeviceName]; !ok {

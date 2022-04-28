@@ -12,6 +12,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 
 	"github.com/netsampler/goflow2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -40,8 +41,8 @@ var (
 	MappingFile   = flag.String("nf.mapping", "", "Configuration file for custom netflow mappings")
 )
 
-func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*KentikDriver, error) {
-	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, *MessageFields)
+func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, resolv *resolv.Resolver) (*KentikDriver, error) {
+	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, *MessageFields, resolv)
 	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", *Addr, *Port, proto, maxBatchSize)
 	kt.Infof("Netflow listener sending fields %s", *MessageFields)
 
