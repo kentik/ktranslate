@@ -26,7 +26,10 @@ func TestFindProfile(t *testing.T) {
 			"1.3.6.1.4.1.318.1.3.*":       &Profile{Device: Device{Vendor: "ups"}},
 			"1.3.6.1.4.1.8072.3.2.*":      &Profile{Matches: map[string]string{"^barracuda": "barracuda.yml"}, Device: Device{Vendor: "net-bsd"}},
 			"1.3.6.1.4.1.1588.2.1.1.*":    &Profile{From: "barracuda.yml", Device: Device{Vendor: "barracuda"}},
+			"1.3.6.1.4.1.1588.2.1.22.*":   &Profile{From: "foo.yml", Device: Device{Vendor: "foo"}},
 			"1.3.6.1.4.1.2.3.4":           &Profile{From: "direct", Device: Device{Vendor: "direct"}},
+			"1.3.6.1.4.1.8072.3.66.*":     &Profile{MatchesList: []Match{Match{Regex: "^barracuda", Target: "barracuda.yml"}}, Device: Device{Vendor: "net-bsd"}},
+			"1.3.6.1.4.1.8072.3.77.*":     &Profile{MatchesList: []Match{Match{Regex: "^foocuda", Target: "foo.yml"}}, Matches: map[string]string{"^barracuda": "barracuda.yml"}, Device: Device{Vendor: "net-bsd"}},
 		},
 	}
 
@@ -103,6 +106,16 @@ func TestFindProfile(t *testing.T) {
 			Expected: "direct",
 			Sysdesc:  "Barracuda Email Security Gateway",
 			Profile:  "!direct",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.8072.3.66.10",
+			Expected: "barracuda",
+			Sysdesc:  "Barracuda Email Security Gateway",
+		},
+		{
+			Sysoid:   ".1.3.6.1.4.1.8072.3.77.10",
+			Expected: "foo",
+			Sysdesc:  "Foocuda Email Security Gateway",
 		},
 	}
 

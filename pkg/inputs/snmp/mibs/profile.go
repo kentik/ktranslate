@@ -52,6 +52,11 @@ type Device struct {
 	Vendor string `yaml:"vendor,omitempty"`
 }
 
+type Match struct {
+	Regex  string `yaml:"regex"`
+	Target string `yaml:"target"`
+}
+
 type Profile struct {
 	logger.ContextL  `yaml:"-"`
 	Metrics          []MIB             `yaml:"metrics,omitempty"`
@@ -63,6 +68,7 @@ type Profile struct {
 	Provider         kt.Provider       `yaml:"provider,omitempty"`
 	NoUseBulkWalkAll bool              `yaml:"no_use_bulkwalkall"`
 	Matches          map[string]string `yaml:"matches"`
+	MatchesList      []Match           `yaml:"matches_list"`
 	SysMap           map[string]string
 	extended         bool
 }
@@ -261,6 +267,24 @@ func (mdb *MibDB) FindProfile(sysid string, sysdesc string, mibProfile string) *
 }
 
 func (mdb *MibDB) checkMatch(pro *Profile, sysdesc string) *Profile {
+	// Match on list first because this is ordered.
+	for _, match := range pro.MatchesList {
+		r, err := regexp.Compile(match.Regex)
+		if err != nil {
+			mdb.log.Errorf("Invalid Regex for Match: %s %s", pro.From, match.Regex)
+			return nil
+		}
+		if r.MatchString(strings.ToLower(sysdesc)) {
+			for _, p := range mdb.profiles {
+				if p.From == match.Target {
+					return p
+				}
+			}
+			mdb.log.Errorf("No profile matching %s found", match.Target)
+		}
+	}
+
+	// And then the old way, which randomly itterates over the matches map.
 	for m, target := range pro.Matches {
 		r, err := regexp.Compile(m)
 		if err != nil {
