@@ -94,10 +94,10 @@ func (r *Resolver) Resolve(ctx context.Context, ip string, log bool) string {
 	} // ignore errors here
 	r.mux.Lock()
 	r.cache[ip] = final // cache.
+	r.mux.Unlock()
 	if log {
 		r.Infof("%s resolved to %s", ip, final)
 	}
-	r.mux.Unlock()
 
 	return final
 }
