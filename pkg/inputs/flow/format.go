@@ -112,7 +112,7 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	} else {
 		in.DeviceName = net.IP(fmsg.SamplerAddress).String()
 		if t.resolv != nil {
-			dm := t.resolv.Resolve(t.ctx, in.DeviceName)
+			dm := t.resolv.Resolve(t.ctx, in.DeviceName, true)
 			if dm != "" {
 				in.DeviceName = dm
 			}

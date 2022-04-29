@@ -66,7 +66,7 @@ func NewResolver(ctx context.Context, log logger.Underlying, dnsHost string) (*R
 	return res, nil
 }
 
-func (r *Resolver) Resolve(ctx context.Context, ip string) string {
+func (r *Resolver) Resolve(ctx context.Context, ip string, log bool) string {
 	r.mux.RLock()
 	final, ok := r.cache[ip]
 	if ok {
@@ -94,6 +94,9 @@ func (r *Resolver) Resolve(ctx context.Context, ip string) string {
 	} // ignore errors here
 	r.mux.Lock()
 	r.cache[ip] = final // cache.
+	if log {
+		r.Infof("%s resolved to %s", ip, final)
+	}
 	r.mux.Unlock()
 
 	return final

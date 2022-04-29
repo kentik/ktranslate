@@ -248,7 +248,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 
 	// Resolve any hostnames if a resolver is set up.
 	if kc.resolver != nil {
-		dst.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, dst.DstAddr)
+		dst.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, dst.DstAddr, false)
 	}
 
 	if src.CHF.Ipv4SrcAddr() > 0 {
@@ -266,7 +266,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.DstRoutePrefix = addr.String()
 
 	if kc.resolver != nil {
-		dst.CustomStr["src_host"] = kc.resolver.Resolve(ctx, dst.SrcAddr)
+		dst.CustomStr["src_host"] = kc.resolver.Resolve(ctx, dst.SrcAddr, false)
 	}
 
 	// next hops
@@ -557,8 +557,8 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]st
 
 		// If there's a resolver, try to resolve to hostnames.
 		if kc.resolver != nil {
-			msg.CustomStr["src_host"] = kc.resolver.Resolve(ctx, msg.SrcAddr)
-			msg.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, msg.DstAddr)
+			msg.CustomStr["src_host"] = kc.resolver.Resolve(ctx, msg.SrcAddr, false)
+			msg.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, msg.DstAddr, false)
 		}
 	}
 
