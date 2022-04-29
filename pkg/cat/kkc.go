@@ -65,6 +65,7 @@ func NewKTranslate(config *Config, log logger.ContextL, registry go_metrics.Regi
 			JCHFQ:        go_metrics.GetOrRegisterGauge("jchfq", registry),
 			InputQ:       go_metrics.GetOrRegisterMeter("inputq", registry),
 			InputQLen:    go_metrics.GetOrRegisterGauge("inputq_len^force=true", registry),
+			OutputQLen:   go_metrics.GetOrRegisterGauge("outputq_len^force=true", registry),
 		},
 		alphaChans: make([]chan *Flow, config.Threads),
 		jchfChans:  make([]chan *kt.JCHF, config.Threads),
@@ -254,6 +255,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		AlphaQDrop:     kc.metrics.AlphaQDrop.Rate1(),
 		InputQ:         kc.metrics.InputQ.Rate1(),
 		InputQLen:      kc.metrics.InputQLen.Value(),
+		OutputQLen:     kc.metrics.OutputQLen.Value(),
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 		Inputs:         map[string]map[string]float64{},
@@ -452,6 +454,7 @@ func (kc *KTranslate) watchInput(ctx context.Context, seri func([]*kt.JCHF, []by
 				}
 			}
 			kc.metrics.InputQLen.Update(int64(len(kc.inputChan)))
+			kc.metrics.OutputQLen.Update(int64(len(kc.msgsc)))
 		case <-ctx.Done():
 			kc.log.Infof("watchInput Done")
 			return
