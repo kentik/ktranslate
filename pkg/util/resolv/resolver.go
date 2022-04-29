@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -25,6 +26,7 @@ type Resolver struct {
 	logger.ContextL
 	resolver *net.Resolver
 	cache    map[string]string
+	mux      sync.RWMutex
 }
 
 func NewResolver(ctx context.Context, log logger.Underlying, dnsHost string) (*Resolver, error) {
@@ -64,11 +66,14 @@ func NewResolver(ctx context.Context, log logger.Underlying, dnsHost string) (*R
 	return res, nil
 }
 
-func (r *Resolver) Resolve(ctx context.Context, ip string) string {
+func (r *Resolver) Resolve(ctx context.Context, ip string, log bool) string {
+	r.mux.RLock()
 	final, ok := r.cache[ip]
 	if ok {
+		r.mux.RUnlock()
 		return final
 	}
+	r.mux.RUnlock()
 
 	// Else, look it up on the network, unless we are full.
 	if len(r.cache) > MAX_CACHE_SIZE {
@@ -87,7 +92,12 @@ func (r *Resolver) Resolve(ctx context.Context, ip string) string {
 			}
 		}
 	} // ignore errors here
+	r.mux.Lock()
 	r.cache[ip] = final // cache.
+	r.mux.Unlock()
+	if log {
+		r.Infof("%s resolved to %s", ip, final)
+	}
 
 	return final
 }

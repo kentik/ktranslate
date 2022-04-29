@@ -659,7 +659,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're looking for netflow direct flows coming in
 	if kc.config.FlowSource != "" {
 		assureInput()
-		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.config.MaxFlowPerMessage, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic)
+		nfs, err := flow.NewFlowSource(ctx, kc.config.FlowSource, kc.config.MaxFlowPerMessage, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, kc.inputChan, kc.apic, kc.resolver)
 		if err != nil {
 			return err
 		}

@@ -188,7 +188,7 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 			dev.SetMsgUserTags(msg)
 		}
 		if ks.resolver != nil {
-			msg["client_name"] = ks.resolver.Resolve(ctx, pts[0])
+			msg["client_name"] = ks.resolver.Resolve(ctx, pts[0], true)
 		}
 	}
 
@@ -198,7 +198,7 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 			if hs, ok := hostname.(string); ok {
 				if ipr := net.ParseIP(hs); ipr != nil {
 					if ks.resolver != nil {
-						msg["device_name"] = ks.resolver.Resolve(ctx, hs)
+						msg["device_name"] = ks.resolver.Resolve(ctx, hs, true)
 					} else {
 						msg["device_name"] = hs
 					}
