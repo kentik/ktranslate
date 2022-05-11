@@ -17,7 +17,7 @@ require (
 	github.com/honeycombio/libhoney-go v1.15.6
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
-	github.com/kentik/api-schema-public v0.0.0-20211011204132-acc22cb40b78
+	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
