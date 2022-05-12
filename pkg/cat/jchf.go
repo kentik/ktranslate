@@ -411,7 +411,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 					dst.SrcGeo = a.GetCountry()
 					dst.CustomStr["src_cloud_region"] = a.GetCloudRegion()
 					dst.CustomStr["src_cloud_provider"] = a.GetCloudProvider()
-					dst.CustomStr["src_cloud_provider"] = a.GetCloudProvider()
 					dst.CustomStr["src_site"] = a.GetSiteName()
 
 				} else {
