@@ -376,8 +376,12 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 			delete(attr, k)
 		}
 		if k == "test_id" { // Force this to be a string.
+			f.Infof("XX %v %s", k, v)
 			if vi, ok := v.(int64); ok {
 				attr[k] = strconv.Itoa(int(vi))
+				f.Infof("XXXX Set %v %s", k, v)
+			} else {
+				f.Infof("YYY not OK")
 			}
 		}
 	}
