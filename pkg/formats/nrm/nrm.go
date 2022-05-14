@@ -371,9 +371,14 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	// Hard code these.
 	attr["instrumentation.name"] = InstNameSynthetic
 
-	for k, _ := range attr { // White list only a few attributes here.
+	for k, v := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int64); ok {
+				attr[k] = strconv.Itoa(int(vi))
+			}
 		}
 	}
 
