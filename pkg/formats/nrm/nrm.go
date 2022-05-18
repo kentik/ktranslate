@@ -333,19 +333,24 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 
 var (
 	synthWLAttr = map[string]bool{
-		"agent_id":    true,
-		"agent_name":  true,
-		"dst_addr":    true,
-		"dst_cdn_int": true,
-		"dst_geo":     true,
-		"provider":    true,
-		"src_addr":    true,
-		"src_cdn_int": true,
-		"src_geo":     true,
-		"test_id":     true,
-		"test_name":   true,
-		"test_type":   true,
-		"test_url":    true,
+		"agent_id":           true,
+		"agent_name":         true,
+		"dst_addr":           true,
+		"dst_cdn_int":        true,
+		"dst_geo":            true,
+		"provider":           true,
+		"src_addr":           true,
+		"src_cdn_int":        true,
+		"src_geo":            true,
+		"test_id":            true,
+		"test_name":          true,
+		"test_type":          true,
+		"test_url":           true,
+		"src_host":           true,
+		"dst_host":           true,
+		"src_cloud_region":   true,
+		"src_cloud_provider": true,
+		"src_site":           true,
 	}
 )
 
@@ -366,9 +371,14 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	// Hard code these.
 	attr["instrumentation.name"] = InstNameSynthetic
 
-	for k, _ := range attr { // White list only a few attributes here.
+	for k, v := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
 			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
 		}
 	}
 

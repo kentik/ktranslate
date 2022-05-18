@@ -1,0 +1,82 @@
+name: Publish Next
+
+on:
+  repository_dispatch:
+    types: [new-snmp-profiles]
+
+  push:
+    branches:
+      - next
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Set Version
+        run: |
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.18.1'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to Quay.IO
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_LOGIN_TOKEN }}
+
+      - name: Install dependencies
+        run: sudo apt-get install make libpcap-dev golint
+
+      - name: Run build
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make
+
+      - name: Run vet & lint
+        run: |
+          go vet .
+          golint .
+
+      - name: Run testing
+        run: make test
+
+      - name: Build and Publish Docker
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          platforms: linux/amd64, linux/arm64
+          push: true
+          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:next, quay.io/kentik/ktranslate:next, quay.io/kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}
+          build-args: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
+          secrets: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+
+      - name: Publish binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: ktranslate
+          path: bin/ktranslate
