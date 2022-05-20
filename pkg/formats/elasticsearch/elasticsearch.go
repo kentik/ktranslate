@@ -192,8 +192,12 @@ var (
 	}
 
 	KeepAttrs = map[string]bool{
-		"lost": true,
-		"sent": true,
+		"lost":           true,
+		"sent":           true,
+		"src_geo_city":   true,
+		"src_geo_region": true,
+		"dst_geo_city":   true,
+		"dst_geo_region": true,
 	}
 )
 
