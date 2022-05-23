@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -28,25 +29,27 @@ type NetflowFormat struct {
 }
 
 const (
-	IN_BYTES      uint16 = 1
-	IN_PKTS              = 2
-	PROTOCOL             = 4
-	TOS                  = 5
-	TCP_FLAGS            = 6
-	L4_SRC_PORT          = 7
-	IPV4_SRC_ADDR        = 8
-	INPUT_SNMP           = 10
-	L4_DST_PORT          = 11
-	IPV4_DST_ADDR        = 12
-	OUTPUT_SNMP          = 14
-	SRC_AS               = 16
-	DST_AS               = 17
-	OUT_BYTES            = 23
-	OUT_PKTS             = 24
-	IPV6_SRC_ADDR        = 27
-	IPV6_DST_ADDR        = 28
-	SRC_MAC              = 56
-	DST_MAC              = 80
+	IN_BYTES           uint16 = 1
+	IN_PKTS                   = 2
+	PROTOCOL                  = 4
+	TOS                       = 5
+	TCP_FLAGS                 = 6
+	L4_SRC_PORT               = 7
+	IPV4_SRC_ADDR             = 8
+	INPUT_SNMP                = 10
+	L4_DST_PORT               = 11
+	IPV4_DST_ADDR             = 12
+	OUTPUT_SNMP               = 14
+	SRC_AS                    = 16
+	DST_AS                    = 17
+	OUT_BYTES                 = 23
+	OUT_PKTS                  = 24
+	IPV6_SRC_ADDR             = 27
+	IPV6_DST_ADDR             = 28
+	SRC_MAC                   = 56
+	DST_MAC                   = 80
+	FLOW_START_SECONDS        = 150
+	FLOW_END_SECONDS          = 151
 )
 
 type Field struct {
@@ -79,6 +82,8 @@ var fields = []Field{
 	{OUT_BYTES, 8},
 	{IN_PKTS, 8},
 	{OUT_PKTS, 8},
+	{FLOW_START_SECONDS, 4}, // uint32
+	{FLOW_END_SECONDS, 4},
 }
 
 const templateSet = uint16(2)
@@ -307,6 +312,14 @@ func (ipf *NetflowFormat) setCHFField(flow *kt.JCHF, id uint16, value interface{
 			return false
 		}
 		flow.DstEthMac = dstMac.String()
+	case FLOW_START_SECONDS:
+		ts, ok := value.(time.Time)
+		if !ok {
+			return false
+		}
+		flow.Timestamp = ts.Unix()
+	case FLOW_END_SECONDS:
+		// Noop for now.
 	}
 	return true
 }
@@ -411,6 +424,10 @@ func encodeFlow(flow *kt.JCHF) (*bytes.Buffer, error) {
 			value = uint64(flow.InPkts)
 		case OUT_PKTS:
 			value = uint64(flow.OutPkts)
+		case FLOW_START_SECONDS:
+			value = uint32(flow.Timestamp)
+		case FLOW_END_SECONDS: // Assume that each flow is 60 sec long.
+			value = uint32(flow.Timestamp + 60)
 		}
 
 		err := write(buf, value)
