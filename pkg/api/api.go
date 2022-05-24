@@ -357,7 +357,7 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	}
 
 	api.synAgents = synAgents
-	api.synAgentsByIP = api.synAgentsByIP
+	api.synAgentsByIP = synAgentsByIP
 	api.synTests = synTests
 	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
 
