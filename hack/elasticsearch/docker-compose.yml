@@ -1,0 +1,80 @@
+version: "3.9"
+services:
+  elasticsearch:
+    image: elasticsearch:7.14.2
+    restart: always
+    environment:
+      - "discovery.type=single-node"
+    healthcheck:
+      test: ["CMD", "curl", "localhost:9090"]
+      interval: 10s
+      timeout: 1s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 9200:9200
+
+  elasticsearch-init:
+    image: ehazlett/curl:latest
+    restart: on-failure
+    entrypoint: ["/bin/sh"]
+    command:
+      - "-c"
+      - "wait-for-it.sh -h elasticsearch -p 9200 -- curl -XPUT http://elasticsearch:9200/kentik"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.14.2
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://elasticsearch:9200"]
+    healthcheck:
+      test: ["CMD", "curl", "localhost:5601"]
+      interval: 10s
+      timeout: 1s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+
+  ktranslate:
+    image: kentik/ktranslate:v2
+    command:
+      - --sinks=http
+      - --format=elasticsearch
+      - --http_header
+      - "Content-type:application/json"
+      - --http_url
+      - "http://elasticsearch:9200/kentik/_bulk"
+      - -geo
+      - /etc/ktranslate/GeoLite2-Country.mmdb
+      - -udrs
+      - /etc/ktranslate/udr.csv
+      - -api_devices
+      - /etc/ktranslate/devices.json
+      - -asn
+      - /etc/ktranslate/GeoLite2-ASN.mmdb
+      - --nf.source=netflow5
+      - --nf.addr=0.0.0.0
+      - --nf.port=9995
+    restart: always
+    ports:
+      - 9090:9090
+      - 9995:9995/udp
+    depends_on:
+      - elasticsearch
+      - elasticsearch-init
+
+  nflow:
+    image: ehazlett/nflow-generator:latest
+    restart: always
+    command:
+      - -t
+      - ktranslate
+      - -p
+      - "9995"
+    depends_on:
+      - ktranslate
