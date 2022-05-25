@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  ktranslate:
+    image: kentik/ktranslate:v2
+    network_mode: host
+    command:
+      - --format=json
+      - --snmp=/snmp.yml
+    restart: always
+    ports:
+      - 9995:9995/udp
+    volumes:
+      - type: bind
+        source: ./snmp.yml
+        target: /snmp.yml

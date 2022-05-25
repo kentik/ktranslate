@@ -1,0 +1,53 @@
+devices:
+  lima-ktranslate__127.0.0.1:
+    device_name: ktranslate
+    device_ip: 127.0.0.1
+    snmp_comm: public
+    use_snmp_v1: false
+    debug: false
+    port: 161
+    oid: .1.3.6.1.4.1.8072.3.2.10
+    description: 'Linux lima-ktranslate 5.15.0-25-generic #25-Ubuntu SMP Wed Mar 30
+      15:57:31 UTC 2022 aarch64'
+    last_checked: 2022-05-23T16:52:35.51822962Z
+    mib_profile: net-snmp.yml
+    provider: kentik-net-snmp
+    user_tags: {}
+    discovered_mibs:
+    - HOST-RESOURCES-MIB
+    - IF-MIB
+    - MIB-DELL-10892
+    - UCD-DISKIO-MIB
+    - UCD-SNMP-MIB
+    match_attributes: {}
+    monitor_admin_shut: false
+    no_use_bulkwalkall: false
+trap: null
+discovery:
+  cidrs:
+  - 127.0.0.1/32
+  ignore_list: []
+  debug: false
+  ports:
+  - 161
+  default_communities:
+  - public
+  use_snmp_v1: false
+  default_v3: null
+  add_devices: true
+  add_mibs: false
+  threads: 16
+  replace_devices: true
+global:
+  poll_time_sec: 30
+  drop_if_outside_poll: false
+  mib_profile_dir: /etc/ktranslate/profiles
+  mibs_db: /etc/ktranslate/mibs.db
+  mibs_enabled:
+  - IF-MIB
+  timeout_ms: 3000
+  retries: 0
+  global_v3: null
+  response_time: false
+  user_tags: {}
+  match_attributes: {}
