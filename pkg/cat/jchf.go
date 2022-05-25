@@ -413,6 +413,20 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 					dst.CustomStr["src_cloud_provider"] = a.GetCloudProvider()
 					dst.CustomStr["src_site"] = a.GetSiteName()
 
+					// Try getting dest agent info also, but we have to use IP to look up.
+					if dst.DstAddr != "" && dst.DstAddr != "<nil>" {
+						if da := kc.apic.GetAgentByIP(dst.DstAddr); da != nil {
+							dst.CustomStr["dst_agent_name"] = da.GetAlias()
+							dst.CustomStr["dst_agent_id"] = da.GetId()
+							dst.DstAs = da.GetAsn()
+							dst.DstGeoRegion = da.GetRegion()
+							dst.DstGeoCity = da.GetCity()
+							dst.DstGeo = da.GetCountry()
+							dst.CustomStr["dst_cloud_region"] = da.GetCloudRegion()
+							dst.CustomStr["dst_cloud_provider"] = da.GetCloudProvider()
+							dst.CustomStr["dst_site"] = da.GetSiteName()
+						}
+					}
 				} else {
 					dst.CustomStr["agent_name"] = ""
 				}

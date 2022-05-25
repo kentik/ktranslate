@@ -13,7 +13,7 @@ require (
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	github.com/gosnmp/gosnmp v1.34.0
+	github.com/gosnmp/gosnmp v1.35.0
 	github.com/honeycombio/libhoney-go v1.15.6
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
@@ -28,7 +28,7 @@ require (
 	github.com/prometheus/client_golang v1.11.0
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.23
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	github.com/syndtr/goleveldb v1.0.0
 	google.golang.org/grpc v1.42.0
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0

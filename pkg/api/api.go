@@ -109,6 +109,13 @@ func (api *KentikApi) GetAgent(aid kt.AgentId) *synthetics.Agent {
 	return api.synAgents[aid]
 }
 
+func (api *KentikApi) GetAgentByIP(ip string) *synthetics.Agent {
+	if api == nil {
+		return nil
+	}
+	return api.synAgentsByIP[ip]
+}
+
 func (api *KentikApi) GetDevicesAsMap(cid kt.Cid) map[string]*kt.Device {
 	if api == nil {
 		return nil
@@ -177,15 +184,16 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 
 type KentikApi struct {
 	logger.ContextL
-	tr         *http.Transport
-	client     *http.Client
-	devices    map[kt.Cid]kt.Devices
-	synAgents  map[kt.AgentId]*synthetics.Agent
-	synTests   map[kt.TestId]*synthetics.Test
-	setTime    time.Time
-	apiTimeout time.Duration
-	synClient  synthetics.SyntheticsAdminServiceClient
-	conf       *kt.KentikConfig
+	tr            *http.Transport
+	client        *http.Client
+	devices       map[kt.Cid]kt.Devices
+	synAgents     map[kt.AgentId]*synthetics.Agent
+	synAgentsByIP map[string]*synthetics.Agent
+	synTests      map[kt.TestId]*synthetics.Test
+	setTime       time.Time
+	apiTimeout    time.Duration
+	synClient     synthetics.SyntheticsAdminServiceClient
+	conf          *kt.KentikConfig
 }
 
 func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.ContextL) (*KentikApi, error) {
@@ -337,12 +345,19 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	}
 
 	synAgents := map[kt.AgentId]*synthetics.Agent{}
+	synAgentsByIP := map[string]*synthetics.Agent{}
 	for _, agent := range ra.GetAgents() {
 		locala := agent
 		synAgents[kt.NewAgentId(agent.GetId())] = locala
+		lip := locala.GetLocalIp() // Store local ip seperately from public one, if a local is set.
+		if lip != "" {
+			synAgentsByIP[lip] = locala
+		}
+		synAgentsByIP[locala.GetIp()] = locala
 	}
 
 	api.synAgents = synAgents
+	api.synAgentsByIP = synAgentsByIP
 	api.synTests = synTests
 	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
 
