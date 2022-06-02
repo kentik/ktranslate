@@ -2,6 +2,7 @@ package arista
 
 import (
 	"context"
+	"strconv"
 	"strings"
 	"time"
 
@@ -161,6 +162,7 @@ func (c *EAPIClient) parseBGP(sv *ShowBGP) ([]*kt.JCHF, error) {
 				"peer_state_idle_reason": state.PeerStateIdleReason,
 				"asn":                    vrf.ASN,
 				"peer_asn":               state.ASN,
+				"version":                strconv.Itoa(state.Version),
 			}
 			dst.CustomInt = map[string]int32{}
 			dst.CustomBigInt = map[string]int64{}
@@ -182,9 +184,6 @@ func (c *EAPIClient) parseBGP(sv *ShowBGP) ([]*kt.JCHF, error) {
 
 			dst.CustomBigInt["UpDownTime"] = int64(state.UpDownTime)
 			dst.CustomMetrics["UpDownTime"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
-
-			dst.CustomBigInt["Version"] = int64(state.Version)
-			dst.CustomMetrics["Version"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}
 
 			dst.CustomBigInt["MsgReceived"] = int64(state.MsgReceived)
 			dst.CustomMetrics["MsgReceived"] = kt.MetricInfo{Oid: "eapi", Mib: "eapi", Profile: "eapi.bgp", Type: "eapi.bgp"}

@@ -351,6 +351,9 @@ var (
 		"src_cloud_region":   true,
 		"src_cloud_provider": true,
 		"src_site":           true,
+		"dst_cloud_region":   true,
+		"dst_cloud_provider": true,
+		"dst_site":           true,
 	}
 )
 
@@ -370,6 +373,9 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 
 	// Hard code these.
 	attr["instrumentation.name"] = InstNameSynthetic
+	if tt, ok := attr["test_type"]; ok {
+		attr["instrumentation.name"] = tt
+	}
 
 	for k, v := range attr { // White list only a few attributes here.
 		if !synthWLAttr[k] {
