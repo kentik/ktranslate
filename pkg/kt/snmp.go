@@ -218,6 +218,7 @@ type SnmpGlobalConfig struct {
 	Retries       int               `yaml:"retries"`
 	GlobalV3      *V3SNMPConfig     `yaml:"global_v3"`
 	RunPing       bool              `yaml:"response_time"`
+	PingSec       int               `yaml:"ping_interval_sec,omitempty"`
 	UserTags      map[string]string `yaml:"user_tags"`
 	MatchAttr     map[string]string `yaml:"match_attributes"`
 }

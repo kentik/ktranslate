@@ -99,6 +99,14 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		counterTimeSec = 30
 	}
 
+	pingSec := conf.PingSec
+	if pingSec == 0 { // If not per device, try per global.
+		pingSec = gconf.PingSec
+	}
+	if pingSec == 0 { // Default to 1 here if not defined in either global or per device levels.
+		pingSec = 1
+	}
+
 	poller := Poller{
 		jchfChan:       jchfChan,
 		log:            log,
@@ -107,7 +115,7 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
 	}
 
-	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second, conf.PingSec)
+	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second, pingSec)
 	if err != nil {
 		log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else {
