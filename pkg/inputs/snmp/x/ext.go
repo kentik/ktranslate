@@ -6,6 +6,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/x/arista"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/x/meraki"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -22,6 +23,8 @@ func NewExtension(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metrics *
 
 	if conf.Ext.EAPIConfig != nil {
 		return arista.NewEAPIClient(jchfChan, conf, metrics, log)
+	} else if conf.Ext.MerakiConfig != nil {
+		return meraki.NewMerakiClient(jchfChan, conf, metrics, log)
 	}
 
 	return nil, nil
