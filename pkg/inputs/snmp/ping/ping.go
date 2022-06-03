@@ -23,10 +23,6 @@ type Pinger struct {
 }
 
 func NewPinger(log logger.ContextL, target string, inter time.Duration, pingSec int) (*Pinger, error) {
-	if pingSec == 0 { // Default to 1 here if not defined.
-		pingSec = 1
-	}
-
 	p := &Pinger{
 		log:      log,
 		target:   target,
