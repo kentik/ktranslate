@@ -144,9 +144,8 @@ type EAPIConfig struct {
 }
 
 type MerakiConfig struct {
-	NetworkID string `yaml:"network_id"`
-	ApiKey    string `yaml:"api_key"`
-	Host      string `yaml:"host"`
+	ApiKey string `yaml:"api_key"` // Required.
+	Host   string `yaml:"host"`    // Optional, defaults to api.meraki.com
 }
 
 // Contain various extensions to snmp which can be used to get data.
