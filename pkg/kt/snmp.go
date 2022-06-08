@@ -143,9 +143,15 @@ type EAPIConfig struct {
 	origStr   string
 }
 
+type MerakiConfig struct {
+	ApiKey string `yaml:"api_key"` // Required.
+	Host   string `yaml:"host"`    // Optional, defaults to api.meraki.com
+}
+
 // Contain various extensions to snmp which can be used to get data.
 type ExtensionSet struct {
-	EAPIConfig *EAPIConfig `yaml:"eapi_config,omitempty"` // Arista eAPI.
+	EAPIConfig   *EAPIConfig   `yaml:"eapi_config,omitempty"` // Arista eAPI.
+	MerakiConfig *MerakiConfig `yaml:"meraki_config,omitempty"`
 }
 
 type SnmpDeviceConfig struct {

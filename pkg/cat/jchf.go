@@ -390,6 +390,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 				} else {
 					dst.CustomStr["test_name"] = ""
 					dst.CustomStr["test_type"] = ""
+					kc.apic.UpdateTests(ctx) // On demand, check to see if this test is new.
 				}
 			case "agent_id":
 				if a := kc.apic.GetAgent(kt.AgentId(dst.CustomBigInt[udr.ColumnName])); a != nil {
