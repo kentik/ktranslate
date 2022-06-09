@@ -243,6 +243,11 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 		}
 	}
 
+	// Sometimes a device is only going to be running its extention.
+	if device.Ext != nil && device.Ext.ExtOnly {
+		return launchExtOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
+	}
+
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems
 	// like maintaining separate GoSNMP structs for the two goroutines is safe.
@@ -406,6 +411,21 @@ func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.S
 	// code, and do everything else in the background
 	go func() {
 		metricPoller.StartPingOnlyLoop(ctx)
+	}()
+
+	return nil
+}
+
+/**
+Handle the case where we're only doing a extention loop of a device.
+*/
+func launchExtOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
+	metricPoller := snmp_metrics.NewPollerForExtention(conf, device, jchfChan, metrics, profile, log)
+
+	// We've now done everything we can do synchronously -- return to the client initialization
+	// code, and do everything else in the background
+	go func() {
+		metricPoller.StartExtensionOnlyLoop(ctx)
 	}()
 
 	return nil

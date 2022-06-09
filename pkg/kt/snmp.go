@@ -144,12 +144,15 @@ type EAPIConfig struct {
 }
 
 type MerakiConfig struct {
-	ApiKey string `yaml:"api_key"` // Required.
-	Host   string `yaml:"host"`    // Optional, defaults to api.meraki.com
+	ApiKey         string `yaml:"api_key"`         // Required.
+	Host           string `yaml:"host"`            // Optional, defaults to api.meraki.com
+	MonitorUplinks bool   `yaml:"monitor_uplinks"` // This will be the default if neither is set.
+	MonitorDevices bool   `yaml:"monitor_devices"`
 }
 
 // Contain various extensions to snmp which can be used to get data.
 type ExtensionSet struct {
+	ExtOnly      bool          `yaml:"ext_only"`
 	EAPIConfig   *EAPIConfig   `yaml:"eapi_config,omitempty"` // Arista eAPI.
 	MerakiConfig *MerakiConfig `yaml:"meraki_config,omitempty"`
 }
