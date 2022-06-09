@@ -488,6 +488,16 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
 				return err
 			}
+		} else if strings.HasPrefix(single, AzureKVPrefix) { // Same but use Azure.
+			raw := loadViaAzureKeyVault(single[len(AzureKVPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, GCPSmPrefix) { // And Same again but use GCP.
+			raw := loadViaGCPSecrets(single[len(GCPSmPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
 		}
 		conf.origStr = single // Let us know where this came from.
 		*a = V3SNMPConfig(conf)
