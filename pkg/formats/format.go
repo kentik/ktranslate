@@ -6,6 +6,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
+	"github.com/kentik/ktranslate/pkg/formats/carbon"
 	"github.com/kentik/ktranslate/pkg/formats/elasticsearch"
 	"github.com/kentik/ktranslate/pkg/formats/influx"
 	"github.com/kentik/ktranslate/pkg/formats/json"
@@ -33,6 +34,7 @@ const (
 	FORMAT_JSON_FLAT            = "flat_json"
 	FORMAT_NETFLOW              = "netflow"
 	FORMAT_INFLUX               = "influx"
+	FORMAT_CARBON               = "carbon"
 	FORMAT_PROM                 = "prometheus"
 	FORMAT_NR                   = "new_relic"
 	FORMAT_NRM                  = "new_relic_metric"
@@ -52,6 +54,8 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 		return netflow.NewFormat(log, compression)
 	case FORMAT_INFLUX:
 		return influx.NewFormat(log, compression)
+	case FORMAT_CARBON:
+		return carbon.NewFormat(log, compression)
 	case FORMAT_PROM:
 		return prom.NewFormat(log, compression)
 	case FORMAT_NR, FORMAT_JSON_FLAT:
