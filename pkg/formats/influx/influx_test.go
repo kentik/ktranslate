@@ -23,8 +23,24 @@ func TestSeriToInflux(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 
-	assert.Equal(byte('\n'), res.Body[len(res.Body)-1])
-
-	pts := strings.Split(string(res.Body[:len(res.Body)-1]), "\n")
+	pts := strings.Split(string(res.Body), "\n")
 	assert.Equal(len(pts), len(kt.InputTesting))
+}
+
+func TestInfluxEscape(t *testing.T) {
+	var tests = []struct {
+		input string
+		want  string
+	}{
+		{"asdf", "asdf"},
+		{"as df", "as\\ df"},
+		{"as,df", "as\\,df"},
+		{"as=df", "as\\=df"},
+		{"as, df", "as\\,\\ df"},
+	}
+	for _, test := range tests {
+		if got := influxEscape(test.input); got != test.want {
+			t.Errorf("influxEscape(%q) = %q; want %q", test.input, got, test.want)
+		}
+	}
 }
