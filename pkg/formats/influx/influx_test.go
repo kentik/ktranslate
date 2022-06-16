@@ -23,6 +23,8 @@ func TestSeriToInflux(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 
-	pts := strings.Split(string(res.Body), "\n")
+	assert.Equal(byte('\n'), res.Body[len(res.Body)-1])
+
+	pts := strings.Split(string(res.Body[:len(res.Body)-1]), "\n")
 	assert.Equal(len(pts), len(kt.InputTesting))
 }

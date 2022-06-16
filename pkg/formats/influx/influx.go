@@ -1,6 +1,7 @@
 package influx
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 	"strings"
@@ -69,11 +70,12 @@ func (d *InfluxData) String() string {
 type InfluxDataSet []InfluxData
 
 func (s InfluxDataSet) Bytes() []byte {
-	res := make([]string, 0)
+	var res bytes.Buffer
 	for _, l := range s {
-		res = append(res, l.String())
+		res.WriteString(l.String())
+		res.WriteRune('\n')
 	}
-	return []byte(strings.Join(res, "\n"))
+	return res.Bytes()
 }
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*InfluxFormat, error) {
@@ -130,7 +132,7 @@ func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 }
 
 func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
-	res := make([]string, 0)
+	var res bytes.Buffer
 	ts := time.Now()
 	for _, roll := range rolls {
 		if roll.Metric == 0 {
@@ -144,11 +146,11 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			attr = append(attr, dims[i]+"="+pt)
 		}
 		if len(mets) > 2 {
-			res = append(res, fmt.Sprintf("%s,%s %s=%d,count=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
+			fmt.Fprintf(&res, "%s,%s %s=%d,count=%d %d\n", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano()) // Time to nano
 		}
 	}
 
-	return kt.NewOutput([]byte(strings.Join(res, "\n"))), nil
+	return kt.NewOutput(res.Bytes()), nil
 }
 
 func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
