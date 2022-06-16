@@ -1,0 +1,34 @@
+name: RPM Build
+
+on:
+  push:
+    branches:
+      - main
+      - make-rpm
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - distro: centos
+            release: 8
+            pkg: rpm
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Version
+        run: |
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+
+      - name: Create package
+        id: package
+        uses: kentik/pkg@master
+        with:
+          name: ktranslate
+          version: ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          arch: x86_64
+          format: ${{ matrix.pkg }}
+          package: ktranslate-package.yml
