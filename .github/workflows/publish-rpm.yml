@@ -36,22 +36,19 @@ jobs:
         with:
           go-version: '1.18.3'
 
+      - name: Get Deps
+        run: |
+          wget 'http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-3.el8.noarch.rpm'
+          rpm -i 'centos-gpg-keys-8-3.el8.noarch.rpm'
+          dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+          yum install -y make gcc diffutils
+
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go generate ./cmd/version
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go build -o bin/ktranslate ./cmd/ktranslate
 
-
-  package:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - distro: centos
-            release: 8
-            pkg: rpm
-    steps:
       - name: Create package
         id: package
         uses: kentik/pkg@master
