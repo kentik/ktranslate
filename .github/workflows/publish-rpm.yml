@@ -18,6 +18,9 @@ jobs:
       matrix:
         include:
           - distro: centos
+            release: 7
+            pkg: rpm
+          - distro: centos
             release: 8
             pkg: rpm
     container:
@@ -39,6 +42,10 @@ jobs:
 
       - name: Get Deps
         run: |
+          if ! command -v dnf &> /dev/null
+          then
+            yum install -y dnf
+          fi
           dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
           yum install -y make gcc diffutils
           dnf -y --enablerepo=powertools install libpcap-devel
