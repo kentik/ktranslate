@@ -65,11 +65,13 @@ jobs:
             apt-get -y install make libpcap-dev ca-certificates build-essential curl
           fi
 
-      - name: Run build
+      - name: Run Make
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
-          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go generate ./cmd/version
-          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go build -o bin/ktranslate ./cmd/ktranslate
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make
+
+      - name: Run Test
+        run: make test
 
       - name: Install MM DBs
         run: |

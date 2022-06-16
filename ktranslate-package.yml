@@ -4,7 +4,7 @@ meta:
   maintainer: Kentik
 
 depends:
-  - libpcap
+  - libpcap git-core
 
 files:
   "/usr/bin/ktranslate":
@@ -32,6 +32,11 @@ files:
     mode: "0644"
     user: ktranslate
 
+  "/etc/default/ktranslate.env.sample":
+    file: config/ktranslate.env.sample
+    mode: "0644"
+    user: ktranslate
+
   "/etc/ktranslate/udr.csv":
     file: config/udr.csv
     mode: "0644"
@@ -42,9 +47,58 @@ files:
     mode: "0644"
     user: ktranslate
 
+  "/etc/ktranslate/mibs.db/000243.ldb":
+    file: config/mibs.db/000243.ldb
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/000244.ldb":
+    file: config/mibs.db/000244.ldb
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/000245.ldb":
+    file: config/mibs.db/000245.ldb
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/001158.log":
+    file: config/mibs.db/001158.log
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/CURRENT":
+    file: config/mibs.db/CURRENT
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/CURRENT.bak":
+    file: config/mibs.db/CURRENT.bak
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/LOCK":
+    file: config/mibs.db/LOCK
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/LOG":
+    file: config/mibs.db/LOG
+    mode: "0644"
+    user: ktranslate
+
+  "/etc/ktranslate/mibs.db/MANIFEST-001159":
+    file: config/mibs.db/MANIFEST-001159
+    mode: "0644"
+    user: ktranslate
+
 dirs:
   - "/etc/ktranslate"
 
 units:
   - ktranslate.service
+
+scripts:
+  "post-install": scripts/post-install
+
 user: ktranslate
