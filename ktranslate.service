@@ -1,0 +1,16 @@
+[Unit]
+Description=Kentik KTranslate Service
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/default/ktranslate.env
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/bin/ktranslate -listen off -mapping /etc/ktranslate/config.json -geo /etc/ktranslate/GeoLite2-Country.mmdb /etc/ktranslate/udr.csv -api_devices /etc/ktranslate/devices.json -asn /etc/ktranslate/GeoLite2-ASN.mmdb -log_level info
+Restart=on-failure
+RestartSec=3
+## Restart on failure but wait 3 sec.
+
+[Install]
+WantedBy=multi-user.target
