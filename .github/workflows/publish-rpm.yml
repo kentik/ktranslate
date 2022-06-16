@@ -49,6 +49,16 @@ jobs:
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go generate ./cmd/version
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} go build -o bin/ktranslate ./cmd/ktranslate
 
+      - name: Install MM DBs
+        run: |
+          MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config/profiles
+
       - name: Create package
         id: package
         uses: kentik/pkg@master

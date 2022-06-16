@@ -2,11 +2,19 @@ meta:
   description: Kentik KTranslate
   vendor: Kentik
   maintainer: Kentik
+
+depends:
+  - libpcap
+
 files:
   "/usr/bin/ktranslate":
     file: bin/ktranslate
     mode: "0755"
-    user: kproxy
+    user: ktranslate
+  "/etc/ktranslate":
+    file: config
+    mode: "0755"
+    user: ktranslate
 
 units:
   - ktranslate.service
