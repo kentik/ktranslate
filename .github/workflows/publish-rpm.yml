@@ -23,6 +23,14 @@ jobs:
           - distro: centos
             release: 8
             pkg: rpm
+
+          - distro: ubuntu
+            release: focal
+            pkg: deb
+
+          - distro: debian
+            release: bullseye
+            pkg: deb
     container:
       image: ${{ matrix.distro }}:${{ matrix.release }}
 
@@ -42,13 +50,18 @@ jobs:
 
       - name: Get Deps
         run: |
-          if [ "${{ matrix.release }}" = "7" ]
+          if [ "${{ matrix.distro }}" = "centos" ]
           then
-            yum install -y make gcc diffutils libpcap-devel
+            if [ "${{ matrix.release }}" = "7" ]
+            then
+              yum install -y make gcc diffutils libpcap-devel
+            else
+              dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+              yum install -y make gcc diffutils
+              dnf -y --enablerepo=powertools install libpcap-devel
+            fi
           else
-            dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
-            yum install -y make gcc diffutils
-            dnf -y --enablerepo=powertools install libpcap-devel
+            sudo apt-get install make libpcap-dev
           fi
 
       - name: Run build
