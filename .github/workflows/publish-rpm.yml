@@ -58,3 +58,9 @@ jobs:
           arch: x86_64
           format: ${{ matrix.pkg }}
           package: ktranslate-package.yml
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
+          path: ${{ steps.package.outputs.package }}
