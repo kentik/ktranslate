@@ -6,9 +6,6 @@ on:
       - main
       - make-rpm
 
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -103,14 +100,3 @@ jobs:
         with:
           name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
           path: ${{ steps.package.outputs.package }}
-
-      - name: Upload Release Asset
-          id: upload-release-asset
-          uses: actions/upload-release-asset@v1
-          env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-              upload_url: ${{ github.event.release.upload_url }}
-              asset_path: ${{ steps.package.outputs.package }}
-              asset_name: ${{ steps.package.outputs.package }}
-              asset_content_type: application/binary
