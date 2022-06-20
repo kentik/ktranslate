@@ -2,6 +2,7 @@ package influx
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -41,22 +42,17 @@ func (d *InfluxData) String() string {
 		i++
 	}
 
-	tags := make([]string, len(d.Tags))
-	i = 0
+	var tags []string
 	for key, v := range d.Tags {
 		kval := strings.ReplaceAll(key, " ", "_")
 		switch t := v.(type) {
 		case string:
-			if strings.ContainsAny(t, " ") {
-				tags[i] = fmt.Sprintf("%s=\"%s\"", kval, t)
-			} else {
-				tags[i] = fmt.Sprintf("%s=%s", kval, t)
+			if t != "" {
+				tags = append(tags, fmt.Sprintf("%s=%s", kval, influxEscape(t)))
 			}
 		default:
-			tags[i] = fmt.Sprintf("%s=%v", kval, v)
+			tags = append(tags, fmt.Sprintf("%s=%v", kval, v))
 		}
-
-		i++
 	}
 
 	return fmt.Sprintf("%s,%s %s %d",
@@ -141,7 +137,7 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		mets := strings.Split(roll.EventType, ":")
 		attr := []string{}
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
-			attr = append(attr, dims[i]+"="+pt)
+			attr = append(attr, dims[i]+"="+influxEscape(pt))
 		}
 		if len(mets) > 2 {
 			res = append(res, fmt.Sprintf("%s,%s %s=%d,count=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
@@ -236,14 +232,6 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	for k, v := range attr { // Weed out any spaces which might break things.
-		if sv, ok := v.(string); ok {
-			if strings.Contains(sv, " ") {
-				delete(attr, k)
-			}
-		}
-	}
-
 	return []InfluxData{InfluxData{
 		Name:      "kentik.snmp.device",
 		Fields:    ms,
@@ -263,14 +251,6 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	for m, _ := range metrics {
 		if _, ok := in.CustomBigInt[m]; ok {
 			ms[m] = in.CustomBigInt[m]
-		}
-	}
-
-	for k, v := range attr { // Weed out any spaces which might break things.
-		if sv, ok := v.(string); ok {
-			if strings.Contains(sv, " ") {
-				delete(attr, k)
-			}
 		}
 	}
 
@@ -305,4 +285,15 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		Timestamp:   in.Timestamp * 1000000000,
 		Tags:        attr,
 	}}
+}
+
+var escaper = regexp.MustCompile("([,= ])")
+
+// Escape special characters according to https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial/#special-characters-and-keywords
+func influxEscape(s string) string {
+	if strings.ContainsAny(s, ",= ") {
+		return string(escaper.ReplaceAll([]byte(s), []byte("\\$1")))
+	} else {
+		return s
+	}
 }
