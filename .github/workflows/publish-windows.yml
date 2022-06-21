@@ -53,7 +53,7 @@ jobs:
 
       - name: Run testing
         run: make test
-        
+
       - name: Archive binary and config artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -70,21 +70,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
-          fetch-depth: 0   
-      
+          fetch-depth: 0
+
       - name: Fetch artifacts
         uses: actions/download-artifact@v2
         with:
           name: win-build-artifacts
           path: "."
-          
+
       - name: Build MSI
         run: |
           $env:ProductCode = [guid]::NewGuid().ToString()
           & "$env:WIX\bin\heat.exe" dir ".\config\profiles" -platform x64 -var var.SnmpProfilesPath -dr ConfigDir -cg SnmpProfiles -ag -sfrag -out SnmpProfiles.wxs -nologo
           & "$env:WIX\bin\candle.exe" -dVersion="$(Get-Date -Format 'yy.MM.dd')" -dPath="./" -dSnmpProfilesPath="./config/profiles"  -ext WixUtilExtension -ext WixUIExtension ktranslate.wxs SnmpProfiles.wxs -arch x64 -nologo
           & "$env:WIX\bin\light.exe" ktranslate.wixobj SnmpProfiles.wixobj -out ktranslate.msi -ext WixUtilExtension  -ext WixUIExtension -nologo
-      
+
       - name: Publish MSI
         uses: actions/upload-artifact@v2
         with:

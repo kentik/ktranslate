@@ -1,0 +1,102 @@
+name: Package Build
+
+on:
+  push:
+    branches:
+      - main
+      - make-rpm
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # There's several of these lists of releases that we're building
+    # for scattered throughout these workflows. Hopefully one day GH
+    # makes it possible to define this in one place and then refer to
+    # it. In the meantime, if you're adding to this list, go look for
+    # other "matrix" definitions.
+    strategy:
+      matrix:
+        include:
+          - distro: centos
+            release: 7
+            pkg: rpm
+          - distro: centos
+            release: 8
+            pkg: rpm
+
+          - distro: ubuntu
+            release: focal
+            pkg: deb
+
+          - distro: debian
+            release: bullseye
+            pkg: deb
+    container:
+      image: ${{ matrix.distro }}:${{ matrix.release }}
+
+    # NB: any run steps that need chf src need to have `working-directory: ${{ env.SRCDIR }}`
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set Version
+        run: |
+           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+           echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.18.3'
+
+      - name: Get Deps
+        run: |
+          if [ "${{ matrix.distro }}" = "centos" ]
+          then
+            if [ "${{ matrix.release }}" = "7" ]
+            then
+              yum install -y make gcc diffutils libpcap-devel
+            else
+              dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+              yum install -y make gcc diffutils
+              dnf -y --enablerepo=powertools install libpcap-devel
+            fi
+          else
+            apt-get update
+            apt-get -y install make libpcap-dev ca-certificates build-essential curl
+          fi
+
+      - name: Run Make
+        run: |
+          echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          echo ${{ env.RELEASE_VERSION }}
+          KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make
+
+      - name: Run Test
+        run: make test
+
+      - name: Install MM DBs
+        run: |
+          MM_DOWNLOAD_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+
+      - name: Install SNMP Profiles
+        uses: actions/checkout@main
+        with:
+          repository: kentik/snmp-profiles
+          path: ./config/profiles
+
+      - name: Create package
+        id: package
+        uses: kentik/pkg@master
+        with:
+          name: ktranslate
+          version: ${{ env.KENTIK_KTRANSLATE_VERSION }}
+          arch: x86_64
+          format: ${{ matrix.pkg }}
+          package: ktranslate-package.yml
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
+          path: ${{ steps.package.outputs.package }}
