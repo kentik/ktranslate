@@ -1,1 +1,6 @@
-su -s /bin/bash ktranslate -c "git clone https://github.com/kentik/snmp-profiles.git /etc/ktranslate/profiles"
+if [ -d "/etc/ktranslate/profiles" ]
+then
+  su -s /bin/bash ktranslate -c "cd /etc/ktranslate/profiles && git pull --rebase"
+else
+  su -s /bin/bash ktranslate -c "git clone https://github.com/kentik/snmp-profiles.git /etc/ktranslate/profiles"
+fi
