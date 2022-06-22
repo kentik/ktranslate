@@ -7,13 +7,8 @@ name: Upload Release
 jobs:
   build:
     runs-on: ubuntu-latest
-    # There's several of these lists of releases that we're building
-    # for scattered throughout these workflows. Hopefully one day GH
-    # makes it possible to define this in one place and then refer to
-    # it. In the meantime, if you're adding to this list, go look for
-    # other "matrix" definitions.
+    continue-on-error: true
     strategy:
-      continue-on-error: true
       matrix:
         include:
           - distro: centos
