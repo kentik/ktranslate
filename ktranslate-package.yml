@@ -4,8 +4,16 @@ meta:
   maintainer: Kentik
 
 depends:
-  - libpcap
   - git-core
+
+# All fields above marked as `overridable` can be overridden for a given package format in this section.
+overrides:
+  deb:
+    depends:
+      - libpcap-dev
+  rpm:
+    depends:
+      - libpcap
 
 files:
   "/usr/bin/ktranslate":
