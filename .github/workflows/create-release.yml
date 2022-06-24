@@ -56,12 +56,6 @@ jobs:
               yum install -y centos-release-scl
               yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++ rh-ruby27-rubygems
               scl enable rh-ruby27 bash
-              ls /opt/rh/rh-ruby27/root/usr/bin/
-              export PATH=/opt/rh/rh-ruby27/root/usr/local/bin:/opt/rh/rh-ruby27/root/usr/bin:/sbin:/bin:/usr/sbin:/usr/bin
-              export LD_LIBRARY_PATH=/opt/rh/rh-ruby27/root/usr/local/lib64:/opt/rh/rh-ruby27/root/usr/lib64
-              ruby -v
-              gem -v
-              gem install package_cloud
             else
               dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
@@ -105,8 +99,15 @@ jobs:
         env:
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: |
-          gem install package_cloud
+          if [ "${{ matrix.release }}" = "7" ] // Centos7 is extra hard to work with.
+          then
+            export PATH=/opt/rh/rh-ruby27/root/usr/local/bin:/opt/rh/rh-ruby27/root/usr/bin:/sbin:/bin:/usr/sbin:/usr/bin
+            export LD_LIBRARY_PATH=/opt/rh/rh-ruby27/root/usr/local/lib64:/opt/rh/rh-ruby27/root/usr/lib64
+            ruby -v
+            gem -v
+          fi
           REPO="${{ github.event.repository.name }}"
+          gem install package_cloud
           package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
 
       - name: Upload Release Asset
