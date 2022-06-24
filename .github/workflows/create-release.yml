@@ -53,15 +53,16 @@ jobs:
             if [ "${{ matrix.release }}" = "7" ]
             then
               yum install -y centos-release-scl
-              yum install -y make gcc diffutils libpcap-devel rh-ruby27
+              yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++
+              scl enable rh-ruby27 rh-ruby27-ruby-devel
             else
               dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
-              yum install -y make gcc diffutils ruby
+              yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
           else
             apt-get update
-            apt-get -y install make libpcap-dev ca-certificates build-essential curl ruby
+            apt-get -y install make libpcap-dev ca-certificates build-essential curl ruby ruby-dev
           fi
 
       - name: Run Make
