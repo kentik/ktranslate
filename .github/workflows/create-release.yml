@@ -54,7 +54,7 @@ jobs:
             then
               yum install -y centos-release-scl
               yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++
-              scl enable rh-ruby27 rh-ruby27-ruby-devel
+              scl enable rh-ruby27
             else
               dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
@@ -99,7 +99,7 @@ jobs:
         run: |
           gem install package_cloud
           REPO="${{ github.event.repository.name }}"
-          package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} steps.package.outputs.package
+          package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
 
       - name: Upload Release Asset
         id: upload-release-asset
