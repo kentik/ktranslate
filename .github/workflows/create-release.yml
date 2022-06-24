@@ -14,17 +14,22 @@ jobs:
           - distro: centos
             release: 7
             pkg: rpm
+            pkg_name: el
           - distro: centos
             release: 8
             pkg: rpm
+            pkg_name: el
 
           - distro: ubuntu
             release: focal
             pkg: deb
+            pkg_name: ubuntu
 
           - distro: debian
             release: bullseye
             pkg: deb
+            pkg_name: debian
+
     container:
       image: ${{ matrix.distro }}:${{ matrix.release }}
 
@@ -85,6 +90,17 @@ jobs:
           arch: x86_64
           format: ${{ matrix.pkg }}
           package: ktranslate-package.yml
+
+      - name: Send to packagecloud
+        uses: actions/setup-ruby@v1
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
+        with:
+          ruby-version: 2.6
+        run: |
+          gem install package_cloud
+          REPO="${{ github.event.repository.name }}"
+          package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} steps.package.outputs.package
 
       - name: Upload Release Asset
         id: upload-release-asset
