@@ -56,8 +56,11 @@ jobs:
               yum install -y centos-release-scl
               yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++ rh-ruby27-rubygems
               scl enable rh-ruby27 bash
-              ruby --version
-              gem --version
+              ls /opt/rh/rh-ruby27/root/usr/bin/
+              ln -s /opt/rh/rh-ruby27/root/usr/bin/ruby /usr/bin/ruby
+              ln -s /opt/rh/rh-ruby27/root/usr/bin/gem /usr/bin/gem
+              ruby -v
+              gem -v
             else
               dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
