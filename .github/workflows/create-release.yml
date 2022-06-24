@@ -52,9 +52,9 @@ jobs:
           then
             if [ "${{ matrix.release }}" = "7" ]
             then
-              yum install -y make gcc diffutils libpcap-devel
+              yum install -y make gcc diffutils libpcap-devel ruby
             else
-              dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+              dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos ruby
               yum install -y make gcc diffutils
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
@@ -92,11 +92,8 @@ jobs:
           package: ktranslate-package.yml
 
       - name: Send to packagecloud
-        uses: actions/setup-ruby@v1
         env:
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
-        with:
-          ruby-version: 2.6
         run: |
           gem install package_cloud
           REPO="${{ github.event.repository.name }}"
