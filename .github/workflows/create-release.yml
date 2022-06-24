@@ -94,6 +94,17 @@ jobs:
           format: ${{ matrix.pkg }}
           package: ktranslate-package.yml
 
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.package.outputs.package }}
+          asset_name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
+          asset_content_type: application/binary
+
       - name: Send to packagecloud
         shell: bash
         env:
@@ -109,14 +120,3 @@ jobs:
           REPO="${{ github.event.repository.name }}"
           gem install package_cloud
           package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.package.outputs.package }}
-          asset_name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
-          asset_content_type: application/binary
