@@ -47,6 +47,7 @@ jobs:
           go-version: '1.18.3'
 
       - name: Get Deps
+        shell: bash
         run: |
           if [ "${{ matrix.distro }}" = "centos" ]
           then
@@ -54,7 +55,9 @@ jobs:
             then
               yum install -y centos-release-scl
               yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++ rh-ruby27-rubygems
+              which ruby
               scl enable rh-ruby27 bash
+              which ruby
               ruby --version
               gem --version
             else
@@ -96,6 +99,7 @@ jobs:
           package: ktranslate-package.yml
 
       - name: Send to packagecloud
+        shell: bash
         env:
           PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
         run: |
