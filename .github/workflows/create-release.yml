@@ -57,10 +57,11 @@ jobs:
               yum install -y make gcc diffutils libpcap-devel rh-ruby27 rh-ruby27-ruby-devel redhat-rpm-config gcc-c++ rh-ruby27-rubygems
               scl enable rh-ruby27 bash
               ls /opt/rh/rh-ruby27/root/usr/bin/
-              ln -s /opt/rh/rh-ruby27/root/usr/bin/ruby /usr/bin/ruby
-              ln -s /opt/rh/rh-ruby27/root/usr/bin/gem /usr/bin/gem
+              export PATH=/opt/rh/rh-ruby27/root/usr/local/bin:/opt/rh/rh-ruby27/root/usr/bin:/sbin:/bin:/usr/sbin:/usr/bin
+              export LD_LIBRARY_PATH=/opt/rh/rh-ruby27/root/usr/local/lib64:/opt/rh/rh-ruby27/root/usr/lib64
               ruby -v
               gem -v
+              gem install package_cloud
             else
               dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
