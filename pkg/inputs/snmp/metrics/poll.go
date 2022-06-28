@@ -103,8 +103,8 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 	if pingSec == 0 { // If not per device, try per global.
 		pingSec = gconf.PingSec
 	}
-	if pingSec == 0 { // Default to 1 here if not defined in either global or per device levels.
-		pingSec = 1
+	if pingSec == 0 { // Default to 60 (1/per min) here if not defined in either global or per device levels.
+		pingSec = 60
 	}
 
 	poller := Poller{
@@ -121,6 +121,40 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 	} else {
 		poller.pinger = p
 		log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
+	}
+
+	return &poller
+}
+
+func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
+	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
+	counterTimeSec := 5 * 60
+	if conf != nil && conf.PollTimeSec > 0 {
+		counterTimeSec = conf.PollTimeSec
+	} else if gconf != nil && gconf.PollTimeSec > 0 {
+		counterTimeSec = gconf.PollTimeSec
+	}
+	// Lastly, enforece a min polling interval.
+	if counterTimeSec < 30 {
+		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
+		counterTimeSec = 30
+	}
+
+	poller := Poller{
+		jchfChan:       jchfChan,
+		log:            log,
+		metrics:        metrics,
+		counterTimeSec: counterTimeSec,
+		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
+	}
+
+	// If we are extending the metrics for this device in any way, set it up now.
+	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
+	if err != nil {
+		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
+	} else if ext != nil {
+		poller.extension = ext
+		log.Infof("Enabling extension %s for %s -> %s", ext.GetName(), conf.DeviceIP, conf.DeviceName)
 	}
 
 	return &poller
@@ -267,6 +301,34 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
 				counterCheck.Stop()
+				return
+			}
+		}
+	}()
+}
+
+// Simpler loop which only runs on ext data, no actual snmp polling.
+func (p *Poller) StartExtensionOnlyLoop(ctx context.Context) {
+	if p.extension == nil {
+		p.log.Errorf("Missing extension in Ext loop.")
+		return
+	}
+
+	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
+	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
+	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
+	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
+	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
+
+	if p.extension != nil {
+		go p.extension.Run(ctx, counterAlignment)
+	}
+
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				p.log.Infof("Metrics ExtOnly Done")
 				return
 			}
 		}

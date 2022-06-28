@@ -56,7 +56,7 @@ func (ff *FilterFlag) String() string {
 
 func (i *FilterFlag) Set(value string) error {
 	pts := strings.Split(value, ",")
-	if len(pts) < 3 {
+	if len(pts) < 4 {
 		return fmt.Errorf("Filter flag is defined by type dimension operator value")
 	}
 	ptn := make([]string, len(pts))
@@ -94,6 +94,8 @@ func GetFilters(log logger.Underlying) ([]Filter, error) {
 				return nil, err
 			}
 			filterSet = append(filterSet, newf)
+		default:
+			return nil, fmt.Errorf("Invalid type: %s. Valid Types: %s|%s|%s", fd.FType, String, Int, Addr)
 		}
 	}
 

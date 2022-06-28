@@ -13,6 +13,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202202"
@@ -24,12 +25,13 @@ import (
 )
 
 const (
-	CACHE_TIME_DEVICE   = 1 * time.Hour
-	API_TIMEOUT         = 60 * time.Second
-	USER_AGENT_BASE     = "KentikFirehose"
-	HTTP_USER_AGENT     = "User-Agent"
-	API_EMAIL_HEADER    = "X-CH-Auth-Email"
-	API_PASSWORD_HEADER = "X-CH-Auth-API-Token"
+	CACHE_TIME_DEVICE             = 1 * time.Hour
+	API_TIMEOUT                   = 60 * time.Second
+	USER_AGENT_BASE               = "KentikFirehose"
+	HTTP_USER_AGENT               = "User-Agent"
+	API_EMAIL_HEADER              = "X-CH-Auth-Email"
+	API_PASSWORD_HEADER           = "X-CH-Auth-API-Token"
+	MIN_TIME_BETWEEN_SYNTH_CHECKS = 60 * time.Second
 )
 
 var (
@@ -93,6 +95,24 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte,
 	}
 
 	return body, nil
+}
+
+func (api *KentikApi) UpdateTests(ctx context.Context) {
+	if api == nil {
+		return
+	}
+
+	if time.Now().Before(api.lastSynth.Add(MIN_TIME_BETWEEN_SYNTH_CHECKS)) { // Only check this often.
+		return
+	}
+
+	go func() {
+		err := api.getSynthInfo(ctx)
+		if err != nil {
+			api.Errorf("Cannot get API synth on demand: %v", err)
+		}
+	}()
+	return
 }
 
 func (api *KentikApi) GetTest(tid kt.TestId) *synthetics.Test {
@@ -194,6 +214,8 @@ type KentikApi struct {
 	apiTimeout    time.Duration
 	synClient     synthetics.SyntheticsAdminServiceClient
 	conf          *kt.KentikConfig
+	mux           sync.RWMutex
+	lastSynth     time.Time
 }
 
 func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.ContextL) (*KentikApi, error) {
@@ -320,6 +342,10 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 }
 
 func (api *KentikApi) getSynthInfo(ctx context.Context) error {
+	api.mux.Lock() // Guard this function totally.
+	defer api.mux.Unlock()
+	api.lastSynth = time.Now()
+
 	md := metadata.New(map[string]string{
 		"X-CH-Auth-Email":     api.conf.ApiEmail,
 		"X-CH-Auth-API-Token": api.conf.ApiToken,

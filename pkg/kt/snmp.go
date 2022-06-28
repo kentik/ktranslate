@@ -143,9 +143,18 @@ type EAPIConfig struct {
 	origStr   string
 }
 
+type MerakiConfig struct {
+	ApiKey         string `yaml:"api_key"`         // Required.
+	Host           string `yaml:"host"`            // Optional, defaults to api.meraki.com
+	MonitorUplinks bool   `yaml:"monitor_uplinks"` // This will be the default if neither is set.
+	MonitorDevices bool   `yaml:"monitor_devices"`
+}
+
 // Contain various extensions to snmp which can be used to get data.
 type ExtensionSet struct {
-	EAPIConfig *EAPIConfig `yaml:"eapi_config,omitempty"` // Arista eAPI.
+	ExtOnly      bool          `yaml:"ext_only"`
+	EAPIConfig   *EAPIConfig   `yaml:"eapi_config,omitempty"` // Arista eAPI.
+	MerakiConfig *MerakiConfig `yaml:"meraki_config,omitempty"`
 }
 
 type SnmpDeviceConfig struct {
@@ -479,6 +488,16 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			}
 		} else if strings.HasPrefix(single, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
 			raw := loadViaAWSSecrets(single[len(AwsSmPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, AzureKVPrefix) { // Same but use Azure.
+			raw := loadViaAzureKeyVault(single[len(AzureKVPrefix):])
+			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
+				return err
+			}
+		} else if strings.HasPrefix(single, GCPSmPrefix) { // And Same again but use GCP.
+			raw := loadViaGCPSecrets(single[len(GCPSmPrefix):])
 			if err = yaml.Unmarshal([]byte(raw), &conf); err != nil {
 				return err
 			}
