@@ -27,13 +27,15 @@ const (
 
 func loadViaAzureKeyVault(key string) string {
 	if azureClient == nil {
-		keyVaultName := os.Getenv("KT_AZURE_KEY_VAULT_NAME") // Must be set.
-		if keyVaultName == "" {
-			log.Printf("ENV Var 'KT_AZURE_KEY_VAULT_NAME' must be set")
-			return "ENV Var KT_AZURE_KEY_VAULT_NAME must be set"
+		keyVaultURL := os.Getenv("KT_AZURE_KEY_VAULT_URL") // Optional, default to name + common url.
+		if keyVaultURL == "" {
+			keyVaultName := os.Getenv("KT_AZURE_KEY_VAULT_NAME") // Must be set.
+			if keyVaultName == "" {
+				log.Printf("ENV Var 'KT_AZURE_KEY_VAULT_NAME' or 'KT_AZURE_KEY_VAULT_URL' must be set")
+				return "ENV Var KT_AZURE_KEY_VAULT_NAME or KT_AZURE_KEY_VAULT_URL must be set"
+			}
+			keyVaultURL = fmt.Sprintf("https://%s.vault.azure.net/", keyVaultName)
 		}
-
-		keyVaultURL := fmt.Sprintf("https://%s.vault.azure.net/", keyVaultName) // Should this be hard coded?
 
 		cred, err := azidentity.NewDefaultAzureCredential(nil)
 		if err != nil {

@@ -513,13 +513,11 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		return nil, err
 	}
 
-	//c.log.Infof("Loaded %d Uplinks for %d Organizations", len(uplinkSet), len(c.orgs))
-
 	return c.parseUplinks(uplinkSet)
 }
 
 type uplinkTS struct {
-	TS          time.Time `json:"ts":`
+	TS          time.Time `json:"ts"`
 	LossPercent float64   `json:"lossPercent"`
 	LatencyMS   float64   `json:"latencyMs"`
 }
