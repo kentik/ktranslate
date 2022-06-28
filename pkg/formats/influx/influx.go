@@ -37,8 +37,9 @@ func (d *InfluxData) String() string {
 		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
 		i++
 	}
-	for k, v := range d.FieldsFloat {
-		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+	for key, v := range d.FieldsFloat {
+		kval := strings.ReplaceAll(key, " ", "_")
+		fields[i] = kval + "=" + strconv.FormatFloat(v, 'f', 4, 64)
 		i++
 	}
 
@@ -225,19 +226,39 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
-	ms := map[string]int64{}
-	for m, _ := range metrics {
+
+	results := []InfluxData{}
+	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			ms[m] = in.CustomBigInt[m]
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+
+			mtype := name.GetType()
+			if name.Format == kt.FloatMS {
+				results = append(results, InfluxData{
+					Name:        "kentik." + mtype,
+					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
+					Timestamp:   in.Timestamp * 1000000000,
+					Tags:        attrNew,
+				})
+			} else {
+				results = append(results, InfluxData{
+					Name:      "kentik." + mtype,
+					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
+					Timestamp: in.Timestamp * 1000000000,
+					Tags:      attrNew,
+				})
+			}
 		}
 	}
 
-	return []InfluxData{InfluxData{
-		Name:      "kentik.snmp.device",
-		Fields:    ms,
-		Timestamp: in.Timestamp * 1000000000,
-		Tags:      attr,
-	}}
+	return results
 }
 
 func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
@@ -246,11 +267,37 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
-	ms := map[string]int64{}
-	msF := map[string]float64{}
-	for m, _ := range metrics {
+
+	profileName := "snmp"
+	results := []InfluxData{}
+	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
+		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
-			ms[m] = in.CustomBigInt[m]
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+
+			mtype := name.GetType()
+			if name.Format == kt.FloatMS {
+				results = append(results, InfluxData{
+					Name:        "kentik." + mtype,
+					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
+					Timestamp:   in.Timestamp * 1000000000,
+					Tags:        attrNew,
+				})
+			} else {
+				results = append(results, InfluxData{
+					Name:      "kentik." + mtype,
+					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
+					Timestamp: in.Timestamp * 1000000000,
+					Tags:      attrNew,
+				})
+			}
 		}
 	}
 
@@ -259,9 +306,19 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
-						msF["IfInUtilization"] = float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed)
+						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName])
+						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
+							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+								results = append(results, InfluxData{
+									Name:        "kentik.snmp",
+									FieldsFloat: map[string]float64{"IfInUtilization": float64(inBytes*8*100) / float64(uptimeSpeed)},
+									Timestamp:   in.Timestamp * 1000000000,
+									Tags:        attrNew,
+								})
+							}
+						}
 					}
 				}
 			}
@@ -269,22 +326,26 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 1000000) // Convert into bits here, from megabits.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
-						msF["IfOutUtilization"] = float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed)
+						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName])
+						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
+							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+								results = append(results, InfluxData{
+									Name:        "kentik.snmp",
+									FieldsFloat: map[string]float64{"IfOutUtilization": float64(outBytes*8*100) / float64(uptimeSpeed)},
+									Timestamp:   in.Timestamp * 1000000000,
+									Tags:        attrNew,
+								})
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
-	return []InfluxData{InfluxData{
-		Name:        "kentik.snmp.interface",
-		Fields:      ms,
-		FieldsFloat: msF,
-		Timestamp:   in.Timestamp * 1000000000,
-		Tags:        attr,
-	}}
+	return results
 }
 
 var escaper = regexp.MustCompile("([,= ])")
