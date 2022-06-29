@@ -34,7 +34,7 @@ func (d *InfluxData) String() string {
 	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
 	i := 0
 	for k, v := range d.Fields {
-		fields[i] = k + "=" + strconv.FormatInt(v, 10)
+		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
 		i++
 	}
 	for k, v := range d.FieldsFloat {
