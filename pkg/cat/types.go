@@ -96,7 +96,7 @@ type KTranslate struct {
 	rollups      []rollup.Roller
 	doRollups    bool
 	doFilter     bool
-	filters      []filter.Filter
+	filters      []filter.FilterWrapper
 	geo          *patricia.MMMap
 	asn          *patricia.MMMap
 	resolver     *resolv.Resolver
