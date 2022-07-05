@@ -249,10 +249,22 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.CustomInteger1)
 		case "CustomInteger2":
 			in.CustomBigInt[field] = int64(fmsg.CustomInteger2)
+		case "CustomInteger3":
+			in.CustomBigInt[field] = int64(fmsg.CustomInteger3)
+		case "CustomInteger4":
+			in.CustomBigInt[field] = int64(fmsg.CustomInteger4)
+		case "CustomInteger5":
+			in.CustomBigInt[field] = int64(fmsg.CustomInteger5)
 		case "CustomBytes1":
 			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes1)
 		case "CustomBytes2":
 			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes2)
+		case "CustomBytes3":
+			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes3)
+		case "CustomBytes4":
+			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes4)
+		case "CustomBytes5":
+			in.CustomStr[field] = fmt.Sprintf("%.2x", fmsg.CustomBytes5)
 		}
 	}
 
