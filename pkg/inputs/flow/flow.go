@@ -2,8 +2,10 @@ package flow
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -14,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
+	"github.com/netsampler/goflow2/producer"
 	"github.com/netsampler/goflow2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -54,14 +57,14 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config utils.ProducerConfig
+	var config *producer.ProducerConfig
 	if *MappingFile != "" {
 		f, err := os.Open(*MappingFile)
 		if err != nil {
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		config, err = utils.LoadMapping(f)
+		config, err = loadMapping(f)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
@@ -75,6 +78,9 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			Format: kt,
 			Logger: &KentikLog{l: kt},
 			Config: config,
+		}
+		for _, v := range config.IPFIX.Mapping {
+			kt.Infof("Custom Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, v.Destination)
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sNF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -110,4 +116,11 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		return kt, nil
 	}
 	return nil, fmt.Errorf("Unknown flow format %v", proto)
+}
+
+func loadMapping(f io.Reader) (*producer.ProducerConfig, error) {
+	config := &producer.ProducerConfig{}
+	dec := json.NewDecoder(f)
+	err := dec.Decode(config)
+	return config, err
 }
