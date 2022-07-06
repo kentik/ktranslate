@@ -161,6 +161,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 		oidName := wrapper.mib.GetName()
 
+		// This result is blocked due to a defined condition.
+		if !wrapper.checkCondition(idx, results) {
+			continue
+		}
+
 		dmr := assureDeviceMetrics(m, idx)
 		metricsFound[oidName] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
 		switch wrapper.variable.Type {
@@ -376,4 +381,22 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dm.conf.SetUserTags(dst.CustomStr)
 
 	return []*kt.JCHF{dst}, nil
+}
+
+func (w wrapper) checkCondition(idx string, results []wrapper) bool { // Check condition, if it exists. If this is false, we skip this result.
+	if w.mib.Condition != nil {
+		for _, wr := range results { // Annoying we have to itterate twice here.
+			idxw := snmp_util.GetIndex(wr.variable.Name[1:], wr.oid)
+			if idxw != idx { // We only care about results which share a common index.
+				continue
+			}
+			oidNameWr := wr.mib.GetName() // Does the name match our target?
+			if oidNameWr == w.mib.Condition.TargetName {
+				// If it does, does it match our target value?
+				return snmp_util.ToInt64(wr.variable.Value) == w.mib.Condition.TargetValue
+			}
+		}
+		return true // Keep this one because condition evals to true.
+	}
+	return true // True if no condition exists.
 }
