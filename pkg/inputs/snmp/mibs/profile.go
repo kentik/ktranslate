@@ -438,7 +438,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				FromExtended: metric.fromExtended,
 				Format:       metric.Symbol.Format,
 				AllowDup:     metric.Symbol.AllowDup,
-				Condition:    metric.Symbol.GetCondition(),
+				Condition:    metric.Symbol.GetCondition(p),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -484,7 +484,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				FromExtended: metric.fromExtended,
 				Format:       s.Format,
 				AllowDup:     s.AllowDup,
-				Condition:    s.GetCondition(),
+				Condition:    s.GetCondition(p),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -869,15 +869,21 @@ func (o *OID) GetTableName() string {
 	return o.Name
 }
 
-func (o *OID) GetCondition() *kt.MibCondition {
+func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
 	if o.Condition != "" {
 		pts := strings.Split(o.Condition, "=")
 		if len(pts) == 2 {
-			val, _ := strconv.Atoi(pts[1])
-			return &kt.MibCondition{
-				TargetName:  pts[0],
-				TargetValue: int64(val),
+			val, err := strconv.Atoi(pts[1])
+			if err != nil {
+				log.Errorf("Skipping invalid profile condition in %s: %s. RHS (%s) must be an int.", o.Name, o.Condition, pts[1])
+			} else {
+				return &kt.MibCondition{
+					TargetName:  pts[0],
+					TargetValue: int64(val),
+				}
 			}
+		} else {
+			log.Errorf("Skipping invalid profile condition in %s: %s", o.Name, o.Condition)
 		}
 	}
 	return nil
