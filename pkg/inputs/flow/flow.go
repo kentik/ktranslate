@@ -2,8 +2,10 @@ package flow
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -14,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
+	"github.com/netsampler/goflow2/producer"
 	"github.com/netsampler/goflow2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -27,7 +30,7 @@ const (
 	Netflow9            = "netflow9"
 
 	// These can be any of
-	fullFieldList = "Type,TimeReceived,SequenceNum,SamplingRate,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IngressVrfID,EgressVrfID,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,BiFlowDirection,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,HasMPLS,MPLSCount,MPLS1TTL,MPLS1Label,MPLS2TTL,MPLS2Label,MPLS3TTL,MPLS3Label,MPLSLastTTL,MPLSLastLabel,CustomInteger1,CustomInteger2,CustomBytes1,CustomBytes2"
+	fullFieldList = "Type,TimeReceived,SequenceNum,SamplingRate,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IngressVrfID,EgressVrfID,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,BiFlowDirection,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,HasMPLS,MPLSCount,MPLS1TTL,MPLS1Label,MPLS2TTL,MPLS2Label,MPLS3TTL,MPLS3Label,MPLSLastTTL,MPLSLastLabel,CustomInteger1,CustomInteger2,CustomInteger3,CustomInteger4,CustomInteger5,CustomBytes1,CustomBytes2,CustomBytes3,CustomBytes4,CustomBytes5"
 	defaultFields = "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
 )
 
@@ -54,14 +57,14 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config utils.ProducerConfig
+	var config *producer.ProducerConfig
 	if *MappingFile != "" {
 		f, err := os.Open(*MappingFile)
 		if err != nil {
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		config, err = utils.LoadMapping(f)
+		config, err = loadMapping(f)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
@@ -75,6 +78,9 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			Format: kt,
 			Logger: &KentikLog{l: kt},
 			Config: config,
+		}
+		for _, v := range config.IPFIX.Mapping {
+			kt.Infof("Custom Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, v.Destination)
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sNF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -110,4 +116,11 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		return kt, nil
 	}
 	return nil, fmt.Errorf("Unknown flow format %v", proto)
+}
+
+func loadMapping(f io.Reader) (*producer.ProducerConfig, error) {
+	config := &producer.ProducerConfig{}
+	dec := json.NewDecoder(f)
+	err := dec.Decode(config)
+	return config, err
 }
