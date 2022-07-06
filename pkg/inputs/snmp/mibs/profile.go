@@ -875,7 +875,7 @@ func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
 		if len(pts) == 2 {
 			val, err := strconv.Atoi(pts[1])
 			if err != nil {
-				log.Errorf("Skipping invalid profile condition in %s: %s. RHS (%s) must be an int.", o.Name, o.Condition, pts[1])
+				log.Errorf("Skipping invalid profile condition in %s: %s. RHS (%s) must be an int and operator must be '='.", o.Name, o.Condition, pts[1])
 			} else {
 				return &kt.MibCondition{
 					TargetName:  pts[0],
@@ -883,7 +883,7 @@ func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
 				}
 			}
 		} else {
-			log.Errorf("Skipping invalid profile condition in %s: %s", o.Name, o.Condition)
+			log.Errorf("Skipping invalid profile condition in %s: %s. RHS must be an int and operator must be '='.", o.Name, o.Condition)
 		}
 	}
 	return nil
