@@ -220,29 +220,30 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				continue
 			}
 		}
-	} else { // Loop over all possibe v2c options here.
-		for _, community := range conf.Disco.DefaultCommunities {
-			device = kt.SnmpDeviceConfig{
-				DeviceName: result.Name,
-				DeviceIP:   result.Host.String(),
-				Community:  community,
-				UseV1:      conf.Disco.UseV1,
-				Debug:      conf.Disco.Debug,
-				Port:       uint16(conf.Disco.Ports[0]),
-				Checked:    time.Now(),
-			}
-			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
-			if err != nil {
-				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-				return
-			}
-			md, err = metadata.GetBasicDeviceMetadata(log, serv)
-			if err != nil {
-				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
-				continue
-			}
-			break // We're good to go here.
+	}
+
+	// Loop over all possibe v2c options here if any are set.
+	for _, community := range conf.Disco.DefaultCommunities {
+		device = kt.SnmpDeviceConfig{
+			DeviceName: result.Name,
+			DeviceIP:   result.Host.String(),
+			Community:  community,
+			UseV1:      conf.Disco.UseV1,
+			Debug:      conf.Disco.Debug,
+			Port:       uint16(conf.Disco.Ports[0]),
+			Checked:    time.Now(),
 		}
+		serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
+		if err != nil {
+			log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
+			return
+		}
+		md, err = metadata.GetBasicDeviceMetadata(log, serv)
+		if err != nil {
+			log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
+			continue
+		}
+		break // We're good to go here.
 	}
 
 	if md == nil { // No way to establish comminications
