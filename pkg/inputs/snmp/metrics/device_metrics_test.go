@@ -35,7 +35,7 @@ func TestCheckCondition(t *testing.T) {
 	for in, expt := range tests {
 		oid := mibs.OID{Condition: in}
 		mib := &kt.Mib{
-			Condition: oid.GetCondition(),
+			Condition: oid.GetCondition(nil),
 			Tag:       "name2",
 		}
 		w := wrapper{
