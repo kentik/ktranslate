@@ -139,6 +139,9 @@ func loadMapping(f io.Reader, proto FlowSource) (*EntConfig, error) {
 	err := dec.Decode(config)
 
 	// Update any non filled in name maps to the default.
+	if config.NameMap == nil {
+		config.NameMap = map[string]string{}
+	}
 	switch proto {
 	case Ipfix:
 		for _, v := range config.FlowConfig.IPFIX.Mapping {
