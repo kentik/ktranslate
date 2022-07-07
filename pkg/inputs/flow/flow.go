@@ -57,19 +57,20 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config *producer.ProducerConfig
+	var config *EntConfig
 	if *MappingFile != "" {
 		f, err := os.Open(*MappingFile)
 		if err != nil {
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		config, err = loadMapping(f)
+		config, err = loadMapping(f, proto)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
 			return nil, err
 		}
+		kt.SetConfig(config)
 	}
 
 	switch proto {
@@ -77,10 +78,16 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		sNF := &utils.StateNetFlow{
 			Format: kt,
 			Logger: &KentikLog{l: kt},
-			Config: config,
+			Config: &config.FlowConfig,
 		}
-		for _, v := range config.IPFIX.Mapping {
-			kt.Infof("Custom Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, v.Destination)
+		if proto == Ipfix {
+			for _, v := range config.FlowConfig.IPFIX.Mapping {
+				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, config.NameMap[v.Destination])
+			}
+		} else {
+			for _, v := range config.FlowConfig.NetFlowV9.Mapping {
+				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, config.NameMap[v.Destination])
+			}
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sNF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -93,7 +100,10 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		sSF := &utils.StateSFlow{
 			Format: kt,
 			Logger: &KentikLog{l: kt},
-			Config: config,
+			Config: &config.FlowConfig,
+		}
+		for _, v := range config.FlowConfig.SFlow.Mapping {
+			kt.Infof("Custom SFlow Field Mapping: Layer=%d, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, config.NameMap[v.Destination])
 		}
 		go func() { // Let this run, returning flow into the kentik transport struct
 			err := sSF.FlowRoutine(*Workers, *Addr, *Port, *Reuse)
@@ -118,9 +128,37 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	return nil, fmt.Errorf("Unknown flow format %v", proto)
 }
 
-func loadMapping(f io.Reader) (*producer.ProducerConfig, error) {
-	config := &producer.ProducerConfig{}
+type EntConfig struct {
+	FlowConfig producer.ProducerConfig `json:"flow_config"`
+	NameMap    map[string]string       `json:"name_map"`
+}
+
+func loadMapping(f io.Reader, proto FlowSource) (*EntConfig, error) {
+	config := &EntConfig{}
 	dec := json.NewDecoder(f)
 	err := dec.Decode(config)
+
+	// Update any non filled in name maps to the default.
+	switch proto {
+	case Ipfix:
+		for _, v := range config.FlowConfig.IPFIX.Mapping {
+			if _, ok := config.NameMap[v.Destination]; !ok {
+				config.NameMap[v.Destination] = v.Destination
+			}
+		}
+	case Netflow9:
+		for _, v := range config.FlowConfig.NetFlowV9.Mapping {
+			if _, ok := config.NameMap[v.Destination]; !ok {
+				config.NameMap[v.Destination] = v.Destination
+			}
+		}
+	case Sflow:
+		for _, v := range config.FlowConfig.SFlow.Mapping {
+			if _, ok := config.NameMap[v.Destination]; !ok {
+				config.NameMap[v.Destination] = v.Destination
+			}
+		}
+	}
+
 	return config, err
 }
