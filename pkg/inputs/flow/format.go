@@ -37,7 +37,7 @@ type KentikDriver struct {
 	registry     go_metrics.Registry
 	resolv       *resolv.Resolver
 	ctx          context.Context
-	config       *EntConfig
+	config       EntConfig
 }
 
 type FlowMetric struct {
@@ -63,7 +63,7 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 	return &kt
 }
 
-func (t *KentikDriver) SetConfig(c *EntConfig) {
+func (t *KentikDriver) SetConfig(c EntConfig) {
 	t.config = c
 }
 

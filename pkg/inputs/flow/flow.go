@@ -57,7 +57,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config *EntConfig
+	var config EntConfig
 	if *MappingFile != "" {
 		f, err := os.Open(*MappingFile)
 		if err != nil {
@@ -133,10 +133,10 @@ type EntConfig struct {
 	NameMap    map[string]string       `json:"name_map"`
 }
 
-func loadMapping(f io.Reader, proto FlowSource) (*EntConfig, error) {
-	config := &EntConfig{}
+func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
+	config := EntConfig{}
 	dec := json.NewDecoder(f)
-	err := dec.Decode(config)
+	err := dec.Decode(&config)
 
 	// Update any non filled in name maps to the default.
 	if config.NameMap == nil {
