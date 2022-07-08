@@ -37,6 +37,7 @@ type KentikDriver struct {
 	registry     go_metrics.Registry
 	resolv       *resolv.Resolver
 	ctx          context.Context
+	config       EntConfig
 }
 
 type FlowMetric struct {
@@ -60,6 +61,10 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 	}
 	go kt.run(ctx) // Process flows and send them on.
 	return &kt
+}
+
+func (t *KentikDriver) SetConfig(c EntConfig) {
+	t.config = c
 }
 
 func (t *KentikDriver) Init(ctx context.Context) error {
@@ -246,25 +251,25 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "MPLSLastLabel":
 			in.CustomBigInt[field] = int64(fmsg.MPLSLastLabel)
 		case "CustomInteger1":
-			in.CustomBigInt[field] = int64(fmsg.CustomInteger1)
+			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger1)
 		case "CustomInteger2":
-			in.CustomBigInt[field] = int64(fmsg.CustomInteger2)
+			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger2)
 		case "CustomInteger3":
-			in.CustomBigInt[field] = int64(fmsg.CustomInteger3)
+			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger3)
 		case "CustomInteger4":
-			in.CustomBigInt[field] = int64(fmsg.CustomInteger4)
+			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger4)
 		case "CustomInteger5":
-			in.CustomBigInt[field] = int64(fmsg.CustomInteger5)
+			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger5)
 		case "CustomBytes1":
-			in.CustomStr[field] = fmt.Sprintf("%s", string(fmsg.CustomBytes1))
+			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes1))
 		case "CustomBytes2":
-			in.CustomStr[field] = fmt.Sprintf("%s", string(fmsg.CustomBytes2))
+			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes2))
 		case "CustomBytes3":
-			in.CustomStr[field] = fmt.Sprintf("%s", string(fmsg.CustomBytes3))
+			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes3))
 		case "CustomBytes4":
-			in.CustomStr[field] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
+			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
 		case "CustomBytes5":
-			in.CustomStr[field] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
+			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
 		}
 	}
 
