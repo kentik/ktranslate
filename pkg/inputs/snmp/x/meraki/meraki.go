@@ -674,6 +674,11 @@ func getUsage(u uplink) (int64, int64) {
 func getLatencyLoss(u uplink) (float64, float64) {
 	latency := float64(0)
 	loss := float64(0)
+
+	if len(u.LatencyLoss.TimeSeries) == 0 { // Kinda a noop but 0 is best here.
+		return 0, 0
+	}
+
 	for _, t := range u.LatencyLoss.TimeSeries {
 		latency += t.LatencyMS
 		loss += t.LossPercent
