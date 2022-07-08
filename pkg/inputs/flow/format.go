@@ -7,6 +7,7 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -26,6 +27,7 @@ const (
 
 type KentikDriver struct {
 	logger.ContextL
+	sync.RWMutex
 	jchfChan     chan []*kt.JCHF
 	apic         *api.KentikApi
 	metrics      map[string]*FlowMetric
@@ -108,6 +110,9 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderFlowDevice
+
+	// We have enough traffic here now to require a locking primative.
+	t.RLock()
 	if dev, ok := t.devices[net.IP(fmsg.SamplerAddress).String()]; ok {
 		in.DeviceName = dev.Name // Copy in any of these info we get
 		in.DeviceId = dev.ID
@@ -125,9 +130,14 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	}
 
 	if _, ok := t.metrics[in.DeviceName]; !ok {
+		t.RUnlock() // Annoying lock dance, we assume this will not happen that much.
+		t.Lock()
 		t.metrics[in.DeviceName] = &FlowMetric{Flows: go_metrics.GetOrRegisterMeter(fmt.Sprintf("netflow.flows^fmt=%s^device_name=%s^force=true", string(t.proto), in.DeviceName), t.registry)}
+		t.Unlock()
+		t.RLock()
 	}
 	t.metrics[in.DeviceName].Flows.Mark(1)
+	t.RUnlock()
 
 	if in.SampleRate == 0 {
 		in.SampleRate = 1
