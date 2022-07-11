@@ -365,6 +365,10 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	if !isTest {
 		removeNum := conf.Global.PurgeDevices
 		for dip, d := range conf.Devices {
+			if d.PurgeDevice != 0 { // Let this override the global settings.
+				removeNum = d.PurgeDevice
+			}
+
 			if removeNum > 0 && pollDuration > 0 {
 				// Get time this would take.
 				removeTime := time.Now().Add(time.Duration(removeNum) * pollDuration * -1)
