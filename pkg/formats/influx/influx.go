@@ -37,9 +37,8 @@ func (d *InfluxData) String() string {
 		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
 		i++
 	}
-	for key, v := range d.FieldsFloat {
-		kval := strings.ReplaceAll(key, " ", "_")
-		fields[i] = kval + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+	for k, v := range d.FieldsFloat {
+		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
 		i++
 	}
 
