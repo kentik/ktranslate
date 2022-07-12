@@ -278,7 +278,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName])
-			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
