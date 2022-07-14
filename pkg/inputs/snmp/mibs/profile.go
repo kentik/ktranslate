@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -27,6 +28,7 @@ type OID struct {
 	MatchAttr  []string         `yaml:"match_attributes,omitempty"`
 	Format     string           `yaml:"format,omitempty"`
 	AllowDup   bool             `yaml:"allow_duplicate,omitempty"`
+	Condition  string           `yaml:"condition,omitempty"`
 }
 
 type Tag struct {
@@ -436,6 +438,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				FromExtended: metric.fromExtended,
 				Format:       metric.Symbol.Format,
 				AllowDup:     metric.Symbol.AllowDup,
+				Condition:    metric.Symbol.GetCondition(p),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -458,6 +461,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
 			}
+			if mib.Condition != nil {
+				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
+			}
 			if metric.IsInterface || strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
 			} else {
@@ -478,6 +484,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				FromExtended: metric.fromExtended,
 				Format:       s.Format,
 				AllowDup:     s.AllowDup,
+				Condition:    s.GetCondition(p),
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
@@ -499,6 +506,9 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			if mib.Name == "" {
 				p.Warnf("Skipping mib with no name: %v", mib)
 				continue
+			}
+			if mib.Condition != nil {
+				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
 			}
 			if metric.IsInterface || strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
@@ -857,4 +867,24 @@ func (o *OID) GetTableName() string {
 		return o.Name[0 : len(o.Name)-5]
 	}
 	return o.Name
+}
+
+func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
+	if o.Condition != "" {
+		pts := strings.Split(o.Condition, "=")
+		if len(pts) == 2 {
+			val, err := strconv.Atoi(pts[1])
+			if err != nil {
+				log.Errorf("Skipping invalid profile condition in %s: %s. RHS (%s) must be an int and operator must be '='.", o.Name, o.Condition, pts[1])
+			} else {
+				return &kt.MibCondition{
+					TargetName:  pts[0],
+					TargetValue: int64(val),
+				}
+			}
+		} else {
+			log.Errorf("Skipping invalid profile condition in %s: %s. RHS must be an int and operator must be '='.", o.Name, o.Condition)
+		}
+	}
+	return nil
 }

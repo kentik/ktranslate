@@ -318,6 +318,11 @@ const (
 	Integer32         = 16
 )
 
+type MibCondition struct {
+	TargetName  string
+	TargetValue int64
+}
+
 type Mib struct {
 	Oid          string
 	Name         string
@@ -336,6 +341,7 @@ type Mib struct {
 	OtherTables  map[string]bool
 	Format       string
 	AllowDup     bool
+	Condition    *MibCondition
 }
 
 func (mb *Mib) String() string {
