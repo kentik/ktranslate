@@ -369,12 +369,19 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 				removeNum = d.PurgeDevice
 			}
 
-			if removeNum > 0 && pollDuration > 0 {
+			if removeNum == -1 { // If this value is -1, keep this device forever.
+				continue
+			} else if removeNum < -1 {
+				// This is an invalid state, throw an error.
+				return nil, fmt.Errorf("Invalid PurgeDevice value (%d) for device %s", removeNum, d.DeviceName)
+			}
+
+			if removeNum > 0 && pollDuration > 0 { // Keep remove num guard just in case.
 				// Get time this would take.
 				removeTime := time.Now().Add(time.Duration(removeNum) * pollDuration * -1)
 				removeTime = removeTime.Add(RemoveTimeBuffer)
 				if d.Checked.Before(removeTime) {
-					log.Warnf("Removing device %s because it hasn't been seen since %v. Max time %v", d.DeviceName, d.Checked, removeTime)
+					log.Infof("Removing device %s because it hasn't been seen since %v. Max time %v", d.DeviceName, d.Checked, removeTime)
 					delete(conf.Devices, dip)
 					stats.added--
 				}
