@@ -378,9 +378,10 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 	if ms.Global != nil {
 		for k, v := range ms.Global.UserTags {
 			for _, device := range ms.Devices {
-				// If this global tag has a provider prefix, only add if the provider matches.
-				if !matchesPrefix(k, device.Provider) {
-					continue
+				if nk, ok := matchesPrefix(k, device.Provider); !ok {
+					continue // If this global tag has a provider prefix, only add if the provider matches.
+				} else {
+					k = nk // We do use this tag, go ahead and update the value to the one returned.
 				}
 
 				if device.UserTags == nil {
@@ -447,15 +448,19 @@ func ParseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 }
 
 // If there's a provider: prefix here
-func matchesPrefix(tag string, provider kt.Provider) bool {
+func matchesPrefix(tag string, provider kt.Provider) (string, bool) {
 	if !strings.HasPrefix(tag, ProviderPrefix) { // No prefix so just return true.
-		return true
+		return tag, true
 	}
 
 	pts := strings.SplitN(tag, ProviderToken, 3)
 	if len(pts) < 3 { // Invalid prefix, just return true here.
-		return true
+		return tag, true
 	}
 
-	return pts[1] == string(provider)
+	if pts[1] == string(provider) {
+		return pts[2], true
+	}
+
+	return "", false
 }
