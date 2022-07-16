@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+  release:
+    types: [created]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,9 +20,20 @@ jobs:
           submodules: recursive
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Set Version
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
+
+      - name: Set Release Version
+        run: |
+           echo "KENTIK_KTRANSLATE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        if: steps.version.outputs.is_valid == 'true'
+
+      - name: Set NonRelease Version
         run: |
            echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
+        if: steps.version.outputs.is_valid == 'false'
 
       - name: Setup Go
         uses: actions/setup-go@v2
