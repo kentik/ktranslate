@@ -23,7 +23,8 @@ import (
 )
 
 const (
-	permissions = 0644
+	permissions      = 0644
+	RemoveTimeBuffer = -1 * 15 * 60 * time.Second // This is a 15 min buffer time on removing a device which isn't seen.
 )
 
 type SnmpDiscoDeviceStat struct {
@@ -32,7 +33,7 @@ type SnmpDiscoDeviceStat struct {
 	delta    int
 }
 
-func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpDiscoDeviceStat, error) {
+func Discover(ctx context.Context, snmpFile string, log logger.ContextL, pollDuration time.Duration) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
 	conf, err := parseConfig(ctx, snmpFile, log)
@@ -54,7 +55,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpD
 	}
 
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
-		if _, err := addDevices(ctx, nil, snmpFile, conf, true, log); err != nil {
+		if _, err := addDevices(ctx, nil, snmpFile, conf, true, log, pollDuration); err != nil {
 			return nil, fmt.Errorf("There was an error when writing the %s SNMP configuration file: %v.", snmpFile, err)
 		}
 	}
@@ -128,7 +129,7 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL) (*SnmpD
 
 	var stats *SnmpDiscoDeviceStat
 	if conf.Disco.AddDevices {
-		stats, err = addDevices(ctx, foundDevices, snmpFile, conf, false, log)
+		stats, err = addDevices(ctx, foundDevices, snmpFile, conf, false, log, pollDuration)
 		if err != nil {
 			return nil, err
 		}
@@ -146,7 +147,7 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log
 	defer discoCheck.Stop()
 
 	check := func() {
-		stats, err := Discover(ctx, snmpFile, log)
+		stats, err := Discover(ctx, snmpFile, log, pt)
 		if err != nil {
 			log.Errorf("Discovery SNMP Error: %v", err)
 		} else {
@@ -302,7 +303,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	foundDevices[result.Host.String()] = &device
 }
 
-func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL) (*SnmpDiscoDeviceStat, error) {
+func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL, pollDuration time.Duration) (*SnmpDiscoDeviceStat, error) {
 	// Now add the new.
 	stats := SnmpDiscoDeviceStat{}
 	if conf.Devices == nil {
@@ -356,6 +357,34 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 				stats.added--
 			} else {
 				byEngineID[d.EngineID] = d
+			}
+		}
+	}
+
+	// Remove any devices which havn't been up long enough if this is set.
+	if !isTest {
+		removeNum := conf.Global.PurgeDevices
+		for dip, d := range conf.Devices {
+			if d.PurgeDevice != 0 { // Let this override the global settings.
+				removeNum = d.PurgeDevice
+			}
+
+			if removeNum == -1 { // If this value is -1, keep this device forever.
+				continue
+			} else if removeNum < -1 {
+				// This is an invalid state, throw an error.
+				return nil, fmt.Errorf("Invalid PurgeDevice value (%d) for device %s", removeNum, d.DeviceName)
+			}
+
+			if removeNum > 0 && pollDuration > 0 { // Keep remove num guard just in case.
+				// Get time this would take.
+				removeTime := time.Now().Add(time.Duration(removeNum) * pollDuration * -1)
+				removeTime = removeTime.Add(RemoveTimeBuffer)
+				if d.Checked.Before(removeTime) {
+					log.Infof("Removing device %s because it hasn't been seen since %v. Max time %v", d.DeviceName, d.Checked, removeTime)
+					delete(conf.Devices, dip)
+					stats.added--
+				}
 			}
 		}
 	}
