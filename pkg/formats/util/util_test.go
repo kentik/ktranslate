@@ -244,6 +244,52 @@ func TestDropOnFilter(t *testing.T) {
 			},
 			true, // drop because alias is missing.
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+				"if_Alias":     "igb4",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!if_Alias":       regexp.MustCompile("igb4"),
+					"!if_Description": regexp.MustCompile("igb4"),
+					kt.AdminStatus:    regexp.MustCompile("up"),
+				},
+			},
+			true, // drop because description is missing.
+		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus:   "up",
+				"if_Description": "igb4",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!(if_Description||if_Alias)": regexp.MustCompile("igb4"),
+					kt.AdminStatus:                regexp.MustCompile("up"),
+				},
+			},
+			false, // keep because alias or description match.
+		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus:   "up",
+				"if_Description": "igb5",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"!(if_Alias||if_Description)": regexp.MustCompile("igb5"),
+					kt.AdminStatus:                regexp.MustCompile("up"),
+				},
+			},
+			false, // keep because alias or description match. Test the other way around.
+		},
 	}
 
 	for i, test := range tests {
