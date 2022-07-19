@@ -186,6 +186,7 @@ type SnmpDeviceConfig struct {
 	RunPing             bool              `yaml:"response_time,omitempty"`
 	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
 	PingSec             int               `yaml:"ping_interval_sec,omitempty"`
+	PurgeDevice         int               `yaml:"purge_after_num"` // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }
@@ -228,6 +229,7 @@ type SnmpGlobalConfig struct {
 	GlobalV3      *V3SNMPConfig     `yaml:"global_v3"`
 	RunPing       bool              `yaml:"response_time"`
 	PingSec       int               `yaml:"ping_interval_sec,omitempty"`
+	PurgeDevices  int               `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
 	UserTags      map[string]string `yaml:"user_tags"`
 	MatchAttr     map[string]string `yaml:"match_attributes"`
 }
@@ -577,6 +579,9 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	}
 	if old.RunPing {
 		d.RunPing = old.RunPing
+	}
+	if old.PurgeDevice != 0 {
+		d.PurgeDevice = old.PurgeDevice
 	}
 	if d.UserTags == nil && old.UserTags != nil {
 		d.UserTags = map[string]string{}

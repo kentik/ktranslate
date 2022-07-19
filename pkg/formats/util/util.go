@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -36,6 +37,7 @@ var (
 const (
 	FORCE_MATCH_TOKEN = "!"
 	OR_TOKEN          = "||"
+	MAX_ATTR_FOR_SNMP = 64
 )
 
 func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.MetricInfo, lastMetadata *kt.LastMetadata) {
@@ -292,4 +294,121 @@ var (
 
 func GetSynMetricNameSet(rt int32) map[string]kt.MetricInfo {
 	return synMetrics[rt]
+}
+
+// List of attributes to not pass to NR.
+var removeAttrForSnmp = []string{
+	"Uptime",
+	"if_LastChange",
+	"SysServices",
+	"if_Mtu",
+	"if_ConnectorPresent",
+	"output_port",
+	"input_port",
+	"DropMetric",
+	"sysoid_vendor",
+}
+
+var keepAcrossTables = map[string]bool{
+	"device_name":    true,
+	"eventType":      true,
+	"provider":       true,
+	"sysoid_profile": true,
+	kt.IndexVar:      true,
+	"if_Index":       true,
+}
+
+var allowSysAttr = map[string]bool{
+	"Uptime":   true,
+	"MinRttMs": true,
+	"MaxRttMs": true,
+	"AvgRttMs": true,
+}
+
+func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
+	attrNew := map[string]interface{}{
+		"objectIdentifier":     name.Oid,
+		"mib-name":             name.Mib,
+		"instrumentation.name": name.Profile,
+	}
+
+	// If set, add this in.
+	durSec := name.PollDur.Seconds()
+	if durSec > 0 {
+		attrNew["poll_duration_sec"] = name.PollDur.Seconds() + kt.PollAdjustTime
+	}
+
+	for k, v := range attr {
+		if !allowSysAttr[metricName] { // Only allow Sys* attributes on specific metrics.
+			if strings.HasPrefix(k, "Sys") || k == "src_addr" {
+				continue
+			}
+		}
+
+		newKey := k
+		if strings.HasPrefix(k, kt.StringPrefix) {
+			newKey = k[len(kt.StringPrefix):]
+		}
+
+		if name.Table != "" && metricName != newKey {
+			if _, ok := keepAcrossTables[newKey]; !ok { // If we want this attribute in every table, list it here.
+				attrNew["mib-table"] = name.Table
+
+				// See if the metadata knows about this attribute.
+				if tableName, allNames, ok := lm.GetTableName(newKey); ok && len(allNames) > 0 {
+					if !allNames[name.Table] && tableName != kt.DeviceTagTable {
+						continue
+					}
+				} else {
+					// If this metric comes from a specific table, only show attributes for this table.
+					if !strings.HasPrefix(newKey, name.Table) {
+						if !allNames[name.Table] && tableName != kt.DeviceTagTable {
+							continue
+						}
+					}
+				}
+			}
+		}
+
+		// Case where metric has no table.
+		if name.Table == "" {
+			if tableName, _, ok := lm.GetTableName(newKey); ok {
+				if tableName != "" && tableName != kt.DeviceTagTable {
+					continue
+				}
+			}
+		}
+
+		attrNew[newKey] = v
+	}
+
+	// Delete a few attributes we don't want adding to cardinality.
+	for _, key := range removeAttrForSnmp {
+		delete(attrNew, key)
+	}
+
+	if len(attrNew) > MAX_ATTR_FOR_SNMP {
+		// Since NR limits us to 100 attributes, we need to prune. Take the first 100 lexographical keys.
+		keys := make([]string, len(attrNew))
+		i := 0
+		for k, _ := range attrNew {
+			keys[i] = k
+			i++
+		}
+		sort.Strings(keys)
+		for _, k := range keys[MAX_ATTR_FOR_SNMP-3:] {
+			delete(attrNew, k)
+		}
+
+		// Force these to be back in.
+		attrNew["objectIdentifier"] = name.Oid
+		attrNew["mib-name"] = name.Mib
+		attrNew["instrumentation.name"] = name.Profile
+	}
+
+	if attrNew["mib-name"] == "" {
+		delete(attrNew, "mib-name")
+	}
+
+	return attrNew
 }
