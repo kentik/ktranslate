@@ -209,6 +209,14 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			}
 		}
 
+		// Tweak any per provider tags here.
+		for key, tag := range device.UserTags {
+			delete(device.UserTags, key)
+			if nk, ok := matchesPrefix(key, device.Provider); ok {
+				device.UserTags[nk] = tag // We do use this tag, go ahead and update the value to the one returned.
+			}
+		}
+
 		// Create this device in Kentik if the option is set.
 		err := apic.EnsureDevice(ctx, device)
 		if err != nil {
@@ -378,12 +386,6 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 	if ms.Global != nil {
 		for k, v := range ms.Global.UserTags {
 			for _, device := range ms.Devices {
-				if nk, ok := matchesPrefix(k, device.Provider); !ok {
-					continue // If this global tag has a provider prefix, only add if the provider matches.
-				} else {
-					k = nk // We do use this tag, go ahead and update the value to the one returned.
-				}
-
 				if device.UserTags == nil {
 					device.UserTags = map[string]string{}
 				}
