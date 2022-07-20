@@ -28,8 +28,14 @@ type MerakiClient struct {
 	metrics  *kt.SnmpDeviceMetric
 	client   *apiclient.MerakiDashboard
 	auth     runtime.ClientAuthInfoWriter
-	orgs     []*organizations.GetOrganizationsOKBodyItems0
-	networks []networkDesc
+	orgs     []orgDesc
+}
+
+type orgDesc struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	networks map[string]networkDesc
+	org      *organizations.GetOrganizationsOKBodyItems0
 }
 
 type networkDesc struct {
@@ -44,8 +50,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		jchfChan: jchfChan,
 		conf:     conf,
 		metrics:  metrics,
-		orgs:     []*organizations.GetOrganizationsOKBodyItems0{},
-		networks: []networkDesc{},
+		orgs:     []orgDesc{},
 		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", conf.Ext.MerakiConfig.ApiKey),
 	}
 
@@ -65,8 +70,23 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		return nil, err
 	}
 
+	orgs := map[string]bool{}
+	nets := map[string]bool{}
+	for _, org := range conf.Ext.MerakiConfig.Orgs {
+		orgs[org] = true
+	}
+	for _, net := range conf.Ext.MerakiConfig.Networks {
+		nets[net] = true
+	}
+
+	numNets := 0
 	for _, org := range prod.GetPayload() {
 		lorg := org
+
+		if len(orgs) > 0 && !orgs[org.Name] {
+			continue // This organization isn't opted in.
+		}
+
 		// Now list the networks for this org.
 		params := organizations.NewGetOrganizationNetworksParams()
 		params.SetOrganizationID(org.ID)
@@ -85,20 +105,30 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 			return nil, err
 		}
 
+		netSet := map[string]networkDesc{}
 		for _, network := range networks {
+			if len(nets) > 0 && !nets[network.Name] {
+				continue // This network isn't opted in.
+			}
 			network.org = lorg
 			c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
-			c.networks = append(c.networks, network)
+			netSet[network.ID] = network
+			numNets++
 		}
 
-		if len(networks) > 0 { // Only add this org in to track if it has some networks.
+		if len(netSet) > 0 { // Only add this org in to track if it has some networks.
 			c.log.Infof("Adding organization %s to list to track", org.Name)
-			c.orgs = append(c.orgs, lorg)
+			c.orgs = append(c.orgs, orgDesc{
+				ID:       org.ID,
+				Name:     org.Name,
+				networks: netSet,
+				org:      lorg,
+			})
 		}
 	}
 
 	// If we get this far, we have a list of things to look at.
-	c.log.Infof("%s connected to API for %s with %d organization(s) and %d network(s).", c.GetName(), conf.DeviceName, len(c.orgs), len(c.networks))
+	c.log.Infof("%s connected to API for %s with %d organization(s) and %d network(s).", c.GetName(), conf.DeviceName, len(c.orgs), numNets)
 	c.client = client
 
 	return &c, nil
@@ -169,28 +199,30 @@ type client struct {
 
 func (c *MerakiClient) getNetworkClients() ([]*kt.JCHF, error) {
 	clientSet := []client{}
-	for _, network := range c.networks {
-		params := networks.NewGetNetworkClientsParams()
-		params.SetNetworkID(network.ID)
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			params := networks.NewGetNetworkClientsParams()
+			params.SetNetworkID(network.ID)
 
-		prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
-		if err != nil {
-			return nil, err
-		}
+			prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
+			if err != nil {
+				return nil, err
+			}
 
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return nil, err
-		}
+			b, err := json.Marshal(prod.GetPayload())
+			if err != nil {
+				return nil, err
+			}
 
-		var clients []client
-		err = json.Unmarshal(b, &clients)
-		if err != nil {
-			return nil, err
-		}
-		for _, client := range clients {
-			client.network = network.Name
-			clientSet = append(clientSet, client) // Toss these all in together
+			var clients []client
+			err = json.Unmarshal(b, &clients)
+			if err != nil {
+				return nil, err
+			}
+			for _, client := range clients {
+				client.network = network.Name
+				clientSet = append(clientSet, client) // Toss these all in together
+			}
 		}
 	}
 
@@ -212,35 +244,37 @@ type networkDevice struct {
 
 func (c *MerakiClient) getNetworkDevices() (map[string][]networkDevice, error) {
 	deviceSet := map[string][]networkDevice{}
-	for _, network := range c.networks {
-		params := networks.NewGetNetworkDevicesParams()
-		params.SetNetworkID(network.ID)
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			params := networks.NewGetNetworkDevicesParams()
+			params.SetNetworkID(network.ID)
 
-		prod, err := c.client.Networks.GetNetworkDevices(params, c.auth)
-		if err != nil {
-			return nil, err
-		}
-
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return nil, err
-		}
-
-		var devices []networkDevice
-		err = json.Unmarshal(b, &devices)
-		if err != nil {
-			return nil, err
-		}
-
-		for i, _ := range devices {
-			if devices[i].Name == "" {
-				devices[i].Name = devices[i].Serial
+			prod, err := c.client.Networks.GetNetworkDevices(params, c.auth)
+			if err != nil {
+				return nil, err
 			}
-			devices[i].network = network
-		}
 
-		if len(devices) > 0 {
-			deviceSet[network.Name] = devices
+			b, err := json.Marshal(prod.GetPayload())
+			if err != nil {
+				return nil, err
+			}
+
+			var devices []networkDevice
+			err = json.Unmarshal(b, &devices)
+			if err != nil {
+				return nil, err
+			}
+
+			for i, _ := range devices {
+				if devices[i].Name == "" {
+					devices[i].Name = devices[i].Serial
+				}
+				devices[i].network = network
+			}
+
+			if len(devices) > 0 {
+				deviceSet[network.Name] = devices
+			}
 		}
 	}
 
@@ -485,14 +519,15 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 
 		for _, uplink := range uplinks {
-			for _, network := range c.networks {
-				if network.ID == uplink.NetworkID {
-					lnet := network
-					uplink.network = &lnet
-				}
+			if network, ok := org.networks[uplink.NetworkID]; ok {
+				lnet := network
+				uplink.network = &lnet
 			}
+
 			if uplink.network == nil {
-				c.log.Errorf("Missing Network for Uplink %s", uplink.NetworkID, uplink.Serial)
+				// Skip this uplink.
+				continue
+				//c.log.Errorf("Missing Network for Uplink %s -- %s", uplink.NetworkID, uplink.Serial)
 			}
 			if _, ok := uplinkSet[uplink.Serial]; ok {
 				c.log.Errorf("Duplicate Uplink %s", uplink.Serial)
@@ -578,34 +613,36 @@ type uplinkUsage struct {
 
 func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]*deviceUplink) error {
 
-	for _, network := range c.networks {
-		params := appliance.NewGetNetworkApplianceUplinksUsageHistoryParams()
-		params.SetNetworkID(network.ID)
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			params := appliance.NewGetNetworkApplianceUplinksUsageHistoryParams()
+			params.SetNetworkID(network.ID)
 
-		prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
-		if err != nil {
-			c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
-			continue
-		}
-
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return err
-		}
-
-		var uplinkHistories []uplinkUsage
-		err = json.Unmarshal(b, &uplinkHistories)
-		if err != nil {
-			return err
-		}
-
-		if len(uplinkHistories) > 0 {
-			for _, du := range uplinkMap {
-				if du.network.ID == network.ID {
-					du.SetUsage(uplinkHistories)
-				}
+			prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
+			if err != nil {
+				c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
+				continue
 			}
 
+			b, err := json.Marshal(prod.GetPayload())
+			if err != nil {
+				return err
+			}
+
+			var uplinkHistories []uplinkUsage
+			err = json.Unmarshal(b, &uplinkHistories)
+			if err != nil {
+				return err
+			}
+
+			if len(uplinkHistories) > 0 {
+				for _, du := range uplinkMap {
+					if du.network.ID == network.ID {
+						du.SetUsage(uplinkHistories)
+					}
+				}
+
+			}
 		}
 	}
 
