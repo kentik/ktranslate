@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -35,6 +36,7 @@ var (
 
 const (
 	FORCE_MATCH_TOKEN = "!"
+	OR_TOKEN          = "||"
 	MAX_ATTR_FOR_SNMP = 64
 )
 
@@ -128,38 +130,33 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 		seenNonAdmin := 0
 		for k, re := range lastMetadata.MatchAttr {
 			forceMatch := false
-			if strings.HasPrefix(k, FORCE_MATCH_TOKEN) {
+			if strings.HasPrefix(k, FORCE_MATCH_TOKEN) { // Handle forcing this column to exist here.
 				k = k[1:]
 				forceMatch = true
 			}
-
-			// If this is not an interface attribute, skip interface matches.
-			if !isIfMetric && (k == kt.AdminStatus || strings.HasPrefix(k, "if_") || strings.HasPrefix(k, "input_if_") || strings.HasPrefix(k, "output_if_")) {
-				continue
+			if strings.HasPrefix(k, "(") && strings.HasSuffix(k, ")") { // Handle paren groupings here.
+				k = k[1 : len(k)-1]
 			}
-			if v, ok := attr[k]; ok {
-				if strv, ok := v.(string); ok {
-					if k == kt.AdminStatus { // If admin status is causing us to drop, drop right away.
-						dropOnAdminStatus = !re.MatchString(strv)
-						if dropOnAdminStatus == true {
-							break
-						}
-					} else { // Otherwise, OR all the matches together. Keep trying until we find an RE which matches.
-						seenNonAdmin++
-						if !keepForOtherMatch {
-							keepForOtherMatch = re.MatchString(strv)
-							if !keepForOtherMatch && forceMatch { // In this case, we failed the force match so break right now.
-								break
-							}
-						}
+			keyCheck := strings.Split(k, OR_TOKEN)
+			var cont, br bool
+			seenAny := false
+			if forceMatch {
+				for _, key := range keyCheck {
+					if _, ok := attr[key]; ok {
+						seenAny = true
+						break
 					}
 				}
-			} else { // If the key doesn't exist but the match tells us to force this, drop here.
-				if forceMatch {
-					seenNonAdmin++
-					keepForOtherMatch = false
-					break
-				}
+			}
+
+			for _, key := range keyCheck {
+				cont, br = checkFilter(attr, key, re, forceMatch, seenAny, isIfMetric, &dropOnAdminStatus, &keepForOtherMatch, &seenNonAdmin)
+			}
+			if cont {
+				continue
+			}
+			if br {
+				break
 			}
 		}
 
@@ -175,6 +172,43 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 		}
 	}
 	return false
+}
+
+func checkFilter(attr map[string]interface{}, k string, re *regexp.Regexp, forceMatch bool, seenAny bool, isIfMetric bool, dropOnAdminStatus *bool, keepForOtherMatch *bool, seenNonAdmin *int) (cont bool, br bool) {
+	// If this is not an interface attribute, skip interface matches.
+	if !isIfMetric && (k == kt.AdminStatus || strings.HasPrefix(k, "if_") || strings.HasPrefix(k, "input_if_") || strings.HasPrefix(k, "output_if_")) {
+		cont = true
+		return
+	}
+	if v, ok := attr[k]; ok {
+		if strv, ok := v.(string); ok {
+			if k == kt.AdminStatus { // If admin status is causing us to drop, drop right away.
+				*dropOnAdminStatus = !re.MatchString(strv)
+				if *dropOnAdminStatus == true {
+					br = true
+					return
+				}
+			} else { // Otherwise, OR all the matches together. Keep trying until we find an RE which matches.
+				*seenNonAdmin++
+				if !*keepForOtherMatch {
+					*keepForOtherMatch = re.MatchString(strv)
+					if !*keepForOtherMatch && (forceMatch && !seenAny) { // In this case, we failed the force match so break right now.
+						br = true
+						return
+					}
+				}
+			}
+		}
+	} else { // If the key doesn't exist but the match tells us to force this, drop here.
+		if forceMatch && !seenAny {
+			*seenNonAdmin++
+			*keepForOtherMatch = false
+			br = true
+			return
+		}
+	}
+
+	return
 }
 
 func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
