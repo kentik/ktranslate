@@ -525,7 +525,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 			}
 
 			if uplink.network == nil {
-				// Skip this uplink.
+				// Skip this uplink because its from a network we don't care about.
 				continue
 				//c.log.Errorf("Missing Network for Uplink %s -- %s", uplink.NetworkID, uplink.Serial)
 			}
@@ -591,7 +591,8 @@ func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[str
 			if uu, ok := uplinkMap[uplink.Serial]; ok { // We've matched the serial, now add this loss.
 				uu.SetLatencyLoss(uplink)
 			} else {
-				c.log.Errorf("Missing Uplink %s In LatencyLoss", uplink.Serial)
+				// Not on a network we care about.
+				// c.log.Errorf("Missing Uplink %s In LatencyLoss", uplink.Serial)
 			}
 		}
 	}
