@@ -1,0 +1,27 @@
+# Recommended default minimalist config for sending data to New Relic
+---
+devices:
+trap:
+  listen: 127.0.0.1:1620
+  community: hello
+discovery:
+  cidrs:
+  - 10.10.0.0/24
+  ignore_list: []
+  debug: false
+  ports:
+  - 161
+  default_communities:
+  - public
+  default_v3: null
+  add_devices: true
+  add_mibs: true
+  threads: 4
+  replace_devices: true
+  check_all_ips: true
+global:
+  poll_time_sec: 300
+  mibs_enabled:
+  - IF-MIB
+  timeout_ms: 3000
+  retries: 0
