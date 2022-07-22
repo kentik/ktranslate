@@ -39,11 +39,6 @@ var (
 	ServiceName    = ""
 )
 
-const (
-	ProviderToken  = ":"
-	ProviderPrefix = "provider" + ProviderToken
-)
-
 func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
 	// Do this once here just to see if we need to exit right away.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
@@ -390,6 +385,10 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 
 	// If there's a global user tags and match, add them in here.
 	if ms.Global != nil {
+		for p, m := range ms.Global.ProviderMap {
+			m.Init(p, ms.Global) // Set up any provider based user and match tags here.
+		}
+
 		for k, v := range ms.Global.UserTags {
 			for _, device := range ms.Devices {
 				if device.UserTags == nil {
@@ -457,11 +456,11 @@ func ParseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 
 // If there's a provider: prefix here
 func matchesPrefix(tag string, provider kt.Provider) (string, bool) {
-	if !strings.HasPrefix(tag, ProviderPrefix) { // No prefix so just return true.
+	if !strings.HasPrefix(tag, kt.ProviderPrefix) { // No prefix so just return true.
 		return tag, true
 	}
 
-	pts := strings.SplitN(tag, ProviderToken, 3)
+	pts := strings.SplitN(tag, kt.ProviderToken, 3)
 	if len(pts) < 3 { // Invalid prefix, just return true here.
 		return tag, true
 	}

@@ -16,7 +16,9 @@ import (
 )
 
 const (
-	UserTagPrefix = "tags."
+	UserTagPrefix  = "tags."
+	ProviderToken  = ":"
+	ProviderPrefix = "provider" + ProviderToken
 )
 
 // DeviceData holds information about a device, sent via ST, and sent
@@ -218,20 +220,26 @@ type SnmpDiscoConfig struct {
 	IgnoreOrig         string          `yaml:"-"`
 }
 
+type ProviderMap struct {
+	UserTags  map[string]string `yaml:"user_tags"`
+	MatchAttr map[string]string `yaml:"match_attributes"`
+}
+
 type SnmpGlobalConfig struct {
-	PollTimeSec   int               `yaml:"poll_time_sec"`
-	DropIfOutside bool              `yaml:"drop_if_outside_poll"`
-	MibProfileDir string            `yaml:"mib_profile_dir"`
-	MibDB         string            `yaml:"mibs_db"`
-	MibsEnabled   []string          `yaml:"mibs_enabled"`
-	TimeoutMS     int               `yaml:"timeout_ms"`
-	Retries       int               `yaml:"retries"`
-	GlobalV3      *V3SNMPConfig     `yaml:"global_v3"`
-	RunPing       bool              `yaml:"response_time"`
-	PingSec       int               `yaml:"ping_interval_sec,omitempty"`
-	PurgeDevices  int               `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
-	UserTags      map[string]string `yaml:"user_tags"`
-	MatchAttr     map[string]string `yaml:"match_attributes"`
+	PollTimeSec   int                    `yaml:"poll_time_sec"`
+	DropIfOutside bool                   `yaml:"drop_if_outside_poll"`
+	MibProfileDir string                 `yaml:"mib_profile_dir"`
+	MibDB         string                 `yaml:"mibs_db"`
+	MibsEnabled   []string               `yaml:"mibs_enabled"`
+	TimeoutMS     int                    `yaml:"timeout_ms"`
+	Retries       int                    `yaml:"retries"`
+	GlobalV3      *V3SNMPConfig          `yaml:"global_v3"`
+	RunPing       bool                   `yaml:"response_time"`
+	PingSec       int                    `yaml:"ping_interval_sec,omitempty"`
+	PurgeDevices  int                    `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
+	UserTags      map[string]string      `yaml:"user_tags"`
+	MatchAttr     map[string]string      `yaml:"match_attributes"`
+	ProviderMap   map[string]ProviderMap `yaml:"provider_maps"`
 }
 
 type SnmpConfig struct {
@@ -703,4 +711,21 @@ func (a *EAPIConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	}
 
 	return nil
+}
+
+func (p *ProviderMap) Init(provider string, g *SnmpGlobalConfig) {
+	if p.UserTags != nil && g.UserTags == nil {
+		g.UserTags = map[string]string{}
+	}
+	if p.MatchAttr != nil && g.MatchAttr == nil {
+		g.MatchAttr = map[string]string{}
+	}
+
+	// Copy these over in the right order to get processed by the regular per device system.
+	for k, v := range p.UserTags {
+		g.UserTags[ProviderPrefix+provider+ProviderToken+k] = v
+	}
+	for k, v := range p.MatchAttr {
+		g.MatchAttr[ProviderPrefix+provider+ProviderToken+k] = v
+	}
 }
