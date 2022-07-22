@@ -77,9 +77,19 @@ func (db *MibDB) Close() {
 }
 
 func (db *MibDB) GetTrap(oid string) *Trap {
-	if t, ok := db.traps[oid]; ok {
+	if t, ok := db.traps[oid]; ok { // If things directly match, return right away.
 		return &t
 	}
+
+	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
+	pts := strings.Split(oid, ".")
+	for i := len(pts); i > 0; i-- {
+		check := strings.Join(pts[0:i], ".") + ".*"
+		if t, ok := db.traps[check]; ok {
+			return &t
+		}
+	}
+
 	return nil
 }
 

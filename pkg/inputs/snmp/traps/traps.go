@@ -154,6 +154,10 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 				dst.CustomStr["TrapOID"] = toid
 				if trap != nil {
 					dst.CustomStr["TrapName"] = trap.Name
+					idx := snmp_util.GetIndex(toid, trap.Oid)
+					if idx != "" {
+						dst.CustomStr["Index"] = idx
+					}
 				}
 			}
 		}
