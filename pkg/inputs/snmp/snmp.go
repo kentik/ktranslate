@@ -209,11 +209,17 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			}
 		}
 
-		// Tweak any per provider tags here.
+		// Tweak any per provider tags and match attributes here.
 		for key, tag := range device.UserTags {
 			delete(device.UserTags, key)
 			if nk, ok := matchesPrefix(key, device.Provider); ok {
 				device.UserTags[nk] = tag // We do use this tag, go ahead and update the value to the one returned.
+			}
+		}
+		for key, match := range device.MatchAttr {
+			delete(device.MatchAttr, key)
+			if nk, ok := matchesPrefix(key, device.Provider); ok {
+				device.MatchAttr[nk] = match // We do use this match, go ahead and update the value to the one returned.
 			}
 		}
 
