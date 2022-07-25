@@ -19,40 +19,31 @@ type CarbonFormat struct {
 }
 
 type CarbonData struct {
-	Type      string
-	Name      string
-	Value     int64
-	Unit      string
-	Tags      map[string]interface{}
-	Timestamp int64
+	Type          string
+	Name          string
+	Value         int64
+	Unit          string
+	IntrinsicTags map[string]interface{}
+	MetaTags      map[string]interface{}
+	Timestamp     int64
 }
 
 // formatted using http://metrics20.org/spec/
 func (d *CarbonData) String() string {
-	tags := make([]string, len(d.Tags))
-	i := 0
-	for key, v := range d.Tags {
-		kval := strings.ReplaceAll(key, " ", "_")
-		switch t := v.(type) {
-		case string:
-			tags[i] = fmt.Sprintf("%s=%s", kval, strings.ReplaceAll(t, " ", "_"))
-		default:
-			tags[i] = fmt.Sprintf("%s=%v", kval, v)
-		}
+	intrinsicTags := parseTags(d.IntrinsicTags)
+	metaTags := parseTags(d.MetaTags)
 
-		i++
-	}
-
-	return fmt.Sprintf("metric=%s mtype=%s unit=%s  %s %d %d",
+	return fmt.Sprintf("metric=%s mtype=%s unit=%s %s  %s %d %d",
 		d.Name,
 		d.Type,
 		d.Unit,
-		strings.Join(tags, " "),
+		strings.Join(intrinsicTags, " "),
+		strings.Join(metaTags, " "),
 		d.Value,
 		d.Timestamp)
 }
 
-type CarbonDataSet []CarbonData
+type CarbonDataSet []*CarbonData
 
 func (s CarbonDataSet) Bytes() []byte {
 	res := make([]string, 0)
@@ -72,7 +63,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*CarbonFormat
 }
 
 func (f *CarbonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
-	res := make([]CarbonData, 0, len(msgs))
+	res := make([]*CarbonData, 0, len(msgs))
 	for _, m := range msgs {
 		res = append(res, f.toCarbonMetric(m)...)
 	}
@@ -81,10 +72,12 @@ func (f *CarbonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	return kt.NewOutput(CarbonDataSet(res).Bytes()), nil
+	data := CarbonDataSet(res).Bytes()
+
+	return kt.NewOutput(data), nil
 }
 
-func (f *CarbonFormat) toCarbonMetric(in *kt.JCHF) []CarbonData {
+func (f *CarbonFormat) toCarbonMetric(in *kt.JCHF) []*CarbonData {
 	switch in.EventType {
 	case kt.KENTIK_EVENT_TYPE:
 		return f.fromKflow(in)
@@ -111,14 +104,20 @@ func (f *CarbonFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	return nil, nil
 }
 
-func (f *CarbonFormat) fromKflow(in *kt.JCHF) []CarbonData {
+func (f *CarbonFormat) fromKflow(in *kt.JCHF) []*CarbonData {
 	attr := map[string]interface{}{}
-	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
+	metrics := map[string]kt.MetricInfo{
+		"in_bytes":   kt.MetricInfo{},
+		"out_bytes":  kt.MetricInfo{},
+		"in_pkts":    kt.MetricInfo{},
+		"out_pkts":   kt.MetricInfo{},
+		"latency_ms": kt.MetricInfo{},
+	}
 	util.SetAttr(attr, in, metrics, nil)
-	metricData := []CarbonData{}
+	metricData := []*CarbonData{}
 	for m, _ := range metrics {
 		v := int64(0)
-		mtype := ""
+		mtype := "count"
 		unit := ""
 		switch m {
 		case "in_bytes":
@@ -142,15 +141,76 @@ func (f *CarbonFormat) fromKflow(in *kt.JCHF) []CarbonData {
 			mtype = "gauge"
 			unit = "ms"
 		}
-		metricData = append(metricData, CarbonData{
-			Type:      mtype,
-			Name:      m,
-			Value:     v,
-			Unit:      unit,
-			Timestamp: in.Timestamp,
-			Tags:      attr,
+		// intrinsic tags are the metric dimensions
+		intrinsicTags := map[string]interface{}{
+			"device": in.DeviceId.Itoa(),
+		}
+		if v := in.DstAddr; v != "" {
+			intrinsicTags["dst_addr"] = v
+		}
+		if v := in.SrcAddr; v != "" {
+			intrinsicTags["src_addr"] = v
+		}
+		if v := in.Protocol; v != "" {
+			intrinsicTags["protocol"] = v
+		}
+
+		// meta tags are used to decorate and add context
+		metaTags := map[string]interface{}{
+			"l4_dst_port":    in.L4DstPort,
+			"l4_src_port":    in.L4SrcPort,
+			"src_as":         in.SrcAs,
+			"dst_as":         in.DstAs,
+			"tcp_retransmit": in.TcpRetransmit,
+			"vlan_in":        in.VlanIn,
+			"vlan_out":       in.VlanOut,
+		}
+		if v := in.DstGeo; v != "" {
+			metaTags["dst_geo"] = v
+		}
+		if v := in.SrcGeo; v != "" {
+			metaTags["src_geo"] = v
+		}
+		if v := in.DstBgpAsPath; v != "" {
+			metaTags["dst_bgp_as_path"] = v
+		}
+		if v := in.SrcBgpAsPath; v != "" {
+			metaTags["src_bgp_as_path"] = v
+		}
+		for k, v := range in.CustomStr {
+			if v == "" {
+				continue
+			}
+			metaTags[k] = v
+		}
+		metricData = append(metricData, &CarbonData{
+			Type:          mtype,
+			Name:          m,
+			Value:         v,
+			Unit:          unit,
+			Timestamp:     in.Timestamp,
+			IntrinsicTags: intrinsicTags,
+			MetaTags:      metaTags,
 		})
 	}
 
 	return metricData
+}
+
+func parseTags(tags map[string]interface{}) []string {
+	parsedTags := make([]string, len(tags))
+	x := 0
+	for key, v := range tags {
+		kval := strings.ReplaceAll(key, " ", "_")
+		switch t := v.(type) {
+		case string:
+			parsedTags[x] = fmt.Sprintf("%s=%s", kval, strings.ReplaceAll(t, " ", "_"))
+		default:
+			parsedTags[x] = fmt.Sprintf("%s=%v", kval, v)
+		}
+
+		x++
+	}
+
+	return parsedTags
 }
