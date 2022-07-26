@@ -1,6 +1,7 @@
 package influx
 
 import (
+	"flag"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -29,6 +30,10 @@ type InfluxData struct {
 	Tags        map[string]interface{}
 	Timestamp   int64
 }
+
+var (
+	Prefix = flag.String("influxdb_measurment_prefix", "kentik.", "Prefix metric names with this")
+)
 
 func (d *InfluxData) String() string {
 	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
@@ -181,7 +186,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{InfluxData{
-		Name:      "kentik.synth",
+		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -212,7 +217,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{InfluxData{
-		Name:      "kentik.flow",
+		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -225,6 +230,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
+	ip := attr["src_addr"]
 
 	results := []InfluxData{}
 	for m, name := range metrics {
@@ -238,17 +244,17 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			mtype := name.GetType()
+			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        "kentik." + mtype,
+					Name:        *Prefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      "kentik." + mtype,
+					Name:      *Prefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -266,6 +272,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ip := attr["src_ip"]
 
 	profileName := "snmp"
 	results := []InfluxData{}
@@ -281,17 +288,17 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			mtype := name.GetType()
+			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        "kentik." + mtype,
+					Name:        *Prefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      "kentik." + mtype,
+					Name:      *Prefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -311,7 +318,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								results = append(results, InfluxData{
-									Name:        "kentik.snmp",
+									Name:        *Prefix + "if",
 									FieldsFloat: map[string]float64{"IfInUtilization": float64(inBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
@@ -331,7 +338,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								results = append(results, InfluxData{
-									Name:        "kentik.snmp",
+									Name:        *Prefix + "if",
 									FieldsFloat: map[string]float64{"IfOutUtilization": float64(outBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
@@ -356,4 +363,40 @@ func influxEscape(s string) string {
 	} else {
 		return s
 	}
+}
+
+func getMib(attr map[string]interface{}, ip interface{}) string {
+	mib, ok := attr["mib-name"].(string)
+	if !ok {
+		return "none"
+	}
+	delete(attr, "mib-name")
+	if mib == "" {
+		mib = "none"
+	}
+
+	// Also remove any lingering droppable fields.
+	for k, v := range attr {
+		if _, ok := dropFields[k]; ok {
+			delete(attr, k)
+		}
+		if k == "Index" {
+			delete(attr, k)
+			attr["index"] = v
+		}
+	}
+	if ip != nil {
+		attr["device_ip"] = ip
+	}
+
+	return mib
+}
+
+var dropFields = map[string]bool{
+	//"device_name": true,
+	"eventType":   true,
+	"SysObjectID": true,
+	"provider":    true,
+	"SysServices": true,
+	"SysDescr":    true,
 }
