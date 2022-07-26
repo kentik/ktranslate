@@ -32,7 +32,7 @@ type InfluxData struct {
 }
 
 var (
-	Prefix = flag.String("influxdb_measurment_prefix", "kentik.", "Prefix metric names with this")
+	Prefix = flag.String("influxdb_measurement_prefix", "", "Prefix metric names with this")
 )
 
 func (d *InfluxData) String() string {
