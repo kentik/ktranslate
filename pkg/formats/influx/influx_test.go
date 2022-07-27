@@ -37,6 +37,8 @@ func TestInfluxEscape(t *testing.T) {
 		{"as,df", "as\\,df"},
 		{"as=df", "as\\=df"},
 		{"as, df", "as\\,\\ df"},
+		{"as\ndf", "as\\\ndf"},
+		{"as\r\ndf", "as\\\r\\\ndf"},
 	}
 	for _, test := range tests {
 		if got := influxEscape(test.input); got != test.want {

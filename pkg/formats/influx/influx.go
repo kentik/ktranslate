@@ -347,11 +347,11 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	return results
 }
 
-var escaper = regexp.MustCompile("([,= ])")
+var escaper = regexp.MustCompile("([,= \\s])")
 
 // Escape special characters according to https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial/#special-characters-and-keywords
 func influxEscape(s string) string {
-	if strings.ContainsAny(s, ",= ") {
+	if strings.ContainsAny(s, ",= \t\r\n") {
 		return string(escaper.ReplaceAll([]byte(s), []byte("\\$1")))
 	} else {
 		return s
