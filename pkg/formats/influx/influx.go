@@ -65,11 +65,21 @@ func (d *InfluxData) String() string {
 	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
 	i := 0
 	for k, v := range d.Fields {
-		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
+		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
+			fields[i] = k + "=" + ev.(string)
+			delete(d.Tags, k)
+		} else {
+			fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
+		}
 		i++
 	}
 	for k, v := range d.FieldsFloat {
-		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
+			fields[i] = k + "=" + ev.(string)
+			delete(d.Tags, k)
+		} else {
+			fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+		}
 		i++
 	}
 
