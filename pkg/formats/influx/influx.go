@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -35,18 +36,7 @@ var (
 	Prefix = flag.String("influxdb_measurement_prefix", "", "Prefix metric names with this")
 )
 
-func (d *InfluxData) String() string {
-	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
-	i := 0
-	for k, v := range d.Fields {
-		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
-		i++
-	}
-	for k, v := range d.FieldsFloat {
-		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
-		i++
-	}
-
+func (d *InfluxData) GetTags() string {
 	var tags []string
 	for key, v := range d.Tags {
 		kval := strings.ReplaceAll(key, " ", "_")
@@ -60,19 +50,85 @@ func (d *InfluxData) String() string {
 		}
 	}
 
+	sort.Strings(tags) // Need to be sorted for dedupe.
+	return strings.Join(tags, ",")
+}
+
+func (d *InfluxData) Prefix() string {
+	return fmt.Sprintf("%s,%s",
+		d.Name,
+		d.GetTags(),
+	)
+}
+
+func (d *InfluxData) String() string {
+	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
+	i := 0
+	for k, v := range d.Fields {
+		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
+		i++
+	}
+	for k, v := range d.FieldsFloat {
+		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+		i++
+	}
+
 	return fmt.Sprintf("%s,%s %s %d",
 		d.Name,
-		strings.Join(tags, ","),
+		d.GetTags(),
 		strings.Join(fields, ","),
 		d.Timestamp)
+}
+
+func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
+	if len(s) == 0 {
+		return nil
+	}
+	d := InfluxData{
+		Name:        s[0].Name,
+		Tags:        s[0].Tags,
+		Timestamp:   s[0].Timestamp,
+		FieldsFloat: map[string]float64{},
+		Fields:      map[string]int64{},
+	}
+
+	for _, f := range s {
+		for k, v := range f.FieldsFloat {
+			d.FieldsFloat[k] = v
+		}
+		for k, v := range f.Fields {
+			d.Fields[k] = v
+		}
+	}
+
+	return &d
 }
 
 type InfluxDataSet []InfluxData
 
 func (s InfluxDataSet) Bytes() []byte {
-	res := make([]string, 0)
+	// First map common prefixes.
+	prefixes := map[string][]InfluxData{}
 	for _, l := range s {
-		res = append(res, l.String())
+		prefix := l.Prefix()
+		if _, ok := prefixes[prefix]; !ok {
+			prefixes[prefix] = []InfluxData{}
+		}
+		prefixes[prefix] = append(prefixes[prefix], l)
+	}
+
+	// Now merge down any common prefixes.
+	merged := []*InfluxData{}
+	for _, l := range prefixes {
+		merged = append(merged, NewMergedInfluxData(l))
+	}
+
+	// Then format for output.
+	res := make([]string, 0)
+	for _, l := range merged {
+		if l != nil {
+			res = append(res, l.String())
+		}
 	}
 	return []byte(strings.Join(res, "\n"))
 }
@@ -366,16 +422,7 @@ func influxEscape(s string) string {
 }
 
 func getMib(attr map[string]interface{}, ip interface{}) string {
-	mib, ok := attr["mib-name"].(string)
-	if !ok {
-		return "none"
-	}
-	delete(attr, "mib-name")
-	if mib == "" {
-		mib = "none"
-	}
-
-	// Also remove any lingering droppable fields.
+	// Remove any lingering droppable fields.
 	for k, v := range attr {
 		if _, ok := dropFields[k]; ok {
 			delete(attr, k)
@@ -389,14 +436,32 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 		attr["device_ip"] = ip
 	}
 
+	// And now figure out what the mib name is.
+	mib, ok := attr["mib-name"].(string)
+	if !ok {
+		return "none"
+	}
+	delete(attr, "mib-name")
+	if mib == "" {
+		mib = "none"
+	}
+
+	// If there's a table, add this to the info.
+	mibTable, ok := attr["mib-table"].(string)
+	if ok {
+		mib = mib + "::" + mibTable
+		delete(attr, "mib-table")
+	}
+
 	return mib
 }
 
 var dropFields = map[string]bool{
 	//"device_name": true,
-	"eventType":   true,
-	"SysObjectID": true,
-	"provider":    true,
-	"SysServices": true,
-	"SysDescr":    true,
+	"objectIdentifier": true,
+	"eventType":        true,
+	"SysObjectID":      true,
+	"provider":         true,
+	"SysServices":      true,
+	"SysDescr":         true,
 }
