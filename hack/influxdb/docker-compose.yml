@@ -20,19 +20,67 @@ services:
       - 8086:8086
 
   ktranslate:
-    image: kentik/ktranslate:v2
-    command:
-      - --sinks=http
-      - --format=influx
-      - --http_url
-      - "http://influxdb:8086/api/v2/write?org=system&bucket=default"
-      - --http_header
-      - "Authorization: Token secret-token"
-      - --http_header
-      - "Content-type: application/json"
-      - --nf.source=netflow5
-      - --nf.addr=0.0.0.0
-      - --nf.port=9995
+    image: kentik/ktranslate:latest
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /tmp/ktranslate.toml
+        listenaddr: "127.0.0.1:8081"
+        udrsfile: "/etc/ktranslate/udr.csv"
+        geofile: "/etc/ktranslate/GeoLite2-Country.mmdb"
+        asnfile: "/etc/ktranslate/GeoLite2-ASN.mmdb"
+        processingthreads: 1
+        inputthreads: 1
+        maxthreads: 1
+        format: "influx"
+        compression: "none"
+        sinks: "http"
+        maxflowspermessage: 10000
+        rollupinterval: 0
+        rollupandalpha: false
+        samplerate: 1
+        samplemin: 1
+        enablesnmpdiscovery: false
+        kentikplan: 0
+        apibaseurl: "https://api.kentik.com"
+        enableteelogs: false
+        enablehttpinput: true
+        filters: []
+
+        netflowformat:
+          version: "netflow5"
+
+        httpsink:
+          target: "http://influxdb:8086/api/v2/write?org=system&bucket=default"
+          headers: ["Authorization:Token secret-token", "Content-Type:application/json"]
+          insecureskipverify: false
+          timeoutinseconds: 30
+
+        server:
+          servicename: "ktranslate"
+          loglevel: "info"
+          logtostdout: false
+          metricsendpoint: "none"
+          metalistenaddr: ""
+          ollydataset: ""
+          ollywritekey: ""
+
+        api:
+          devicefile: "/etc/ktranslate/devices.json"
+
+        flowinput:
+          enable: true
+          protocol: "netflow5"
+          listenip: "0.0.0.0"
+          listenport: 9995
+          enablereuseport: false
+          workers: 1
+          messagefields: "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
+          prometheuslistenaddr: ""
+          mappingfile: ""
+        EOF
+        ktranslate --config /tmp/ktranslate.toml
     restart: always
     ports:
       - 9995:9995/udp

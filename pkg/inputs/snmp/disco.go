@@ -15,6 +15,7 @@ import (
 	"github.com/liamg/furious/scan" // Discovery
 	"gopkg.in/yaml.v2"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
@@ -33,8 +34,9 @@ type SnmpDiscoDeviceStat struct {
 	delta    int
 }
 
-func Discover(ctx context.Context, snmpFile string, log logger.ContextL, pollDuration time.Duration) (*SnmpDiscoDeviceStat, error) {
+func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
+	snmpFile := cfg.SNMPFile
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
 	conf, err := parseConfig(ctx, snmpFile, log)
 	if err != nil {
@@ -49,9 +51,9 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL, pollDur
 		return nil, fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
 	}
 
-	if *snmpOutFile != "" { // If we want to write somewhere else, swap the output file in here.
-		snmpFile = *snmpOutFile
-		log.Infof("Writing snmp config file to %s.", snmpFile)
+	if v := cfg.OutputFile; v != "" { // If we want to write somewhere else, swap the output file in here.
+		snmpFile = v
+		log.Infof("Writing snmp config file to %s.", v)
 	}
 
 	if conf.Disco.AddDevices { // Verify that the output is writeable before diving into discoing.
@@ -140,14 +142,14 @@ func Discover(ctx context.Context, snmpFile string, log logger.ContextL, pollDur
 	return stats, nil
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, snmpFile string, log logger.ContextL, pollTimeMin int, checkNow bool) {
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig) {
 	pt := time.Duration(pollTimeMin) * time.Minute
 	log.Infof("Running SNMP Discovery Loop every %v", pt)
 	discoCheck := time.NewTicker(pt)
 	defer discoCheck.Stop()
 
 	check := func() {
-		stats, err := Discover(ctx, snmpFile, log, pt)
+		stats, err := Discover(ctx, log, pt, cfg)
 		if err != nil {
 			log.Errorf("Discovery SNMP Error: %v", err)
 		} else {

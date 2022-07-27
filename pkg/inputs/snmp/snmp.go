@@ -11,6 +11,7 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
@@ -24,45 +25,62 @@ import (
 )
 
 var (
-	mibdb          *mibs.MibDB // Global singleton instance here.
-	dumpMibTable   = flag.Bool("snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
-	flowOnly       = flag.Bool("flow_only", false, "If true, don't poll snmp devices.")
-	jsonToYaml     = flag.String("snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
-	snmpWalk       = flag.String("snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
-	snmpWalkOid    = flag.String("snmp_walk_oid", ".1.3.6.1.2.1", "Walk this oid if -snmp_do_walk is set.")
-	snmpWalkFormat = flag.String("snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
-	snmpOutFile    = flag.String("snmp_out_file", "", "If set, write updated snmp file here.")
-	snmpPollNow    = flag.String("snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
-	snmpDiscoDur   = flag.Int("snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
-	snmpDiscoSt    = flag.Bool("snmp_discovery_on_start", false, "If set, run snmp discovery on application start.")
-	validateMib    = flag.Bool("snmp_validate", false, "If true, validate mib profiles and exit.")
-	ServiceName    = ""
+	mibdb       *mibs.MibDB // Global singleton instance here.
+	ServiceName = ""
+
+	dumpMibTable   bool
+	flowOnly       bool
+	jsonToYaml     string
+	snmpWalk       string
+	snmpWalkOid    string
+	snmpWalkFormat string
+	snmpOutFile    string
+	snmpPollNow    string
+	snmpDiscoDur   int
+	snmpDiscoSt    bool
+	validateMib    bool
 )
 
-func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL) error {
+func init() {
+	flag.BoolVar(&dumpMibTable, "snmp_dump_mibs", false, "If true, dump the list of possible mibs on start.")
+	flag.BoolVar(&flowOnly, "flow_only", false, "If true, don't poll snmp devices.")
+	flag.StringVar(&jsonToYaml, "snmp_json2yaml", "", "If set, convert the passed in json file to a yaml profile.")
+	flag.StringVar(&snmpWalk, "snmp_do_walk", "", "If set, try to perform a snmp walk against the targeted device.")
+	flag.StringVar(&snmpWalkOid, "snmp_walk_oid", ".1.3.6.1.2.1", "Walk this oid if -snmp_do_walk is set.")
+	flag.StringVar(&snmpWalkFormat, "snmp_walk_format", "", "use this format for walked values if -snmp_do_walk is set.")
+	flag.StringVar(&snmpOutFile, "snmp_out_file", "", "If set, write updated snmp file here.")
+	flag.StringVar(&snmpPollNow, "snmp_poll_now", "", "If set, run one snmp poll for the specified device and then exit.")
+	flag.IntVar(&snmpDiscoDur, "snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
+	flag.BoolVar(&snmpDiscoSt, "snmp_discovery_on_start", false, "If set, run snmp discovery on application start.")
+	flag.BoolVar(&validateMib, "snmp_validate", false, "If true, validate mib profiles and exit.")
+}
+
+func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig) error {
+	snmpFile := cfg.SNMPFile
 	// Do this once here just to see if we need to exit right away.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil { // If no global, we're turning off all snmp polling.
 		return err
 	}
 
-	if *jsonToYaml != "" { // If this flag is set, convert a passed in json mib file to a yaml profile and call it a day.
-		return mibs.ConvertJson2Yaml(*jsonToYaml, log)
+	if v := cfg.JSONToYAML; v != "" { // If this flag is set, convert a passed in json mib file to a yaml profile and call it a day.
+		return mibs.ConvertJson2Yaml(v, log)
 	}
 
-	if *snmpWalk != "" { // If this flag is set, do just a snmp walk on the targeted device and exit.
-		return snmp_util.DoWalk(*snmpWalk, *snmpWalkOid, *snmpWalkFormat, conf, connectTimeout, retries, log)
+	if v := cfg.WalkTarget; v != "" { // If this flag is set, do just a snmp walk on the targeted device and exit
+		return snmp_util.DoWalk(v, cfg.WalkOID, cfg.WalkFormat, conf, connectTimeout, retries, log)
 	}
 
 	// Load a mibdb if we have one.
 	if conf.Global != nil {
-		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, *validateMib, log)
+		mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, cfg.ValidateMIBs, log)
 		if err != nil {
 			time.Sleep(2 * time.Second) // Give logs time to get sent back.
 			return fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 		}
 		mibdb = mdb
-		if *validateMib {
+		// TODO (ehazlett): can we remove this from the general config path and make a separate command / app that simply validates and exits?
+		if cfg.ValidateMIBs {
 			// We just want to validate that this was ok so time to exit now.
 			os.Exit(0)
 		}
@@ -71,15 +89,15 @@ func StartSNMPPolls(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	}
 
 	// If we just want to poll one device and exit, do this here.
-	if *snmpPollNow != "" {
-		return pollOnce(ctx, *snmpPollNow, conf, connectTimeout, retries, jchfChan, metrics, registry, log)
+	if v := cfg.PollNowTarget; v != "" {
+		return pollOnce(ctx, v, conf, connectTimeout, retries, jchfChan, metrics, registry, log)
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0)
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
 
 	// Run a trap listener?
-	if conf.Trap != nil && !*flowOnly {
+	if conf.Trap != nil && !cfg.FlowOnly {
 		err := launchSnmpTrap(conf, jchfChan, metrics, log)
 		if err != nil {
 			return err
@@ -125,9 +143,9 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
-func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int) {
+func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) {
 	ctxSnmp, cancel := context.WithCancel(ctx)
-	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount)
+	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg)
 	if err != nil {
 		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
 	}
@@ -135,8 +153,8 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// Now, wait for sigusr2 to re-do or if there's a discovery with new devices.
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
-	if *snmpDiscoDur > 0 { // If we are re-running snmp discovery every interval, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, snmpFile, log, *snmpDiscoDur, *snmpDiscoSt)
+	if v := cfg.DiscoveryIntervalMinutes; v > 0 { // If we are re-running snmp discovery every interval, start the ticker here.
+		go RunDiscoOnTimer(ctxSnmp, c, log, v, cfg.DiscoveryOnStart, cfg)
 	}
 
 	// Block here
@@ -145,10 +163,10 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// If we got this signal, redo the snmp system.
 	cancel()
 
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1) // Track how many times through here we've been.
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg) // Track how many times through here we've been.
 }
 
-func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int) error {
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) error {
 	// Parse again to make sure nothing's changed.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
@@ -161,7 +179,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			// Default provider to something we can work with.
 			device.Provider = kt.ProviderDefault
 		}
-		if *flowOnly || device.FlowOnly {
+		if cfg.FlowOnly || device.FlowOnly {
 			continue
 		}
 
@@ -187,7 +205,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			profile = mibdb.FindProfile(device.OID, device.Description, device.MibProfile)
 			if profile != nil {
 				cl.Infof("Found profile for %s: %v %s", device.OID, profile.From, device.MibProfile)
-				if *dumpMibTable {
+				if cfg.DumpMIBs {
 					profile.DumpOids(cl)
 				}
 

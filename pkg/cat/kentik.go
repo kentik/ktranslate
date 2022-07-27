@@ -202,7 +202,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If we have a kentik sink, send on here.
-	if kc.kentik != nil {
+	if kc.kentikConfig != nil {
 		go kc.kentik.SendKentik(evt, cid, senderId, offset)
 	}
 
@@ -243,7 +243,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 				dropped++
 			}
 			next++ // Round robin across processing threads.
-			if next >= kc.config.Threads {
+			if next >= kc.config.ProcessingThreads {
 				next = 0
 			}
 		}
@@ -285,13 +285,13 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		if !kc.doRollups || kc.config.RollupAndAlpha {
 			// Compute and sample rate stuff here.
 			keep := len(msgs)
-			if kc.config.SampleRate > 1 && keep > kc.config.MaxBeforeSample {
+			if kc.config.SampleRate > 1 && keep > kc.config.SampleMin {
 				rand.Shuffle(len(msgs), func(i, j int) {
 					msgs[i], msgs[j] = msgs[j], msgs[i]
 				})
 				keep = int(math.Max(float64(len(msgs))/float64(kc.config.SampleRate), 1))
 				for _, msg := range msgs {
-					msg.SampleRate = msg.SampleRate * kc.config.SampleRate
+					msg.SampleRate = msg.SampleRate * uint32(kc.config.SampleRate)
 				}
 				kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 			}
@@ -336,7 +336,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 				}
 				if keep {
 					msgs = append(msgs, jflow) // Batch up here.
-					if len(msgs) >= kc.config.MaxFlowPerMessage {
+					if len(msgs) >= kc.config.MaxFlowsPerMessage {
 						sendBytesOn()
 					}
 				} else {

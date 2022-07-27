@@ -11,10 +11,23 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
+
+var (
+	fileDir     string
+	fileWrite   bool
+	flushDurSec int
+)
+
+func init() {
+	flag.StringVar(&fileDir, "file_out", "./", "Write flows seen to log to this directory if set")
+	flag.BoolVar(&fileWrite, "file_on", false, "If true, start writting to file sink right away. Otherwise, wait for a USR1 signal")
+	flag.IntVar(&flushDurSec, "file_flush_sec", 60, "Create a new output file every this many seconds")
+}
 
 type FileSink struct {
 	logger.ContextL
@@ -24,19 +37,15 @@ type FileSink struct {
 	mux      sync.RWMutex
 	suffix   string
 	written  int
+	config   *ktranslate.FileSinkConfig
 }
 
-var (
-	FileDir     = flag.String("file_out", "./", "Write flows seen to log to this directory if set")
-	FileWrite   = flag.Bool("file_on", false, "If true, start writting to file sink right away. Otherwise, wait for a USR1 signal")
-	FlushDurSec = flag.Int("file_flush_sec", 60, "Create a new output file every this many seconds")
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*FileSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.FileSinkConfig) (*FileSink, error) {
 	rand.Seed(time.Now().UnixNano())
 	fs := &FileSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "fileSink"}, log),
-		doWrite:  *FileWrite,
+		doWrite:  cfg.EnableImmediateWrite,
+		config:   cfg,
 	}
 	return fs, nil
 }
@@ -46,8 +55,8 @@ func (s *FileSink) getName() string {
 }
 
 func (s *FileSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	s.location = *FileDir
-	_, err := os.Stat(*FileDir)
+	s.location = s.config.Path
+	_, err := os.Stat(s.config.Path)
 	if err != nil {
 		return err
 	}
@@ -71,7 +80,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 		// Listen for signals to print or not.
 		sigCh := make(chan os.Signal, 2)
 		signal.Notify(sigCh, kt.SIGUSR1)
-		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
+		dumpTick := time.NewTicker(time.Duration(s.config.FlushIntervalSeconds) * time.Second)
 		s.Infof("Writing file at %s %v ...", s.location, s.doWrite)
 		defer dumpTick.Stop()
 

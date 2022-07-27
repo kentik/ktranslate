@@ -13,10 +13,26 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/pkg/errors"
 )
+
+var (
+	targetURL          string
+	insecureSkipVerify bool
+	timeoutSec         int
+	headers            string
+)
+
+func init() {
+	flag.StringVar(&targetURL, "http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
+	flag.BoolVar(&insecureSkipVerify, "http_insecure", false, "Allow insecure urls.")
+	flag.IntVar(&timeoutSec, "http_timeout_sec", 30, "Timeout each request after this long.")
+	flag.StringVar(&headers, "http_header", "", "Any custom http headers to set on outbound requests")
+}
 
 type HttpSink struct {
 	logger.ContextL
@@ -29,6 +45,7 @@ type HttpSink struct {
 	headers         map[string]string
 	targetUrls      []string
 	sendMaxDuration time.Duration
+	config          *ktranslate.HTTPSinkConfig
 }
 
 type HttpMetric struct {
@@ -47,14 +64,7 @@ func (h *HeaderFlag) Set(value string) error {
 	return nil
 }
 
-var (
-	TargetUrl          = flag.String("http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
-	InsecureSkipVerify = flag.Bool("http_insecure", false, "Allow insecure urls.")
-	TimeoutSec         = flag.Int("http_timeout_sec", 30, "Timeout each request after this long.")
-	headers            HeaderFlag
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (*HttpSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, cfg *ktranslate.HTTPSinkConfig) (*HttpSink, error) {
 	nr := HttpSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "httpSink"}, log),
 		registry: registry,
@@ -64,10 +74,19 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 		},
 		headers:         map[string]string{},
 		targetUrls:      []string{},
-		sendMaxDuration: time.Duration(*TimeoutSec) * time.Second,
+		sendMaxDuration: time.Duration(cfg.TimeoutInSeconds) * time.Second,
+		config:          cfg,
 	}
 
-	for _, header := range headers {
+	for _, u := range strings.Split(cfg.Target, ",") {
+		if _, err := nurl.Parse(u); err != nil {
+			return nil, errors.Wrapf(err, "invalid url for http sink: %s", u)
+		}
+		nr.Infof("Exporting HTTP to %s", u)
+		nr.targetUrls = append(nr.targetUrls, u)
+	}
+
+	for _, header := range cfg.Headers {
 		pts := strings.SplitN(header, ":", 2)
 		if len(pts) > 1 {
 			nr.headers[strings.TrimSpace(pts[0])] = strings.TrimSpace(pts[1])
@@ -90,17 +109,8 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string) (
 }
 
 func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	for _, url := range strings.Split(*TargetUrl, ",") {
-		_, err := nurl.Parse(url)
-		if err != nil {
-			return fmt.Errorf("Invalid url for http sink: %s", url)
-		}
-		s.targetUrls = append(s.targetUrls, url)
-		s.Infof("Exporting HTTP to %s", url)
-	}
-
 	s.tr = &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: *InsecureSkipVerify},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: s.config.InsecureSkipVerify},
 	}
 	s.client = &http.Client{Transport: s.tr}
 

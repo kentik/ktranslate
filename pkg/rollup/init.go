@@ -1,14 +1,12 @@
 package rollup
 
 import (
-	"flag"
 	"fmt"
 
 	gohll "github.com/sasha-s/go-hll"
 )
 
 func init() {
-	flag.Var(&rollups, "rollups", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
 	verifyHLLConstantsOrPanic()
 }
 

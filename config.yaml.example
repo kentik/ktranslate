@@ -1,0 +1,134 @@
+listenaddr: 127.0.0.1:8081
+mappingfile: ""
+udrsfile: ""
+geofile: ""
+asnfile: ""
+applicationfile: ""
+dns: ""
+processingthreads: 1
+inputthreads: 1
+maxthreads: 1
+format: flat_json
+formatrollup: ""
+compression: none
+sinks: stdout
+maxflowspermessage: 10000
+rollupinterval: 0
+rollupandalpha: false
+samplerate: 1
+samplemin: 1
+enablesnmpdiscovery: false
+kentikemail: ""
+kentikapitoken: ""
+kentikplan: 0
+apibaseurl: https://api.kentik.com
+sslcertfile: ""
+sslkeyfile: ""
+tagmaptype: ""
+enableteelogs: false
+enablehttpinput: false
+enricherurl: ""
+tagmapfile: ""
+netflowformat:
+    version: ipfix
+prometheusformat:
+    enablecollectorstats: false
+    flowsneeded: 10
+prometheussink:
+    listenaddr: :8082
+gcloudsink:
+    bucket: ""
+    prefix: /kentik
+    contenttype: application/json
+    flushintervalseconds: 60
+s3sink:
+    bucket: ""
+    prefix: /kentik
+    flushintervalseconds: 60
+netsink:
+    endpoint: ""
+    protocol: udp
+newrelicsink:
+    account: ""
+    estimateonly: false
+    region: ""
+    validatejson: false
+filesink:
+    path: ./
+    enableimmediatewrite: false
+    flushintervalseconds: 60
+gcloudpubsubsink:
+    projectid: ""
+    topic: ""
+httpsink:
+    target: http://localhost:8086/write?db=kentik
+    headers: []
+    insecureskipverify: false
+    timeoutinseconds: 30
+kafkasink:
+    topic: ""
+    bootstrapservers: ""
+kentiksink:
+    relayurl: ""
+rollup:
+    joinkey: ^
+    topk: 10
+    formats: []
+kmux:
+    dir: .
+server:
+    servicename: ""
+    loglevel: info
+    logtostdout: false
+    metricsendpoint: none
+    metalistenaddr: localhost:0
+    ollydataset: ""
+    ollywritekey: ""
+api:
+    devicefile: ""
+filters: []
+sysloginput:
+    enable: false
+    listenaddr: ""
+    enabletcp: true
+    enableudp: true
+    enableunix: false
+    format: Automatic
+    threads: 1
+snmpinput:
+    enable: false
+    snmpfile: ""
+    dumpmibs: false
+    flowonly: false
+    jsontoyaml: ""
+    walktarget: ""
+    walkoid: .1.3.6.1.2.1
+    walkformat: ""
+    outputfile: ""
+    discoveryintervalminutes: 0
+    discoveryonstart: false
+    validatemibs: false
+    pollnowtarget: ""
+gcpvpcinput:
+    enable: false
+    projectid: ""
+    subject: ""
+    samplerate: 1
+awsvpcinput:
+    enable: false
+    iamrole: ""
+    sqsname: ""
+    regions:
+        - us-east-1
+    islambda: false
+    localfile: ""
+flowinput:
+    enable: false
+    protocol: netflow5
+    listenip: 0.0.0.0
+    listenport: 9995
+    enablereuseport: false
+    workers: 1
+    messagefields: TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress
+    prometheuslistenaddr: ""
+    mappingfile: ""

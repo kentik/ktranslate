@@ -3,6 +3,7 @@ package formats
 import (
 	"fmt"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
@@ -44,7 +45,7 @@ const (
 	FORMAT_KFLOW                = "kflow"
 )
 
-func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (Formatter, error) {
+func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config) (Formatter, error) {
 	switch format {
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
@@ -53,13 +54,13 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 	case FORMAT_JSON:
 		return json.NewFormat(log, compression, false)
 	case FORMAT_NETFLOW:
-		return netflow.NewFormat(log, compression)
+		return netflow.NewFormat(log, compression, cfg.NetflowFormat)
 	case FORMAT_INFLUX:
 		return influx.NewFormat(log, registry, compression)
 	case FORMAT_CARBON:
 		return carbon.NewFormat(log, compression)
 	case FORMAT_PROM:
-		return prom.NewFormat(log, compression)
+		return prom.NewFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_NR, FORMAT_JSON_FLAT:
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:

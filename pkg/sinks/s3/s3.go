@@ -13,10 +13,23 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
+
+var (
+	s3Bucket    string
+	s3Prefix    string
+	flushDurSec int
+)
+
+func init() {
+	flag.StringVar(&s3Bucket, "s3_bucket", "", "AWS S3 Bucket to write flows to")
+	flag.StringVar(&s3Prefix, "s3_prefix", "/kentik", "AWS S3 Object prefix")
+	flag.IntVar(&flushDurSec, "s3_flush_sec", 60, "Create a new output file every this many seconds")
+}
 
 type S3Sink struct {
 	logger.ContextL
@@ -28,6 +41,7 @@ type S3Sink struct {
 	suffix   string
 	buf      *bytes.Buffer
 	mux      sync.RWMutex
+	config   *ktranslate.S3SinkConfig
 }
 
 type S3Metric struct {
@@ -35,24 +49,19 @@ type S3Metric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-var (
-	S3Bucket    = flag.String("s3_bucket", "", "AWS S3 Bucket to write flows to")
-	S3Prefix    = flag.String("s3_prefix", "/kentik", "AWS S3 Object prefix")
-	FlushDurSec = flag.Int("s3_flush_sec", 60, "Create a new output file every this many seconds")
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*S3Sink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.S3SinkConfig) (*S3Sink, error) {
 	rand.Seed(time.Now().UnixNano())
 	return &S3Sink{
 		registry: registry,
-		Bucket:   *S3Bucket,
-		prefix:   *S3Prefix,
+		Bucket:   cfg.Bucket,
+		prefix:   cfg.Prefix,
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "s3Sink"}, log),
 		metrics: &S3Metric{
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_s3", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_s3", registry),
 		},
-		buf: bytes.NewBuffer(make([]byte, 0)),
+		buf:    bytes.NewBuffer(make([]byte, 0)),
+		config: cfg,
 	}, nil
 }
 
@@ -78,10 +87,10 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 		s.suffix = "." + string(compression)
 	}
 
-	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(*FlushDurSec)*time.Second)
+	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(s.config.FlushIntervalSeconds)*time.Second)
 
 	go func() {
-		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
+		dumpTick := time.NewTicker(time.Duration(s.config.FlushIntervalSeconds) * time.Second)
 		defer dumpTick.Stop()
 
 		for {

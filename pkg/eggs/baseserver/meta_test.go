@@ -23,7 +23,7 @@ func doGet(t *testing.T, addr net.Addr, path string) (int, string) {
 }
 
 func TestMetaServer(t *testing.T) {
-	BaseServerConfigurationDefaults.SkipParseFlags = true
+	cfg := testConfig()
 	BaseServerConfigurationDefaults.LogToStdout = false
 	BaseServerConfigurationDefaults.ShutdownSettleTime = 1 * time.Millisecond
 
@@ -32,7 +32,7 @@ func TestMetaServer(t *testing.T) {
 	BaseServerConfigurationDefaults.HealthCheckTimeout = 1 * time.Second
 	BaseServerConfigurationDefaults.MetaListen = "localhost:0"
 
-	bs := Boilerplate("dumdum", versionInfo, nil, nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil, cfg)
 	assert.NotNil(t, bs, "Boilerplate should return a non-nil value")
 
 	dumdum := NewDummyService(t, false, 1*time.Millisecond)

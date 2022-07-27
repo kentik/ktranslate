@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -27,6 +28,7 @@ type StatsRollup struct {
 	isSum     bool
 	kvs       chan *sumset
 	exportKvs chan chan []Rollup
+	config    *ktranslate.RollupConfig
 }
 
 type sumset struct {
@@ -37,11 +39,14 @@ type sumset struct {
 	prov  map[string]kt.Provider
 }
 
-func newStatsRollup(log logger.Underlying, rd RollupDef) (*StatsRollup, error) {
+func newStatsRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.RollupConfig) (*StatsRollup, error) {
 	r := &StatsRollup{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "sumRollup"}, log),
 		state:    map[string][]float64{},
 	}
+
+	r.keyJoin = cfg.JoinKey
+	r.topK = cfg.TopK
 
 	switch rd.Method {
 	case "sum":
@@ -224,8 +229,8 @@ func (r *StatsRollup) Export() []Rollup {
 	}
 
 	sort.Sort(byValue(keys))
-	if len(keys) > r.topK {
-		return keys[0:r.topK]
+	if len(keys) > r.config.TopK {
+		return keys[0:r.config.TopK]
 	}
 
 	return keys
@@ -297,7 +302,7 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	}
 
 	sort.Sort(byValue(keys))
-	if len(keys) > r.topK {
+	if len(keys) > r.config.TopK {
 		r.getTopkSum(keys, total, totalc, ot, provt, rc)
 	} else {
 		rc <- keys
@@ -313,8 +318,8 @@ func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot 
 
 	for _, roll := range keys {
 		pts := strings.Split(roll.Dimension, r.keyJoin)
-		if seen[pts[r.primaryDim]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
-			if len(seenPrimay) <= r.topK { // And, if the number of primary keys is also less than topk, add.
+		if seen[pts[r.primaryDim]] < r.config.TopK { // If the primary key for this rollup has less than the topk set, add it to the list.
+			if len(seenPrimay) <= r.config.TopK { // And, if the number of primary keys is also less than topk, add.
 				top = append(top, roll)
 			}
 		}

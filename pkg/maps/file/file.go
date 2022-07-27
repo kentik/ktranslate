@@ -11,17 +11,21 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
+var (
+	tags string
+)
+
+func init() {
+	flag.StringVar(&tags, "tag_map", "", "CSV file mapping tag ids to strings")
+}
+
 type FileTagMapper struct {
 	logger.ContextL
 	tags map[uint32][2]string
 }
 
-var (
-	tags = flag.String("tag_map", "", "CSV file mapping tag ids to strings")
-)
-
-func NewFileTagMapper(log logger.Underlying) (*FileTagMapper, error) {
-	f, err := os.Open(*tags)
+func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMapper, error) {
+	f, err := os.Open(tagMapFilePath)
 	if err != nil {
 		return nil, err
 	}

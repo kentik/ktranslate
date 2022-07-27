@@ -4,10 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"strings"
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -21,6 +21,25 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 )
 
+var (
+	iamRole   string
+	sqsName   string
+	regions   string
+	isLambda  bool
+	localFile string
+
+	ERROR_SLEEP_TIME     = 20 * time.Second
+	MappingCheckDuration = 30 * 60 * time.Second
+)
+
+func init() {
+	flag.StringVar(&iamRole, "iam_role", "", "IAM Role to use for processing flow")
+	flag.StringVar(&sqsName, "sqs_name", "", "Listen for events from this queue for new objects to look at.")
+	flag.StringVar(&regions, "aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
+	flag.BoolVar(&isLambda, "aws_lambda", kt.LookupEnvBool("AWS_IS_LAMBDA", false), "Run as a AWS Lambda function")
+	flag.StringVar(&localFile, "aws_local_file", "", "If set, process this local file and exit")
+}
+
 type AwsVpc struct {
 	logger.ContextL
 	metrics       *OrangeMetric
@@ -32,6 +51,7 @@ type AwsVpc struct {
 	topo          *AWSTopology
 	regions       []string
 	lambdaHandler func([]*kt.JCHF, func(error))
+	config        *ktranslate.AWSVPCInputConfig
 }
 
 type OrangeMetric struct {
@@ -43,18 +63,7 @@ type OrangeMetric struct {
 	DispatchRecsCount go_metrics.Counter
 }
 
-var (
-	IamRole   = flag.String("iam_role", "", "IAM Role to use for processing flow")
-	SqsName   = flag.String("sqs_name", "", "Listen for events from this queue for new objects to look at.")
-	Regions   = flag.String("aws_regions", "us-east-1", "CSV list of region to run in. Will look for metadata in all regions, run SQS in first region.")
-	IsLambda  = flag.Bool("aws_lambda", kt.LookupEnvBool("AWS_IS_LAMBDA", false), "Run as a AWS Lambda function")
-	localFile = flag.String("aws_local_file", "", "If set, process this local file and exit")
-
-	ERROR_SLEEP_TIME     = 20 * time.Second
-	MappingCheckDuration = 30 * 60 * time.Second
-)
-
-func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, lambdaHandler func([]*kt.JCHF, func(error))) (*AwsVpc, error) {
+func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, lambdaHandler func([]*kt.JCHF, func(error)), cfg *ktranslate.AWSVPCInputConfig) (*AwsVpc, error) {
 	vpc := &AwsVpc{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "awsVpc"}, log),
 		recs:     make(chan *FlowSet, 1000),
@@ -64,38 +73,38 @@ func NewVpc(ctx context.Context, log logger.Underlying, registry go_metrics.Regi
 			Flows:        go_metrics.GetOrRegisterMeter("flows", registry),
 			DroppedFlows: go_metrics.GetOrRegisterMeter("dropped_flows", registry),
 		},
-		awsQUrl: *SqsName,
+		awsQUrl: cfg.SQSName,
+		config:  cfg,
 	}
 
-	if *IsLambda {
+	if cfg.IsLambda {
 		sess := session.Must(session.NewSession())
 		conf := aws.NewConfig()
 		vpc.client = s3.New(sess, conf)
 		vpc.lambdaHandler = lambdaHandler
 		go lambda.Start(vpc.handleLamdba)
 		vpc.Infof("Running as a lamdba function")
-	} else if *localFile != "" {
-		vpc.Infof("Running on %s directly.", *localFile)
-		go vpc.handleLocal(*localFile)
+	} else if cfg.LocalFile != "" {
+		vpc.Infof("Running on %s directly.", cfg.LocalFile)
+		go vpc.handleLocal(cfg.LocalFile)
 	} else {
 		if vpc.awsQUrl == "" {
-			return nil, fmt.Errorf("Flag --sqs_name required")
+			return nil, fmt.Errorf("Flag --sqs_name (or AWSVPCInput.SQSName) required")
 		}
-		if *IamRole == "" {
-			return nil, fmt.Errorf("Flag --iam_role required")
+		if cfg.IAMRole == "" {
+			return nil, fmt.Errorf("Flag --iam_role (or AWSVPCInput.IAMRole) required")
 		}
 
-		regions := strings.Split(*Regions, ",")
-		if len(regions) == 0 {
-			return nil, fmt.Errorf("Flag --regions required")
+		if len(cfg.Regions) == 0 {
+			return nil, fmt.Errorf("Flag --regions (or AWSVPCInput.Regions) required")
 		}
-		vpc.regions = regions
+		vpc.regions = cfg.Regions
 
-		vpc.Infof("Running with role %s in region %s looking at q %s and metadata in %v", *IamRole, vpc.regions[0], *SqsName, vpc.regions)
+		vpc.Infof("Running with role %s in region %s looking at q %s and metadata in %v", cfg.IAMRole, vpc.regions[0], cfg.SQSName, vpc.regions)
 		sess := session.Must(session.NewSession())
 		conf := aws.NewConfig().
 			WithRegion(vpc.regions[0]).
-			WithCredentials(stscreds.NewCredentials(sess, *IamRole))
+			WithCredentials(stscreds.NewCredentials(sess, cfg.IAMRole))
 		vpc.client = s3.New(sess, conf)
 		vpc.sqsCli = sqs.New(sess, conf)
 

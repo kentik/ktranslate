@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/judwhite/go-svc"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/version"
 	"github.com/stretchr/testify/assert"
 )
@@ -19,6 +20,10 @@ type DummyService struct {
 	alwaysUp         bool
 	healthcheckSleep time.Duration
 	contextGotDone   bool
+}
+
+func testConfig() *ktranslate.ServerConfig {
+	return ktranslate.DefaultConfig().Server
 }
 
 func NewDummyService(t *testing.T, alwaysUp bool, healthcheckSleep time.Duration) *DummyService {
@@ -75,10 +80,10 @@ func (dumdum *DummyService) Stop() error {
 }
 
 func TestBoilerplateAndShutdown(t *testing.T) {
-	BaseServerConfigurationDefaults.SkipParseFlags = true
+	cfg := testConfig()
 	BaseServerConfigurationDefaults.LogToStdout = false
 	BaseServerConfigurationDefaults.ShutdownSettleTime = 1 * time.Millisecond
-	bs := Boilerplate("dumdum", versionInfo, nil, nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil, cfg)
 	assert.NotNil(t, bs, "Boilerplate should return a non-nil value")
 
 	assert.NotNil(t, GetGlobalBaseServer())
@@ -100,10 +105,10 @@ func TestBoilerplateAndShutdown(t *testing.T) {
 }
 
 func TestSignalShutdown(t *testing.T) {
-	BaseServerConfigurationDefaults.SkipParseFlags = true
+	cfg := testConfig()
 	BaseServerConfigurationDefaults.LogToStdout = false
 	BaseServerConfigurationDefaults.ShutdownSettleTime = 1 * time.Millisecond
-	bs := Boilerplate("dumdum", versionInfo, nil, nil)
+	bs := Boilerplate("dumdum", versionInfo, nil, nil, cfg)
 	assert.NotNil(t, bs, "Boilerplate returns a non-nil value")
 
 	dumdum := NewDummyService(t, true, 10*time.Millisecond)
