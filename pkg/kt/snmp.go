@@ -239,7 +239,7 @@ type SnmpGlobalConfig struct {
 	PurgeDevices  int                    `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
 	UserTags      map[string]string      `yaml:"user_tags"`
 	MatchAttr     map[string]string      `yaml:"match_attributes"`
-	ProviderMap   map[string]ProviderMap `yaml:"provider_maps"`
+	ProviderMap   map[string]ProviderMap `yaml:"providers"`
 }
 
 type SnmpConfig struct {
