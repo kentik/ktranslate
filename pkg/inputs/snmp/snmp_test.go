@@ -82,9 +82,39 @@ func TestSetTagsMatch(t *testing.T) {
 				},
 			},
 		},
+		"two": kt.SnmpConfig{
+			Global: &kt.SnmpGlobalConfig{
+				UserTags: map[string]string{
+					"tag": "global",
+				},
+				MatchAttr: map[string]string{
+					"match": "global",
+				},
+			},
+			Devices: map[string]*kt.SnmpDeviceConfig{
+				"device": &kt.SnmpDeviceConfig{
+					Provider: "foo",
+					UserTags: map[string]string{
+						"tag": "device", // This should be device tag because its set at device level.
+					},
+					MatchAttr: map[string]string{
+						"match": "device",
+					},
+				},
+				"global": &kt.SnmpDeviceConfig{
+					Provider: "fooA",
+					UserTags: map[string]string{
+						"tagA": "device", // This should fall back to global level because niether provider or device set.
+					},
+					MatchAttr: map[string]string{
+						"matchA": "device",
+					},
+				},
+			},
+		},
 	}
 
-	for _, ms := range tests {
+	for test, ms := range tests {
 		for p, m := range ms.Global.ProviderMap {
 			m.Init(p, ms.Global) // Set up any provider based user and match tags here.
 		}
@@ -111,8 +141,8 @@ func TestSetTagsMatch(t *testing.T) {
 
 		for expt, device := range ms.Devices {
 			setDeviceTagsAndMatch(device)
-			assert.Equal(expt, device.UserTags["tag"], "%s", device.Provider)
-			assert.Equal(expt, device.MatchAttr["match"], "%s", device.Provider)
+			assert.Equal(expt, device.UserTags["tag"], "%s -> %s", test, device.Provider)
+			assert.Equal(expt, device.MatchAttr["match"], "%s -> %s", test, device.Provider)
 		}
 	}
 }
