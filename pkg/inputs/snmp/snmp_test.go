@@ -28,3 +28,91 @@ func TestMatchesPrefix(t *testing.T) {
 		assert.Equal(expt[1], fmt.Sprintf("%v", res), "%s <-> %s", in, provider)
 	}
 }
+
+func TestSetTagsMatch(t *testing.T) {
+	assert := assert.New(t)
+
+	tests := map[string]kt.SnmpConfig{
+		"one": kt.SnmpConfig{
+			Global: &kt.SnmpGlobalConfig{
+				UserTags: map[string]string{
+					"tag": "global",
+				},
+				MatchAttr: map[string]string{
+					"match": "global",
+				},
+				ProviderMap: map[string]kt.ProviderMap{
+					"foo": kt.ProviderMap{
+						UserTags: map[string]string{
+							"tag": "provider",
+						},
+						MatchAttr: map[string]string{
+							"match": "provider",
+						},
+					},
+				},
+			},
+			Devices: map[string]*kt.SnmpDeviceConfig{
+				"device": &kt.SnmpDeviceConfig{
+					Provider: "foo",
+					UserTags: map[string]string{
+						"tag": "device", // This should be device tag because its set at device level.
+					},
+					MatchAttr: map[string]string{
+						"match": "device",
+					},
+				},
+				"provider": &kt.SnmpDeviceConfig{
+					Provider: "foo",
+					UserTags: map[string]string{
+						"tagA": "device", // This should fall back to provider level.
+					},
+					MatchAttr: map[string]string{
+						"matchA": "device",
+					},
+				},
+				"global": &kt.SnmpDeviceConfig{
+					Provider: "fooA",
+					UserTags: map[string]string{
+						"tagA": "device", // This should fall back to global level because niether provider or device set.
+					},
+					MatchAttr: map[string]string{
+						"matchA": "device",
+					},
+				},
+			},
+		},
+	}
+
+	for _, ms := range tests {
+		for p, m := range ms.Global.ProviderMap {
+			m.Init(p, ms.Global) // Set up any provider based user and match tags here.
+		}
+		for k, v := range ms.Global.UserTags {
+			for _, device := range ms.Devices {
+				if device.UserTags == nil {
+					device.UserTags = map[string]string{}
+				}
+				if _, ok := device.UserTags[k]; !ok {
+					device.UserTags[k] = v
+				}
+			}
+		}
+		for k, v := range ms.Global.MatchAttr {
+			for _, device := range ms.Devices {
+				if device.MatchAttr == nil {
+					device.MatchAttr = map[string]string{}
+				}
+				if _, ok := device.MatchAttr[k]; !ok {
+					device.MatchAttr[k] = v
+				}
+			}
+		}
+
+		for expt, device := range ms.Devices {
+			setDeviceTagsAndMatch(device)
+			assert.Equal(expt, device.UserTags["tag"], "%s", device.Provider)
+			assert.Equal(expt, device.MatchAttr["match"], "%s", device.Provider)
+		}
+	}
+}
