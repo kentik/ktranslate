@@ -449,11 +449,11 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	// And now figure out what the mib name is.
 	mib, ok := attr["mib-name"].(string)
 	if !ok {
-		return "none"
+		return "device"
 	}
 	delete(attr, "mib-name")
 	if mib == "" {
-		mib = "none"
+		mib = "device"
 	}
 
 	// If there's a table, add this to the info.
