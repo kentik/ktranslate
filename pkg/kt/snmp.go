@@ -19,6 +19,8 @@ const (
 	UserTagPrefix  = "tags."
 	ProviderToken  = ":"
 	ProviderPrefix = "provider" + ProviderToken
+	GlobalProvider = "global"
+	DeviceProvider = "device"
 )
 
 // DeviceData holds information about a device, sent via ST, and sent
@@ -248,6 +250,7 @@ type SnmpConfig struct {
 	Disco      *SnmpDiscoConfig  `yaml:"discovery"`
 	Global     *SnmpGlobalConfig `yaml:"global"`
 	DeviceOrig string            `yaml:"-"`
+	doneInit   bool              `yaml:"-"`
 }
 
 type SnmpMetricSet struct {
@@ -713,12 +716,42 @@ func (a *EAPIConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	return nil
 }
 
-func (p *ProviderMap) Init(provider string, g *SnmpGlobalConfig) {
+func (p *ProviderMap) Init(provider string, cfg *SnmpConfig) {
+	if cfg.Global == nil {
+		cfg.Global = &SnmpGlobalConfig{}
+	}
+	g := cfg.Global
+
 	if p.UserTags != nil && g.UserTags == nil {
 		g.UserTags = map[string]string{}
 	}
 	if p.MatchAttr != nil && g.MatchAttr == nil {
 		g.MatchAttr = map[string]string{}
+	}
+
+	// Set up a global provider for global tags.
+	if !cfg.doneInit {
+		cfg.doneInit = true
+		for k, v := range g.UserTags {
+			delete(g.UserTags, k)
+			g.UserTags[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+		}
+		for k, v := range g.MatchAttr {
+			delete(g.MatchAttr, k)
+			g.MatchAttr[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+		}
+
+		// Set up device prefix for device level ones.
+		for _, device := range cfg.Devices {
+			for k, v := range device.UserTags {
+				delete(device.UserTags, k)
+				device.UserTags[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+			}
+			for k, v := range device.MatchAttr {
+				delete(device.MatchAttr, k)
+				device.MatchAttr[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+			}
+		}
 	}
 
 	// Copy these over in the right order to get processed by the regular per device system.

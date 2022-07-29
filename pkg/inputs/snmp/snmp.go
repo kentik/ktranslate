@@ -375,7 +375,7 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 	// If there's a global user tags and match, add them in here.
 	if ms.Global != nil {
 		for p, m := range ms.Global.ProviderMap {
-			m.Init(p, ms.Global) // Set up any provider based user and match tags here.
+			m.Init(p, &ms) // Set up any provider based user and match tags here.
 		}
 
 		for k, v := range ms.Global.UserTags {
@@ -462,16 +462,38 @@ func matchesPrefix(tag string, provider kt.Provider) (string, bool) {
 }
 
 func setDeviceTagsAndMatch(device *kt.SnmpDeviceConfig) {
-	for key, tag := range device.UserTags {
-		delete(device.UserTags, key)
-		if nk, ok := matchesPrefix(key, device.Provider); ok {
-			device.UserTags[nk] = tag // We do use this tag, go ahead and update the value to the one returned.
+	set := func(m map[string]string, p kt.Provider) {
+		for k, v := range m {
+			if nk, ok := matchesPrefix(k, p); ok {
+				delete(m, k)
+				if _, ok := m[nk]; !ok { // Don't overwrite an existing key.
+					m[nk] = v
+				}
+			}
 		}
 	}
-	for key, match := range device.MatchAttr {
-		delete(device.MatchAttr, key)
-		if nk, ok := matchesPrefix(key, device.Provider); ok {
-			device.MatchAttr[nk] = match // We do use this match, go ahead and update the value to the one returned.
+
+	prune := func(m map[string]string) {
+		for k, _ := range m {
+			if strings.HasPrefix(k, kt.ProviderPrefix) {
+				delete(m, k)
+			}
 		}
 	}
+
+	// First fill in any device level sets.
+	set(device.UserTags, kt.DeviceProvider)
+	set(device.MatchAttr, kt.DeviceProvider)
+
+	// Then any provider level
+	set(device.UserTags, device.Provider)
+	set(device.MatchAttr, device.Provider)
+
+	// Lastly any global
+	set(device.UserTags, kt.GlobalProvider)
+	set(device.MatchAttr, kt.GlobalProvider)
+
+	// Now take out any unset keys.
+	prune(device.UserTags)
+	prune(device.MatchAttr)
 }
