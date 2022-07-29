@@ -120,6 +120,29 @@ func TestSetTagsMatch(t *testing.T) {
 				},
 			},
 		},
+		"three": kt.SnmpConfig{ // No provider, just gobal and device.
+			Global: &kt.SnmpGlobalConfig{},
+			Devices: map[string]*kt.SnmpDeviceConfig{
+				"device": &kt.SnmpDeviceConfig{
+					Provider: "foo",
+					UserTags: map[string]string{
+						"tag": "device", // This should be device tag because its set at device level.
+					},
+					MatchAttr: map[string]string{
+						"match": "device",
+					},
+				},
+				"": &kt.SnmpDeviceConfig{
+					Provider: "fooA",
+					UserTags: map[string]string{
+						"tagA": "device", // This should fall back to global level because niether provider or device set.
+					},
+					MatchAttr: map[string]string{
+						"matchA": "device",
+					},
+				},
+			},
+		},
 	}
 
 	for test, ms := range tests {
