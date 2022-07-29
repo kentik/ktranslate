@@ -43,7 +43,7 @@ func (d *InfluxData) GetTags() string {
 		switch t := v.(type) {
 		case string:
 			if t != "" {
-				tags = append(tags, fmt.Sprintf("%s=%s", kval, influxEscape(t)))
+				tags = append(tags, fmt.Sprintf("%s=%s", kval, influxEscapeTag(t)))
 			}
 		default:
 			tags = append(tags, fmt.Sprintf("%s=%v", kval, v))
@@ -66,7 +66,7 @@ func (d *InfluxData) String() string {
 	i := 0
 	for k, v := range d.Fields {
 		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=" + ev.(string)
+			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
 			delete(d.Tags, k)
 		} else {
 			fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
@@ -75,7 +75,7 @@ func (d *InfluxData) String() string {
 	}
 	for k, v := range d.FieldsFloat {
 		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=" + ev.(string)
+			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
 			delete(d.Tags, k)
 		} else {
 			fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
@@ -208,7 +208,7 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		mets := strings.Split(roll.EventType, ":")
 		attr := []string{}
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
-			attr = append(attr, dims[i]+"="+influxEscape(pt))
+			attr = append(attr, dims[i]+"="+influxEscapeTag(pt))
 		}
 		if len(mets) > 2 {
 			res = append(res, fmt.Sprintf("%s,%s %s=%d,count=%d %d", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
@@ -420,12 +420,22 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	return results
 }
 
-var escaper = regexp.MustCompile("([,= \\s])")
+var tagEscaper = regexp.MustCompile("([,= \\s])")
 
 // Escape special characters according to https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial/#special-characters-and-keywords
-func influxEscape(s string) string {
+func influxEscapeTag(s string) string {
 	if strings.ContainsAny(s, ",= \t\r\n") {
-		return string(escaper.ReplaceAll([]byte(s), []byte("\\$1")))
+		return string(tagEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
+	} else {
+		return s
+	}
+}
+
+var fieldEscaper = regexp.MustCompile("([\"\\\\])")
+
+func influxEscapeField(s string) string {
+	if strings.ContainsAny(s, "\"\\") {
+		return string(fieldEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
 	} else {
 		return s
 	}

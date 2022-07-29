@@ -27,7 +27,7 @@ func TestSeriToInflux(t *testing.T) {
 	assert.Equal(len(pts), len(kt.InputTesting))
 }
 
-func TestInfluxEscape(t *testing.T) {
+func TestInfluxEscapeTag(t *testing.T) {
 	var tests = []struct {
 		input string
 		want  string
@@ -41,8 +41,25 @@ func TestInfluxEscape(t *testing.T) {
 		{"as\r\ndf", "as\\\r\\\ndf"},
 	}
 	for _, test := range tests {
-		if got := influxEscape(test.input); got != test.want {
-			t.Errorf("influxEscape(%q) = %q; want %q", test.input, got, test.want)
+		if got := influxEscapeTag(test.input); got != test.want {
+			t.Errorf("influxEscapeTag(%q) = %q; want %q", test.input, got, test.want)
+		}
+	}
+}
+
+func TestInfluxEscapeField(t *testing.T) {
+	var tests = []struct {
+		input string
+		want  string
+	}{
+		{"asdf", "asdf"},
+		{"as df", "as df"},
+		{"as\"df", "as\\\"df"},
+		{"as\\df", "as\\\\df"},
+	}
+	for _, test := range tests {
+		if got := influxEscapeField(test.input); got != test.want {
+			t.Errorf("influxEscapeField(%q) = %q; want %q", test.input, got, test.want)
 		}
 	}
 }
