@@ -204,6 +204,9 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			}
 		}
 
+		// Tweak any per provider tags and match attributes here.
+		setDeviceTagsAndMatch(device)
+
 		// Create this device in Kentik if the option is set.
 		err := apic.EnsureDevice(ctx, device)
 		if err != nil {
@@ -371,6 +374,10 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 
 	// If there's a global user tags and match, add them in here.
 	if ms.Global != nil {
+		for p, m := range ms.Global.ProviderMap {
+			m.Init(p, &ms) // Set up any provider based user and match tags here.
+		}
+
 		for k, v := range ms.Global.UserTags {
 			for _, device := range ms.Devices {
 				if device.UserTags == nil {
@@ -434,4 +441,59 @@ func launchExtOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.Sn
 // Public wrapper for calling this other places.
 func ParseConfig(file string, log logger.ContextL) (*kt.SnmpConfig, error) {
 	return parseConfig(context.Background(), file, log)
+}
+
+// If there's a provider: prefix here
+func matchesPrefix(tag string, provider kt.Provider) (string, bool) {
+	if !strings.HasPrefix(tag, kt.ProviderPrefix) { // No prefix so just return true.
+		return tag, true
+	}
+
+	pts := strings.SplitN(tag, kt.ProviderToken, 3)
+	if len(pts) < 3 { // Invalid prefix, just return true here.
+		return tag, true
+	}
+
+	if pts[1] == string(provider) {
+		return pts[2], true
+	}
+
+	return "", false
+}
+
+func setDeviceTagsAndMatch(device *kt.SnmpDeviceConfig) {
+	set := func(m map[string]string, p kt.Provider) {
+		for k, v := range m {
+			if nk, ok := matchesPrefix(k, p); ok {
+				delete(m, k)
+				if _, ok := m[nk]; !ok { // Don't overwrite an existing key.
+					m[nk] = v
+				}
+			}
+		}
+	}
+
+	prune := func(m map[string]string) {
+		for k, _ := range m {
+			if strings.HasPrefix(k, kt.ProviderPrefix) {
+				delete(m, k)
+			}
+		}
+	}
+
+	// First fill in any device level sets.
+	set(device.UserTags, kt.DeviceProvider)
+	set(device.MatchAttr, kt.DeviceProvider)
+
+	// Then any provider level
+	set(device.UserTags, device.Provider)
+	set(device.MatchAttr, device.Provider)
+
+	// Lastly any global
+	set(device.UserTags, kt.GlobalProvider)
+	set(device.MatchAttr, kt.GlobalProvider)
+
+	// Now take out any unset keys.
+	prune(device.UserTags)
+	prune(device.MatchAttr)
 }
