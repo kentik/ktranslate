@@ -1,8 +1,10 @@
 package influx
 
 import (
+	"flag"
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -30,18 +32,11 @@ type InfluxData struct {
 	Timestamp   int64
 }
 
-func (d *InfluxData) String() string {
-	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
-	i := 0
-	for k, v := range d.Fields {
-		fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
-		i++
-	}
-	for k, v := range d.FieldsFloat {
-		fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
-		i++
-	}
+var (
+	Prefix = flag.String("influxdb_measurement_prefix", "", "Prefix metric names with this")
+)
 
+func (d *InfluxData) GetTags() string {
 	var tags []string
 	for key, v := range d.Tags {
 		kval := strings.ReplaceAll(key, " ", "_")
@@ -55,19 +50,95 @@ func (d *InfluxData) String() string {
 		}
 	}
 
+	sort.Strings(tags) // Need to be sorted for dedupe.
+	return strings.Join(tags, ",")
+}
+
+func (d *InfluxData) Prefix() string {
+	return fmt.Sprintf("%s,%s",
+		d.Name,
+		d.GetTags(),
+	)
+}
+
+func (d *InfluxData) String() string {
+	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
+	i := 0
+	for k, v := range d.Fields {
+		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
+			fields[i] = k + "=" + ev.(string)
+			delete(d.Tags, k)
+		} else {
+			fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
+		}
+		i++
+	}
+	for k, v := range d.FieldsFloat {
+		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
+			fields[i] = k + "=" + ev.(string)
+			delete(d.Tags, k)
+		} else {
+			fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
+		}
+		i++
+	}
+
 	return fmt.Sprintf("%s,%s %s %d",
 		d.Name,
-		strings.Join(tags, ","),
+		d.GetTags(),
 		strings.Join(fields, ","),
 		d.Timestamp)
+}
+
+func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
+	if len(s) == 0 {
+		return nil
+	}
+	d := InfluxData{
+		Name:        s[0].Name,
+		Tags:        s[0].Tags,
+		Timestamp:   s[0].Timestamp,
+		FieldsFloat: map[string]float64{},
+		Fields:      map[string]int64{},
+	}
+
+	for _, f := range s {
+		for k, v := range f.FieldsFloat {
+			d.FieldsFloat[k] = v
+		}
+		for k, v := range f.Fields {
+			d.Fields[k] = v
+		}
+	}
+
+	return &d
 }
 
 type InfluxDataSet []InfluxData
 
 func (s InfluxDataSet) Bytes() []byte {
-	res := make([]string, 0)
+	// First map common prefixes.
+	prefixes := map[string][]InfluxData{}
 	for _, l := range s {
-		res = append(res, l.String())
+		prefix := l.Prefix()
+		if _, ok := prefixes[prefix]; !ok {
+			prefixes[prefix] = []InfluxData{}
+		}
+		prefixes[prefix] = append(prefixes[prefix], l)
+	}
+
+	// Now merge down any common prefixes.
+	merged := []*InfluxData{}
+	for _, l := range prefixes {
+		merged = append(merged, NewMergedInfluxData(l))
+	}
+
+	// Then format for output.
+	res := make([]string, 0)
+	for _, l := range merged {
+		if l != nil {
+			res = append(res, l.String())
+		}
 	}
 	return []byte(strings.Join(res, "\n"))
 }
@@ -181,7 +252,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{InfluxData{
-		Name:      "kentik.synth",
+		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -212,7 +283,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{InfluxData{
-		Name:      "kentik.flow",
+		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -225,6 +296,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
+	ip := attr["src_addr"]
 
 	results := []InfluxData{}
 	for m, name := range metrics {
@@ -238,17 +310,17 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			mtype := name.GetType()
+			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        "kentik." + mtype,
+					Name:        *Prefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      "kentik." + mtype,
+					Name:      *Prefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -266,6 +338,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	f.mux.RLock()
 	defer f.mux.RUnlock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	ip := attr["src_ip"]
 
 	profileName := "snmp"
 	results := []InfluxData{}
@@ -281,17 +354,17 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			mtype := name.GetType()
+			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        "kentik." + mtype,
+					Name:        *Prefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      "kentik." + mtype,
+					Name:      *Prefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -311,7 +384,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								results = append(results, InfluxData{
-									Name:        "kentik.snmp",
+									Name:        *Prefix + "if",
 									FieldsFloat: map[string]float64{"IfInUtilization": float64(inBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
@@ -331,7 +404,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								results = append(results, InfluxData{
-									Name:        "kentik.snmp",
+									Name:        *Prefix + "if",
 									FieldsFloat: map[string]float64{"IfOutUtilization": float64(outBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
@@ -356,4 +429,49 @@ func influxEscape(s string) string {
 	} else {
 		return s
 	}
+}
+
+func getMib(attr map[string]interface{}, ip interface{}) string {
+	// Remove any lingering droppable fields.
+	for k, v := range attr {
+		if _, ok := dropFields[k]; ok {
+			delete(attr, k)
+		}
+		if k == "Index" {
+			delete(attr, k)
+			attr["index"] = v
+		}
+	}
+	if ip != nil {
+		attr["device_ip"] = ip
+	}
+
+	// And now figure out what the mib name is.
+	mib, ok := attr["mib-name"].(string)
+	if !ok {
+		return "device"
+	}
+	delete(attr, "mib-name")
+	if mib == "" {
+		mib = "device"
+	}
+
+	// If there's a table, add this to the info.
+	mibTable, ok := attr["mib-table"].(string)
+	if ok {
+		mib = mib + "::" + mibTable
+		delete(attr, "mib-table")
+	}
+
+	return mib
+}
+
+var dropFields = map[string]bool{
+	//"device_name": true,
+	"objectIdentifier": true,
+	"eventType":        true,
+	"SysObjectID":      true,
+	"provider":         true,
+	"SysServices":      true,
+	"SysDescr":         true,
 }
