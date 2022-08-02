@@ -416,6 +416,11 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 
 	sort.Strings(conf.Global.MibsEnabled) // Put them in a common ordering.
 
+	// Remove any provider based tags and matches.
+	if !isTest {
+		cleanForSave(conf)
+	}
+
 	// Write out to seperate files any sections which need this.
 	if conf.Disco.CidrOrig != "" {
 		t, err := yaml.Marshal(conf.Disco.Cidrs)
