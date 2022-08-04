@@ -133,8 +133,14 @@ func (s InfluxDataSet) Bytes() []byte {
 
 			}
 			for k, v := range l.Fields {
-				if val, ok := lineprotocol.NewValue(v); ok {
-					enc.AddField(k, val)
+				enc.AddField(k, lineprotocol.IntValue(v))
+				if enc.Err() != nil {
+					panic(enc.Err())
+				}
+			}
+			for k, v := range l.FieldsFloat {
+				if fv, ok := lineprotocol.FloatValue(v); ok {
+					enc.AddField(k, fv)
 					if enc.Err() != nil {
 						panic(enc.Err())
 					}
