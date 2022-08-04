@@ -218,9 +218,39 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		mets := strings.Split(roll.EventType, ":")
 		if len(mets) > 2 {
 			enc.StartLine(roll.Name)
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
+
+			dims := roll.GetDims()
+			tags := map[string]string{}
+			for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
+				tags[dims[i]] = pt
+			}
+			keys := make([]string, 0, len(tags))
+			for k := range tags {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				enc.AddTag(k, tags[k])
+				if enc.Err() != nil {
+					panic(enc.Err())
+				}
+			}
+
 			enc.AddField(mets[1], lineprotocol.IntValue(int64(roll.Metric)))
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
 			enc.AddField("count", lineprotocol.IntValue(int64(roll.Count)))
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
 			enc.EndLine(ts)
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
 		}
 	}
 
