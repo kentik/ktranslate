@@ -411,15 +411,13 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 						device.Provider = profile.Provider
 					}
 				}
-
-				// Tweak any per provider tags and match attributes here now that we have the actual provider.
-				setDeviceTagsAndMatch(device)
 			}
 		}
 	}
 
 	// Correctly format all the user tags needed here:
 	for _, device := range ms.Devices {
+		setDeviceTagsAndMatch(device) // Tweak any per provider tags and match attributes here now that we have the actual provider.
 		device.InitUserTags(ServiceName)
 	}
 
