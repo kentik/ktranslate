@@ -116,21 +116,16 @@ func (s InfluxDataSet) Bytes() []byte {
 			sort.Strings(keys)
 			for _, k := range keys {
 				v := l.Tags[k]
-				switch t := v.(type) {
-				case string:
-					if t != "" {
-						enc.AddTag(k, fmt.Sprintf("%s", v))
-					}
-				default:
-					s := fmt.Sprintf("%s", v)
-					if s != "" {
-						enc.AddTag(k, s)
-					}
+				s, ok := v.(string)
+				if !ok {
+					s = fmt.Sprintf("%s", v)
+				}
+				if s != "" {
+					enc.AddTag(k, s)
 				}
 				if enc.Err() != nil {
 					panic(enc.Err())
 				}
-
 			}
 			for k, v := range l.Fields {
 				enc.AddField(k, lineprotocol.IntValue(v))
