@@ -397,19 +397,17 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 		}
 
 		// Load a mibdb if we have one. We have to do this here first because we need to get device provider info out.
-		if ms.Global != nil {
-			mdb, err := mibs.NewMibDB(ms.Global.MibDB, ms.Global.MibProfileDir, false, log)
-			if err != nil {
-				return nil, err
-			}
+		mdb, err := mibs.NewMibDB(ms.Global.MibDB, ms.Global.MibProfileDir, false, log)
+		if err != nil {
+			return nil, err
+		}
 
-			for _, device := range ms.Devices {
-				profile := mdb.FindProfile(device.OID, device.Description, device.MibProfile)
-				if profile != nil {
-					// Use the profile's provider if it is set.
-					if profile.Provider != "" {
-						device.Provider = profile.Provider
-					}
+		for _, device := range ms.Devices {
+			profile := mdb.FindProfile(device.OID, device.Description, device.MibProfile)
+			if profile != nil {
+				// Use the profile's provider if it is set.
+				if profile.Provider != "" {
+					device.Provider = profile.Provider
 				}
 			}
 		}
