@@ -79,6 +79,7 @@ require (
 	github.com/google/gopacket v1.1.17 // indirect
 	github.com/googleapis/gax-go/v2 v2.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
+	github.com/influxdata/line-protocol/v2 v2.2.1 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

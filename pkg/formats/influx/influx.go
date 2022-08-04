@@ -1,16 +1,14 @@
 package influx
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"regexp"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/influxdata/line-protocol/v2/lineprotocol"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -43,9 +41,7 @@ func (d *InfluxData) GetTags() string {
 		kval := strings.ReplaceAll(key, " ", "_")
 		switch t := v.(type) {
 		case string:
-			if t != "" {
-				tags = append(tags, fmt.Sprintf("%s=%s", kval, influxEscapeTag(t)))
-			}
+			tags = append(tags, fmt.Sprintf("%s=%s", kval, t))
 		default:
 			tags = append(tags, fmt.Sprintf("%s=%v", kval, v))
 		}
@@ -60,35 +56,6 @@ func (d *InfluxData) Prefix() string {
 		d.Name,
 		d.GetTags(),
 	)
-}
-
-func (d *InfluxData) String() string {
-	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
-	i := 0
-	for k, v := range d.Fields {
-		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
-			delete(d.Tags, k)
-		} else {
-			fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
-		}
-		i++
-	}
-	for k, v := range d.FieldsFloat {
-		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
-			delete(d.Tags, k)
-		} else {
-			fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
-		}
-		i++
-	}
-
-	return fmt.Sprintf("%s,%s %s %d",
-		d.Name,
-		d.GetTags(),
-		strings.Join(fields, ","),
-		d.Timestamp)
 }
 
 func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
@@ -135,14 +102,51 @@ func (s InfluxDataSet) Bytes() []byte {
 	}
 
 	// Then format for output.
-	var res bytes.Buffer
+	var enc lineprotocol.Encoder
 	for _, l := range merged {
 		if l != nil {
-			res.WriteString(l.String())
-			res.WriteRune('\n')
+			enc.StartLine(l.Name)
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
+			keys := make([]string, 0, len(l.Tags))
+			for k := range l.Tags {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				v := l.Tags[k]
+				switch t := v.(type) {
+				case string:
+					if t != "" {
+						enc.AddTag(k, fmt.Sprintf("%s", v))
+					}
+				default:
+					s := fmt.Sprintf("%s", v)
+					if s != "" {
+						enc.AddTag(k, s)
+					}
+				}
+				if enc.Err() != nil {
+					panic(enc.Err())
+				}
+
+			}
+			for k, v := range l.Fields {
+				if val, ok := lineprotocol.NewValue(v); ok {
+					enc.AddField(k, val)
+					if enc.Err() != nil {
+						panic(enc.Err())
+					}
+				}
+			}
+			enc.EndLine(time.Unix(0, l.Timestamp))
+			if enc.Err() != nil {
+				panic(enc.Err())
+			}
 		}
 	}
-	return res.Bytes()
+	return enc.Bytes()
 }
 
 func NewFormat(log logger.Underlying, compression kt.Compression) (*InfluxFormat, error) {
@@ -199,25 +203,22 @@ func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 }
 
 func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
-	var res bytes.Buffer
+	var enc lineprotocol.Encoder
 	ts := time.Now()
 	for _, roll := range rolls {
 		if roll.Metric == 0 {
 			continue
 		}
-
-		dims := roll.GetDims()
 		mets := strings.Split(roll.EventType, ":")
-		attr := []string{}
-		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
-			attr = append(attr, dims[i]+"="+influxEscapeTag(pt))
-		}
 		if len(mets) > 2 {
-			fmt.Fprintf(&res, fmt.Sprintf("%s,%s %s=%d,count=%d %d\n", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
+			enc.StartLine(roll.Name)
+			enc.AddField(mets[1], lineprotocol.IntValue(int64(roll.Metric)))
+			enc.AddField("count", lineprotocol.IntValue(int64(roll.Count)))
+			enc.EndLine(ts)
 		}
 	}
 
-	return kt.NewOutput(res.Bytes()), nil
+	return kt.NewOutput(enc.Bytes()), nil
 }
 
 func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
@@ -422,27 +423,6 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	}
 
 	return results
-}
-
-var tagEscaper = regexp.MustCompile("([,= \\s])")
-
-// Escape special characters according to https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial/#special-characters-and-keywords
-func influxEscapeTag(s string) string {
-	if strings.ContainsAny(s, ",= \t\r\n") {
-		return string(tagEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
-	} else {
-		return s
-	}
-}
-
-var fieldEscaper = regexp.MustCompile("([\"\\\\])")
-
-func influxEscapeField(s string) string {
-	if strings.ContainsAny(s, "\"\\") {
-		return string(fieldEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
-	} else {
-		return s
-	}
 }
 
 func getMib(attr map[string]interface{}, ip interface{}) string {
