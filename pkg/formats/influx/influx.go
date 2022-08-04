@@ -253,7 +253,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	return []InfluxData{InfluxData{
+	return []InfluxData{{
 		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
@@ -264,12 +264,12 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
+	metrics := map[string]kt.MetricInfo{"in_bytes": {}, "out_bytes": {}, "in_pkts": {}, "out_pkts": {}, "latency_ms": {}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := map[string]int64{}
-	for m, _ := range metrics {
+	for m := range metrics {
 		switch m {
 		case "in_bytes":
 			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
@@ -284,7 +284,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	return []InfluxData{InfluxData{
+	return []InfluxData{{
 		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
