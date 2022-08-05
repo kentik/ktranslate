@@ -204,9 +204,6 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			}
 		}
 
-		// Tweak any per provider tags and match attributes here.
-		setDeviceTagsAndMatch(device)
-
 		// Create this device in Kentik if the option is set.
 		err := apic.EnsureDevice(ctx, device)
 		if err != nil {
@@ -398,10 +395,27 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 				}
 			}
 		}
+
+		// Load a mibdb if we have one. We have to do this here first because we need to get device provider info out.
+		mdb, err := mibs.NewMibDB(ms.Global.MibDB, ms.Global.MibProfileDir, false, log)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, device := range ms.Devices {
+			profile := mdb.FindProfile(device.OID, device.Description, device.MibProfile)
+			if profile != nil {
+				// Use the profile's provider if it is set.
+				if profile.Provider != "" {
+					device.Provider = profile.Provider
+				}
+			}
+		}
 	}
 
 	// Correctly format all the user tags needed here:
 	for _, device := range ms.Devices {
+		setDeviceTagsAndMatch(device) // Tweak any per provider tags and match attributes here now that we have the actual provider.
 		device.InitUserTags(ServiceName)
 	}
 

@@ -62,14 +62,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 }
 
 type deviceMetricRow struct {
-	Error             string
-	Component         string
-	CPU               int64
-	MemoryTotal       int64
-	MemoryUsed        int64
-	MemoryFree        int64
-	MemoryUtilization int64
-	Uptime            int64
+	Error string
 
 	// Custom Specific
 	customStr    map[string]string
@@ -230,6 +223,12 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.CustomMetrics = metricsFound        // Add this in so that we know what metrics to pull out down the road.
 		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
+		}
+
+		// If CPUIdle is present, calculate CPU from this.
+		if cpui, ok := dst.CustomBigInt["CPUIdle"]; ok && cpui <= 100 {
+			dst.CustomBigInt["CPU"] = 100 - cpui
+			dst.CustomMetrics["CPU"] = dst.CustomMetrics["CPU"]
 		}
 
 		// Memory can be compound value so need to do it here if present but not already set.
