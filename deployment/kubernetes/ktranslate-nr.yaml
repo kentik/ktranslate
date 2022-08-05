@@ -14,6 +14,13 @@ spec:
       labels:
         app: ktranslate
     spec:
+      initContainers:
+      - name: ensure-device-file
+        image: alpine
+        command: ["touch", "/kt/devices.yaml"]
+        volumeMounts:
+          - name: ktranslate-device-list
+            mountPath: /kt
       containers:
       - name: ktranslate
         image: docker.io/kentik/ktranslate:v2
@@ -66,10 +73,18 @@ spec:
           - name: ktranslate-config
             mountPath: /etc/ktranslate/snmp-base.yaml
             subPath: snmp-base.yaml
+          - name: ktranslate-device-list
+            mountPath: /kt
       volumes:
         - name: ktranslate-config
           configMap:
             name: ktranslate-config
+              - name: ktranslate-config
+          configMap:
+            name: ktranslate-config
+        - name: ktranslate-device-list
+          emptyDir: {}
+
 
 ---
 apiVersion: v1
@@ -110,7 +125,7 @@ metadata:
   name: ktranslate-config
 data:
   snmp-base.yaml: |
-    devices:
+    devices: "@/kt/devices.yaml"
     trap:
       listen: 0.0.0.0:1620
     discovery:
