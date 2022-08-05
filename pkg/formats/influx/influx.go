@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/influxdata/line-protocol/v2/lineprotocol"
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -18,9 +19,15 @@ import (
 
 type InfluxFormat struct {
 	logger.ContextL
-	invalids     map[string]bool
-	lastMetadata map[string]*kt.LastMetadata
-	mux          sync.RWMutex
+	invalids      map[string]bool
+	lastMetadata  map[string]*kt.LastMetadata
+	mux           sync.RWMutex
+	encoderErrors map[string]bool
+	metrics       *InfluxMetrics
+}
+
+type InfluxMetrics struct {
+	EncoderErrors go_metrics.Counter
 }
 
 type InfluxData struct {
@@ -84,7 +91,16 @@ func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
 
 type InfluxDataSet []InfluxData
 
-func (s InfluxDataSet) Bytes() []byte {
+func (f *InfluxFormat) report(err error, format string, args ...interface{}) {
+	str := fmt.Sprintf(format, args...)
+	if !f.invalids[str] {
+		f.invalids[str] = true
+		f.Errorf("influx encoding error on %s: %v", str, err)
+	}
+	f.metrics.EncoderErrors.Inc(1)
+}
+
+func (f *InfluxFormat) Bytes(s InfluxDataSet) []byte {
 	// First map common prefixes.
 	prefixes := map[string][]InfluxData{}
 	for _, l := range s {
@@ -103,11 +119,13 @@ func (s InfluxDataSet) Bytes() []byte {
 
 	// Then format for output.
 	var enc lineprotocol.Encoder
+line:
 	for _, l := range merged {
 		if l != nil {
 			enc.StartLine(l.Name)
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "measurement '%s'", l.Name)
+				continue line
 			}
 			keys := make([]string, 0, len(l.Tags))
 			for k := range l.Tags {
@@ -124,37 +142,45 @@ func (s InfluxDataSet) Bytes() []byte {
 					enc.AddTag(k, s)
 				}
 				if enc.Err() != nil {
-					panic(enc.Err())
+					f.report(enc.Err(), "tag '%s'='%s'", k, s)
+					continue line
 				}
 			}
 			for k, v := range l.Fields {
 				enc.AddField(k, lineprotocol.IntValue(v))
 				if enc.Err() != nil {
-					panic(enc.Err())
+					f.report(enc.Err(), "int field '%s'='%d'", k, v)
+					continue line
 				}
 			}
 			for k, v := range l.FieldsFloat {
 				if fv, ok := lineprotocol.FloatValue(v); ok {
 					enc.AddField(k, fv)
 					if enc.Err() != nil {
-						panic(enc.Err())
+						f.report(enc.Err(), "float field '%s'='%g'", k, v)
+						continue line
 					}
 				}
 			}
 			enc.EndLine(time.Unix(0, l.Timestamp))
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "end of line on measurement '%s'", l.Name)
+				continue line
 			}
 		}
 	}
 	return enc.Bytes()
 }
 
-func NewFormat(log logger.Underlying, compression kt.Compression) (*InfluxFormat, error) {
+func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
 	jf := &InfluxFormat{
-		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
-		invalids:     map[string]bool{},
-		lastMetadata: map[string]*kt.LastMetadata{},
+		ContextL:      logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
+		invalids:      map[string]bool{},
+		lastMetadata:  map[string]*kt.LastMetadata{},
+		encoderErrors: map[string]bool{},
+		metrics: &InfluxMetrics{
+			EncoderErrors: go_metrics.GetOrRegisterCounter("influx_encoder_errors", registry),
+		},
 	}
 
 	return jf, nil
@@ -170,7 +196,7 @@ func (f *InfluxFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	return kt.NewOutput(InfluxDataSet(res).Bytes()), nil
+	return kt.NewOutput(f.Bytes(InfluxDataSet(res))), nil
 }
 
 func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
@@ -206,6 +232,7 @@ func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	var enc lineprotocol.Encoder
 	ts := time.Now()
+line:
 	for _, roll := range rolls {
 		if roll.Metric == 0 {
 			continue
@@ -214,7 +241,8 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		if len(mets) > 2 {
 			enc.StartLine(roll.Name)
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "rollup measurement '%s'", roll.Name)
+				continue line
 			}
 
 			dims := roll.GetDims()
@@ -230,21 +258,26 @@ func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			for _, k := range keys {
 				enc.AddTag(k, tags[k])
 				if enc.Err() != nil {
-					panic(enc.Err())
+					f.report(enc.Err(), "rollup tag '%s'='%s'", k, tags[k])
+					continue line
 				}
 			}
 
 			enc.AddField(mets[1], lineprotocol.IntValue(int64(roll.Metric)))
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "rollup int field '%s'", mets[1])
+				continue line
+
 			}
 			enc.AddField("count", lineprotocol.IntValue(int64(roll.Count)))
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "rollup count field")
+				continue line
 			}
 			enc.EndLine(ts)
 			if enc.Err() != nil {
-				panic(enc.Err())
+				f.report(enc.Err(), "rollup end of line on measurement '%s'", roll.Name)
+				continue line
 			}
 		}
 	}

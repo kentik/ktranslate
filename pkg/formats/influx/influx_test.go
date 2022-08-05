@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -16,7 +17,7 @@ func TestSeriToInflux(t *testing.T) {
 	assert := assert.New(t)
 	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
 
-	f, err := NewFormat(l, kt.CompressionNone)
+	f, err := NewFormat(l, go_metrics.DefaultRegistry, kt.CompressionNone)
 	assert.NoError(err)
 
 	prefix := "notempty"

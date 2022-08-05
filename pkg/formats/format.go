@@ -17,6 +17,8 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats/splunk"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
+
+	go_metrics "github.com/kentik/go-metrics"
 )
 
 type Formatter interface {
@@ -42,7 +44,7 @@ const (
 	FORMAT_KFLOW                = "kflow"
 )
 
-func NewFormat(format Format, log logger.Underlying, compression kt.Compression) (Formatter, error) {
+func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (Formatter, error) {
 	switch format {
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
@@ -53,7 +55,7 @@ func NewFormat(format Format, log logger.Underlying, compression kt.Compression)
 	case FORMAT_NETFLOW:
 		return netflow.NewFormat(log, compression)
 	case FORMAT_INFLUX:
-		return influx.NewFormat(log, compression)
+		return influx.NewFormat(log, registry, compression)
 	case FORMAT_CARBON:
 		return carbon.NewFormat(log, compression)
 	case FORMAT_PROM:
