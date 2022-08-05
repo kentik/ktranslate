@@ -136,13 +136,13 @@ line:
 				v := l.Tags[k]
 				s, ok := v.(string)
 				if !ok {
-					s = fmt.Sprintf("%s", v)
+					s = fmt.Sprintf("%v", v)
 				}
 				if s != "" {
 					enc.AddTag(k, s)
 				}
 				if enc.Err() != nil {
-					f.report(enc.Err(), "tag '%s'='%s'", k, s)
+					f.report(enc.Err(), "tag '%s'='%v'", k, s)
 					continue line
 				}
 			}
