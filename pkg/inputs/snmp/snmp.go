@@ -150,7 +150,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
 	}
 
-	// We only want to run a disco on start when resartCount is 0. Otherwise you end up doing 2 discos if a new device is found on start.
+	// We only want to run a disco on start when restartCount is 0. Otherwise you end up doing 2 discos if a new device is found on start.
 	runOnStart := *snmpDiscoSt
 	if restartCount > 0 {
 		runOnStart = false
