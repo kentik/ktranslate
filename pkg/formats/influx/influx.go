@@ -19,11 +19,11 @@ import (
 
 type InfluxFormat struct {
 	logger.ContextL
-	invalids      map[string]bool
-	lastMetadata  map[string]*kt.LastMetadata
-	mux           sync.RWMutex
-	encoderErrors map[string]bool
-	metrics       *InfluxMetrics
+	invalids     map[string]bool
+	invalidsMux  sync.RWMutex
+	lastMetadata map[string]*kt.LastMetadata
+	mux          sync.RWMutex
+	metrics      *InfluxMetrics
 }
 
 type InfluxMetrics struct {
@@ -93,9 +93,18 @@ type InfluxDataSet []InfluxData
 
 func (f *InfluxFormat) report(err error, format string, args ...interface{}) {
 	str := fmt.Sprintf(format, args...)
+	f.invalidsMux.RLock()
 	if !f.invalids[str] {
-		f.invalids[str] = true
-		f.Errorf("influx encoding error on %s: %v", str, err)
+		f.invalidsMux.RUnlock()
+		f.invalidsMux.Lock()
+		// recheck since another thread may have written while we were upgrading lock
+		if !f.invalids[str] {
+			f.invalids[str] = true
+			f.Errorf("influx encoding error on %s: %v", str, err)
+		}
+		f.invalidsMux.Unlock()
+	} else {
+		f.invalidsMux.RUnlock()
 	}
 	f.metrics.EncoderErrors.Inc(1)
 }
@@ -174,10 +183,9 @@ line:
 
 func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
 	jf := &InfluxFormat{
-		ContextL:      logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
-		invalids:      map[string]bool{},
-		lastMetadata:  map[string]*kt.LastMetadata{},
-		encoderErrors: map[string]bool{},
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
+		invalids:     map[string]bool{},
+		lastMetadata: map[string]*kt.LastMetadata{},
 		metrics: &InfluxMetrics{
 			EncoderErrors: go_metrics.GetOrRegisterCounter("influx_encoder_errors", registry),
 		},
@@ -212,8 +220,8 @@ func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
 	default:
-		f.mux.Lock()
-		defer f.mux.Unlock()
+		f.invalidsMux.Lock()
+		defer f.invalidsMux.Unlock()
 		if !f.invalids[in.EventType] {
 			f.Warnf("Invalid EventType: %s", in.EventType)
 			f.invalids[in.EventType] = true
