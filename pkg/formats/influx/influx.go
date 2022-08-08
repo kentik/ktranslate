@@ -1,16 +1,15 @@
 package influx
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
-	"regexp"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/influxdata/line-protocol/v2/lineprotocol"
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -21,8 +20,14 @@ import (
 type InfluxFormat struct {
 	logger.ContextL
 	invalids     map[string]bool
+	invalidsMux  sync.RWMutex
 	lastMetadata map[string]*kt.LastMetadata
 	mux          sync.RWMutex
+	metrics      *InfluxMetrics
+}
+
+type InfluxMetrics struct {
+	EncoderErrors go_metrics.Counter
 }
 
 type InfluxData struct {
@@ -43,9 +48,7 @@ func (d *InfluxData) GetTags() string {
 		kval := strings.ReplaceAll(key, " ", "_")
 		switch t := v.(type) {
 		case string:
-			if t != "" {
-				tags = append(tags, fmt.Sprintf("%s=%s", kval, influxEscapeTag(t)))
-			}
+			tags = append(tags, fmt.Sprintf("%s=%s", kval, t))
 		default:
 			tags = append(tags, fmt.Sprintf("%s=%v", kval, v))
 		}
@@ -60,35 +63,6 @@ func (d *InfluxData) Prefix() string {
 		d.Name,
 		d.GetTags(),
 	)
-}
-
-func (d *InfluxData) String() string {
-	fields := make([]string, len(d.Fields)+len(d.FieldsFloat))
-	i := 0
-	for k, v := range d.Fields {
-		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
-			delete(d.Tags, k)
-		} else {
-			fields[i] = k + "=" + strconv.FormatInt(v, 10) + "i"
-		}
-		i++
-	}
-	for k, v := range d.FieldsFloat {
-		if ev, ok := d.Tags[k]; ok { // There's an enum here, use this vs the int value.
-			fields[i] = k + "=\"" + influxEscapeField(ev.(string)) + "\""
-			delete(d.Tags, k)
-		} else {
-			fields[i] = k + "=" + strconv.FormatFloat(v, 'f', 4, 64)
-		}
-		i++
-	}
-
-	return fmt.Sprintf("%s,%s %s %d",
-		d.Name,
-		d.GetTags(),
-		strings.Join(fields, ","),
-		d.Timestamp)
 }
 
 func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
@@ -117,7 +91,25 @@ func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
 
 type InfluxDataSet []InfluxData
 
-func (s InfluxDataSet) Bytes() []byte {
+func (f *InfluxFormat) report(err error, format string, args ...interface{}) {
+	str := fmt.Sprintf(format, args...)
+	f.invalidsMux.RLock()
+	if !f.invalids[str] {
+		f.invalidsMux.RUnlock()
+		f.invalidsMux.Lock()
+		// recheck since another thread may have written while we were upgrading lock
+		if !f.invalids[str] {
+			f.invalids[str] = true
+			f.Errorf("influx encoding error on %s: %v", str, err)
+		}
+		f.invalidsMux.Unlock()
+	} else {
+		f.invalidsMux.RUnlock()
+	}
+	f.metrics.EncoderErrors.Inc(1)
+}
+
+func (f *InfluxFormat) Bytes(s InfluxDataSet) []byte {
 	// First map common prefixes.
 	prefixes := map[string][]InfluxData{}
 	for _, l := range s {
@@ -135,21 +127,68 @@ func (s InfluxDataSet) Bytes() []byte {
 	}
 
 	// Then format for output.
-	var res bytes.Buffer
+	var enc lineprotocol.Encoder
+line:
 	for _, l := range merged {
 		if l != nil {
-			res.WriteString(l.String())
-			res.WriteRune('\n')
+			enc.StartLine(l.Name)
+			if enc.Err() != nil {
+				f.report(enc.Err(), "measurement '%s'", l.Name)
+				continue line
+			}
+			keys := make([]string, 0, len(l.Tags))
+			for k := range l.Tags {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				v := l.Tags[k]
+				s, ok := v.(string)
+				if !ok {
+					s = fmt.Sprintf("%v", v)
+				}
+				if s != "" {
+					enc.AddTag(k, s)
+				}
+				if enc.Err() != nil {
+					f.report(enc.Err(), "tag '%s'='%v'", k, s)
+					continue line
+				}
+			}
+			for k, v := range l.Fields {
+				enc.AddField(k, lineprotocol.IntValue(v))
+				if enc.Err() != nil {
+					f.report(enc.Err(), "int field '%s'='%d'", k, v)
+					continue line
+				}
+			}
+			for k, v := range l.FieldsFloat {
+				if fv, ok := lineprotocol.FloatValue(v); ok {
+					enc.AddField(k, fv)
+					if enc.Err() != nil {
+						f.report(enc.Err(), "float field '%s'='%g'", k, v)
+						continue line
+					}
+				}
+			}
+			enc.EndLine(time.Unix(0, l.Timestamp))
+			if enc.Err() != nil {
+				f.report(enc.Err(), "end of line on measurement '%s'", l.Name)
+				continue line
+			}
 		}
 	}
-	return res.Bytes()
+	return enc.Bytes()
 }
 
-func NewFormat(log logger.Underlying, compression kt.Compression) (*InfluxFormat, error) {
+func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
 	jf := &InfluxFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
+		metrics: &InfluxMetrics{
+			EncoderErrors: go_metrics.GetOrRegisterCounter("influx_encoder_errors", registry),
+		},
 	}
 
 	return jf, nil
@@ -165,7 +204,7 @@ func (f *InfluxFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	return kt.NewOutput(InfluxDataSet(res).Bytes()), nil
+	return kt.NewOutput(f.Bytes(InfluxDataSet(res))), nil
 }
 
 func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
@@ -181,8 +220,8 @@ func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
 	default:
-		f.mux.Lock()
-		defer f.mux.Unlock()
+		f.invalidsMux.Lock()
+		defer f.invalidsMux.Unlock()
 		if !f.invalids[in.EventType] {
 			f.Warnf("Invalid EventType: %s", in.EventType)
 			f.invalids[in.EventType] = true
@@ -199,25 +238,59 @@ func (f *InfluxFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 }
 
 func (f *InfluxFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
-	var res bytes.Buffer
+	var enc lineprotocol.Encoder
 	ts := time.Now()
+line:
 	for _, roll := range rolls {
 		if roll.Metric == 0 {
 			continue
 		}
-
-		dims := roll.GetDims()
 		mets := strings.Split(roll.EventType, ":")
-		attr := []string{}
-		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
-			attr = append(attr, dims[i]+"="+influxEscapeTag(pt))
-		}
 		if len(mets) > 2 {
-			fmt.Fprintf(&res, fmt.Sprintf("%s,%s %s=%d,count=%d %d\n", roll.Name, strings.Join(attr, ","), mets[1], uint64(roll.Metric), roll.Count, ts.UnixNano())) // Time to nano
+			enc.StartLine(roll.Name)
+			if enc.Err() != nil {
+				f.report(enc.Err(), "rollup measurement '%s'", roll.Name)
+				continue line
+			}
+
+			dims := roll.GetDims()
+			tags := map[string]string{}
+			for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
+				tags[dims[i]] = pt
+			}
+			keys := make([]string, 0, len(tags))
+			for k := range tags {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				enc.AddTag(k, tags[k])
+				if enc.Err() != nil {
+					f.report(enc.Err(), "rollup tag '%s'='%s'", k, tags[k])
+					continue line
+				}
+			}
+
+			enc.AddField(mets[1], lineprotocol.IntValue(int64(roll.Metric)))
+			if enc.Err() != nil {
+				f.report(enc.Err(), "rollup int field '%s'", mets[1])
+				continue line
+
+			}
+			enc.AddField("count", lineprotocol.IntValue(int64(roll.Count)))
+			if enc.Err() != nil {
+				f.report(enc.Err(), "rollup count field")
+				continue line
+			}
+			enc.EndLine(ts)
+			if enc.Err() != nil {
+				f.report(enc.Err(), "rollup end of line on measurement '%s'", roll.Name)
+				continue line
+			}
 		}
 	}
 
-	return kt.NewOutput(res.Bytes()), nil
+	return kt.NewOutput(enc.Bytes()), nil
 }
 
 func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
@@ -253,7 +326,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	return []InfluxData{InfluxData{
+	return []InfluxData{{
 		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
@@ -264,12 +337,12 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	// Map the basic strings into here.
 	attr := map[string]interface{}{}
-	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
+	metrics := map[string]kt.MetricInfo{"in_bytes": {}, "out_bytes": {}, "in_pkts": {}, "out_pkts": {}, "latency_ms": {}}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
 	f.mux.RUnlock()
 	ms := map[string]int64{}
-	for m, _ := range metrics {
+	for m := range metrics {
 		switch m {
 		case "in_bytes":
 			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
@@ -284,7 +357,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	return []InfluxData{InfluxData{
+	return []InfluxData{{
 		Name:      *Prefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
@@ -422,27 +495,6 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	}
 
 	return results
-}
-
-var tagEscaper = regexp.MustCompile("([,= \\s])")
-
-// Escape special characters according to https://docs.influxdata.com/influxdb/v1.8/write_protocols/line_protocol_tutorial/#special-characters-and-keywords
-func influxEscapeTag(s string) string {
-	if strings.ContainsAny(s, ",= \t\r\n") {
-		return string(tagEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
-	} else {
-		return s
-	}
-}
-
-var fieldEscaper = regexp.MustCompile("([\"\\\\])")
-
-func influxEscapeField(s string) string {
-	if strings.ContainsAny(s, "\"\\") {
-		return string(fieldEscaper.ReplaceAll([]byte(s), []byte("\\$1")))
-	} else {
-		return s
-	}
 }
 
 func getMib(attr map[string]interface{}, ip interface{}) string {

@@ -19,6 +19,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gosnmp/gosnmp v1.35.0
 	github.com/honeycombio/libhoney-go v1.15.6
+	github.com/influxdata/line-protocol/v2 v2.2.1
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
 	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
