@@ -185,15 +185,17 @@ line:
 var invalidTagChars string
 var invalidTagCharsOnce sync.Once
 
+func invalidTagCharsInit() {
+	b := []byte{}
+	for i := 0; i < 32; i++ {
+		b = append(b, byte(i))
+	}
+	b = append(b, 0x7f)
+	invalidTagChars = string(b)
+}
+
 func prepareTagValue(s string) string {
-	invalidTagCharsOnce.Do(func() {
-		b := []byte{}
-		for i := 0; i < 32; i++ {
-			b = append(b, byte(i))
-		}
-		b = append(b, 0x7f)
-		invalidTagChars = string(b)
-	})
+	invalidTagCharsOnce.Do(invalidTagCharsInit)
 	if strings.ContainsAny(s, invalidTagChars) {
 		var clean bytes.Buffer
 		for _, c := range s {
@@ -209,16 +211,20 @@ func prepareTagValue(s string) string {
 }
 
 func prepareTagValueMap(s string) string {
-	swap := func(r rune) rune {
-		switch {
-		case r >= 0x00 && r <= 0x1f:
-			return ' '
-		case r == 0x7f:
-			return ' '
+	invalidTagCharsOnce.Do(invalidTagCharsInit)
+	if strings.ContainsAny(s, invalidTagChars) {
+		swap := func(r rune) rune {
+			switch {
+			case r >= 0x00 && r <= 0x1f:
+				return ' '
+			case r == 0x7f:
+				return ' '
+			}
+			return r
 		}
-		return r
+		return strings.Map(swap, s)
 	}
-	return strings.Map(swap, s)
+	return s
 }
 
 func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
