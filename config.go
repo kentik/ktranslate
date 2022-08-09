@@ -7,25 +7,31 @@ import (
 )
 
 const (
-	// fields for the Flow input
-	FlowFields           = "Type,TimeReceived,SequenceNum,SamplingRate,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IngressVrfID,EgressVrfID,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,BiFlowDirection,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,HasMPLS,MPLSCount,MPLS1TTL,MPLS1Label,MPLS2TTL,MPLS2Label,MPLS3TTL,MPLS3Label,MPLSLastTTL,MPLSLastLabel,CustomInteger1,CustomInteger2,CustomInteger3,CustomInteger4,CustomInteger5,CustomBytes1,CustomBytes2,CustomBytes3,CustomBytes4,CustomBytes5"
-	FlowDefaultFields    = "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
+	// FlowFields are fields for the Flow input
+	FlowFields = "Type,TimeReceived,SequenceNum,SamplingRate,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IngressVrfID,EgressVrfID,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,BiFlowDirection,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,HasMPLS,MPLSCount,MPLS1TTL,MPLS1Label,MPLS2TTL,MPLS2Label,MPLS3TTL,MPLS3Label,MPLSLastTTL,MPLSLastLabel,CustomInteger1,CustomInteger2,CustomInteger3,CustomInteger4,CustomInteger5,CustomBytes1,CustomBytes2,CustomBytes3,CustomBytes4,CustomBytes5"
+	// FlowDefaultFields are the default fields for flow
+	FlowDefaultFields = "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
+	// KentikAPITokenEnvVar is the environment variables used to get the Kentik API Token
 	KentikAPITokenEnvVar = "KENTIK_API_TOKEN"
 )
 
+// NetflowFormatConfig is the config format for netflow
 type NetflowFormatConfig struct {
 	Version string
 }
 
+// PrometheusFormatConfig is the config for the prometheus format
 type PrometheusFormatConfig struct {
 	EnableCollectorStats bool
 	FlowsNeeded          int
 }
 
+// PrometheusSinkConfig is config for the prometheus sink
 type PrometheusSinkConfig struct {
 	ListenAddr string
 }
 
+// GCloudSinkConfig is the config for GCP
 type GCloudSinkConfig struct {
 	Bucket               string
 	Prefix               string
@@ -33,17 +39,20 @@ type GCloudSinkConfig struct {
 	FlushIntervalSeconds int
 }
 
+// S3SinkConfig is the config for the S3 sink
 type S3SinkConfig struct {
 	Bucket               string
 	Prefix               string
 	FlushIntervalSeconds int
 }
 
+// NetSinkConfig is the config for the net sink
 type NetSinkConfig struct {
 	Endpoint string
 	Protocol string
 }
 
+// NewRelicSinkConfig is the config for the NewRelic sink
 type NewRelicSinkConfig struct {
 	Account      string
 	EstimateOnly bool
@@ -51,17 +60,20 @@ type NewRelicSinkConfig struct {
 	ValidateJSON bool
 }
 
+// FileSinkConfig is the config for the file sink
 type FileSinkConfig struct {
 	Path                 string
 	EnableImmediateWrite bool
 	FlushIntervalSeconds int
 }
 
+// GCloudPubSubSinkConfig is the config for GCP PubSub
 type GCloudPubSubSinkConfig struct {
 	ProjectID string
 	Topic     string
 }
 
+// HTTPSinkConfig is the config for the HTTP sink
 type HTTPSinkConfig struct {
 	Target             string
 	Headers            []string
@@ -69,25 +81,30 @@ type HTTPSinkConfig struct {
 	TimeoutInSeconds   int
 }
 
+// KafkaSinkConfig is the config for the Kafka sink
 type KafkaSinkConfig struct {
 	Topic            string
 	BootstrapServers string
 }
 
+// KentikSinkConfig is the config for the Kentik sink
 type KentikSinkConfig struct {
 	RelayURL string
 }
 
+// RollupConfig is the config for rollups
 type RollupConfig struct {
 	JoinKey string
 	TopK    int
 	Formats []string
 }
 
+// KMuxConfig is the config for the mux server
 type KMuxConfig struct {
 	Dir string
 }
 
+// ServerConfig is the config for the meta server
 type ServerConfig struct {
 	ServiceName     string
 	LogLevel        string
@@ -98,10 +115,12 @@ type ServerConfig struct {
 	OllyWriteKey    string
 }
 
+// APIConfig is the config for the API service
 type APIConfig struct {
 	DeviceFile string
 }
 
+// SyslogInputConfig is the config for the syslog input
 type SyslogInputConfig struct {
 	Enable     bool
 	ListenAddr string
@@ -112,6 +131,7 @@ type SyslogInputConfig struct {
 	Threads    int
 }
 
+// SNMPInputConfig is the config for SNMP input
 type SNMPInputConfig struct {
 	Enable                   bool
 	SNMPFile                 string
@@ -128,6 +148,7 @@ type SNMPInputConfig struct {
 	PollNowTarget            string
 }
 
+// GCPVPCInputConfig is the config for GCP VPC
 type GCPVPCInputConfig struct {
 	Enable     bool
 	ProjectID  string
@@ -135,6 +156,7 @@ type GCPVPCInputConfig struct {
 	SampleRate float64
 }
 
+// AWSVPCInputConfig is the config for AWS VPC
 type AWSVPCInputConfig struct {
 	Enable    bool
 	IAMRole   string
@@ -144,6 +166,7 @@ type AWSVPCInputConfig struct {
 	LocalFile string
 }
 
+// FlowInputConfig is the config for flow input
 type FlowInputConfig struct {
 	Enable               bool
 	Protocol             string
@@ -156,6 +179,7 @@ type FlowInputConfig struct {
 	MappingFile          string
 }
 
+// Config is the ktranslate configuration
 type Config struct {
 	// ktranslate
 	ListenAddr          string
@@ -240,6 +264,7 @@ type Config struct {
 	FlowInput *FlowInputConfig
 }
 
+// DefaultConfig returns a ktranslate configuration with defaults applied
 func DefaultConfig() *Config {
 	return &Config{
 		ListenAddr:          "127.0.0.1:8081",
@@ -397,6 +422,7 @@ func DefaultConfig() *Config {
 	}
 }
 
+// LoadConfig returns a ktranslate configuration from the specified path
 func LoadConfig(configPath string) (*Config, error) {
 	f, err := os.Open(configPath)
 	if err != nil {
