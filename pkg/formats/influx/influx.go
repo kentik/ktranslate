@@ -1,6 +1,7 @@
 package influx
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"sort"
@@ -148,7 +149,7 @@ line:
 					s = fmt.Sprintf("%v", v)
 				}
 				if s != "" {
-					enc.AddTag(k, s)
+					enc.AddTag(k, prepareTagValueMap(s))
 				}
 				if enc.Err() != nil {
 					f.report(enc.Err(), "tag '%s'='%v'", k, s)
@@ -179,6 +180,51 @@ line:
 		}
 	}
 	return enc.Bytes()
+}
+
+var invalidTagChars string
+var invalidTagCharsOnce sync.Once
+
+func invalidTagCharsInit() {
+	b := []byte{}
+	for i := 0; i < 32; i++ {
+		b = append(b, byte(i))
+	}
+	b = append(b, 0x7f)
+	invalidTagChars = string(b)
+}
+
+func prepareTagValue(s string) string {
+	invalidTagCharsOnce.Do(invalidTagCharsInit)
+	if strings.ContainsAny(s, invalidTagChars) {
+		var clean bytes.Buffer
+		for _, c := range s {
+			if !strings.ContainsRune(invalidTagChars, c) {
+				clean.WriteRune(c)
+			} else {
+				clean.WriteRune(' ')
+			}
+		}
+		return clean.String()
+	}
+	return s
+}
+
+func prepareTagValueMap(s string) string {
+	invalidTagCharsOnce.Do(invalidTagCharsInit)
+	if strings.ContainsAny(s, invalidTagChars) {
+		swap := func(r rune) rune {
+			switch {
+			case r >= 0x00 && r <= 0x1f:
+				return ' '
+			case r == 0x7f:
+				return ' '
+			}
+			return r
+		}
+		return strings.Map(swap, s)
+	}
+	return s
 }
 
 func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
