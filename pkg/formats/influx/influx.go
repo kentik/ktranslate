@@ -149,7 +149,7 @@ line:
 					s = fmt.Sprintf("%v", v)
 				}
 				if s != "" {
-					enc.AddTag(k, prepareTagValue(s))
+					enc.AddTag(k, prepareTagValueMap(s))
 				}
 				if enc.Err() != nil {
 					f.report(enc.Err(), "tag '%s'='%v'", k, s)
