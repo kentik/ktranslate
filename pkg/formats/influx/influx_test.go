@@ -31,3 +31,30 @@ func TestSeriToInflux(t *testing.T) {
 	pts := strings.Split(string(res.Body[:len(res.Body)-1]), "\n")
 	assert.Equal(len(pts), len(kt.InputTesting))
 }
+
+func TestNewline(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
+
+	f, err := NewFormat(l, go_metrics.DefaultRegistry, kt.CompressionNone)
+	assert.NoError(err)
+
+	input := InfluxDataSet{
+		InfluxData{
+			Name:        "measurement",
+			FieldsFloat: map[string]float64{},
+			Fields:      map[string]int64{"moltue": 42},
+			Tags: map[string]interface{}{
+				"tag1": `line1
+line2`,
+			},
+			Timestamp: 0,
+		},
+	}
+	res := f.Bytes(input)
+	assert.NotNil(res)
+	str := string(res)
+	assert.Contains(str, "measurement")
+	assert.Contains(str, "line1")
+	assert.Contains(str, "line2")
+}
