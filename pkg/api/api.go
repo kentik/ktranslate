@@ -17,6 +17,7 @@ import (
 	"time"
 
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202202"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -35,13 +36,77 @@ const (
 )
 
 var (
-	deviceFile = flag.String("api_device_file", "", "File to sideload devices without hitting API")
+	apiDeviceFile string
 )
 
+func init() {
+	flag.StringVar(&apiDeviceFile, "api_device_file", "", "File to sideload devices without hitting API")
+}
+
+type KentikApi struct {
+	logger.ContextL
+	tr            *http.Transport
+	client        *http.Client
+	devices       map[kt.Cid]kt.Devices
+	synAgents     map[kt.AgentId]*synthetics.Agent
+	synAgentsByIP map[string]*synthetics.Agent
+	synTests      map[kt.TestId]*synthetics.Test
+	setTime       time.Time
+	apiTimeout    time.Duration
+	synClient     synthetics.SyntheticsAdminServiceClient
+	conf          *kt.KentikConfig
+	mux           sync.RWMutex
+	lastSynth     time.Time
+	config        *ktranslate.APIConfig
+}
+
+func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.ContextL, cfg *ktranslate.APIConfig) (*KentikApi, error) {
+	apiTimeoutStr := os.Getenv(kt.KentikAPITimeout)
+	apiTimeout := API_TIMEOUT
+	if apiTimeoutStr != "" {
+		intv, _ := strconv.Atoi(apiTimeoutStr)
+		apiTimeout = time.Duration(intv) * time.Second
+	}
+	log.Infof("Setting API timeout to %v", apiTimeout)
+
+	tr := &http.Transport{
+		DisableCompression: false,
+		DisableKeepAlives:  false,
+		Dial: (&net.Dialer{
+			Timeout: apiTimeout,
+		}).Dial,
+		TLSHandshakeTimeout: apiTimeout,
+	}
+	client := &http.Client{Transport: tr, Timeout: apiTimeout}
+
+	kapi := &KentikApi{
+		ContextL:   log,
+		conf:       conf,
+		tr:         tr,
+		client:     client,
+		apiTimeout: apiTimeout,
+		config:     cfg,
+	}
+
+	// Now, check to see if synthetics API works.
+	err := kapi.connectSynth(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// check api works and also pre-populate cache.
+	err = kapi.getDevices(ctx)
+
+	// Drop cache every hour to keep up to date
+	go kapi.manageCache(ctx)
+
+	return kapi, err
+}
+
 func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte, error) {
-	if *deviceFile != "" {
-		api.Infof("Reading devices from local file: %s", *deviceFile)
-		return os.ReadFile(*deviceFile)
+	if v := api.config.DeviceFile; v != "" {
+		api.Infof("Reading devices from local file: %s", v)
+		return os.ReadFile(v)
 	}
 
 	// Try to make a request, parse the result as json.
@@ -200,64 +265,6 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 	api.Infof("Loaded %d Kentik devices via API in %v", num, api.setTime.Sub(stime))
 	api.devices = resDev
 	return nil
-}
-
-type KentikApi struct {
-	logger.ContextL
-	tr            *http.Transport
-	client        *http.Client
-	devices       map[kt.Cid]kt.Devices
-	synAgents     map[kt.AgentId]*synthetics.Agent
-	synAgentsByIP map[string]*synthetics.Agent
-	synTests      map[kt.TestId]*synthetics.Test
-	setTime       time.Time
-	apiTimeout    time.Duration
-	synClient     synthetics.SyntheticsAdminServiceClient
-	conf          *kt.KentikConfig
-	mux           sync.RWMutex
-	lastSynth     time.Time
-}
-
-func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.ContextL) (*KentikApi, error) {
-	apiTimeoutStr := os.Getenv(kt.KentikAPITimeout)
-	apiTimeout := API_TIMEOUT
-	if apiTimeoutStr != "" {
-		intv, _ := strconv.Atoi(apiTimeoutStr)
-		apiTimeout = time.Duration(intv) * time.Second
-	}
-	log.Infof("Setting API timeout to %v", apiTimeout)
-
-	tr := &http.Transport{
-		DisableCompression: false,
-		DisableKeepAlives:  false,
-		Dial: (&net.Dialer{
-			Timeout: apiTimeout,
-		}).Dial,
-		TLSHandshakeTimeout: apiTimeout,
-	}
-	client := &http.Client{Transport: tr, Timeout: apiTimeout}
-
-	kapi := &KentikApi{
-		ContextL:   log,
-		conf:       conf,
-		tr:         tr,
-		client:     client,
-		apiTimeout: apiTimeout,
-	}
-
-	// Now, check to see if synthetics API works.
-	err := kapi.connectSynth(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// check api works and also pre-populate cache.
-	err = kapi.getDevices(ctx)
-
-	// Drop cache every hour to keep up to date
-	go kapi.manageCache(ctx)
-
-	return kapi, err
 }
 
 func NewKentikApiFromLocalDevices(localDevices map[string]*kt.Device, log logger.ContextL) *KentikApi {

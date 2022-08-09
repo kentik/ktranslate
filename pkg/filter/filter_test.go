@@ -13,47 +13,16 @@ import (
 func TestFilter(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
 	assert := assert.New(t)
-	filters = []FilterDefWrapper{
-		[]FilterDef{
-			FilterDef{
-				Dimension: "src_addr",
-				Operator:  "==",
-				Value:     "10.2.2.1",
-				FType:     "string",
-			},
-			FilterDef{
-				Dimension: "custom_bigint.fooII",
-				Operator:  "==",
-				Value:     "12",
-				FType:     "int",
-			},
-			FilterDef{
-				Dimension: "src_addr",
-				Operator:  "%",
-				Value:     "10.2.2.0/24",
-				FType:     "addr",
-			},
-			FilterDef{
-				Dimension: "src_addr",
-				Operator:  "%",
-				Value:     "10.2.3.0/24",
-				FType:     "addr",
-			},
-			FilterDef{
-				Dimension: "custom_bigint.foo",
-				Operator:  "!=",
-				Value:     "13",
-				FType:     "int",
-			},
-			FilterDef{
-				Dimension: "src_addr",
-				Operator:  "%",
-				Value:     "10.2",
-				FType:     "string",
-			},
-		},
+	// filters are type,dimension,operator,value
+	filters := []string{
+		"string,src_addr,==,10.2.2.1",
+		"int,custom_bigint.fooII,==,12",
+		"addr,src_addr,%,10.2.2.0/24",
+		"addr,src_addr,%,10.2.3.0/24",
+		"int,custom_bigint.foo,!=,13",
+		"string,src_addr,%,10.2",
 	}
-	fs, err := GetFilters(l)
+	fs, err := GetFilters(l, filters)
 	assert.NoError(err)
 	assert.Equal(len(filters), len(fs))
 

@@ -3,6 +3,7 @@ package netflow
 import (
 	"testing"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -11,19 +12,19 @@ import (
 )
 
 func TestBasic(t *testing.T) {
+	cfg := ktranslate.DefaultConfig().NetflowFormat
 	assert := assert.New(t)
 	serBuf := make([]byte, 0)
 	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
-	_, err := NewFormat(l, kt.CompressionSnappy)
+	_, err := NewFormat(l, kt.CompressionSnappy, cfg)
 	assert.Error(err)
 
-	vv := "netflow5"
-	Version = &vv
-	_, err = NewFormat(l, kt.CompressionNone)
+	cfg.Version = "netflow5"
+	_, err = NewFormat(l, kt.CompressionNone, cfg)
 	assert.Error(err)
 
-	vv = "ipfix"
-	f, err := NewFormat(l, kt.CompressionNone)
+	cfg.Version = "ipfix"
+	f, err := NewFormat(l, kt.CompressionNone, cfg)
 	assert.NoError(err)
 
 	res, err := f.To(kt.InputTesting, serBuf)

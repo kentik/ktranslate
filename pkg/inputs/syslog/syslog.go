@@ -9,6 +9,7 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"gopkg.in/mcuadros/go-syslog.v2"
 	sfmt "gopkg.in/mcuadros/go-syslog.v2/format"
 
@@ -17,6 +18,22 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 )
+
+var (
+	doUDP   bool
+	doTCP   bool
+	doUnix  bool
+	format  string
+	threads int
+)
+
+func init() {
+	flag.BoolVar(&doUDP, "syslog.udp", true, "Listen on UDP for syslog messages.")
+	flag.BoolVar(&doTCP, "syslog.tcp", true, "Listen on TCP for syslog messages.")
+	flag.BoolVar(&doUnix, "syslog.unix", false, "Listen on a Unix socket for syslog messages.")
+	flag.StringVar(&format, "syslog.format", "Automatic", "Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587.")
+	flag.IntVar(&threads, "syslog.threads", 1, "Number of threads to use to process messages.")
+}
 
 type KentikSyslog struct {
 	logger.ContextL
@@ -28,6 +45,7 @@ type KentikSyslog struct {
 	apic     *api.KentikApi
 	devices  map[string]*kt.Device
 	resolver *resolv.Resolver
+	config   *ktranslate.SyslogInputConfig
 }
 
 type SyslogMetric struct {
@@ -36,21 +54,13 @@ type SyslogMetric struct {
 	Queue    go_metrics.Gauge
 }
 
-var (
-	doUDP   = flag.Bool("syslog.udp", true, "Listen on UDP for syslog messages.")
-	doTCP   = flag.Bool("syslog.tcp", true, "Listen on TCP for syslog messages.")
-	doUnix  = flag.Bool("syslog.unix", false, "Listen on a Unix socket for syslog messages.")
-	format  = flag.String("syslog.format", "Automatic", "Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587.")
-	threads = flag.Int("syslog.threads", 1, "Number of threads to use to process messages.")
-)
-
 const (
 	CHAN_SLACK           = 10000
 	DeviceUpdateDuration = 1 * time.Hour
 	InstNameSyslog       = "ktranslate-syslog"
 )
 
-func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi, resolver *resolv.Resolver) (*KentikSyslog, error) {
+func NewSyslogSource(ctx context.Context, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi, resolver *resolv.Resolver, cfg *ktranslate.SyslogInputConfig) (*KentikSyslog, error) {
 	ks := KentikSyslog{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Syslog"}, log),
 		logchan:  logchan,
@@ -62,6 +72,7 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 		apic:     apic,
 		devices:  apic.GetDevicesAsMap(0),
 		resolver: resolver,
+		config:   cfg,
 	}
 
 	if logchan == nil {
@@ -71,7 +82,7 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 	channel := make(syslog.LogPartsChannel, CHAN_SLACK)
 	handler := syslog.NewChannelHandler(channel)
 	server := syslog.NewServer()
-	switch *format {
+	switch cfg.Format {
 	case "RFC3164":
 		server.SetFormat(syslog.RFC3164)
 	case "RFC5424":
@@ -81,30 +92,30 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 	case "Automatic":
 		server.SetFormat(syslog.Automatic)
 	default:
-		return nil, fmt.Errorf("Invalid syslog format (%s). Options are RFC3164|RFC5424|RFC6587", *format)
+		return nil, fmt.Errorf("Invalid syslog format (%s). Options are RFC3164|RFC5424|RFC6587", cfg.Format)
 	}
 
 	server.SetHandler(handler)
-	if *doUDP {
-		err := server.ListenUDP(host)
+	if cfg.EnableUDP {
+		err := server.ListenUDP(cfg.ListenAddr)
 		if err != nil {
 			return nil, fmt.Errorf("Cannot listen for syslog udp: %v", err)
 		}
-		ks.Infof("Listening for UDP on %s", host)
+		ks.Infof("Listening for UDP on %s", cfg.ListenAddr)
 	}
-	if *doTCP {
-		err := server.ListenTCP(host)
+	if cfg.EnableTCP {
+		err := server.ListenTCP(cfg.ListenAddr)
 		if err != nil {
 			return nil, fmt.Errorf("Cannot listen for syslog with tcp: %v", err)
 		}
-		ks.Infof("Listening for TCP on %s", host)
+		ks.Infof("Listening for TCP on %s", cfg.ListenAddr)
 	}
-	if *doUnix {
-		err := server.ListenUnixgram(host)
+	if cfg.EnableUnix {
+		err := server.ListenUnixgram(cfg.ListenAddr)
 		if err != nil {
 			return nil, fmt.Errorf("Cannot listen for syslog with unixgram: %v", err)
 		}
-		ks.Infof("Listening for Unixgram on %s", host)
+		ks.Infof("Listening for Unixgram on %s", cfg.ListenAddr)
 	}
 
 	err := server.Boot()
@@ -115,7 +126,7 @@ func NewSyslogSource(ctx context.Context, host string, log logger.Underlying, lo
 	ks.channel = channel
 	ks.handler = handler
 
-	go ks.run(ctx, host)
+	go ks.run(ctx, cfg.ListenAddr)
 
 	return &ks, nil
 }
@@ -172,7 +183,7 @@ func (ks *KentikSyslog) process(ctx context.Context, id int, channel syslog.LogP
 func (ks *KentikSyslog) run(ctx context.Context, host string) {
 	ks.Infof("Server ready on %s", host)
 
-	for i := 1; i <= *threads; i++ {
+	for i := 1; i <= ks.config.Threads; i++ {
 		go ks.process(ctx, i, ks.channel)
 	}
 

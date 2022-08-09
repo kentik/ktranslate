@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -46,30 +47,30 @@ const (
 	GCPPubSub         = "gcppubsub"
 )
 
-func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig, logTee chan string) (SinkImpl, error) {
+func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
 	switch sink {
 	case StdOutSink:
 		return stdout.NewSink(log, registry, logTee)
 	case FileSink:
-		return file.NewSink(log, registry)
+		return file.NewSink(log, registry, config.FileSink)
 	case KafkaSink:
-		return kafka.NewSink(log, registry)
+		return kafka.NewSink(log, registry, config.KafkaSink)
 	case NewRelicSink:
-		return nr.NewSink(log, registry, tooBig, logTee)
+		return nr.NewSink(log, registry, tooBig, logTee, config.NewRelicSink)
 	case KentikSink:
-		return kentik.NewSink(log, registry, conf)
+		return kentik.NewSink(log, registry, conf, config.KentikSink)
 	case NetSink:
-		return net.NewSink(log, registry)
+		return net.NewSink(log, registry, config.NetSink)
 	case HttpSink, SplunkSink:
-		return http.NewSink(log, registry, string(sink))
+		return http.NewSink(log, registry, string(sink), config.HTTPSink)
 	case PromSink:
-		return prom.NewSink(log, registry)
+		return prom.NewSink(log, registry, config.PrometheusSink)
 	case S3Sink:
-		return s3.NewSink(log, registry)
+		return s3.NewSink(log, registry, config.S3Sink)
 	case GCloudSink:
-		return gcloud.NewSink(log, registry)
+		return gcloud.NewSink(log, registry, config.GCloudSink)
 	case GCPPubSub:
-		return gcppubsub.NewSink(log, registry)
+		return gcppubsub.NewSink(log, registry, config.GCloudPubSubSink)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
 }

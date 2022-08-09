@@ -36,7 +36,7 @@ func (vpc *AwsVpc) checkMappings(ctx context.Context) {
 func (vpc *AwsVpc) updateMapping(ctx context.Context) error {
 	start := time.Now()
 
-	topo, allGood := FetchAllEntities(ctx, vpc, *IamRole, vpc.regions)
+	topo, allGood := FetchAllEntities(ctx, vpc, vpc.config.IAMRole, vpc.regions)
 	if !allGood {
 		vpc.Warnf("There was an error when fetching mappings.")
 	}

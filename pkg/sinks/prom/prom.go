@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -15,24 +16,33 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var (
+	listen string
+)
+
+func init() {
+	flag.StringVar(&listen, "prom_listen", ":8082", "Bind to listen for prometheus requests on.")
+}
+
 type PromSink struct {
 	logger.ContextL
 	registry go_metrics.Registry
 	metrics  *PromMetric
+	config   *ktranslate.PrometheusSinkConfig
 }
 
 type PromMetric struct {
 }
 
-var (
-	listen = flag.String("prom_listen", ":8082", "Bind to listen for prometheus requests on.")
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*PromSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.PrometheusSinkConfig) (*PromSink, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("prometheus sink config cannot be nil")
+	}
 	nr := PromSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "promSink"}, log),
 		registry: registry,
 		metrics:  &PromMetric{},
+		config:   cfg,
 	}
 
 	return &nr, nil
@@ -70,8 +80,8 @@ func (s *PromSink) listen(ctx context.Context) {
 			EnableOpenMetrics: true,
 		},
 	))
-	s.Infof("Prometheus listening on %s", *listen)
-	err := http.ListenAndServe(*listen, nil)
+	s.Infof("Prometheus listening on %s", s.config.ListenAddr)
+	err := http.ListenAndServe(s.config.ListenAddr, nil)
 	if err != nil {
 		s.Errorf("Error with Prometheus -- %v", err)
 	}

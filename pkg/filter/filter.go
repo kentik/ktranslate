@@ -1,6 +1,7 @@
 package filter
 
 import (
+	"flag"
 	"fmt"
 	"strings"
 
@@ -24,8 +25,12 @@ const (
 )
 
 var (
-	filters FilterFlag
+	filters string
 )
+
+func init() {
+	flag.StringVar(&filters, "filters", "", "Any filters to use. Format: type dimension operator value")
+}
 
 type Operator string
 
@@ -58,9 +63,9 @@ func (f FilterDefWrapper) String() string {
 	return strings.Join(set, OrToken)
 }
 
-type FilterFlag []FilterDefWrapper
+type FilterDefs []FilterDefWrapper
 
-func (ff *FilterFlag) String() string {
+func (ff *FilterDefs) String() string {
 	pts := make([]string, len(*ff))
 	for i, r := range *ff {
 		pts[i] = r.String()
@@ -68,7 +73,7 @@ func (ff *FilterFlag) String() string {
 	return strings.Join(pts, "\n")
 }
 
-func (i *FilterFlag) Set(value string) error {
+func (i *FilterDefs) Set(value string) error {
 	inner := FilterDefWrapper{}
 	for _, orSet := range strings.Split(value, OrToken) {
 		pts := strings.Split(orSet, ",")
@@ -91,9 +96,15 @@ func (i *FilterFlag) Set(value string) error {
 	return nil
 }
 
-func GetFilters(log logger.Underlying) ([]FilterWrapper, error) {
+func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error) {
+	ff := FilterDefs{}
+	for _, f := range filters {
+		if err := ff.Set(f); err != nil {
+			return nil, err
+		}
+	}
 	filterSet := make([]FilterWrapper, 0)
-	for _, fSet := range filters {
+	for _, fSet := range ff {
 		orSet := []Filter{}
 		for _, fd := range fSet {
 			switch fd.FType {

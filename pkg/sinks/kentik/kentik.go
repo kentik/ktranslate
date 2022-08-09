@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -24,8 +25,12 @@ const (
 )
 
 var (
-	relayUrl = flag.String("kentik_relay_url", "", "If set, override the kentik api url to send flow over here.")
+	relayUrl string
 )
+
+func init() {
+	flag.StringVar(&relayUrl, "kentik_relay_url", "", "If set, override the kentik api url to send flow over here.")
+}
 
 type KentikSink struct {
 	logger.ContextL
@@ -36,6 +41,7 @@ type KentikSink struct {
 	tr        *http.Transport
 	conf      *kt.KentikConfig
 	isKentik  bool
+	config    *ktranslate.KentikSinkConfig
 }
 
 type KentikMetric struct {
@@ -43,7 +49,7 @@ type KentikMetric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.KentikConfig) (*KentikSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.KentikConfig, cfg *ktranslate.KentikSinkConfig) (*KentikSink, error) {
 	return &KentikSink{
 		registry: registry,
 		conf:     conf,
@@ -52,6 +58,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.Kenti
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_kentik", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_kentik", registry),
 		},
+		config: cfg,
 	}, nil
 }
 
@@ -60,8 +67,8 @@ func (s *KentikSink) Init(ctx context.Context, format formats.Format, compressio
 		return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
 	}
 	s.KentikUrl = strings.ReplaceAll(s.conf.ApiRoot, "api.", "flow.") + "/chf"
-	if *relayUrl != "" { // If this is set, override and go directly here instead.
-		s.KentikUrl = *relayUrl
+	if v := s.config.RelayURL; v != "" { // If this is set, override and go directly here instead.
+		s.KentikUrl = v
 	}
 
 	s.isKentik = strings.Contains(strings.ToLower(s.KentikUrl), "kentik.com") // Make sure we can't feed data back into kentik in a loop.

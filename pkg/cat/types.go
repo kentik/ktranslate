@@ -4,7 +4,9 @@ import (
 	"database/sql"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
@@ -18,7 +20,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
-	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -42,49 +43,15 @@ const (
 	UDR_TYPE                    = "application_type"
 )
 
-// Config configuration parameters used by activate service
-type Config struct {
-	Listen            string
-	SslCertFile       string
-	SslKeyFile        string
-	MappingFile       string
-	Threads           int
-	ThreadsInput      int
-	MaxThreads        int
-	Format            formats.Format
-	FormatRollup      formats.Format
-	Compression       kt.Compression
-	MaxFlowPerMessage int
-	RollupAndAlpha    bool
-	UDRFile           string
-	GeoMapping        string
-	AsnMapping        string
-	DnsResolver       string
-	SampleRate        uint32
-	MaxBeforeSample   int
-	Auth              *auth.AuthConfig
-	SNMPFile          string
-	SNMPDisco         bool
-	TagMapType        maps.Mapper
-	Kentik            *kt.KentikConfig
-	VpcSource         vpc.CloudSource
-	FlowSource        flow.FlowSource
-	SyslogSource      string
-	LogTee            chan string
-	MetricsChan       chan []*kt.JCHF
-	AppMap            string
-	HttpInput         bool
-	Enricher          string
-}
-
 type KTranslate struct {
 	log          logger.ContextL
-	config       *Config
+	config       *ktranslate.Config
 	registry     go_metrics.Registry
 	metrics      *KKCMetric
 	alphaChans   []chan *Flow
 	jchfChans    []chan *kt.JCHF
 	inputChan    chan []*kt.JCHF
+	metricsChan  chan []*kt.JCHF
 	mapr         *CustomMapper
 	udrMapr      *UDRMapper
 	pgdb         *sql.DB
@@ -110,6 +77,9 @@ type KTranslate struct {
 	syslog       *syslog.KentikSyslog
 	http         *http.KentikHttpListener
 	enricher     *enrich.Enricher
+	logTee       chan string
+	authConfig   *auth.AuthConfig
+	kentikConfig *kt.KentikConfig
 }
 
 type CustomMapper struct {

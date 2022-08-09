@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -16,9 +17,15 @@ import (
 )
 
 var (
-	doCollectorStats = flag.Bool("info_collector", false, "Also send stats about this collector")
-	seenNeeded       = flag.Int("prom_seen", 10, "Number of flows needed inbound before we start writting to the collector")
+	doCollectorStats bool
+	seenNeeded       int
 )
+
+func init() {
+	flag.BoolVar(&doCollectorStats, "info_collector", false, "Also send stats about this collector")
+	flag.IntVar(&seenNeeded, "prom_seen", 10, "Number of flows needed inbound before we start writting to the collector")
+
+}
 
 type PromData struct {
 	Name  string
@@ -65,20 +72,25 @@ type PromFormat struct {
 	lastMetadata map[string]*kt.LastMetadata
 	vecTags      tagVec
 	seen         int
+	config       *ktranslate.PrometheusFormatConfig
 
 	mux sync.RWMutex
 }
 
-func NewFormat(log logger.Underlying, compression kt.Compression) (*PromFormat, error) {
+func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslate.PrometheusFormatConfig) (*PromFormat, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("prometheus format cannot be nil")
+	}
 	jf := &PromFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "promFormat"}, log),
 		vecs:         make(map[string]*prometheus.CounterVec),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 		vecTags:      map[string]map[string]int{},
+		config:       cfg,
 	}
 
-	if *doCollectorStats {
+	if cfg.EnableCollectorStats {
 		prometheus.MustRegister(prometheus.NewBuildInfoCollector())
 	}
 
@@ -112,10 +124,10 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	f.mux.Lock()
 	defer f.mux.Unlock()
 
-	if f.seen < *seenNeeded {
+	if f.seen < f.config.FlowsNeeded {
 		f.addLabels(res)
 		f.seen++
-		if f.seen == *seenNeeded {
+		if f.seen == f.config.FlowsNeeded {
 			f.Infof("Seen enough!")
 		} else {
 			f.Infof("Seen %d", f.seen)

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -40,13 +41,14 @@ type KentikDriver struct {
 	resolv       *resolv.Resolver
 	ctx          context.Context
 	config       EntConfig
+	cfg          *ktranslate.FlowInputConfig
 }
 
 type FlowMetric struct {
 	Flows go_metrics.Meter
 }
 
-func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string, resolv *resolv.Resolver) *KentikDriver {
+func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, fields string, resolv *resolv.Resolver, cfg *ktranslate.FlowInputConfig) *KentikDriver {
 	kt := KentikDriver{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "flow"}, log),
 		jchfChan:     jchfChan,
@@ -60,6 +62,7 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 		registry:     registry,
 		resolv:       resolv,
 		ctx:          ctx,
+		cfg:          cfg,
 	}
 	go kt.run(ctx) // Process flows and send them on.
 	return &kt

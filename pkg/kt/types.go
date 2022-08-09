@@ -28,7 +28,6 @@ const (
 	KENTIK_EVENT_JSON            = "KJson"
 	KENTIK_EVENT_KTRANS_METRIC   = "KTranslateMetric"
 
-	KentikAPIToken   = "KENTIK_API_TOKEN"
 	KentikAPITimeout = "KENTIK_API_TIMEOUT"
 	IndexVar         = "Index"
 	StringPrefix     = "ks_"

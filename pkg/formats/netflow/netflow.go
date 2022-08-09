@@ -8,6 +8,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -20,12 +21,21 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/netflow/session"
 )
 
+var (
+	version string
+)
+
+func init() {
+	flag.StringVar(&version, "netflow_version", "ipfix", "Version of netflow to produce: (netflow9|ipfix)")
+}
+
 type NetflowFormat struct {
 	logger.ContextL
 	s               session.Session
 	d               *netflow.Decoder
 	templateTracker templateTracker
 	version         uint16
+	config          *ktranslate.NetflowFormatConfig
 }
 
 const (
@@ -92,11 +102,10 @@ const dataSet = uint16(256)
 const templateId = uint16(256)
 const templateEntId = uint16(257)
 
-var (
-	Version = flag.String("netflow_version", "ipfix", "Version of netflow to produce: (netflow9|ipfix)")
-)
-
-func NewFormat(log logger.Underlying, comp kt.Compression) (*NetflowFormat, error) {
+func NewFormat(log logger.Underlying, comp kt.Compression, cfg *ktranslate.NetflowFormatConfig) (*NetflowFormat, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("netflow format cannot be nil")
+	}
 	s := trkdsess.New()
 	d := netflow.NewDecoder(s)
 
@@ -105,15 +114,16 @@ func NewFormat(log logger.Underlying, comp kt.Compression) (*NetflowFormat, erro
 		s:               s,
 		d:               d,
 		templateTracker: newTemplateTracker(),
+		config:          cfg,
 	}
 
-	switch *Version {
+	switch cfg.Version {
 	case "ipfix":
 		ipf.version = ipfix.Version
 	case "netflow9":
 		ipf.version = netflow9.Version
 	default:
-		return nil, fmt.Errorf("You used an unsupported netflow version: %s. Use netflow9 or ipfix.", *Version)
+		return nil, fmt.Errorf("You used an unsupported netflow version: %s. Use netflow9 or ipfix.", cfg.Version)
 	}
 
 	if comp != kt.CompressionNone {

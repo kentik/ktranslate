@@ -15,6 +15,7 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/formats/nrm"
@@ -34,53 +35,15 @@ const (
 )
 
 var (
+	nrAccount    string
+	estimateSize bool
+	nrRegion     string
+	nrCheckJson  bool
+
 	NrUrl        = "https://insights-collector.newrelic.com/v1/accounts/%s/events"
 	NrMetricsUrl = "https://metric-api.newrelic.com/metric/v1"
 	NrLogUrl     = "https://log-api.newrelic.com/log/v1"
-)
-
-type NRSink struct {
-	logger.ContextL
-	NRAccount   string
-	NRApiKey    string
-	NRUrl       string
-	NRUrlEvent  string
-	NRUrlMetric string
-	NRUrlLog    string
-
-	client      *http.Client
-	tr          *http.Transport
-	registry    go_metrics.Registry
-	metrics     *NRMetric
-	format      formats.Format
-	compression kt.Compression
-	estimate    bool
-	checkJson   bool
-	fmtr        *nrm.NRMFormat
-	tooBig      chan int
-	logTee      chan string
-}
-
-type NRMetric struct {
-	DeliveryErr     go_metrics.Meter
-	DeliveryWin     go_metrics.Meter
-	DeliveryMetrics go_metrics.Meter
-	DeliveryLogs    go_metrics.Meter
-}
-
-type NRResponce struct {
-	Success   bool   `json:"success"`
-	Uuid      string `json:"uuid"`
-	RequestId string `json:"requestId"`
-}
-
-var (
-	NrAccount    = flag.String("nr_account_id", kt.LookupEnvString("NR_ACCOUNT_ID", ""), "If set, sends flow to New Relic")
-	EstimateSize = flag.Bool("nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
-	NrRegion     = flag.String("nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU")
-	NrCheckJson  = flag.Bool("nr_check_json", false, "Verify body is valid json before sending on")
-
-	regions = map[string]map[string]string{
+	regions      = map[string]map[string]string{
 		REGION_US: map[string]string{
 			"events":  "https://insights-collector.newrelic.com/v1/accounts/%s/events",
 			"metrics": "https://metric-api.newrelic.com/metric/v1",
@@ -104,7 +67,50 @@ var (
 	}
 )
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string) (*NRSink, error) {
+func init() {
+	flag.StringVar(&nrAccount, "nr_account_id", kt.LookupEnvString("NR_ACCOUNT_ID", ""), "If set, sends flow to New Relic")
+	flag.BoolVar(&estimateSize, "nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
+	flag.StringVar(&nrRegion, "nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU")
+	flag.BoolVar(&nrCheckJson, "nr_check_json", false, "Verify body is valid json before sending on")
+}
+
+type NRSink struct {
+	logger.ContextL
+	NRAccount   string
+	NRApiKey    string
+	NRUrl       string
+	NRUrlEvent  string
+	NRUrlMetric string
+	NRUrlLog    string
+
+	client      *http.Client
+	tr          *http.Transport
+	registry    go_metrics.Registry
+	metrics     *NRMetric
+	format      formats.Format
+	compression kt.Compression
+	estimate    bool
+	checkJson   bool
+	fmtr        *nrm.NRMFormat
+	tooBig      chan int
+	logTee      chan string
+	config      *ktranslate.NewRelicSinkConfig
+}
+
+type NRMetric struct {
+	DeliveryErr     go_metrics.Meter
+	DeliveryWin     go_metrics.Meter
+	DeliveryMetrics go_metrics.Meter
+	DeliveryLogs    go_metrics.Meter
+}
+
+type NRResponce struct {
+	Success   bool   `json:"success"`
+	Uuid      string `json:"uuid"`
+	RequestId string `json:"requestId"`
+}
+
+func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, cfg *ktranslate.NewRelicSinkConfig) (*NRSink, error) {
 	nr := NRSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nrSink"}, log),
 		NRApiKey: os.Getenv(EnvNrApiKey),
@@ -115,10 +121,11 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 			DeliveryMetrics: go_metrics.GetOrRegisterMeter("delivery_metrics_nr", registry),
 			DeliveryLogs:    go_metrics.GetOrRegisterMeter("delivery_logs_nr", registry),
 		},
-		estimate:  *EstimateSize,
-		checkJson: *NrCheckJson,
+		estimate:  cfg.EstimateOnly,
+		checkJson: cfg.ValidateJSON,
 		tooBig:    tooBig,
 		logTee:    logTee,
+		config:    cfg,
 	}
 
 	return &nr, nil
@@ -126,7 +133,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 
 func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
 	// set region if this is set.
-	rval := strings.ToLower(*NrRegion)
+	rval := strings.ToLower(s.config.Region)
 	switch rval {
 	case "": // noop
 	case REGION_US, REGION_EU, REGION_GOV, REGION_US_STAGING:
@@ -134,10 +141,10 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		NrMetricsUrl = regions[rval]["metrics"]
 		s.NRUrlLog = regions[rval]["logs"]
 	default:
-		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", *NrRegion)
+		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", s.config.Region)
 	}
 
-	s.NRAccount = *NrAccount
+	s.NRAccount = s.config.Account
 	s.NRUrl = NrUrl
 	s.format = format
 	s.compression = compression

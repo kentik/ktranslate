@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -27,10 +28,16 @@ const (
 )
 
 var (
-	rollups RollupFlag
-	keyJoin = flag.String("rollup_key_join", "^", "Token to use to join dimension keys together")
-	topK    = flag.Int("rollup_top_k", 10, "Export only these top values")
+	rollups string
+	keyJoin string
+	topK    int
 )
+
+func init() {
+	flag.StringVar(&rollups, "rollups", "", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
+	flag.StringVar(&keyJoin, "rollup_key_join", "^", "Token to use to join dimension keys together")
+	flag.IntVar(&topK, "rollup_top_k", 10, "Export only these top values")
+}
 
 type Roller interface {
 	Add([]map[string]interface{})
@@ -65,9 +72,9 @@ func (r *RollupDef) String() string {
 	return fmt.Sprintf("Name: %s, Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.Name, r.Method, r.Sample, r.Metrics, r.Dimensions)
 }
 
-type RollupFlag []RollupDef
+type RollupDefs []RollupDef
 
-func (rf *RollupFlag) String() string {
+func (rf *RollupDefs) String() string {
 	pts := make([]string, len(*rf))
 	for i, r := range *rf {
 		pts[i] = r.String()
@@ -75,7 +82,7 @@ func (rf *RollupFlag) String() string {
 	return strings.Join(pts, "\n")
 }
 
-func (i *RollupFlag) Set(value string) error {
+func (i *RollupDefs) Set(value string) error {
 	pts := strings.Split(value, ",")
 	if len(pts) < 3 {
 		return fmt.Errorf("Rollup flag is defined by type, name, metric, dimension 1, dimension 2, ..., dimension n")
@@ -103,7 +110,13 @@ func (i *RollupFlag) Set(value string) error {
 	return nil
 }
 
-func GetRollups(log logger.Underlying) ([]Roller, error) {
+func GetRollups(log logger.Underlying, cfg *ktranslate.RollupConfig) ([]Roller, error) {
+	rollups := RollupDefs{}
+	for _, r := range cfg.Formats {
+		if err := rollups.Set(r); err != nil {
+			return nil, err
+		}
+	}
 	rolls := make([]Roller, 0)
 	for _, rf := range rollups {
 		switch rf.Method {
@@ -114,7 +127,7 @@ func GetRollups(log logger.Underlying) ([]Roller, error) {
 			}
 			rolls = append(rolls, ur)
 		default:
-			statr, err := newStatsRollup(log, rf)
+			statr, err := newStatsRollup(log, rf, cfg)
 			if err != nil {
 				return nil, err
 			}
@@ -151,8 +164,6 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.multiMetrics = make([][]string, 0)
 	r.dims = make([]string, 0)
 	r.multiDims = make([][]string, 0)
-	r.keyJoin = *keyJoin
-	r.topK = *topK
 	r.dtime = time.Now()
 	r.name = rd.Name
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")

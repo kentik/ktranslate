@@ -15,6 +15,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/timing"
 
 	"github.com/google/uuid"
@@ -28,7 +29,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/features"
 	"github.com/kentik/ktranslate/pkg/eggs/properties"
 
-	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/cmetrics"
 	"github.com/kentik/ktranslate/pkg/util/logger"
 )
@@ -39,6 +39,26 @@ const (
 	readinessWaitGroupContextKey = "_baseserver_ready_wg"
 	subContextNameContextKey     = "_baseserver_subctx"
 )
+
+var (
+	serviceName  string
+	logLevel     string
+	logToStdout  bool
+	metricsDest  string
+	metaListen   string
+	ollyDataset  string
+	ollyWriteKey string
+)
+
+func init() {
+	flag.StringVar(&serviceName, "service_name", "", "Service identifier")
+	flag.StringVar(&logLevel, "log_level", "info", "Logging Level")
+	flag.BoolVar(&logToStdout, "stdout", false, "Log to stdout")
+	flag.StringVar(&metricsDest, "metrics", "none", "Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003")
+	flag.StringVar(&metaListen, "metalisten", "localhost:0", "HTTP interface and port to bind on")
+	flag.StringVar(&ollyDataset, "olly_dataset", "", "Olly dataset name")
+	flag.StringVar(&ollyWriteKey, "olly_write_key", "", "Olly dataset name")
+}
 
 type BaseServerConfiguration struct {
 	// base service properties
@@ -68,9 +88,6 @@ type BaseServerConfiguration struct {
 	HealthCheckStartupDelay time.Duration
 	HealthCheckPeriod       time.Duration
 	HealthCheckTimeout      time.Duration
-
-	// for tests
-	SkipParseFlags bool
 
 	// props
 	PropsRefreshPeriod time.Duration
@@ -105,32 +122,38 @@ type BaseServer struct {
 	propertyService properties.PropertyService
 	featureService  features.FeatureService
 	ollyBuilder     *olly.Builder
+	config          *ktranslate.ServerConfig
 }
 
 // Perform baseserver initialization steps -- hopefully 9 out of 10 services can just call this and Run()
-func Boilerplate(serviceName string, versionInfo version.VersionInfo, defaultPropertyBacking properties.PropertyBacking, mextra interface{}) *BaseServer {
-	bs := NewBaseServer(serviceName, versionInfo, "chf", defaultPropertyBacking)
-	bs.ParseFlags()
+func Boilerplate(serviceName string, versionInfo version.VersionInfo, defaultPropertyBacking properties.PropertyBacking, mextra interface{}, cfg *ktranslate.ServerConfig) *BaseServer {
+	bs := NewBaseServer(serviceName, versionInfo, "chf", defaultPropertyBacking, cfg)
 	bs.Init(mextra)
 	setGlobalBaseServer(bs)
 	return bs
 }
 
 // For when you need to set metrics prefix.
-func BoilerplateWithPrefix(serviceName string, versionInfo version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking, mextra interface{}) *BaseServer {
-	bs := NewBaseServer(serviceName, versionInfo, metricsPrefix, defaultPropertyBacking)
-	bs.ParseFlags()
+func BoilerplateWithPrefix(serviceName string, versionInfo version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking, mextra interface{}, cfg *ktranslate.ServerConfig) *BaseServer {
+	bs := NewBaseServer(serviceName, versionInfo, metricsPrefix, defaultPropertyBacking, cfg)
 	bs.Init(mextra)
 	setGlobalBaseServer(bs)
 	return bs
 }
 
-func NewBaseServer(serviceName string, version version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking) *BaseServer {
+func NewBaseServer(serviceName string, version version.VersionInfo, metricsPrefix string, defaultPropertyBacking properties.PropertyBacking, cfg *ktranslate.ServerConfig) *BaseServer {
 	conf := BaseServerConfigurationDefaults
-	conf.ServiceName = serviceName
+	conf.ServiceName = cfg.ServiceName
 	conf.VersionInfo = version
 	conf.MetricsPrefix = metricsPrefix
 	conf.LogPrefix = serviceName + " "
+
+	conf.LogLevel = cfg.LogLevel
+	conf.LogToStdout = cfg.LogToStdout
+	conf.MetricsDestination = cfg.MetricsEndpoint
+	conf.MetaListen = cfg.MetaListenAddr
+	conf.OllyDataset = cfg.OllyDataset
+	conf.OllyWriteKey = cfg.OllyWriteKey
 
 	props := properties.NewPropertyService(
 		properties.NewFileSystemPropertyBacking("/props"), // highest prio: dynamic FS props
@@ -163,44 +186,6 @@ func (bs *BaseServer) GetHealthCheckHandler() func(w http.ResponseWriter, r *htt
 		time.Sleep(100 * time.Millisecond)
 	}
 	return nil
-}
-
-// Parse standard golang command line flags (both those defined by the service and baseserver).
-// Exits if the resulting configuration is broken or eg. if -v is specified
-func (bs *BaseServer) ParseFlags() {
-	if bs.SkipParseFlags {
-		return
-	}
-
-	flagVersion := flag.CommandLine.Bool("v", false, "Show version and build information")
-
-	flag.CommandLine.StringVar(&bs.ServiceName, "service_name", bs.ServiceName, "Service identifier")
-	flag.CommandLine.StringVar(&bs.LogLevel, "log_level", bs.LogLevel, "Logging Level")
-	flag.CommandLine.BoolVar(&bs.LogToStdout, "stdout", bs.LogToStdout, "Log to stdout")
-	flag.CommandLine.StringVar(&bs.MetricsDestination, "metrics", bs.MetricsDestination, "Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003")
-	flag.CommandLine.StringVar(&bs.MetaListen, "metalisten", bs.MetaListen, "HTTP interface and port to bind on")
-	flag.CommandLine.StringVar(&bs.OllyDataset, "olly_dataset", bs.OllyDataset, "Olly dataset name")
-	flag.CommandLine.StringVar(&bs.OllyWriteKey, "olly_write_key", bs.OllyWriteKey, "Olly dataset name")
-
-	flag.Parse()
-
-	if *flagVersion {
-		fmt.Printf("%s: %s\nBuilt on %s %s (%s) \n", bs.ServiceName, bs.VersionInfo.Version,
-			bs.VersionInfo.Platform, bs.VersionInfo.Distro, bs.VersionInfo.Date)
-		os.Exit(0)
-	}
-
-	// We need the log level checked after so that the env var takes precedince from the flag.
-	bs.LogLevel = kt.LookupEnvString("KENTIK_LOG_LEVEL", bs.LogLevel)
-
-	// validate our configuration
-	if bs.ServiceName == "" {
-		bs.Fail(fmt.Sprintf("Bad value for ServiceName [%s]", bs.ServiceName))
-	}
-
-	if bs.OllyWriteKey == "" {
-		bs.OllyWriteKey = os.Getenv("OLLY_WRITE_KEY")
-	}
 }
 
 // Perform some early initialization steps -- things it makes sense to do before callers start building/initializing

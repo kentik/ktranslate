@@ -7,10 +7,21 @@ import (
 
 	"cloud.google.com/go/pubsub"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
+
+var (
+	gcpPubSubProjectID string
+	gcpPubSubTopic     string
+)
+
+func init() {
+	flag.StringVar(&gcpPubSubProjectID, "gcp_pubsub_project_id", "", "GCP PubSub Project ID to use")
+	flag.StringVar(&gcpPubSubTopic, "gcp_pubsub_topic", "", "GCP PubSub Topic to publish to")
+}
 
 type GCPPubSub struct {
 	logger.ContextL
@@ -20,6 +31,7 @@ type GCPPubSub struct {
 	projectID string
 	topicID   string
 	topic     *pubsub.Topic
+	config    *ktranslate.GCloudPubSubSinkConfig
 }
 
 type GCPPubSubMetric struct {
@@ -27,21 +39,17 @@ type GCPPubSubMetric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-var (
-	GCPPubSubProjectID = flag.String("gcp_pubsub_project_id", "", "GCP PubSub Project ID to use")
-	GCPPubSubTopic     = flag.String("gcp_pubsub_topic", "", "GCP PubSub Topic to publish to")
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCPPubSub, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.GCloudPubSubSinkConfig) (*GCPPubSub, error) {
 	return &GCPPubSub{
 		registry:  registry,
-		projectID: *GCPPubSubProjectID,
-		topicID:   *GCPPubSubTopic,
+		projectID: cfg.ProjectID,
+		topicID:   cfg.Topic,
 		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "gcppubsub"}, log),
 		metrics: &GCPPubSubMetric{
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_gcppubsub", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_gcppubsub", registry),
 		},
+		config: cfg,
 	}, nil
 }
 

@@ -11,10 +11,25 @@ import (
 
 	"cloud.google.com/go/storage"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
+
+var (
+	gcloudBucket      string
+	gcloudPrefix      string
+	gcloudContentType string
+	flushDurSec       int
+)
+
+func init() {
+	flag.StringVar(&gcloudBucket, "gcloud_bucket", "", "GCloud Storage Bucket to write flows to")
+	flag.StringVar(&gcloudPrefix, "gcloud_prefix", "/kentik", "GCloud Storage object prefix")
+	flag.StringVar(&gcloudContentType, "gcloud_content_type", "application/json", "GCloud Storage Content Type")
+	flag.IntVar(&flushDurSec, "gcloud_flush_sec", 60, "Create a new output file every this many seconds")
+}
 
 type GCloudSink struct {
 	logger.ContextL
@@ -27,6 +42,7 @@ type GCloudSink struct {
 	contentType string
 	buf         *bytes.Buffer
 	mux         sync.RWMutex
+	config      *ktranslate.GCloudSinkConfig
 }
 
 type GCloudMetric struct {
@@ -34,25 +50,19 @@ type GCloudMetric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-var (
-	GCloudBucket      = flag.String("gcloud_bucket", "", "GCloud Storage Bucket to write flows to")
-	GCloudPrefix      = flag.String("gcloud_prefix", "/kentik", "GCloud Storage object prefix")
-	GCloudContentType = flag.String("gcloud_content_type", "application/json", "GCloud Storage Content Type")
-	FlushDurSec       = flag.Int("gcloud_flush_sec", 60, "Create a new output file every this many seconds")
-)
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry) (*GCloudSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.GCloudSinkConfig) (*GCloudSink, error) {
 	return &GCloudSink{
 		registry:    registry,
-		Bucket:      *GCloudBucket,
-		prefix:      *GCloudPrefix,
-		contentType: *GCloudContentType,
+		Bucket:      cfg.Bucket,
+		prefix:      cfg.Prefix,
+		contentType: cfg.ContentType,
 		ContextL:    logger.NewContextLFromUnderlying(logger.SContext{S: "gcloudSink"}, log),
 		metrics: &GCloudMetric{
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_gcloud", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_gcloud", registry),
 		},
-		buf: bytes.NewBuffer(make([]byte, 0)),
+		buf:    bytes.NewBuffer(make([]byte, 0)),
+		config: cfg,
 	}, nil
 }
 
@@ -76,10 +86,10 @@ func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compressio
 		s.suffix = "." + string(compression)
 	}
 
-	s.Infof("System connected to gcloud, bucket is %s, dumping on %v", s.Bucket, time.Duration(*FlushDurSec)*time.Second)
+	s.Infof("System connected to gcloud, bucket is %s, dumping on %v", s.Bucket, time.Duration(s.config.FlushIntervalSeconds)*time.Second)
 
 	go func() {
-		dumpTick := time.NewTicker(time.Duration(*FlushDurSec) * time.Second)
+		dumpTick := time.NewTicker(time.Duration(s.config.FlushIntervalSeconds) * time.Second)
 		defer dumpTick.Stop()
 
 		for {

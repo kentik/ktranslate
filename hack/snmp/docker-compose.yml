@@ -1,14 +1,70 @@
 version: "3.9"
 services:
   ktranslate:
-    image: kentik/ktranslate:v2
+    image: kentik/ktranslate:latest
     network_mode: host
-    command:
-      - --format=json
-      - --snmp=/snmp.yml
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /tmp/ktranslate.toml
+        listenaddr: "127.0.0.1:8081"
+        udrsfile: "/etc/ktranslate/udr.csv"
+        geofile: "/etc/ktranslate/GeoLite2-Country.mmdb"
+        asnfile: "/etc/ktranslate/GeoLite2-ASN.mmdb"
+        processingthreads: 1
+        inputthreads: 1
+        maxthreads: 1
+        format: "json"
+        compression: "none"
+        sinks: "stdout"
+        maxflowspermessage: 10000
+        rollupinterval: 0
+        rollupandalpha: false
+        samplerate: 1
+        samplemin: 1
+        enablesnmpdiscovery: false
+        kentikplan: 0
+        apibaseurl: "https://api.kentik.com"
+        enableteelogs: false
+        enablehttpinput: false
+        filters: []
+
+        netflowformat:
+          version: "netflow5"
+
+        prometheussink:
+          listenaddr: ":9080"
+
+        server:
+          servicename: "ktranslate"
+          loglevel: "info"
+          logtostdout: false
+          metricsendpoint: "none"
+          metalistenaddr: ""
+          ollydataset: ""
+          ollywritekey: ""
+
+        api:
+          devicefile: "/etc/ktranslate/devices.json"
+
+        snmpinput:
+          enable: true
+          snmpfile: "/snmp.yml"
+          dumpmibs: false
+          flowonly: false
+          jsontoyaml: ""
+          walktarget: ""
+          walkoid: ".1.3.6.1.2.1"
+          walkformat: ""
+          outputfile: ""
+          discoveryintervalminutes: 0
+          discoveryonstart: false
+          validatemibs: false
+          pollnowtarget: ""
+        EOF
+        ktranslate --config /tmp/ktranslate.toml
     restart: always
-    ports:
-      - 9995:9995/udp
     volumes:
       - type: bind
         source: ./snmp.yml
