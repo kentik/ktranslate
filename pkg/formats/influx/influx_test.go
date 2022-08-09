@@ -58,3 +58,38 @@ line2`,
 	assert.Contains(str, "line1")
 	assert.Contains(str, "line2")
 }
+
+const (
+	clean = "the quick red fox jumps over the lazy brown dogs"
+	dirty = `the quick red fox
+			jumps over
+			the lazy brown dogs`
+)
+
+func BenchmarkPrepareTagValueContainsAnyClean(b *testing.B) {
+	benchmarkPrepareTagValueContainsAny(b, clean)
+}
+
+func BenchmarkPrepareTagValueContainsAnyDirty(b *testing.B) {
+	benchmarkPrepareTagValueContainsAny(b, dirty)
+}
+
+func benchmarkPrepareTagValueContainsAny(b *testing.B, s string) {
+	for i := 0; i < b.N; i++ {
+		prepareTagValue(s)
+	}
+}
+
+func BenchmarkPrepareTagValueMapClean(b *testing.B) {
+	benchmarkPrepareTagValueMap(b, clean)
+}
+
+func BenchmarkPrepareTagValueMapDirty(b *testing.B) {
+	benchmarkPrepareTagValueMap(b, dirty)
+}
+
+func benchmarkPrepareTagValueMap(b *testing.B, s string) {
+	for i := 0; i < b.N; i++ {
+		prepareTagValueMap(s)
+	}
+}

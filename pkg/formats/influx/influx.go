@@ -199,11 +199,26 @@ func prepareTagValue(s string) string {
 		for _, c := range s {
 			if !strings.ContainsRune(invalidTagChars, c) {
 				clean.WriteRune(c)
+			} else {
+				clean.WriteRune(' ')
 			}
 		}
 		return clean.String()
 	}
 	return s
+}
+
+func prepareTagValueMap(s string) string {
+	swap := func(r rune) rune {
+		switch {
+		case r >= 0x00 && r <= 0x1f:
+			return ' '
+		case r == 0x7f:
+			return ' '
+		}
+		return r
+	}
+	return strings.Map(swap, s)
 }
 
 func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
