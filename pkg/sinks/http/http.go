@@ -24,14 +24,14 @@ var (
 	targetURL          string
 	insecureSkipVerify bool
 	timeoutSec         int
-	headers            string
+	headers            HeaderFlag
 )
 
 func init() {
 	flag.StringVar(&targetURL, "http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
 	flag.BoolVar(&insecureSkipVerify, "http_insecure", false, "Allow insecure urls.")
 	flag.IntVar(&timeoutSec, "http_timeout_sec", 30, "Timeout each request after this long.")
-	flag.StringVar(&headers, "http_header", "", "Any custom http headers to set on outbound requests")
+	flag.Var(&headers, "http_header", "Any custom http headers to set on outbound requests")
 }
 
 type HttpSink struct {
