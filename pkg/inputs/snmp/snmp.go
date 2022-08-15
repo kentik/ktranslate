@@ -543,7 +543,9 @@ func cleanForSave(cfg *kt.SnmpConfig) {
 		for k, v := range m {
 			if nk, ok := matchesPrefix(k, p); ok {
 				delete(m, k)
-				m[nk] = v
+				if v != "" {
+					m[nk] = v
+				}
 			} else { // Just delete.
 				delete(m, k)
 			}
