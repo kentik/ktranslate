@@ -151,7 +151,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	}
 
 	// We only want to run a disco on start when restartCount is 0. Otherwise you end up doing 2 discos if a new device is found on start.
-	runOnStart := *snmpDiscoSt
+	runOnStart := cfg.DiscoveryOnStart
 	if restartCount > 0 {
 		runOnStart = false
 	}
@@ -159,8 +159,8 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// Now, wait for sigusr2 to re-do or if there's a discovery with new devices.
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
-	if v := cfg.DiscoveryIntervalMinutes; v > 0 { // If we are re-running snmp discovery every interval, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, log, v, cfg.DiscoveryOnStart, cfg)
+	if v := cfg.DiscoveryIntervalMinutes; v > 0 || runOnStart { // If we are re-running snmp discovery every interval AND/OR running on start, start the ticker here.
+		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg)
 	}
 
 	// Block here
