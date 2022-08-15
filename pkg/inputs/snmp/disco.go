@@ -144,10 +144,6 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 
 func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig) {
 	pt := time.Duration(pollTimeMin) * time.Minute
-	log.Infof("Running SNMP Discovery Loop every %v", pt)
-	discoCheck := time.NewTicker(pt)
-	defer discoCheck.Stop()
-
 	check := func() {
 		stats, err := Discover(ctx, log, pt, cfg)
 		if err != nil {
@@ -165,6 +161,13 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL,
 	if checkNow {
 		check()
 	}
+	if pollTimeMin == 0 { // Don't actually keep running discovery, just exit now.
+		return
+	}
+
+	log.Infof("Running SNMP Discovery Loop every %v", pt)
+	discoCheck := time.NewTicker(pt)
+	defer discoCheck.Stop()
 
 	for {
 		select {
