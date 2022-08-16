@@ -170,12 +170,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: ktranslate-discovery-claim
 spec:
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
+  storageClassName: "" # Empty string must be explicitly set otherwise default StorageClass will be set
+  volumeName: ktranslate-pv-volume
+metadata:
+  name: ktranslate-discovery-claim
 
 ---
 apiVersion: v1

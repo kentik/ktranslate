@@ -14,13 +14,6 @@ spec:
       labels:
         app: ktranslate
     spec:
-      initContainers:
-      - name: ensure-device-file
-        image: alpine
-        command: ["touch", "/path/to/your/devices.yaml"]
-        volumeMounts:
-          - name: ktranslate-device-list
-            mountPath: /path/to/your
       containers:
       - name: ktranslate
         image: docker.io/kentik/ktranslate:v2
@@ -38,7 +31,7 @@ spec:
               key: nr_account_id
         args:
           - --metalisten=0.0.0.0:8083
-          - --snmp=/etc/ktranslate/snmp-base.yaml
+          - --snmp=/data/snmp-base.yaml
           - --metrics=jchf
           - --tee_logs=true
           - --snmp_discovery_on_start=true
@@ -70,18 +63,12 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
         volumeMounts:
-          - name: ktranslate-config
-            mountPath: /etc/ktranslate/snmp-base.yaml
-            subPath: snmp-base.yaml
-          - name: ktranslate-device-list
-            mountPath: /path/to/your
+          - name: ktranslate-config-claim
+            mountPath: /data
       volumes:
-        - name: ktranslate-config
-          configMap:
-            name: ktranslate-config
-        - name: ktranslate-device-list
-          emptyDir: {}
-
+        - name: ktranslate-config-claim
+          hostPath:
+            path: /mnt/data/
 
 ---
 apiVersion: v1
@@ -117,36 +104,32 @@ spec:
 
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: PersistentVolumeClaim
 metadata:
-  name: ktranslate-config
-data:
-  snmp-base.yaml: |
-    devices: "@/path/to/your/devices.yaml"
-    trap:
-      listen: 0.0.0.0:1620
-    discovery:
-      cidrs:
-      - 10.10.0.0/24
-      ignore_list: []
-      debug: false
-      ports:
-      - 161
-      default_communities:
-      - public
-      default_v3: null
-      add_devices: true
-      add_mibs: true
-      threads: 4
-      replace_devices: true
-      check_all_ips: true
-    global:
-      poll_time_sec: 300
-      mib_profile_dir: /etc/ktranslate/profiles
-      mibs_enabled:
-      - IF-MIB
-      timeout_ms: 3000
-      retries: 0
+  name: ktranslate-config-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ktranslate-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
 
 ---
 apiVersion: v1
