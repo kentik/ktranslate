@@ -506,7 +506,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								getMib(attrNew, ip)
 								results = append(results, InfluxData{
-									Name:        *Prefix + "if",
+									Name:        *Prefix + "IF-MIB::if",
 									FieldsFloat: map[string]float64{"IfInUtilization": float64(inBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
@@ -527,7 +527,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								getMib(attrNew, ip)
 								results = append(results, InfluxData{
-									Name:        *Prefix + "if",
+									Name:        *Prefix + "IF-MIB::if",
 									FieldsFloat: map[string]float64{"IfOutUtilization": float64(outBytes*8*100) / float64(uptimeSpeed)},
 									Timestamp:   in.Timestamp * 1000000000,
 									Tags:        attrNew,
