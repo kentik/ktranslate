@@ -32,11 +32,12 @@ type InfluxMetrics struct {
 }
 
 type InfluxData struct {
-	Name        string
-	FieldsFloat map[string]float64
-	Fields      map[string]int64
-	Tags        map[string]interface{}
-	Timestamp   int64
+	Name         string
+	FieldsFloat  map[string]float64
+	Fields       map[string]int64
+	FieldsString map[string]string
+	Tags         map[string]interface{}
+	Timestamp    int64
 }
 
 var (
@@ -71,11 +72,12 @@ func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
 		return nil
 	}
 	d := InfluxData{
-		Name:        s[0].Name,
-		Tags:        s[0].Tags,
-		Timestamp:   s[0].Timestamp,
-		FieldsFloat: map[string]float64{},
-		Fields:      map[string]int64{},
+		Name:         s[0].Name,
+		Tags:         s[0].Tags,
+		Timestamp:    s[0].Timestamp,
+		FieldsFloat:  map[string]float64{},
+		Fields:       map[string]int64{},
+		FieldsString: map[string]string{},
 	}
 
 	for _, f := range s {
@@ -84,6 +86,9 @@ func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
 		}
 		for k, v := range f.Fields {
 			d.Fields[k] = v
+		}
+		for k, v := range f.FieldsString {
+			d.FieldsString[k] = v
 		}
 	}
 
@@ -168,6 +173,15 @@ line:
 					enc.AddField(k, fv)
 					if enc.Err() != nil {
 						f.report(enc.Err(), "float field '%s'='%g'", k, v)
+						continue line
+					}
+				}
+			}
+			for k, v := range l.FieldsString {
+				if fv, ok := lineprotocol.StringValue(prepareTagValueMap(v)); ok {
+					enc.AddField(k, fv)
+					if enc.Err() != nil {
+						f.report(enc.Err(), "string field '%s'='%s'", k, v)
 						continue line
 					}
 				}
@@ -490,6 +504,9 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
 				})
+				if sv, ok := in.CustomStr[kt.StringPrefix+m]; ok {
+					results[len(results)-1].FieldsString = map[string]string{m + "_str": sv}
+				}
 			}
 		}
 	}
