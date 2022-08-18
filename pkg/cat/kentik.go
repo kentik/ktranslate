@@ -202,7 +202,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If we have a kentik sink, send on here.
-	if kc.kentikConfig != nil {
+	if kc.kentik != nil {
 		go kc.kentik.SendKentik(evt, cid, senderId, offset)
 	}
 
