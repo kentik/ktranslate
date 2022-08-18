@@ -40,7 +40,7 @@ const (
 	MAX_ATTR_FOR_SNMP = 64
 )
 
-func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.MetricInfo, lastMetadata *kt.LastMetadata) {
+func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.MetricInfo, lastMetadata *kt.LastMetadata, stripMetrics bool) {
 	mapr := in.Flatten()
 	for k, v := range mapr {
 		if DroppedAttrs[k] {
@@ -50,7 +50,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 		if _, ok := metrics[k]; ok { // Skip because this one is a metric, not an attribute.
 			continue
 		}
-		if strings.HasPrefix(k, kt.StringPrefix) {
+		if stripMetrics && strings.HasPrefix(k, kt.StringPrefix) {
 			if _, ok := metrics[k[len(kt.StringPrefix):]]; ok { // Skip because this one is a metric, not an attribute.
 				continue
 			}

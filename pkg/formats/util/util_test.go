@@ -294,7 +294,7 @@ func TestDropOnFilter(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		SetAttr(test.attr, test.in, test.metrics, &test.lm)
+		SetAttr(test.attr, test.in, test.metrics, &test.lm, false)
 		isIf := false
 		for k, _ := range test.attr {
 			if strings.HasPrefix(k, "if_") {

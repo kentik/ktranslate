@@ -371,7 +371,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 
@@ -399,7 +399,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	attr := map[string]interface{}{}
 	metrics := map[string]kt.MetricInfo{"in_bytes": {}, "out_bytes": {}, "in_pkts": {}, "out_pkts": {}, "latency_ms": {}}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m := range metrics {
@@ -429,7 +429,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
 	f.mux.RUnlock()
 	ip := attr["src_addr"]
 
@@ -472,7 +472,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
 	ip := attr["src_ip"]
 
 	profileName := "snmp"
