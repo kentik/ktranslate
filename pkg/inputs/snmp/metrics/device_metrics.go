@@ -216,7 +216,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
 		dst.Provider = dm.conf.Provider
 		dst.CustomStr["Error"] = dmr.Error
-		dst.CustomStr[kt.IndexVar] = idx
+		dst.CustomStr[kt.IndexVar] = strings.TrimPrefix(idx, ".")
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
