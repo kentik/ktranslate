@@ -362,7 +362,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0, len(metrics))
 	lost := 0.0
@@ -424,7 +424,7 @@ func (f *NRMFormat) fromKflow(in *kt.JCHF) []NRMetric {
 	attr := map[string]interface{}{}
 	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0)
 
@@ -462,7 +462,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	if f.lastMetadata[in.DeviceName] == nil {
 		f.Debugf("Missing device metadata for %s", in.DeviceName)
 	}
@@ -506,7 +506,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	if f.lastMetadata[in.DeviceName] == nil {
 		f.Debugf("Missing interface metadata for %s", in.DeviceName)
 	}
@@ -611,7 +611,7 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 	attr := map[string]interface{}{}
 	metrics := map[string]kt.MetricInfo{"name": kt.MetricInfo{}, "value": kt.MetricInfo{}, "count": kt.MetricInfo{}, "one-minute": kt.MetricInfo{}, "95-percentile": kt.MetricInfo{}, "du": kt.MetricInfo{}}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0)
 

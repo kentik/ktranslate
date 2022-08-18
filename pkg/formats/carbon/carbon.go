@@ -113,7 +113,7 @@ func (f *CarbonFormat) fromKflow(in *kt.JCHF) []*CarbonData {
 		"out_pkts":   kt.MetricInfo{},
 		"latency_ms": kt.MetricInfo{},
 	}
-	util.SetAttr(attr, in, metrics, nil)
+	util.SetAttr(attr, in, metrics, nil, false)
 	metricData := []*CarbonData{}
 	for m, _ := range metrics {
 		v := int64(0)

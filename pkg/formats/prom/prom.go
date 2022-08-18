@@ -208,7 +208,7 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 
@@ -240,7 +240,7 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	attr := map[string]interface{}{}
 	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
@@ -274,7 +274,7 @@ func (f *PromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []PromData {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
 	f.mux.RLock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
@@ -300,7 +300,7 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	defer f.mux.RUnlock()
-	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName])
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	ms := map[string]int64{}
 	msF := map[string]float64{}
 	for m, _ := range metrics {
