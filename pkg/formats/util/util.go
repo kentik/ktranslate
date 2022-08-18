@@ -50,6 +50,11 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 		if _, ok := metrics[k]; ok { // Skip because this one is a metric, not an attribute.
 			continue
 		}
+		if strings.HasPrefix(k, kt.StringPrefix) {
+			if _, ok := metrics[k[len(kt.StringPrefix):]]; ok { // Skip because this one is a metric, not an attribute.
+				continue
+			}
+		}
 
 		switch vt := v.(type) {
 		case string, kt.Provider:
