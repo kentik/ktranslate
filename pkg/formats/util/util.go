@@ -325,7 +325,7 @@ var allowSysAttr = map[string]bool{
 	"AvgRttMs": true,
 }
 
-func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata) map[string]interface{} {
+func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata, gentleCardinality bool) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
@@ -382,28 +382,30 @@ func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		attrNew[newKey] = v
 	}
 
-	// Delete a few attributes we don't want adding to cardinality.
-	for _, key := range removeAttrForSnmp {
-		delete(attrNew, key)
-	}
-
-	if len(attrNew) > MAX_ATTR_FOR_SNMP {
-		// Since NR limits us to 100 attributes, we need to prune. Take the first 100 lexographical keys.
-		keys := make([]string, len(attrNew))
-		i := 0
-		for k, _ := range attrNew {
-			keys[i] = k
-			i++
-		}
-		sort.Strings(keys)
-		for _, k := range keys[MAX_ATTR_FOR_SNMP-3:] {
-			delete(attrNew, k)
+	if gentleCardinality {
+		// Delete a few attributes we don't want adding to cardinality.
+		for _, key := range removeAttrForSnmp {
+			delete(attrNew, key)
 		}
 
-		// Force these to be back in.
-		attrNew["objectIdentifier"] = name.Oid
-		attrNew["mib-name"] = name.Mib
-		attrNew["instrumentation.name"] = name.Profile
+		if len(attrNew) > MAX_ATTR_FOR_SNMP {
+			// Since NR limits us to 100 attributes, we need to prune. Take the first 100 lexographical keys.
+			keys := make([]string, len(attrNew))
+			i := 0
+			for k, _ := range attrNew {
+				keys[i] = k
+				i++
+			}
+			sort.Strings(keys)
+			for _, k := range keys[MAX_ATTR_FOR_SNMP-3:] {
+				delete(attrNew, k)
+			}
+
+			// Force these to be back in.
+			attrNew["objectIdentifier"] = name.Oid
+			attrNew["mib-name"] = name.Mib
+			attrNew["instrumentation.name"] = name.Profile
+		}
 	}
 
 	if attrNew["mib-name"] == "" {
