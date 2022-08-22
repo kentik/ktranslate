@@ -279,6 +279,8 @@ func (f *InfluxFormat) toInfluxMetric(in *kt.JCHF) []InfluxData {
 		return f.fromKSynth(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
+	case kt.KENTIK_EVENT_KTRANS_METRIC:
+		return f.fromKtranslate(in)
 	default:
 		f.invalidsMux.Lock()
 		defer f.invalidsMux.Unlock()
@@ -365,6 +367,66 @@ func (f *InfluxFormat) fromSnmpMetadata(in *kt.JCHF) []InfluxData {
 	f.lastMetadata[in.DeviceName] = lm
 
 	return nil
+}
+
+func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]kt.MetricInfo{"name": kt.MetricInfo{}, "value": kt.MetricInfo{}, "count": kt.MetricInfo{}, "one-minute": kt.MetricInfo{}, "95-percentile": kt.MetricInfo{}, "du": kt.MetricInfo{}}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+	ms := make([]InfluxData, 0)
+	name := strings.ReplaceAll(in.CustomStr["name"], "chf.kkc.", "")
+
+	switch in.CustomStr["type"] {
+	case "counter":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["count"] > 0 {
+			ms = append(ms, InfluxData{
+				Name:        *Prefix + "ktranslate",
+				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["count"]) / 100},
+				Timestamp:   in.Timestamp * 1000000000,
+				Tags:        attr,
+			})
+		}
+	case "gauge":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
+			ms = append(ms, InfluxData{
+				Name:        *Prefix + "ktranslate",
+				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["value"]) / 100},
+				Timestamp:   in.Timestamp * 1000000000,
+				Tags:        attr,
+			})
+		}
+	case "histogram":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
+			ms = append(ms, InfluxData{
+				Name:        *Prefix + "ktranslate",
+				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
+				Timestamp:   in.Timestamp * 1000000000,
+				Tags:        attr,
+			})
+		}
+	case "meter":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["one-minute"] > 0 {
+			ms = append(ms, InfluxData{
+				Name:        *Prefix + "ktranslate",
+				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["one-minute"]) / 100},
+				Timestamp:   in.Timestamp * 1000000000,
+				Tags:        attr,
+			})
+		}
+	case "timer":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
+			ms = append(ms, InfluxData{
+				Name:        *Prefix + "ktranslate",
+				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
+				Timestamp:   in.Timestamp * 1000000000,
+				Tags:        attr,
+			})
+		}
+	}
+	return ms
 }
 
 func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {

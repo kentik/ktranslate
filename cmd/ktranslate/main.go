@@ -33,6 +33,7 @@ var (
 	maxThreads     int
 	format         string
 	formatRollup   string
+	formatMetric   string
 	compression    string
 	sinks          string
 	maxFlows       int
@@ -71,6 +72,7 @@ func init() {
 	flag.IntVar(&maxThreads, "max_threads", 1, "Dynamically grow threads up to this number")
 	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow)")
 	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow)")
+	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow)")
 	flag.StringVar(&compression, "compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
 	flag.StringVar(&sinks, "sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud)")
 	flag.IntVar(&maxFlows, "max_flows_per_message", 10000, "Max number of flows to put in each emitted message")
@@ -289,6 +291,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.Format = val
 			case "format_rollup":
 				cfg.FormatRollup = val
+			case "format_metric":
+				cfg.FormatMetric = val
 			case "compression":
 				cfg.Compression = val
 			case "sinks":

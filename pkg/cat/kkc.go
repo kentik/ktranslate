@@ -723,7 +723,12 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If we're sending self metrics via a chan to sinks. This one always get sent via nrm.
 	if kc.metricsChan != nil {
 		// Set up formatter
-		fmtr, err := formats.NewFormat(formats.FORMAT_NRM, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
+		format := formats.Format(formats.FORMAT_NRM)
+		if kc.config.FormatMetric != "" {
+			format = formats.Format(kc.config.FormatMetric)
+		}
+
+		fmtr, err := formats.NewFormat(format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
 		if err != nil {
 			return err
 		}
