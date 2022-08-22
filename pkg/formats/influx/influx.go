@@ -417,7 +417,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			})
 		}
 	case "timer":
-		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
