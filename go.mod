@@ -30,7 +30,6 @@ require (
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.1
 	github.com/montanaflynn/stats v0.6.6
-	github.com/netsampler/goflow2 v1.1.1-0.20220509155230-5300494e4785
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
@@ -94,6 +93,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mostlygeek/arp v0.0.0-20170424181311-541a2129847a // indirect
+	github.com/netsampler/goflow2 v1.1.1-0.20220818030102-fc42020d1b73 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/onsi/ginkgo v1.16.2 // indirect
 	github.com/onsi/gomega v1.13.0 // indirect
