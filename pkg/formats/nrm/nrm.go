@@ -656,9 +656,9 @@ func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {
 			})
 		}
 	case "timer":
-		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
 			ms = append(ms, NRMetric{
-				Name:       "kentik.ktranslate." + in.CustomStr["95-percentile"],
+				Name:       "kentik.ktranslate." + in.CustomStr["name"],
 				Type:       NR_GAUGE_TYPE,
 				Value:      float64(in.CustomBigInt["95-percentile"]) / 100,
 				Attributes: attr,

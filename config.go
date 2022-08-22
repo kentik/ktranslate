@@ -194,6 +194,7 @@ type Config struct {
 	MaxThreads          int
 	Format              string
 	FormatRollup        string
+	FormatMetric        string
 	Compression         string
 	Sinks               string
 	MaxFlowsPerMessage  int
