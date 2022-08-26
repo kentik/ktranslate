@@ -211,10 +211,11 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 	case "nr1.discovery":
 		cfg.EnableSNMPDiscovery = true
 		setNr()
-	case "nr1.syslog": // Tune for syslog.
+	case "nr1.syslog": // Tune for syslog. Don't want any sampling so can't use setNR directly.
 		cfg.Compression = "gzip"
 		cfg.Sinks = "new_relic"
 		cfg.Format = "new_relic_metric"
+		cfg.SNMPInput.FlowOnly = true // Don't do snmp polling.
 		if cfg.SyslogInput.ListenAddr == "" {
 			cfg.SyslogInput.ListenAddr = "0.0.0.0:5143"
 		}
