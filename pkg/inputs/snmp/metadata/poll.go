@@ -47,7 +47,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		if len(deviceMetadataMibs) > 0 {
 			log.Infof("Custom device metadata")
 			for n, d := range deviceMetadataMibs {
-				log.Infof("   -> : %s -> %s", n, d.Name)
+				log.Infof("   -> : %s -> %s:%s", n, d.Mib, d.GetName())
 				for k, v := range d.MatchAttr {
 					attrMap[k] = v
 				}
@@ -218,7 +218,13 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 
 			for _, table := range dst.CustomTables {
 				for k, v := range table.Customs {
-					dst.CustomMetrics[k] = kt.MetricInfo{Table: v.TableName, Tables: v.TableNames}
+					if _, ok := dst.CustomMetrics[k]; !ok {
+						dst.CustomMetrics[k] = kt.MetricInfo{Table: v.TableName, Tables: v.TableNames}
+					} else {
+						for newKey, _ := range v.TableNames {
+							dst.CustomMetrics[k].Tables[newKey] = true
+						}
+					}
 				}
 			}
 		}
