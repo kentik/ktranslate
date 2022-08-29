@@ -29,6 +29,9 @@ const (
 	Sflow               = "sflow"
 	Netflow5            = "netflow5"
 	Netflow9            = "netflow9"
+	NBar                = "nbar"
+	ASA                 = "asa"
+	PAN                 = "pan"
 )
 
 var (
@@ -52,9 +55,6 @@ func init() {
 }
 
 func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi, resolv *resolv.Resolver, cfg *ktranslate.FlowInputConfig) (*KentikDriver, error) {
-	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, cfg.MessageFields, resolv, cfg)
-	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", cfg.ListenIP, cfg.ListenPort, proto, maxBatchSize)
-	kt.Infof("Netflow listener sending fields %s", cfg.MessageFields)
 
 	defer func() {
 		if v := cfg.PrometheusListenAddr; v != "" {
@@ -65,6 +65,20 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 
 	// Allow processing of custom ipfix templates here.
 	var config EntConfig
+
+	// Load a special config if there's a known enriched flow.
+	switch proto {
+	case ASA:
+		config = loadASA(cfg)
+	case NBar:
+		config = loadNBar(cfg)
+	case PAN:
+		config = loadPAN(cfg)
+	}
+
+	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, cfg.MessageFields, resolv, cfg)
+
+	// Or pull up a special file if needed.
 	if v := cfg.MappingFile; v != "" {
 		f, err := os.Open(v)
 		if err != nil {
@@ -77,21 +91,25 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
 			return nil, err
 		}
-		kt.SetConfig(config)
 	}
 
+	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", cfg.ListenIP, cfg.ListenPort, proto, maxBatchSize)
+	kt.Infof("Netflow listener sending fields %s", cfg.MessageFields)
+	kt.SetConfig(config)
+
 	switch proto {
-	case Ipfix, Netflow9:
+	case Ipfix, Netflow9, ASA, NBar, PAN:
 		sNF := &utils.StateNetFlow{
 			Format: kt,
 			Logger: &KentikLog{l: kt},
 			Config: &config.FlowConfig,
 		}
-		if proto == Ipfix {
+		switch proto {
+		case Ipfix, ASA, NBar, PAN:
 			for _, v := range config.FlowConfig.IPFIX.Mapping {
 				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, config.NameMap[v.Destination])
 			}
-		} else {
+		case Netflow9:
 			for _, v := range config.FlowConfig.NetFlowV9.Mapping {
 				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, config.NameMap[v.Destination])
 			}
@@ -150,7 +168,7 @@ func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
 		config.NameMap = map[string]string{}
 	}
 	switch proto {
-	case Ipfix:
+	case Ipfix, ASA, NBar, PAN:
 		for _, v := range config.FlowConfig.IPFIX.Mapping {
 			if _, ok := config.NameMap[v.Destination]; !ok {
 				config.NameMap[v.Destination] = v.Destination
