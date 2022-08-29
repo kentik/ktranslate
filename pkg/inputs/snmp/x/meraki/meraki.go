@@ -497,7 +497,7 @@ type deviceUplink struct {
 
 func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
-	uplinkSet := map[string]*deviceUplink{}
+	uplinkSet := map[string]deviceUplink{}
 	for _, org := range c.orgs {
 		params := organizations.NewGetOrganizationUplinksStatusesParams()
 		params.SetOrganizationID(org.ID)
@@ -526,13 +526,13 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 			if uplink.network == nil {
 				// Skip this uplink because its from a network we don't care about.
-				continue
-				//c.log.Errorf("Missing Network for Uplink %s -- %s", uplink.NetworkID, uplink.Serial)
-			}
-			if _, ok := uplinkSet[uplink.Serial]; ok {
-				c.log.Errorf("Duplicate Uplink %s", uplink.Serial)
+				// c.log.Errorf("Missing Network for Uplink %s -- %s", uplink.NetworkID, uplink.Serial)
 			} else {
-				uplinkSet[uplink.Serial] = &uplink
+				if _, ok := uplinkSet[uplink.Serial]; ok {
+					c.log.Errorf("Duplicate Uplink %s", uplink.Serial)
+				} else {
+					uplinkSet[uplink.Serial] = uplink
+				}
 			}
 		}
 	}
@@ -565,7 +565,7 @@ type deviceUplinkLatency struct {
 	TimeSeries []uplinkTS `json:"timeSeries"`
 }
 
-func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[string]*deviceUplink) error {
+func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
 	for _, org := range c.orgs {
 		params := organizations.NewGetOrganizationDevicesUplinksLossAndLatencyParams()
@@ -612,7 +612,7 @@ type uplinkUsage struct {
 	ByInterface []uplinkInterfaceUsage `json:"byInterface"`
 }
 
-func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]*deviceUplink) error {
+func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
@@ -650,13 +650,13 @@ func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]*d
 	return nil
 }
 
-func (c *MerakiClient) parseUplinks(uplinkMap map[string]*deviceUplink) ([]*kt.JCHF, error) {
+func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
 	for _, device := range uplinkMap {
 		for _, uplink := range device.Uplinks {
 			dst := kt.NewJCHF()
 			dst.SrcAddr = uplink.IP
-			dst.DeviceName = device.network.Name + uplink.Interface
+			dst.DeviceName = strings.Join([]string{device.network.Name, uplink.Interface}, ".")
 
 			dst.CustomStr = map[string]string{
 				"network":         device.network.Name,
