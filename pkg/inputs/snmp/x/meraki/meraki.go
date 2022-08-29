@@ -2,6 +2,7 @@ package meraki
 
 import (
 	"context"
+	"regexp"
 	"strings"
 	"time"
 
@@ -70,21 +71,32 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		return nil, err
 	}
 
-	orgs := map[string]bool{}
-	nets := map[string]bool{}
+	orgs := []*regexp.Regexp{}
+	nets := []*regexp.Regexp{}
 	for _, org := range conf.Ext.MerakiConfig.Orgs {
-		orgs[org] = true
+		re := regexp.MustCompile(org)
+		orgs = append(orgs, re)
 	}
 	for _, net := range conf.Ext.MerakiConfig.Networks {
-		nets[net] = true
+		re := regexp.MustCompile(net)
+		nets = append(nets, re)
 	}
 
 	numNets := 0
 	for _, org := range prod.GetPayload() {
 		lorg := org
 
-		if len(orgs) > 0 && !orgs[org.Name] {
-			continue // This organization isn't opted in.
+		if len(orgs) > 0 {
+			foundOrg := false
+			for _, orgR := range orgs {
+				if orgR.MatchString(org.Name) {
+					foundOrg = true
+					break
+				}
+			}
+			if !foundOrg {
+				continue // This organization isn't opted in.
+			}
 		}
 
 		// Now list the networks for this org.
@@ -107,8 +119,17 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 
 		netSet := map[string]networkDesc{}
 		for _, network := range networks {
-			if len(nets) > 0 && !nets[network.Name] {
-				continue // This network isn't opted in.
+			if len(nets) > 0 {
+				foundNet := false
+				for _, net := range nets {
+					if net.MatchString(network.Name) {
+						foundNet = true
+						break
+					}
+				}
+				if !foundNet {
+					continue // This network isn't opted in.
+				}
 			}
 			network.org = lorg
 			c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
