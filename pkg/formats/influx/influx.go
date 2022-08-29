@@ -385,7 +385,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["count"]) / 100},
-				Timestamp:   in.Timestamp * 1000000000,
+				Timestamp:   in.Timestamp,
 				Tags:        attr,
 			})
 		}
@@ -394,7 +394,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["value"]) / 100},
-				Timestamp:   in.Timestamp * 1000000000,
+				Timestamp:   in.Timestamp,
 				Tags:        attr,
 			})
 		}
@@ -403,7 +403,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
-				Timestamp:   in.Timestamp * 1000000000,
+				Timestamp:   in.Timestamp,
 				Tags:        attr,
 			})
 		}
@@ -412,7 +412,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["one-minute"]) / 100},
-				Timestamp:   in.Timestamp * 1000000000,
+				Timestamp:   in.Timestamp,
 				Tags:        attr,
 			})
 		}
@@ -421,7 +421,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 			ms = append(ms, InfluxData{
 				Name:        *Prefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
-				Timestamp:   in.Timestamp * 1000000000,
+				Timestamp:   in.Timestamp,
 				Tags:        attr,
 			})
 		}
