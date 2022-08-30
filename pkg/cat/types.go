@@ -31,6 +31,7 @@ import (
 const (
 	HttpHealthCheckPath         = "/check"
 	HttpAlertInboundPath        = "/chf"
+	HttpInfoPath                = "/service_info"
 	HttpCompanyID               = "sid"
 	HttpAlertKey                = "key"
 	MaxProxyListenerBufferAlloc = 10 * 1024 * 1024 // 10MB

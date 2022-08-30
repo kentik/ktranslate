@@ -539,6 +539,7 @@ func (kc *KTranslate) reduce(in []*kt.JCHF) []*kt.JCHF {
 func (kc *KTranslate) getRouter() http.Handler {
 	r := kmux.NewRouter()
 	r.HandleFunc(HttpAlertInboundPath, kc.handleFlow)
+	r.HandleFunc(HttpInfoPath, kc.HttpInfo)
 	r.HandleFunc(HttpHealthCheckPath, func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "OK\n") // nolint: errcheck
 	})
