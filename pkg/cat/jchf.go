@@ -579,8 +579,8 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]st
 		}
 
 		// See if we know what service this is based on proto and port.
-		if _, ok := msg.CustomStr["application"]; !ok {
-			if msg.L4SrcPort < msg.L4DstPort {
+		if msg.CustomStr["application"] == "" {
+			if msg.L4SrcPort > 0 && msg.L4SrcPort < msg.L4DstPort {
 				if app, ok := kc.rule.GetService(sip, msg.L4SrcPort, ic.PROTO_NUMS[msg.Protocol]); ok {
 					msg.CustomStr["application"] = app
 				}
