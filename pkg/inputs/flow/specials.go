@@ -101,7 +101,7 @@ func loadNBar(cfg *ktranslate.FlowInputConfig) EntConfig {
 			},
 		},
 		NameMap: map[string]string{
-			"CustomBytes1": "Application Name",
+			"CustomBytes1": "application",
 			"CustomBytes2": "Application Category",
 			"CustomBytes3": "Application Subcategory",
 			"CustomBytes4": "Application Group",
