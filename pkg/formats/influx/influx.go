@@ -573,53 +573,64 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		}
 	}
 
-	// Grap capacity utilization if possible.
+	// Grap varioius rates computed over time here if possible.
 	if f.lastMetadata[in.DeviceName] != nil {
-		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
-			if speed, ok := ii["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
-					if uptimeSpeed > 0 {
-						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
-						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
-							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-								getMib(attrNew, ip)
-								results = append(results, InfluxData{
-									Name:        *Prefix + "IF-MIB::if",
-									FieldsFloat: map[string]float64{"IfInUtilization": float64(inBytes*8*100) / float64(uptimeSpeed)},
-									Timestamp:   in.Timestamp * 1000000000,
-									Tags:        attrNew,
-								})
-							}
+		f.setRates("In", in, results, attr, profileName, ip)
+		f.setRates("Out", in, results, attr, profileName, ip)
+	}
+
+	return results
+}
+
+func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxData, attr map[string]interface{}, profileName string, ip interface{}) {
+	var port kt.IfaceID
+	if direction == "In" {
+		port = in.InputPort
+	} else {
+		port = in.OutputPort
+	}
+	utilName := fmt.Sprintf("If%sUtilization", direction)
+	bitRate := fmt.Sprintf("If%sBitRate", direction)
+	pktRate := fmt.Sprintf("If%sPktRate", direction)
+	totalBytes := in.CustomBigInt[fmt.Sprintf("ifHC%sOctets", direction)]
+	totalPkts := in.CustomBigInt[fmt.Sprintf("ifHC%sUcastPkts", direction)] + in.CustomBigInt[fmt.Sprintf("ifHC%sMulticastPkts", direction)] + in.CustomBigInt[fmt.Sprintf("ifHC%sBroadcastPkts", direction)]
+
+	if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[port]; ok {
+		if speed, ok := ii["Speed"]; ok {
+			if ispeed, ok := speed.(int32); ok {
+				uptime := in.CustomBigInt["Uptime"]
+				uptimeSpeed := uptime * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+				if uptimeSpeed > 0 {
+					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
+					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+						getMib(attrNew, ip)
+						if totalBytes > 0 {
+							results = append(results, InfluxData{
+								Name:        *Prefix + "IF-MIB::if",
+								FieldsFloat: map[string]float64{utilName: float64(totalBytes*8*100) / float64(uptimeSpeed)},
+								Timestamp:   in.Timestamp * 1000000000,
+								Tags:        attrNew,
+							})
+							results = append(results, InfluxData{
+								Name:        *Prefix + "IF-MIB::if",
+								FieldsFloat: map[string]float64{bitRate: float64(totalBytes*8*100) / float64(uptime)},
+								Timestamp:   in.Timestamp * 1000000000,
+								Tags:        attrNew,
+							})
 						}
-					}
-				}
-			}
-		}
-		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-			if speed, ok := oi["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
-					if uptimeSpeed > 0 {
-						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
-						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
-							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-								getMib(attrNew, ip)
-								results = append(results, InfluxData{
-									Name:        *Prefix + "IF-MIB::if",
-									FieldsFloat: map[string]float64{"IfOutUtilization": float64(outBytes*8*100) / float64(uptimeSpeed)},
-									Timestamp:   in.Timestamp * 1000000000,
-									Tags:        attrNew,
-								})
-							}
+						if totalPkts > 0 {
+							results = append(results, InfluxData{
+								Name:        *Prefix + "IF-MIB::if",
+								FieldsFloat: map[string]float64{pktRate: float64(totalPkts*100) / float64(uptime)},
+								Timestamp:   in.Timestamp * 1000000000,
+								Tags:        attrNew,
+							})
 						}
 					}
 				}
 			}
 		}
 	}
-
-	return results
 }
 
 func getMib(attr map[string]interface{}, ip interface{}) string {
