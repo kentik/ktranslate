@@ -321,7 +321,7 @@ func (p *Poller) StartExtensionOnlyLoop(ctx context.Context) {
 	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
 
 	if p.extension != nil {
-		p.log.Infof("Running only extenion %s", p.extension.GetName())
+		p.log.Infof("Running only extension %s", p.extension.GetName())
 		go p.extension.Run(ctx, counterAlignment)
 	}
 
