@@ -575,14 +575,14 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 
 	// Grap varioius rates computed over time here if possible.
 	if f.lastMetadata[in.DeviceName] != nil {
-		f.setRates("In", in, results, attr, profileName, ip)
-		f.setRates("Out", in, results, attr, profileName, ip)
+		results = f.setRates("In", in, results, attr, profileName, ip)
+		results = f.setRates("Out", in, results, attr, profileName, ip)
 	}
 
 	return results
 }
 
-func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxData, attr map[string]interface{}, profileName string, ip interface{}) {
+func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxData, attr map[string]interface{}, profileName string, ip interface{}) []InfluxData {
 	var port kt.IfaceID
 	if direction == "In" {
 		port = in.InputPort
@@ -631,6 +631,8 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 			}
 		}
 	}
+
+	return results
 }
 
 func getMib(attr map[string]interface{}, ip interface{}) string {
