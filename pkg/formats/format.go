@@ -56,7 +56,7 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 	case FORMAT_NETFLOW:
 		return netflow.NewFormat(log, compression, cfg.NetflowFormat)
 	case FORMAT_INFLUX:
-		return influx.NewFormat(log, registry, compression)
+		return influx.NewFormat(log, registry, compression, cfg.InfluxDBFormat)
 	case FORMAT_CARBON:
 		return carbon.NewFormat(log, compression)
 	case FORMAT_PROM:

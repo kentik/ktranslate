@@ -20,6 +20,11 @@ type NetflowFormatConfig struct {
 	Version string
 }
 
+// InfluxDBFormatConfig is the config format for influxdb
+type InfluxDBFormatConfig struct {
+	MeasurementPrefix string
+}
+
 // PrometheusFormatConfig is the config for the prometheus format
 type PrometheusFormatConfig struct {
 	EnableCollectorStats bool
@@ -220,6 +225,8 @@ type Config struct {
 	NetflowFormat *NetflowFormatConfig
 	// pkg/formats/prom
 	PrometheusFormat *PrometheusFormatConfig
+	// pkg/formats/influxdb
+	InfluxDBFormat *InfluxDBFormatConfig
 
 	// pkg/sinks/prom
 	PrometheusSink *PrometheusSinkConfig
@@ -305,6 +312,9 @@ func DefaultConfig() *Config {
 		PrometheusFormat: &PrometheusFormatConfig{
 			EnableCollectorStats: false,
 			FlowsNeeded:          10,
+		},
+		InfluxDBFormat: &InfluxDBFormatConfig{
+			MeasurementPrefix: "kentik.flow",
 		},
 		PrometheusSink: &PrometheusSinkConfig{
 			ListenAddr: ":8082",
