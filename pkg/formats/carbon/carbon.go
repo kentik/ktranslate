@@ -79,6 +79,8 @@ func (f *CarbonFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 func (f *CarbonFormat) toCarbonMetric(in *kt.JCHF) []*CarbonData {
 	switch in.EventType {
+	case kt.KENTIK_EVENT_SYNTH, kt.KENTIK_EVENT_TRACE:
+		return f.fromKsynth(in)
 	case kt.KENTIK_EVENT_TYPE:
 		return f.fromKflow(in)
 	default:
@@ -187,6 +189,80 @@ func (f *CarbonFormat) fromKflow(in *kt.JCHF) []*CarbonData {
 			Type:          mtype,
 			Name:          m,
 			Value:         v,
+			Unit:          unit,
+			Timestamp:     in.Timestamp,
+			IntrinsicTags: intrinsicTags,
+			MetaTags:      metaTags,
+		})
+	}
+
+	return metricData
+}
+
+func (f *CarbonFormat) fromKsynth(in *kt.JCHF) []*CarbonData {
+	metrics := []string{
+		"ping_avg_rtt",
+		"ping_jit_rtt",
+		"ping_max_rtt",
+		"ping_std_rtt",
+	}
+	metricData := []*CarbonData{}
+	for _, m := range metrics {
+		val := int64(0)
+		mtype := "gauge"
+		unit := "μ"
+		if v, ok := in.CustomInt[m]; ok {
+			val = int64(v)
+		}
+
+		// intrinsic tags are the metric dimensions
+		intrinsicTags := map[string]interface{}{}
+		if v, ok := in.CustomStr["application_type"]; ok && v != "" {
+			intrinsicTags["application_type"] = v
+		}
+		if v := in.DstAddr; v != "" {
+			intrinsicTags["dst_addr"] = v
+		}
+		if v := in.SrcAddr; v != "" {
+			intrinsicTags["src_addr"] = v
+		}
+
+		// meta tags are used to decorate and add context
+		metaTags := map[string]interface{}{
+			"src_as": in.SrcAs,
+			"dst_as": in.DstAs,
+		}
+		if v := in.DstGeo; v != "" {
+			metaTags["dst_geo"] = v
+		}
+		if v := in.SrcGeo; v != "" {
+			metaTags["src_geo"] = v
+		}
+		if v := in.SrcGeo; v != "" {
+			metaTags["src_geo"] = v
+		}
+		if v := in.SrcGeoRegion; v != "" {
+			metaTags["src_geo_region"] = v
+		}
+		if v := in.DstGeoRegion; v != "" {
+			metaTags["dst_geo_region"] = v
+		}
+		if v := in.SrcGeoCity; v != "" {
+			metaTags["src_geo_city"] = v
+		}
+		if v := in.DstGeoCity; v != "" {
+			metaTags["dst_geo_city"] = v
+		}
+		for k, v := range in.CustomStr {
+			if v == "" {
+				continue
+			}
+			metaTags[k] = v
+		}
+		metricData = append(metricData, &CarbonData{
+			Type:          mtype,
+			Name:          m,
+			Value:         val,
 			Unit:          unit,
 			Timestamp:     in.Timestamp,
 			IntrinsicTags: intrinsicTags,
