@@ -216,10 +216,11 @@ type client struct {
 	DhcpHostname     string             `json:"dhcpHostname"`
 	network          string
 	device           networkDevice
+	appUsage         []appUsage
 }
 
 func (c *MerakiClient) getNetworkClients() ([]*kt.JCHF, error) {
-	clientSet := []client{}
+	clientSet := []*client{}
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
 			params := networks.NewGetNetworkClientsParams()
@@ -235,7 +236,7 @@ func (c *MerakiClient) getNetworkClients() ([]*kt.JCHF, error) {
 				return nil, err
 			}
 
-			var clients []client
+			var clients []*client
 			err = json.Unmarshal(b, &clients)
 			if err != nil {
 				return nil, err
@@ -302,6 +303,63 @@ func (c *MerakiClient) getNetworkDevices() (map[string][]networkDevice, error) {
 	return deviceSet, nil
 }
 
+type appUsage struct {
+	Application string `json:"application"`
+	Received    int64  `json:"received"`
+	Sent        int64  `json:"sent"`
+}
+
+type applicationUsage struct {
+	AppUsage  []appUsage `json:"applicationUsage"`
+	ClientId  string     `json:"clientId"`
+	ClientIp  string     `json:"clientIp"`
+	ClientMac string     `json:"clientMac"`
+}
+
+func (c *MerakiClient) getDeviceClientApplications(dur time.Duration, clients []*client, network networkDesc) error {
+	// Max of 10 clients to check application usage per call.
+	getApps := func(client *client) error {
+		params := networks.NewGetNetworkClientsApplicationUsageParams()
+		params.SetNetworkID(network.ID)
+		params.SetClients(client.ID)
+
+		prod, err := c.client.Networks.GetNetworkClientsApplicationUsage(params, c.auth)
+		if err != nil {
+			return err
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return err
+		}
+
+		var appUsage []applicationUsage
+		err = json.Unmarshal(b, &appUsage)
+		if err != nil {
+			return err
+		}
+
+		for _, appU := range appUsage {
+			if appU.ClientId == client.ID {
+				client.appUsage = appU.AppUsage
+				break
+			}
+		}
+
+		return nil
+	}
+
+	// Have to go 1 by 1 here because some clients arn't valid in the app call for some reason.
+	for _, client := range clients {
+		err := getApps(client)
+		if err != nil {
+			c.log.Debugf("Cannot get application usage for %s %v: %v", network.ID, client.ID, err)
+		}
+	}
+
+	return nil
+}
+
 func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 	networkDevs, err := c.getNetworkDevices()
 	if err != nil {
@@ -309,7 +367,7 @@ func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 	}
 
 	c.log.Infof("Got devices for %d networks", len(networkDevs))
-	clientSet := []client{}
+	clientSet := []*client{}
 	durs := float32(3600) // Look back 1 hour in seconds, get all devices using APs in this range.
 	for network, deviceSet := range networkDevs {
 		c.log.Infof("Looking at %d devices for network %s", len(deviceSet), network)
@@ -328,11 +386,18 @@ func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 				return nil, err
 			}
 
-			var clients []client
+			var clients []*client
 			err = json.Unmarshal(b, &clients)
 			if err != nil {
 				return nil, err
 			}
+
+			// Now, look up application usage for this client set.
+			err = c.getDeviceClientApplications(dur, clients, device.network)
+			if err != nil {
+				c.log.Warnf("Cannot get application usage for %s: %v", device.network.ID, err)
+			}
+
 			for _, client := range clients {
 				client.network = network
 				client.device = device
@@ -344,66 +409,75 @@ func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 	return c.parseClients(clientSet)
 }
 
-func (c *MerakiClient) parseClients(cs []client) ([]*kt.JCHF, error) {
+func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
 	for _, client := range cs {
-		dst := kt.NewJCHF()
-		if client.IPv6 != "" {
-			dst.DstAddr = client.IPv6
-		} else {
-			dst.DstAddr = client.IP
-		}
-		dst.CustomStr = map[string]string{
-			"network":            client.network,
-			"client_id":          client.ID,
-			"description":        client.Description,
-			"status":             client.Status,
-			"vlan_name":          client.NamedVlan,
-			"client_mac_addr":    client.Mac,
-			"user":               client.User,
-			"manufacturer":       client.Manufacturer,
-			"device_type":        client.DeviceType,
-			"recent_device_name": client.RecentDeviceName,
-			"dhcp_hostname":      client.DhcpHostname,
-			"mdsn_name":          client.MdnsName,
-		}
-		dst.CustomInt = map[string]int32{
-			"vlan": int32(client.Vlan),
-		}
-		dst.CustomBigInt = map[string]int64{}
-		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
-		//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
-
-		if client.device.Serial != "" {
-			dst.DeviceName = client.device.Name // Here, device is this device's name.
-			dst.SrcAddr = client.device.LanIP
-			dst.CustomStr["device_serial"] = client.device.Serial
-			dst.CustomStr["device_firmware"] = client.device.Firmware
-			dst.CustomStr["device_mac_addr"] = client.device.Mac
-			dst.CustomStr["device_tags"] = strings.Join(client.device.Tags, ",")
-			dst.CustomStr["device_notes"] = client.device.Notes
-			dst.CustomStr["device_model"] = client.device.Model
-			dst.CustomStr["src_ip"] = client.device.LanIP
-			if client.device.network.org != nil {
-				dst.CustomStr["org_name"] = client.device.network.org.Name
-				dst.CustomStr["org_id"] = client.device.network.org.ID
+		for _, appU := range client.appUsage {
+			dst := kt.NewJCHF()
+			if client.IPv6 != "" {
+				dst.DstAddr = client.IPv6
+			} else {
+				dst.DstAddr = client.IP
 			}
-		} else {
-			dst.DeviceName = client.network // Here, device is this network's name.
-			dst.SrcAddr = c.conf.DeviceIP
+			dst.CustomStr = map[string]string{
+				"network":            client.network,
+				"client_id":          client.ID,
+				"description":        client.Description,
+				"status":             client.Status,
+				"vlan_name":          client.NamedVlan,
+				"client_mac_addr":    client.Mac,
+				"user":               client.User,
+				"manufacturer":       client.Manufacturer,
+				"device_type":        client.DeviceType,
+				"recent_device_name": client.RecentDeviceName,
+				"dhcp_hostname":      client.DhcpHostname,
+				"mdsn_name":          client.MdnsName,
+				"application":        appU.Application,
+			}
+			dst.CustomInt = map[string]int32{
+				"vlan": int32(client.Vlan),
+			}
+			dst.CustomBigInt = map[string]int64{}
+			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+			//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
+
+			if client.device.Serial != "" {
+				dst.DeviceName = client.device.Name // Here, device is this device's name.
+				dst.SrcAddr = client.device.LanIP
+				dst.CustomStr["device_serial"] = client.device.Serial
+				dst.CustomStr["device_firmware"] = client.device.Firmware
+				dst.CustomStr["device_mac_addr"] = client.device.Mac
+				dst.CustomStr["device_tags"] = strings.Join(client.device.Tags, ",")
+				dst.CustomStr["device_notes"] = client.device.Notes
+				dst.CustomStr["device_model"] = client.device.Model
+				dst.CustomStr["src_ip"] = client.device.LanIP
+				if client.device.network.org != nil {
+					dst.CustomStr["org_name"] = client.device.network.org.Name
+					dst.CustomStr["org_id"] = client.device.network.org.ID
+				}
+			} else {
+				dst.DeviceName = client.network // Here, device is this network's name.
+				dst.SrcAddr = c.conf.DeviceIP
+			}
+
+			dst.Timestamp = time.Now().Unix()
+			dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+			dst.CustomBigInt["SentTotal"] = int64(client.Usage["sent"] * 1000) // Unit is kilobytes, convert to bytes
+			dst.CustomMetrics["SentTotal"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
+
+			dst.CustomBigInt["RecvTotal"] = int64(client.Usage["recv"] * 1000) // Same, convert to bytes.
+			dst.CustomMetrics["RecvTotal"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
+
+			dst.CustomBigInt["Sent"] = int64(appU.Sent * 1000) // Unit is kilobytes, convert to bytes
+			dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
+
+			dst.CustomBigInt["Recv"] = int64(appU.Received * 1000) // Same, convert to bytes.
+			dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
+
+			c.conf.SetUserTags(dst.CustomStr)
+			res = append(res, dst)
 		}
-
-		dst.Timestamp = time.Now().Unix()
-		dst.CustomMetrics = map[string]kt.MetricInfo{}
-
-		dst.CustomBigInt["Sent"] = int64(client.Usage["sent"] * 1000) // Unit is kilobytes, convert to bytes
-		dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
-
-		dst.CustomBigInt["Recv"] = int64(client.Usage["recv"] * 1000) // Same, convert to bytes.
-		dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.clients", Type: "meraki.clients"}
-
-		c.conf.SetUserTags(dst.CustomStr)
-		res = append(res, dst)
 	}
 
 	return res, nil
