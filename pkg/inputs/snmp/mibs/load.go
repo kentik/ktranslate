@@ -98,6 +98,15 @@ func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
 		return res, nil
 	}
 
+	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
+	pts := strings.Split(oid, ".")
+	for i := len(pts); i > 0; i-- {
+		check := strings.Join(pts[0:i], ".") + ".*"
+		if t, ok := db.trapMibs[check]; ok {
+			return t, nil
+		}
+	}
+
 	if db.db == nil { // We might not have set up a db here.
 		return nil, nil
 	}
@@ -109,7 +118,7 @@ func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
 		return nil, err
 	}
 
-	pts := strings.SplitN(string(data), " ", 2)
+	pts = strings.SplitN(string(data), " ", 2)
 	if len(pts) >= 2 {
 		res := reType.FindAllStringSubmatch(pts[1], -1)
 		if len(res) > 0 {
