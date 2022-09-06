@@ -2,6 +2,7 @@ package meraki
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
@@ -165,16 +166,25 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 
 	doUplinks := c.conf.Ext.MerakiConfig.MonitorUplinks
 	doDevices := c.conf.Ext.MerakiConfig.MonitorDevices
-	if !doUplinks && !doDevices {
+	doOrgChanges := c.conf.Ext.MerakiConfig.MonitorOrgChanges
+	if !doUplinks && !doDevices && !doOrgChanges {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, devices=%v", dur, doUplinks, doDevices)
+	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v", dur, doUplinks, doDevices, doOrgChanges)
 
 	for {
 		select {
 
 		// Track the counters here, to convert from raw counters to differences
 		case _ = <-poll.C:
+			if doOrgChanges {
+				if res, err := c.getOrgChanges(dur); err != nil {
+					c.log.Infof("Meraki cannot get Organization Changes: %v", err)
+				} else if len(res) > 0 {
+					c.jchfChan <- res
+				}
+			}
+
 			if doDevices {
 				if res, err := c.getDeviceClients(dur); err != nil {
 					c.log.Infof("Meraki cannot get Device Client Info: %v", err)
@@ -196,6 +206,78 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 			return
 		}
 	}
+}
+
+type orgLog struct {
+	TimeStamp   time.Time `json:"ts"`
+	AdminName   string    `json:"adminName"`
+	NetworkName string    `json:"networkName"`
+	Label       string    `json:"label"`
+	NewValue    string    `json:"newValue"`
+	AdminEmail  string    `json:"adminEmail"`
+	AdminId     string    `json:"adminId"`
+	NetworkId   string    `json:"networkId"`
+	Page        string    `json:"page"`
+	OldValue    string    `json:"oldValue"`
+}
+
+func (c *MerakiClient) getOrgChanges(dur time.Duration) ([]*kt.JCHF, error) {
+	startTime := time.Now().Add(-1 * dur)
+	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
+
+	res := []*kt.JCHF{}
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			params := organizations.NewGetOrganizationConfigurationChangesParams()
+			params.SetOrganizationID(org.ID)
+			params.SetNetworkID(&(network.ID))
+			params.SetT0(&startTimeStr)
+
+			prod, err := c.client.Organizations.GetOrganizationConfigurationChanges(params, c.auth)
+			if err != nil {
+				return nil, err
+			}
+
+			b, err := json.Marshal(prod.GetPayload())
+			if err != nil {
+				return nil, err
+			}
+
+			var logs []*orgLog
+			err = json.Unmarshal(b, &logs)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, lg := range logs {
+				res = append(res, c.parseOrgLog(lg, network, org))
+			}
+		}
+	}
+
+	return res, nil
+}
+
+func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) *kt.JCHF {
+	dst := kt.NewJCHF()
+	dst.Timestamp = l.TimeStamp.Unix()
+
+	dst.CustomStr = map[string]string{
+		"admin_name":   l.AdminName,
+		"network_name": l.NetworkName,
+		"label":        l.Label,
+		"new_nalue":    l.NewValue,
+		"admin_email":  l.AdminEmail,
+		"admin_id":     l.AdminId,
+		"network_id":   l.NetworkId,
+		"page":         l.Page,
+		"old_value":    l.OldValue,
+	}
+	dst.EventType = kt.KENTIK_EVENT_EXT // This gets sent as event, not metric.
+	//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
+
+	c.conf.SetUserTags(dst.CustomStr)
+	return dst
 }
 
 type client struct {

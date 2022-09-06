@@ -205,7 +205,7 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {
 		return f.fromSnmpMetadata(in)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
 		return f.fromKtranslate(in)
-	case kt.KENTIK_EVENT_SNMP_TRAP:
+	case kt.KENTIK_EVENT_SNMP_TRAP, kt.KENTIK_EVENT_EXT:
 		// This is actually an event, send out as an event to sink directly.
 		err := events.SendEvent(in, f.doGz, f.EventChan)
 		if err != nil {
