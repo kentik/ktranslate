@@ -20,6 +20,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/traps"
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 
 	"gopkg.in/yaml.v2"
 )
@@ -55,7 +56,7 @@ func init() {
 	flag.BoolVar(&validateMib, "snmp_validate", false, "If true, validate mib profiles and exit.")
 }
 
-func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig) error {
+func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver) error {
 	snmpFile := cfg.SNMPFile
 	// Do this once here just to see if we need to exit right away.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
@@ -98,7 +99,7 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 
 	// Run a trap listener?
 	if conf.Trap != nil && !cfg.FlowOnly {
-		err := launchSnmpTrap(conf, jchfChan, metrics, log)
+		err := launchSnmpTrap(ctx, conf, jchfChan, metrics, log, resolv)
 		if err != nil {
 			return err
 		}
@@ -243,9 +244,9 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	return nil
 }
 
-func launchSnmpTrap(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL) error {
+func launchSnmpTrap(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL, resolv *resolv.Resolver) error {
 	log.Infof("Client SNMP: Running SNMP Trap listener on %s", conf.Trap.Listen)
-	tl, err := traps.NewSnmpTrapListener(conf, jchfChan, metrics, mibdb, log)
+	tl, err := traps.NewSnmpTrapListener(ctx, conf, jchfChan, metrics, mibdb, log, resolv)
 	if err != nil {
 		return err
 	}

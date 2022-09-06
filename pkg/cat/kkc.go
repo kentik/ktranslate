@@ -658,7 +658,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		}
 		assureInput()
 		kc.metrics.SnmpDeviceData = kt.NewSnmpMetricSet(kc.registry)
-		err := snmp.StartSNMPPolls(ctx, kc.inputChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log, kc.config.SNMPInput)
+		err := snmp.StartSNMPPolls(ctx, kc.inputChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log, kc.config.SNMPInput, kc.resolver)
 		if err != nil {
 			return err
 		}

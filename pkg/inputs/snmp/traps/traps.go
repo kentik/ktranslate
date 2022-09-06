@@ -1,6 +1,7 @@
 package traps
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"sync"
@@ -12,6 +13,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/resolv"
 )
 
 const (
@@ -28,6 +30,8 @@ type SnmpTrap struct {
 	conf      *kt.SnmpConfig
 	mux       sync.RWMutex
 	mibdb     *mibs.MibDB
+	resolv    *resolv.Resolver
+	ctx       context.Context
 	deviceMap map[string]*kt.SnmpDeviceConfig
 }
 
@@ -45,7 +49,7 @@ func (l logWrapper) Printf(format string, v ...interface{}) {
 	l.printf(format, v...)
 }
 
-func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB, log logger.ContextL) (*SnmpTrap, error) {
+func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB, log logger.ContextL, resolv *resolv.Resolver) (*SnmpTrap, error) {
 	st := &SnmpTrap{
 		jchfChan:  jchfChan,
 		log:       log,
@@ -53,6 +57,8 @@ func NewSnmpTrapListener(conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics 
 		listen:    conf.Trap.Listen,
 		metrics:   metrics,
 		deviceMap: map[string]*kt.SnmpDeviceConfig{},
+		resolv:    resolv,
+		ctx:       ctx,
 	}
 
 	// Some quick defaults.
@@ -141,6 +147,12 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		dev.SetUserTags(dst.CustomStr)
 	} else {
 		dst.DeviceName = addr.IP.String()
+		if s.resolv != nil { // Try pulling device name from reverse IP if possible.
+			dm := s.resolv.Resolve(s.ctx, dst.DeviceName, true)
+			if dm != "" {
+				dst.DeviceName = dm
+			}
+		}
 		dst.Provider = kt.ProviderTrapUnknown
 	}
 
