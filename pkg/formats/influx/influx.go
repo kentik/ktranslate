@@ -11,12 +11,22 @@ import (
 
 	"github.com/influxdata/line-protocol/v2/lineprotocol"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 )
+
+var (
+	measurementPrefix string
+)
+
+func init() {
+	flag.StringVar(&measurementPrefix, "influxdb_measurement_prefix", "kentik.flow", "Prefix metric names with this")
+
+}
 
 type InfluxFormat struct {
 	logger.ContextL
@@ -25,6 +35,7 @@ type InfluxFormat struct {
 	lastMetadata map[string]*kt.LastMetadata
 	mux          sync.RWMutex
 	metrics      *InfluxMetrics
+	config       *ktranslate.InfluxDBFormatConfig
 }
 
 type InfluxMetrics struct {
@@ -39,10 +50,6 @@ type InfluxData struct {
 	Tags         map[string]interface{}
 	Timestamp    int64
 }
-
-var (
-	Prefix = flag.String("influxdb_measurement_prefix", "", "Prefix metric names with this")
-)
 
 func (d *InfluxData) GetTags() string {
 	var tags []string
@@ -241,7 +248,10 @@ func prepareTagValueMap(s string) string {
 	return s
 }
 
-func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression) (*InfluxFormat, error) {
+func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.InfluxDBFormatConfig) (*InfluxFormat, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("influxdb format cannot be nil")
+	}
 	jf := &InfluxFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "influxFormat"}, log),
 		invalids:     map[string]bool{},
@@ -249,6 +259,7 @@ func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression 
 		metrics: &InfluxMetrics{
 			EncoderErrors: go_metrics.GetOrRegisterCounter("influx_encoder_errors", registry),
 		},
+		config: cfg,
 	}
 
 	return jf, nil
@@ -383,7 +394,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 	case "counter":
 		if in.CustomStr["force"] == "true" || in.CustomBigInt["count"] > 0 {
 			ms = append(ms, InfluxData{
-				Name:        *Prefix + "ktranslate",
+				Name:        f.config.MeasurementPrefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["count"]) / 100},
 				Timestamp:   in.Timestamp,
 				Tags:        attr,
@@ -392,7 +403,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 	case "gauge":
 		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
 			ms = append(ms, InfluxData{
-				Name:        *Prefix + "ktranslate",
+				Name:        f.config.MeasurementPrefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["value"]) / 100},
 				Timestamp:   in.Timestamp,
 				Tags:        attr,
@@ -401,7 +412,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 	case "histogram":
 		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
 			ms = append(ms, InfluxData{
-				Name:        *Prefix + "ktranslate",
+				Name:        f.config.MeasurementPrefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
 				Timestamp:   in.Timestamp,
 				Tags:        attr,
@@ -410,7 +421,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 	case "meter":
 		if in.CustomStr["force"] == "true" || in.CustomBigInt["one-minute"] > 0 {
 			ms = append(ms, InfluxData{
-				Name:        *Prefix + "ktranslate",
+				Name:        f.config.MeasurementPrefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["one-minute"]) / 100},
 				Timestamp:   in.Timestamp,
 				Tags:        attr,
@@ -419,7 +430,7 @@ func (f *InfluxFormat) fromKtranslate(in *kt.JCHF) []InfluxData {
 	case "timer":
 		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
 			ms = append(ms, InfluxData{
-				Name:        *Prefix + "ktranslate",
+				Name:        f.config.MeasurementPrefix + "ktranslate",
 				FieldsFloat: map[string]float64{name: float64(in.CustomBigInt["95-percentile"]) / 100},
 				Timestamp:   in.Timestamp,
 				Tags:        attr,
@@ -449,7 +460,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{{
-		Name:      *Prefix,
+		Name:      f.config.MeasurementPrefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -480,7 +491,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{{
-		Name:      *Prefix,
+		Name:      f.config.MeasurementPrefix,
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -510,14 +521,14 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        *Prefix + mib,
+					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      *Prefix + mib,
+					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -554,14 +565,14 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 			mib := getMib(attrNew, ip)
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
-					Name:        *Prefix + mib,
+					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp * 1000000000,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
-					Name:      *Prefix + mib,
+					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp * 1000000000,
 					Tags:      attrNew,
@@ -606,13 +617,13 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 						getMib(attrNew, ip)
 						if totalBytes > 0 {
 							results = append(results, InfluxData{
-								Name:        *Prefix + "IF-MIB::if",
+								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{utilName: float64(totalBytes*8*100) / float64(uptimeSpeed)},
 								Timestamp:   in.Timestamp * 1000000000,
 								Tags:        attrNew,
 							})
 							results = append(results, InfluxData{
-								Name:        *Prefix + "IF-MIB::if",
+								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{bitRate: float64(totalBytes*8*100) / float64(uptime)},
 								Timestamp:   in.Timestamp * 1000000000,
 								Tags:        attrNew,
@@ -620,7 +631,7 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 						}
 						if totalPkts > 0 {
 							results = append(results, InfluxData{
-								Name:        *Prefix + "IF-MIB::if",
+								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{pktRate: float64(totalPkts*100) / float64(uptime)},
 								Timestamp:   in.Timestamp * 1000000000,
 								Tags:        attrNew,

@@ -420,6 +420,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.PrometheusFormat.FlowsNeeded = v
+			// pkg/formats/influxdb
+			case "influxdb_measurement_prefix":
+				cfg.InfluxDBFormat.MeasurementPrefix = val
 			// pkg/sinks/prom
 			case "prom_listen":
 				cfg.PrometheusSink.ListenAddr = val
