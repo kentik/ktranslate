@@ -21,6 +21,7 @@ const (
 	ProviderPrefix = "provider" + ProviderToken
 	GlobalProvider = "global"
 	DeviceProvider = "device"
+	EnableAllMibs  = "USE_ALL_MIBS"
 )
 
 // DeviceData holds information about a device, sent via ST, and sent
