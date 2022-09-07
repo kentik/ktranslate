@@ -67,7 +67,7 @@ func (bs *BaseServer) createIDFile() {
 	sEnc := make([]byte, base64.StdEncoding.EncodedLen(len(full)))
 	base64.StdEncoding.Encode(sEnc, full)
 
-	err = os.WriteFile(bs.BaseServerConfiguration.IDFileLocation, sEnc, 0644)
+	err = os.WriteFile(bs.BaseServerConfiguration.IDFileLocation, sEnc, 0600)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("encode error write to %s with id: %v", bs.BaseServerConfiguration.IDFileLocation, err))
 	}
