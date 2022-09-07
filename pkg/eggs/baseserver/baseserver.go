@@ -48,6 +48,7 @@ var (
 	metaListen   string
 	ollyDataset  string
 	ollyWriteKey string
+	idFile       string
 )
 
 func init() {
@@ -58,6 +59,7 @@ func init() {
 	flag.StringVar(&metaListen, "metalisten", "localhost:0", "HTTP interface and port to bind on")
 	flag.StringVar(&ollyDataset, "olly_dataset", "", "Olly dataset name")
 	flag.StringVar(&ollyWriteKey, "olly_write_key", "", "Olly dataset name")
+	flag.StringVar(&idFile, "id_file", "", "Location of id file")
 }
 
 type BaseServerConfiguration struct {
@@ -94,6 +96,9 @@ type BaseServerConfiguration struct {
 
 	// Skip env dump
 	SkipEnvDump bool
+
+	// If set, write out id file.
+	IDFileLocation string
 }
 
 var BaseServerConfigurationDefaults = BaseServerConfiguration{
@@ -108,6 +113,7 @@ var BaseServerConfigurationDefaults = BaseServerConfiguration{
 	PropsRefreshPeriod:      5 * time.Minute,
 	OllyDataset:             "", // olly is disabled by default
 	OllyWriteKey:            "",
+	IDFileLocation:          "", // Disable by default.
 }
 
 type BaseServer struct {
@@ -154,6 +160,7 @@ func NewBaseServer(serviceName string, version version.VersionInfo, metricsPrefi
 	conf.MetaListen = cfg.MetaListenAddr
 	conf.OllyDataset = cfg.OllyDataset
 	conf.OllyWriteKey = cfg.OllyWriteKey
+	conf.IDFileLocation = cfg.IDFileLocation
 
 	props := properties.NewPropertyService(
 		properties.NewFileSystemPropertyBacking("/props"), // highest prio: dynamic FS props
@@ -165,6 +172,7 @@ func NewBaseServer(serviceName string, version version.VersionInfo, metricsPrefi
 		BaseServerConfiguration: &conf,
 		propertyService:         props,
 		featureService:          features.NewFeatureService(props),
+		config:                  cfg,
 	}
 	bs.waitGroup.Add(1)
 	return bs
@@ -230,6 +238,7 @@ func (bs *BaseServer) Run(service Service) {
 	bs.spawnHealthCheck(bs.readyAwareSubContext(bs.ctx, "health check"), service)
 	bs.spawnLegacyHealthCheck(bs.readyAwareSubContext(bs.ctx, "legacy health check"), service)
 	bs.spawnMetaServer(bs.readyAwareSubContext(bs.ctx, "metaserver"), service)
+	bs.checkIDFile(bs.ctx)
 
 	// If windows, turn over to windows process here
 	if runtime.GOOS == "windows" {

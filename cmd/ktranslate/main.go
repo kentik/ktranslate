@@ -560,6 +560,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.Server.OllyDataset = val
 			case "olly_write_key":
 				cfg.Server.OllyWriteKey = val
+			case "id_file":
+				cfg.Server.IDFileLocation = val
 			// pkg/api
 			case "api_device_file":
 				cfg.API.DeviceFile = val

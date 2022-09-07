@@ -118,7 +118,13 @@ type ServerConfig struct {
 	MetaListenAddr  string
 	OllyDataset     string
 	OllyWriteKey    string
+	IDFileLocation  string
+	pubKey          []byte
+	privKey         []byte
 }
+
+func (s *ServerConfig) SetKeys(pub []byte, priv []byte) { s.pubKey = pub; s.privKey = priv }
+func (s *ServerConfig) GetPubKey() []byte               { return s.pubKey }
 
 // APIConfig is the config for the API service
 type APIConfig struct {
@@ -378,6 +384,7 @@ func DefaultConfig() *Config {
 			MetaListenAddr:  "localhost:0",
 			OllyDataset:     "",
 			OllyWriteKey:    "",
+			IDFileLocation:  "",
 		},
 		API: &APIConfig{
 			DeviceFile: "",
