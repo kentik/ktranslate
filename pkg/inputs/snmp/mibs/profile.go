@@ -389,6 +389,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 
 	enabled := map[string]bool{}
 	enabledTables := map[string]map[string]bool{}
+	allMibsEnabled := false
 	for _, mib := range enabledMibs {
 		pts := strings.Split(mib, ".")
 		if len(pts) == 1 {
@@ -400,10 +401,14 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			}
 			enabledTables[pts[0]][pts[1]] = true
 		}
+
+		if mib == kt.EnableAllMibs {
+			allMibsEnabled = true
+		}
 	}
 
 	for _, metric := range p.Metrics {
-		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
+		if !allMibsEnabled && !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
 			continue
 		}
 		if enabledTables[metric.Mib] != nil {
@@ -531,6 +536,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 
 	enabled := map[string]bool{}
 	enabledTables := map[string]map[string]bool{}
+	allMibsEnabled := false
 	for _, mib := range enabledMibs {
 		pts := strings.Split(mib, ".")
 		if len(pts) == 1 {
@@ -541,6 +547,10 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				enabledTables[pts[0]] = map[string]bool{}
 			}
 			enabledTables[pts[0]][pts[1]] = true
+		}
+
+		if mib == kt.EnableAllMibs {
+			allMibsEnabled = true
 		}
 	}
 
@@ -580,7 +590,7 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 
 	// per metric tags here.
 	for _, metric := range p.Metrics {
-		if !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
+		if !allMibsEnabled && !enabled[metric.Mib] { // Only look at mibs we have opted into caring about.
 			continue
 		}
 		if enabledTables[metric.Mib] != nil {
