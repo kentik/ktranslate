@@ -294,7 +294,6 @@ func NewKentikApiFromLocalDevices(localDevices map[string]*kt.Device, log logger
 	api.setTime = time.Now()
 	api.Infof("Loaded %d Kentik devices via local file", num)
 	api.devices = resDev
-
 	return api
 }
 

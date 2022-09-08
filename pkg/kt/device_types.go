@@ -29,6 +29,9 @@ type Device struct {
 	MaxFlowRate   int                   `json:"max_flow_rate"`
 	Customs       []Column              `json:"custom_column_data,omitempty"`
 	CustomStr     string                `json:"custom_columns"`
+	SnmpCommunity string                `json:"device_snmp_community"`
+	SnmpIp        string                `json:"device_snmp_ip"`
+	SnmpV3        *V3SNMPConfig         `json:"device_snmp_v3_conf"`
 	allUserTags   map[string]string
 }
 
