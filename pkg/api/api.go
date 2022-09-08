@@ -236,7 +236,7 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 
 func (api *KentikApi) getDevices(ctx context.Context) error {
 	stime := time.Now()
-	res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/v5/devices")
+	res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/internal/devices")
 	if err != nil {
 		return err
 	}
