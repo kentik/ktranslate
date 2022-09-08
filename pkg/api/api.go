@@ -224,6 +224,23 @@ func (api *KentikApi) GetDevicesAsMap(cid kt.Cid) map[string]*kt.Device {
 	return res
 }
 
+func (api *KentikApi) GetDevices(ctx context.Context) (*kt.DeviceList, error) {
+	if api == nil {
+		return nil, nil
+	}
+	res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/internal/devices")
+	if err != nil {
+		return nil, err
+	}
+	var devices kt.DeviceList
+	err = json.Unmarshal(res, &devices)
+	if err != nil {
+		return nil, err
+	}
+
+	return &devices, nil
+}
+
 func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	if api == nil {
 		return nil

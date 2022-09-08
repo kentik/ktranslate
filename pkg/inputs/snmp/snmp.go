@@ -59,7 +59,7 @@ func init() {
 func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver) error {
 	snmpFile := cfg.SNMPFile
 	// Do this once here just to see if we need to exit right away.
-	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
+	conf, connectTimeout, retries, err := initSnmp(ctx, apic, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil { // If no global, we're turning off all snmp polling.
 		return err
 	}
@@ -114,13 +114,33 @@ func Close() {
 	}
 }
 
-func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.SnmpConfig, time.Duration, int, error) {
+func initSnmp(ctx context.Context, apic *api.KentikApi, snmpFile string, log logger.ContextL) (*kt.SnmpConfig, time.Duration, int, error) {
 	// First, parse the config file and see what we're doing.
 	log.Infof("Client SNMP: Running SNMP interface polling, loading config from %s", snmpFile)
 	conf, err := parseConfig(ctx, snmpFile, log)
 	if err != nil {
 		return nil, 0, 0, err
 	}
+
+	// load from kentik api
+	apiDevices, err := apic.GetDevices(ctx)
+	if err != nil {
+		return nil, 0, 0, err
+	}
+
+	for _, device := range apiDevices.Devices {
+		for _, ip := range device.SendingIps {
+			log.Infof("adding api device %s: %s", device.Name, ip)
+			conf.Devices[device.Name] = &kt.SnmpDeviceConfig{
+				DeviceName: device.Name,
+				DeviceIP:   device.SnmpIp,
+				Community:  device.SnmpCommunity,
+				V3:         device.SnmpV3,
+			}
+		}
+	}
+
+	log.Infof("SNMP Discovery: %+v", conf.Disco)
 
 	// If there's no global section, just turn ourselves off here.
 	if conf.Global == nil {
@@ -175,7 +195,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 
 func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) error {
 	// Parse again to make sure nothing's changed.
-	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
+	conf, connectTimeout, retries, err := initSnmp(ctx, apic, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
 		return err
 	}
