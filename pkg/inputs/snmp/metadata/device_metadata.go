@@ -158,7 +158,7 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
 		case SNMP_engineID:
-			_, md.EngineID = snmp_util.GetFromConv(wrapper.variable, snmp_util.CONV_ENGINE_ID, dm.log)
+			_, md.EngineID, _ = snmp_util.GetFromConv(wrapper.variable, snmp_util.CONV_ENGINE_ID, dm.log)
 		default:
 			// Now we're actually in the range of custom fields.
 			if wrapper.mib == nil { // This should never happen here.
@@ -174,12 +174,18 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 					md.Customs[oidName] = vt
 				case []byte:
 					if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
-						ival, sval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
+						ival, sval, mval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
 						if ival > 0 {
 							md.CustomInts[oidName] = ival
 							md.Customs[kt.StringPrefix+oidName] = sval
 						} else {
-							md.Customs[oidName] = sval
+							if len(mval) > 0 {
+								for k, v := range mval {
+									md.Customs[k] = v
+								}
+							} else {
+								md.Customs[oidName] = sval
+							}
 						}
 					} else {
 						md.Customs[oidName] = string(vt)
@@ -226,7 +232,7 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 	case gosnmp.OctetString:
 		val := string(value.variable.Value.([]byte))
 		if value.mib.Conversion != "" { // Adjust for any hard coded values here.
-			_, val = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
+			_, val, _ = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
 		}
 		if utf8.ValidString(val) {
 			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
@@ -243,7 +249,7 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 	case gosnmp.ObjectIdentifier:
 		val := string(value.variable.Value.(string))
 		if value.mib.Conversion != "" { // Adjust for any hard coded values here.
-			_, val = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
+			_, val, _ = snmp_util.GetFromConv(value.variable, value.mib.Conversion, dm.log)
 		}
 		if utf8.ValidString(val) {
 			md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, val, 0)
@@ -303,7 +309,7 @@ func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.Dev
 		case SNMP_sysServices:
 			md.SysServices = int(snmp_util.ToInt64(value))
 		case SNMP_engineID:
-			_, md.EngineID = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
+			_, md.EngineID, _ = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
 		}
 	}
 

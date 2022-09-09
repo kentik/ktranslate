@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func HandlePowersetStatus(bv []byte) (int64, string) {
+func HandlePowersetStatus(bv []byte) (int64, string, map[string]string) {
 	actives := make([]*UpsCode, len(upsCodes))
 
 	for i, v := range bv {
@@ -43,12 +43,12 @@ func HandlePowersetStatus(bv []byte) (int64, string) {
 
 	for i := len(severities); i > 0; i-- {
 		if len(severity[i]) > 0 { // Return the highest severity present which has flags set.
-			return int64(i), severities[i-1] + ": " + strings.Join(severity[i], ",")
+			return int64(i), severities[i-1] + ": " + strings.Join(severity[i], ","), nil
 		}
 	}
 
 	// Generally assume you don't get here.
-	return 0, ""
+	return 0, "", nil
 }
 
 type UpsCode struct {

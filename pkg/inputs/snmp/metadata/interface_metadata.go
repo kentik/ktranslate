@@ -247,7 +247,7 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 				case SNMP_ifPhysAddress:
 					switch variable.Type {
 					case gosnmp.OctetString:
-						_, sval := snmp_util.GetFromConv(variable, "hwaddr", im.log)
+						_, sval, _ := snmp_util.GetFromConv(variable, "hwaddr", im.log)
 						data.ExtraInfo[SNMP_ifPhysAddress] = sval
 					}
 				case SNMP_ifLastChange:

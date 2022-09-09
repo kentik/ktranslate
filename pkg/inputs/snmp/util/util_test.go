@@ -106,7 +106,7 @@ func TestHandlePowerset(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		val, str := GetFromConv(pdu, "powerset_status", l)
+		val, str, _ := GetFromConv(pdu, "powerset_status", l)
 		assert.Equal(expt, str, "%s", in)
 		pts := strings.SplitN(str, ":", 2)
 		assert.Equal(levels[pts[0]], val, "%s", in)
@@ -123,7 +123,7 @@ func TestHWAddr(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		_, str := GetFromConv(pdu, "hwaddr", l)
+		_, str, _ := GetFromConv(pdu, "hwaddr", l)
 		assert.Equal(expt, str, "%s", in)
 	}
 }
@@ -138,7 +138,7 @@ func TestHexToInt(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		_, str := GetFromConv(pdu, "hextoint:LittleEndian:uint64", l)
+		_, str, _ := GetFromConv(pdu, "hextoint:LittleEndian:uint64", l)
 		assert.Equal(expt, str, "%s", in)
 	}
 }
@@ -154,7 +154,7 @@ func TestHexToIP(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		_, str := GetFromConv(pdu, CONV_HEXTOIP, l)
+		_, str, _ := GetFromConv(pdu, CONV_HEXTOIP, l)
 		assert.Equal(expt, str, "%s", in)
 	}
 }
@@ -171,9 +171,15 @@ func TestEngineID(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		_, str := GetFromConv(pdu, CONV_ENGINE_ID, l)
+		_, str, _ := GetFromConv(pdu, CONV_ENGINE_ID, l)
 		assert.Equal(expt, str, "%s", in)
 	}
+}
+
+type multiRe struct {
+	input   []byte
+	re      string
+	outputs map[string]string
 }
 
 func TestRegex(t *testing.T) {
@@ -187,8 +193,27 @@ func TestRegex(t *testing.T) {
 
 	for expt, in := range tests {
 		pdu := gosnmp.SnmpPDU{Value: in}
-		ival, _ := GetFromConv(pdu, CONV_REGEXP+`:60 Secs.*?(\d+)`, l)
-		assert.Equal(expt, ival, "%s", in)
+		ival, _, named := GetFromConv(pdu, CONV_REGEXP+`:60 Secs.*?(\d+)`, l)
+		assert.Equal(expt, ival, "%s %v", in, named)
+	}
+
+	testStr := []multiRe{
+		multiRe{
+			input: []byte("Juniper Networks, Inc. mx80-48t , version 13.3R9.13 Build date: 2016-03-01 08:36:50 UTC "),
+			re:    `:Juniper Networks, Inc. (?P<model>\S+?) , version (?P<version>\S+)`,
+			outputs: map[string]string{
+				"model":   "mx80-48t",
+				"version": "13.3R9.13",
+			},
+		},
+	}
+
+	for _, in := range testStr {
+		pdu := gosnmp.SnmpPDU{Value: in.input}
+		_, str, mult := GetFromConv(pdu, CONV_REGEXP+in.re, l)
+		for k, v := range in.outputs {
+			assert.Equal(v, mult[k], "%s %s %v %s", k, string(in.input), mult, str)
+		}
 	}
 }
 
@@ -203,7 +228,7 @@ func TestToOne(t *testing.T) {
 
 	for in, expt := range tests {
 		pdu := gosnmp.SnmpPDU{Value: []byte(in)}
-		ival, _ := GetFromConv(pdu, CONV_ONE, l)
+		ival, _, _ := GetFromConv(pdu, CONV_ONE, l)
 		assert.Equal(expt, ival, "%s", in)
 	}
 }
