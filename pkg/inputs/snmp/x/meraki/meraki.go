@@ -879,8 +879,8 @@ func getUsage(u uplink) (int64, int64) {
 	sent := int64(0)
 	rcv := int64(0)
 	for _, t := range u.Usage {
-		sent += int64(t.Sent * 1000)    // Kilobytes -> Bytes
-		rcv += int64(t.Received * 1000) // Same.
+		sent += int64(t.Sent)
+		rcv += int64(t.Received)
 	}
 
 	return sent, rcv
