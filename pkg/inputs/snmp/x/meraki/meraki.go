@@ -513,7 +513,7 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 				"device_type":        client.DeviceType,
 				"recent_device_name": client.RecentDeviceName,
 				"dhcp_hostname":      client.DhcpHostname,
-				"mdsn_name":          client.MdnsName,
+				"mdns_name":          client.MdnsName,
 				"application":        appU.Application,
 			}
 			dst.CustomInt = map[string]int32{
