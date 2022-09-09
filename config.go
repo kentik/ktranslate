@@ -314,7 +314,7 @@ func DefaultConfig() *Config {
 			FlowsNeeded:          10,
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
-			MeasurementPrefix: "kentik.flow",
+			MeasurementPrefix: "",
 		},
 		PrometheusSink: &PrometheusSinkConfig{
 			ListenAddr: ":8082",
