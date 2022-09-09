@@ -24,7 +24,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&measurementPrefix, "influxdb_measurement_prefix", "kentik.flow", "Prefix metric names with this")
+	flag.StringVar(&measurementPrefix, "influxdb_measurement_prefix", "", "Prefix metric names with this")
 
 }
 
@@ -460,7 +460,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{{
-		Name:      f.config.MeasurementPrefix,
+		Name:      f.config.MeasurementPrefix + "ksynth",
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
@@ -491,7 +491,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	}
 
 	return []InfluxData{{
-		Name:      f.config.MeasurementPrefix,
+		Name:      f.config.MeasurementPrefix + "flow",
 		Fields:    ms,
 		Timestamp: in.Timestamp * 1000000000,
 		Tags:      attr,
