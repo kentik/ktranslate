@@ -124,13 +124,13 @@ type ServerConfig struct {
 	privKey         []byte
 }
 
-// Allows a pub/priv keypair to be passed in to this server config.
+// SetKeys allows a pub/priv keypair to be passed in to this server config.
 func (s *ServerConfig) SetKeys(pub []byte, priv []byte) { s.pubKey = pub; s.privKey = priv }
 
-// Lets you get the public key out of the config.
+// GetPubKey lets you get the public key out of the config.
 func (s *ServerConfig) GetPubKey() []byte { return s.pubKey }
 
-// uses the key to sign the passed in message.
+// Sign uses the key to sign the passed in message.
 func (s *ServerConfig) Sign(msg []byte) []byte { return ed25519.Sign(s.privKey, msg) }
 
 // APIConfig is the config for the API service
