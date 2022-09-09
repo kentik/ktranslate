@@ -165,7 +165,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(wrapper.variable.Value.([]byte))
 			if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
-				ival, sval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
+				ival, sval, _ := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
 				if ival > 0 {
 					dmr.customBigInt[oidName] = ival
 					dmr.customStr[kt.StringPrefix+oidName] = sval

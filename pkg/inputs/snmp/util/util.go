@@ -198,7 +198,7 @@ func GetDeviceManufacturer(server snmpWalker, log logger.ContextL) string {
 func PrettyPrint(pdu gosnmp.SnmpPDU, format string, log logger.ContextL) string {
 	switch pdu.Type {
 	case gosnmp.OctetString:
-		_, s := GetFromConv(pdu, format, log)
+		_, s, _ := GetFromConv(pdu, format, log)
 		return s
 	case gosnmp.IPAddress:
 		return pdu.Value.(string)
@@ -236,7 +236,7 @@ func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, c
 }
 
 // Handle the case of wierd ints encoded as byte arrays.
-func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, string) {
+func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, string, map[string]string) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Warnf("Invalid Conversion: %s %v %v", pdu.Name, pdu.Value, r)
@@ -245,12 +245,12 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 
 	bv, ok := pdu.Value.([]byte)
 	if !ok || len(bv) == 0 {
-		return 0, ""
+		return 0, "", nil
 	}
 
 	switch conv {
 	case CONV_HWADDR: // If there's an encoded mac addr here.
-		return 0, net.HardwareAddr(bv).String()
+		return 0, net.HardwareAddr(bv).String(), nil
 	case CONV_POWERSET:
 		return vendor.HandlePowersetStatus(bv)
 	case CONV_HEXTOIP:
@@ -269,37 +269,37 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 			if endian == "LittleEndian" {
 				switch bit {
 				case "uint64":
-					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint64(bv))
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint64(bv)), nil
 				case "uint32":
-					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint32(bv))
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint32(bv)), nil
 				case "uint16":
-					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint16(bv))
+					return 0, fmt.Sprintf("%d", binary.LittleEndian.Uint16(bv)), nil
 				default:
 					log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
-					return 0, ""
+					return 0, "", nil
 				}
 			} else if endian == "BigEndian" {
 				switch bit {
 				case "uint64":
-					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint64(bv))
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint64(bv)), nil
 				case "uint32":
-					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint32(bv))
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint32(bv)), nil
 				case "uint16":
-					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint16(bv))
+					return 0, fmt.Sprintf("%d", binary.BigEndian.Uint16(bv)), nil
 				default:
 					log.Errorf("invalid bit value (%s) for hex to int conversion", bit)
-					return 0, ""
+					return 0, "", nil
 				}
 			} else {
 				log.Errorf("invalid Endian value (%s) for hex to int conversion", endian)
-				return 0, ""
+				return 0, "", nil
 			}
 		} else if split[0] == CONV_REGEXP && len(split) >= 2 {
 			return fromRegexp(bv, strings.Join(split[1:], ":")) // Put back together just in case RE has a : in it.
 		}
 	}
 
-	return 0, string(bv) // Default down to here.
+	return 0, string(bv), nil // Default down to here.
 }
 
 /**
@@ -308,7 +308,7 @@ I need to take this:
 .1.3.6.1.4.1.9.9.42.1.2.2.1.2.1 = Hex-String: 0A00640A
 and display it as a string 10.0.100.10
 */
-func hexToIP(bv []byte) (int64, string) {
+func hexToIP(bv []byte) (int64, string, map[string]string) {
 	switch len(bv) {
 	case 8:
 		return 0, fmt.Sprintf("%d.%d.%d.%d",
@@ -316,7 +316,7 @@ func hexToIP(bv []byte) (int64, string) {
 			binary.BigEndian.Uint16(bv[2:4]),
 			binary.BigEndian.Uint16(bv[4:6]),
 			binary.BigEndian.Uint16(bv[6:8]),
-		)
+		), nil
 	case 4:
 		nv := []byte{0x00, bv[0], 0x00, bv[1], 0x00, bv[2], 0x00, bv[3]}
 		return 0, fmt.Sprintf("%d.%d.%d.%d",
@@ -324,20 +324,20 @@ func hexToIP(bv []byte) (int64, string) {
 			binary.BigEndian.Uint16(nv[2:4]),
 			binary.BigEndian.Uint16(nv[4:6]),
 			binary.BigEndian.Uint16(nv[6:8]),
-		)
+		), nil
 	default:
-		return 0, ""
+		return 0, "", nil
 	}
 }
 
-func engineID(bv []byte) (int64, string) {
+func engineID(bv []byte) (int64, string, map[string]string) {
 	buf := make([]byte, 0, 3*len(bv))
 	x := buf[1*len(bv) : 3*len(bv)]
 	hex.Encode(x, bv)
 	for i := 0; i < len(x); i += 2 {
 		buf = append(buf, x[i], x[i+1], ':')
 	}
-	return 0, string(buf[:len(buf)-1])
+	return 0, string(buf[:len(buf)-1]), nil
 }
 
 /**
@@ -347,30 +347,46 @@ This lets people parse it out.
 	agentSwitchCpuProcessTotalUtilization
 	1.3.6.1.4.1.4413.1.1.1.1.4.9.0 = STRING: "    5 Secs ( 96.3762%)   60 Secs ( 62.8549%)  300 Secs ( 25.2877%)"
 */
-func fromRegexp(bv []byte, reg string) (int64, string) {
+func fromRegexp(bv []byte, reg string) (int64, string, map[string]string) {
 	r := reCache[reg]
 	if r == nil {
 		rn, err := regexp.Compile(reg)
 		if err != nil {
-			return 0, ""
+			return 0, "", nil
 		}
 		reCache[reg] = rn
 		r = rn
 	}
 
 	// Now, lets run some regexps.
+	named := r.SubexpNames()
 	res := r.FindSubmatch(bv)
+	matches := map[string]string{}
 	if len(res) < 2 {
-		return 0, ""
+		return 0, "", nil
 	}
-	ival, err := strconv.Atoi(string(res[1]))
-	if err != nil { // If we can't parse as int, return as string.
-		return 0, string(res[1])
+
+	for i, match := range res {
+		if i == 0 {
+			continue // This is always the whole matched expression.
+		}
+
+		if named[i] != "" { // If we have a list of named matches to deal with, don't return here but keep going.
+			matches[named[i]] = string(match) // Store this as a string.
+			continue
+		}
+
+		ival, err := strconv.Atoi(string(match))
+		if err != nil { // If we can't parse as int, return as string.
+			return 0, string(match), nil
+		}
+		return int64(ival), string(match), nil // Parsed as int but return both just in case.
 	}
-	return int64(ival), string(res[1]) // Parsed as int but return both just in case.
+
+	return 0, "", matches
 }
 
 // This one is used for certain string valued oids which we want to poll as metrics. Just converts to 1.
-func toOne(bv []byte) (int64, string) {
-	return 1, string(bv)
+func toOne(bv []byte) (int64, string, map[string]string) {
+	return 1, string(bv), nil
 }
