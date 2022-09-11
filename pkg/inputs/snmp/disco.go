@@ -229,7 +229,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	}
 
 	// Loop over all possibe v2c options here if any are set.
-	if md == nil { // Only check these if v3 hasn't found anything.
+	if md == nil || md.SysObjectID == "" { // Only check these if v3 hasn't found anything.
 		for _, community := range conf.Disco.DefaultCommunities {
 			device = kt.SnmpDeviceConfig{
 				DeviceName: result.Name,
