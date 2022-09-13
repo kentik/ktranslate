@@ -477,6 +477,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.NewRelicSink.ValidateJSON = v
+			// pkg/sinks/nrmulti
+			case "nr_multi_config_file":
+				cfg.NewRelicMultiSink.CredFile = val
 			// pkg/sinks/file
 			case "file_out":
 				cfg.FileSink.Path = val

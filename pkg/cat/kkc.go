@@ -82,15 +82,11 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		}
 	}
 
-	if config.KentikEmail != "" && config.KentikAPIToken != "" {
-		kentikConfig := &kt.KentikConfig{
-			ApiEmail: config.KentikEmail,
-			ApiToken: config.KentikAPIToken,
-			ApiRoot:  config.APIBaseURL,
-			ApiPlan:  config.KentikPlan,
-		}
-
-		kc.kentikConfig = kentikConfig
+	kc.kentikConfig = &kt.KentikConfig{
+		ApiEmail: config.KentikEmail,
+		ApiToken: config.KentikAPIToken,
+		ApiRoot:  config.APIBaseURL,
+		ApiPlan:  config.KentikPlan,
 	}
 
 	for i := 0; i < config.ProcessingThreads; i++ {
@@ -629,12 +625,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// Api system for talking to kentik.
-	if kc.kentikConfig != nil && kc.kentikConfig.ApiEmail != "" {
-		apic, err := api.NewKentikApi(ctx, kc.kentikConfig, kc.log, kc.config.API)
-		if err != nil {
-			return err
+	if kc.kentikConfig != nil {
+		if kc.kentikConfig.ApiEmail != "" || len(kc.kentikConfig.CredMap) > 0 {
+			apic, err := api.NewKentikApi(ctx, kc.kentikConfig, kc.log, kc.config.API)
+			if err != nil {
+				return err
+			}
+			kc.apic = apic
 		}
-		kc.apic = apic
 	} else {
 		kc.apic = api.NewKentikApiFromLocalDevices(kc.auth.GetDeviceMap(), kc.log)
 	}

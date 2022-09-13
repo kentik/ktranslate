@@ -88,6 +88,13 @@ func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.Context
 		config:     cfg,
 	}
 
+	// Set a list of devices if there's not one present.
+	if len(kapi.conf.CredMap) == 0 {
+		kapi.conf.CredMap = map[kt.Cid]*kt.KentikConfig{
+			0: conf,
+		}
+	}
+
 	// Now, check to see if synthetics API works.
 	err := kapi.connectSynth(ctx)
 	if err != nil {
@@ -103,8 +110,8 @@ func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.Context
 	return kapi, err
 }
 
-func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte, error) {
-	if api.conf.ApiEmail == "" { // If no creds, use fake file.
+func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
+	if apiEmail == "" {
 		if v := api.config.DeviceFile; v != "" {
 			api.Infof("Reading devices from local file: %s", v)
 			return os.ReadFile(v)
@@ -120,8 +127,8 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte,
 
 	userAgentString := USER_AGENT_BASE
 
-	req.Header.Add(API_EMAIL_HEADER, api.conf.ApiEmail)
-	req.Header.Add(API_PASSWORD_HEADER, api.conf.ApiToken)
+	req.Header.Add(API_EMAIL_HEADER, apiEmail)
+	req.Header.Add(API_PASSWORD_HEADER, apiToken)
 	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
 
 	resp, err := api.client.Do(req)
@@ -238,29 +245,31 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 
 func (api *KentikApi) getDevices(ctx context.Context) error {
 	stime := time.Now()
-	res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/internal/devices")
-	if err != nil {
-		return err
-	}
-	var devices kt.DeviceList
-	err = json.Unmarshal(res, &devices)
-	if err != nil {
-		return err
-	}
-
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
-	for _, device := range devices.Devices {
-		myd := device
-		if _, ok := resDev[device.CompanyID]; !ok {
-			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
+	for _, info := range api.conf.CredMap {
+		res, err := api.getDeviceInfo(ctx, api.conf.ApiRoot+"/api/internal/devices", info.ApiEmail, info.ApiToken)
+		if err != nil {
+			return err
 		}
-		device.Interfaces = map[kt.IfaceID]kt.Interface{}
-		for _, intf := range device.AllInterfaces {
-			device.Interfaces[intf.SnmpID] = intf
+		var devices kt.DeviceList
+		err = json.Unmarshal(res, &devices)
+		if err != nil {
+			return err
 		}
-		resDev[device.CompanyID][device.ID] = &myd
-		num++
+
+		for _, device := range devices.Devices {
+			myd := device
+			if _, ok := resDev[device.CompanyID]; !ok {
+				resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
+			}
+			device.Interfaces = map[kt.IfaceID]kt.Interface{}
+			for _, intf := range device.AllInterfaces {
+				device.Interfaces[intf.SnmpID] = intf
+			}
+			resDev[device.CompanyID][device.ID] = &myd
+			num++
+		}
 	}
 
 	api.setTime = time.Now()
@@ -355,40 +364,42 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	defer api.mux.Unlock()
 	api.lastSynth = time.Now()
 
-	md := metadata.New(map[string]string{
-		"X-CH-Auth-Email":     api.conf.ApiEmail,
-		"X-CH-Auth-API-Token": api.conf.ApiToken,
-	})
-	ctxo := metadata.NewOutgoingContext(ctx, md)
-
-	lt := &synthetics.ListTestsRequest{}
-	r, err := api.synClient.ListTests(ctxo, lt)
-	if err != nil {
-		return err
-	}
-
 	synTests := map[kt.TestId]*synthetics.Test{}
-	for _, test := range r.GetTests() {
-		localt := test
-		synTests[kt.NewTestId(test.GetId())] = localt
-	}
-
-	la := &synthetics.ListAgentsRequest{}
-	ra, err := api.synClient.ListAgents(ctxo, la)
-	if err != nil {
-		return err
-	}
-
 	synAgents := map[kt.AgentId]*synthetics.Agent{}
 	synAgentsByIP := map[string]*synthetics.Agent{}
-	for _, agent := range ra.GetAgents() {
-		locala := agent
-		synAgents[kt.NewAgentId(agent.GetId())] = locala
-		lip := locala.GetLocalIp() // Store local ip seperately from public one, if a local is set.
-		if lip != "" {
-			synAgentsByIP[lip] = locala
+	for _, info := range api.conf.CredMap {
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.ApiEmail,
+			"X-CH-Auth-API-Token": info.ApiToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &synthetics.ListTestsRequest{}
+		r, err := api.synClient.ListTests(ctxo, lt)
+		if err != nil {
+			return err
 		}
-		synAgentsByIP[locala.GetIp()] = locala
+
+		for _, test := range r.GetTests() {
+			localt := test
+			synTests[kt.NewTestId(test.GetId())] = localt
+		}
+
+		la := &synthetics.ListAgentsRequest{}
+		ra, err := api.synClient.ListAgents(ctxo, la)
+		if err != nil {
+			return err
+		}
+
+		for _, agent := range ra.GetAgents() {
+			locala := agent
+			synAgents[kt.NewAgentId(agent.GetId())] = locala
+			lip := locala.GetLocalIp() // Store local ip seperately from public one, if a local is set.
+			if lip != "" {
+				synAgentsByIP[lip] = locala
+			}
+			synAgentsByIP[locala.GetIp()] = locala
+		}
 	}
 
 	api.synAgents = synAgents

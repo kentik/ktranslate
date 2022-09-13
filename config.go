@@ -65,6 +65,11 @@ type NewRelicSinkConfig struct {
 	ValidateJSON bool
 }
 
+// NewRelicMultiSinkConfig is the config for Multi New Relic
+type NewRelicMultiSinkConfig struct {
+	CredFile string
+}
+
 // FileSinkConfig is the config for the file sink
 type FileSinkConfig struct {
 	Path                 string
@@ -238,6 +243,8 @@ type Config struct {
 	NetSink *NetSinkConfig
 	// pkg/sinks/nr
 	NewRelicSink *NewRelicSinkConfig
+	// pkg/sinks/nrmulti
+	NewRelicMultiSink *NewRelicMultiSinkConfig
 	// pkg/sinks/file
 	FileSink *FileSinkConfig
 	// pkg/sinks/gcppubsub
@@ -340,6 +347,7 @@ func DefaultConfig() *Config {
 			Region:       "",
 			ValidateJSON: false,
 		},
+		NewRelicMultiSink: &NewRelicMultiSinkConfig{},
 		FileSink: &FileSinkConfig{
 			Path:                 "./",
 			EnableImmediateWrite: false,
