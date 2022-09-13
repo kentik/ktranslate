@@ -16,6 +16,7 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/kentik/ktranslate"
+	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
@@ -34,7 +35,7 @@ type SnmpDiscoDeviceStat struct {
 	delta    int
 }
 
-func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig) (*SnmpDiscoDeviceStat, error) {
+func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
 	snmpFile := cfg.SNMPFile
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
@@ -71,6 +72,9 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	for i := 0; i < conf.Disco.Threads; i++ {
 		ctl <- true
 	}
+
+	// Pull in any kentik devices to check if defined here.
+	addKentikDevices(apic, conf)
 
 	// Use this for auto-discovering metrics to pull.
 	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, false, log)
@@ -142,10 +146,10 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	return stats, nil
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig) {
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) {
 	pt := time.Duration(pollTimeMin) * time.Minute
 	check := func() {
-		stats, err := Discover(ctx, log, pt, cfg)
+		stats, err := Discover(ctx, log, pt, cfg, apic)
 		if err != nil {
 			log.Errorf("Discovery SNMP Error: %v", err)
 		} else {
@@ -487,4 +491,44 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	}
 
 	return &stats, snmp_util.WriteFile(ctx, snmpFile, t, permissions)
+}
+
+func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) {
+	for _, device := range apic.GetDevicesAsMap(0) {
+		if device.SnmpIp != "" {
+			found := false
+			for _, com := range conf.Disco.Cidrs {
+				if com == device.SnmpIp {
+					found = true
+					break
+				}
+			}
+			if !found {
+				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
+				if device.SnmpCommunity != "" {
+					found := false
+					for _, com := range conf.Disco.DefaultCommunities {
+						if com == device.SnmpCommunity {
+							found = true
+							break
+						}
+					}
+					if !found {
+						conf.Disco.DefaultCommunities = append(conf.Disco.DefaultCommunities, device.SnmpCommunity)
+					}
+				} else if device.SnmpV3 != nil {
+					found := false
+					for _, com := range conf.Disco.OtherV3s {
+						if com.UserName == device.SnmpV3.UserName && com.AuthenticationPassphrase == device.SnmpV3.AuthenticationPassphrase {
+							found = true
+							break
+						}
+					}
+					if !found {
+						conf.Disco.OtherV3s = append(conf.Disco.OtherV3s, device.SnmpV3)
+					}
+				}
+			}
+		}
+	}
 }

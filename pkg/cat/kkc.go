@@ -654,7 +654,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.
 	if kc.config.SNMPInput.Enable {
 		if kc.config.EnableSNMPDiscovery { // Here, we're just returning the list of devices on the network which might speak snmp.
-			_, err := snmp.Discover(ctx, kc.log, 0, kc.config.SNMPInput)
+			_, err := snmp.Discover(ctx, kc.log, 0, kc.config.SNMPInput, kc.apic)
 			return err
 		}
 		assureInput()

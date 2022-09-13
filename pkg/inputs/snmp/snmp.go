@@ -161,7 +161,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
 	if v := cfg.DiscoveryIntervalMinutes; v > 0 || runOnStart { // If we are re-running snmp discovery every interval AND/OR running on start, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg)
+		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg, apic)
 	}
 
 	// Block here
