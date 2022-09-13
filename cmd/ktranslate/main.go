@@ -219,6 +219,7 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		if cfg.SyslogInput.ListenAddr == "" {
 			cfg.SyslogInput.ListenAddr = "0.0.0.0:5143"
 		}
+		cfg.SyslogInput.Enable = true
 	case "nr1.snmp": // Tune for snmp sending.
 		cfg.Compression = "gzip"
 		cfg.Sinks = "new_relic"
