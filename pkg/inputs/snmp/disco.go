@@ -74,7 +74,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	}
 
 	// Pull in any kentik devices to check if defined here.
-	addKentikDevices(apic, conf)
+	kentikDevices := addKentikDevices(apic, conf)
 
 	// Use this for auto-discovering metrics to pull.
 	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, false, log)
@@ -126,7 +126,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 				}
 				wg.Add(1)
 				posit := fmt.Sprintf("%d/%d)", i+1, len(results))
-				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, log)
+				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
 			}
 		}
 		wg.Wait()
@@ -185,7 +185,7 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL,
 }
 
 func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, mux *sync.RWMutex, wg *sync.WaitGroup,
-	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, log logger.ContextL) {
+	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, kentikDevices map[string]string, log logger.ContextL) {
 
 	// Get the token to allow us to run.
 	_ = <-ctl
@@ -305,6 +305,13 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		} else {
 			device.Provider = provider
 		}
+	}
+
+	if did, ok := kentikDevices[device.DeviceIP]; ok {
+		if device.UserTags == nil {
+			device.UserTags = map[string]string{}
+		}
+		device.UserTags["kentik.device_id"] = did
 	}
 
 	mux.Lock()
@@ -493,11 +500,12 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	return &stats, snmp_util.WriteFile(ctx, snmpFile, t, permissions)
 }
 
-func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) {
+func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]string {
 	if conf.Disco.Kentik == nil || !conf.Disco.Kentik.UseDeviceInventory {
-		return
+		return nil
 	}
 
+	added := map[string]string{}
 	for _, device := range apic.GetDevicesAsMap(0) {
 		if device.SnmpIp != "" {
 			found := false
@@ -523,6 +531,7 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) {
 
 			if !found && add {
 				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
+				added[device.SnmpIp] = device.ID.Itoa()
 				if device.SnmpCommunity != "" {
 					found := false
 					for _, com := range conf.Disco.DefaultCommunities {
@@ -549,4 +558,6 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) {
 			}
 		}
 	}
+
+	return added
 }
