@@ -204,6 +204,15 @@ type SnmpTrapConfig struct {
 	V3        *V3SNMPConfig `yaml:"v3_config"`
 }
 
+type KentikMatch struct {
+	IPAddress []string `yaml:"ip_address"`
+}
+
+type KentikDisco struct {
+	UseDeviceInventory bool        `yaml:"use_device_inventory"`
+	DeviceMatching     KentikMatch `yaml:"device_matching"`
+}
+
 type SnmpDiscoConfig struct {
 	Cidrs              StringArray     `yaml:"cidrs"`
 	IgnoreList         StringArray     `yaml:"ignore_list"`
@@ -219,6 +228,7 @@ type SnmpDiscoConfig struct {
 	ReplaceDevices     bool            `yaml:"replace_devices"`
 	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
 	CheckAll           bool            `yaml:"check_all_ips,omitempty"`
+	Kentik             *KentikDisco    `yaml:"kentik"`
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`
 }

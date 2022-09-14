@@ -494,16 +494,34 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 }
 
 func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) {
+	if conf.Disco.Kentik == nil || !conf.Disco.Kentik.UseDeviceInventory {
+		return
+	}
+
 	for _, device := range apic.GetDevicesAsMap(0) {
 		if device.SnmpIp != "" {
 			found := false
+			add := false
 			for _, com := range conf.Disco.Cidrs {
 				if com == device.SnmpIp {
 					found = true
 					break
 				}
 			}
-			if !found {
+			if len(conf.Disco.Kentik.DeviceMatching.IPAddress) == 0 {
+				add = true
+			} else {
+				snmpIP := net.ParseIP(device.SnmpIp)
+				for _, ip := range conf.Disco.Kentik.DeviceMatching.IPAddress {
+					_, ipr, err := net.ParseCIDR(ip)
+					if err == nil && ipr.Contains(snmpIP) {
+						add = true
+						break
+					}
+				}
+			}
+
+			if !found && add {
 				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
 				if device.SnmpCommunity != "" {
 					found := false
