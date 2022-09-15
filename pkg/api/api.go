@@ -104,9 +104,11 @@ func NewKentikApi(ctx context.Context, conf *kt.KentikConfig, log logger.Context
 }
 
 func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string) ([]byte, error) {
-	if v := api.config.DeviceFile; v != "" {
-		api.Infof("Reading devices from local file: %s", v)
-		return os.ReadFile(v)
+	if api.conf.ApiEmail == "" { // If no creds, use fake file.
+		if v := api.config.DeviceFile; v != "" {
+			api.Infof("Reading devices from local file: %s", v)
+			return os.ReadFile(v)
+		}
 	}
 
 	// Try to make a request, parse the result as json.
