@@ -505,17 +505,23 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 		return nil
 	}
 
+	inArray := func(kneedle string, haystack []string) bool {
+		if len(haystack) == 0 { // Default to true if empty.
+			return true
+		}
+		for _, k := range haystack {
+			if k == kneedle {
+				return true
+			}
+		}
+		return false
+	}
+
 	added := map[string]string{}
 	for _, device := range apic.GetDevicesAsMap(0) {
 		if device.SnmpIp != "" {
-			found := false
+			found := len(conf.Disco.Cidrs) > 0 && inArray(device.SnmpIp, conf.Disco.Cidrs)
 			add := false
-			for _, com := range conf.Disco.Cidrs {
-				if com == device.SnmpIp {
-					found = true
-					break
-				}
-			}
 			if len(conf.Disco.Kentik.DeviceMatching.IPAddress) == 0 {
 				add = true
 			} else {
@@ -529,17 +535,23 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 				}
 			}
 
+			if add { // And together any label selections.
+				if len(device.Labels) > 0 && len(conf.Disco.Kentik.DeviceMatching.Labels) > 0 { // Force a match here.
+					add = false
+				}
+				for _, l := range device.Labels {
+					add = inArray(l.Name, conf.Disco.Kentik.DeviceMatching.Labels)
+					if !add {
+						break
+					}
+				}
+			}
+
 			if !found && add {
 				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
 				added[device.SnmpIp] = device.ID.Itoa()
 				if device.SnmpCommunity != "" {
-					found := false
-					for _, com := range conf.Disco.DefaultCommunities {
-						if com == device.SnmpCommunity {
-							found = true
-							break
-						}
-					}
+					found := inArray(device.SnmpCommunity, conf.Disco.DefaultCommunities)
 					if !found {
 						conf.Disco.DefaultCommunities = append(conf.Disco.DefaultCommunities, device.SnmpCommunity)
 					}

@@ -206,6 +206,7 @@ type SnmpTrapConfig struct {
 
 type KentikMatch struct {
 	IPAddress []string `yaml:"ip_address"`
+	Labels    []string `yaml:"labels"`
 }
 
 type KentikDisco struct {
