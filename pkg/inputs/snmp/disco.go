@@ -522,7 +522,7 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 		if device.SnmpIp != "" {
 			found := len(conf.Disco.Cidrs) > 0 && inArray(device.SnmpIp, conf.Disco.Cidrs)
 			add := false
-			if len(conf.Disco.Kentik.DeviceMatching.IPAddress) == 0 {
+			if len(conf.Disco.Kentik.DeviceMatching.IPAddress) == 0 { // If nothing here, default to allow all.
 				add = true
 			} else {
 				snmpIP := net.ParseIP(device.SnmpIp)
