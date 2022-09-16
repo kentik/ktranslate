@@ -535,7 +535,7 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 				}
 			}
 
-			if add { // And together any label selections.
+			if add { // And together any label selections. Force both cidr AND label to match, if both are set.
 				if len(device.Labels) > 0 && len(conf.Disco.Kentik.DeviceMatching.Labels) > 0 { // Force a match here.
 					add = false
 				}
