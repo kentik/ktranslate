@@ -536,12 +536,12 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 			}
 
 			if add { // And together any label selections. Force both cidr AND label to match, if both are set.
-				if len(device.Labels) > 0 && len(conf.Disco.Kentik.DeviceMatching.Labels) > 0 { // Force a match here.
+				if len(conf.Disco.Kentik.DeviceMatching.Labels) > 0 { // Force a match here.
 					add = false
 				}
 				for _, l := range device.Labels {
 					add = inArray(l.Name, conf.Disco.Kentik.DeviceMatching.Labels)
-					if !add {
+					if add { // match any label, if true break out.
 						break
 					}
 				}
@@ -551,7 +551,7 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
 				added[device.SnmpIp] = device.ID.Itoa()
 				if device.SnmpCommunity != "" {
-					found := inArray(device.SnmpCommunity, conf.Disco.DefaultCommunities)
+					found := len(conf.Disco.DefaultCommunities) > 0 && inArray(device.SnmpCommunity, conf.Disco.DefaultCommunities)
 					if !found {
 						conf.Disco.DefaultCommunities = append(conf.Disco.DefaultCommunities, device.SnmpCommunity)
 					}
