@@ -547,6 +547,12 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 				}
 			}
 
+			if add { // And together any site selections.
+				if len(conf.Disco.Kentik.DeviceMatching.Sites) > 0 { // Force a match here.
+					add = inArray(device.Site.SiteName, conf.Disco.Kentik.DeviceMatching.Sites)
+				}
+			}
+
 			if !found && add {
 				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
 				added[device.SnmpIp] = device.ID.Itoa()
