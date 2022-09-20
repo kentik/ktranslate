@@ -1,0 +1,157 @@
+version: "3.9"
+services:
+  elasticsearch:
+    image: elasticsearch:7.14.2
+    restart: always
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200
+
+  elasticsearch-init:
+    image: ehazlett/curl:latest
+    restart: on-failure
+    entrypoint: ["/bin/sh"]
+    command:
+      - "-c"
+      - "wait-for-it.sh -h elasticsearch -p 9200 -- curl -XPUT http://elasticsearch:9200/kentik"
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:7.14.2
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://elasticsearch:9200"]
+    healthcheck:
+      test: ["CMD", "curl", "localhost:5601"]
+      interval: 10s
+      timeout: 1s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+
+  elasticsearchreplica:
+    image: elasticsearch:7.14.2
+    restart: always
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200
+
+  elasticsearchreplica-init:
+    image: ehazlett/curl:latest
+    restart: on-failure
+    entrypoint: ["/bin/sh"]
+    command:
+      - "-c"
+      - "wait-for-it.sh -h elasticsearchreplica -p 9200 -- curl -XPUT http://elasticsearchreplica:9200/kentik"
+    depends_on:
+      - elasticsearchreplica
+
+  kibana_replica:
+    image: kibana:7.14.2
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://elasticsearchreplica:9200"]
+    healthcheck:
+      test: ["CMD", "curl", "localhost:5601"]
+      interval: 10s
+      timeout: 1s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 5602:5601
+    depends_on:
+      - elasticsearchreplica
+
+  ktranslate:
+    image: kentik/ktranslate:latest
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /tmp/ktranslate.yaml
+        listenaddr: "127.0.0.1:8081"
+        udrsfile: "/etc/ktranslate/udr.csv"
+        geofile: "/etc/ktranslate/GeoLite2-Country.mmdb"
+        asnfile: "/etc/ktranslate/GeoLite2-ASN.mmdb"
+        processingthreads: 1
+        inputthreads: 1
+        maxthreads: 1
+        format: "elasticsearch"
+        compression: "none"
+        sinks: ""
+        maxflowspermessage: 10000
+        rollupinterval: 0
+        rollupandalpha: false
+        samplerate: 1
+        samplemin: 1
+        enablesnmpdiscovery: false
+        kentikplan: 0
+        apibaseurl: "https://api.kentik.com"
+        enableteelogs: false
+        enablehttpinput: true
+        filters: []
+        netflowformat:
+          version: "netflow5"
+        multisink:
+          httpsinks:
+            - target: "http://elasticsearch:9200/kentik/_bulk"
+              headers: ["Content-Type:application/json"]
+              insecureskipverify: false
+              timeoutinseconds: 30
+            - target: "http://elasticsearchreplica:9200/kentik/_bulk"
+              headers: ["Content-Type:application/json"]
+              insecureskipverify: false
+              timeoutinseconds: 30
+
+        server:
+          servicename: "ktranslate"
+          loglevel: "info"
+          logtostdout: false
+          metricsendpoint: "none"
+          metalistenaddr: ""
+          ollydataset: ""
+          ollywritekey: ""
+
+        api:
+          devicefile: "/etc/ktranslate/devices.json"
+
+        flowinput:
+          enable: true
+          protocol: "netflow5"
+          listenip: "0.0.0.0"
+          listenport: 9995
+          enablereuseport: false
+          workers: 1
+          messagefields: "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
+          prometheuslistenaddr: ""
+          mappingfile: ""
+        EOF
+        ktranslate --config /tmp/ktranslate.yaml
+    restart: always
+    ports:
+      - 9090:9090
+      - 9995:9995/udp
+    depends_on:
+      - elasticsearch
+      - elasticsearch-init
+      - elasticsearchreplica
+      - elasticsearchreplica-init
+
+  nflow:
+    image: ehazlett/nflow-generator:latest
+    restart: always
+    command:
+      - -t
+      - ktranslate
+      - -p
+      - "9995"
+    depends_on:
+      - ktranslate

@@ -26,7 +26,15 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
-	"github.com/kentik/ktranslate/pkg/sinks/kentik"
+	ssfile "github.com/kentik/ktranslate/pkg/sinks/file"
+	ssgcloud "github.com/kentik/ktranslate/pkg/sinks/gcloud"
+	ssgcppubsub "github.com/kentik/ktranslate/pkg/sinks/gcppubsub"
+	sshttp "github.com/kentik/ktranslate/pkg/sinks/http"
+	sskentik "github.com/kentik/ktranslate/pkg/sinks/kentik"
+	ssnet "github.com/kentik/ktranslate/pkg/sinks/net"
+	ssnr "github.com/kentik/ktranslate/pkg/sinks/nr"
+	ssprom "github.com/kentik/ktranslate/pkg/sinks/prom"
+	sss3 "github.com/kentik/ktranslate/pkg/sinks/s3"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -172,19 +180,109 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	}
 
 	// Define our sinks for where to send data to.
-	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
+	kc.sinks = []ss.SinkImpl{}
 	for _, sinkStr := range strings.Split(sinks, ",") {
 		sink := ss.Sink(sinkStr)
 		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, kc.kentikConfig, logTee, kc.config)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}
-		kc.sinks[sink] = snk
+		kc.sinks = append(kc.sinks, snk)
 		kc.log.Infof("Using sink %s", sink)
 
 		// Kentik gets special cased
 		if sink == ss.KentikSink {
-			kc.kentik = snk.(*kentik.KentikSink)
+			kc.kentik = snk.(*sskentik.KentikSink)
+		}
+	}
+
+	// multisink
+	if m := config.MultiSink; m != nil {
+		l := log.GetLogger().GetUnderlyingLogger()
+		// Prometheus
+		for _, sc := range m.PrometheusSinks {
+			s, err := ssprom.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %s, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using prometheus sink: %s", sc.ListenAddr)
+		}
+		// GCloud
+		for _, sc := range m.GCloudSinks {
+			s, err := ssgcloud.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using gcloud sink: %s", sc.Bucket)
+		}
+		// S3
+		for _, sc := range m.S3Sinks {
+			s, err := sss3.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using s3 sink: %s", sc.Bucket)
+		}
+		// Net
+		for _, sc := range m.NetSinks {
+			s, err := ssnet.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using net sink: %s", sc.Endpoint)
+		}
+		// NR
+		for _, sc := range m.NewRelicSinks {
+			s, err := ssnr.NewSink(l, registry, kc.tooBig, logTee, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using NewRelic sink: %s", sc.Account)
+		}
+		// File
+		for _, sc := range m.FileSinks {
+			s, err := ssfile.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using file sink: %s", sc.Path)
+		}
+		// GCloudPubSub
+		for _, sc := range m.GCloudPubSubSinks {
+			s, err := ssgcppubsub.NewSink(l, registry, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using gcp pubsub sink: %s", sc.ProjectID)
+		}
+		// HTTPSink
+		for _, sc := range m.HTTPSinks {
+			s, err := sshttp.NewSink(l, registry, sc.Type, sc)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.sinks = append(kc.sinks, s)
+			kc.log.Infof("Using http sink: %s", sc.Target)
+		}
+		// KentikSink
+		switch len(m.KentikSinks) {
+		case 0:
+		case 1:
+			sc := m.KentikSinks[0]
+			s, err := sskentik.NewSink(l, registry, kc.kentikConfig, config.KentikSink)
+			if err != nil {
+				return nil, fmt.Errorf("invalid sink: %v, %v", sc, err)
+			}
+			kc.kentik = s
+		default:
+			return nil, fmt.Errorf("only a single Kentik sink is supported")
 		}
 	}
 
@@ -276,14 +374,14 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		InputQ:         kc.metrics.InputQ.Rate1(),
 		InputQLen:      kc.metrics.InputQLen.Value(),
 		OutputQLen:     kc.metrics.OutputQLen.Value(),
-		Sinks:          map[ss.Sink]map[string]float64{},
+		Sinks:          []map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 		Inputs:         map[string]map[string]float64{},
 	}
 
 	// Now, let other sinks do their work
-	for sn, sink := range kc.sinks {
-		h.Sinks[sn] = sink.HttpInfo()
+	for _, sink := range kc.sinks {
+		h.Sinks = append(h.Sinks, sink.HttpInfo())
 	}
 
 	// And store any metrics from inputs.

@@ -1,0 +1,94 @@
+version: "3.9"
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - type: bind
+        source: ./prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+    healthcheck:
+      test: ["CMD", "curl", "localhost:9090"]
+      interval: 10s
+      timeout: 1s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 9090:9090
+
+  ktranslate:
+    image: kentik/ktranslate:latest
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /tmp/ktranslate.toml
+        listenaddr: "127.0.0.1:8081"
+        udrsfile: "/etc/ktranslate/udr.csv"
+        geofile: "/etc/ktranslate/GeoLite2-Country.mmdb"
+        asnfile: "/etc/ktranslate/GeoLite2-ASN.mmdb"
+        processingthreads: 1
+        inputthreads: 1
+        maxthreads: 1
+        format: "prometheus"
+        compression: "none"
+        sinks: "prometheus"
+        maxflowspermessage: 10000
+        rollupinterval: 0
+        rollupandalpha: false
+        samplerate: 1
+        samplemin: 1
+        enablesnmpdiscovery: false
+        kentikplan: 0
+        apibaseurl: "https://api.kentik.com"
+        enableteelogs: false
+        enablehttpinput: true
+        filters: []
+
+        netflowformat:
+          version: "netflow5"
+
+        prometheussink:
+          listenaddr: ":9080"
+
+        server:
+          servicename: "ktranslate"
+          loglevel: "info"
+          logtostdout: false
+          metricsendpoint: "none"
+          metalistenaddr: ""
+          ollydataset: ""
+          ollywritekey: ""
+
+        api:
+          devicefile: "/etc/ktranslate/devices.json"
+
+        flowinput:
+          enable: true
+          protocol: "netflow5"
+          listenip: "0.0.0.0"
+          listenport: 9995
+          enablereuseport: false
+          workers: 1
+          messagefields: "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress"
+          prometheuslistenaddr: ""
+          mappingfile: ""
+        EOF
+        ktranslate --config /tmp/ktranslate.toml
+    restart: always
+    ports:
+      - 9080:9080
+      - 9995:9995/udp
+    depends_on:
+      - prometheus
+
+  nflow:
+    image: ehazlett/nflow-generator:latest
+    restart: always
+    command:
+      - -t
+      - ktranslate
+      - -p
+      - "9995"
+    depends_on:
+      - ktranslate

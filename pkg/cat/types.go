@@ -57,7 +57,7 @@ type KTranslate struct {
 	udrMapr      *UDRMapper
 	pgdb         *sql.DB
 	msgsc        chan *kt.Output
-	sinks        map[sinks.Sink]sinks.SinkImpl
+	sinks        []sinks.SinkImpl
 	format       formats.Formatter
 	formatRollup formats.Formatter
 	kentik       *kentik.KentikSink // This one gets special handling
@@ -109,7 +109,7 @@ type hc struct {
 	InputQ         float64
 	InputQLen      int64
 	OutputQLen     int64
-	Sinks          map[sinks.Sink]map[string]float64
+	Sinks          []map[string]float64
 	SnmpDeviceData map[string]map[string]float64
 	Inputs         map[string]map[string]float64
 }

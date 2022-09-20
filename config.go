@@ -31,6 +31,19 @@ type PrometheusFormatConfig struct {
 	FlowsNeeded          int
 }
 
+// MultiSinkConfig is a config for multiple sinks
+type MultiSinkConfig struct {
+	PrometheusSinks   []*PrometheusSinkConfig
+	GCloudSinks       []*GCloudSinkConfig
+	S3Sinks           []*S3SinkConfig
+	NetSinks          []*NetSinkConfig
+	NewRelicSinks     []*NewRelicSinkConfig
+	FileSinks         []*FileSinkConfig
+	GCloudPubSubSinks []*GCloudPubSubSinkConfig
+	HTTPSinks         []*HTTPSinkConfig
+	KentikSinks       []*KentikSinkConfig
+}
+
 // PrometheusSinkConfig is config for the prometheus sink
 type PrometheusSinkConfig struct {
 	ListenAddr string
@@ -80,6 +93,7 @@ type GCloudPubSubSinkConfig struct {
 
 // HTTPSinkConfig is the config for the HTTP sink
 type HTTPSinkConfig struct {
+	Type               string
 	Target             string
 	Headers            []string
 	InsecureSkipVerify bool
@@ -248,6 +262,7 @@ type Config struct {
 	KafkaSink *KafkaSinkConfig
 	// pkg/sinks/kentik
 	KentikSink *KentikSinkConfig
+	MultiSink  *MultiSinkConfig
 
 	// pkg/rollup
 	Rollup *RollupConfig
@@ -350,6 +365,7 @@ func DefaultConfig() *Config {
 			Topic:     "",
 		},
 		HTTPSink: &HTTPSinkConfig{
+			Type:               "http",
 			Target:             "http://localhost:8086/write?db=kentik",
 			Headers:            []string{},
 			InsecureSkipVerify: false,
