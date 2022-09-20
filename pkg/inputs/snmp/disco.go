@@ -16,6 +16,7 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/kentik/ktranslate"
+	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
@@ -34,7 +35,7 @@ type SnmpDiscoDeviceStat struct {
 	delta    int
 }
 
-func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig) (*SnmpDiscoDeviceStat, error) {
+func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
 	snmpFile := cfg.SNMPFile
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
@@ -71,6 +72,9 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	for i := 0; i < conf.Disco.Threads; i++ {
 		ctl <- true
 	}
+
+	// Pull in any kentik devices to check if defined here.
+	kentikDevices := addKentikDevices(apic, conf)
 
 	// Use this for auto-discovering metrics to pull.
 	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, false, log)
@@ -122,7 +126,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 				}
 				wg.Add(1)
 				posit := fmt.Sprintf("%d/%d)", i+1, len(results))
-				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, log)
+				go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
 			}
 		}
 		wg.Wait()
@@ -142,10 +146,10 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	return stats, nil
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig) {
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) {
 	pt := time.Duration(pollTimeMin) * time.Minute
 	check := func() {
-		stats, err := Discover(ctx, log, pt, cfg)
+		stats, err := Discover(ctx, log, pt, cfg, apic)
 		if err != nil {
 			log.Errorf("Discovery SNMP Error: %v", err)
 		} else {
@@ -181,7 +185,7 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL,
 }
 
 func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, mux *sync.RWMutex, wg *sync.WaitGroup,
-	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, log logger.ContextL) {
+	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, kentikDevices map[string]string, log logger.ContextL) {
 
 	// Get the token to allow us to run.
 	_ = <-ctl
@@ -301,6 +305,13 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		} else {
 			device.Provider = provider
 		}
+	}
+
+	if did, ok := kentikDevices[device.DeviceIP]; ok {
+		if device.UserTags == nil {
+			device.UserTags = map[string]string{}
+		}
+		device.UserTags["kentik.device_id"] = did
 	}
 
 	mux.Lock()
@@ -487,4 +498,84 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	}
 
 	return &stats, snmp_util.WriteFile(ctx, snmpFile, t, permissions)
+}
+
+func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]string {
+	if conf.Disco.Kentik == nil || !conf.Disco.Kentik.UseDeviceInventory {
+		return nil
+	}
+
+	inArray := func(kneedle string, haystack []string) bool {
+		if len(haystack) == 0 { // Default to true if empty.
+			return true
+		}
+		for _, k := range haystack {
+			if k == kneedle {
+				return true
+			}
+		}
+		return false
+	}
+
+	added := map[string]string{}
+	for _, device := range apic.GetDevicesAsMap(0) {
+		if device.SnmpIp != "" {
+			found := len(conf.Disco.Cidrs) > 0 && inArray(device.SnmpIp, conf.Disco.Cidrs)
+			add := false
+			if len(conf.Disco.Kentik.DeviceMatching.IPAddress) == 0 { // If nothing here default to allow all.
+				add = true
+			} else {
+				snmpIP := net.ParseIP(device.SnmpIp)
+				for _, ip := range conf.Disco.Kentik.DeviceMatching.IPAddress {
+					_, ipr, err := net.ParseCIDR(ip)
+					if err == nil && ipr.Contains(snmpIP) {
+						add = true
+						break
+					}
+				}
+			}
+
+			if add { // And together any label selections. Force both cidr AND label to match, if both are set.
+				if len(conf.Disco.Kentik.DeviceMatching.Labels) > 0 { // Force a match here.
+					add = false
+				}
+				for _, l := range device.Labels {
+					add = inArray(l.Name, conf.Disco.Kentik.DeviceMatching.Labels)
+					if add { // match any label, if true break out.
+						break
+					}
+				}
+			}
+
+			if add { // And together any site selections.
+				if len(conf.Disco.Kentik.DeviceMatching.Sites) > 0 { // Force a match here.
+					add = inArray(device.Site.SiteName, conf.Disco.Kentik.DeviceMatching.Sites)
+				}
+			}
+
+			if !found && add {
+				conf.Disco.Cidrs = append(conf.Disco.Cidrs, device.SnmpIp)
+				added[device.SnmpIp] = device.ID.Itoa()
+				if device.SnmpCommunity != "" {
+					found := len(conf.Disco.DefaultCommunities) > 0 && inArray(device.SnmpCommunity, conf.Disco.DefaultCommunities)
+					if !found {
+						conf.Disco.DefaultCommunities = append(conf.Disco.DefaultCommunities, device.SnmpCommunity)
+					}
+				} else if device.SnmpV3 != nil {
+					found := false
+					for _, com := range conf.Disco.OtherV3s {
+						if com.UserName == device.SnmpV3.UserName && com.AuthenticationPassphrase == device.SnmpV3.AuthenticationPassphrase {
+							found = true
+							break
+						}
+					}
+					if !found {
+						conf.Disco.OtherV3s = append(conf.Disco.OtherV3s, device.SnmpV3)
+					}
+				}
+			}
+		}
+	}
+
+	return added
 }

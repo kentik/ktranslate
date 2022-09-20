@@ -32,7 +32,20 @@ type Device struct {
 	SnmpCommunity string                `json:"device_snmp_community"`
 	SnmpIp        string                `json:"device_snmp_ip"`
 	SnmpV3        *V3SNMPConfig         `json:"device_snmp_v3_conf"`
+	Labels        []DeviceLabel         `json:"labels"`
+	Site          DeviceSite            `json:"site"`
 	allUserTags   map[string]string
+}
+
+type DeviceLabel struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"description"`
+}
+
+type DeviceSite struct {
+	ID       int    `json:"id"`
+	SiteName string `json:"site_name"`
 }
 
 // A CustomColumn corresponds a row in mn_kflow_field, which represents
