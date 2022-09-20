@@ -270,6 +270,8 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 			resDev[device.CompanyID][device.ID] = &myd
 			num++
 		}
+
+		api.Infof("Loaded %d Kentik devices via API for %s", len(devices.Devices), info.ApiEmail)
 	}
 
 	api.setTime = time.Now()
@@ -400,12 +402,14 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 			}
 			synAgentsByIP[locala.GetIp()] = locala
 		}
+
+		api.Infof("Loaded %d Kentik Tests and %d Agents via API for %s", len(r.GetTests()), len(ra.GetAgents()), info.ApiEmail)
 	}
 
 	api.synAgents = synAgents
 	api.synAgentsByIP = synAgentsByIP
 	api.synTests = synTests
-	api.Infof("Loaded %d Kentik Tests and %d Agents via API", len(api.synTests), len(api.synAgents))
+	api.Infof("Loaded %d Kentik Tests and %d Agents Total via API", len(api.synTests), len(api.synAgents))
 
 	return nil
 }
