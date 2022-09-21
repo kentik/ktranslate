@@ -462,7 +462,7 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 	return []InfluxData{{
 		Name:      f.config.MeasurementPrefix + "ksynth",
 		Fields:    ms,
-		Timestamp: in.Timestamp * 1000000000,
+		Timestamp: in.Timestamp,
 		Tags:      attr,
 	}}
 }
@@ -493,7 +493,7 @@ func (f *InfluxFormat) fromKflow(in *kt.JCHF) []InfluxData {
 	return []InfluxData{{
 		Name:      f.config.MeasurementPrefix + "flow",
 		Fields:    ms,
-		Timestamp: in.Timestamp * 1000000000,
+		Timestamp: in.Timestamp,
 		Tags:      attr,
 	}}
 }
@@ -523,14 +523,14 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
-					Timestamp:   in.Timestamp * 1000000000,
+					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
-					Timestamp: in.Timestamp * 1000000000,
+					Timestamp: in.Timestamp,
 					Tags:      attrNew,
 				})
 			}
@@ -567,14 +567,14 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
-					Timestamp:   in.Timestamp * 1000000000,
+					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
-					Timestamp: in.Timestamp * 1000000000,
+					Timestamp: in.Timestamp,
 					Tags:      attrNew,
 				})
 				if sv, ok := in.CustomStr[kt.StringPrefix+m]; ok {
@@ -619,13 +619,13 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 							results = append(results, InfluxData{
 								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{utilName: float64(totalBytes*8*100) / float64(uptimeSpeed)},
-								Timestamp:   in.Timestamp * 1000000000,
+								Timestamp:   in.Timestamp,
 								Tags:        attrNew,
 							})
 							results = append(results, InfluxData{
 								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{bitRate: float64(totalBytes*8*100) / float64(uptime)},
-								Timestamp:   in.Timestamp * 1000000000,
+								Timestamp:   in.Timestamp,
 								Tags:        attrNew,
 							})
 						}
@@ -633,7 +633,7 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 							results = append(results, InfluxData{
 								Name:        f.config.MeasurementPrefix + "IF-MIB::if",
 								FieldsFloat: map[string]float64{pktRate: float64(totalPkts*100) / float64(uptime)},
-								Timestamp:   in.Timestamp * 1000000000,
+								Timestamp:   in.Timestamp,
 								Tags:        attrNew,
 							})
 						}
