@@ -274,7 +274,7 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) 
 		"old_value":    l.OldValue,
 	}
 	dst.EventType = kt.KENTIK_EVENT_EXT // This gets sent as event, not metric.
-	//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
+	dst.Provider = kt.ProviderMerakiCloud
 
 	c.conf.SetUserTags(dst.CustomStr)
 	return dst
@@ -521,7 +521,7 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			}
 			dst.CustomBigInt = map[string]int64{}
 			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
-			//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
+			dst.Provider = kt.ProviderMerakiCloud
 
 			if client.device.Serial != "" {
 				dst.DeviceName = client.device.Name // Here, device is this device's name.
@@ -848,7 +848,7 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.CustomInt = map[string]int32{}
 			dst.CustomBigInt = map[string]int64{}
 			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
-			//dst.Provider = c.conf.Provider // @TODO, pick a provider for this one.
+			dst.Provider = kt.ProviderMerakiCloud
 
 			dst.Timestamp = time.Now().Unix()
 			dst.CustomMetrics = map[string]kt.MetricInfo{}

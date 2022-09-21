@@ -67,6 +67,7 @@ const (
 	ProviderFibreChannel       Provider = "kentik-fibre-channel"
 	ProviderTrapUnknown        Provider = "kentik-trap-device"
 	ProviderHttpDevice         Provider = "kentik-http"
+	ProviderMerakiCloud        Provider = "meraki-cloud-controller"
 )
 
 const (
