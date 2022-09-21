@@ -49,7 +49,7 @@ const (
 	NewRelicMulti      = "new_relic_multi"
 )
 
-func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
+func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
 	switch sink {
 	case StdOutSink:
 		return stdout.NewSink(log, registry, logTee)
@@ -60,7 +60,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 	case NewRelicSink:
 		return nr.NewSink(log, registry, tooBig, logTee, config.NewRelicSink)
 	case KentikSink:
-		return kentik.NewSink(log, registry, conf, config.KentikSink)
+		return kentik.NewSink(log, registry, config)
 	case NetSink:
 		return net.NewSink(log, registry, config.NetSink)
 	case HttpSink, SplunkSink:
@@ -74,7 +74,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 	case GCPPubSub:
 		return gcppubsub.NewSink(log, registry, config.GCloudPubSubSink)
 	case NewRelicMulti:
-		return nrmulti.NewSink(log, registry, tooBig, logTee, conf, config.NewRelicSink, config.NewRelicMultiSink)
+		return nrmulti.NewSink(log, registry, tooBig, logTee, config.NewRelicSink, config.NewRelicMultiSink)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
 }

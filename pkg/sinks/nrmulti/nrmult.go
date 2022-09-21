@@ -2,9 +2,7 @@ package nrmulti
 
 import (
 	"context"
-	"flag"
 	"fmt"
-	"os"
 	"sync"
 
 	jsoniter "github.com/json-iterator/go"
@@ -27,30 +25,14 @@ type NRMultiSink struct {
 	tooBig      chan int
 	configMult  *ktranslate.NewRelicMultiSinkConfig
 	config      *ktranslate.NewRelicSinkConfig
-	confKentik  *kt.KentikConfig
 	ctx         context.Context
 	format      formats.Format
 	compression kt.Compression
 	fmtr        formats.Formatter
-	creds       map[kt.Cid]NRInfo
+	creds       map[kt.Cid]ktranslate.NRCred
 }
 
-type NRInfo struct {
-	NRAccount      string `json:"nr_account_id"`
-	NRApiToken     string `json:"nr_api_token"`
-	KentikApiEmail string `json:"kentik_api_email"`
-	KentikApiToken string `json:"kentik_api_token"`
-}
-
-var (
-	nrMultiFile string
-)
-
-func init() {
-	flag.StringVar(&nrMultiFile, "nr_multi_config_file", "", "Used to send multiple accounts to NR")
-}
-
-func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, confK *kt.KentikConfig, cfg *ktranslate.NewRelicSinkConfig, cfgMult *ktranslate.NewRelicMultiSinkConfig) (*NRMultiSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, cfg *ktranslate.NewRelicSinkConfig, cfgMult *ktranslate.NewRelicMultiSinkConfig) (*NRMultiSink, error) {
 	return &NRMultiSink{
 		ContextL:   logger.NewContextLFromUnderlying(logger.SContext{S: "nrMultiSink"}, log),
 		sinks:      map[kt.Cid]*nr.NRSink{},
@@ -58,7 +40,6 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 		tooBig:     tooBig,
 		configMult: cfgMult,
 		config:     cfg,
-		confKentik: confK,
 	}, nil
 }
 
@@ -69,34 +50,12 @@ func (s *NRMultiSink) Init(ctx context.Context, format formats.Format, compressi
 	s.fmtr = fmtr
 
 	// Load the config map.
-	m := map[kt.Cid]NRInfo{}
-	by, err := os.ReadFile(s.configMult.CredFile)
-	if err != nil {
-		return fmt.Errorf("Cannot load nrMulti file from %s -- %v", s.configMult.CredFile, err)
-	}
-	err = json.Unmarshal(by, &m)
-	if err != nil {
-		return err
+	m := map[kt.Cid]ktranslate.NRCred{}
+	for cid, cl := range s.configMult.CredMap {
+		m[kt.Cid(cid)] = cl
 	}
 	s.creds = m
-
-	if s.confKentik == nil { // Set this up if nil.
-		base := ktranslate.DefaultConfig()
-		s.confKentik = &kt.KentikConfig{
-			ApiRoot: base.APIBaseURL,
-			ApiPlan: base.KentikPlan,
-		}
-	}
-	kentikInfo := map[kt.Cid]*kt.KentikConfig{}
-	for cid, i := range m {
-		kentikInfo[cid] = &kt.KentikConfig{
-			ApiEmail: i.KentikApiEmail,
-			ApiToken: i.KentikApiToken,
-		}
-	}
-	s.confKentik.CredMap = kentikInfo // Save this one for the api system also.
 	s.Infof("Online with %d accounts", len(s.creds))
-
 	return nil
 }
 

@@ -67,7 +67,13 @@ type NewRelicSinkConfig struct {
 
 // NewRelicMultiSinkConfig is the config for Multi New Relic
 type NewRelicMultiSinkConfig struct {
-	CredFile string
+	CredMap map[int]NRCred
+}
+
+// NRCred exposes a list of NR creds.
+type NRCred struct {
+	NRAccount  string
+	NRApiToken string
 }
 
 // FileSinkConfig is the config for the file sink
@@ -189,6 +195,11 @@ type FlowInputConfig struct {
 	MappingFile          string
 }
 
+type KentikCred struct {
+	ApiEmail string
+	ApiToken string
+}
+
 // Config is the ktranslate configuration
 type Config struct {
 	// ktranslate
@@ -213,8 +224,7 @@ type Config struct {
 	SampleRate          int
 	SampleMin           int
 	EnableSNMPDiscovery bool
-	KentikEmail         string
-	KentikAPIToken      string
+	KentikCreds         []KentikCred
 	KentikPlan          int
 	APIBaseURL          string
 	SSLCertFile         string
@@ -302,8 +312,7 @@ func DefaultConfig() *Config {
 		SampleRate:          1,
 		SampleMin:           1,
 		EnableSNMPDiscovery: false,
-		KentikEmail:         "",
-		KentikAPIToken:      os.Getenv(KentikAPITokenEnvVar),
+		KentikCreds:         nil,
 		KentikPlan:          0,
 		APIBaseURL:          "https://api.kentik.com",
 		SSLCertFile:         "",
@@ -347,7 +356,9 @@ func DefaultConfig() *Config {
 			Region:       "",
 			ValidateJSON: false,
 		},
-		NewRelicMultiSink: &NewRelicMultiSinkConfig{},
+		NewRelicMultiSink: &NewRelicMultiSinkConfig{
+			CredMap: nil,
+		},
 		FileSink: &FileSinkConfig{
 			Path:                 "./",
 			EnableImmediateWrite: false,

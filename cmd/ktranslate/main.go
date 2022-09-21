@@ -351,7 +351,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 				cfg.EnableSNMPDiscovery = v
 			case "kentik_email":
-				cfg.KentikEmail = val
+				cfg.KentikCreds = []ktranslate.KentikCred{ktranslate.KentikCred{ApiEmail: val, ApiToken: os.Getenv(ktranslate.KentikAPITokenEnvVar)}}
 			case "api_root":
 				cfg.APIBaseURL = val
 			case "kentik_plan":
@@ -477,9 +477,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.NewRelicSink.ValidateJSON = v
-			// pkg/sinks/nrmulti
-			case "nr_multi_config_file":
-				cfg.NewRelicMultiSink.CredFile = val
 			// pkg/sinks/file
 			case "file_out":
 				cfg.FileSink.Path = val

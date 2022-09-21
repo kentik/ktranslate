@@ -340,14 +340,6 @@ func NewTestId(id string) TestId {
 	return TestId(tid)
 }
 
-type KentikConfig struct {
-	ApiEmail string
-	ApiToken string
-	ApiRoot  string
-	ApiPlan  int
-	CredMap  map[Cid]*KentikConfig
-}
-
 type OutputContext struct {
 	Provider  Provider
 	Type      OutputType

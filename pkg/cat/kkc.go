@@ -82,13 +82,6 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		}
 	}
 
-	kc.kentikConfig = &kt.KentikConfig{
-		ApiEmail: config.KentikEmail,
-		ApiToken: config.KentikAPIToken,
-		ApiRoot:  config.APIBaseURL,
-		ApiPlan:  config.KentikPlan,
-	}
-
 	for i := 0; i < config.ProcessingThreads; i++ {
 		kc.jchfChans[i] = make(chan *kt.JCHF, CHAN_SLACK)
 		for j := 0; j < CHAN_SLACK; j++ {
@@ -171,7 +164,7 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
 	for _, sinkStr := range strings.Split(sinks, ",") {
 		sink := ss.Sink(sinkStr)
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, kc.kentikConfig, logTee, kc.config)
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, logTee, kc.config)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}
@@ -625,14 +618,12 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// Api system for talking to kentik.
-	if kc.kentikConfig != nil {
-		if kc.kentikConfig.ApiEmail != "" || len(kc.kentikConfig.CredMap) > 0 {
-			apic, err := api.NewKentikApi(ctx, kc.kentikConfig, kc.log, kc.config.API)
-			if err != nil {
-				return err
-			}
-			kc.apic = apic
+	if len(kc.config.KentikCreds) > 0 {
+		apic, err := api.NewKentikApi(ctx, kc.log, kc.config)
+		if err != nil {
+			return err
 		}
+		kc.apic = apic
 	} else {
 		kc.apic = api.NewKentikApiFromLocalDevices(kc.auth.GetDeviceMap(), kc.log)
 	}
