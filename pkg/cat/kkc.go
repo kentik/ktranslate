@@ -6,7 +6,6 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate"
@@ -51,7 +50,7 @@ var (
 	RollupsSendDuration = 15 * time.Second
 )
 
-func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks string, serviceName string, logTee chan string, metricsChan chan []*kt.JCHF) (*KTranslate, error) {
+func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks []string, serviceName string, logTee chan string, metricsChan chan []*kt.JCHF) (*KTranslate, error) {
 	kc := &KTranslate{
 		log:      log,
 		registry: registry,
@@ -162,7 +161,7 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 
 	// Define our sinks for where to send data to.
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
-	for _, sinkStr := range strings.Split(sinks, ",") {
+	for _, sinkStr := range sinks {
 		sink := ss.Sink(sinkStr)
 		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, logTee, kc.config)
 		if err != nil {

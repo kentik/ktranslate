@@ -217,7 +217,7 @@ type Config struct {
 	FormatRollup        string
 	FormatMetric        string
 	Compression         string
-	Sinks               string
+	Sinks               []string
 	MaxFlowsPerMessage  int
 	RollupInterval      int
 	RollupAndAlpha      bool
@@ -305,7 +305,7 @@ func DefaultConfig() *Config {
 		Format:              "flat_json",
 		FormatRollup:        "",
 		Compression:         "none",
-		Sinks:               "stdout",
+		Sinks:               []string{"stdout"},
 		MaxFlowsPerMessage:  10000,
 		RollupInterval:      0,
 		RollupAndAlpha:      false,
