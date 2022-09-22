@@ -18,6 +18,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/sinks/net"
 	"github.com/kentik/ktranslate/pkg/sinks/nr"
+	"github.com/kentik/ktranslate/pkg/sinks/nrmulti"
 	"github.com/kentik/ktranslate/pkg/sinks/prom"
 	"github.com/kentik/ktranslate/pkg/sinks/s3"
 	"github.com/kentik/ktranslate/pkg/sinks/stdout"
@@ -33,21 +34,22 @@ type SinkImpl interface {
 type Sink string
 
 const (
-	KafkaSink    Sink = "kafka"
-	StdOutSink        = "stdout"
-	NewRelicSink      = "new_relic"
-	KentikSink        = "kentik"
-	FileSink          = "file"
-	NetSink           = "net"
-	HttpSink          = "http"
-	SplunkSink        = "splunk"
-	PromSink          = "prometheus"
-	S3Sink            = "s3"
-	GCloudSink        = "gcloud"
-	GCPPubSub         = "gcppubsub"
+	KafkaSink     Sink = "kafka"
+	StdOutSink         = "stdout"
+	NewRelicSink       = "new_relic"
+	KentikSink         = "kentik"
+	FileSink           = "file"
+	NetSink            = "net"
+	HttpSink           = "http"
+	SplunkSink         = "splunk"
+	PromSink           = "prometheus"
+	S3Sink             = "s3"
+	GCloudSink         = "gcloud"
+	GCPPubSub          = "gcppubsub"
+	NewRelicMulti      = "new_relic_multi"
 )
 
-func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, conf *kt.KentikConfig, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
+func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
 	switch sink {
 	case StdOutSink:
 		return stdout.NewSink(log, registry, logTee)
@@ -58,7 +60,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 	case NewRelicSink:
 		return nr.NewSink(log, registry, tooBig, logTee, config.NewRelicSink)
 	case KentikSink:
-		return kentik.NewSink(log, registry, conf, config.KentikSink)
+		return kentik.NewSink(log, registry, config)
 	case NetSink:
 		return net.NewSink(log, registry, config.NetSink)
 	case HttpSink, SplunkSink:
@@ -71,6 +73,8 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 		return gcloud.NewSink(log, registry, config.GCloudSink)
 	case GCPPubSub:
 		return gcppubsub.NewSink(log, registry, config.GCloudPubSubSink)
+	case NewRelicMulti:
+		return nrmulti.NewSink(log, registry, tooBig, logTee, config.NewRelicSink, config.NewRelicMultiSink)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
 }

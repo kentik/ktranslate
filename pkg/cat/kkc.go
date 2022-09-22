@@ -6,7 +6,6 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate"
@@ -51,7 +50,7 @@ var (
 	RollupsSendDuration = 15 * time.Second
 )
 
-func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks string, serviceName string, logTee chan string, metricsChan chan []*kt.JCHF) (*KTranslate, error) {
+func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks []string, serviceName string, logTee chan string, metricsChan chan []*kt.JCHF) (*KTranslate, error) {
 	kc := &KTranslate{
 		log:      log,
 		registry: registry,
@@ -80,17 +79,6 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		kc.authConfig = &auth.AuthConfig{
 			DevicesFile: v,
 		}
-	}
-
-	if config.KentikEmail != "" && config.KentikAPIToken != "" {
-		kentikConfig := &kt.KentikConfig{
-			ApiEmail: config.KentikEmail,
-			ApiToken: config.KentikAPIToken,
-			ApiRoot:  config.APIBaseURL,
-			ApiPlan:  config.KentikPlan,
-		}
-
-		kc.kentikConfig = kentikConfig
 	}
 
 	for i := 0; i < config.ProcessingThreads; i++ {
@@ -173,9 +161,9 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 
 	// Define our sinks for where to send data to.
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
-	for _, sinkStr := range strings.Split(sinks, ",") {
+	for _, sinkStr := range sinks {
 		sink := ss.Sink(sinkStr)
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, kc.kentikConfig, logTee, kc.config)
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, logTee, kc.config)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}
@@ -629,8 +617,8 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// Api system for talking to kentik.
-	if kc.kentikConfig != nil && kc.kentikConfig.ApiEmail != "" {
-		apic, err := api.NewKentikApi(ctx, kc.kentikConfig, kc.log, kc.config.API)
+	if len(kc.config.KentikCreds) > 0 {
+		apic, err := api.NewKentikApi(ctx, kc.log, kc.config)
 		if err != nil {
 			return err
 		}

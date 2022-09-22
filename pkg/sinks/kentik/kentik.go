@@ -39,9 +39,8 @@ type KentikSink struct {
 	KentikUrl string
 	client    *http.Client
 	tr        *http.Transport
-	conf      *kt.KentikConfig
 	isKentik  bool
-	config    *ktranslate.KentikSinkConfig
+	config    *ktranslate.Config
 }
 
 type KentikMetric struct {
@@ -49,10 +48,9 @@ type KentikMetric struct {
 	DeliveryWin go_metrics.Meter
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.KentikConfig, cfg *ktranslate.KentikSinkConfig) (*KentikSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.Config) (*KentikSink, error) {
 	return &KentikSink{
 		registry: registry,
-		conf:     conf,
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kentikSink"}, log),
 		metrics: &KentikMetric{
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_kentik", registry),
@@ -63,11 +61,11 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, conf *kt.Kenti
 }
 
 func (s *KentikSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	if s.conf == nil || s.conf.ApiEmail == "" || s.conf.ApiToken == "" {
+	if s.config.KentikCreds == nil || len(s.config.KentikCreds) == 0 {
 		return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
 	}
-	s.KentikUrl = strings.ReplaceAll(s.conf.ApiRoot, "api.", "flow.") + "/chf"
-	if v := s.config.RelayURL; v != "" { // If this is set, override and go directly here instead.
+	s.KentikUrl = strings.ReplaceAll(s.config.APIBaseURL, "api.", "flow.") + "/chf"
+	if v := s.config.KentikSink.RelayURL; v != "" { // If this is set, override and go directly here instead.
 		s.KentikUrl = v
 	}
 
@@ -118,8 +116,8 @@ func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string, offset
 		return
 	}
 
-	req.Header.Set("X-CH-Auth-Email", s.conf.ApiEmail)
-	req.Header.Set("X-CH-Auth-API-Token", s.conf.ApiEmail)
+	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].ApiEmail)
+	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].ApiToken)
 	req.Header.Set("Content-Type", CHF_TYPE)
 	req.Header.Set("Content-Encoding", "gzip")
 

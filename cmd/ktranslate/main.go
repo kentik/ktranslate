@@ -179,7 +179,7 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		cfg.Format = "new_relic"
 		cfg.SampleMin = 100
 		cfg.Compression = "gzip"
-		cfg.Sinks = "new_relic"
+		cfg.Sinks = []string{"new_relic"}
 
 		if cfg.SampleRate == 0 {
 			cfg.SampleRate = 1000
@@ -213,7 +213,7 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		setNr()
 	case "nr1.syslog": // Tune for syslog. Don't want any sampling so can't use setNR directly.
 		cfg.Compression = "gzip"
-		cfg.Sinks = "new_relic"
+		cfg.Sinks = []string{"new_relic"}
 		cfg.Format = "new_relic_metric"
 		cfg.SNMPInput.FlowOnly = true // Don't do snmp polling.
 		if cfg.SyslogInput.ListenAddr == "" {
@@ -222,7 +222,7 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		cfg.SyslogInput.Enable = true
 	case "nr1.snmp": // Tune for snmp sending.
 		cfg.Compression = "gzip"
-		cfg.Sinks = "new_relic"
+		cfg.Sinks = []string{"new_relic"}
 		cfg.Format = "new_relic_metric"
 		cfg.MaxFlowsPerMessage = 100
 	default:
@@ -298,7 +298,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 			case "compression":
 				cfg.Compression = val
 			case "sinks":
-				cfg.Sinks = val
+				cfg.Sinks = strings.Split(val, ",")
 			case "max_flows_per_message":
 				v, err := strconv.Atoi(val)
 				if err != nil {
@@ -351,7 +351,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 				cfg.EnableSNMPDiscovery = v
 			case "kentik_email":
-				cfg.KentikEmail = val
+				cfg.KentikCreds = []ktranslate.KentikCred{ktranslate.KentikCred{ApiEmail: val, ApiToken: os.Getenv(ktranslate.KentikAPITokenEnvVar)}}
 			case "api_root":
 				cfg.APIBaseURL = val
 			case "kentik_plan":

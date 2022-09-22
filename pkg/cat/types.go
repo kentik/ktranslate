@@ -80,7 +80,6 @@ type KTranslate struct {
 	enricher     *enrich.Enricher
 	logTee       chan string
 	authConfig   *auth.AuthConfig
-	kentikConfig *kt.KentikConfig
 }
 
 type CustomMapper struct {

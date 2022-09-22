@@ -65,6 +65,17 @@ type NewRelicSinkConfig struct {
 	ValidateJSON bool
 }
 
+// NewRelicMultiSinkConfig is the config for Multi New Relic
+type NewRelicMultiSinkConfig struct {
+	CredMap map[int]NRCred
+}
+
+// NRCred exposes a list of NR creds.
+type NRCred struct {
+	NRAccount  string
+	NRApiToken string
+}
+
 // FileSinkConfig is the config for the file sink
 type FileSinkConfig struct {
 	Path                 string
@@ -184,6 +195,11 @@ type FlowInputConfig struct {
 	MappingFile          string
 }
 
+type KentikCred struct {
+	ApiEmail string
+	ApiToken string
+}
+
 // Config is the ktranslate configuration
 type Config struct {
 	// ktranslate
@@ -201,15 +217,14 @@ type Config struct {
 	FormatRollup        string
 	FormatMetric        string
 	Compression         string
-	Sinks               string
+	Sinks               []string
 	MaxFlowsPerMessage  int
 	RollupInterval      int
 	RollupAndAlpha      bool
 	SampleRate          int
 	SampleMin           int
 	EnableSNMPDiscovery bool
-	KentikEmail         string
-	KentikAPIToken      string
+	KentikCreds         []KentikCred
 	KentikPlan          int
 	APIBaseURL          string
 	SSLCertFile         string
@@ -238,6 +253,8 @@ type Config struct {
 	NetSink *NetSinkConfig
 	// pkg/sinks/nr
 	NewRelicSink *NewRelicSinkConfig
+	// pkg/sinks/nrmulti
+	NewRelicMultiSink *NewRelicMultiSinkConfig
 	// pkg/sinks/file
 	FileSink *FileSinkConfig
 	// pkg/sinks/gcppubsub
@@ -288,15 +305,14 @@ func DefaultConfig() *Config {
 		Format:              "flat_json",
 		FormatRollup:        "",
 		Compression:         "none",
-		Sinks:               "stdout",
+		Sinks:               []string{"stdout"},
 		MaxFlowsPerMessage:  10000,
 		RollupInterval:      0,
 		RollupAndAlpha:      false,
 		SampleRate:          1,
 		SampleMin:           1,
 		EnableSNMPDiscovery: false,
-		KentikEmail:         "",
-		KentikAPIToken:      os.Getenv(KentikAPITokenEnvVar),
+		KentikCreds:         nil,
 		KentikPlan:          0,
 		APIBaseURL:          "https://api.kentik.com",
 		SSLCertFile:         "",
@@ -339,6 +355,9 @@ func DefaultConfig() *Config {
 			EstimateOnly: false,
 			Region:       "",
 			ValidateJSON: false,
+		},
+		NewRelicMultiSink: &NewRelicMultiSinkConfig{
+			CredMap: nil,
 		},
 		FileSink: &FileSinkConfig{
 			Path:                 "./",

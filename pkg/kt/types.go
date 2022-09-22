@@ -342,16 +342,10 @@ func NewTestId(id string) TestId {
 	return TestId(tid)
 }
 
-type KentikConfig struct {
-	ApiEmail string
-	ApiToken string
-	ApiRoot  string
-	ApiPlan  int
-}
-
 type OutputContext struct {
-	Provider Provider
-	Type     OutputType
+	Provider  Provider
+	Type      OutputType
+	CompanyId Cid
 }
 
 type Output struct {
@@ -366,6 +360,10 @@ func NewOutput(body []byte) *Output {
 
 func NewOutputWithProvider(body []byte, prov Provider, stype OutputType) *Output {
 	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype}}
+}
+
+func NewOutputWithProviderAndCompany(body []byte, prov Provider, cid Cid, stype OutputType) *Output {
+	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype, CompanyId: cid}}
 }
 
 func (o *Output) IsEvent() bool {

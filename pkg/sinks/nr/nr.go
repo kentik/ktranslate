@@ -112,9 +112,10 @@ type NRResponce struct {
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, cfg *ktranslate.NewRelicSinkConfig) (*NRSink, error) {
 	nr := NRSink{
-		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nrSink"}, log),
-		NRApiKey: os.Getenv(EnvNrApiKey),
-		registry: registry,
+		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "nrSink"}, log),
+		NRApiKey:  os.Getenv(EnvNrApiKey),
+		NRAccount: cfg.Account,
+		registry:  registry,
 		metrics: &NRMetric{
 			DeliveryErr:     go_metrics.GetOrRegisterMeter("delivery_errors_nr", registry),
 			DeliveryWin:     go_metrics.GetOrRegisterMeter("delivery_wins_nr", registry),
@@ -144,7 +145,6 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV and US_STAGE.", s.config.Region)
 	}
 
-	s.NRAccount = s.config.Account
 	s.NRUrl = NrUrl
 	s.format = format
 	s.compression = compression

@@ -123,7 +123,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 
 	if !f.doGz {
-		return kt.NewOutputWithProvider(target, msgs[0].Provider, kt.MetricOutput), nil
+		return kt.NewOutputWithProviderAndCompany(target, msgs[0].Provider, msgs[0].CompanyId, kt.MetricOutput), nil
 	}
 
 	buf := bytes.NewBuffer(serBuf)
