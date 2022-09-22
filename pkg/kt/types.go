@@ -25,6 +25,7 @@ const (
 	KENTIK_EVENT_SNMP_INT_METRIC = "KSnmpInterfaceMetric"
 	KENTIK_EVENT_SNMP_METADATA   = "KSnmpInterfaceMetadata"
 	KENTIK_EVENT_SNMP_TRAP       = "KSnmpTrap"
+	KENTIK_EVENT_EXT             = "KExtEvent"
 	KENTIK_EVENT_JSON            = "KJson"
 	KENTIK_EVENT_KTRANS_METRIC   = "KTranslateMetric"
 
@@ -66,6 +67,7 @@ const (
 	ProviderFibreChannel       Provider = "kentik-fibre-channel"
 	ProviderTrapUnknown        Provider = "kentik-trap-device"
 	ProviderHttpDevice         Provider = "kentik-http"
+	ProviderMerakiCloud        Provider = "meraki-cloud-controller"
 )
 
 const (
