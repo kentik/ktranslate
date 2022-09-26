@@ -310,6 +310,8 @@ and display it as a string 10.0.100.10
 */
 func hexToIP(bv []byte) (int64, string, map[string]string) {
 	switch len(bv) {
+	case 16:
+		return 0, net.IP(bv).String(), nil
 	case 8:
 		return 0, fmt.Sprintf("%d.%d.%d.%d",
 			binary.BigEndian.Uint16(bv[0:2]),
