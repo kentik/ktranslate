@@ -406,7 +406,7 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 }
 
 func (api *KentikApi) EnsureDevice(ctx context.Context, conf *kt.SnmpDeviceConfig) error {
-	if api == nil || len(api.config.KentikCreds) == 0 {
+	if api == nil || api.config == nil || len(api.config.KentikCreds) == 0 {
 		return nil
 	}
 
