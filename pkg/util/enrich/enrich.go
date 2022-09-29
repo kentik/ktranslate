@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 
+	"go.starlark.net/starlark"
+
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
@@ -23,11 +25,13 @@ const (
 
 type Enricher struct {
 	logger.ContextL
-	url    string
-	client *http.Client
-	doSrc  bool
-	doDst  bool
-	salt   []byte
+	url     string
+	client  *http.Client
+	doSrc   bool
+	doDst   bool
+	salt    []byte
+	thread  *starlark.Thread
+	globals starlark.StringDict
 }
 
 func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
@@ -47,6 +51,23 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 			salt = url[len(EnrichUrlHashSrcIP):] // same # chars src and dst.
 		}
 		e.salt = []byte(salt)
+	} else {
+		if strings.HasPrefix(url, "http") {
+			e.Infof("Enriching at remote url %s", url)
+		} else {
+			// Try loading as an a local file.
+			thread := &starlark.Thread{
+				Print: func(_ *starlark.Thread, msg string) { e.Infof("%s", msg) },
+				Name:  "kentik enrich",
+			}
+			globals, err := starlark.ExecFile(thread, url, nil, nil)
+			if err != nil {
+				return nil, err
+			}
+			e.thread = thread
+			e.globals = globals
+			e.Infof("Enriching via a starlark script at %s", url)
+		}
 	}
 
 	e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
@@ -56,6 +77,8 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
 	if e.doSrc || e.doDst {
 		return e.hashIP(ctx, msgs)
+	} else if e.globals != nil {
+		return e.runScript(ctx, msgs)
 	}
 
 	target, err := json.Marshal(msgs) // Has to be an array here, no idea why.
@@ -105,6 +128,27 @@ func (e *Enricher) hashIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 			msg.CustomStr["dst_endpoint"] = msg.DstAddr + ":" + strconv.Itoa(int(msg.L4DstPort))
 			h.Reset()
 		}
+	}
+}
+
+func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
+
+	inputs := []starlark.Value{}
+	for _, msg := range msgs {
+		lm := msg
+		jf := &JCHF{}
+		jf.Wrap(lm)
+		inputs = append(inputs, jf)
+	}
+	rv, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{starlark.NewList(inputs)}, nil)
+	if err != nil {
+		return nil, err
+	}
+	switch rv := rv.(type) {
+	case starlark.NoneType:
+		return nil, nil
+	case starlark.Int:
+		e.Infof("RC %d", rv)
 	}
 
 	return msgs, nil
