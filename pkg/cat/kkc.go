@@ -385,9 +385,9 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 }
 
 // This processes data from the non-kentik input sets.
-func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, citycache map[uint32]string, regioncache map[uint32]string, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
+func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	if kc.geo != nil || kc.asn != nil {
-		kc.doEnrichments(ctx, citycache, regioncache, msgs)
+		kc.doEnrichments(ctx, msgs)
 	}
 
 	// If we are filtering, cut any out here.
@@ -473,13 +473,11 @@ func (kc *KTranslate) watchInput(ctx context.Context, seri func([]*kt.JCHF, []by
 func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	kc.log.Infof("monitorInput %d Starting", num)
 	serBuf := make([]byte, 0)
-	citycache := map[uint32]string{}
-	regioncache := map[uint32]string{}
 
 	for {
 		select {
 		case msgs := <-kc.inputChan:
-			kc.handleInput(ctx, msgs, serBuf, citycache, regioncache, nil, seri)
+			kc.handleInput(ctx, msgs, serBuf, nil, seri)
 		case <-ctx.Done():
 			kc.log.Infof("monitorInput %d Done", num)
 			return
@@ -490,13 +488,11 @@ func (kc *KTranslate) monitorInput(ctx context.Context, num int, seri func([]*kt
 func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	kc.log.Infof("monitorMetricsInput Starting")
 	serBuf := make([]byte, 0)
-	citycache := map[uint32]string{}
-	regioncache := map[uint32]string{}
 
 	for {
 		select {
 		case msgs := <-kc.metricsChan:
-			kc.handleInput(ctx, msgs, serBuf, citycache, regioncache, nil, seri)
+			kc.handleInput(ctx, msgs, serBuf, nil, seri)
 		case <-ctx.Done():
 			kc.log.Infof("monitorMetricsInput Done")
 			return
@@ -657,10 +653,8 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	if kc.config.GCPVPCInput.Enable || kc.config.AWSVPCInput.Enable {
 		assureInput()
 		serBufInput := make([]byte, 0)
-		citycacheInput := map[uint32]string{}
-		regioncacheInput := map[uint32]string{}
 		handler := func(msgs []*kt.JCHF, cb func(error)) { // Capture this in a closure.
-			kc.handleInput(ctx, msgs, serBufInput, citycacheInput, regioncacheInput, cb, kc.format.To)
+			kc.handleInput(ctx, msgs, serBufInput, cb, kc.format.To)
 		}
 		var vpcSource vpc.CloudSource
 		if kc.config.GCPVPCInput.Enable && kc.config.AWSVPCInput.Enable {

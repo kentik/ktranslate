@@ -3,12 +3,18 @@ package enrich
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+)
+
+const (
+	EnrichUrlHashSrc = "hash_src_ip"
 )
 
 type Enricher struct {
@@ -29,6 +35,9 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
+	if e.url == EnrichUrlHashSrc {
+		return e.hashSrcIP(ctx, msgs)
+	}
 
 	target, err := json.Marshal(msgs) // Has to be an array here, no idea why.
 	if err != nil {
@@ -58,4 +67,17 @@ func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 
 	err = json.Unmarshal(body, &msgs)
 	return msgs, err
+}
+
+func (e *Enricher) hashSrcIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
+
+	h := sha256.New()
+	for _, msg := range msgs {
+		h.Write([]byte(msg.SrcAddr))
+		msg.SrcAddr = fmt.Sprintf("%x", (h.Sum(nil)))
+		msg.CustomStr["src_endpoint"] = msg.SrcAddr + ":" + strconv.Itoa(int(msg.L4SrcPort))
+		h.Reset()
+	}
+
+	return msgs, nil
 }

@@ -121,27 +121,11 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 	return kt.ProviderFlowDevice
 }
 
-func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
+func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
 
 	dst.CustomStr = make(map[string]string)
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
-
-	// In the direct case, users can map their own asn/geo values into here.
-	if kc.geo != nil || kc.asn != nil {
-		srcAsnName, dstAsnName := kc.setGeoAsn(src)
-		if srcAsnName != "" {
-			dst.CustomStr["src_as_name"] = srcAsnName
-		} else {
-			dst.CustomStr["src_as_name"] = strconv.Itoa(int(src.CHF.SrcAs()))
-		}
-
-		if dstAsnName != "" {
-			dst.CustomStr["dst_as_name"] = dstAsnName
-		} else {
-			dst.CustomStr["dst_as_name"] = strconv.Itoa(int(src.CHF.DstAs()))
-		}
-	}
 
 	// dst.Timestamp = src.CHF.Timestamp() This is being strage, use current timestamp for now.
 	dst.Timestamp = currentTS
@@ -529,7 +513,7 @@ var (
 )
 
 // Updates asn and geo if set for any of these inputs.
-func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, msgs []*kt.JCHF) {
+func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)

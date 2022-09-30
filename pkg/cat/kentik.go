@@ -260,14 +260,17 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 	defer sendTicker.Stop()
 
 	// Set up some data structures.
-	citycache := map[uint32]string{}
-	regioncache := map[uint32]string{}
 	tagcache := map[uint64]string{}
 	serBuf := make([]byte, 0)
 	msgs := make([]*kt.JCHF, 0)
 	sendBytesOn := func() {
 		if len(msgs) == 0 {
 			return
+		}
+
+		// Add in any extra things here.
+		if kc.geo != nil || kc.asn != nil {
+			kc.doEnrichments(ctx, msgs)
 		}
 
 		// If we have any rollups defined, send here instead of directly to the output format.
@@ -320,7 +323,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		case f := <-kc.alphaChans[i]:
 			select {
 			case jflow := <-kc.jchfChans[i]: // non blocking select on this chan.
-				err := kc.flowToJCHF(ctx, citycache, regioncache, jflow, f, currentTime, tagcache)
+				err := kc.flowToJCHF(ctx, jflow, f, currentTime, tagcache)
 				if err != nil {
 					kc.log.Errorf("There was an error when converting to json: %v.", err)
 					jflow.Reset()
