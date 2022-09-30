@@ -30,6 +30,8 @@ const (
 type Enricher struct {
 	logger.ContextL
 	url     string
+	source  string
+	script  string
 	client  *http.Client
 	doSrc   bool
 	doDst   bool
@@ -38,10 +40,12 @@ type Enricher struct {
 	globals starlark.StringDict
 }
 
-func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
+func NewEnricher(url string, source string, script string, log logger.Underlying) (*Enricher, error) {
 	e := Enricher{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Enricher"}, log),
 		url:      url,
+		source:   source,
+		script:   script,
 		client:   &http.Client{},
 		doSrc:    strings.HasPrefix(url, EnrichUrlHashSrcIP) || strings.HasPrefix(url, EnrichUrlHashAllIP),
 		doDst:    strings.HasPrefix(url, EnrichUrlHashDstIP) || strings.HasPrefix(url, EnrichUrlHashAllIP),
@@ -56,28 +60,48 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 		}
 		e.salt = []byte(salt)
 	} else {
-		if strings.HasPrefix(url, "http") {
+		if url != "" {
 			e.Infof("Enriching at remote url %s", url)
 		} else {
-			// Try loading as an a local file.
+			if source == "" && script == "" {
+				return nil, fmt.Errorf("Source, Script or URL required for enrichment.")
+			}
+
 			// Try loading as an a local file.
 			thread := &starlark.Thread{
 				Print: func(_ *starlark.Thread, msg string) { e.Infof("%s", msg) },
 				Name:  "kentik enrich",
 				Load:  e.LoadFunc,
 			}
-			globals, err := starlark.ExecFile(thread, url, nil, nil)
+			builtins := starlark.StringDict{}
+
+			program, err := e.sourceProgram(builtins)
 			if err != nil {
 				return nil, err
 			}
+
+			// Execute source
+			globals, err := program.Init(thread, builtins)
+			if err != nil {
+				return nil, err
+			}
+
+			// Place to store state across runs.
+			globals["state"] = starlark.NewDict(0)
+			globals.Freeze()
+
 			e.thread = thread
 			e.globals = globals
-			e.Infof("Enriching via a starlark script at %s", url)
+			if script != "" {
+				e.Infof("Enriching via a starlark script at %s", script)
+			} else {
+				e.Infof("Enriching via a starlark program")
+			}
 		}
-	}
 
-	e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
-	return &e, nil
+		e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
+		return &e, nil
+	}
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
@@ -138,7 +162,6 @@ func (e *Enricher) hashIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 }
 
 func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
-
 	inputs := []starlark.Value{}
 	for _, msg := range msgs {
 		lm := msg
@@ -158,6 +181,15 @@ func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, 
 	}
 
 	return msgs, nil
+}
+
+func (e *Enricher) sourceProgram(builtins starlark.StringDict) (*starlark.Program, error) {
+	var src interface{}
+	if e.source != "" {
+		src = e.source
+	}
+	_, program, err := starlark.SourceProgram(e.script, src, builtins.Has)
+	return program, err
 }
 
 func (e *Enricher) LoadFunc(thread *starlark.Thread, module string) (starlark.StringDict, error) {
