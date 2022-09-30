@@ -11,7 +11,11 @@ import (
 	"strconv"
 	"strings"
 
+	"go.starlark.net/lib/math"
+	"go.starlark.net/lib/time"
+	"go.starlark.net/resolve"
 	"go.starlark.net/starlark"
+	"go.starlark.net/starlarkjson"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -56,9 +60,11 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 			e.Infof("Enriching at remote url %s", url)
 		} else {
 			// Try loading as an a local file.
+			// Try loading as an a local file.
 			thread := &starlark.Thread{
 				Print: func(_ *starlark.Thread, msg string) { e.Infof("%s", msg) },
 				Name:  "kentik enrich",
+				Load:  e.LoadFunc,
 			}
 			globals, err := starlark.ExecFile(thread, url, nil, nil)
 			if err != nil {
@@ -152,4 +158,33 @@ func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, 
 	}
 
 	return msgs, nil
+}
+
+func (e *Enricher) LoadFunc(thread *starlark.Thread, module string) (starlark.StringDict, error) {
+	switch module {
+	case "json.star":
+		return starlark.StringDict{
+			"json": starlarkjson.Module,
+		}, nil
+	case "math.star":
+		return starlark.StringDict{
+			"math": math.Module,
+		}, nil
+	case "time.star":
+		return starlark.StringDict{
+			"time": time.Module,
+		}, nil
+	default:
+		return nil, fmt.Errorf("module %s is not available", module)
+	}
+}
+
+func init() {
+	// https://github.com/bazelbuild/starlark/issues/20
+	resolve.AllowNestedDef = true
+	resolve.AllowLambda = true
+	resolve.AllowFloat = true
+	resolve.AllowSet = true
+	resolve.AllowGlobalReassign = true
+	resolve.AllowRecursion = true
 }
