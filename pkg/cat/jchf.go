@@ -20,62 +20,6 @@ var (
 	DEFAULT_GEO_PACKED = patricia.PackGeo(DEFAULT_GEO)
 )
 
-func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (string, error) {
-	if ipv4 != 0 {
-		return kc.geo.SearchBestFromHostGeo(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
-	}
-	return kc.geo.SearchBestFromHostGeo(net.IP(ipv6))
-}
-
-func (kc *KTranslate) lookupAsn(ipv4 uint32, ipv6 []byte) (uint32, string, error) {
-	if ipv4 != 0 {
-		return kc.asn.SearchBestFromHostAsn(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
-	}
-	return kc.geo.SearchBestFromHostAsn(net.IP(ipv6))
-}
-
-func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
-	var srcName, dstName string
-
-	// Fetch our own geo if not already set.
-	if kc.geo != nil {
-		if src.CHF.SrcGeo() == 0 || src.CHF.SrcGeo() == DEFAULT_GEO_PACKED {
-			ipv6, _ := src.CHF.Ipv6SrcAddr()
-			if srcGeo, err := kc.lookupGeo(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
-				src.CHF.SetSrcGeo(patricia.PackGeo([]byte(srcGeo)))
-			}
-		}
-
-		if src.CHF.DstGeo() == 0 || src.CHF.DstGeo() == DEFAULT_GEO_PACKED {
-			ipv6, _ := src.CHF.Ipv6DstAddr()
-			if dstGeo, err := kc.lookupGeo(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
-				src.CHF.SetDstGeo(patricia.PackGeo([]byte(dstGeo)))
-			}
-		}
-	}
-
-	// And set our own asn also if not set.
-	if kc.asn != nil {
-		ipv6, _ := src.CHF.Ipv6SrcAddr()
-		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
-			if src.CHF.SrcAs() == 0 {
-				src.CHF.SetSrcAs(asn)
-			}
-			srcName = name
-		}
-
-		ipv6, _ = src.CHF.Ipv6DstAddr()
-		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
-			if src.CHF.DstAs() == 0 {
-				src.CHF.SetDstAs(asn)
-			}
-			dstName = name
-		}
-	}
-
-	return srcName, dstName
-}
-
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 
 	// if app_proto is 12, this is snmp and return as such.

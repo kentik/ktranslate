@@ -31,6 +31,9 @@ func TestSeriToJflow(t *testing.T) {
 	assert.Equal(len(kt.InputTesting), len(out))
 	for i, _ := range out {
 		assert.Equal(kt.InputTesting[i].Timestamp, out[i]["timestamp"])
+		assert.Equal(kt.InputTesting[i].SrcAddr, out[i]["src_addr"])
+		assert.Equal(kt.InputTesting[i].SrcGeo, out[i]["src_geo"])
+		assert.Equal(kt.InputTesting[i].Protocol, out[i]["protocol"])
 		for k, v := range kt.InputTesting[i].CustomStr {
 			assert.Equal(v, out[i][k])
 		}
