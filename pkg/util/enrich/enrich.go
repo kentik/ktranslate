@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"strconv"
 
@@ -70,11 +71,10 @@ func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 }
 
 func (e *Enricher) hashSrcIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
-
 	h := sha256.New()
 	for _, msg := range msgs {
 		h.Write([]byte(msg.SrcAddr))
-		msg.SrcAddr = fmt.Sprintf("%x", (h.Sum(nil)))
+		msg.SrcAddr = net.IP(h.Sum(nil)[0:16]).String()
 		msg.CustomStr["src_endpoint"] = msg.SrcAddr + ":" + strconv.Itoa(int(msg.L4SrcPort))
 		h.Reset()
 	}

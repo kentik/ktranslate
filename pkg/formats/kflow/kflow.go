@@ -20,7 +20,7 @@ import (
 
 const (
 	MSG_KEY_PREFIX                    = 80 // This many bytes in every rcv message are for the key.
-	KTRANSLATE_PROTO                  = 100
+	KTRANSLATE_PROTO                  = 0
 	KTRANSLATE_MAP_PROTO              = 101
 	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
 )
@@ -80,19 +80,25 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	root.SetMsgs(msgs)
 
-	cid := [MSG_KEY_PREFIX]byte{}
+	key := fmt.Sprintf("%d:%s:%d^", flows[0].CompanyId, flows[0].DeviceName, flows[0].DeviceId)
+	cid := make([]byte, MSG_KEY_PREFIX)
+	if len(key) < MSG_KEY_PREFIX {
+		copy(cid, key)
+	}
+
 	buf := bytes.NewBuffer(serBuf)
 	z := gzip.NewWriter(buf)
 	z.Reset(buf)
-	z.Write(cid[:])
+	z.Write(cid)
 
 	err = capn.NewPackedEncoder(z).Encode(msg)
 	if err != nil {
 		return nil, err
 	}
 
+	f.Infof("Sending to %s", key)
 	z.Close()
-	return kt.NewOutputWithProvider(buf.Bytes(), flows[0].Provider, kt.EventOutput), nil
+	return kt.NewOutputWithProviderAndCompany(buf.Bytes(), flows[0].Provider, flows[0].CompanyId, kt.EventOutput), nil
 }
 
 func (f *KflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
@@ -109,6 +115,11 @@ func (f *KflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 		return nil, err
 	}
 	evt := bodyBuffer.Bytes()
+
+	keyP := bytes.Split(evt[0:MSG_KEY_PREFIX], []byte("^"))
+	if len(keyP) < 2 {
+		return nil, fmt.Errorf("Invalid prefix found for kflow: %s", string(evt[0:MSG_KEY_PREFIX]))
+	}
 
 	decoder := capn.NewPackedDecoder(bytes.NewBuffer(evt[MSG_KEY_PREFIX:]))
 	decoder.MaxMessageSize = kentikDefaultCapnprotoDecodeLimit
@@ -138,6 +149,7 @@ func (f *KflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 				"timestamp": msg.Timestamp(),
 				"protocol":  ic.PROTO_NAMES[uint16(msg.Protocol())],
 				"src_geo":   fmt.Sprintf("%c%c", msg.SrcGeo()>>8, msg.SrcGeo()&0xFF),
+				"server_id": keyP[0],
 			}
 
 			// Now the addresses.
@@ -239,6 +251,7 @@ func (ff *KflowFormat) pack(f *kt.JCHF, kflow model.CHF, list model.Custom_List,
 			kflow.SetIpv6DstAddr(dip)
 		}
 	}
+
 	if sip != nil {
 		if sip.To4() != nil {
 			kflow.SetIpv4SrcAddr(binary.BigEndian.Uint32(sip.To4()))

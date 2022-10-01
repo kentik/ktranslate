@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -196,14 +197,23 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 
 	// If we are sending from before kentik, add offset in here.
 	offset := 0
+	did := 0
+	deviceName := ""
 	if senderId != "" && len(evt) > MSG_KEY_PREFIX && // Direct flow without enrichment.
 		(evt[0] == 0x00 && evt[1] == 0x00 && evt[2] == 0x00 && evt[3] == 0x00 && evt[4] == 0x00) { // Double check with this
 		offset = MSG_KEY_PREFIX
+		pts := strings.Split(senderId, ":")
+		if len(pts) == 3 {
+			cid, _ = strconv.Atoi(strings.TrimSpace(pts[1]))
+			deviceName = pts[1]
+			did, _ = strconv.Atoi(strings.TrimSpace(pts[2]))
+		}
+
 	}
 
 	// If we have a kentik sink, send on here.
 	if kc.kentik != nil {
-		go kc.kentik.SendKentik(evt, cid, senderId, offset)
+		go kc.kentik.SendKentik(context.Background(), evt, cid, senderId, offset)
 	}
 
 	// decompress and read (capnproto "packed" representation)
@@ -233,9 +243,13 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 			if !msg.SampleAdj() {
 				msg.SetSampleRate(msg.SampleRate() * 100) // Apply re-sample trick here.
 			}
+			if msg.DeviceId() == 0 && senderId != "" {
+				// Fill in from the parsed senderId.
+				msg.SetDeviceId(uint32(did))
+			}
 
 			// send without blocking, dropping the message if the channel buffer is full
-			alpha := &Flow{CompanyId: cid, CHF: msg}
+			alpha := &Flow{CompanyId: cid, CHF: msg, DeviceName: deviceName}
 			select {
 			case kc.alphaChans[next] <- alpha:
 				sent++

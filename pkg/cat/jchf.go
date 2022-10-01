@@ -107,6 +107,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.TcpRetransmit = src.CHF.TcpRetransmit()
 	dst.SampleRate = src.CHF.SampleRate() / 100 // Reduce by 100 to get actual rate.
 	dst.DeviceId = kt.DeviceID(src.CHF.DeviceId())
+	dst.DeviceName = src.DeviceName
 	dst.CompanyId = kt.Cid(src.CompanyId)
 	dst.SrcNextHopAs = src.CHF.SrcNextHopAs()
 	dst.DstNextHopAs = src.CHF.DstNextHopAs()

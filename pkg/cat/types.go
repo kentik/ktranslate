@@ -114,8 +114,9 @@ type hc struct {
 }
 
 type Flow struct {
-	CompanyId int
-	CHF       model.CHF
+	CompanyId  int
+	CHF        model.CHF
+	DeviceName string
 }
 
 type KKCMetric struct {

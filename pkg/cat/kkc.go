@@ -619,6 +619,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			return err
 		}
 		kc.apic = apic
+		if kc.auth != nil {
+			kc.auth.AddDevices(apic.GetDevicesAsMap(0)) // Load all these up to be authed also.
+		}
 	} else {
 		kc.apic = api.NewKentikApiFromLocalDevices(kc.auth.GetDeviceMap(), kc.log)
 	}
