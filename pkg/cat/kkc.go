@@ -25,7 +25,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
-	"github.com/kentik/ktranslate/pkg/sinks/kentik"
+	//"github.com/kentik/ktranslate/pkg/sinks/kentik"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -169,11 +169,6 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		}
 		kc.sinks[sink] = snk
 		kc.log.Infof("Using sink %s", sink)
-
-		// Kentik gets special cased
-		if sink == ss.KentikSink {
-			kc.kentik = snk.(*kentik.KentikSink)
-		}
 	}
 
 	// IP based rules

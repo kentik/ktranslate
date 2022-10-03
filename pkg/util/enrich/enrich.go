@@ -9,19 +9,25 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 const (
-	EnrichUrlHashSrc = "hash_src_ip"
+	EnrichUrlHashSrcIP = "hash_src_ip"
+	EnrichUrlHashDstIP = "hash_dst_ip"
+	EnrichUrlHashAllIP = "hash_ip"
 )
 
 type Enricher struct {
 	logger.ContextL
 	url    string
 	client *http.Client
+	doSrc  bool
+	doDst  bool
+	salt   []byte
 }
 
 func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
@@ -29,15 +35,27 @@ func NewEnricher(url string, log logger.Underlying) (*Enricher, error) {
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "Enricher"}, log),
 		url:      url,
 		client:   &http.Client{},
+		doSrc:    strings.HasPrefix(url, EnrichUrlHashSrcIP) || strings.HasPrefix(url, EnrichUrlHashAllIP),
+		doDst:    strings.HasPrefix(url, EnrichUrlHashDstIP) || strings.HasPrefix(url, EnrichUrlHashAllIP),
 	}
 
-	e.Infof("Enriching at %s", url)
+	if e.doSrc || e.doDst {
+		var salt string
+		if strings.HasPrefix(url, EnrichUrlHashAllIP) {
+			salt = url[len(EnrichUrlHashAllIP):]
+		} else {
+			salt = url[len(EnrichUrlHashSrcIP):] // same # chars src and dst.
+		}
+		e.salt = []byte(salt)
+	}
+
+	e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
 	return &e, nil
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
-	if e.url == EnrichUrlHashSrc {
-		return e.hashSrcIP(ctx, msgs)
+	if e.doSrc || e.doDst {
+		return e.hashIP(ctx, msgs)
 	}
 
 	target, err := json.Marshal(msgs) // Has to be an array here, no idea why.
@@ -70,13 +88,23 @@ func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 	return msgs, err
 }
 
-func (e *Enricher) hashSrcIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
+func (e *Enricher) hashIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
 	h := sha256.New()
 	for _, msg := range msgs {
-		h.Write([]byte(msg.SrcAddr))
-		msg.SrcAddr = net.IP(h.Sum(nil)[0:16]).String()
-		msg.CustomStr["src_endpoint"] = msg.SrcAddr + ":" + strconv.Itoa(int(msg.L4SrcPort))
-		h.Reset()
+		if e.doSrc {
+			h.Write(e.salt)
+			h.Write([]byte(msg.SrcAddr))
+			msg.SrcAddr = net.IP(h.Sum(nil)[0:16]).String()
+			msg.CustomStr["src_endpoint"] = msg.SrcAddr + ":" + strconv.Itoa(int(msg.L4SrcPort))
+			h.Reset()
+		}
+		if e.doDst {
+			h.Write(e.salt)
+			h.Write([]byte(msg.DstAddr))
+			msg.DstAddr = net.IP(h.Sum(nil)[0:16]).String()
+			msg.CustomStr["dst_endpoint"] = msg.DstAddr + ":" + strconv.Itoa(int(msg.L4DstPort))
+			h.Reset()
+		}
 	}
 
 	return msgs, nil

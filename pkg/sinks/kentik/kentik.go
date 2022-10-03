@@ -2,7 +2,6 @@ package kentik
 
 import (
 	"bytes"
-	"compress/gzip"
 	"context"
 	"crypto/tls"
 	"flag"
@@ -91,7 +90,7 @@ func (s *KentikSink) Send(ctx context.Context, payload *kt.Output) {
 	go func() {
 		ctxC, cancel := context.WithTimeout(ctx, s.sendMaxDuration)
 		defer cancel()
-		s.SendKentik(ctxC, payload.Body, int(payload.Ctx.CompanyId), "", kflow.MSG_KEY_PREFIX)
+		s.sendKentik(ctxC, payload.Body, int(payload.Ctx.CompanyId), payload.Ctx.SenderId, kflow.MSG_KEY_PREFIX)
 	}()
 }
 
@@ -104,7 +103,7 @@ func (s *KentikSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *KentikSink) SendKentik(ctx context.Context, payload []byte, cid int, senderId string, offset int) {
+func (s *KentikSink) sendKentik(ctx context.Context, payload []byte, cid int, senderId string, offset int) {
 	if s.isKentik && offset == 0 { // Cut short any flow which is coming from kentik going back to kentik.
 		return
 	}
@@ -115,12 +114,7 @@ func (s *KentikSink) SendKentik(ctx context.Context, payload []byte, cid int, se
 	valString := vals.Encode()
 	fullUrl := s.KentikUrl + "?" + valString
 
-	gziped, err := s.gzBuf(nil, payload)
-	if err != nil {
-		s.Errorf("Cannot compress Kentik forward: %v", err)
-		return
-	}
-	req, err := http.NewRequestWithContext(ctx, "POST", fullUrl, bytes.NewBuffer(gziped))
+	req, err := http.NewRequestWithContext(ctx, "POST", fullUrl, bytes.NewBuffer(payload))
 	if err != nil {
 		s.Errorf("Cannot create Kentik request: %v", err)
 		return
@@ -150,28 +144,4 @@ func (s *KentikSink) SendKentik(ctx context.Context, payload []byte, cid int, se
 			}
 		}
 	}
-}
-
-func (s *KentikSink) gzBuf(serBuf []byte, raw []byte) ([]byte, error) {
-	if serBuf == nil {
-		serBuf = make([]byte, len(raw))
-	}
-	buf := bytes.NewBuffer(serBuf)
-	buf.Reset()
-	zw, err := gzip.NewWriterLevel(buf, gzip.DefaultCompression)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = zw.Write(raw)
-	if err != nil {
-		return nil, err
-	}
-
-	err = zw.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
 }

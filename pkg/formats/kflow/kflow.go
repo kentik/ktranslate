@@ -96,9 +96,8 @@ func (f *KflowFormat) To(flows []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, err
 	}
 
-	f.Infof("Sending to %s", key)
 	z.Close()
-	return kt.NewOutputWithProviderAndCompany(buf.Bytes(), flows[0].Provider, flows[0].CompanyId, kt.EventOutput), nil
+	return kt.NewOutputWithProviderAndCompanySender(buf.Bytes(), flows[0].Provider, flows[0].CompanyId, kt.EventOutput, key[0:len(key)-1]), nil
 }
 
 func (f *KflowFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {

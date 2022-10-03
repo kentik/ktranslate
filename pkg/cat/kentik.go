@@ -204,16 +204,11 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 		offset = MSG_KEY_PREFIX
 		pts := strings.Split(senderId, ":")
 		if len(pts) == 3 {
-			cid, _ = strconv.Atoi(strings.TrimSpace(pts[1]))
+			cid, _ = strconv.Atoi(strings.TrimSpace(pts[0]))
 			deviceName = pts[1]
 			did, _ = strconv.Atoi(strings.TrimSpace(pts[2]))
 		}
 
-	}
-
-	// If we have a kentik sink, send on here.
-	if kc.kentik != nil {
-		go kc.kentik.SendKentik(context.Background(), evt, cid, senderId, offset)
 	}
 
 	// decompress and read (capnproto "packed" representation)
