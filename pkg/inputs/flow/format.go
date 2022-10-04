@@ -157,6 +157,12 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 				// Assume seconds and multiply
 				in.Timestamp = in.Timestamp * 1000
 			}
+		case "FlowDirection":
+			if fmsg.FlowDirection == 1 {
+				in.CustomStr[field] = "egress"
+			} else {
+				in.CustomStr[field] = "ingress"
+			}
 		case "SequenceNum":
 			in.CustomBigInt[field] = int64(fmsg.SequenceNum)
 		case "SamplingRate":
@@ -170,9 +176,17 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "TimeFlowEnd":
 			in.CustomBigInt[field] = int64(fmsg.TimeFlowEnd)
 		case "Bytes":
-			in.InBytes = fmsg.Bytes
+			if fmsg.FlowDirection == 1 {
+				in.OutBytes = fmsg.Bytes
+			} else {
+				in.InBytes = fmsg.Bytes
+			}
 		case "Packets":
-			in.InPkts = fmsg.Packets
+			if fmsg.FlowDirection == 1 {
+				in.OutPkts = fmsg.Packets
+			} else {
+				in.InPkts = fmsg.Packets
+			}
 		case "SrcAddr":
 			in.SrcAddr = net.IP(fmsg.SrcAddr).String()
 		case "DstAddr":
