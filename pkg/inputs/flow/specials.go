@@ -118,6 +118,32 @@ func loadNBar(cfg *ktranslate.FlowInputConfig) EntConfig {
 	return config
 }
 
+func loadNBar9(cfg *ktranslate.FlowInputConfig) EntConfig {
+	config := EntConfig{
+		FlowConfig: producer.ProducerConfig{
+			NetFlowV9: producer.NetFlowV9ProducerConfig{
+				Mapping: []producer.NetFlowMapField{
+					producer.NetFlowMapField{
+						Type:        96,
+						Destination: "CustomBytes1",
+					},
+				},
+			},
+		},
+		NameMap: map[string]string{
+			"CustomBytes1": "application",
+		},
+	}
+
+	for field, _ := range config.NameMap {
+		if !strings.Contains(cfg.MessageFields, field) {
+			cfg.MessageFields = cfg.MessageFields + "," + field
+		}
+	}
+
+	return config
+}
+
 func loadPAN(cfg *ktranslate.FlowInputConfig) EntConfig {
 	config := EntConfig{
 		FlowConfig: producer.ProducerConfig{

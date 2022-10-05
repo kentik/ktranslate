@@ -30,6 +30,7 @@ const (
 	Netflow5            = "netflow5"
 	Netflow9            = "netflow9"
 	NBar                = "nbar"
+	NBar9               = "nbar.nf9"
 	ASA                 = "asa"
 	PAN                 = "pan"
 )
@@ -72,6 +73,8 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		config = loadASA(cfg)
 	case NBar:
 		config = loadNBar(cfg)
+	case NBar9:
+		config = loadNBar9(cfg)
 	case PAN:
 		config = loadPAN(cfg)
 	}
@@ -98,7 +101,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	kt.SetConfig(config)
 
 	switch proto {
-	case Ipfix, Netflow9, ASA, NBar, PAN:
+	case Ipfix, Netflow9, ASA, NBar, PAN, NBar9:
 		sNF := &utils.StateNetFlow{
 			Format: kt,
 			Logger: &KentikLog{l: kt},
@@ -109,7 +112,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			for _, v := range config.FlowConfig.IPFIX.Mapping {
 				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, config.NameMap[v.Destination])
 			}
-		case Netflow9:
+		case Netflow9, NBar9:
 			for _, v := range config.FlowConfig.NetFlowV9.Mapping {
 				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, config.NameMap[v.Destination])
 			}
@@ -174,7 +177,7 @@ func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
 				config.NameMap[v.Destination] = v.Destination
 			}
 		}
-	case Netflow9:
+	case Netflow9, NBar9:
 		for _, v := range config.FlowConfig.NetFlowV9.Mapping {
 			if _, ok := config.NameMap[v.Destination]; !ok {
 				config.NameMap[v.Destination] = v.Destination
