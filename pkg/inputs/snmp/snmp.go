@@ -95,7 +95,9 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
+	if conf.Trap != nil && !conf.Trap.TrapOnly { // Unless we are turning off everything but snmp traps.
+		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
+	}
 
 	// Run a trap listener?
 	if conf.Trap != nil && !cfg.FlowOnly {

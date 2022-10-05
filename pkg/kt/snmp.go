@@ -205,6 +205,7 @@ type SnmpTrapConfig struct {
 	Version   string        `yaml:"version"`
 	Transport string        `yaml:"transport"`
 	V3        *V3SNMPConfig `yaml:"v3_config"`
+	TrapOnly  bool          `yaml:"trap_only"`
 }
 
 type KentikMatch struct {
