@@ -836,14 +836,14 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.DeviceName = strings.Join([]string{device.network.Name, uplink.Interface}, ".")
 
 			dst.CustomStr = map[string]string{
-				"network":         device.network.Name,
-				"status":          uplink.Status,
-				"connection_type": uplink.ConnectionType,
-				"interface":       uplink.Interface,
-				"provider":        uplink.Provider,
-				"signal_type":     uplink.SignalType,
-				"signal_rsrp":     uplink.SignalStat.Rsrp,
-				"signal_rsrq":     uplink.SignalStat.Rsrq,
+				"network":           device.network.Name,
+				"status":            uplink.Status,
+				"connection_type":   uplink.ConnectionType,
+				"interface":         uplink.Interface,
+				"cellular_provider": uplink.Provider,
+				"signal_type":       uplink.SignalType,
+				"signal_rsrp":       uplink.SignalStat.Rsrp,
+				"signal_rsrq":       uplink.SignalStat.Rsrq,
 			}
 			dst.CustomInt = map[string]int32{}
 			dst.CustomBigInt = map[string]int64{}
