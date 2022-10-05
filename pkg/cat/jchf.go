@@ -20,62 +20,6 @@ var (
 	DEFAULT_GEO_PACKED = patricia.PackGeo(DEFAULT_GEO)
 )
 
-func (kc *KTranslate) lookupGeo(ipv4 uint32, ipv6 []byte) (string, error) {
-	if ipv4 != 0 {
-		return kc.geo.SearchBestFromHostGeo(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
-	}
-	return kc.geo.SearchBestFromHostGeo(net.IP(ipv6))
-}
-
-func (kc *KTranslate) lookupAsn(ipv4 uint32, ipv6 []byte) (uint32, string, error) {
-	if ipv4 != 0 {
-		return kc.asn.SearchBestFromHostAsn(net.IPv4(byte(ipv4>>24), byte(ipv4>>16), byte(ipv4>>8), byte(ipv4)))
-	}
-	return kc.geo.SearchBestFromHostAsn(net.IP(ipv6))
-}
-
-func (kc *KTranslate) setGeoAsn(src *Flow) (string, string) {
-	var srcName, dstName string
-
-	// Fetch our own geo if not already set.
-	if kc.geo != nil {
-		if src.CHF.SrcGeo() == 0 || src.CHF.SrcGeo() == DEFAULT_GEO_PACKED {
-			ipv6, _ := src.CHF.Ipv6SrcAddr()
-			if srcGeo, err := kc.lookupGeo(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
-				src.CHF.SetSrcGeo(patricia.PackGeo([]byte(srcGeo)))
-			}
-		}
-
-		if src.CHF.DstGeo() == 0 || src.CHF.DstGeo() == DEFAULT_GEO_PACKED {
-			ipv6, _ := src.CHF.Ipv6DstAddr()
-			if dstGeo, err := kc.lookupGeo(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
-				src.CHF.SetDstGeo(patricia.PackGeo([]byte(dstGeo)))
-			}
-		}
-	}
-
-	// And set our own asn also if not set.
-	if kc.asn != nil {
-		ipv6, _ := src.CHF.Ipv6SrcAddr()
-		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4SrcAddr(), ipv6); err == nil {
-			if src.CHF.SrcAs() == 0 {
-				src.CHF.SetSrcAs(asn)
-			}
-			srcName = name
-		}
-
-		ipv6, _ = src.CHF.Ipv6DstAddr()
-		if asn, name, err := kc.lookupAsn(src.CHF.Ipv4DstAddr(), ipv6); err == nil {
-			if src.CHF.DstAs() == 0 {
-				src.CHF.SetDstAs(asn)
-			}
-			dstName = name
-		}
-	}
-
-	return srcName, dstName
-}
-
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 
 	// if app_proto is 12, this is snmp and return as such.
@@ -121,27 +65,11 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 	return kt.ProviderFlowDevice
 }
 
-func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
+func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
 
 	dst.CustomStr = make(map[string]string)
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
-
-	// In the direct case, users can map their own asn/geo values into here.
-	if kc.geo != nil || kc.asn != nil {
-		srcAsnName, dstAsnName := kc.setGeoAsn(src)
-		if srcAsnName != "" {
-			dst.CustomStr["src_as_name"] = srcAsnName
-		} else {
-			dst.CustomStr["src_as_name"] = strconv.Itoa(int(src.CHF.SrcAs()))
-		}
-
-		if dstAsnName != "" {
-			dst.CustomStr["dst_as_name"] = dstAsnName
-		} else {
-			dst.CustomStr["dst_as_name"] = strconv.Itoa(int(src.CHF.DstAs()))
-		}
-	}
 
 	// dst.Timestamp = src.CHF.Timestamp() This is being strage, use current timestamp for now.
 	dst.Timestamp = currentTS
@@ -179,6 +107,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, citycache map[uint32]strin
 	dst.TcpRetransmit = src.CHF.TcpRetransmit()
 	dst.SampleRate = src.CHF.SampleRate() / 100 // Reduce by 100 to get actual rate.
 	dst.DeviceId = kt.DeviceID(src.CHF.DeviceId())
+	dst.DeviceName = src.DeviceName
 	dst.CompanyId = kt.Cid(src.CompanyId)
 	dst.SrcNextHopAs = src.CHF.SrcNextHopAs()
 	dst.DstNextHopAs = src.CHF.DstNextHopAs()
@@ -529,7 +458,7 @@ var (
 )
 
 // Updates asn and geo if set for any of these inputs.
-func (kc *KTranslate) doEnrichments(ctx context.Context, citycache map[uint32]string, regioncache map[uint32]string, msgs []*kt.JCHF) {
+func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)

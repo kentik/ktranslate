@@ -2,7 +2,6 @@ package kentik
 
 import (
 	"bytes"
-	"compress/gzip"
 	"context"
 	"crypto/tls"
 	"flag"
@@ -12,16 +11,20 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
+	"github.com/kentik/ktranslate/pkg/formats/kflow"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 const (
 	CHF_TYPE = "application/chf"
+
+	DefaultSendTimeout = 30 * time.Second
 )
 
 var (
@@ -34,13 +37,14 @@ func init() {
 
 type KentikSink struct {
 	logger.ContextL
-	registry  go_metrics.Registry
-	metrics   *KentikMetric
-	KentikUrl string
-	client    *http.Client
-	tr        *http.Transport
-	isKentik  bool
-	config    *ktranslate.Config
+	registry        go_metrics.Registry
+	metrics         *KentikMetric
+	KentikUrl       string
+	client          *http.Client
+	tr              *http.Transport
+	isKentik        bool
+	config          *ktranslate.Config
+	sendMaxDuration time.Duration
 }
 
 type KentikMetric struct {
@@ -56,7 +60,8 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_kentik", registry),
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_kentik", registry),
 		},
-		config: cfg,
+		sendMaxDuration: DefaultSendTimeout,
+		config:          cfg,
 	}, nil
 }
 
@@ -82,7 +87,11 @@ func (s *KentikSink) Init(ctx context.Context, format formats.Format, compressio
 }
 
 func (s *KentikSink) Send(ctx context.Context, payload *kt.Output) {
-	// Noop, can't send this way.
+	go func() {
+		ctxC, cancel := context.WithTimeout(ctx, s.sendMaxDuration)
+		defer cancel()
+		s.sendKentik(ctxC, payload.Body, int(payload.Ctx.CompanyId), payload.Ctx.SenderId, kflow.MSG_KEY_PREFIX)
+	}()
 }
 
 func (s *KentikSink) Close() {}
@@ -94,7 +103,7 @@ func (s *KentikSink) HttpInfo() map[string]float64 {
 	}
 }
 
-func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string, offset int) {
+func (s *KentikSink) sendKentik(ctx context.Context, payload []byte, cid int, senderId string, offset int) {
 	if s.isKentik && offset == 0 { // Cut short any flow which is coming from kentik going back to kentik.
 		return
 	}
@@ -105,19 +114,14 @@ func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string, offset
 	valString := vals.Encode()
 	fullUrl := s.KentikUrl + "?" + valString
 
-	gziped, err := s.gzBuf(nil, payload)
-	if err != nil {
-		s.Errorf("Cannot compress Kentik forward: %v", err)
-		return
-	}
-	req, err := http.NewRequestWithContext(context.Background(), "POST", fullUrl, bytes.NewBuffer(gziped))
+	req, err := http.NewRequestWithContext(ctx, "POST", fullUrl, bytes.NewBuffer(payload))
 	if err != nil {
 		s.Errorf("Cannot create Kentik request: %v", err)
 		return
 	}
 
-	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].ApiEmail)
-	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].ApiToken)
+	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].APIEmail)
+	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].APIToken)
 	req.Header.Set("Content-Type", CHF_TYPE)
 	req.Header.Set("Content-Encoding", "gzip")
 
@@ -140,28 +144,4 @@ func (s *KentikSink) SendKentik(payload []byte, cid int, senderId string, offset
 			}
 		}
 	}
-}
-
-func (s *KentikSink) gzBuf(serBuf []byte, raw []byte) ([]byte, error) {
-	if serBuf == nil {
-		serBuf = make([]byte, len(raw))
-	}
-	buf := bytes.NewBuffer(serBuf)
-	buf.Reset()
-	zw, err := gzip.NewWriterLevel(buf, gzip.DefaultCompression)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = zw.Write(raw)
-	if err != nil {
-		return nil, err
-	}
-
-	err = zw.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
 }

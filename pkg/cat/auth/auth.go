@@ -109,6 +109,16 @@ func (s *Server) GetDeviceMap() map[string]*kt.Device {
 	return s.devicesByIP
 }
 
+func (s *Server) AddDevices(devices map[string]*kt.Device) {
+	for _, device := range devices {
+		s.devicesByName[device.ID.Itoa()] = device
+		for _, ip := range device.SendingIps {
+			s.devicesByIP[ip.String()] = device
+		}
+	}
+	s.log.Infof("API server running %d devices after remote fetch", len(s.devicesByName))
+}
+
 func (s *Server) getDevice(query string) *kt.Device {
 	// Try finding this device directly by its ID
 	device, ok := s.devicesByName[query]

@@ -195,9 +195,10 @@ type FlowInputConfig struct {
 	MappingFile          string
 }
 
+// KentikCred is information needed to auth the Kentik API.
 type KentikCred struct {
-	ApiEmail string
-	ApiToken string
+	APIEmail string
+	APIToken string
 }
 
 // Config is the ktranslate configuration

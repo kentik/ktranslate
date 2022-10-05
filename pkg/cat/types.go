@@ -6,7 +6,6 @@ import (
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
-	"github.com/kentik/ktranslate/pkg/sinks/kentik"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
@@ -60,7 +59,6 @@ type KTranslate struct {
 	sinks        map[sinks.Sink]sinks.SinkImpl
 	format       formats.Formatter
 	formatRollup formats.Formatter
-	kentik       *kentik.KentikSink // This one gets special handling
 	rollups      []rollup.Roller
 	doRollups    bool
 	doFilter     bool
@@ -114,8 +112,9 @@ type hc struct {
 }
 
 type Flow struct {
-	CompanyId int
-	CHF       model.CHF
+	CompanyId  int
+	CHF        model.CHF
+	DeviceName string
 }
 
 type KKCMetric struct {

@@ -346,6 +346,7 @@ type OutputContext struct {
 	Provider  Provider
 	Type      OutputType
 	CompanyId Cid
+	SenderId  string
 }
 
 type Output struct {
@@ -362,8 +363,8 @@ func NewOutputWithProvider(body []byte, prov Provider, stype OutputType) *Output
 	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype}}
 }
 
-func NewOutputWithProviderAndCompany(body []byte, prov Provider, cid Cid, stype OutputType) *Output {
-	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype, CompanyId: cid}}
+func NewOutputWithProviderAndCompanySender(body []byte, prov Provider, cid Cid, stype OutputType, senderid string) *Output {
+	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype, CompanyId: cid, SenderId: senderid}}
 }
 
 func (o *Output) IsEvent() bool {
