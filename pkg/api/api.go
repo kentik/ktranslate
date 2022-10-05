@@ -239,7 +239,7 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
 	for _, info := range api.config.KentikCreds {
-		res, err := api.getDeviceInfo(ctx, api.config.APIBaseURL+"/api/internal/devices", info.ApiEmail, info.ApiToken)
+		res, err := api.getDeviceInfo(ctx, api.config.APIBaseURL+"/api/internal/devices", info.APIEmail, info.APIToken)
 		if err != nil {
 			return err
 		}
@@ -262,7 +262,7 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 			num++
 		}
 
-		api.Infof("Loaded %d Kentik devices via API for %s", len(devices.Devices), info.ApiEmail)
+		api.Infof("Loaded %d Kentik devices via API for %s", len(devices.Devices), info.APIEmail)
 	}
 
 	api.setTime = time.Now()
@@ -362,8 +362,8 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	synAgentsByIP := map[string]*synthetics.Agent{}
 	for _, info := range api.config.KentikCreds {
 		md := metadata.New(map[string]string{
-			"X-CH-Auth-Email":     info.ApiEmail,
-			"X-CH-Auth-API-Token": info.ApiToken,
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
 		})
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
@@ -394,7 +394,7 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 			synAgentsByIP[locala.GetIp()] = locala
 		}
 
-		api.Infof("Loaded %d Kentik Tests and %d Agents via API for %s", len(r.GetTests()), len(ra.GetAgents()), info.ApiEmail)
+		api.Infof("Loaded %d Kentik Tests and %d Agents via API for %s", len(r.GetTests()), len(ra.GetAgents()), info.APIEmail)
 	}
 
 	api.synAgents = synAgents
@@ -470,8 +470,8 @@ func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, ur
 	}
 
 	userAgentString := USER_AGENT_BASE
-	req.Header.Add(API_EMAIL_HEADER, api.config.KentikCreds[0].ApiEmail)
-	req.Header.Add(API_PASSWORD_HEADER, api.config.KentikCreds[0].ApiToken)
+	req.Header.Add(API_EMAIL_HEADER, api.config.KentikCreds[0].APIEmail)
+	req.Header.Add(API_PASSWORD_HEADER, api.config.KentikCreds[0].APIToken)
 	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
 	req.Header.Add("Content-Type", "application/json")
 

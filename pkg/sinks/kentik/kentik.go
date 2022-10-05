@@ -120,8 +120,8 @@ func (s *KentikSink) sendKentik(ctx context.Context, payload []byte, cid int, se
 		return
 	}
 
-	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].ApiEmail)
-	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].ApiToken)
+	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].APIEmail)
+	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].APIToken)
 	req.Header.Set("Content-Type", CHF_TYPE)
 	req.Header.Set("Content-Encoding", "gzip")
 

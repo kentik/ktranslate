@@ -351,7 +351,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 				cfg.EnableSNMPDiscovery = v
 			case "kentik_email":
-				cfg.KentikCreds = []ktranslate.KentikCred{ktranslate.KentikCred{ApiEmail: val, ApiToken: os.Getenv(ktranslate.KentikAPITokenEnvVar)}}
+				cfg.KentikCreds = []ktranslate.KentikCred{ktranslate.KentikCred{APIEmail: val, APIToken: os.Getenv(ktranslate.KentikAPITokenEnvVar)}}
 			case "api_root":
 				cfg.APIBaseURL = val
 			case "kentik_plan":
