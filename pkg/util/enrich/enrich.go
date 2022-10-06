@@ -98,10 +98,10 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 				e.Infof("Enriching via a starlark program")
 			}
 		}
-
-		e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
-		return &e, nil
 	}
+
+	e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
+	return &e, nil
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
@@ -159,6 +159,8 @@ func (e *Enricher) hashIP(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, err
 			h.Reset()
 		}
 	}
+
+	return msgs, nil
 }
 
 func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
