@@ -19,6 +19,8 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+
+	"github.com/gosnmp/gosnmp"
 )
 
 const (
@@ -102,6 +104,21 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 
 	e.Infof("Enriching at %s. Source: %v, Dest: %v, Salt %s", url, e.doSrc, e.doDst, string(e.salt))
 	return &e, nil
+}
+
+func (e *Enricher) EnrichMib(idx string, oidName string, value gosnmp.SnmpPDU) (string, string, error) {
+	rv, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{}, nil)
+	if err != nil {
+		return nil, err
+	}
+	switch rv := rv.(type) {
+	case starlark.NoneType:
+		return nil, nil
+	case starlark.String:
+
+	}
+
+	return "", "", nil
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {

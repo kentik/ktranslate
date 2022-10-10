@@ -371,6 +371,11 @@ type Mib struct {
 	Format       string
 	AllowDup     bool
 	Condition    *MibCondition
+	Script       Enricher
+}
+
+type Enricher interface {
+	EnrichMib(idx string, oidName string, value gosnmp.SnmpPDU) (string, string, error)
 }
 
 func (mb *Mib) String() string {
