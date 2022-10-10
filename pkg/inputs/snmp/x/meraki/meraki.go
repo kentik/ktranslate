@@ -266,7 +266,7 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) 
 		"admin_name":   l.AdminName,
 		"network_name": l.NetworkName,
 		"label":        l.Label,
-		"new_nalue":    l.NewValue,
+		"new_value":    l.NewValue,
 		"admin_email":  l.AdminEmail,
 		"admin_id":     l.AdminId,
 		"network_id":   l.NetworkId,

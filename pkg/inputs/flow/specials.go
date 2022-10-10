@@ -43,6 +43,38 @@ func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
 					},
 				},
 			},
+			NetFlowV9: producer.NetFlowV9ProducerConfig{
+				Mapping: []producer.NetFlowMapField{
+					producer.NetFlowMapField{
+						Type:        231,
+						Destination: "CustomInteger1",
+					},
+					producer.NetFlowMapField{
+						Type:        232,
+						Destination: "CustomInteger2",
+					},
+					producer.NetFlowMapField{
+						Type:        298,
+						Destination: "CustomInteger3",
+					},
+					producer.NetFlowMapField{
+						Type:        299,
+						Destination: "CustomInteger4",
+					},
+					producer.NetFlowMapField{
+						Type:        233,
+						Destination: "CustomInteger5",
+					},
+					producer.NetFlowMapField{
+						Type:        33000,
+						Destination: "CustomBytes1",
+					},
+					producer.NetFlowMapField{
+						Type:        33001,
+						Destination: "CustomBytes2",
+					},
+				},
+			},
 		},
 		NameMap: map[string]string{
 			"CustomInteger1": "in_bytes",
@@ -99,28 +131,6 @@ func loadNBar(cfg *ktranslate.FlowInputConfig) EntConfig {
 					},
 				},
 			},
-		},
-		NameMap: map[string]string{
-			"CustomBytes1": "application",
-			"CustomBytes2": "Application Category",
-			"CustomBytes3": "Application Subcategory",
-			"CustomBytes4": "Application Group",
-			"CustomBytes5": "Application Traffic Class",
-		},
-	}
-
-	for field, _ := range config.NameMap {
-		if !strings.Contains(cfg.MessageFields, field) {
-			cfg.MessageFields = cfg.MessageFields + "," + field
-		}
-	}
-
-	return config
-}
-
-func loadNBar9(cfg *ktranslate.FlowInputConfig) EntConfig {
-	config := EntConfig{
-		FlowConfig: producer.ProducerConfig{
 			NetFlowV9: producer.NetFlowV9ProducerConfig{
 				Mapping: []producer.NetFlowMapField{
 					producer.NetFlowMapField{
@@ -132,6 +142,10 @@ func loadNBar9(cfg *ktranslate.FlowInputConfig) EntConfig {
 		},
 		NameMap: map[string]string{
 			"CustomBytes1": "application",
+			"CustomBytes2": "Application Category",
+			"CustomBytes3": "Application Subcategory",
+			"CustomBytes4": "Application Group",
+			"CustomBytes5": "Application Traffic Class",
 		},
 	}
 
