@@ -43,6 +43,38 @@ func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
 					},
 				},
 			},
+			NetFlowV9: producer.NetFlowV9ProducerConfig{
+				Mapping: []producer.NetFlowMapField{
+					producer.NetFlowMapField{
+						Type:        231,
+						Destination: "CustomInteger1",
+					},
+					producer.NetFlowMapField{
+						Type:        232,
+						Destination: "CustomInteger2",
+					},
+					producer.NetFlowMapField{
+						Type:        298,
+						Destination: "CustomInteger3",
+					},
+					producer.NetFlowMapField{
+						Type:        299,
+						Destination: "CustomInteger4",
+					},
+					producer.NetFlowMapField{
+						Type:        233,
+						Destination: "CustomInteger5",
+					},
+					producer.NetFlowMapField{
+						Type:        33000,
+						Destination: "CustomBytes1",
+					},
+					producer.NetFlowMapField{
+						Type:        33001,
+						Destination: "CustomBytes2",
+					},
+				},
+			},
 		},
 		NameMap: map[string]string{
 			"CustomInteger1": "in_bytes",
@@ -96,6 +128,14 @@ func loadNBar(cfg *ktranslate.FlowInputConfig) EntConfig {
 						Destination: "CustomBytes5",
 						PenProvided: true,
 						Pen:         9,
+					},
+				},
+			},
+			NetFlowV9: producer.NetFlowV9ProducerConfig{
+				Mapping: []producer.NetFlowMapField{
+					producer.NetFlowMapField{
+						Type:        96,
+						Destination: "CustomBytes1",
 					},
 				},
 			},
