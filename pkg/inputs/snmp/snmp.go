@@ -95,7 +95,9 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
+	if conf.Trap == nil || !conf.Trap.TrapOnly { // Unless we are turning off everything but snmp traps.
+		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
+	}
 
 	// Run a trap listener?
 	if conf.Trap != nil && !cfg.FlowOnly {
@@ -444,7 +446,8 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 	return &ms, nil
 }
 
-/**
+/*
+*
 Handle the case where we're only doing a ping loop of a device.
 */
 func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
@@ -459,7 +462,8 @@ func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.S
 	return nil
 }
 
-/**
+/*
+*
 Handle the case where we're only doing a extention loop of a device.
 */
 func launchExtOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {

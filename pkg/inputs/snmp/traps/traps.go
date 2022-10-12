@@ -59,6 +59,7 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 		deviceMap: map[string]*kt.SnmpDeviceConfig{},
 		resolv:    resolv,
 		ctx:       ctx,
+		conf:      conf,
 	}
 
 	// Some quick defaults.
@@ -143,7 +144,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	dst.SrcAddr = addr.IP.String()
 	if dev != nil {
 		dst.DeviceName = dev.DeviceName
-		dst.Provider = dev.Provider
+		if s.conf.Trap.TrapOnly {
+			dst.Provider = kt.ProviderTrapUnknown
+		} else {
+			dst.Provider = dev.Provider
+		}
 		dev.SetUserTags(dst.CustomStr)
 	} else {
 		dst.DeviceName = addr.IP.String()
