@@ -472,7 +472,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
 			}
 			if metric.Symbol.Script != "" {
-				er, err := enrich.NewEnricher("", "", metric.Symbol.Script, p.GetLogger().GetUnderlyingLogger())
+				er, err := enrich.NewEnricher("", metric.Symbol.Script, "", p.GetLogger().GetUnderlyingLogger())
 				if err != nil {
 					p.Errorf("Cannot add script for %s: %v", mib.Name, err)
 				} else {
@@ -527,7 +527,7 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
 			}
 			if s.Script != "" {
-				er, err := enrich.NewEnricher("", "", s.Script, p.GetLogger().GetUnderlyingLogger())
+				er, err := enrich.NewEnricher("", s.Script, "", p.GetLogger().GetUnderlyingLogger())
 				if err != nil {
 					p.Errorf("Cannot add script for %s: %v", mib.Name, err)
 				} else {
@@ -605,9 +605,9 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				}
 			}
 			if tag.Column.Script != "" {
-				er, err := enrich.NewEnricher("", "", tag.Column.Script, p.GetLogger().GetUnderlyingLogger())
+				er, err := enrich.NewEnricher("", tag.Column.Script, "", p.GetLogger().GetUnderlyingLogger())
 				if err != nil {
-					p.Errorf("Cannot add script for %s: %v", mib.Name, err)
+					p.Errorf("Cannot add script for %s: %v [%s]", mib.Name, err, tag.Column.Script)
 				} else {
 					p.Infof("Enabling script for %s", mib.Name)
 					mib.Script = er
@@ -660,9 +660,9 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					}
 				}
 				if t.Column.Script != "" {
-					er, err := enrich.NewEnricher("", "", t.Column.Script, p.GetLogger().GetUnderlyingLogger())
+					er, err := enrich.NewEnricher("", t.Column.Script, "", p.GetLogger().GetUnderlyingLogger())
 					if err != nil {
-						p.Errorf("Cannot add script for %s: %v", mib.Name, err)
+						p.Errorf("Cannot add script for %s: %v [%s]", mib.Name, err, t.Column.Script)
 					} else {
 						p.Infof("Enabling script for %s", mib.Name)
 						mib.Script = er

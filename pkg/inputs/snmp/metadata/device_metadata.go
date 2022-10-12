@@ -258,15 +258,6 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 		// Try to just use as a number, either via an enum or directly. Enum handled in the NewMetaValue func.
 		md.Tables[idx].Customs[oidName] = kt.NewMetaValue(value.mib, "", gosnmp.ToBigInt(value.variable.Value).Int64())
 	}
-
-	// Call script if set up.
-	if value.mib.Script != nil {
-		if k, v, err := value.mib.Script.EnrichMib(idx, oidName, value.variable); err != nil {
-			dm.log.Errorf("Cannot run script for %s: %v", value.mib.GetName(), err)
-		} else {
-			md.Tables[idx].Customs[k] = kt.NewMetaValue(value.mib, v, 0)
-		}
-	}
 }
 
 // Super basic loop to get info for discovery.

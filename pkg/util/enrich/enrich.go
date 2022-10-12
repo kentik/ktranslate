@@ -19,8 +19,6 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
-
-	"github.com/gosnmp/gosnmp"
 )
 
 const (
@@ -106,19 +104,14 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 	return &e, nil
 }
 
-func (e *Enricher) EnrichMib(idx string, oidName string, value gosnmp.SnmpPDU) (string, string, error) {
-	rv, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{}, nil)
+func (e *Enricher) EnrichMib(idx string, attr map[string]interface{}) {
+	mm := &Mib{}
+	mm.Wrap(idx, attr)
+	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
 	if err != nil {
-		return nil, err
+		e.Errorf("Cannot run enrich mib script: %v", err)
+		return
 	}
-	switch rv := rv.(type) {
-	case starlark.NoneType:
-		return nil, nil
-	case starlark.String:
-
-	}
-
-	return "", "", nil
 }
 
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
