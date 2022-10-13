@@ -84,6 +84,7 @@ func (m *JCHF) Attr(name string) (starlark.Value, error) {
 		}
 	}
 
+	// Returning nil, nil indicates "no such field or method"
 	return nil, nil
 }
 

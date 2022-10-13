@@ -88,7 +88,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				for k, v := range table.Customs {
 					attr[k] = v.GetValue()
 					if s := v.GetScript(); s != nil {
-						s.EnrichMib(idx, attr)
+						s.EnrichMib(idx, k, attr, lastMetadata)
 					}
 				}
 			}
@@ -100,7 +100,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 					for k, v := range table.Customs {
 						attr[k] = v.GetValue()
 						if s := v.GetScript(); s != nil {
-							s.EnrichMib(idx, attr)
+							s.EnrichMib(idx, k, attr, lastMetadata)
 						}
 					}
 				}

@@ -104,9 +104,9 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 	return &e, nil
 }
 
-func (e *Enricher) EnrichMib(idx string, attr map[string]interface{}) {
-	mm := &Mib{}
-	mm.Wrap(idx, attr)
+func (e *Enricher) EnrichMib(idx string, key string, attr map[string]interface{}, lm *kt.LastMetadata) {
+	mm := &Mib{ContextL: e}
+	mm.Wrap(idx, key, attr, lm)
 	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
 	if err != nil {
 		e.Errorf("Cannot run enrich mib script: %v", err)

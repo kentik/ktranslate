@@ -7,19 +7,25 @@ import (
 
 	"go.starlark.net/starlark"
 
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 type Mib struct {
-	attr   map[string]interface{}
+	logger.ContextL
 	idx    string
+	key    string
+	attr   map[string]interface{}
+	lm     *kt.LastMetadata
 	frozen bool
 }
 
 // Wrap updates the starlark.Metric to wrap a new telegraf.Metric.
-func (m *Mib) Wrap(idx string, attr map[string]interface{}) {
-	m.attr = attr
+func (m *Mib) Wrap(idx string, key string, attr map[string]interface{}, lm *kt.LastMetadata) {
 	m.idx = idx
+	m.key = key
+	m.attr = attr
+	m.lm = lm
 	m.frozen = false
 }
 
@@ -30,8 +36,9 @@ func (m *Mib) Wrap(idx string, attr map[string]interface{}) {
 func (m *Mib) String() string {
 	buf := new(strings.Builder)
 	buf.WriteString("Mib(")
-	buf.WriteString(fmt.Sprintf("%s", m.idx))
-	buf.WriteString(fmt.Sprintf("%v", m.attr))
+	buf.WriteString(fmt.Sprintf("Index: %s, ", m.idx))
+	buf.WriteString(fmt.Sprintf("Key: %s, ", m.key))
+	buf.WriteString(fmt.Sprintf("Attr: %v", m.attr))
 	buf.WriteString(")")
 	return buf.String()
 }
@@ -54,7 +61,7 @@ func (m *Mib) Hash() (uint32, error) {
 
 // AttrNames implements the starlark.HasAttrs interface.
 func (m *Mib) AttrNames() []string {
-	names := []string{"idx"}
+	names := []string{"this.idx", "this.key"}
 	for k, _ := range m.attr {
 		names = append(names, k)
 	}
@@ -63,27 +70,32 @@ func (m *Mib) AttrNames() []string {
 
 // Attr implements the starlark.HasAttrs interface.
 func (m *Mib) Attr(name string) (starlark.Value, error) {
-	if name == "idx" {
+	switch name {
+	case "this.idx":
 		return starlark.String(m.idx), nil
-	}
-	if v, ok := m.attr[name]; ok {
-		switch nv := v.(type) {
-		case kt.Cid:
-			return starlark.MakeUint64(uint64(nv)), nil
-		case uint64:
-			return starlark.MakeUint64(nv), nil
-		case int64:
-			return starlark.MakeInt64(nv), nil
-		case int:
-			return starlark.MakeInt(int(nv)), nil
-		case int32:
-			return starlark.MakeInt(int(nv)), nil
-		case string:
-			return starlark.String(nv), nil
+	case "this.key":
+		return starlark.String(m.key), nil
+	default:
+		if v, ok := m.attr[name]; ok {
+			switch nv := v.(type) {
+			case kt.Cid:
+				return starlark.MakeUint64(uint64(nv)), nil
+			case uint64:
+				return starlark.MakeUint64(nv), nil
+			case int64:
+				return starlark.MakeInt64(nv), nil
+			case int:
+				return starlark.MakeInt(int(nv)), nil
+			case int32:
+				return starlark.MakeInt(int(nv)), nil
+			case string:
+				return starlark.String(nv), nil
+			}
 		}
 	}
 
-	return nil, nil
+	// By default, return empty string for all other variables.
+	return starlark.String(""), nil
 }
 
 // SetField implements the starlark.HasSetField interface.
@@ -93,9 +105,20 @@ func (m *Mib) SetField(name string, value starlark.Value) error {
 	}
 
 	switch name {
-	case "idx":
-		m.idx = setString(value)
+	case "this.idx":
+		return starlark.NoSuchAttrError(
+			fmt.Sprintf("cannot assign to field '%s'", name))
+	case "this.key":
+		return starlark.NoSuchAttrError(
+			fmt.Sprintf("cannot assign to field '%s'", name))
 	default:
+		// Copy over the info about this new key from the key which started this process.
+		if m.lm != nil {
+			if _, ok := m.lm.XtraInfo[name]; !ok {
+				m.lm.XtraInfo[name] = m.lm.XtraInfo[m.key]
+			}
+		}
+
 		switch v := value.(type) {
 		case starlark.String:
 			m.attr[name] = v.GoString()
