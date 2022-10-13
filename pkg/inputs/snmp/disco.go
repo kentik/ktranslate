@@ -320,6 +320,11 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 }
 
 func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfig, snmpFile string, conf *kt.SnmpConfig, isTest bool, log logger.ContextL, pollDuration time.Duration) (*SnmpDiscoDeviceStat, error) {
+	// If testing, just return if a touch works or not.
+	if isTest {
+		return nil, snmp_util.TouchFile(snmpFile)
+	}
+
 	// Now add the new.
 	stats := SnmpDiscoDeviceStat{}
 	if conf.Devices == nil {
