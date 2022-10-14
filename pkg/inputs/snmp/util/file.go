@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -163,4 +165,30 @@ func (m *mockS3) DownloadWithContext(ctx aws.Context, w io.WriterAt, in *s3.GetO
 
 func getMockS3Client() s3Full {
 	return sMock
+}
+
+func TouchFile(path string) error {
+	u, err := url.Parse(path)
+	if err != nil {
+		return err
+	}
+
+	// If an external scheme, just return nil.
+	switch u.Scheme {
+	case "http", "https":
+		return nil
+	case "s3":
+		return nil
+	case "s3m":
+		return nil
+	}
+
+	_, err = os.Stat(path)
+	if err != nil {
+		return err
+	}
+
+	// Now see if can write.
+	currentTime := time.Now().Local()
+	return os.Chtimes(path, currentTime, currentTime)
 }
