@@ -27,6 +27,8 @@ const (
 	CONV_ENGINE_ID = "engine_id"
 	CONV_REGEXP    = "regexp"
 	CONV_ONE       = "to_one"
+
+	ConstantOidPrefix = "1.3.6.1.6.3.1135.6169."
 )
 
 var (
@@ -127,6 +129,11 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 		pollTry{walk: server.BulkWalkAll, sleep: time.Duration(0)},
 		pollTry{walk: server.WalkAll, sleep: time.Duration(0)},
 		pollTry{walk: server.WalkAll, sleep: SNMP_POLL_SLEEP_TIME},
+	}
+
+	// If the oid is the constant oid, return a fixed string here.
+	if strings.HasPrefix(oid, ConstantOidPrefix) {
+		return []gosnmp.SnmpPDU{{Value: oid[len(ConstantOidPrefix):], Name: oid}}, nil
 	}
 
 	// If we are overriding with a test set.
