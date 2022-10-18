@@ -28,7 +28,8 @@ const (
 	CONV_REGEXP    = "regexp"
 	CONV_ONE       = "to_one"
 
-	ConstantOidPrefix = "1.3.6.1.6.3.1135.6169."
+	ConstantOidPrefix       = "1.3.6.1.6.3.1135.6169."
+	ConstantOidMetricPrefix = ".1.3.6.1.6.3.1136.6169."
 )
 
 var (
@@ -134,6 +135,9 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 	// If the oid is the constant oid, return a fixed string here.
 	if strings.HasPrefix(oid, ConstantOidPrefix) {
 		return []gosnmp.SnmpPDU{{Value: oid[len(ConstantOidPrefix):], Name: oid}}, nil
+	} else if strings.HasPrefix(oid, ConstantOidMetricPrefix) {
+		val, _ := strconv.Atoi(oid[len(ConstantOidMetricPrefix):])
+		return []gosnmp.SnmpPDU{{Value: val, Name: oid}}, nil
 	}
 
 	// If we are overriding with a test set.
