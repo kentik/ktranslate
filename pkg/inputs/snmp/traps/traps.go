@@ -6,6 +6,7 @@ import (
 	"net"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gosnmp/gosnmp"
 
@@ -199,10 +200,15 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		switch v.Type {
 		case gosnmp.OctetString:
 			if value, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok {
-				if res != nil {
-					dst.CustomStr[res.GetName()] = value
-				} else {
-					dst.CustomStr[v.Name] = value
+				if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
+					_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
+				}
+				if utf8.ValidString(value) {
+					if res != nil {
+						dst.CustomStr[res.GetName()] = value
+					} else {
+						dst.CustomStr[v.Name] = value
+					}
 				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32, gosnmp.Integer:
@@ -212,10 +218,16 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 				dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
 			}
 		case gosnmp.ObjectIdentifier:
-			if res != nil {
-				dst.CustomStr[res.GetName()] = v.Value.(string)
-			} else {
-				dst.CustomStr[v.Name] = v.Value.(string)
+			value := v.Value.(string)
+			if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
+				_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
+			}
+			if utf8.ValidString(value) {
+				if res != nil {
+					dst.CustomStr[res.GetName()] = value
+				} else {
+					dst.CustomStr[v.Name] = value
+				}
 			}
 		default:
 			s.log.Infof("trap variable with unknown type (%v) handling, skipping: %+v", v.Type, v)
