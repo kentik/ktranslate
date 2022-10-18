@@ -6,7 +6,6 @@ import (
 	"net"
 	"sync"
 	"time"
-	"unicode/utf8"
 
 	"github.com/gosnmp/gosnmp"
 
@@ -200,12 +199,10 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		switch v.Type {
 		case gosnmp.OctetString:
 			if value, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok {
-				if utf8.ValidString(value) {
-					if res != nil {
-						dst.CustomStr[res.GetName()] = value
-					} else {
-						dst.CustomStr[v.Name] = value
-					}
+				if res != nil {
+					dst.CustomStr[res.GetName()] = value
+				} else {
+					dst.CustomStr[v.Name] = value
 				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32, gosnmp.Integer:
