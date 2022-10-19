@@ -41,6 +41,7 @@ type MetaValue struct {
 	TableNames map[string]bool
 	StringVal  string
 	IntVal     int64
+	Mib        *Mib
 }
 
 func (mv *MetaValue) GetValue() interface{} {
@@ -48,6 +49,13 @@ func (mv *MetaValue) GetValue() interface{} {
 		return mv.IntVal
 	}
 	return mv.StringVal
+}
+
+func (mv *MetaValue) GetScript() Enricher {
+	if mv.Mib == nil {
+		return nil
+	}
+	return mv.Mib.Script
 }
 
 func NewDeviceTableMetadata() DeviceTableMetadata {
@@ -71,6 +79,7 @@ func NewMetaValue(mib *Mib, sv string, iv int64) MetaValue {
 		TableNames: map[string]bool{mib.Table: true},
 		StringVal:  strings.TrimSpace(sv),
 		IntVal:     iv,
+		Mib:        mib,
 	}
 
 	for k, _ := range mib.OtherTables {
@@ -372,6 +381,11 @@ type Mib struct {
 	Format       string
 	AllowDup     bool
 	Condition    *MibCondition
+	Script       Enricher
+}
+
+type Enricher interface {
+	EnrichMib(string, string, map[string]interface{}, *LastMetadata)
 }
 
 func (mb *Mib) String() string {

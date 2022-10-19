@@ -178,8 +178,8 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	kc.rule = rule
 
 	// External Enrichment.
-	if config.EnricherURL != "" {
-		en, err := enrich.NewEnricher(config.EnricherURL, log.GetLogger().GetUnderlyingLogger())
+	if config.EnricherURL != "" || config.EnricherSource != "" || config.EnricherScript != "" {
+		en, err := enrich.NewEnricher(config.EnricherURL, config.EnricherSource, config.EnricherScript, log.GetLogger().GetUnderlyingLogger())
 		if err != nil {
 			return nil, err
 		}

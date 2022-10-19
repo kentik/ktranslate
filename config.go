@@ -234,6 +234,8 @@ type Config struct {
 	EnableTeeLogs       bool
 	EnableHTTPInput     bool
 	EnricherURL         string
+	EnricherSource      string
+	EnricherScript      string
 
 	// pkg/maps/file
 	TagMapFile string

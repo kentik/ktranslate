@@ -13,6 +13,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs/apc"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/enrich"
 
 	"gopkg.in/yaml.v2"
 )
@@ -29,6 +30,7 @@ type OID struct {
 	Format     string           `yaml:"format,omitempty"`
 	AllowDup   bool             `yaml:"allow_duplicate,omitempty"`
 	Condition  string           `yaml:"condition,omitempty"`
+	Script     string           `yaml:"script,omitempty"`
 }
 
 type Tag struct {
@@ -469,6 +471,15 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			if mib.Condition != nil {
 				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
 			}
+			if metric.Symbol.Script != "" {
+				er, err := enrich.NewEnricher("", metric.Symbol.Script, "", p.GetLogger().GetUnderlyingLogger())
+				if err != nil {
+					p.Errorf("Cannot add script for %s: %v", mib.Name, err)
+				} else {
+					p.Infof("Enabling script for %s", mib.Name)
+					mib.Script = er
+				}
+			}
 			if metric.IsInterface || strings.HasPrefix(metric.Symbol.Name, "if") {
 				interfaceMetrics[metric.Symbol.Oid] = mib
 			} else {
@@ -514,6 +525,15 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 			}
 			if mib.Condition != nil {
 				p.Infof("SNMP: Condition of %s=%d for %s", mib.Condition.TargetName, mib.Condition.TargetValue, mib.Name)
+			}
+			if s.Script != "" {
+				er, err := enrich.NewEnricher("", s.Script, "", p.GetLogger().GetUnderlyingLogger())
+				if err != nil {
+					p.Errorf("Cannot add script for %s: %v", mib.Name, err)
+				} else {
+					p.Infof("Enabling script for %s", mib.Name)
+					mib.Script = er
+				}
 			}
 			if metric.IsInterface || strings.HasPrefix(s.Name, "if") {
 				interfaceMetrics[s.Oid] = mib
@@ -584,6 +604,15 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					}
 				}
 			}
+			if tag.Column.Script != "" {
+				er, err := enrich.NewEnricher("", tag.Column.Script, "", p.GetLogger().GetUnderlyingLogger())
+				if err != nil {
+					p.Errorf("Cannot add script for %s: %v [%s]", mib.Name, err, tag.Column.Script)
+				} else {
+					p.Infof("Enabling script for %s", mib.Name)
+					mib.Script = er
+				}
+			}
 			deviceMetadata[tag.Column.Oid] = mib
 		}
 	}
@@ -628,6 +657,15 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 						} else {
 							mib.MatchAttr[mib.GetName()] = re
 						}
+					}
+				}
+				if t.Column.Script != "" {
+					er, err := enrich.NewEnricher("", t.Column.Script, "", p.GetLogger().GetUnderlyingLogger())
+					if err != nil {
+						p.Errorf("Cannot add script for %s: %v [%s]", mib.Name, err, t.Column.Script)
+					} else {
+						p.Infof("Enabling script for %s", mib.Name)
+						mib.Script = er
 					}
 				}
 				if metric.IsInterface || strings.HasPrefix(t.Column.Name, "if") {
