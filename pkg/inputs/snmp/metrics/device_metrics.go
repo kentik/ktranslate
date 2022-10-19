@@ -3,6 +3,7 @@ package metrics
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 	"time"
@@ -367,6 +368,8 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	percnt := 0.0
 	if diffSent > 0 {
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
+	} else { // Since we haven't sent any more packets on, sending more information here will be confusing so just return now.
+		return nil, nil
 	}
 
 	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
@@ -376,6 +379,14 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	if percnt >= 0.0 {
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
 		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+
+		// If percent ~ 100, push rtt down to 0 to avoid bad readings.
+		if math.Abs(percnt-99.) <= 1 {
+			dst.CustomBigInt["MinRttMs"] = 0
+			dst.CustomBigInt["MaxRttMs"] = 0
+			dst.CustomBigInt["AvgRttMs"] = 0
+			dst.CustomBigInt["StdDevRtt"] = 0
+		}
 	}
 	dm.conf.SetUserTags(dst.CustomStr)
 
