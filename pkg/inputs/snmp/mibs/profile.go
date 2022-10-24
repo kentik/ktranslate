@@ -648,6 +648,9 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					mib.Enum[strings.ToLower(k)] = v
 					mib.EnumRev[v] = k
 				}
+				if mib.Table != "" {
+					mib.OtherTables = map[string]bool{mib.Table: true}
+				}
 				if len(t.Column.MatchAttr) > 0 {
 					mib.MatchAttr = map[string]*regexp.Regexp{}
 					for _, restr := range t.Column.MatchAttr {
