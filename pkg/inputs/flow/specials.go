@@ -33,14 +33,6 @@ func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
 						Type:        233,
 						Destination: "CustomInteger5",
 					},
-					producer.NetFlowMapField{
-						Type:        33000,
-						Destination: "CustomBytes1",
-					},
-					producer.NetFlowMapField{
-						Type:        33001,
-						Destination: "CustomBytes2",
-					},
 				},
 			},
 			NetFlowV9: producer.NetFlowV9ProducerConfig{
@@ -65,14 +57,6 @@ func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
 						Type:        233,
 						Destination: "CustomInteger5",
 					},
-					producer.NetFlowMapField{
-						Type:        33000,
-						Destination: "CustomBytes1",
-					},
-					producer.NetFlowMapField{
-						Type:        33001,
-						Destination: "CustomBytes2",
-					},
 				},
 			},
 		},
@@ -82,8 +66,6 @@ func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
 			"CustomInteger3": "in_pkts",
 			"CustomInteger4": "out_pkts",
 			"CustomInteger5": "Firewall Event",
-			"CustomBytes1":   "Ingress ACL",
-			"CustomBytes2":   "Egress ACL",
 		},
 	}
 
