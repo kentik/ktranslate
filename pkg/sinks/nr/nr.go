@@ -279,6 +279,8 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 		return
 	}
 
+	s.Infof("XXX %s Sending to %s %s", string(payload.Body), url, s.NRApiKey)
+
 	req.Header.Set("Api-Key", s.NRApiKey)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("NR-Data-Provider", NR_DATA_PROVIDER)

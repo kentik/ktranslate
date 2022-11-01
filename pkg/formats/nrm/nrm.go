@@ -122,6 +122,10 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return f.handleInvalid(msgs, target)
 	}
 
+	for _, msg := range msgs {
+		f.Infof("XXX %d", msg.CompanyId)
+	}
+
 	if !f.doGz {
 		return kt.NewOutputWithProviderAndCompanySender(target, msgs[0].Provider, msgs[0].CompanyId, kt.MetricOutput, ""), nil
 	}
