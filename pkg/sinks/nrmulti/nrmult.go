@@ -101,7 +101,6 @@ func (s *NRMultiSink) Send(ctx context.Context, payload *kt.Output) {
 
 	sink := s.sinks[payload.Ctx.CompanyId]
 	if sink != nil {
-		s.Infof("Sending to %d %s", payload.Ctx.CompanyId, s.sinks[payload.Ctx.CompanyId].NRAccount)
 		s.sinks[payload.Ctx.CompanyId].Send(ctx, payload)
 	}
 }
