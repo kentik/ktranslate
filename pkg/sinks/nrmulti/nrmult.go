@@ -95,12 +95,15 @@ func (s *NRMultiSink) Send(ctx context.Context, payload *kt.Output) {
 		}
 
 		// Sink is good, go ahead and run.
-		s.Infof("Started NR sink for %d, NR ID %d", payload.Ctx.CompanyId, account)
+		s.Infof("Started NR sink for %d, NR ID %s", payload.Ctx.CompanyId, account)
 		place(sink)
 	}
 
 	sink := s.sinks[payload.Ctx.CompanyId]
 	if sink != nil {
+
+		s.Infof("Sending to %s", payload.Ctx.CompanyId, s.sinks[payload.Ctx.CompanyId].NRAccount)
+
 		s.sinks[payload.Ctx.CompanyId].Send(ctx, payload)
 	}
 }
