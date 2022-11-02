@@ -6,7 +6,7 @@ services:
     environment:
       - "discovery.type=single-node"
     healthcheck:
-      test: ["CMD", "curl", "localhost:9090"]
+      test: ["CMD", "curl", "localhost:9200"]
       interval: 10s
       timeout: 1s
       retries: 30
@@ -56,7 +56,7 @@ services:
         maxthreads: 1
         format: "elasticsearch"
         compression: "none"
-        sinks: "http"
+        sinks: ["http"]
         maxflowspermessage: 10000
         rollupinterval: 0
         rollupandalpha: false
@@ -104,7 +104,7 @@ services:
         ktranslate --config /tmp/ktranslate.yaml
     restart: always
     ports:
-      - 9090:9090
+      - 8081:8081
       - 9995:9995/udp
     depends_on:
       - elasticsearch
