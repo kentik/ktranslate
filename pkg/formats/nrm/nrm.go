@@ -143,7 +143,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, err
 	}
 
-	return kt.NewOutputWithProvider(buf.Bytes(), msgs[0].Provider, kt.MetricOutput), nil
+	return kt.NewOutputWithProviderAndCompanySender(buf.Bytes(), msgs[0].Provider, msgs[0].CompanyId, kt.MetricOutput, ""), nil
 }
 
 func (f *NRMFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {

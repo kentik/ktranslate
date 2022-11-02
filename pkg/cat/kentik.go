@@ -307,11 +307,23 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 				}
 				kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 			}
-			ser, err := seri(msgs[0:keep], serBuf)
-			if err != nil {
-				kc.log.Errorf("There was an error when converting to native: %v.", err)
-			} else {
-				kc.msgsc <- ser
+
+			// Need to only serialize flows from 1 company at a time.
+			splits := map[kt.Cid][]*kt.JCHF{}
+			for _, msg := range msgs[0:keep] {
+				if _, ok := splits[msg.CompanyId]; !ok {
+					splits[msg.CompanyId] = make([]*kt.JCHF, 0, keep)
+				}
+				splits[msg.CompanyId] = append(splits[msg.CompanyId], msg)
+			}
+
+			for _, cidl := range splits {
+				ser, err := seri(cidl, serBuf)
+				if err != nil {
+					kc.log.Errorf("There was an error when converting to native: %v.", err)
+				} else {
+					kc.msgsc <- ser
+				}
 			}
 		}
 
