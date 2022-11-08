@@ -229,6 +229,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
 				continue
 			}
+			break // We're good to go here.
 		}
 	}
 
