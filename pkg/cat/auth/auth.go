@@ -19,6 +19,7 @@ import (
 type Server struct {
 	devicesByName map[string]*kt.Device
 	devicesByIP   map[string]*kt.Device
+	devicesByID   map[string]*kt.Device
 	log           logger.ContextL
 }
 
@@ -35,7 +36,8 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 	}
 	s := &Server{
 		log:           log,
-		devicesByName: devices,
+		devicesByID:   devices,
+		devicesByName: make(map[string]*kt.Device),
 		devicesByIP:   make(map[string]*kt.Device),
 	}
 
@@ -76,17 +78,20 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 					nd.SampleRate = 1
 				}
 				nd.InitUserTags(d.GetUserTags())
-				s.devicesByName[strconv.Itoa(int(nd.ID))] = nd
+				s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}
 		}
 	}
 
-	log.Infof("API server running %d devices", len(s.devicesByName))
-	for _, d := range s.devicesByName {
+	log.Infof("API server running %d devices", len(s.devicesByID))
+	for _, d := range s.devicesByID {
 		for _, ip := range d.SendingIps {
 			s.devicesByIP[ip.String()] = d
 		}
+	}
+	for _, d := range s.devicesByID {
+		s.devicesByName[d.Name] = d
 	}
 
 	return s, nil
@@ -111,17 +116,18 @@ func (s *Server) GetDeviceMap() map[string]*kt.Device {
 
 func (s *Server) AddDevices(devices map[string]*kt.Device) {
 	for _, device := range devices {
-		s.devicesByName[device.ID.Itoa()] = device
+		s.devicesByID[device.ID.Itoa()] = device
+		s.devicesByName[device.Name] = device
 		for _, ip := range device.SendingIps {
 			s.devicesByIP[ip.String()] = device
 		}
 	}
-	s.log.Infof("API server running %d devices after remote fetch", len(s.devicesByName))
+	s.log.Infof("API server running %d devices after remote fetch", len(s.devicesByID))
 }
 
 func (s *Server) getDevice(query string) *kt.Device {
 	// Try finding this device directly by its ID
-	device, ok := s.devicesByName[query]
+	device, ok := s.devicesByID[query]
 	if ok {
 		return device
 	}
@@ -130,6 +136,12 @@ func (s *Server) getDevice(query string) *kt.Device {
 	ipr := net.ParseIP(query)
 	if ipr != nil {
 		return s.devicesByIP[ipr.String()]
+	}
+
+	// Else, can we find this by its name?
+	device, ok = s.devicesByName[query]
+	if ok {
+		return device
 	}
 
 	return nil
@@ -158,7 +170,7 @@ func (s *Server) devices(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	devices := []*kt.Device{}
-	for _, d := range s.devicesByName {
+	for _, d := range s.devicesByID {
 		devices = append(devices, d)
 	}
 
@@ -185,7 +197,7 @@ func (s *Server) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var od *kt.Device
-	for _, d := range s.devicesByName {
+	for _, d := range s.devicesByID {
 		od = d
 		break
 	}
