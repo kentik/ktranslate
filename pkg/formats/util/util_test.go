@@ -291,6 +291,40 @@ func TestDropOnFilter(t *testing.T) {
 			},
 			false, // keep because alias or description match. Test the other way around.
 		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus:      "up",
+				"if_interface_name": "tu22",
+				"if_Alias":          "some other alias",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"DOES_NOT_MATCH":    regexp.MustCompile("true"),
+					"if_interface_name": regexp.MustCompile("^(lo|po|vl|tu)"),
+					"if_Alias":          regexp.MustCompile("unused|reserved|desktop"),
+					kt.AdminStatus:      regexp.MustCompile("up"),
+				},
+			},
+			true, // drop because we are negating alias or description match.
+		},
+		{
+			map[string]interface{}{
+				kt.AdminStatus: "up",
+			},
+			kt.NewJCHF(),
+			map[string]kt.MetricInfo{},
+			kt.LastMetadata{
+				MatchAttr: map[string]*regexp.Regexp{
+					"DOES_NOT_MATCH":    regexp.MustCompile("true"),
+					"if_interface_name": regexp.MustCompile("^(lo|po|vl|tu)"),
+					"if_Alias":          regexp.MustCompile("unused|reserved|desktop"),
+					kt.AdminStatus:      regexp.MustCompile("up"),
+				},
+			},
+			true, // drop because we are negating alias or description match and alias doesn't exist.
+		},
 	}
 
 	for i, test := range tests {
@@ -302,7 +336,7 @@ func TestDropOnFilter(t *testing.T) {
 			}
 		}
 		drop := DropOnFilter(test.attr, &test.lm, isIf)
-		assert.Equal(t, test.drop, drop, "Test %d", i)
+		assert.Equal(t, test.drop, drop, "Test %d %v", i, test.lm.MatchAttr)
 	}
 }
 

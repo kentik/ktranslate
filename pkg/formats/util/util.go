@@ -35,9 +35,10 @@ var (
 )
 
 const (
-	FORCE_MATCH_TOKEN = "!"
-	OR_TOKEN          = "||"
-	MAX_ATTR_FOR_SNMP = 64
+	FORCE_MATCH_TOKEN  = "!"
+	OR_TOKEN           = "||"
+	MAX_ATTR_FOR_SNMP  = 64
+	NEGATE_MATCH_TOKEN = "DOES_NOT_MATCH"
 )
 
 func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.MetricInfo, lastMetadata *kt.LastMetadata, stripMetrics bool) {
@@ -139,12 +140,18 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 		dropOnAdminStatus := false // Default this false.
 		keepForOtherMatch := false // We use inverse of this, so default is to drop flow. BUT, need to have a match set else all flow passes.
 		seenNonAdmin := 0
+		negateMatch := false
 		for k, re := range lastMetadata.MatchAttr {
 			forceMatch := false
 			if strings.HasPrefix(k, FORCE_MATCH_TOKEN) { // Handle forcing this column to exist here.
 				k = k[1:]
 				forceMatch = true
 			}
+			if k == NEGATE_MATCH_TOKEN { // If this is set, return the opposite of all matches.
+				negateMatch = true
+				continue
+			}
+
 			if strings.HasPrefix(k, "(") && strings.HasSuffix(k, ")") { // Handle paren groupings here.
 				k = k[1 : len(k)-1]
 			}
@@ -176,9 +183,17 @@ func DropOnFilter(attr map[string]interface{}, lastMetadata *kt.LastMetadata, is
 			return true
 		} else {
 			if seenNonAdmin > 0 {
-				return !keepForOtherMatch
+				if negateMatch {
+					return keepForOtherMatch
+				} else {
+					return !keepForOtherMatch
+				}
 			} else {
-				return false
+				if negateMatch {
+					return true
+				} else {
+					return false
+				}
 			}
 		}
 	}
