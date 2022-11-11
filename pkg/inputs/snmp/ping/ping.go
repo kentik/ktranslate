@@ -29,7 +29,7 @@ func NewPinger(log logger.ContextL, target string, inter time.Duration, pingSec 
 		interval: time.Second * time.Duration(pingSec), // Send 1 ping every this many seconds.
 	}
 
-	if os.Getenv(KENTIK_PING_PRIV) == "true" {
+	if os.Getenv(KENTIK_PING_PRIV) != "false" {
 		log.Infof("Running ping service in privileged mode. Ping Interval: %v", p.interval)
 		p.priv = true
 	} else {
