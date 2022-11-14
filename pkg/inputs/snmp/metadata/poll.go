@@ -34,6 +34,7 @@ type Poller struct {
 const (
 	DEFAULT_INTERVAL = 30 * 60 * time.Second // Run every 30 min.
 	vendorPrefix     = ".1.3.6.1.4.1."
+	TagValuePrefix   = "$"
 )
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -257,6 +258,16 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	cs := map[string]string{}
 	p.conf.SetUserTags(cs)
 	for k, v := range cs {
+		if strings.HasPrefix(v, TagValuePrefix) { // See if we can find this value in the MDS instead.
+			search := v[len(TagValuePrefix):]
+			v = "" // 0 tag out here incase of no match.
+			for tag, value := range dst.CustomStr {
+				if tag == search {
+					v = value
+				}
+			}
+		}
+
 		dst.CustomStr[k] = v
 		dst.CustomMetrics[k] = kt.MetricInfo{Table: kt.DeviceTagTable}
 	}
