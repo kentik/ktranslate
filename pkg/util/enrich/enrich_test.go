@@ -24,6 +24,7 @@ def main(n):
       print(evt.foo)
       evt.company_id = i
       evt.foo = "aaa"
+      evt["foo-one"] = "aaa"
       i += 1
       # state["count"] += 1 # doesn't work for some reason
 
@@ -52,6 +53,7 @@ def main(n):
 	for i, evt := range kt.InputTestingSnmp {
 		assert.Equal(i, int(evt.CompanyId))
 		assert.Equal("aaa", evt.CustomStr["foo"])
+		assert.Equal("aaa", evt.CustomStr["foo-one"])
 	}
 }
 
