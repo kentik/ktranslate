@@ -132,3 +132,31 @@ func (m *Mib) SetField(name string, value starlark.Value) error {
 
 	return nil
 }
+
+// Get implements the starlark.Mapping interface.
+func (m *Mib) Get(key starlark.Value) (v starlark.Value, found bool, err error) {
+	if k, ok := key.(starlark.String); ok {
+		v, err := m.Attr(k.GoString())
+		if err != nil {
+			return starlark.None, false, err
+		}
+		return v, true, nil
+	}
+
+	return starlark.None, false, errors.New("key must be of type 'str'")
+}
+
+// SetKey implements the starlark.HasSetKey interface to support map update
+// using x[k]=v syntax, like a dictionary.
+func (m *Mib) SetKey(k, v starlark.Value) error {
+	if m.frozen {
+		return fmt.Errorf("cannot modify frozen metric")
+	}
+
+	key, ok := k.(starlark.String)
+	if !ok {
+		return errors.New("field key must be of type 'str'")
+	}
+
+	return m.SetField(key.GoString(), v)
+}
