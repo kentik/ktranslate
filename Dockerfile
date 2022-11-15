@@ -1,5 +1,5 @@
 # build ktranslate
-FROM golang:1.18-alpine as build
+FROM golang:1.19-alpine as build
 RUN apk add -U libpcap-dev alpine-sdk bash libcap
 COPY . /src
 WORKDIR /src
@@ -21,7 +21,14 @@ RUN curl -o /tmp/asn.tar.gz "https://download.maxmind.com/app/geoip_download?edi
 # snmp profiles
 FROM alpine:latest as snmp
 RUN apk add -U git
-RUN git clone https://github.com/kentik/snmp-profiles /snmp
+
+# If there is a branch of snmp-profiles to use, switch over here now.
+RUN if [ -z "${KENTIK_SNMP_PROFILE_BRANCH}" ]; then \
+    git clone https://github.com/kentik/snmp-profiles /snmp; \
+else \
+    echo "picking branch ${KENTIK_SNMP_PROFILE_BRANCH} for snmp profiles"; \
+    git clone --branch ${KENTIK_SNMP_PROFILE_BRANCH} https://github.com/kentik/snmp-profiles /snmp; \
+fi
 
 # main image
 FROM alpine:3.14
