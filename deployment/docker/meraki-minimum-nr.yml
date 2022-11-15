@@ -1,0 +1,18 @@
+# this represents a minimalist configuration for Meraki API polling
+---
+devices:
+  meraki_cloud_controller:
+    device_name: meraki_cloud_controller
+    device_ip: snmp.meraki.com
+    provider: meraki-cloud-controller
+    ext:
+      ext_only: true
+      meraki_config:
+        api_key: ABC123
+        monitor_uplinks: true
+        monitor_devices: true
+        monitor_org_changes: true
+trap: {}
+discovery: {}
+global:
+  poll_time_sec: 60
