@@ -68,6 +68,7 @@ const (
 	ProviderTrapUnknown        Provider = "kentik-trap-device"
 	ProviderHttpDevice         Provider = "kentik-http"
 	ProviderMerakiCloud        Provider = "meraki-cloud-controller"
+	ProviderST                 Provider = "kentik-st"
 )
 
 const (

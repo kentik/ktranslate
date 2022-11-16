@@ -36,8 +36,8 @@ require (
 	github.com/segmentio/kafka-go v0.4.23
 	github.com/stretchr/testify v1.7.1
 	github.com/syndtr/goleveldb v1.0.0
-	google.golang.org/genproto v0.0.0-20220405205423-9d709892a2bf
-	google.golang.org/grpc v1.45.0
+	google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3
+	google.golang.org/grpc v1.46.0
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	zombiezen.com/go/capnproto2 v2.18.2+incompatible
@@ -76,7 +76,8 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
+	github.com/google/gnxi v0.0.0-20221016143401-2aeceb5a2901 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/gopacket v1.1.17 // indirect
 	github.com/googleapis/gax-go/v2 v2.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0 // indirect
@@ -97,6 +98,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/onsi/ginkgo v1.16.2 // indirect
 	github.com/onsi/gomega v1.13.0 // indirect
+	github.com/openconfig/gnmi v0.0.0-20220920173703-480bf53a74d2 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/oschwald/maxminddb-golang v1.8.0 // indirect
 	github.com/phayes/freeport v0.0.0-20180830031419-95f893ade6f2 // indirect

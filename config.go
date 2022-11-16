@@ -3,6 +3,7 @@ package ktranslate
 import (
 	"os"
 
+	gnmiLib "github.com/openconfig/gnmi/proto/gnmi"
 	yaml "gopkg.in/yaml.v3"
 )
 
@@ -106,6 +107,66 @@ type KafkaSinkConfig struct {
 // KentikSinkConfig is the config for the Kentik sink
 type KentikSinkConfig struct {
 	RelayURL string
+}
+
+// Subscription for a gNMI client
+type STSubscription struct {
+	Name   string
+	Origin string
+	Path   string
+
+	fullPath *gnmiLib.Path
+
+	// Subscription mode and interval
+	SubscriptionMode  string
+	SampleIntervalSec int
+
+	// Duplicate suppression
+	SuppressRedundant    bool
+	HeartbeatIntervalSec int
+
+	// Mark this subscription as a tag-only lookup source, not emitting any metric
+	TagOnly bool
+}
+
+// Tag Subscription for a gNMI client
+type STTagSubscription struct {
+	STSubscription
+	Elements []string
+}
+
+// KentikSTConfig is the config for streaming telemetry input.
+type KentikSTConfig struct {
+	Addresses        []string
+	Subscriptions    []STSubscription
+	TagSubscriptions []STTagSubscription
+	Aliases          map[string]string
+
+	// Optional subscription configuration
+	Encoding    string
+	Origin      string
+	Prefix      string
+	Target      string
+	UpdatesOnly bool
+
+	// gNMI target credentials
+	Username string
+	Password string
+
+	// Redial
+	RedialSec int
+
+	// TLS on/off
+	EnableTLS bool
+
+	// GRPC TLS settings
+	TLSCA              string
+	TLSCert            string
+	TLSKey             string
+	TLSKeyPwd          string
+	TLSMinVersion      string
+	InsecureSkipVerify bool
+	ServerName         string
 }
 
 // RollupConfig is the config for rollups
@@ -290,6 +351,8 @@ type Config struct {
 	AWSVPCInput *AWSVPCInputConfig
 	// pkg/inputs/flow
 	FlowInput *FlowInputConfig
+	// pkg/inputs/st
+	STInput KentikSTConfig
 }
 
 // DefaultConfig returns a ktranslate configuration with defaults applied
