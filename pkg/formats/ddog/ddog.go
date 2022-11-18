@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -121,7 +122,7 @@ func (f *DDogFormat) fromKtranslate(in *kt.JCHF, ms *datadogV2.MetricPayload) er
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
-	res := getDDMetricResource(attr)
+	tags := getDDMetricTags(attr)
 	var value *float64 = nil
 
 	switch in.CustomStr["type"] {
@@ -157,7 +158,7 @@ func (f *DDogFormat) fromKtranslate(in *kt.JCHF, ms *datadogV2.MetricPayload) er
 					Value:     value,
 				},
 			},
-			Resources: res,
+			Tags: tags,
 		})
 	}
 
@@ -196,7 +197,7 @@ func (f *DDogFormat) fromSnmpDeviceMetric(in *kt.JCHF, ms *datadogV2.MetricPaylo
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 			seriesName := "kentik.snmp." + m
-			res := getDDMetricResource(attrNew)
+			tags := getDDMetricTags(attrNew)
 			if name.Format == kt.FloatMS {
 				ms.Series = append(ms.Series, datadogV2.MetricSeries{
 					Metric: seriesName,
@@ -207,7 +208,7 @@ func (f *DDogFormat) fromSnmpDeviceMetric(in *kt.JCHF, ms *datadogV2.MetricPaylo
 							Value:     datadog.PtrFloat64(float64(float64(in.CustomBigInt[m]) / 1000)),
 						},
 					},
-					Resources: res,
+					Tags: tags,
 				})
 			} else {
 				ms.Series = append(ms.Series, datadogV2.MetricSeries{
@@ -219,7 +220,7 @@ func (f *DDogFormat) fromSnmpDeviceMetric(in *kt.JCHF, ms *datadogV2.MetricPaylo
 							Value:     datadog.PtrFloat64(float64(in.CustomBigInt[m])),
 						},
 					},
-					Resources: res,
+					Tags: tags,
 				})
 			}
 		}
@@ -249,7 +250,7 @@ func (f *DDogFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ms *datadogV2.MetricPa
 
 			profileName = name.Profile
 			seriesName := "kentik.snmp." + m
-			res := getDDMetricResource(attrNew)
+			tags := getDDMetricTags(attrNew)
 			if name.Format == kt.FloatMS {
 				ms.Series = append(ms.Series, datadogV2.MetricSeries{
 					Metric: seriesName,
@@ -260,7 +261,7 @@ func (f *DDogFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ms *datadogV2.MetricPa
 							Value:     datadog.PtrFloat64(float64(float64(in.CustomBigInt[m]) / 1000)),
 						},
 					},
-					Resources: res,
+					Tags: tags,
 				})
 			} else {
 				ms.Series = append(ms.Series, datadogV2.MetricSeries{
@@ -272,7 +273,7 @@ func (f *DDogFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ms *datadogV2.MetricPa
 							Value:     datadog.PtrFloat64(float64(in.CustomBigInt[m])),
 						},
 					},
-					Resources: res,
+					Tags: tags,
 				})
 			}
 		}
@@ -308,7 +309,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 				if uptimeSpeed > 0 {
 					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
 					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-						res := getDDMetricResource(attrNew)
+						tags := getDDMetricTags(attrNew)
 						if totalBytes > 0 {
 							ms.Series = append(ms.Series, datadogV2.MetricSeries{
 								Metric: "kentik.snmp." + utilName,
@@ -319,7 +320,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 										Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptimeSpeed)),
 									},
 								},
-								Resources: res,
+								Tags: tags,
 							},
 								datadogV2.MetricSeries{
 									Metric: "kentik.snmp." + bitRate,
@@ -330,7 +331,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 											Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptime)),
 										},
 									},
-									Resources: res,
+									Tags: tags,
 								},
 							)
 						}
@@ -344,7 +345,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 										Value:     datadog.PtrFloat64(float64(totalPkts*100) / float64(uptime)),
 									},
 								},
-								Resources: res,
+								Tags: tags,
 							})
 						}
 					}
@@ -354,31 +355,19 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 	}
 }
 
-func getDDMetricResource(attrNew map[string]interface{}) []datadogV2.MetricResource {
-	res := []datadogV2.MetricResource{}
+func getDDMetricTags(attrNew map[string]interface{}) []string {
+	tags := []string{}
 	for k, v := range attrNew {
 		switch nv := v.(type) {
 		case string:
-			res = append(res, datadogV2.MetricResource{
-				Name: datadog.PtrString(k),
-				Type: datadog.PtrString(nv),
-			})
+			tags = append(tags, strings.Join([]string{k, nv}, ":"))
 		case int64:
-			res = append(res, datadogV2.MetricResource{
-				Name: datadog.PtrString(k),
-				Type: datadog.PtrString(strconv.Itoa(int(nv))),
-			})
+			tags = append(tags, strings.Join([]string{k, strconv.Itoa(int(nv))}, ":"))
 		case int32:
-			res = append(res, datadogV2.MetricResource{
-				Name: datadog.PtrString(k),
-				Type: datadog.PtrString(strconv.Itoa(int(nv))),
-			})
+			tags = append(tags, strings.Join([]string{k, strconv.Itoa(int(nv))}, ":"))
 		case kt.Cid:
-			res = append(res, datadogV2.MetricResource{
-				Name: datadog.PtrString(k),
-				Type: datadog.PtrString(strconv.Itoa(int(nv))),
-			})
+			tags = append(tags, strings.Join([]string{k, strconv.Itoa(int(nv))}, ":"))
 		}
 	}
-	return res
+	return tags
 }
