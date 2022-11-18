@@ -111,6 +111,115 @@ func (f *DDogFormat) toDDogMetric(in *kt.JCHF, ms *datadogV2.MetricPayload) erro
 		return f.fromSnmpMetadata(in, ms)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
 		return f.fromKtranslate(in, ms)
+	case kt.KENTIK_EVENT_TYPE:
+		return f.fromKflow(in, ms)
+	case kt.KENTIK_EVENT_SYNTH:
+		return f.fromKSynth(in, ms)
+	}
+
+	return nil
+}
+
+func (f *DDogFormat) fromKSynth(in *kt.JCHF, ms *datadogV2.MetricPayload) error {
+	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
+	attr := map[string]interface{}{}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
+	f.mux.RUnlock()
+	tags := getDDMetricTags(attr)
+
+	for m, name := range metrics {
+		switch name.Name {
+		case "avg_rtt", "jit_rtt", "time", "code", "port", "status", "ttlb", "sent", "lost":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.synth." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(in.CustomInt[m])),
+					},
+				},
+				Tags: tags,
+			})
+		}
+	}
+
+	return nil
+}
+
+func (f *DDogFormat) fromKflow(in *kt.JCHF, ms *datadogV2.MetricPayload) error {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]kt.MetricInfo{"in_bytes": {}, "out_bytes": {}, "in_pkts": {}, "out_pkts": {}, "latency_ms": {}}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
+	f.mux.RUnlock()
+	tags := getDDMetricTags(attr)
+
+	for m := range metrics {
+		switch m {
+		case "in_bytes":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.flow." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(int64(in.InBytes * uint64(in.SampleRate)))),
+					},
+				},
+				Tags: tags,
+			})
+		case "out_bytes":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.flow." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(int64(in.OutBytes * uint64(in.SampleRate)))),
+					},
+				},
+				Tags: tags,
+			})
+		case "in_pkts":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.flow." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(int64(in.InPkts * uint64(in.SampleRate)))),
+					},
+				},
+				Tags: tags,
+			})
+		case "out_pkts":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.flow." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(int64(in.OutPkts * uint64(in.SampleRate)))),
+					},
+				},
+				Tags: tags,
+			})
+		case "latency_ms":
+			ms.Series = append(ms.Series, datadogV2.MetricSeries{
+				Metric: "kentik.flow." + m,
+				Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+				Points: []datadogV2.MetricPoint{
+					{
+						Timestamp: datadog.PtrInt64(in.Timestamp),
+						Value:     datadog.PtrFloat64(float64(in.CustomInt["appl_latency_ms"])),
+					},
+				},
+				Tags: tags,
+			})
+		}
 	}
 
 	return nil
