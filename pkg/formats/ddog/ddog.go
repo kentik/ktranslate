@@ -110,6 +110,7 @@ func (f *DDogFormat) toDDogMetric(in *kt.JCHF, ms *datadogV2.MetricPayload) erro
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in, ms)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
+		return f.fromKtranslate(in, ms)
 	}
 
 	return nil
