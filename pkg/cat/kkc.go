@@ -49,7 +49,8 @@ var (
 	RollupsSendDuration = 15 * time.Second
 )
 
-func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks []string, serviceName string, logTee chan string, metricsChan chan []*kt.JCHF) (*KTranslate, error) {
+func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_metrics.Registry, version string, sinks []string, serviceName string,
+	logTee chan string, metricsChan chan []*kt.JCHF, shutdown func(string)) (*KTranslate, error) {
 	kc := &KTranslate{
 		log:      log,
 		registry: registry,
@@ -195,6 +196,16 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 
 	// Get some randomness
 	rand.Seed(time.Now().UnixNano())
+
+	// If we are monitoring the conf file, kick this off now.
+	if config.Server.MonitorConf {
+		go func() {
+			err := kc.monitorConf(config.Server, shutdown)
+			if err != nil {
+				kc.log.Errorf("Cannot monitor config: %v", err)
+			}
+		}()
+	}
 
 	return kc, nil
 }

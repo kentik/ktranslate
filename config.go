@@ -129,6 +129,8 @@ type ServerConfig struct {
 	MetaListenAddr  string
 	OllyDataset     string
 	OllyWriteKey    string
+	MonitorConf     bool
+	CfgPath         string
 }
 
 // APIConfig is the config for the API service
@@ -400,6 +402,8 @@ func DefaultConfig() *Config {
 			MetaListenAddr:  "localhost:0",
 			OllyDataset:     "",
 			OllyWriteKey:    "",
+			CfgPath:         "",
+			MonitorConf:     false,
 		},
 		API: &APIConfig{
 			DeviceFile: "",

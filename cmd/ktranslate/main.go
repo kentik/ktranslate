@@ -135,6 +135,7 @@ func main() {
 		}
 
 		cfg = ktCfg
+		cfg.Server.CfgPath = v
 	}
 
 	if err := applyMode(cfg, kt.LookupEnvString("KENTIK_MODE", flag.Arg(0))); err != nil {
@@ -163,7 +164,7 @@ func main() {
 		cat.RollupsSendDuration = time.Duration(dumpRollups) * time.Second
 	}
 
-	kc, err := cat.NewKTranslate(cfg, lc, go_metrics.DefaultRegistry, version.Version.Version, cfg.Sinks, bs.ServiceName, logTee, metricsChan)
+	kc, err := cat.NewKTranslate(cfg, lc, go_metrics.DefaultRegistry, version.Version.Version, cfg.Sinks, bs.ServiceName, logTee, metricsChan, bs.Shutdown)
 	if err != nil {
 		bs.Fail(fmt.Sprintf("Cannot start ktranslate: %v", err))
 	}
