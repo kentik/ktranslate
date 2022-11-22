@@ -349,38 +349,53 @@ func TestCopyAttrforSNMP(t *testing.T) {
 	}
 	name := kt.MetricInfo{Oid: "oid", Mib: "mib"}
 
-	res := CopyAttrForSnmp(input, "test", name, nil, true)
+	res := CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal(len(input)+3, len(res)) // adds in three keys
 	assert.Equal("oid", res["objectIdentifier"])
 
 	for i := 0; i < MAX_ATTR_FOR_SNMP+10; i++ {
 		input[fmt.Sprintf("XXX%d", i)] = i
 	}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal(MAX_ATTR_FOR_SNMP, len(res)) // truncated at MAX_ATTR_FOR_SNMP
 	assert.Equal("oid", res["objectIdentifier"])
 
 	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal("one", res["foo"], res)
 
 	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
 	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "noMatch"}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal(nil, res["foo"], res)
 
 	input = map[string]interface{}{kt.StringPrefix + "foo": "one"}
 	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "foo"}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal("one", res["foo"], res)
 
 	input = map[string]interface{}{"foo": "one"}
 	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "foo"}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal("one", res["foo"], res)
 
 	input = map[string]interface{}{"foo": "one"}
 	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "somethingElse"}
-	res = CopyAttrForSnmp(input, "test", name, nil, true)
+	res = CopyAttrForSnmp(input, "test", name, nil, true, true)
 	assert.Equal(nil, res["foo"], res)
+
+	input = map[string]interface{}{"src_addr": "10.10.1.1"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "somethingElse"}
+	res = CopyAttrForSnmp(input, "test", name, nil, true, false)
+	assert.Equal("10.10.1.1", res["src_addr"], res)
+
+	input = map[string]interface{}{"src_addr": "10.10.1.1"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "somethingElse"}
+	res = CopyAttrForSnmp(input, "Uptime", name, nil, true, true)
+	assert.Equal("10.10.1.1", res["src_addr"], res)
+
+	input = map[string]interface{}{"src_addr": "10.10.1.1"}
+	name = kt.MetricInfo{Oid: "oid", Mib: "mib", Table: "somethingElse"}
+	res = CopyAttrForSnmp(input, "myTable", name, nil, true, true)
+	assert.Equal(nil, res["src_addr"], res)
 }
