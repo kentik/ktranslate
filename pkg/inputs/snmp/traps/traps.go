@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 	"time"
-	"unicode/utf8"
 
 	"github.com/gosnmp/gosnmp"
 
@@ -36,7 +36,7 @@ type SnmpTrap struct {
 	deviceMap map[string]*kt.SnmpDeviceConfig
 }
 
-//Move to util?
+// Move to util?
 type logWrapper struct {
 	print  func(v ...interface{})
 	printf func(format string, v ...interface{})
@@ -203,12 +203,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 				if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
 					_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
 				}
-				if utf8.ValidString(value) {
-					if res != nil {
-						dst.CustomStr[res.GetName()] = value
-					} else {
-						dst.CustomStr[v.Name] = value
-					}
+				value = strings.ToValidUTF8(value, "")
+				if res != nil {
+					dst.CustomStr[res.GetName()] = value
+				} else {
+					dst.CustomStr[v.Name] = value
 				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32, gosnmp.Integer:
@@ -222,12 +221,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 			if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
 				_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
 			}
-			if utf8.ValidString(value) {
-				if res != nil {
-					dst.CustomStr[res.GetName()] = value
-				} else {
-					dst.CustomStr[v.Name] = value
-				}
+			value = strings.ToValidUTF8(value, "")
+			if res != nil {
+				dst.CustomStr[res.GetName()] = value
+			} else {
+				dst.CustomStr[v.Name] = value
 			}
 		default:
 			s.log.Infof("trap variable with unknown type (%v) handling, skipping: %+v", v.Type, v)
