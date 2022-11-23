@@ -371,6 +371,8 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 				return nil, err
 			}
 			ms.DeviceOrig = devFile.DeviceName[1:]
+			delete(ms.Devices, name) // Remove this one from the list because we don't need the external info any more.
+			delete(deviceSet, name)  // Belt and suspendors in case file_0 is present here too.
 			log.Infof("Loading %d devices from %s", len(deviceSet), devFile.DeviceName[1:])
 			for k, v := range deviceSet {
 				fullDevices[k] = v
