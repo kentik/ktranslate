@@ -476,8 +476,8 @@ func LoadConfig(configPath string) (*Config, error) {
 }
 
 // SaveConfig saves the ktranslate configuration to the specified path
-func (c *Config) SaveConfig(configPath string) error {
-	f, err := os.Open(configPath)
+func (c *Config) SaveConfig() error {
+	f, err := os.Open(c.Server.CfgPath)
 	if err != nil {
 		return err
 	}
