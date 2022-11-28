@@ -342,6 +342,7 @@ var keepAcrossTables = map[string]bool{
 	"sysoid_profile": true,
 	kt.IndexVar:      true,
 	"if_Index":       true,
+	"src_addr":       true,
 }
 
 var allowSysAttr = map[string]bool{
@@ -351,7 +352,7 @@ var allowSysAttr = map[string]bool{
 	"AvgRttMs": true,
 }
 
-func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata, gentleCardinality bool) map[string]interface{} {
+func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata, gentleCardinality bool, dropSrcAddr bool) map[string]interface{} {
 	attrNew := map[string]interface{}{
 		"objectIdentifier":     name.Oid,
 		"mib-name":             name.Mib,
@@ -366,7 +367,7 @@ func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 
 	for k, v := range attr {
 		if !allowSysAttr[metricName] { // Only allow Sys* attributes on specific metrics.
-			if strings.HasPrefix(k, "Sys") || k == "src_addr" {
+			if strings.HasPrefix(k, "Sys") || (dropSrcAddr && k == "src_addr") {
 				continue
 			}
 		}

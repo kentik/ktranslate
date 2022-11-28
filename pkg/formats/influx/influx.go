@@ -513,7 +513,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 			continue
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false)
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false, true)
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
@@ -557,7 +557,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 		}
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false)
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false, true)
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
@@ -612,7 +612,7 @@ func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxD
 				uptime := in.CustomBigInt["Uptime"]
 				uptimeSpeed := uptime * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 				if uptimeSpeed > 0 {
-					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
+					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false, true)
 					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 						getMib(attrNew, ip)
 						if totalBytes > 0 {
