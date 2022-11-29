@@ -314,13 +314,6 @@ func (bs *BaseServer) InitLogger(stdout bool, loglevel string) {
 		progSvcName = fmt.Sprintf("%s/%s", progSvcName, bs.ServiceName)
 	}
 
-	pid := os.Getpid()
-	if pid > 10 {
-		// Note about the above comparison: if our pid is super low, we're probably running inside docker and/or in a
-		// context where pid is not likely to be very important, and we omit it.
-		progSvcName = fmt.Sprintf("%s(%d)", progSvcName, pid)
-	}
-
 	if err := logger.SetLogName(fmt.Sprintf("%s ", progSvcName)); err != nil {
 		bs.Fail("Cannot set log name for program")
 	}

@@ -15,6 +15,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 )
@@ -197,7 +198,10 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 		if dev, ok := ks.devices[pts[0]]; ok {
 			msg["device_name"] = dev.Name // Copy in any of these info we get
 			dev.SetMsgUserTags(msg)
+		} else if snmp.ServiceName != "" {
+			msg["tags.container_service"] = snmp.ServiceName
 		}
+
 		if ks.resolver != nil {
 			msg["client_name"] = ks.resolver.Resolve(ctx, pts[0], true)
 		}
