@@ -130,7 +130,7 @@ type ServerConfig struct {
 	OllyDataset     string
 	OllyWriteKey    string
 	MonitorConf     bool
-	CfgPath         string
+	CfgPath         string `yaml:"-"` // We don't want to read this directly because it comes from a flag but saved here for internal use.
 }
 
 // APIConfig is the config for the API service
