@@ -483,8 +483,7 @@ func (c *Config) SaveConfig() error {
 	}
 	defer f.Close()
 
-	var cfg *Config
-	if err := yaml.NewEncoder(f).Encode(&cfg); err != nil {
+	if err := yaml.NewEncoder(f).Encode(c); err != nil {
 		return err
 	}
 
