@@ -132,8 +132,11 @@ type Column struct {
 	Type string `json:"col_type"`
 }
 
-func (d *Device) InitUserTags(tags map[string]string) {
+func (d *Device) InitUserTags(serviceName string, tags map[string]string) {
 	d.allUserTags = tags
+	if serviceName != "ktranslate" {
+		d.allUserTags["tags.container_service"] = serviceName
+	}
 }
 
 func (d *Device) SetMsgUserTags(in sfmt.LogParts) {

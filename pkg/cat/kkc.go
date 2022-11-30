@@ -599,7 +599,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 
 	// Set up api auth system if this is set. Allows kproxy|kprobe|kappa|ksynth and others to use this without phoneing home to kentik.
 	if kc.authConfig != nil {
-		authr, err := auth.NewServer(kc.authConfig, kc.config.SNMPInput.SNMPFile, kc.log)
+		authr, err := auth.NewServer(kc.authConfig, kc.config.SNMPInput.SNMPFile, kc.log, snmp.ServiceName)
 		if err != nil {
 			return err
 		}

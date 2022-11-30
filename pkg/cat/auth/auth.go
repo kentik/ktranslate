@@ -29,7 +29,7 @@ const (
 	API_INT = "/api/internal"
 )
 
-func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server, error) {
+func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL, serviceName string) (*Server, error) {
 	devices, err := loadDevices(auth)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL) (*Server,
 				if nd.SampleRate == 0 {
 					nd.SampleRate = 1
 				}
-				nd.InitUserTags(d.GetUserTags())
+				nd.InitUserTags(serviceName, d.GetUserTags())
 				s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}
