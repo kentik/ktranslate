@@ -71,15 +71,7 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 }
 
 func (s *KafkaSink) Send(ctx context.Context, payload *kt.Output) {
-	err := s.kp.WriteMessages(ctx, kafka.Message{
-		Value: payload.Body,
-	})
-	if err != nil {
-		s.Errorf("There was an error with the delivery: %v.", err)
-		s.metrics.DeliveryErr.Mark(1)
-	} else {
-		s.metrics.DeliveryWin.Mark(1)
-	}
+	go s.send(ctx, payload)
 }
 
 func (s *KafkaSink) Close() {
@@ -92,5 +84,17 @@ func (s *KafkaSink) HttpInfo() map[string]float64 {
 	return map[string]float64{
 		"DeliveryErr": s.metrics.DeliveryErr.Rate1(),
 		"DeliveryWin": s.metrics.DeliveryWin.Rate1(),
+	}
+}
+
+func (s *KafkaSink) send(ctx context.Context, payload *kt.Output) {
+	err := s.kp.WriteMessages(ctx, kafka.Message{
+		Value: payload.Body,
+	})
+	if err != nil {
+		s.Errorf("There was an error with the delivery: %v.", err)
+		s.metrics.DeliveryErr.Mark(1)
+	} else {
+		s.metrics.DeliveryWin.Mark(1)
 	}
 }
