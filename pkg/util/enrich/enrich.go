@@ -114,6 +114,16 @@ func (e *Enricher) EnrichMib(idx string, key string, attr map[string]interface{}
 	}
 }
 
+func (e *Enricher) EnrichMetric(idx string, key string, ints map[string]int64, strs map[string]string) {
+	mm := &MibMetric{ContextL: e}
+	mm.Wrap(idx, key, ints, strs)
+	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
+	if err != nil {
+		e.Errorf("Cannot run enrich mib script: %v", err)
+		return
+	}
+}
+
 func (e *Enricher) Enrich(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, error) {
 	if e.doSrc || e.doDst {
 		return e.hashIP(ctx, msgs)
