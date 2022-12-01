@@ -8,23 +8,26 @@ import (
 	"go.starlark.net/starlark"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 type MibMetric struct {
 	logger.ContextL
-	idx    string
-	key    string
-	strs   map[string]string
-	ints   map[string]int64
-	frozen bool
+	idx     string
+	key     string
+	strs    map[string]string
+	ints    map[string]int64
+	metrics map[string]kt.MetricInfo
+	frozen  bool
 }
 
 // Wrap updates the starlark.Metric to wrap a new telegraf.Metric.
-func (m *MibMetric) Wrap(idx string, key string, ints map[string]int64, strs map[string]string) {
+func (m *MibMetric) Wrap(idx string, key string, ints map[string]int64, strs map[string]string, metrics map[string]kt.MetricInfo) {
 	m.idx = idx
 	m.key = key
 	m.strs = strs
 	m.ints = ints
+	m.metrics = metrics
 	m.frozen = false
 }
 
@@ -106,6 +109,12 @@ func (m *MibMetric) SetField(name string, value starlark.Value) error {
 			fmt.Sprintf("cannot assign to field '%s'", name))
 	default:
 		// Copy over the info about this new key from the key which started this process.
+		if m.metrics != nil {
+			if _, ok := m.metrics[name]; !ok {
+				m.metrics[name] = m.metrics[m.key]
+			}
+		}
+
 		switch v := value.(type) {
 		case starlark.String:
 			m.strs[name] = v.GoString()

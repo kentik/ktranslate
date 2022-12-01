@@ -114,9 +114,9 @@ func (e *Enricher) EnrichMib(idx string, key string, attr map[string]interface{}
 	}
 }
 
-func (e *Enricher) EnrichMetric(idx string, key string, ints map[string]int64, strs map[string]string) {
+func (e *Enricher) EnrichMetric(idx string, key string, ints map[string]int64, strs map[string]string, metrics map[string]kt.MetricInfo) {
 	mm := &MibMetric{ContextL: e}
-	mm.Wrap(idx, key, ints, strs)
+	mm.Wrap(idx, key, ints, strs, metrics)
 	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
 	if err != nil {
 		e.Errorf("Cannot run enrich mib script: %v", err)

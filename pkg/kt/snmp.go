@@ -386,7 +386,7 @@ type Mib struct {
 
 type Enricher interface {
 	EnrichMib(string, string, map[string]interface{}, *LastMetadata)
-	EnrichMetric(string, string, map[string]int64, map[string]string)
+	EnrichMetric(string, string, map[string]int64, map[string]string, map[string]MetricInfo)
 }
 
 func (mb *Mib) String() string {
