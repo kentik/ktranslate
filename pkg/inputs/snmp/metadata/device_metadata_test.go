@@ -48,11 +48,11 @@ func TestPoll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(res.Tables))
 
-	// Test sysdesc
-	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysdesc"), Name: ".1.3.6.1.2.1.1.1.0"}}, dm: ""}) // SysDescr.
+	// Test sysName
+	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysName"), Name: ".1.3.6.1.2.1.1.5.0"}}, dm: ""}) // sysName.
 	res, err = dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
-	assert.Equal(t, "sysdesc", res.SysDescr)
+	assert.Equal(t, "sysName", res.SysName)
 
 	meta := map[string]*kt.Mib{
 		"1.1.1": &kt.Mib{Name: "foo"},
