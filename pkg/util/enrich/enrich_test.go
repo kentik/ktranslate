@@ -99,3 +99,25 @@ def main(n):
 		assert.Equal("aaa", evt.CustomStr["foo"])
 	}
 }
+
+func TestCatch(t *testing.T) {
+	testDataPy := string(`
+
+def bad():
+  return 100/0
+
+def main(n):
+  res = catch(bad)
+  return res
+`)
+
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+	e, err := NewEnricher("", testDataPy, "", l.GetLogger().GetUnderlyingLogger())
+	assert.Nil(err)
+	assert.NotNil(e)
+
+	out, err := e.Enrich(context.Background(), kt.InputTestingSnmp)
+	assert.Nil(err)
+	assert.NotNil(out)
+}

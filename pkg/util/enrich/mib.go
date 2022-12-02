@@ -61,7 +61,7 @@ func (m *Mib) Hash() (uint32, error) {
 
 // AttrNames implements the starlark.HasAttrs interface.
 func (m *Mib) AttrNames() []string {
-	names := []string{"this.idx", "this.key"}
+	names := []string{"this.idx", "this.key", "pop"}
 	for k, _ := range m.attr {
 		names = append(names, k)
 	}
@@ -75,6 +75,8 @@ func (m *Mib) Attr(name string) (starlark.Value, error) {
 		return starlark.String(m.idx), nil
 	case "this.key":
 		return starlark.String(m.key), nil
+	case "pop":
+		return builtinAttr(m, "pop", m.pop)
 	default:
 		if v, ok := m.attr[name]; ok {
 			switch nv := v.(type) {
@@ -146,6 +148,24 @@ func (m *Mib) Get(key starlark.Value) (v starlark.Value, found bool, err error) 
 	return starlark.None, false, errors.New("key must be of type 'str'")
 }
 
+// Delete removes the key and also returns it.
+func (m *Mib) Delete(key starlark.Value) (v starlark.Value, found bool, err error) {
+	if k, ok := key.(starlark.String); ok {
+		v, err := m.Attr(k.GoString())
+		if err != nil {
+			return starlark.None, false, err
+		}
+
+		// Actually remove the key here.
+		delete(m.attr, k.GoString())
+
+		// And return
+		return v, true, nil
+	}
+
+	return starlark.None, false, errors.New("key must be of type 'str'")
+}
+
 // SetKey implements the starlark.HasSetKey interface to support map update
 // using x[k]=v syntax, like a dictionary.
 func (m *Mib) SetKey(k, v starlark.Value) error {
@@ -159,4 +179,22 @@ func (m *Mib) SetKey(k, v starlark.Value) error {
 	}
 
 	return m.SetField(key.GoString(), v)
+}
+
+// Implements the pop method
+func (m *Mib) pop(b *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
+	var k, d starlark.Value
+	if err := starlark.UnpackPositionalArgs(b.Name(), args, kwargs, 1, &k, &d); err != nil {
+		return starlark.None, fmt.Errorf("%s: %v", b.Name(), err)
+	}
+
+	if v, found, err := m.Delete(k); err != nil {
+		return starlark.None, fmt.Errorf("%s: %v", b.Name(), err)
+	} else if found {
+		return v, nil
+	} else if d != nil {
+		return d, nil
+	}
+
+	return starlark.None, fmt.Errorf("%s: missing key", b.Name())
 }

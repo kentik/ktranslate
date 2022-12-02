@@ -73,7 +73,9 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 				Name:  "kentik enrich",
 				Load:  e.LoadFunc,
 			}
-			builtins := starlark.StringDict{}
+			builtins := starlark.StringDict{
+				"catch": starlark.NewBuiltin("catch", catch),
+			}
 
 			program, err := e.sourceProgram(builtins)
 			if err != nil {
