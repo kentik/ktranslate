@@ -129,6 +129,8 @@ type ServerConfig struct {
 	MetaListenAddr  string
 	OllyDataset     string
 	OllyWriteKey    string
+	MonitorConf     bool
+	CfgPath         string `yaml:"-"` // We don't want to read this directly because it comes from a flag but saved here for internal use.
 }
 
 // APIConfig is the config for the API service
@@ -400,6 +402,8 @@ func DefaultConfig() *Config {
 			MetaListenAddr:  "localhost:0",
 			OllyDataset:     "",
 			OllyWriteKey:    "",
+			CfgPath:         "",
+			MonitorConf:     false,
 		},
 		API: &APIConfig{
 			DeviceFile: "",
@@ -469,4 +473,19 @@ func LoadConfig(configPath string) (*Config, error) {
 	}
 
 	return cfg, nil
+}
+
+// SaveConfig saves the ktranslate configuration to the specified path
+func (c *Config) SaveConfig() error {
+	f, err := os.Create(c.Server.CfgPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	if err := yaml.NewEncoder(f).Encode(c); err != nil {
+		return err
+	}
+
+	return nil
 }
