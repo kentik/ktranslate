@@ -675,6 +675,12 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	mibTable, ok := attr["mib-table"].(string)
 	if ok {
 		mib = mib + "::" + mibTable
+		// If the MIB is normalized use "/" as separator
+		if strings.HasPrefix(mib, "/") {
+			mib = strings.TrimRight(mib, "/") + "/" + strings.TrimLeft(mibTable, "/")
+		} else {
+			mib = mib + "::" + mibTable
+		}
 		delete(attr, "mib-table")
 	}
 
@@ -683,8 +689,9 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 
 var dropFields = map[string]bool{
 	//"device_name": true,
-	"objectIdentifier": true,
-	"eventType":        true,
-	"provider":         true,
-	"SysServices":      true,
+	"objectIdentifier":     true,
+	"eventType":            true,
+	"provider":             true,
+	"SysServices":          true,
+	"instrumentation.name": true,
 }
