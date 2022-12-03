@@ -129,7 +129,6 @@ type ServerConfig struct {
 	MetaListenAddr  string
 	OllyDataset     string
 	OllyWriteKey    string
-	MonitorConf     bool
 	CfgPath         string `yaml:"-"` // We don't want to read this directly because it comes from a flag but saved here for internal use.
 }
 
@@ -201,6 +200,12 @@ type FlowInputConfig struct {
 type KentikCred struct {
 	APIEmail string
 	APIToken string
+}
+
+// ConfigManager is the config for how to manage configs.
+type ConfigManager struct {
+	ConfigImpl  string
+	PollTimeSec int
 }
 
 // Config is the ktranslate configuration
@@ -292,6 +297,8 @@ type Config struct {
 	AWSVPCInput *AWSVPCInputConfig
 	// pkg/inputs/flow
 	FlowInput *FlowInputConfig
+	// pkg/config
+	CfgManager *ConfigManager
 }
 
 // DefaultConfig returns a ktranslate configuration with defaults applied
@@ -403,7 +410,6 @@ func DefaultConfig() *Config {
 			OllyDataset:     "",
 			OllyWriteKey:    "",
 			CfgPath:         "",
-			MonitorConf:     false,
 		},
 		API: &APIConfig{
 			DeviceFile: "",
@@ -455,6 +461,10 @@ func DefaultConfig() *Config {
 			MessageFields:        FlowDefaultFields,
 			PrometheusListenAddr: "",
 			MappingFile:          "",
+		},
+		CfgManager: &ConfigManager{
+			ConfigImpl:  "",
+			PollTimeSec: 1200,
 		},
 	}
 }

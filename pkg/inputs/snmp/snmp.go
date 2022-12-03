@@ -13,6 +13,7 @@ import (
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
+	"github.com/kentik/ktranslate/pkg/config"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	snmp_metrics "github.com/kentik/ktranslate/pkg/inputs/snmp/metrics"
@@ -56,7 +57,7 @@ func init() {
 	flag.BoolVar(&validateMib, "snmp_validate", false, "If true, validate mib profiles and exit.")
 }
 
-func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver) error {
+func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver, confMgr config.ConfigManager) error {
 	snmpFile := cfg.SNMPFile
 	// Do this once here just to see if we need to exit right away.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
@@ -96,7 +97,7 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
 	if conf.Trap == nil || !conf.Trap.TrapOnly { // Unless we are turning off everything but snmp traps.
-		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg)
+		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg, confMgr)
 	}
 
 	// Run a trap listener?
@@ -146,7 +147,7 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
-func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) {
+func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, confMgr config.ConfigManager) {
 	ctxSnmp, cancel := context.WithCancel(ctx)
 	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg)
 	if err != nil {
@@ -163,7 +164,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, kt.SIGUSR2)
 	if v := cfg.DiscoveryIntervalMinutes; v > 0 || runOnStart { // If we are re-running snmp discovery every interval AND/OR running on start, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg, apic)
+		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg, apic, confMgr)
 	}
 
 	// Block here
@@ -172,7 +173,7 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// If we got this signal, redo the snmp system.
 	cancel()
 
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg) // Track how many times through here we've been.
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg, confMgr) // Track how many times through here we've been.
 }
 
 func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) error {

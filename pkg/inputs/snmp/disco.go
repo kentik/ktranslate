@@ -17,6 +17,7 @@ import (
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
+	"github.com/kentik/ktranslate/pkg/config"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/metadata"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
@@ -35,7 +36,7 @@ type SnmpDiscoDeviceStat struct {
 	delta    int
 }
 
-func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) (*SnmpDiscoDeviceStat, error) {
+func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Duration, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi, confMgr config.ConfigManager) (*SnmpDiscoDeviceStat, error) {
 	// First, parse the config file and see what we're doing.
 	snmpFile := cfg.SNMPFile
 	log.Infof("SNMP Discovery, loading config from %s", snmpFile)
@@ -141,15 +142,20 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		}
 	}
 
+	// Phone home if we have one of these set up.
+	if confMgr != nil && (stats.added > 0 || stats.replaced > 0) {
+		confMgr.DeviceDiscovery(conf.Devices)
+	}
+
 	time.Sleep(2 * time.Second) // Give logs time to get sent back.
 
 	return stats, nil
 }
 
-func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi) {
+func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi, confMgr config.ConfigManager) {
 	pt := time.Duration(pollTimeMin) * time.Minute
 	check := func() {
-		stats, err := Discover(ctx, log, pt, cfg, apic)
+		stats, err := Discover(ctx, log, pt, cfg, apic, confMgr)
 		if err != nil {
 			log.Errorf("Discovery SNMP Error: %v", err)
 		} else {
