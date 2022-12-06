@@ -6,6 +6,7 @@ Interface to manage configs.
 
 import (
 	"context"
+	"flag"
 	"fmt"
 
 	"github.com/kentik/ktranslate"
@@ -28,6 +29,14 @@ const (
 	LocalConfig    ConfigProvider = "local"
 	NoConfig       ConfigProvider = ""
 )
+
+var (
+	configProvider string
+)
+
+func init() {
+	flag.StringVar(&configProvider, "config_provider", "", "Implementation of which provider controls the config process. Can be one of (new_relic,local)")
+}
 
 func NewConfig(prov ConfigProvider, log logger.Underlying, config *ktranslate.Config) (ConfigManager, error) {
 	switch prov {

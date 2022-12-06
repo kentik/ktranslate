@@ -707,6 +707,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.FlowInput.PrometheusListenAddr = val
 			case "nf.mapping":
 				cfg.FlowInput.MappingFile = val
+			case "config_provider":
+				cfg.CfgManager.ConfigImpl = val
 			// configs
 			case "config", "generate-config":
 				// ignore
