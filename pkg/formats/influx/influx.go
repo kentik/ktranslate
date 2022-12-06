@@ -104,6 +104,10 @@ func NewMergedInfluxData(s InfluxDataSet) *InfluxData {
 
 type InfluxDataSet []InfluxData
 
+func (f InfluxDataSet) Len() int           { return len(f) }
+func (f InfluxDataSet) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
+func (f InfluxDataSet) Less(i, j int) bool { return f[i].Name < f[j].Name }
+
 func (f *InfluxFormat) report(err error, format string, args ...interface{}) {
 	str := fmt.Sprintf(format, args...)
 	f.invalidsMux.RLock()
@@ -123,7 +127,10 @@ func (f *InfluxFormat) report(err error, format string, args ...interface{}) {
 }
 
 func (f *InfluxFormat) Bytes(s InfluxDataSet) []byte {
-	// First map common prefixes.
+	// Sort the output before anything.
+	sort.Sort(s)
+
+	// Next map common prefixes.
 	prefixes := map[string][]InfluxData{}
 	for _, l := range s {
 		prefix := l.Prefix()
