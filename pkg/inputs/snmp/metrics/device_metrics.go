@@ -205,6 +205,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			}
 			dmr.customBigInt[oidName] = snmp_util.ToInt64(wrapper.variable.Value)
 		}
+
+		// If there's a script attatched here, run it now.
+		if wrapper.mib.Script != nil {
+			wrapper.mib.Script.EnrichMetric(idx, oidName, dmr.customBigInt, dmr.customStr, metricsFound)
+		}
 	}
 
 	// Convert to JCFH and pass on.

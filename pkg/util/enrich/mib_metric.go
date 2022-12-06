@@ -11,21 +11,23 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
-type Mib struct {
+type MibMetric struct {
 	logger.ContextL
-	idx    string
-	key    string
-	attr   map[string]interface{}
-	lm     *kt.LastMetadata
-	frozen bool
+	idx     string
+	key     string
+	strs    map[string]string
+	ints    map[string]int64
+	metrics map[string]kt.MetricInfo
+	frozen  bool
 }
 
 // Wrap updates the starlark.Metric to wrap a new telegraf.Metric.
-func (m *Mib) Wrap(idx string, key string, attr map[string]interface{}, lm *kt.LastMetadata) {
+func (m *MibMetric) Wrap(idx string, key string, ints map[string]int64, strs map[string]string, metrics map[string]kt.MetricInfo) {
 	m.idx = idx
 	m.key = key
-	m.attr = attr
-	m.lm = lm
+	m.strs = strs
+	m.ints = ints
+	m.metrics = metrics
 	m.frozen = false
 }
 
@@ -33,43 +35,47 @@ func (m *Mib) Wrap(idx string, key string, attr map[string]interface{}, lm *kt.L
 //
 // The String function is called by both the repr() and str() functions, and so
 // it behaves more like the repr function would in Python.
-func (m *Mib) String() string {
+func (m *MibMetric) String() string {
 	buf := new(strings.Builder)
-	buf.WriteString("Mib(")
+	buf.WriteString("MibMetric(")
 	buf.WriteString(fmt.Sprintf("Index: %s, ", m.idx))
 	buf.WriteString(fmt.Sprintf("Key: %s, ", m.key))
-	buf.WriteString(fmt.Sprintf("Attr: %v", m.attr))
+	buf.WriteString(fmt.Sprintf("Ints: %v", m.ints))
+	buf.WriteString(fmt.Sprintf("Strings: %v", m.strs))
 	buf.WriteString(")")
 	return buf.String()
 }
 
-func (m *Mib) Type() string {
-	return "Mib"
+func (m *MibMetric) Type() string {
+	return "MibMetric"
 }
 
-func (m *Mib) Freeze() {
+func (m *MibMetric) Freeze() {
 	m.frozen = true
 }
 
-func (m *Mib) Truth() starlark.Bool {
+func (m *MibMetric) Truth() starlark.Bool {
 	return true
 }
 
-func (m *Mib) Hash() (uint32, error) {
+func (m *MibMetric) Hash() (uint32, error) {
 	return 0, errors.New("not hashable")
 }
 
 // AttrNames implements the starlark.HasAttrs interface.
-func (m *Mib) AttrNames() []string {
+func (m *MibMetric) AttrNames() []string {
 	names := []string{"this.idx", "this.key", "pop"}
-	for k, _ := range m.attr {
+	for k, _ := range m.strs {
+		names = append(names, k)
+	}
+	for k, _ := range m.ints {
 		names = append(names, k)
 	}
 	return names
 }
 
 // Attr implements the starlark.HasAttrs interface.
-func (m *Mib) Attr(name string) (starlark.Value, error) {
+func (m *MibMetric) Attr(name string) (starlark.Value, error) {
 	switch name {
 	case "this.idx":
 		return starlark.String(m.idx), nil
@@ -78,21 +84,11 @@ func (m *Mib) Attr(name string) (starlark.Value, error) {
 	case "pop":
 		return builtinAttr(m, "pop", m.pop)
 	default:
-		if v, ok := m.attr[name]; ok {
-			switch nv := v.(type) {
-			case kt.Cid:
-				return starlark.MakeUint64(uint64(nv)), nil
-			case uint64:
-				return starlark.MakeUint64(nv), nil
-			case int64:
-				return starlark.MakeInt64(nv), nil
-			case int:
-				return starlark.MakeInt(int(nv)), nil
-			case int32:
-				return starlark.MakeInt(int(nv)), nil
-			case string:
-				return starlark.String(nv), nil
-			}
+		if v, ok := m.ints[name]; ok {
+			return starlark.MakeInt64(v), nil
+		}
+		if v, ok := m.strs[name]; ok {
+			return starlark.String(v), nil
 		}
 	}
 
@@ -101,7 +97,7 @@ func (m *Mib) Attr(name string) (starlark.Value, error) {
 }
 
 // SetField implements the starlark.HasSetField interface.
-func (m *Mib) SetField(name string, value starlark.Value) error {
+func (m *MibMetric) SetField(name string, value starlark.Value) error {
 	if m.frozen {
 		return fmt.Errorf("cannot modify frozen metric")
 	}
@@ -115,19 +111,19 @@ func (m *Mib) SetField(name string, value starlark.Value) error {
 			fmt.Sprintf("cannot assign to field '%s'", name))
 	default:
 		// Copy over the info about this new key from the key which started this process.
-		if m.lm != nil {
-			if _, ok := m.lm.XtraInfo[name]; !ok {
-				m.lm.XtraInfo[name] = m.lm.XtraInfo[m.key]
+		if m.metrics != nil {
+			if _, ok := m.metrics[name]; !ok {
+				m.metrics[name] = m.metrics[m.key]
 			}
 		}
 
 		switch v := value.(type) {
 		case starlark.String:
-			m.attr[name] = v.GoString()
+			m.strs[name] = v.GoString()
 		case starlark.Int:
 			ns, ok := v.Int64()
 			if ok {
-				m.attr[name] = ns
+				m.ints[name] = ns
 			}
 		}
 	}
@@ -136,7 +132,7 @@ func (m *Mib) SetField(name string, value starlark.Value) error {
 }
 
 // Get implements the starlark.Mapping interface.
-func (m *Mib) Get(key starlark.Value) (v starlark.Value, found bool, err error) {
+func (m *MibMetric) Get(key starlark.Value) (v starlark.Value, found bool, err error) {
 	if k, ok := key.(starlark.String); ok {
 		v, err := m.Attr(k.GoString())
 		if err != nil {
@@ -149,7 +145,7 @@ func (m *Mib) Get(key starlark.Value) (v starlark.Value, found bool, err error) 
 }
 
 // Delete removes the key and also returns it.
-func (m *Mib) Delete(key starlark.Value) (v starlark.Value, found bool, err error) {
+func (m *MibMetric) Delete(key starlark.Value) (v starlark.Value, found bool, err error) {
 	if k, ok := key.(starlark.String); ok {
 		v, err := m.Attr(k.GoString())
 		if err != nil {
@@ -157,7 +153,8 @@ func (m *Mib) Delete(key starlark.Value) (v starlark.Value, found bool, err erro
 		}
 
 		// Actually remove the key here.
-		delete(m.attr, k.GoString())
+		delete(m.ints, k.GoString())
+		delete(m.strs, k.GoString())
 
 		// And return
 		return v, true, nil
@@ -168,7 +165,7 @@ func (m *Mib) Delete(key starlark.Value) (v starlark.Value, found bool, err erro
 
 // SetKey implements the starlark.HasSetKey interface to support map update
 // using x[k]=v syntax, like a dictionary.
-func (m *Mib) SetKey(k, v starlark.Value) error {
+func (m *MibMetric) SetKey(k, v starlark.Value) error {
 	if m.frozen {
 		return fmt.Errorf("cannot modify frozen metric")
 	}
@@ -182,7 +179,7 @@ func (m *Mib) SetKey(k, v starlark.Value) error {
 }
 
 // Implements the pop method
-func (m *Mib) pop(b *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
+func (m *MibMetric) pop(b *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
 	var k, d starlark.Value
 	if err := starlark.UnpackPositionalArgs(b.Name(), args, kwargs, 1, &k, &d); err != nil {
 		return starlark.None, fmt.Errorf("%s: %v", b.Name(), err)

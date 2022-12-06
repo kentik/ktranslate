@@ -73,7 +73,9 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 				Name:  "kentik enrich",
 				Load:  e.LoadFunc,
 			}
-			builtins := starlark.StringDict{}
+			builtins := starlark.StringDict{
+				"catch": starlark.NewBuiltin("catch", catch),
+			}
 
 			program, err := e.sourceProgram(builtins)
 			if err != nil {
@@ -107,6 +109,16 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 func (e *Enricher) EnrichMib(idx string, key string, attr map[string]interface{}, lm *kt.LastMetadata) {
 	mm := &Mib{ContextL: e}
 	mm.Wrap(idx, key, attr, lm)
+	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
+	if err != nil {
+		e.Errorf("Cannot run enrich mib script: %v", err)
+		return
+	}
+}
+
+func (e *Enricher) EnrichMetric(idx string, key string, ints map[string]int64, strs map[string]string, metrics map[string]kt.MetricInfo) {
+	mm := &MibMetric{ContextL: e}
+	mm.Wrap(idx, key, ints, strs, metrics)
 	_, err := starlark.Call(e.thread, e.globals["main"], starlark.Tuple{mm}, nil)
 	if err != nil {
 		e.Errorf("Cannot run enrich mib script: %v", err)

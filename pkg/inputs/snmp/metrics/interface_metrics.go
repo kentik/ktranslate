@@ -233,6 +233,11 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 					format = mib.Format
 				}
 				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: format, PollDur: mib.PollDur}
+
+				// If there's a script attatched here, run it now.
+				if mib.Script != nil {
+					mib.Script.EnrichMetric(strint, k, dst.CustomBigInt, dst.CustomStr, metrics)
+				}
 			} else {
 				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName, Format: kt.CountMetric}
 			}
