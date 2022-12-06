@@ -60,6 +60,19 @@ line2`,
 	assert.Contains(str, "line2")
 }
 
+func TestGetMib(t *testing.T) {
+	assert := assert.New(t)
+
+	input := map[string]interface{}{"Index": "11", "bgp::foo": "22"}
+	mibName := getMib(input, nil)
+
+	assert.Equal("11", input["index"])
+	assert.Equal("22", input["foo"])
+	assert.Equal(nil, input["bgp::foo"])
+	assert.Equal(nil, input["device_ip"])
+	assert.Equal("device", mibName)
+}
+
 const (
 	clean = "the quick red fox jumps over the lazy brown dogs"
 	dirty = `the quick red fox

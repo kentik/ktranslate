@@ -23,6 +23,10 @@ var (
 	measurementPrefix string
 )
 
+const (
+	NameSpaceTokenSep = "::"
+)
+
 func init() {
 	flag.StringVar(&measurementPrefix, "influxdb_measurement_prefix", "", "Prefix metric names with this")
 
@@ -655,6 +659,13 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 		if k == "Index" {
 			delete(attr, k)
 			attr["index"] = v
+		}
+
+		// If the attribute has a namespace prefix, drop here.
+		if strings.Contains(k, NameSpaceTokenSep) {
+			pts := strings.SplitN(k, NameSpaceTokenSep, 2)
+			delete(attr, k)
+			attr[pts[1]] = v
 		}
 	}
 	if ip != nil {
