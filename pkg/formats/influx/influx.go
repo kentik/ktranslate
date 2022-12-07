@@ -701,9 +701,8 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	// If there's a table, add this to the info.
 	mibTable, ok := attr["mib-table"].(string)
 	if ok {
-		mib = mib + "::" + mibTable
 		// If the MIB is normalized use "/" as separator
-		if strings.HasPrefix(mib, "/") {
+		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/"){
 			mib = strings.TrimRight(mib, "/") + "/" + strings.TrimLeft(mibTable, "/")
 		} else {
 			mib = mib + "::" + mibTable
