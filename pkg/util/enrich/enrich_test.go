@@ -126,10 +126,13 @@ func TestRE(t *testing.T) {
 	testDataPy := string(`
 def main(n):
   res = findAllSubmatch("foo(.?)", "seafood fool")
-  n[0]["foo"] = res[1][1]
+  n[0]["one"] = res[1][1]
 
   res = findAllSubmatch("foo(.?)", "seafood fool")
-  n[0]["foo"] = res[1][0]
+  n[0]["zero"] = res[1][0]
+
+  res = findAllSubmatch("bar(.?)", "seafood barf")
+  n[0]["bar"] = res[0][0]
 
   return True
 `)
@@ -142,5 +145,7 @@ def main(n):
 
 	out, err := e.Enrich(context.Background(), kt.InputTestingSnmp)
 	assert.Nil(err)
-	assert.Equal("fool", out[0].CustomStr["foo"])
+	assert.Equal("l", out[0].CustomStr["one"])
+	assert.Equal("fool", out[0].CustomStr["zero"])
+	assert.Equal("barf", out[0].CustomStr["bar"])
 }

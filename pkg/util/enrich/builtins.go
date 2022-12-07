@@ -3,6 +3,7 @@ package enrich
 import (
 	"fmt"
 	"regexp"
+	"sync"
 
 	"go.starlark.net/starlark"
 )
@@ -21,7 +22,10 @@ func catch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kw
 }
 
 // Keep a cache of seen regexps seen to speed things up. Note -- this isn't guarded with a lock, should it be?
-var reCache = map[string]*regexp.Regexp{}
+var (
+	reCache = map[string]*regexp.Regexp{}
+	mux     sync.RWMutex
+)
 
 // findAllSubmatch(re, target) will compile re as a regexp and then run findAllSubmatch(target)
 func findAllSubmatch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
@@ -33,13 +37,17 @@ func findAllSubmatch(thread *starlark.Thread, _ *starlark.Builtin, args starlark
 
 	// Use cache, assume there's lots of hits and only a few res so don't need a lock here to populate map.
 	reg := re.GoString()
+	mux.RLock()
 	r := reCache[reg]
+	mux.RUnlock()
 	if r == nil {
 		rn, err := regexp.Compile(reg)
 		if err != nil {
 			return starlark.None, err
 		}
+		mux.Lock()
 		reCache[reg] = rn
+		mux.Unlock()
 		r = rn
 	}
 
