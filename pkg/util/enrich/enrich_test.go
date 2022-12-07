@@ -127,6 +127,10 @@ func TestRE(t *testing.T) {
 def main(n):
   res = findAllSubmatch("foo(.?)", "seafood fool")
   n[0]["foo"] = res[1][1]
+
+  res = findAllSubmatch("foo(.?)", "seafood fool")
+  n[0]["foo"] = res[1][0]
+
   return True
 `)
 
@@ -138,5 +142,5 @@ def main(n):
 
 	out, err := e.Enrich(context.Background(), kt.InputTestingSnmp)
 	assert.Nil(err)
-	assert.Equal("l", out[0].CustomStr["foo"])
+	assert.Equal("fool", out[0].CustomStr["foo"])
 }

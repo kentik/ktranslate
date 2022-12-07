@@ -20,6 +20,9 @@ func catch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kw
 	return starlark.None, nil
 }
 
+// Keep a cache of seen regexps seen to speed things up. Note -- this isn't guarded with a lock, should it be?
+var reCache = map[string]*regexp.Regexp{}
+
 // findAllSubmatch(re, target) will compile re as a regexp and then run findAllSubmatch(target)
 func findAllSubmatch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
 	var re starlark.String
@@ -27,13 +30,21 @@ func findAllSubmatch(thread *starlark.Thread, _ *starlark.Builtin, args starlark
 	if err := starlark.UnpackArgs("findAllSubmatch", args, kwargs, "re", &re, "target", &target); err != nil {
 		return nil, err
 	}
-	rec, err := regexp.Compile(re.GoString())
-	if err != nil {
-		return starlark.None, err
+
+	// Use cache, assume there's lots of hits and only a few res so don't need a lock here to populate map.
+	reg := re.GoString()
+	r := reCache[reg]
+	if r == nil {
+		rn, err := regexp.Compile(reg)
+		if err != nil {
+			return starlark.None, err
+		}
+		reCache[reg] = rn
+		r = rn
 	}
 
 	outputs := []starlark.Value{}
-	for _, match := range rec.FindAllSubmatch([]byte(target.GoString()), -1) {
+	for _, match := range r.FindAllSubmatch([]byte(target.GoString()), -1) {
 		outputs = append(outputs, starlark.NewList([]starlark.Value{
 			starlark.String(match[0]), starlark.String(match[1]),
 		}))
