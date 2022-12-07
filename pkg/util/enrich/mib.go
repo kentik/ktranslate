@@ -129,6 +129,8 @@ func (m *Mib) SetField(name string, value starlark.Value) error {
 			if ok {
 				m.attr[name] = ns
 			}
+		case starlark.Float:
+			m.attr[name] = v
 		}
 	}
 
