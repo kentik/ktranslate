@@ -23,6 +23,7 @@ type NetflowFormatConfig struct {
 // InfluxDBFormatConfig is the config format for influxdb
 type InfluxDBFormatConfig struct {
 	MeasurementPrefix string
+	NamespaceToken    string
 }
 
 // PrometheusFormatConfig is the config for the prometheus format
@@ -336,6 +337,7 @@ func DefaultConfig() *Config {
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
 			MeasurementPrefix: "",
+			NamespaceToken:    ":",
 		},
 		PrometheusSink: &PrometheusSinkConfig{
 			ListenAddr: ":8082",

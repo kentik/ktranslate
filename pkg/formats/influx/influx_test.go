@@ -63,6 +63,7 @@ line2`,
 func TestGetMib(t *testing.T) {
 	assert := assert.New(t)
 
+	namespaceTokenSep = "::"
 	input := map[string]interface{}{"Index": "11", "bgp::foo": "22"}
 	mibName := getMib(input, nil)
 

@@ -21,15 +21,12 @@ import (
 
 var (
 	measurementPrefix string
-)
-
-const (
-	NameSpaceTokenSep = "::"
+	namespaceTokenSep string
 )
 
 func init() {
 	flag.StringVar(&measurementPrefix, "influxdb_measurement_prefix", "", "Prefix metric names with this")
-
+	flag.StringVar(&namespaceTokenSep, "influxdb_namespace_token", ":", "Use this token to seperate namespaces")
 }
 
 type InfluxFormat struct {
@@ -265,6 +262,8 @@ func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression 
 		},
 		config: cfg,
 	}
+
+	namespaceTokenSep = cfg.NamespaceToken
 
 	return jf, nil
 }
@@ -523,17 +522,22 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 			}
 
 			mib := getMib(attrNew, ip)
+			metricName := m
+			if strings.Contains(metricName, namespaceTokenSep) {
+				pts := strings.SplitN(metricName, namespaceTokenSep, 2)
+				metricName = pts[1]
+			}
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
-					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
+					FieldsFloat: map[string]float64{metricName: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
-					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
+					Fields:    map[string]int64{metricName: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp,
 					Tags:      attrNew,
 				})
@@ -567,17 +571,22 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 			}
 
 			mib := getMib(attrNew, ip)
+			metricName := m
+			if strings.Contains(metricName, namespaceTokenSep) {
+				pts := strings.SplitN(metricName, namespaceTokenSep, 2)
+				metricName = pts[1]
+			}
 			if name.Format == kt.FloatMS {
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
-					FieldsFloat: map[string]float64{m: float64(float64(in.CustomBigInt[m]) / 1000)},
+					FieldsFloat: map[string]float64{metricName: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
 			} else {
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
-					Fields:    map[string]int64{m: int64(in.CustomBigInt[m])},
+					Fields:    map[string]int64{metricName: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp,
 					Tags:      attrNew,
 				})
@@ -662,8 +671,8 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 		}
 
 		// If the attribute has a namespace prefix, drop here.
-		if strings.Contains(k, NameSpaceTokenSep) {
-			pts := strings.SplitN(k, NameSpaceTokenSep, 2)
+		if strings.Contains(k, namespaceTokenSep) {
+			pts := strings.SplitN(k, namespaceTokenSep, 2)
 			delete(attr, k)
 			attr[pts[1]] = v
 		}
