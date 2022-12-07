@@ -425,6 +425,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/formats/influxdb
 			case "influxdb_measurement_prefix":
 				cfg.InfluxDBFormat.MeasurementPrefix = val
+			case "influxdb_namespace_token":
+				cfg.InfluxDBFormat.NamespaceToken = val
 			// pkg/sinks/prom
 			case "prom_listen":
 				cfg.PrometheusSink.ListenAddr = val
