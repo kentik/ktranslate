@@ -72,6 +72,17 @@ func TestGetMib(t *testing.T) {
 	assert.Equal(nil, input["bgp::foo"])
 	assert.Equal(nil, input["device_ip"])
 	assert.Equal("device", mibName)
+
+	// Now test out normalizations.
+	mibName = getMib(map[string]interface{}{"mib-table": "mytable", "mib-name": "myname"}, nil)
+	assert.Equal("myname::mytable", mibName)
+
+	mibName = getMib(map[string]interface{}{"mib-table": "mytable::if", "mib-name": "/myname"}, nil)
+	assert.Equal("/myname/mytable::if", mibName)
+
+	mibName = getMib(map[string]interface{}{"mib-table": "mytable::if", "mib-name": "myname/"}, nil)
+	assert.Equal("myname/mytable::if", mibName)
+
 }
 
 const (
