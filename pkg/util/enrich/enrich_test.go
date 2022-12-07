@@ -121,3 +121,22 @@ def main(n):
 	assert.Nil(err)
 	assert.NotNil(out)
 }
+
+func TestRE(t *testing.T) {
+	testDataPy := string(`
+def main(n):
+  res = findAllSubmatch("foo(.?)", "seafood fool")
+  n[0]["foo"] = res[1][1]
+  return True
+`)
+
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+	e, err := NewEnricher("", testDataPy, "", l.GetLogger().GetUnderlyingLogger())
+	assert.Nil(err)
+	assert.NotNil(e)
+
+	out, err := e.Enrich(context.Background(), kt.InputTestingSnmp)
+	assert.Nil(err)
+	assert.Equal("l", out[0].CustomStr["foo"])
+}

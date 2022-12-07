@@ -74,7 +74,8 @@ func NewEnricher(url string, source string, script string, log logger.Underlying
 				Load:  e.LoadFunc,
 			}
 			builtins := starlark.StringDict{
-				"catch": starlark.NewBuiltin("catch", catch),
+				"catch":           starlark.NewBuiltin("catch", catch),
+				"findAllSubmatch": starlark.NewBuiltin("findAllSubmatch", findAllSubmatch),
 			}
 
 			program, err := e.sourceProgram(builtins)

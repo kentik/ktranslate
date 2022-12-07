@@ -2,6 +2,7 @@ package enrich
 
 import (
 	"fmt"
+	"regexp"
 
 	"go.starlark.net/starlark"
 )
@@ -17,6 +18,28 @@ func catch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kw
 		return starlark.String(err.Error()), nil
 	}
 	return starlark.None, nil
+}
+
+// findAllSubmatch(re, target) will compile re as a regexp and then run findAllSubmatch(target)
+func findAllSubmatch(thread *starlark.Thread, _ *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error) {
+	var re starlark.String
+	var target starlark.String
+	if err := starlark.UnpackArgs("findAllSubmatch", args, kwargs, "re", &re, "target", &target); err != nil {
+		return nil, err
+	}
+	rec, err := regexp.Compile(re.GoString())
+	if err != nil {
+		return starlark.None, err
+	}
+
+	outputs := []starlark.Value{}
+	for _, match := range rec.FindAllSubmatch([]byte(target.GoString()), -1) {
+		outputs = append(outputs, starlark.NewList([]starlark.Value{
+			starlark.String(match[0]), starlark.String(match[1]),
+		}))
+	}
+
+	return starlark.NewList(outputs), nil
 }
 
 type builtinMethod func(b *starlark.Builtin, args starlark.Tuple, kwargs []starlark.Tuple) (starlark.Value, error)
