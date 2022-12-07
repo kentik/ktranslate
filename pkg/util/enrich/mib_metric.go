@@ -129,6 +129,7 @@ func (m *MibMetric) SetField(name string, value starlark.Value) error {
 			m.ints[name] = int64(v * 1000.)
 			if met, ok := m.metrics[name]; ok {
 				met.Format = kt.FloatMS
+				m.metrics[name] = met
 			}
 		}
 	}
