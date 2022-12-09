@@ -241,27 +241,34 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 
 	// Loop over all possibe v2c options here if any are set.
 	if md == nil || md.SysObjectID == "" { // Only check these if v3 hasn't found anything.
-		for _, community := range conf.Disco.DefaultCommunities {
-			device = kt.SnmpDeviceConfig{
-				DeviceName: result.Name,
-				DeviceIP:   result.Host.String(),
-				Community:  community,
-				UseV1:      conf.Disco.UseV1,
-				Debug:      conf.Disco.Debug,
-				Port:       uint16(conf.Disco.Ports[0]),
-				Checked:    time.Now(),
+		versions := []bool{conf.Disco.UseV1} // By default, just check v1 or v2c only.
+		if conf.Disco.DoubleCheckV1 {
+			versions = []bool{false, true} // But, if we ask for it, first check v2c and then check v1.
+		}
+	outer:
+		for _, usev1 := range versions {
+			for _, community := range conf.Disco.DefaultCommunities {
+				device = kt.SnmpDeviceConfig{
+					DeviceName: result.Name,
+					DeviceIP:   result.Host.String(),
+					Community:  community,
+					UseV1:      usev1,
+					Debug:      conf.Disco.Debug,
+					Port:       uint16(conf.Disco.Ports[0]),
+					Checked:    time.Now(),
+				}
+				serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
+				if err != nil {
+					log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
+					return
+				}
+				md, err = metadata.GetBasicDeviceMetadata(log, serv)
+				if err != nil {
+					log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
+					continue
+				}
+				break outer // We're good to go here.
 			}
-			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
-			if err != nil {
-				log.Warnf("There was an error when starting SNMP interface component -- %v.", err)
-				return
-			}
-			md, err = metadata.GetBasicDeviceMetadata(log, serv)
-			if err != nil {
-				log.Warnf("Cannot get device metadata on %s: %v. Check for correct snmp credentials.", result.Host.String(), err)
-				continue
-			}
-			break // We're good to go here.
 		}
 	}
 
