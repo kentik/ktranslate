@@ -39,20 +39,24 @@ var (
 type DeviceMetadata struct {
 	log     logger.ContextL
 	mibs    map[string]*kt.Mib
+	gconf   *kt.SnmpGlobalConfig
 	conf    *kt.SnmpDeviceConfig
 	metrics *kt.SnmpDeviceMetric
 	missing map[string]bool
 	basic   map[string]string
 }
 
-func NewDeviceMetadata(deviceMetadataMibs map[string]*kt.Mib, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetadata {
+func NewDeviceMetadata(deviceMetadataMibs map[string]*kt.Mib, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) *DeviceMetadata {
 	mibs := map[string]*kt.Mib{}
 	basic := map[string]string{}
-	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
-		basic[el.Key.(string)] = el.Value.(string)
+
+	if !gconf.NoDeviceHardcodedOids {
+		for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
+			basic[el.Key.(string)] = el.Value.(string)
+		}
 	}
 
-	if len(deviceMetadataMibs) > 0 || conf.NoUseHardcodedOids {
+	if len(deviceMetadataMibs) > 0 {
 		oids := getFromCustomMap(deviceMetadataMibs)
 		for _, oid := range oids {
 			mib := deviceMetadataMibs[oid]
@@ -70,6 +74,7 @@ func NewDeviceMetadata(deviceMetadataMibs map[string]*kt.Mib, conf *kt.SnmpDevic
 		log:     log,
 		mibs:    mibs,
 		conf:    conf,
+		gconf:   gconf,
 		basic:   basic,
 		metrics: metrics,
 		missing: map[string]bool{},
