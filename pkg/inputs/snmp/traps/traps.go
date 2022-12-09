@@ -126,7 +126,7 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 	// Set up some default tags if the device sending isn't found.
 	baseTags := map[string]string{}
 	if serviceName != "" {
-		baseTags["container_service"] = kt.UserTagPrefix + serviceName
+		baseTags[kt.UserTagPrefix+"container_service"] = serviceName
 	}
 	for k, v := range globalTags {
 		key := k
