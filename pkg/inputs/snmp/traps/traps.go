@@ -137,8 +137,6 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 	}
 	st.baseTags = baseTags
 
-	st.log.Infof("XXXX %v", st.baseTags)
-
 	return st, nil
 }
 
