@@ -204,6 +204,7 @@ type SnmpDeviceConfig struct {
 	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
 	PingSec             int               `yaml:"ping_interval_sec,omitempty"`
 	PurgeDevice         int               `yaml:"purge_after_num"` // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
+	NoUseHardcodedOids  bool              `yaml:"no_use_hardcoded_oids"`
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }

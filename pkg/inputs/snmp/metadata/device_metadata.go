@@ -25,18 +25,6 @@ var (
 
 	SNMP_device_metadata_oids = func() *orderedmap.OrderedMap {
 		m := orderedmap.NewOrderedMap()
-		// m.Set(".1.3.6.1.2.1.1.1.0", SNMP_sysDescr)
-		m.Set(".1.3.6.1.2.1.1.2.0", SNMP_sysObjectID)
-		m.Set(".1.3.6.1.2.1.1.4.0", SNMP_sysContact)
-		m.Set(".1.3.6.1.2.1.1.5.0", SNMP_sysName)
-		m.Set(".1.3.6.1.2.1.1.6.0", SNMP_sysLocation)
-		m.Set(".1.3.6.1.2.1.1.7.0", SNMP_sysServices)
-		m.Set(".1.3.6.1.6.3.10.2.1.1.0", SNMP_engineID)
-		return m
-	}()
-
-	SNMP_device_metadata_oids_disco = func() *orderedmap.OrderedMap {
-		m := orderedmap.NewOrderedMap()
 		m.Set(".1.3.6.1.2.1.1.1.0", SNMP_sysDescr)
 		m.Set(".1.3.6.1.2.1.1.2.0", SNMP_sysObjectID)
 		m.Set(".1.3.6.1.2.1.1.4.0", SNMP_sysContact)
@@ -64,7 +52,7 @@ func NewDeviceMetadata(deviceMetadataMibs map[string]*kt.Mib, conf *kt.SnmpDevic
 		basic[el.Key.(string)] = el.Value.(string)
 	}
 
-	if len(deviceMetadataMibs) > 0 {
+	if len(deviceMetadataMibs) > 0 || conf.NoUseHardcodedOids {
 		oids := getFromCustomMap(deviceMetadataMibs)
 		for _, oid := range oids {
 			mib := deviceMetadataMibs[oid]
@@ -277,7 +265,7 @@ func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.Dev
 	md := kt.DeviceMetricsMetadata{}
 
 	var oids []string
-	for el := SNMP_device_metadata_oids_disco.Front(); el != nil; el = el.Next() {
+	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
 		oids = append(oids, el.Key.(string))
 	}
 
@@ -296,7 +284,7 @@ func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.Dev
 		}
 
 		var oidName string
-		thing, ok := SNMP_device_metadata_oids_disco.Get(oidVal)
+		thing, ok := SNMP_device_metadata_oids.Get(oidVal)
 		if !ok {
 			if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
 				log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")

@@ -56,13 +56,15 @@ type InterfaceMetadata struct {
 	interfaceOids *orderedmap.OrderedMap
 }
 
-func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL) *InterfaceMetadata {
+func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, conf *kt.SnmpDeviceConfig, log logger.ContextL) *InterfaceMetadata {
 	mibs := map[string]*kt.Mib{}
 	m := orderedmap.NewOrderedMap()
 
 	// Copy the global values into this map which is per device.
-	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
-		m.Set(el.Key, el.Value)
+	if !conf.NoUseHardcodedOids {
+		for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
+			m.Set(el.Key, el.Value)
+		}
 	}
 
 	if len(interfaceMetadataMibs) > 0 {

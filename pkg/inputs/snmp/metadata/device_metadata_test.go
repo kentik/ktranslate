@@ -67,4 +67,13 @@ func TestPoll(t *testing.T) {
 	res, err = dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(res.Tables))
+
+	// Test no hardcoded. Shoudl get nothing here.
+	conf = &kt.SnmpDeviceConfig{NoUseHardcodedOids: true}
+	conf.SetTestWalker(testWalker{err: errors.New("Error"), dm: ""}) // Non nil error
+	dm = NewDeviceMetadata(nil, conf, kt.NewSnmpDeviceMetric(nil, "deviceB"), l)
+	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysName"), Name: ".1.3.6.1.2.1.1.5.0"}}, dm: ""}) // sysName.
+	res, err = dm.poll(context.Background(), nil)
+	assert.NoError(t, err)
+	assert.Equal(t, "", res.SysName)
 }
