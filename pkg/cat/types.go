@@ -9,6 +9,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
+	"github.com/kentik/ktranslate/pkg/config"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/inputs/flow"
@@ -78,6 +79,8 @@ type KTranslate struct {
 	enricher     *enrich.Enricher
 	logTee       chan string
 	authConfig   *auth.AuthConfig
+	confMgr      config.ConfigManager
+	shutdown     func(string)
 }
 
 type CustomMapper struct {

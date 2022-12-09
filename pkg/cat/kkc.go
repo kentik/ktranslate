@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/cat/auth"
+	cfgMngr "github.com/kentik/ktranslate/pkg/config"
 	"github.com/kentik/ktranslate/pkg/eggs/baseserver"
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -73,6 +74,14 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		logTee:      logTee,
 		msgsc:       make(chan *kt.Output, 60),
 		tooBig:      make(chan int, CHAN_SLACK),
+		shutdown:    shutdown,
+	}
+
+	// If there's a config manager, start this now.
+	if confMgr, err := cfgMngr.NewConfig(cfgMngr.ConfigProvider(config.CfgManager.ConfigImpl), log.GetLogger().GetUnderlyingLogger(), config); err != nil {
+		return nil, err
+	} else {
+		kc.confMgr = confMgr
 	}
 
 	if v := config.API.DeviceFile; v != "" {
@@ -197,16 +206,6 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	// Get some randomness
 	rand.Seed(time.Now().UnixNano())
 
-	// If we are monitoring the conf file, kick this off now.
-	if config.Server.MonitorConf {
-		go func() {
-			err := kc.monitorConf(config.Server, shutdown)
-			if err != nil {
-				kc.log.Errorf("Cannot monitor config: %v", err)
-			}
-		}()
-	}
-
 	return kc, nil
 }
 
@@ -233,6 +232,9 @@ func (kc *KTranslate) cleanup() {
 	}
 	if kc.syslog != nil {
 		kc.syslog.Close()
+	}
+	if kc.confMgr != nil {
+		kc.confMgr.Close()
 	}
 }
 
@@ -569,6 +571,10 @@ func (kc *KTranslate) listenHTTP() {
 func (kc *KTranslate) Run(ctx context.Context) error {
 	defer kc.cleanup()
 
+	if kc.confMgr != nil {
+		go kc.confMgr.Run(ctx, kc.newConfig)
+	}
+
 	format := formats.Format(kc.config.Format)
 	formatRollup := formats.Format(kc.config.FormatRollup)
 	compression := kt.Compression(kc.config.Compression)
@@ -646,12 +652,12 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.
 	if kc.config.SNMPInput.Enable {
 		if kc.config.EnableSNMPDiscovery { // Here, we're just returning the list of devices on the network which might speak snmp.
-			_, err := snmp.Discover(ctx, kc.log, 0, kc.config.SNMPInput, kc.apic)
+			_, err := snmp.Discover(ctx, kc.log, 0, kc.config.SNMPInput, kc.apic, kc.confMgr)
 			return err
 		}
 		assureInput()
 		kc.metrics.SnmpDeviceData = kt.NewSnmpMetricSet(kc.registry)
-		err := snmp.StartSNMPPolls(ctx, kc.inputChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log, kc.config.SNMPInput, kc.resolver)
+		err := snmp.StartSNMPPolls(ctx, kc.inputChan, kc.metrics.SnmpDeviceData, kc.registry, kc.apic, kc.log, kc.config.SNMPInput, kc.resolver, kc.confMgr)
 		if err != nil {
 			return err
 		}
