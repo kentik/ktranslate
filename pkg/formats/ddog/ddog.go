@@ -302,7 +302,7 @@ func (f *DDogFormat) fromSnmpDeviceMetric(in *kt.JCHF, ms *datadogV2.MetricPaylo
 			continue
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false)
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], true, false)
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
@@ -353,7 +353,7 @@ func (f *DDogFormat) fromSnmpInterfaceMetric(in *kt.JCHF, ms *datadogV2.MetricPa
 			continue
 		}
 		if _, ok := in.CustomBigInt[m]; ok {
-			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false)
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], true, false)
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
@@ -417,7 +417,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 				uptime := in.CustomBigInt["Uptime"]
 				uptimeSpeed := uptime * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 				if uptimeSpeed > 0 {
-					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], false)
+					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
 					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 						tags := getDDMetricTags(attrNew)
 						if totalBytes > 0 {
