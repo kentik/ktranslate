@@ -94,7 +94,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		server:                server,
 		interval:              DEFAULT_INTERVAL,
 		interfaceMetadata:     NewInterfaceMetadata(interfaceMetadataMibs, log),
-		deviceMetadata:        NewDeviceMetadata(deviceMetadataMibs, conf, metrics, log),
+		deviceMetadata:        NewDeviceMetadata(deviceMetadataMibs, gconf, conf, metrics, log),
 		jchfChan:              jchfChan,
 		metrics:               metrics,
 		deviceMetadataMibs:    deviceMetadataMibs,

@@ -65,6 +65,7 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 		m.Set(el.Key, el.Value)
 	}
 
+
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
 		for _, oid := range oids {

@@ -26,8 +26,9 @@ func (w testWalker) WalkAll(oid string) ([]gosnmp.SnmpPDU, error) {
 func TestPoll(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
 	conf := &kt.SnmpDeviceConfig{}
+	gconf := &kt.SnmpGlobalConfig{}
 	conf.SetTestWalker(testWalker{err: errors.New("Error"), dm: ""}) // Non nil error
-	dm := NewDeviceMetadata(nil, conf, kt.NewSnmpDeviceMetric(nil, "deviceA"), l)
+	dm := NewDeviceMetadata(nil, gconf, conf, kt.NewSnmpDeviceMetric(nil, "deviceA"), l)
 
 	res, err := dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
@@ -48,16 +49,16 @@ func TestPoll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 0, len(res.Tables))
 
-	// Test sysdesc
-	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysdesc"), Name: ".1.3.6.1.2.1.1.1.0"}}, dm: ""}) // SysDescr.
+	// Test sysName
+	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysName"), Name: ".1.3.6.1.2.1.1.5.0"}}, dm: ""}) // sysName.
 	res, err = dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
-	assert.Equal(t, "sysdesc", res.SysDescr)
+	assert.Equal(t, "sysName", res.SysName)
 
 	meta := map[string]*kt.Mib{
 		"1.1.1": &kt.Mib{Name: "foo"},
 	}
-	dm = NewDeviceMetadata(meta, conf, kt.NewSnmpDeviceMetric(nil, "deviceA"), l)
+	dm = NewDeviceMetadata(meta, gconf, conf, kt.NewSnmpDeviceMetric(nil, "deviceA"), l)
 	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: "not a byte-slice", Name: ".1.1.1"}}, dm: ""}) // string value.
 	res, err = dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
@@ -67,4 +68,14 @@ func TestPoll(t *testing.T) {
 	res, err = dm.poll(context.Background(), nil)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(res.Tables))
+
+	// Test no hardcoded. Should get nothing here.
+	conf = &kt.SnmpDeviceConfig{}
+	gconf = &kt.SnmpGlobalConfig{NoDeviceHardcodedOids: true}
+	conf.SetTestWalker(testWalker{err: errors.New("Error"), dm: ""}) // Non nil error
+	dm = NewDeviceMetadata(nil, gconf, conf, kt.NewSnmpDeviceMetric(nil, "deviceB"), l)
+	conf.SetTestWalker(testWalker{results: []gosnmp.SnmpPDU{{Value: []byte("sysName"), Name: ".1.3.6.1.2.1.1.5.0"}}, dm: ""}) // sysName.
+	res, err = dm.poll(context.Background(), nil)
+	assert.NoError(t, err)
+	assert.Equal(t, "", res.SysName)
 }

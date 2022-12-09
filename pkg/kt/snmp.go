@@ -265,6 +265,7 @@ type SnmpGlobalConfig struct {
 	RunPing       bool                   `yaml:"response_time"`
 	PingSec       int                    `yaml:"ping_interval_sec,omitempty"`
 	PurgeDevices  int                    `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
+	NoDeviceHardcodedOids  bool          `yaml:"no_device_hardcoded_oids"`
 	UserTags      map[string]string      `yaml:"user_tags"`
 	MatchAttr     map[string]string      `yaml:"match_attributes"`
 	ProviderMap   map[string]ProviderMap `yaml:"providers"`
