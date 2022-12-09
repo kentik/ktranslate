@@ -109,6 +109,11 @@ type KentikSinkConfig struct {
 	RelayURL string
 }
 
+// DDogSinkConfig is config for the ddog sink
+type DDogSinkConfig struct {
+	URL string
+}
+
 // RollupConfig is the config for rollups
 type RollupConfig struct {
 	JoinKey string
@@ -271,6 +276,8 @@ type Config struct {
 	KafkaSink *KafkaSinkConfig
 	// pkg/sinks/kentik
 	KentikSink *KentikSinkConfig
+	// pkg/sinks/ddog
+	DDogSink *DDogSinkConfig
 
 	// pkg/rollup
 	Rollup *RollupConfig
@@ -365,6 +372,9 @@ func DefaultConfig() *Config {
 		},
 		NewRelicMultiSink: &NewRelicMultiSinkConfig{
 			CredMap: nil,
+		},
+		DDogSink: &DDogSinkConfig{
+			URL: "",
 		},
 		FileSink: &FileSinkConfig{
 			Path:                 "./",

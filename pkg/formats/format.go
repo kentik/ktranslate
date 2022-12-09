@@ -8,6 +8,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
 	"github.com/kentik/ktranslate/pkg/formats/carbon"
+	"github.com/kentik/ktranslate/pkg/formats/ddog"
 	"github.com/kentik/ktranslate/pkg/formats/elasticsearch"
 	"github.com/kentik/ktranslate/pkg/formats/influx"
 	"github.com/kentik/ktranslate/pkg/formats/json"
@@ -42,6 +43,7 @@ const (
 	FORMAT_NR                   = "new_relic"
 	FORMAT_NRM                  = "new_relic_metric"
 	FORMAT_SPLUNK               = "splunk"
+	FORMAT_DDOG                 = "ddog"
 	FORMAT_KFLOW                = "kflow"
 )
 
@@ -65,6 +67,8 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:
 		return nrm.NewFormat(log, compression)
+	case FORMAT_DDOG:
+		return ddog.NewFormat(log, compression)
 	case FORMAT_SPLUNK:
 		return splunk.NewFormat(log, compression)
 	case FORMAT_KFLOW:

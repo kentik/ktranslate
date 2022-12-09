@@ -10,6 +10,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/sinks/ddog"
 	"github.com/kentik/ktranslate/pkg/sinks/file"
 	"github.com/kentik/ktranslate/pkg/sinks/gcloud"
 	"github.com/kentik/ktranslate/pkg/sinks/gcppubsub"
@@ -47,6 +48,7 @@ const (
 	GCloudSink         = "gcloud"
 	GCPPubSub          = "gcppubsub"
 	NewRelicMulti      = "new_relic_multi"
+	DDogSink           = "ddog"
 )
 
 func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
@@ -59,6 +61,8 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 		return kafka.NewSink(log, registry, config.KafkaSink)
 	case NewRelicSink:
 		return nr.NewSink(log, registry, tooBig, logTee, config.NewRelicSink)
+	case DDogSink:
+		return ddog.NewSink(log, registry, config.DDogSink)
 	case KentikSink:
 		return kentik.NewSink(log, registry, config)
 	case NetSink:
