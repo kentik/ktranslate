@@ -32,6 +32,8 @@ const (
 	NBar                = "nbar"
 	ASA                 = "asa"
 	PAN                 = "pan"
+	JFlow               = "jflow"
+	CFlow               = "cflow"
 )
 
 var (
@@ -137,7 +139,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			}
 		}()
 		return kt, nil
-	case Netflow5:
+	case Netflow5, JFlow, CFlow:
 		sNFL := &utils.StateNFLegacy{
 			Format: kt,
 			Logger: &KentikLog{l: kt},
