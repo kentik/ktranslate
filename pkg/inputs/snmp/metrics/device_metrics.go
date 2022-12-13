@@ -205,9 +205,27 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			}
 			dmr.customBigInt[oidName] = snmp_util.ToInt64(wrapper.variable.Value)
 		}
+	}
 
-		// If there's a script attatched here, run it now.
+	// Run a script over this now but we have to loop over again for BS reasons.
+	for _, wrapper := range results {
+		if wrapper.variable.Value == nil { // You can get nil w/out getting an error, though.
+			continue
+		}
+
+		idx := snmp_util.GetIndex(wrapper.variable.Name[1:], wrapper.oid)
+		if wrapper.mib == nil {
+			continue
+		}
+		oidName := wrapper.mib.GetName()
+
+		// This result is blocked due to a defined condition.
+		if !wrapper.checkCondition(idx, results) {
+			continue
+		}
+
 		if wrapper.mib.Script != nil {
+			dmr := assureDeviceMetrics(m, idx)
 			wrapper.mib.Script.EnrichMetric(idx, oidName, dmr.customBigInt, dmr.customStr, metricsFound)
 		}
 	}
