@@ -683,6 +683,11 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 			delete(attr, k)
 			attr[pts[1]] = v
 		}
+
+		// Make them all lower case.
+		if vs, ok := v.(string); ok {
+			attr[k] = strings.ToLower(vs)
+		}
 	}
 	if ip != nil {
 		attr["device_ip"] = ip
@@ -702,7 +707,7 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	mibTable, ok := attr["mib-table"].(string)
 	if ok {
 		// If the MIB is normalized use "/" as separator
-		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/"){
+		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/") {
 			mib = strings.TrimRight(mib, "/") + "/" + strings.TrimLeft(mibTable, "/")
 		} else {
 			mib = mib + "::" + mibTable
