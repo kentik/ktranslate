@@ -243,7 +243,7 @@ type SnmpDiscoConfig struct {
 	ReplaceDevices     bool            `yaml:"replace_devices"`
 	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
 	CheckAll           bool            `yaml:"check_all_ips,omitempty"`
-	DoubleCheckV1      bool            `yaml:"doublecheck_snmp_v1,omitempty"`
+	CheckAllVersions   bool            `yaml:"check_all_snmp_versions,omitempty"`
 	Kentik             *KentikDisco    `yaml:"kentik"`
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`

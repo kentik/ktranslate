@@ -242,7 +242,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	// Loop over all possibe v2c options here if any are set.
 	if md == nil || md.SysObjectID == "" { // Only check these if v3 hasn't found anything.
 		versions := []bool{conf.Disco.UseV1} // By default, just check v1 or v2c only.
-		if conf.Disco.DoubleCheckV1 {
+		if conf.Disco.CheckAllVersions {
 			versions = []bool{false, true} // But, if we ask for it, first check v2c and then check v1.
 		}
 	outer:
