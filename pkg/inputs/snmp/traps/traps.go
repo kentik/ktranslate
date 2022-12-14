@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -34,6 +35,7 @@ type SnmpTrap struct {
 	resolv    *resolv.Resolver
 	ctx       context.Context
 	deviceMap map[string]*kt.SnmpDeviceConfig
+	baseTags  map[string]string
 }
 
 // Move to util?
@@ -50,7 +52,8 @@ func (l logWrapper) Printf(format string, v ...interface{}) {
 	l.printf(format, v...)
 }
 
-func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB, log logger.ContextL, resolv *resolv.Resolver) (*SnmpTrap, error) {
+func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB,
+	log logger.ContextL, resolv *resolv.Resolver, serviceName string, globalTags map[string]string) (*SnmpTrap, error) {
 	st := &SnmpTrap{
 		jchfChan:  jchfChan,
 		log:       log,
@@ -120,6 +123,20 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 		st.deviceMap[device.DeviceIP] = device
 	}
 
+	// Set up some default tags if the device sending isn't found.
+	baseTags := map[string]string{}
+	if serviceName != "" {
+		baseTags[kt.UserTagPrefix+"container_service"] = serviceName
+	}
+	for k, v := range globalTags {
+		key := k
+		if !strings.HasPrefix(key, kt.UserTagPrefix) {
+			key = kt.UserTagPrefix + k
+		}
+		baseTags[key] = v
+	}
+	st.baseTags = baseTags
+
 	return st, nil
 }
 
@@ -160,6 +177,9 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 			}
 		}
 		dst.Provider = kt.ProviderTrapUnknown
+		for k, v := range s.baseTags {
+			dst.CustomStr[k] = v
+		}
 	}
 
 	// What trap is this from?

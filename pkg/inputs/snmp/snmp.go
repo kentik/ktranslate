@@ -249,7 +249,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 
 func launchSnmpTrap(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, log logger.ContextL, resolv *resolv.Resolver) error {
 	log.Infof("Client SNMP: Running SNMP Trap listener on %s", conf.Trap.Listen)
-	tl, err := traps.NewSnmpTrapListener(ctx, conf, jchfChan, metrics, mibdb, log, resolv)
+	tl, err := traps.NewSnmpTrapListener(ctx, conf, jchfChan, metrics, mibdb, log, resolv, ServiceName, cleanTagsForCopy(conf))
 	if err != nil {
 		return err
 	}
@@ -569,4 +569,22 @@ func cleanForSave(cfg *kt.SnmpConfig) {
 		set(device.UserTags, kt.DeviceProvider)
 		set(device.MatchAttr, kt.DeviceProvider)
 	}
+}
+
+// Strip out any tags which shouldn't be there for traps.
+func cleanTagsForCopy(cfg *kt.SnmpConfig) map[string]string {
+	if cfg == nil || cfg.Global == nil {
+		return nil
+	}
+
+	clean := map[string]string{}
+	for k, v := range cfg.Global.UserTags {
+		if nk, ok := matchesPrefix(k, kt.GlobalProvider); ok {
+			if v != "" {
+				clean[nk] = v
+			}
+		}
+	}
+
+	return clean
 }
