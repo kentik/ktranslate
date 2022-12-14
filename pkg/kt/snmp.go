@@ -243,6 +243,7 @@ type SnmpDiscoConfig struct {
 	ReplaceDevices     bool            `yaml:"replace_devices"`
 	NoDedup            bool            `yaml:"no_dedup_engine_id,omitempty"`
 	CheckAll           bool            `yaml:"check_all_ips,omitempty"`
+	CheckAllVersions   bool            `yaml:"check_all_snmp_versions,omitempty"`
 	Kentik             *KentikDisco    `yaml:"kentik"`
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`
@@ -254,21 +255,21 @@ type ProviderMap struct {
 }
 
 type SnmpGlobalConfig struct {
-	PollTimeSec   int                    `yaml:"poll_time_sec"`
-	DropIfOutside bool                   `yaml:"drop_if_outside_poll"`
-	MibProfileDir string                 `yaml:"mib_profile_dir"`
-	MibDB         string                 `yaml:"mibs_db"`
-	MibsEnabled   []string               `yaml:"mibs_enabled"`
-	TimeoutMS     int                    `yaml:"timeout_ms"`
-	Retries       int                    `yaml:"retries"`
-	GlobalV3      *V3SNMPConfig          `yaml:"global_v3"`
-	RunPing       bool                   `yaml:"response_time"`
-	PingSec       int                    `yaml:"ping_interval_sec,omitempty"`
-	PurgeDevices  int                    `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
-	NoDeviceHardcodedOids  bool          `yaml:"no_device_hardcoded_oids"`
-	UserTags      map[string]string      `yaml:"user_tags"`
-	MatchAttr     map[string]string      `yaml:"match_attributes"`
-	ProviderMap   map[string]ProviderMap `yaml:"providers"`
+	PollTimeSec           int                    `yaml:"poll_time_sec"`
+	DropIfOutside         bool                   `yaml:"drop_if_outside_poll"`
+	MibProfileDir         string                 `yaml:"mib_profile_dir"`
+	MibDB                 string                 `yaml:"mibs_db"`
+	MibsEnabled           []string               `yaml:"mibs_enabled"`
+	TimeoutMS             int                    `yaml:"timeout_ms"`
+	Retries               int                    `yaml:"retries"`
+	GlobalV3              *V3SNMPConfig          `yaml:"global_v3"`
+	RunPing               bool                   `yaml:"response_time"`
+	PingSec               int                    `yaml:"ping_interval_sec,omitempty"`
+	PurgeDevices          int                    `yaml:"purge_devices_after_num"` // Delete any device if its not seen after X discovery attempts. Default is 0, which means things never get purged.
+	NoDeviceHardcodedOids bool                   `yaml:"no_device_hardcoded_oids"`
+	UserTags              map[string]string      `yaml:"user_tags"`
+	MatchAttr             map[string]string      `yaml:"match_attributes"`
+	ProviderMap           map[string]ProviderMap `yaml:"providers"`
 }
 
 type SnmpConfig struct {
