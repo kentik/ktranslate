@@ -88,9 +88,6 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			if table, ok := lastMetadata.Tables[idx]; ok {
 				for k, v := range table.Customs {
 					attr[k] = v.GetValue()
-					if s := v.GetScript(); s != nil {
-						s.EnrichMib(idx, k, attr, lastMetadata)
-					}
 				}
 			}
 			// If the index is longer, see if there's a parent table to look into also.
@@ -100,9 +97,6 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				if table, ok := lastMetadata.Tables[parent]; ok {
 					for k, v := range table.Customs {
 						attr[k] = v.GetValue()
-						if s := v.GetScript(); s != nil {
-							s.EnrichMib(idx, k, attr, lastMetadata)
-						}
 					}
 				}
 			}
@@ -128,6 +122,29 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				for k, v := range ii {
 					if v != "" {
 						attr["if_"+k] = v
+					}
+				}
+			}
+		}
+
+		// Now run the metadata scripts in their own loop.
+		if idx != "" {
+			if table, ok := lastMetadata.Tables[idx]; ok {
+				for k, v := range table.Customs {
+					if s := v.GetScript(); s != nil {
+						s.EnrichMib(idx, k, attr, lastMetadata)
+					}
+				}
+			}
+			// If the index is longer, see if there's a parent table to look into also.
+			pts := strings.Split(idx, ".")
+			if len(pts) > 1 {
+				parent := strings.Join(pts[0:len(pts)-1], ".")
+				if table, ok := lastMetadata.Tables[parent]; ok {
+					for k, v := range table.Customs {
+						if s := v.GetScript(); s != nil {
+							s.EnrichMib(idx, k, attr, lastMetadata)
+						}
 					}
 				}
 			}
