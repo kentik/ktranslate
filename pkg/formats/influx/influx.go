@@ -37,6 +37,7 @@ type InfluxFormat struct {
 	mux          sync.RWMutex
 	metrics      *InfluxMetrics
 	config       *ktranslate.InfluxDBFormatConfig
+	rates        map[string]int64
 }
 
 type InfluxMetrics struct {
@@ -268,6 +269,7 @@ func NewFormat(log logger.Underlying, registry go_metrics.Registry, compression 
 			EncoderErrors: go_metrics.GetOrRegisterCounter("influx_encoder_errors", registry),
 		},
 		config: cfg,
+		rates:  map[string]int64{},
 	}
 
 	namespaceTokenSep = cfg.NamespaceToken
@@ -534,14 +536,25 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 				pts := strings.SplitN(metricName, namespaceTokenSep, 2)
 				metricName = pts[1]
 			}
-			if name.Format == kt.FloatMS {
+			switch name.Format {
+			case kt.FloatMS:
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{metricName: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
-			} else {
+			case kt.Rate:
+				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m])
+				if found {
+					results = append(results, InfluxData{
+						Name:      f.config.MeasurementPrefix + mib,
+						Fields:    map[string]int64{metricName: delta},
+						Timestamp: in.Timestamp,
+						Tags:      attrNew,
+					})
+				}
+			default:
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{metricName: int64(in.CustomBigInt[m])},
@@ -583,23 +596,35 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 				pts := strings.SplitN(metricName, namespaceTokenSep, 2)
 				metricName = pts[1]
 			}
-			if name.Format == kt.FloatMS {
+			switch name.Format {
+			case kt.FloatMS:
 				results = append(results, InfluxData{
 					Name:        f.config.MeasurementPrefix + mib,
 					FieldsFloat: map[string]float64{metricName: float64(float64(in.CustomBigInt[m]) / 1000)},
 					Timestamp:   in.Timestamp,
 					Tags:        attrNew,
 				})
-			} else {
+			case kt.Rate:
+				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m])
+				if found {
+					results = append(results, InfluxData{
+						Name:      f.config.MeasurementPrefix + mib,
+						Fields:    map[string]int64{metricName: delta},
+						Timestamp: in.Timestamp,
+						Tags:      attrNew,
+					})
+				}
+			default:
 				results = append(results, InfluxData{
 					Name:      f.config.MeasurementPrefix + mib,
 					Fields:    map[string]int64{metricName: int64(in.CustomBigInt[m])},
 					Timestamp: in.Timestamp,
 					Tags:      attrNew,
 				})
-				if sv, ok := in.CustomStr[kt.StringPrefix+m]; ok {
-					results[len(results)-1].FieldsString = map[string]string{m + "_str": sv}
-				}
+			}
+			// Adjust string enums here.
+			if sv, ok := in.CustomStr[kt.StringPrefix+m]; ok {
+				results[len(results)-1].FieldsString = map[string]string{m + "_str": sv}
 			}
 		}
 	}
@@ -611,6 +636,17 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	}
 
 	return results
+}
+
+func (f *InfluxFormat) getDelta(name string, attr map[string]interface{}, value int64) (int64, bool) {
+	key := fmt.Sprintf("%s.%v", name, attr["index"])
+	last, ok := f.rates[key]
+	f.rates[key] = value // Save the last value to compare on.
+	if !ok {
+		return 0, false
+	}
+
+	return value - last, true
 }
 
 func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxData, attr map[string]interface{}, profileName string, ip interface{}) []InfluxData {
@@ -702,7 +738,7 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	mibTable, ok := attr["mib-table"].(string)
 	if ok {
 		// If the MIB is normalized use "/" as separator
-		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/"){
+		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/") {
 			mib = strings.TrimRight(mib, "/") + "/" + strings.TrimLeft(mibTable, "/")
 		} else {
 			mib = mib + "::" + mibTable

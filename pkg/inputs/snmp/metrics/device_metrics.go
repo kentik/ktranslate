@@ -161,7 +161,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 
 		dmr := assureDeviceMetrics(m, idx)
-		metricsFound[oidName] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
+		metricsFound[oidName] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur, Format: wrapper.mib.Format}
 		switch wrapper.variable.Type {
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(wrapper.variable.Value.([]byte))

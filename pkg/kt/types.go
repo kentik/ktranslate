@@ -83,6 +83,7 @@ const (
 	PluginSyslog   = "ktranslate-syslog"
 	PluginHealth   = "ktranslate-health"
 	FloatMS        = "float_ms"
+	Rate           = "rate"
 	InvalidEnum    = "invalid enum"
 	DeviceTagTable = "KT_Device_Tag"
 	FromLambda     = "awslambda"
