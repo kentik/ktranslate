@@ -545,7 +545,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 					Tags:        attrNew,
 				})
 			case kt.Rate:
-				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m])
+				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m], in.CustomBigInt["Uptime"])
 				if found {
 					results = append(results, InfluxData{
 						Name:      f.config.MeasurementPrefix + mib,
@@ -605,7 +605,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 					Tags:        attrNew,
 				})
 			case kt.Rate:
-				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m])
+				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m], in.CustomBigInt["Uptime"])
 				if found {
 					results = append(results, InfluxData{
 						Name:      f.config.MeasurementPrefix + mib,
@@ -638,7 +638,7 @@ func (f *InfluxFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []InfluxData {
 	return results
 }
 
-func (f *InfluxFormat) getDelta(name string, attr map[string]interface{}, value int64) (int64, bool) {
+func (f *InfluxFormat) getDelta(name string, attr map[string]interface{}, value int64, uptime int64) (int64, bool) {
 	key := fmt.Sprintf("%s.%v", name, attr["index"])
 	last, ok := f.rates[key]
 	f.rates[key] = value // Save the last value to compare on.
@@ -646,7 +646,13 @@ func (f *InfluxFormat) getDelta(name string, attr map[string]interface{}, value 
 		return 0, false
 	}
 
-	return value - last, true
+	// If we don't know how long we've been going for, return false here also.
+	if uptime == 0 {
+		return 0, false
+	}
+
+	// Uptime is in centi-seconds, divide by 100 to get seconds elapsed.
+	return int64(float64(value-last) / (float64(uptime) / 100.)), true
 }
 
 func (f *InfluxFormat) setRates(direction string, in *kt.JCHF, results []InfluxData, attr map[string]interface{}, profileName string, ip interface{}) []InfluxData {
