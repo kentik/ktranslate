@@ -85,6 +85,26 @@ func TestGetMib(t *testing.T) {
 
 }
 
+func TestGetDelta(t *testing.T) {
+	assert := assert.New(t)
+	f := InfluxFormat{
+		rates: map[string]int64{},
+	}
+
+	delta, found := f.getDelta("foo", map[string]interface{}{"index": 11}, 11, 100)
+	assert.Equal(false, found) // First time is always false.
+	delta, found = f.getDelta("foo", map[string]interface{}{"index": 11}, 11, 100)
+	assert.Equal(true, found)   // Second time should work.
+	assert.Equal(0, int(delta)) // No change so 0.
+
+	delta, found = f.getDelta("foo", map[string]interface{}{"index": 11}, 21, 100)
+	assert.Equal(true, found)
+	assert.Equal(10, int(delta)) // 1 second later its 21 so a delta of 10.
+
+	delta, found = f.getDelta("foo", map[string]interface{}{"index": 11}, 21, 0)
+	assert.Equal(false, found) // No time change so have to return false here.
+}
+
 const (
 	clean = "the quick red fox jumps over the lazy brown dogs"
 	dirty = `the quick red fox
