@@ -188,6 +188,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					p.log.Warnf("Skipping a counter datapoint for the period %v -- poll scheduled for %v, but only dequeued at %v",
 						scheduledTime.Truncate(counterAlignment), scheduledTime, startTime)
 					p.interfaceMetrics.DiscardDeltaState()
+					p.deviceMetrics.DiscardDeltaState()
 					p.metrics.Fail.Update(kt.SNMP_BAD_POLL_TIMEOUT)
 					continue
 				}
@@ -199,6 +200,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					// We didn't collect all the metrics here, which means that our delta values are
 					// off, and we have to discard them.
 					p.interfaceMetrics.DiscardDeltaState()
+					p.deviceMetrics.DiscardDeltaState()
 					continue
 				}
 
@@ -213,6 +215,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					// poll are already over five minutes old, we can no longer use them as the basis for deltas.
 					// Throw all the values away, and start over with the next polling cycle
 					p.interfaceMetrics.DiscardDeltaState()
+					p.deviceMetrics.DiscardDeltaState()
 					continue
 				}
 

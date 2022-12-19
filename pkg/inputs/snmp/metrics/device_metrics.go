@@ -16,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
+	"github.com/kentik/ktranslate/pkg/kt/counters"
 )
 
 type pingStatus struct {
@@ -32,6 +33,7 @@ type DeviceMetrics struct {
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
 	ping        pingStatus
+	counters    *counters.CounterSet
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -59,7 +61,12 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		profileName: profile.GetProfileName(conf.InstrumentationName),
 		oids:        oidMap,
 		missing:     map[string]bool{},
+		counters:    counters.NewCounterSetWithId("Base"),
 	}
+}
+
+func (dm *DeviceMetrics) DiscardDeltaState() {
+	dm.counters = counters.NewCounterSetWithId("Base")
 }
 
 type deviceMetricRow struct {
@@ -125,6 +132,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 
 	// Get uptime manually here.
 	var uptime int64
+	var uptimeDelta uint64
 	uptimeResults, err := snmp_util.WalkOID(ctx, dm.conf, sysUpTime, server, dm.log, "CustomDeviceMetrics")
 	if err == nil {
 		// You might think that if err == nil then you definitely got back some
@@ -132,6 +140,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		// is not an error, but also not what you're looking for.
 		if len(uptimeResults) > 0 {
 			uptime = snmp_util.ToInt64(uptimeResults[0].Value)
+			uptimeDelta = dm.counters.SetValueAndReturnDelta("Uptime", uint64(uptime))
 		}
 	} else {
 		m["uptime"] = &deviceMetricRow{Error: fmt.Sprintf("Walking %s: %v", sysUpTime, err),
@@ -244,6 +253,9 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		dst.DeviceName = dm.conf.DeviceName
 		dst.SrcAddr = dm.conf.DeviceIP
 		dst.Timestamp = time.Now().Unix()
+		if uptimeDelta > 0 {
+			dst.CustomBigInt["uptime_delta"] = int64(uptimeDelta) // Record this here for setting rates down the road.
+		}
 		dst.CustomMetrics = metricsFound        // Add this in so that we know what metrics to pull out down the road.
 		if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage

@@ -545,7 +545,7 @@ func (f *InfluxFormat) fromSnmpDeviceMetric(in *kt.JCHF) []InfluxData {
 					Tags:        attrNew,
 				})
 			case kt.Rate:
-				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m], in.CustomBigInt["Uptime"])
+				delta, found := f.getDelta(m, attrNew, in.CustomBigInt[m], in.CustomBigInt["uptime_delta"])
 				if found {
 					results = append(results, InfluxData{
 						Name:      f.config.MeasurementPrefix + mib,

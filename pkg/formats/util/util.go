@@ -31,6 +31,7 @@ var (
 		"server_nw_latency_ms":    true,
 		"connection_id":           true,
 		"service_name":            true,
+		"uptime_delta":            true,
 	}
 )
 
