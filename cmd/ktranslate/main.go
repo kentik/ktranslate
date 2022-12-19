@@ -11,6 +11,7 @@ import (
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/cmd/version"
 	"github.com/kentik/ktranslate/pkg/cat"
+	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	"github.com/imdario/mergo"
@@ -542,7 +543,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 				cfg.Rollup.TopK = v
 			case "rollups":
-				cfg.Rollup.Formats = strings.Split(val, ",")
+				cfg.Rollup.Formats = strings.Split(val, filter.AndToken)
 			// pkg/eggs/kmux
 			case "dir":
 				cfg.KMux.Dir = val
@@ -571,7 +572,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.API.DeviceFile = val
 			// pkg/filter
 			case "filters":
-				cfg.Filters = strings.Split(val, ",")
+				cfg.Filters = strings.Split(val, filter.AndToken)
 			// pkg/inputs/syslog
 			case "syslog.udp":
 				v, err := strconv.ParseBool(val)
