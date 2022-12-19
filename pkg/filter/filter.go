@@ -21,15 +21,26 @@ const (
 	Int               = "int"
 	Addr              = "addr"
 
-	OrToken = " or "
+	OrToken  = " or "
+	AndToken = " and "
 )
 
 var (
-	filters string
+	filters FilterFlag
 )
 
+type FilterFlag []string
+
+func (ff *FilterFlag) String() string {
+	return strings.Join(*ff, AndToken)
+}
+func (ff *FilterFlag) Set(val string) error {
+	*ff = append(*ff, strings.TrimSpace(val))
+	return nil
+}
+
 func init() {
-	flag.StringVar(&filters, "filters", "", "Any filters to use. Format: type dimension operator value")
+	flag.Var(&filters, "filters", "Any filters to use. Format: type dimension operator value")
 }
 
 type Operator string

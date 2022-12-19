@@ -10,6 +10,7 @@ import (
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -28,13 +29,23 @@ const (
 )
 
 var (
-	rollups string
+	rollups RollupFlag
 	keyJoin string
 	topK    int
 )
 
+type RollupFlag []string
+
+func (ff *RollupFlag) String() string {
+	return strings.Join(*ff, filter.AndToken)
+}
+func (ff *RollupFlag) Set(val string) error {
+	*ff = append(*ff, strings.TrimSpace(val))
+	return nil
+}
+
 func init() {
-	flag.StringVar(&rollups, "rollups", "", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
+	flag.Var(&rollups, "rollups", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
 	flag.StringVar(&keyJoin, "rollup_key_join", "^", "Token to use to join dimension keys together")
 	flag.IntVar(&topK, "rollup_top_k", 10, "Export only these top values")
 }
