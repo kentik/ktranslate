@@ -200,7 +200,7 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		ctl <- true
 	}()
 
-	log.Infof("%s Host found at %s, Manufacturer: %s, Name: %s -- now attepting checking snmp connectivity", posit, result.Host.String(), result.Manufacturer, result.Name)
+	log.Infof("%s Host found at %s, Manufacturer: %s, Name: %s -- now attempting checking snmp connectivity", posit, result.Host.String(), result.Manufacturer, result.Name)
 	var device kt.SnmpDeviceConfig
 	var md *kt.DeviceMetricsMetadata
 	var err error
