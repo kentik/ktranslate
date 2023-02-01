@@ -447,13 +447,11 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				AllowDup:     metric.Symbol.AllowDup,
 				Condition:    metric.Symbol.GetCondition(p),
 			}
+
 			if len(mib.Enum) > 0 {
-				mib.EnumRev = make(map[int64]string)
+				indexEnum(mib)
 			}
-			for k, v := range mib.Enum {
-				mib.Enum[strings.ToLower(k)] = v
-				mib.EnumRev[v] = k
-			}
+
 			if metric.Symbol.PollTime > 0 {
 				if counterTimeSec > metric.Symbol.PollTime {
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", metric.Symbol.Name, metric.Symbol.PollTime, counterTimeSec)
@@ -502,13 +500,11 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				AllowDup:     s.AllowDup,
 				Condition:    s.GetCondition(p),
 			}
+
 			if len(mib.Enum) > 0 {
-				mib.EnumRev = make(map[int64]string)
+				indexEnum(mib)
 			}
-			for k, v := range mib.Enum {
-				mib.Enum[strings.ToLower(k)] = v
-				mib.EnumRev[v] = k
-			}
+
 			if s.PollTime > 0 {
 				if counterTimeSec > s.PollTime {
 					p.Infof("SNMP: %s mib poll time of %d is less than device time of %d. Switching to using this interval.", s.Name, s.PollTime, counterTimeSec)
@@ -586,13 +582,11 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 				Enum:       tag.Column.Enum,
 				AllowDup:   tag.Column.AllowDup,
 			}
+
 			if len(mib.Enum) > 0 {
-				mib.EnumRev = make(map[int64]string)
+				indexEnum(mib)
 			}
-			for k, v := range mib.Enum {
-				mib.Enum[strings.ToLower(k)] = v
-				mib.EnumRev[v] = k
-			}
+
 			if len(tag.Column.MatchAttr) > 0 {
 				mib.MatchAttr = map[string]*regexp.Regexp{}
 				for _, restr := range tag.Column.MatchAttr {
@@ -641,13 +635,11 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Enum:       t.Column.Enum,
 					AllowDup:   t.Column.AllowDup,
 				}
+
 				if len(mib.Enum) > 0 {
-					mib.EnumRev = make(map[int64]string)
+					indexEnum(mib)
 				}
-				for k, v := range mib.Enum {
-					mib.Enum[strings.ToLower(k)] = v
-					mib.EnumRev[v] = k
-				}
+
 				if mib.Table != "" {
 					mib.OtherTables = map[string]bool{mib.Table: true}
 				}
@@ -938,4 +930,17 @@ func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
 		}
 	}
 	return nil
+}
+
+func indexEnum(mib *kt.Mib) {
+	enum := mib.Enum
+
+	mib.Enum = make(map[string]int64, len(enum)*2)
+	mib.EnumRev = make(map[int64]string, len(enum))
+
+	for k, v := range enum {
+		mib.Enum[k] = v
+		mib.Enum[strings.ToLower(k)] = v
+		mib.EnumRev[v] = k
+	}
 }
