@@ -363,10 +363,14 @@ var keepAcrossTables = map[string]bool{
 }
 
 var allowSysAttr = map[string]bool{
-	"Uptime":   true,
-	"MinRttMs": true,
-	"MaxRttMs": true,
-	"AvgRttMs": true,
+	"Uptime":        true,
+	"MinRttMs":      true,
+	"MaxRttMs":      true,
+	"AvgRttMs":      true,
+	"StdDevRtt":     true,
+	"PacketsSent":   true,
+	"PacketsRecv":   true,
+	"PacketLossPct": true,
 }
 
 func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.MetricInfo, lm *kt.LastMetadata, gentleCardinality bool, dropSrcAddr bool) map[string]interface{} {
