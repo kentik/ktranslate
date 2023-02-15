@@ -65,7 +65,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: kentik/ktranslate:kentik, quay.io/kentik/ktranslate:kentik
+          tags: kentik/ktranslate:kentik-${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:kentik, quay.io/kentik/ktranslate:kentik
           build-args: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
             KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
