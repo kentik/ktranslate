@@ -20,6 +20,7 @@ RUN curl -o /tmp/asn.tar.gz "https://download.maxmind.com/app/geoip_download?edi
 
 # snmp profiles
 FROM alpine:latest as snmp
+ARG KENTIK_SNMP_PROFILE_REPO
 RUN apk add -U git
 
 # If there is a branch of snmp-profiles to use, switch over here now.
