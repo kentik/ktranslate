@@ -5,6 +5,8 @@ on:
     branches:
       - kentik
 
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -65,10 +67,10 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: kentik/ktranslate:kentik, quay.io/kentik/ktranslate:kentik
+          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:kentik, quay.io/kentik/ktranslate:kentik
           build-args: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
             KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
-            KENTIK_SNMP_PROFILE_BRANCH=kentik
+            KENTIK_SNMP_PROFILE_REPO=https://github.com/kentik/collection-profiles
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}

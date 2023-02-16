@@ -20,14 +20,15 @@ RUN curl -o /tmp/asn.tar.gz "https://download.maxmind.com/app/geoip_download?edi
 
 # snmp profiles
 FROM alpine:latest as snmp
+ARG KENTIK_SNMP_PROFILE_REPO
 RUN apk add -U git
 
 # If there is a branch of snmp-profiles to use, switch over here now.
-RUN if [ -z "${KENTIK_SNMP_PROFILE_BRANCH}" ]; then \
+RUN if [ -z "${KENTIK_SNMP_PROFILE_REPO}" ]; then \
     git clone https://github.com/kentik/snmp-profiles /snmp; \
 else \
-    echo "picking branch ${KENTIK_SNMP_PROFILE_BRANCH} for snmp profiles"; \
-    git clone --branch ${KENTIK_SNMP_PROFILE_BRANCH} https://github.com/kentik/snmp-profiles /snmp; \
+    echo "picking repo ${KENTIK_SNMP_PROFILE_REPO} for snmp profiles"; \
+    git clone ${KENTIK_SNMP_PROFILE_REPO} /snmp; \
 fi
 
 # main image
