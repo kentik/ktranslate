@@ -355,13 +355,26 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	dst.DeviceName = dm.conf.DeviceName
 	dst.SrcAddr = dm.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
-	dst.CustomMetrics = map[string]kt.MetricInfo{"PollingHealth": kt.MetricInfo{Oid: oid, Mib: mib, Profile: dm.profileName}}
+	dst.CustomMetrics = map[string]kt.MetricInfo{
+		"PollingHealth": {Oid: oid, Mib: mib, Profile: dm.profileName},
+		"PollingStatus": {Oid: oid, Mib: mib, Profile: dm.profileName},
+	}
 	dm.conf.SetUserTags(dst.CustomStr)
 	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
-	dst.CustomBigInt["PollingHealth"] = dm.metrics.Fail.Value()
-	reasonVal := kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
+
+	pollingHealth := dm.metrics.Fail.Value()
+	pollingStatus := int64(0)
+
+	if pollingHealth == kt.SNMP_GOOD {
+		pollingStatus = 1
+	}
+
+	dst.CustomBigInt["PollingHealth"] = pollingHealth
+	dst.CustomBigInt["PollingStatus"] = pollingStatus
+
+	reasonVal := kt.SNMP_STATUS_MAP[pollingHealth]
 	pts := strings.Split(reasonVal, ": ")
 	if len(pts) == 2 {
 		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = pts[0]
@@ -369,6 +382,7 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	} else {
 		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = reasonVal
 	}
+
 	return []*kt.JCHF{dst}
 }
 
