@@ -121,7 +121,11 @@ require (
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
+<<<<<<< HEAD
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
+=======
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+>>>>>>> e7139e4 (Bump golang.org/x/net from 0.0.0-20220425223048-2871e0cb64e4 to 0.7.0 (#530))
 	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
