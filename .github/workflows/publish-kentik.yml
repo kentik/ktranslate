@@ -1,4 +1,5 @@
 name: Publish Kentik
+run-name: ${{ inputs.message }}
 
 on:
   push:
@@ -6,6 +7,9 @@ on:
       - kentik
 
   workflow_dispatch:
+    inputs:
+      message:
+        type: string
 
 jobs:
   deploy:
