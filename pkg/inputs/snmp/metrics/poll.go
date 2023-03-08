@@ -26,6 +26,7 @@ type Poller struct {
 	jchfChan         chan []*kt.JCHF
 	metrics          *kt.SnmpDeviceMetric
 	counterTimeSec   int
+	jitterTimeSec    int
 	dropIfOutside    bool
 	pinger           *ping.Pinger
 	extension        extension.Extension
@@ -43,6 +44,11 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	if counterTimeSec < 30 {
 		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
 		counterTimeSec = 30
+	}
+
+	jitterTimeSec := 15 // This is how long to spead the polling load out across.
+	if gconf.JitterTimeSec > 0 {
+		jitterTimeSec = gconf.JitterTimeSec
 	}
 
 	// Default is not not drop.
@@ -70,6 +76,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		interfaceMetrics: NewInterfaceMetrics(gconf, conf, metrics, interfaceMetricMibs, profile, counterTimeSec, log),
 		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, deviceMetricMibs, profile, log),
 		counterTimeSec:   counterTimeSec,
+		jitterTimeSec:    jitterTimeSec,
 		dropIfOutside:    dropIfOutside,
 	}
 
@@ -99,6 +106,11 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		counterTimeSec = 30
 	}
 
+	jitterTimeSec := 15 // This is how long to spead the polling load out across.
+	if gconf.JitterTimeSec > 0 {
+		jitterTimeSec = gconf.JitterTimeSec
+	}
+
 	pingSec := conf.PingSec
 	if pingSec == 0 { // If not per device, try per global.
 		pingSec = gconf.PingSec
@@ -112,6 +124,7 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		log:            log,
 		metrics:        metrics,
 		counterTimeSec: counterTimeSec,
+		jitterTimeSec:  jitterTimeSec,
 		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
 	}
 
@@ -140,11 +153,17 @@ func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig
 		counterTimeSec = 30
 	}
 
+	jitterTimeSec := 15 // This is how long to spead the polling load out across.
+	if gconf.JitterTimeSec > 0 {
+		jitterTimeSec = gconf.JitterTimeSec
+	}
+
 	poller := Poller{
 		jchfChan:       jchfChan,
 		log:            log,
 		metrics:        metrics,
 		counterTimeSec: counterTimeSec,
+		jitterTimeSec:  jitterTimeSec,
 		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
 	}
 
@@ -167,7 +186,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
 	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
 	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
-	jitterWindow := 15 * time.Second
+	jitterWindow := time.Duration(p.jitterTimeSec) * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 	statusCheck := time.NewTicker(STATUS_CHECK_TIME)
@@ -278,7 +297,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
 	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
 	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
-	jitterWindow := 15 * time.Second
+	jitterWindow := time.Duration(p.jitterTimeSec) * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
