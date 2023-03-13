@@ -57,7 +57,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		log:         log,
 		conf:        conf,
 		metrics:     metrics,
-		profile:     profile,
+		profile:     profile, // Danger, profile can be nil.
 		profileName: profile.GetProfileName(conf.InstrumentationName),
 		oids:        oidMap,
 		missing:     map[string]bool{},
@@ -144,12 +144,6 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	}
 
 	var mib string
-	for _, m := range dm.profile.Metrics {
-		// FIXME: proper OID allocation
-		if m.Table.Oid == ".1.2.3.1" {
-			mib = m.Table.Name
-		}
-	}
 
 	// Map back into types we know about.
 	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Mib: mib, Profile: dm.profileName}}
@@ -339,13 +333,6 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	mib := "computed"
 	oid := "computed"
 
-	for _, m := range dm.profile.Metrics {
-		if m.Table.Oid == ".1.2.3.2" {
-			mib = m.Table.Name
-			oid = m.Table.Oid
-		}
-	}
-
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
 	dst.CustomInt = map[string]int32{}
@@ -397,13 +384,6 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 
 	mib := "computed"
 	oid := "computed"
-
-	for _, m := range dm.profile.Metrics {
-		if m.Table.Oid == ".1.2.3.3" {
-			mib = m.Table.Name
-			oid = m.Table.Oid
-		}
-	}
 
 	stats := pinger.Statistics()
 	dst := kt.NewJCHF()
