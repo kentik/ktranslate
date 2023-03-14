@@ -153,9 +153,8 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		}
 	}
 
-	var mib string
-
 	// Map back into types we know about.
+	mib, _ := dm.profile.GetMibAndOid()
 	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Mib: mib, Profile: dm.profileName}}
 	for _, wrapper := range results {
 		if wrapper.variable.Value == nil { // You can get nil w/out getting an error, though.
@@ -356,8 +355,7 @@ func assureDeviceMetrics(m map[string]*deviceMetricRow, index string) *deviceMet
 
 // Return a flow with status of SNMP, reguardless of if the rest of the system is working.
 func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
-	mib := "computed"
-	oid := "computed"
+	mib, oid := dm.profile.GetMibAndOid()
 
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
@@ -408,9 +406,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		return nil, nil
 	}
 
-	mib := "computed"
-	oid := "computed"
-
+	mib, oid := dm.profile.GetMibAndOid()
 	stats := pinger.Statistics()
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
