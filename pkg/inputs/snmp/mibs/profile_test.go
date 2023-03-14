@@ -129,6 +129,29 @@ func TestFindProfile(t *testing.T) {
 	}
 }
 
+func TestGetMibAndOid(t *testing.T) {
+	fooPro := Profile{Metrics: []MIB{MIB{Table: OID{Oid: ".1.2.3.3", Name: "foo"}}}}
+
+	tests := map[string][]*Profile{
+		"foo": []*Profile{
+			&Profile{Metrics: []MIB{MIB{Table: OID{Oid: ".1.2.3.3", Name: "foo"}}}},
+			&fooPro,
+			&fooPro, // Caching.
+			&fooPro,
+		},
+		"computed": []*Profile{
+			nil, // Nil case.
+			&Profile{Metrics: []MIB{MIB{Table: OID{Oid: ".1.2.3.3.1", Name: "foo"}}}}}, // Not found case.
+	}
+
+	for expected, profiles := range tests {
+		for _, profile := range profiles {
+			mib, _ := profile.GetMibAndOid()
+			assert.Equal(t, expected, mib)
+		}
+	}
+}
+
 func TestPrune(t *testing.T) {
 	mibs := map[string]*kt.Mib{
 		".1.3.6.1.4.1.9.9.48.1.1.1.5": &kt.Mib{Tag: "MemoryUsed"},

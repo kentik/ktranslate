@@ -75,11 +75,39 @@ type Profile struct {
 	MatchesList      []Match           `yaml:"matches_list"`
 	SysMap           map[string]string
 	extended         bool
+	cMib             string
+	cOid             string
 }
 
 var (
 	commentRE = regexp.MustCompile(`\- (.*?)\#(.*)$`)
 )
+
+func (p *Profile) GetMibAndOid() (mib string, oid string) {
+	oid = "computed"
+	mib = "computed"
+	if p == nil {
+		return
+	}
+
+	if p.cMib != "" { // Cache if possible.
+		oid = p.cOid
+		mib = p.cMib
+		return
+	}
+
+	for _, m := range p.Metrics {
+		if m.Table.Oid == ".1.2.3.3" {
+			mib = m.Table.Name
+			oid = m.Table.Oid
+			p.cOid = oid
+			p.cMib = mib
+			return
+		}
+	}
+
+	return
+}
 
 func (p *Profile) GetProfileName(override string) string {
 	if override != "" { // This can override what is set as the profile name.
