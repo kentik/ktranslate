@@ -23,12 +23,16 @@ var (
 	s3Bucket    string
 	s3Prefix    string
 	flushDurSec int
+	assumeRole  string
+	s3Region    string
 )
 
 func init() {
 	flag.StringVar(&s3Bucket, "s3_bucket", "", "AWS S3 Bucket to write flows to")
 	flag.StringVar(&s3Prefix, "s3_prefix", "/kentik", "AWS S3 Object prefix")
 	flag.IntVar(&flushDurSec, "s3_flush_sec", 60, "Create a new output file every this many seconds")
+	flag.StringVar(&assumeRoleARN, "s3_assume_role_arn", "", "AWS assume role ARN which has permissions to write to S3 bucket.")
+	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 }
 
 type S3Sink struct {
@@ -76,7 +80,14 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 		return fmt.Errorf("Not writing to s3 -- no bucket set, use -s3_bucket flag")
 	}
 	sess := session.Must(session.NewSession())
-	s.client = s3manager.NewUploader(sess)
+
+	if assumeRoleARN != "" {
+		creds := stscreds.NewCredentials(sess, assumeRoleARN)
+		s.client = s3manager.NewUploader(sess, &aws.Config{Credentials: creds, Region: aws.String(s3Region)})
+	}
+	else {
+		s.client = s3manager.NewUploader(sess)
+	}
 
 	switch compression {
 	case kt.CompressionNone, kt.CompressionNull:
