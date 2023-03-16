@@ -161,6 +161,10 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr
   -s3_bucket string
     	AWS S3 Bucket to write flows to
+  -s3_assume_role_arn
+      AWS assume role ARN which has permissions to write to S3 bucket
+  -s3_region
+      S3 Bucket region where S3 bucket is created (default us-east-1)
   -s3_flush_sec int
     	Create a new output file every this many seconds (default 60)
   -s3_prefix string

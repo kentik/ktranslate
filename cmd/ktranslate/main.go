@@ -459,6 +459,10 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.S3Sink.FlushIntervalSeconds = v
+			case "s3_assume_role_arn":
+				cfg.S3Sink.assumeRoleARN = val
+			case "s3_region":
+				cfg.S3Sink.Region = val
 			// pkg/sinks/net
 			case "net_server":
 				cfg.NetSink.Endpoint = val

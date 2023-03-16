@@ -50,6 +50,8 @@ type S3SinkConfig struct {
 	Bucket               string
 	Prefix               string
 	FlushIntervalSeconds int
+	assumeRoleARN		 string
+	Region               string
 }
 
 // NetSinkConfig is the config for the net sink
@@ -366,6 +368,8 @@ func DefaultConfig() *Config {
 			Bucket:               "",
 			Prefix:               "/kentik",
 			FlushIntervalSeconds: 60,
+			assumeRoleARN:        "",
+			Region:               "us-east-1",
 		},
 		NetSink: &NetSinkConfig{
 			Endpoint: "",

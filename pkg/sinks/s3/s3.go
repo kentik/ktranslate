@@ -12,6 +12,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -23,7 +24,7 @@ var (
 	s3Bucket    string
 	s3Prefix    string
 	flushDurSec int
-	assumeRole  string
+	assumeRoleArn  string
 	s3Region    string
 )
 
@@ -31,7 +32,7 @@ func init() {
 	flag.StringVar(&s3Bucket, "s3_bucket", "", "AWS S3 Bucket to write flows to")
 	flag.StringVar(&s3Prefix, "s3_prefix", "/kentik", "AWS S3 Object prefix")
 	flag.IntVar(&flushDurSec, "s3_flush_sec", 60, "Create a new output file every this many seconds")
-	flag.StringVar(&assumeRoleARN, "s3_assume_role_arn", "", "AWS assume role ARN which has permissions to write to S3 bucket.")
+	flag.StringVar(&assumeRoleArn, "s3_assume_role_arn", "", "AWS assume role ARN which has permissions to write to S3 bucket")
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 }
 
@@ -79,15 +80,38 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	if s.Bucket == "" {
 		return fmt.Errorf("Not writing to s3 -- no bucket set, use -s3_bucket flag")
 	}
-	sess := session.Must(session.NewSession())
 
-	if assumeRoleARN != "" {
-		creds := stscreds.NewCredentials(sess, assumeRoleARN)
-		s.client = s3manager.NewUploader(sess, &aws.Config{Credentials: creds, Region: aws.String(s3Region)})
-	}
-	else {
+	if s.config.assumeRoleARN != "" {
+		// Getting credentials from assume role ARN
+		// sess_tmp := session.Must(session.NewSession())
+		sess_tmp := session.Must(
+			session.NewSessionWithOptions(session.Options{
+			  SharedConfigState: session.SharedConfigEnable,
+			}),
+		)
+		creds := stscreds.NewCredentials(sess_tmp, s.config.assumeRoleARN)
+		_ , err := creds.Get()
+		if err != nil {
+			return fmt.Errorf("Assume Role ARN doesn't work. ARN: %q", s.config.assumeRoleARN)
+		}
+		// Creating a new session from assume role
+		sess, err := session.NewSession(
+			&aws.Config{
+				Region: aws.String(s.config.Region), 
+				Credentials: creds,
+			},
+		)
+		if err != nil {
+			return fmt.Errorf("Session is not created with region %q", s.config.Region)
+		}
+		// sess := session.Must(session.NewSession(&aws.config{Region: aws.String(s3Region), Credentials: creds}))
+		s.client = s3manager.NewUploader(sess)
+	} else {
+		sess := session.Must(session.NewSession())
 		s.client = s3manager.NewUploader(sess)
 	}
+
+	// s.client = s3manager.NewUploader(sess)
 
 	switch compression {
 	case kt.CompressionNone, kt.CompressionNull:
