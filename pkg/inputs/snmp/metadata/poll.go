@@ -262,6 +262,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 			for tag, value := range dst.CustomStr {
 				if tag == v[len(TagValuePrefix):] {
 					v = value
+					break // Once we find a match, break out and don't try comparing to anything else any more.
 				}
 			}
 		}
