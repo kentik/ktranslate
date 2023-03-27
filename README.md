@@ -163,10 +163,14 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	AWS S3 Bucket to write flows to
   -s3_assume_role_arn
       AWS assume role ARN which has permissions to write to S3 bucket
+  -ec2_instance_profile
+      If to use EC2 Instance Profile of the machine (default false)
   -s3_region
       S3 Bucket region where S3 bucket is created (default us-east-1)
   -s3_flush_sec int
     	Create a new output file every this many seconds (default 60)
+  -assume_role_interval_seconds
+        Refresh credentials after this many seconds
   -s3_prefix string
     	AWS S3 Object prefix (default "/kentik")
   -sample_rate int
