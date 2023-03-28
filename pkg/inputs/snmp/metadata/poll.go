@@ -260,7 +260,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	for k, v := range cs {
 		if strings.HasPrefix(v, TagValuePrefix) { // See if we can find this value in the MDS instead.
 			for tag, value := range dst.CustomStr {
-				if tag == v[len(TagValuePrefix):] {
+				if len(v) > len(TagValuePrefix) && tag == v[len(TagValuePrefix):] {
 					v = value
 					break // Once we find a match, break out and don't try comparing to anything else any more.
 				}
