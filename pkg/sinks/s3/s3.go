@@ -32,6 +32,8 @@ var (
 	ec2assumeRoleIntervalSeconds int
 )
 
+// var wg sync.WaitGroup
+
 func init() {
 	flag.StringVar(&s3Bucket, "s3_bucket", "", "AWS S3 Bucket to write flows to")
 	flag.StringVar(&s3Prefix, "s3_prefix", "/kentik", "AWS S3 Object prefix")
@@ -39,7 +41,7 @@ func init() {
 	flag.StringVar(&s3assumeRoleARN, "s3_assume_role_arn", "", "AWS assume role ARN which has permissions to write to S3 bucket")
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 	flag.BoolVar(&ec2InstanceProfile, "ec2_instance_profile", false, "EC2 Instance Profile")
-	flag.IntVar(&ec2assumeRoleIntervalSeconds, "assume_role_interval_seconds", 600, "Refresh credentials after this many seconds")
+	flag.IntVar(&ec2assumeRoleIntervalSeconds, "assume_role_interval_seconds", 900, "Refresh credentials after this many seconds")
 }
 
 type S3Sink struct {
@@ -115,10 +117,10 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 				s.mux.Lock()
 				if s.buf.Len() == 0 {
 					s.mux.Unlock()
+					s.Infof("Length of buffer == 0") //remove it after testing
 					continue
 				}
 				ob := s.buf
-				s.Infof("Buffer: %v", ob) //remove it after testing
 				s.buf = bytes.NewBuffer(make([]byte, 0, ob.Len()))
 				go s.send(ctx, ob.Bytes())
 				s.mux.Unlock()
@@ -140,7 +142,7 @@ func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
 }
 
 func (s *S3Sink) send(ctx context.Context, payload []byte) {
-	value, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{ // revert value to _
+	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
 		Bucket: aws.String(s.Bucket),
 		Body:   bytes.NewBuffer(payload),
 		Key:    aws.String(s.getName()),
@@ -149,7 +151,6 @@ func (s *S3Sink) send(ctx context.Context, payload []byte) {
 		s.Errorf("Cannot upload to s3: %v", err)
 		s.metrics.DeliveryErr.Mark(1)
 	} else {
-		s.Infof("value for s.client.UploadWithContext: %v", value)
 		s.metrics.DeliveryWin.Mark(1)
 	}
 }
@@ -167,95 +168,76 @@ func (s *S3Sink) HttpInfo() map[string]float64 {
 
 func (s *S3Sink) tmp_credentials() {
 
-	// err_flag := 0
-	// var err_msg []string
+	for {
+		if s.config.EC2InstanceProfile && s.config.AssumeRoleARN != "" {
 
-	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN != "" {
+			svc := ec2metadata.New(session.Must(session.NewSession()))
+			ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
+			sess_tmp := session.Must(
+				session.NewSession(&aws.Config{
+					Region:      aws.String(s.config.Region),
+					Credentials: ec2_role_creds,
+				}),
+			)
+			_, err_role := ec2_role_creds.Get()
+			if err_role != nil {
+				s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
+				break
+			}
 
-		svc := ec2metadata.New(session.Must(session.NewSession()))
-		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess_tmp := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
-		)
-		_, err_role := ec2_role_creds.Get()
-		if err_role != nil {
-			// return fmt.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
-			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
-			// err_flag = 1
-			// err_msg = err_msg.append(err_role)
+			creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
+			_, err_creds := creds.Get()
+			if err_creds != nil {
+				s.Errorf("Assume Role ARN doesn't work. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_creds)
+				break
+			}
+
+			// Creating a new session from assume role
+			sess, err := session.NewSession(
+				&aws.Config{
+					Region:      aws.String(s.config.Region),
+					Credentials: creds,
+				},
+			)
+			if err != nil {
+				s.Errorf("Session is not created ERROR: %v", err)
+				break
+			} else {
+				s.Infof("Session is created using assume role based on EC2 Instance Profile")
+			}
+
+			s.client = s3manager.NewUploader(sess)
+
+		} else if s.config.AssumeRoleARN != "" {
+			// Getting credentials from assume role ARN
+			sess_tmp := session.Must(
+				session.NewSessionWithOptions(session.Options{
+					SharedConfigState: session.SharedConfigEnable,
+				}),
+			)
+			creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
+			_, err := creds.Get()
+			if err != nil {
+				s.Errorf("Assume Role ARN doesn't work. ARN: %v", s.config.AssumeRoleARN)
+				break
+			}
+			// Creating a new session from assume role
+			sess, err := session.NewSession(
+				&aws.Config{
+					Region:      aws.String(s.config.Region),
+					Credentials: creds,
+				},
+			)
+			if err != nil {
+				s.Errorf("Session is not created with region %v", s.config.Region)
+				break
+			} else {
+				s.Infof("Session is created using assume role via shared configuration")
+			}
+
+			s.client = s3manager.NewUploader(sess)
 		}
 
-		creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
-		values, err_creds := creds.Get()
-		if err_creds != nil {
-			// return fmt.Errorf("Assume Role ARN doesn't work. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_creds)
-			s.Errorf("Assume Role ARN doesn't work. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_creds)
-			// err_flag = 1
-			// err_msg = err_msg.append(err_creds)
-		} else {
-			s.Infof("AssumeRole Creds are: %v", values) // remove this part after testing.
-		}
-
-		// retrieving the passwords after 15 mins or default of IAM  {Have to check}
-
-		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
-		if err != nil {
-			// return fmt.Errorf("Session is not created ERROR: %v", err)
-			s.Errorf("Session is not created ERROR: %v", err)
-			// err_flag = 1
-			// err_msg = err_msg.append(err)
-		} else {
-			s.Infof("Session is created using assume role based on EC2 Instance Profile")
-		}
-
-		s.client = s3manager.NewUploader(sess)
-
-	} else if s.config.AssumeRoleARN != "" {
-		// Getting credentials from assume role ARN
-		sess_tmp := session.Must(
-			session.NewSessionWithOptions(session.Options{
-				SharedConfigState: session.SharedConfigEnable,
-			}),
-		)
-		creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
-		_, err := creds.Get()
-		if err != nil {
-			// return fmt.Errorf("Assume Role ARN doesn't work. ARN: %v", s.config.AssumeRoleARN)
-			s.Errorf("Assume Role ARN doesn't work. ARN: %v", s.config.AssumeRoleARN)
-			// err_flag = 1
-			// err_msg = err_msg.append(err)
-		}
-		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
-		if err != nil {
-			// return fmt.Errorf("Session is not created with region %v", s.config.Region)
-			s.Errorf("Session is not created with region %v", s.config.Region)
-			// err_flag = 1
-			// err_msg = err_msg.append(err)
-		} else {
-			s.Infof("Session is created using assume role via shared configuration")
-		}
-
-		s.client = s3manager.NewUploader(sess)
+		time.Sleep(time.Duration(s.config.AssumeRoleIntervalSeconds) * time.Second)
 	}
-	dumpTick := time.NewTicker(time.Duration(s.config.AssumeRoleIntervalSeconds) * time.Second)
-	defer dumpTick.Stop()
-
-	// if err_flag == 1 {
-	// 	return fmt.Errorf("There is an error in connecting to Assume Role temporary credentials: %v", err_msg)
-	// }
 }

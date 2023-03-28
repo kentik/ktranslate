@@ -170,7 +170,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -s3_flush_sec int
     	Create a new output file every this many seconds (default 60)
   -assume_role_interval_seconds
-        Refresh credentials after this many seconds
+        Refresh credentials after this many seconds (default 900)
   -s3_prefix string
     	AWS S3 Object prefix (default "/kentik")
   -sample_rate int

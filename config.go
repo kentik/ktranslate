@@ -373,7 +373,7 @@ func DefaultConfig() *Config {
 			AssumeRoleARN:             "",
 			Region:                    "us-east-1",
 			EC2InstanceProfile:        false,
-			AssumeRoleIntervalSeconds: 600,
+			AssumeRoleIntervalSeconds: 900,
 		},
 		NetSink: &NetSinkConfig{
 			Endpoint: "",
