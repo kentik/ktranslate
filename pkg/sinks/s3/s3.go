@@ -117,7 +117,6 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 				s.mux.Lock()
 				if s.buf.Len() == 0 {
 					s.mux.Unlock()
-					s.Infof("Length of buffer == 0") //remove it after testing
 					continue
 				}
 				ob := s.buf
