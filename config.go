@@ -13,6 +13,9 @@ const (
 	FlowDefaultFields = "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress,FlowDirection"
 	// KentikAPITokenEnvVar is the environment variables used to get the Kentik API Token
 	KentikAPITokenEnvVar = "KENTIK_API_TOKEN"
+	// MaxNetflowsPerMessage is the maximum flowsets in a single netflow message
+	// Must be less than ( 65535[nf_max_size] - 16[nf_header_size] - 96(nf_template_flowset_size] ) / 128[nf_data_flowset_size]
+	MaxNetflowsPerMessage = 510
 )
 
 // NetflowFormatConfig is the config format for netflow
@@ -492,6 +495,10 @@ func LoadConfig(configPath string) (*Config, error) {
 	var cfg *Config
 	if err := yaml.NewDecoder(f).Decode(&cfg); err != nil {
 		return nil, err
+	}
+
+	if cfg.Format == "netflow" && (cfg.MaxFlowsPerMessage <= 0 || cfg.MaxFlowsPerMessage > MaxNetflowsPerMessage) {
+		cfg.MaxFlowsPerMessage = MaxNetflowsPerMessage
 	}
 
 	return cfg, nil
