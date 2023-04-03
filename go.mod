@@ -35,7 +35,7 @@ require (
 	github.com/netsampler/goflow2 v1.1.1-0.20220818030102-fc42020d1b73
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/client_golang v1.11.0
+	github.com/prometheus/client_golang v1.11.1
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.23
 	github.com/stretchr/testify v1.7.1
