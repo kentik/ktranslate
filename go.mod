@@ -14,6 +14,7 @@ require (
 	github.com/aws/aws-sdk-go v1.41.19
 	github.com/dchest/siphash v1.2.2
 	github.com/elliotchance/orderedmap v1.4.0
+	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-openapi/runtime v0.24.1
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/google/uuid v1.3.0
@@ -67,7 +68,6 @@ require (
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/facebookgo/limitgroup v0.0.0-20150612190941-6abd8d71ec01 // indirect
 	github.com/facebookgo/muster v0.0.0-20150708232844-fd3d7953fd52 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-openapi/analysis v0.21.2 // indirect
 	github.com/go-openapi/errors v0.20.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
@@ -123,7 +123,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.2.0 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/api v0.74.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
