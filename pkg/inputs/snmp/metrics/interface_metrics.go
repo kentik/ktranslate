@@ -149,11 +149,12 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 			} else {
 				switch variable.Type {
 				case gosnmp.Integer:
-					// Since its just an int, keep it without computing a delta.
+					// Since it's just an int, keep it without computing a delta.
 					delta[varName] = value
 				default:
 					// Treat as a counter
-					// Calculate the different of this counter here.
+					// Calculate the difference of this counter here.
+					delta[varName+"_counter"] = value
 					delta[varName] = im.intValues[intId].SetValueAndReturnDelta(varName, value)
 				}
 			}
@@ -162,7 +163,7 @@ func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, las
 
 	im.log.Infof("SNMP interface metric poll - found metrics for %d interfaces.", len(deltas))
 
-	// See if we have a uptime delta to work with
+	// See if we have an uptime delta to work with
 	for _, dm := range lastDeviceMetrics {
 		intId := AllDeviceInterface
 		if _, ok := im.intValues[intId]; !ok {
@@ -214,9 +215,14 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 			dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 		}
 
+		baseMetricName := func(n string) string {
+			return strings.TrimSuffix(n, "_counter")
+		}
+
 		metrics := map[string]kt.MetricInfo{}
 		for k, v := range cs {
-			mib := im.oidMibMap[im.nameOidMap[k][1:]]
+			oid := im.nameOidMap[baseMetricName(k)]
+			mib := im.oidMibMap[oid[1:]]
 			if mib != nil && mib.EnumRev != nil {
 				if ev, ok := mib.EnumRev[int64(v)]; ok {
 					// If we know what the enum string is, set it here.
@@ -232,21 +238,21 @@ func (im *InterfaceMetrics) convertToCHF(deltas map[string]map[string]uint64) []
 				if mib.Format != "" {
 					format = mib.Format
 				}
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: format, PollDur: mib.PollDur}
+				metrics[k] = kt.MetricInfo{Oid: oid, Mib: mib.Mib, Profile: im.profileName, Table: mib.Table, Format: format, PollDur: mib.PollDur}
 			} else {
-				metrics[k] = kt.MetricInfo{Oid: im.nameOidMap[k], Profile: im.profileName, Format: kt.CountMetric}
+				metrics[k] = kt.MetricInfo{Oid: oid, Profile: im.profileName, Format: kt.CountMetric}
 			}
 		}
 
-		// If there's a script attatched here, run it now.
-		for k, _ := range cs {
-			mib := im.oidMibMap[im.nameOidMap[k][1:]]
+		// If there's a script attached here, run it now.
+		for k := range cs {
+			mib := im.oidMibMap[im.nameOidMap[baseMetricName(k)][1:]]
 			if mib != nil && mib.Script != nil {
 				mib.Script.EnrichMetric(strint, k, dst.CustomBigInt, dst.CustomStr, metrics)
 			}
 		}
 
-		// Drop in Error %s here if appicable.
+		// Drop in Error %s here if applicable.
 		if dst.CustomBigInt[SNMP_ifHCInUcastPkts] > 0 {
 			if idi, ok := im.nameOidMap[SNMP_ifInErrors]; ok {
 				if mib, ok := im.oidMibMap[idi[1:]]; ok {
