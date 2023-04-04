@@ -50,9 +50,13 @@ type GCloudSinkConfig struct {
 
 // S3SinkConfig is the config for the S3 sink
 type S3SinkConfig struct {
-	Bucket               string
-	Prefix               string
-	FlushIntervalSeconds int
+	Bucket                                     string
+	Prefix                                     string
+	FlushIntervalSeconds                       int
+	AssumeRoleARN                              string
+	Region                                     string
+	EC2InstanceProfile                         bool
+	AssumeRoleOrInstanceProfileIntervalSeconds int
 }
 
 // NetSinkConfig is the config for the net sink
@@ -369,6 +373,10 @@ func DefaultConfig() *Config {
 			Bucket:               "",
 			Prefix:               "/kentik",
 			FlushIntervalSeconds: 60,
+			AssumeRoleARN:        "",
+			Region:               "us-east-1",
+			EC2InstanceProfile:   false,
+			AssumeRoleOrInstanceProfileIntervalSeconds: 900,
 		},
 		NetSink: &NetSinkConfig{
 			Endpoint: "",

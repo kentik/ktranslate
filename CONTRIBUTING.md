@@ -18,7 +18,7 @@ This section will help contributors to the project.
 
 ## Pull Requests
 
-Every pull request is appreciated!  No matter if it is a typo, documentation, instructions, or code we welcome every pull request.  If it is a significant feature ore refactor, please open an issue to discuss before spending time on the change to ensure that the maintainers are in agreement on the direction.
+Every pull request is appreciated!  No matter if it is a typo, documentation, instructions, or code we welcome every pull request.  If it is a significant feature or refactor, please open an issue to discuss before spending time on the change to ensure that the maintainers are in agreement on the direction.
 
 
 ## Connect

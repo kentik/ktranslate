@@ -33,7 +33,7 @@ fi
 
 # main image
 FROM alpine:3.14
-RUN apk add -U --no-cache ca-certificates libpcap
+RUN apk add -U --no-cache ca-certificates libpcap aws-cli
 RUN addgroup -g 1000 ktranslate && \
 	adduser -D -u 1000 -G ktranslate -H -h /etc/ktranslate ktranslate
 #RUN set -eux; \
