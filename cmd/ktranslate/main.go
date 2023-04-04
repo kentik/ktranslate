@@ -470,13 +470,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.S3Sink.EC2InstanceProfile = v
-			case "assume_role_interval_seconds":
+			case "assume_role_or_instance_profile_interval_seconds":
 				v, err := strconv.Atoi(val)
 				if err != nil {
 					errCh <- err
 					return
 				}
-				cfg.S3Sink.AssumeRoleIntervalSeconds = v
+				cfg.S3Sink.AssumeRoleOrInstanceProfileIntervalSeconds = v
 			// pkg/sinks/net
 			case "net_server":
 				cfg.NetSink.Endpoint = val

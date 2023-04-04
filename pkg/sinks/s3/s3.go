@@ -23,13 +23,13 @@ import (
 )
 
 var (
-	s3Bucket                     string
-	s3Prefix                     string
-	flushDurSec                  int
-	s3assumeRoleARN              string
-	s3Region                     string
-	ec2InstanceProfile           bool
-	ec2assumeRoleIntervalSeconds int
+	s3Bucket                                      string
+	s3Prefix                                      string
+	flushDurSec                                   int
+	s3assumeRoleARN                               string
+	s3Region                                      string
+	ec2InstanceProfile                            bool
+	ec2assumeRoleOrInstanceProfileIntervalSeconds int
 )
 
 // var wg sync.WaitGroup
@@ -41,7 +41,7 @@ func init() {
 	flag.StringVar(&s3assumeRoleARN, "s3_assume_role_arn", "", "AWS assume role ARN which has permissions to write to S3 bucket")
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 	flag.BoolVar(&ec2InstanceProfile, "ec2_instance_profile", false, "EC2 Instance Profile")
-	flag.IntVar(&ec2assumeRoleIntervalSeconds, "assume_role_interval_seconds", 900, "Refresh credentials after this many seconds")
+	flag.IntVar(&ec2assumeRoleOrInstanceProfileIntervalSeconds, "assume_role_or_instance_profile_interval_seconds", 900, "Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds")
 }
 
 type S3Sink struct {
@@ -88,7 +88,7 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	if s.Bucket == "" {
 		return fmt.Errorf("Not writing to s3 -- no bucket set, use -s3_bucket flag")
 	}
-	if s.config.AssumeRoleARN != "" {
+	if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
 		if err := s.get_tmp_credentials(ctx); err != nil {
 			return err
 		}
@@ -176,7 +176,7 @@ func (s *S3Sink) get_tmp_credentials(ctx context.Context) error {
 	s.client = creds
 
 	// Now loop forever getting new creds.
-	newCredTick := time.NewTicker(time.Duration(s.config.AssumeRoleIntervalSeconds) * time.Second)
+	newCredTick := time.NewTicker(time.Duration(s.config.AssumeRoleOrInstanceProfileIntervalSeconds) * time.Second)
 	defer newCredTick.Stop()
 
 	for {
@@ -197,6 +197,7 @@ func (s *S3Sink) get_tmp_credentials(ctx context.Context) error {
 }
 
 func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, error) {
+
 	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN != "" {
 
 		svc := ec2metadata.New(session.Must(session.NewSession()))
@@ -236,7 +237,28 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, erro
 
 		return s3manager.NewUploader(sess), nil
 
+	} else if s.config.EC2InstanceProfile {
+
+		svc := ec2metadata.New(session.Must(session.NewSession()))
+		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
+		sess := session.Must(
+			session.NewSession(&aws.Config{
+				Region:      aws.String(s.config.Region),
+				Credentials: ec2_role_creds,
+			}),
+		)
+		_, err_role := ec2_role_creds.Get()
+		if err_role != nil {
+			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
+			return nil, err_role
+		} else {
+			s.Infof("Session is created using EC2 Instance Profile")
+		}
+
+		return s3manager.NewUploader(sess), nil
+
 	} else {
+
 		// Getting credentials from assume role ARN
 		sess_tmp := session.Must(
 			session.NewSessionWithOptions(session.Options{
@@ -249,6 +271,7 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, erro
 			s.Errorf("Assume Role ARN doesn't work. ARN: %v, %v", s.config.AssumeRoleARN, err)
 			return nil, err
 		}
+
 		// Creating a new session from assume role
 		sess, err := session.NewSession(
 			&aws.Config{

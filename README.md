@@ -169,8 +169,8 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
       S3 Bucket region where S3 bucket is created (default us-east-1)
   -s3_flush_sec int
     	Create a new output file every this many seconds (default 60)
-  -assume_role_interval_seconds
-        Refresh credentials after this many seconds (default 900)
+  -assume_role_or_instance_profile_interval_seconds
+        Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds (default 900)
   -s3_prefix string
     	AWS S3 Object prefix (default "/kentik")
   -sample_rate int
