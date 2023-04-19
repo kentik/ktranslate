@@ -313,7 +313,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 	return 0, string(bv), nil // Default down to here.
 }
 
-/**
+/*
+*
 Some OID's don't store IP as a string, they store it as a hex value that we are going to want to translate.
 I need to take this:
 .1.3.6.1.4.1.9.9.42.1.2.2.1.2.1 = Hex-String: 0A00640A
@@ -353,7 +354,8 @@ func engineID(bv []byte) (int64, string, map[string]string) {
 	return 0, string(buf[:len(buf)-1]), nil
 }
 
-/**
+/*
+*
 Ubiquity and maybe others can be annoying in returning a string version of CPU.
 This lets people parse it out.
 
