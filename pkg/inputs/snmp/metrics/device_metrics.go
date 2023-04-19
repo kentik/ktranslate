@@ -174,9 +174,16 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				} else {
 					if len(mval) > 0 {
 						for k, v := range mval {
-							dmr.customStr[k] = v
-							continue // we have everything we need, no need to continue processing.
+							if s, err := strconv.ParseInt(v, 10, 64); err == nil {
+								dmr.customBigInt[k] = s
+								dmr.customStr[kt.StringPrefix+k] = v
+							} else {
+								dm.log.Debugf("unable to set string valued metric as numeric: %s %s", k, v)
+								dmr.customStr[kt.StringPrefix+k] = v // Still save this as a string valued field.
+								dmr.customBigInt[k] = 0
+							}
 						}
+						continue // Once we have set everything here, go on.
 					} else {
 						value = sval
 					}
