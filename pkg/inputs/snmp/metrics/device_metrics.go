@@ -174,6 +174,7 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 				} else {
 					if len(mval) > 0 {
 						for k, v := range mval {
+							metricsFound[k] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
 							if s, err := strconv.ParseInt(v, 10, 64); err == nil {
 								dmr.customBigInt[k] = s
 								dmr.customStr[kt.StringPrefix+k] = v

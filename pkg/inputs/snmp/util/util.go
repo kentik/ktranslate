@@ -367,7 +367,7 @@ func fromRegexp(bv []byte, reg string) (int64, string, map[string]string) {
 	if r == nil {
 		rn, err := regexp.Compile(reg)
 		if err != nil {
-			return 0, "", nil
+			return 0, err.Error(), nil
 		}
 		reCache[reg] = rn
 		r = rn
