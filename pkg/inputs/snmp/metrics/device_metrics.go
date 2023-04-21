@@ -166,13 +166,29 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(wrapper.variable.Value.([]byte))
 			if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
-				ival, sval, _ := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
+				ival, sval, mval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
 				if ival > 0 {
 					dmr.customBigInt[oidName] = ival
 					dmr.customStr[kt.StringPrefix+oidName] = sval
 					continue // we have everything we need, no need to continue processing.
 				} else {
-					value = sval
+					if len(mval) > 0 {
+						for k, v := range mval {
+							metricsFound[k] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
+							if s, err := strconv.ParseInt(v, 10, 64); err == nil {
+								dmr.customBigInt[k] = s
+								dmr.customStr[kt.StringPrefix+k] = v
+							} else {
+								dm.log.Debugf("unable to set string valued metric as numeric: %s %s", k, v)
+								dmr.customStr[kt.StringPrefix+k] = v // Still save this as a string valued field.
+								dmr.customBigInt[k] = 0
+							}
+						}
+						continue // Once we have set everything here, go on.
+					} else {
+						value = sval
+					}
+
 				}
 			}
 			if wrapper.mib.Enum != nil {

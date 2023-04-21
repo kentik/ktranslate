@@ -207,6 +207,14 @@ func TestRegex(t *testing.T) {
 				"version": "13.3R9.13",
 			},
 		},
+		multiRe{
+			input: []byte("[Card-cc1 Intake : 23 C] [Card-cc1 Exhaust : 26 C] [Card-cc1 Board : 23 C] [Card-1 Board : 23 C] [Card-2 Board : 24 C] [Card-3 Board : 23 C] [Card-4 Board : 23 C] [Card-5 Board : 27 C] "),
+			re:    `:.*Intake.*?(?P<Intake>\d+) .*Exhaust.*?(?P<Exhaust>\d+)`,
+			outputs: map[string]string{
+				"Intake":  "23",
+				"Exhaust": "26",
+			},
+		},
 	}
 
 	for _, in := range testStr {
