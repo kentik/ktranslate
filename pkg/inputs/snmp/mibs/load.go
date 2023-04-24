@@ -93,29 +93,41 @@ func (db *MibDB) GetTrap(oid string) *Trap {
 	return nil
 }
 
-func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
+func (db *MibDB) GetForKey(oid string) (*kt.Mib, map[string]string, error) {
 	if res, ok := db.trapMibs[oid]; ok {
-		return res, nil
+		return res, nil, nil
 	}
 
-	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard
+	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard or variables.
 	pts := strings.Split(oid, ".")
 	for i := len(pts); i > 0; i-- {
 		check := strings.Join(pts[0:i], ".") + ".*"
 		if t, ok := db.trapMibs[check]; ok {
-			return t, nil
+			// Fill in any wildcards and return.
+			attrs := map[string]string{}
+			for name, posits := range t.VarSet {
+				if len(pts) < posits[0]+posits[1] {
+					continue // Bad data, skip.
+				}
+				if posits[1] == 0 {
+					attrs[name] = strings.Join(pts[posits[0]:], ".")
+				} else {
+					attrs[name] = strings.Join(pts[posits[0]:posits[0]+posits[1]], ".")
+				}
+			}
+			return t, attrs, nil
 		}
 	}
 
 	if db.db == nil { // We might not have set up a db here.
-		return nil, nil
+		return nil, nil, nil
 	}
 	data, err := db.db.Get([]byte(oid), nil)
 	if err != nil {
 		if err == leveldb.ErrNotFound {
-			return nil, nil
+			return nil, nil, nil
 		}
-		return nil, err
+		return nil, nil, err
 	}
 
 	pts = strings.SplitN(string(data), " ", 2)
@@ -128,12 +140,12 @@ func (db *MibDB) GetForKey(oid string) (*kt.Mib, error) {
 					Oid:  oid,
 					Name: strings.SplitN(pts[0], "(", 2)[0],
 					Type: kt.Oidtype(dt),
-				}, nil
+				}, nil, nil
 			}
 		}
 	}
 
-	return nil, nil
+	return nil, nil, nil
 }
 
 func (db *MibDB) GetForOid(oid string, profile string, description string) (map[string]*kt.Mib, kt.Provider, error) {

@@ -385,6 +385,7 @@ type Mib struct {
 	AllowDup     bool
 	Condition    *MibCondition
 	Script       Enricher
+	VarSet       map[string][]int
 }
 
 type Enricher interface {

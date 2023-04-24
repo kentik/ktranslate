@@ -207,7 +207,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		}
 
 		// Do we know this guy?
-		res, err := s.mibdb.GetForKey(v.Name)
+		res, vars, err := s.mibdb.GetForKey(v.Name)
 		if err != nil {
 			s.log.Errorf("Cannot look up OID in trap: %v", err)
 		}
@@ -215,6 +215,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		// If we don't want undefined vars, pass along here.
 		if res == nil && trap.DropUndefinedVars() {
 			continue
+		}
+
+		// Load any variables defined in the name here.
+		for n, value := range vars {
+			dst.CustomStr[n] = value
 		}
 
 		switch v.Type {
