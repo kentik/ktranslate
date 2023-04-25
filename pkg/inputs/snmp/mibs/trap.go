@@ -57,6 +57,7 @@ func (mdb *MibDB) parseTrapsFromYml(fname string, file os.DirEntry, extends map[
 			kvs := map[string][]int{}
 			pts := strings.Split(oid, ".")
 			newOid := []string{}
+			nextWildcard := 0
 			for i := 0; i < len(pts); i++ {
 				last := pts[i]
 				if len(last) > 2 && last[0:1] == "{" && last[len(last)-1:] == "}" { // Handle this as a variable.
@@ -64,14 +65,17 @@ func (mdb *MibDB) parseTrapsFromYml(fname string, file os.DirEntry, extends map[
 					if len(set) == 2 {
 						vlen, err := strconv.Atoi(set[1])
 						if err == nil {
-							kvs[set[0]] = []int{i + 1, vlen}
+							kvs[set[0]] = []int{nextWildcard + 1, vlen}
+							nextWildcard += vlen
 						} else if set[1] == "*" { // Wildcard means use all the rest.
-							kvs[set[0]] = []int{i + 1, 0}
+							kvs[set[0]] = []int{nextWildcard + 1, 0}
+							break // don't consume any more variables because the wildcard ate them all.
 						} else {
 							// Noop?
 						}
 					}
 				} else {
+					nextWildcard += 1
 					newOid = append(newOid, last) // Put this on as a regular key.
 				}
 			}

@@ -37,9 +37,13 @@ traps:
       - name: vdcMonAttribWild
         OID: 1.3.6.1.4.1.34510.22.*
       - name: cbgpPeerLastErrorTxt
-        OID: 1.3.6.1.4.1.9.9.187.1.2.1.1.7.{bgpPeerRemoteAddr:*}
+        OID: 1.3.6.1.4.1.9.9.187.1.2.1.1.7.{bgpPeerRemoteAddr:*}.{ifIndex:1}
       - name: chsrpTrapVarBing
         OID: 1.3.6.1.4.1.9.9.187.1.3.4.5.{ifIndex:1}.{cHsrpGrpTable:1}
+      - name: chsrpTwoOne
+        OID: 1.3.6.1.4.1.9.9.666.1.3.4.5.{cHsrpGrpTable:2}.{ifIndex:1}
+      - name: chsrpTrapVarYandex
+        OID: 1.3.6.1.4.1.9.9.1811.1.3.4.5.{ifIndex:1}.{cHsrpGrpTable:2}
 `)
 	// Save test data to local.
 	file, err := ioutil.TempFile("", "")
@@ -53,14 +57,13 @@ traps:
 	fe, _ := file.Stat()
 	err = mdb.parseTrapsFromYml(file.Name(), fs.FileInfoToDirEntry(fe), nil)
 	assert.NoError(t, err)
+	assert.Equal(t, 10, len(mdb.trapMibs))
 
-	assert.Equal(t, 8, len(mdb.trapMibs))
 	tr, attr, err := mdb.GetForKey(".1.3.6.1.4.1.34510.2.1.1.3.2.1.1")
 	assert.NoError(t, err)
 	assert.Equal(t, "vdcAlarmId", tr.Name)
 	assert.Equal(t, 0, len(attr))
 
-	assert.Equal(t, 8, len(mdb.trapMibs))
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.34510.22.1.2.3.4.5.6")
 	assert.NoError(t, err)
 	assert.Equal(t, "vdcMonAttribWild", tr.Name)
@@ -70,10 +73,23 @@ traps:
 	assert.NoError(t, err)
 	assert.Equal(t, "cbgpPeerLastErrorTxt", tr.Name)
 	assert.Equal(t, "2.2.2.3", attr["bgpPeerRemoteAddr"])
+	assert.Equal(t, "", attr["ifIndex"]) // Since this is after a wildcard, assume nothing because there are no valid tokens to consume.
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.187.1.3.4.5.999.666")
 	assert.NoError(t, err)
 	assert.Equal(t, "chsrpTrapVarBing", tr.Name)
 	assert.Equal(t, "999", attr["ifIndex"])
 	assert.Equal(t, "666", attr["cHsrpGrpTable"])
+
+	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.666.1.3.4.5.66.99.333")
+	assert.NoError(t, err)
+	assert.Equal(t, "chsrpTwoOne", tr.Name)
+	assert.Equal(t, "333", attr["ifIndex"])
+	assert.Equal(t, "66.99", attr["cHsrpGrpTable"])
+
+	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.1811.1.3.4.5.66.99.333")
+	assert.NoError(t, err)
+	assert.Equal(t, "chsrpTrapVarYandex", tr.Name)
+	assert.Equal(t, "66", attr["ifIndex"])
+	assert.Equal(t, "99.333", attr["cHsrpGrpTable"])
 }
