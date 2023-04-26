@@ -83,3 +83,72 @@ func TestFullProvider(t *testing.T) {
 		assert.Equal(t, prov, res, "input: %s", input)
 	}
 }
+
+func TestGetForKey(t *testing.T) {
+	l := lt.NewTestContextL(logger.NilContext, t)
+	mdb, err := NewMibDB("", "", false, l)
+	assert.NoError(t, err)
+	defer mdb.Close()
+
+	mdb.trapMibs = map[string]*kt.Mib{
+		".1.3.6.1.4.1.2435.2.3.9.1": &kt.Mib{Name: "foo"},
+		".1.3.6.1.4.1.*":            &kt.Mib{Name: "bar"},
+		"1.3.6.1.4.1.9.9.187.1.3.4.5.*": &kt.Mib{Name: "chsrpTrapVarBing", VarSet: map[string][]int{
+			"ifIndex":       []int{13, 1},
+			"cHsrpGrpTable": []int{14, 1},
+		}},
+		"1.3.6.1.4.1.9.9.187.1.2.1.1.7.*": &kt.Mib{Name: "cbgpPeerLastErrorTxt", VarSet: map[string][]int{
+			"bgpPeerRemoteAddr": []int{14, 0},
+		}},
+		"1.3.6.1.4.1.9.9.187.1.2.1.1.8.*": &kt.Mib{Name: "cbgpPeerLastErrorTxt", VarSet: map[string][]int{
+			"bgpPeerRemoteAddr": []int{14, 4},
+		}},
+	}
+
+	inputs := []struct {
+		Sysoid string
+		Name   string
+		KVs    map[string]string
+	}{
+		{
+			Sysoid: ".1.3.6.1.4.1.2435.2.3.9.1",
+			Name:   "foo",
+		},
+		{
+			Sysoid: ".1.3.6.1.4.1.2.3.4",
+			Name:   "bar",
+		},
+		{
+			Sysoid: "1.3.6.1.4.1.9.9.187.1.3.4.5.12.6653",
+			Name:   "chsrpTrapVarBing",
+			KVs: map[string]string{
+				"ifIndex":       "12",
+				"cHsrpGrpTable": "6653",
+			},
+		},
+		{
+			Sysoid: "1.3.6.1.4.1.9.9.187.1.2.1.1.7.12.12.12.3",
+			Name:   "cbgpPeerLastErrorTxt",
+			KVs: map[string]string{
+				"bgpPeerRemoteAddr": "12.12.12.3",
+			},
+		},
+		{
+			Sysoid: "1.3.6.1.4.1.9.9.187.1.2.1.1.8.12.12.12.12.4",
+			Name:   "cbgpPeerLastErrorTxt",
+			KVs: map[string]string{
+				"bgpPeerRemoteAddr": "12.12.12.12",
+			},
+		},
+	}
+
+	for _, input := range inputs {
+		mib, attr, err := mdb.GetForKey(input.Sysoid)
+		assert.NoError(t, err)
+		assert.Equal(t, input.Name, mib.Name, "input: %v", input)
+
+		for k, v := range input.KVs {
+			assert.Equal(t, v, attr[k], attr)
+		}
+	}
+}
