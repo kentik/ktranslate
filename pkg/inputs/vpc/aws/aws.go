@@ -258,7 +258,7 @@ func NewAwsFromKinesis(lineMap AwsLineMap, raw *string, log logger.ContextL) ([]
 	return res, lineMap, nil
 }
 
-//2 391389995465 eni-0939c7c9e1255db73 10.236.54.140 10.236.57.28 31547 27068 6 2 112 1571081770 1571081799 ACCEPT OK
+// 2 391389995465 eni-0939c7c9e1255db73 10.236.54.140 10.236.57.28 31547 27068 6 2 112 1571081770 1571081799 ACCEPT OK
 func NewAwsFromV2(lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWSLogLine, AwsLineMap, error) {
 	line := AWSLogLine{}
 	line.Version = 2
@@ -312,7 +312,7 @@ func getTime(lineMap AwsLineMap, pts []string, key string) time.Time {
 	return time.Unix(int64(v), 0)
 }
 
-//version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstaddr srcport dstport pkt-srcaddr pkt-dstaddr protocol bytes packets start end action tcp-flags log-status
+// version vpc-id subnet-id instance-id interface-id account-id type srcaddr dstaddr srcport dstport pkt-srcaddr pkt-dstaddr protocol bytes packets start end action tcp-flags log-status
 func NewAwsFromV345(version int, lineMap AwsLineMap, pts []string, log logger.ContextL) ([]*AWSLogLine, AwsLineMap, error) {
 	line := AWSLogLine{}
 	line.Version = version
@@ -472,6 +472,7 @@ func (m *AWSLogLine) ToFlow(log logger.ContextL, topo *AWSTopology) (in *kt.JCHF
 	in.CustomStr["kt.from"] = kt.FromLambda
 	in.CustomStr["type"] = AWS_VPC_TYPE
 	in.DeviceName = m.VPCID
+	in.ApplySample = true
 
 	if m.Sample > 0 { // Set sample rate here if we are switching.
 		in.SampleRate = m.Sample

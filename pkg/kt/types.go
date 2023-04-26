@@ -182,6 +182,7 @@ type JCHF struct {
 	CustomMetrics           map[string]MetricInfo          `json:"-"`
 	CustomTables            map[string]DeviceTableMetadata `json:"-"`
 	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
+	ApplySample             bool                           `json:"-"` // Should this value be subject to sampling?
 }
 
 type MetricInfo struct {

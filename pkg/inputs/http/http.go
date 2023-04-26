@@ -129,6 +129,7 @@ func (ks *KentikHttpListener) getJCHF(wrapper *basic, remoteIP string) *kt.JCHF 
 	in.EventType = strings.ReplaceAll(wrapper.Name, ".", "_")
 	in.Provider = kt.ProviderHttpDevice
 	in.SrcAddr = remoteIP
+	in.ApplySample = true
 
 	// Use host for device_name if its set.
 	if host, ok := wrapper.Tags["host"]; ok {

@@ -113,6 +113,7 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 	in.CustomBigInt = make(map[string]int64)
 	in.EventType = kt.KENTIK_EVENT_TYPE
 	in.Provider = kt.ProviderFlowDevice
+	in.ApplySample = true
 
 	// We have enough traffic here now to require a locking primative.
 	t.RLock()

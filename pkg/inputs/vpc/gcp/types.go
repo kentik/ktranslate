@@ -149,6 +149,7 @@ func (m *GCELogLine) ToFlow(log logger.ContextL, flowSample uint32) (in *kt.JCHF
 	in.CustomStr["insert_id"] = m.InsertID
 	in.CustomStr["log_name"] = m.LogName
 	in.CustomBigInt["rcv_time"] = m.RecvTs.Unix()
+	in.ApplySample = true
 
 	m.Payload.Save(in)
 	m.Resource.Save(in)
