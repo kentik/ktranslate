@@ -405,7 +405,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dm.ping.sent = sent
 	dm.ping.received = received
 	percnt := 0.0
-	if diffSent > 0 {
+	if diffSent > 0 && diffRecv <= diffSent { // Make sure that if there's more packets recieved than sent we don't get confused.
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
 	} else { // Since we haven't sent any more packets on, sending more information here will be confusing so just return now.
 		return nil, nil
