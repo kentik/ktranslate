@@ -235,8 +235,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					continue
 				}
 
-				// Great!  We finished the poll in the same five-minute block we started it in!
-				// send the results to Sinks.
+				// Great!  We finished the poll in the same block we started it in!
 				p.jchfChan <- flows
 
 			case _ = <-statusCheck.C: // Send in on a seperate timer status about how this system is working.

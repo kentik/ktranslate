@@ -417,7 +417,11 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 	if !kc.doRollups || kc.config.RollupAndAlpha {
 		// Compute and sample rate stuff here.
 		keep := len(msgs)
-		if kc.config.SampleRate > 1 && keep > kc.config.SampleMin {
+		doSample := false
+		if keep > 1 && msgs[0].ApplySample { // Some mesages don't make sense to sample so we avoid this here.
+			doSample = true
+		}
+		if doSample && kc.config.SampleRate > 1 && keep > kc.config.SampleMin {
 			rand.Shuffle(len(msgs), func(i, j int) {
 				msgs[i], msgs[j] = msgs[j], msgs[i]
 			})
