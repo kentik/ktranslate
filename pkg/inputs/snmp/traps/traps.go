@@ -148,12 +148,26 @@ func (s *SnmpTrap) Listen() {
 }
 
 func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
-	s.log.Infof("got trapdata from %s", addr.IP)
+	engineID := "" // Decode the context engine id if sent here.
+	if packet.Version == gosnmp.Version3 && packet.ContextEngineID != "" {
+		_, eid, _ := snmp_util.EngineID([]byte(packet.ContextEngineID))
+		engineID = eid
+	}
+
+	s.log.Infof("got trapdata from %s, EngineID %s", addr.IP, engineID)
 	s.metrics.Traps.Mark(1)
 	s.mux.RLock()
 	defer s.mux.RUnlock()
 
 	dev := s.deviceMap[addr.IP.String()] // See if we know which device this is coming from.
+	if dev == nil && engineID != "" {    // If the device is still nil, try looking up via the ContextEngineID.
+		for _, d := range s.deviceMap {
+			if d.EngineID == engineID {
+				dev = d
+				break
+			}
+		}
+	}
 	dst := kt.NewJCHF()
 	dst.CustomStr = make(map[string]string)
 	dst.CustomInt = make(map[string]int32)

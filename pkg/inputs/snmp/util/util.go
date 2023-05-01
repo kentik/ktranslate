@@ -267,7 +267,7 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 	case CONV_HEXTOIP:
 		return hexToIP(bv)
 	case CONV_ENGINE_ID:
-		return engineID(bv)
+		return EngineID(bv)
 	case CONV_ONE:
 		return toOne(bv)
 	default:
@@ -344,7 +344,7 @@ func hexToIP(bv []byte) (int64, string, map[string]string) {
 	}
 }
 
-func engineID(bv []byte) (int64, string, map[string]string) {
+func EngineID(bv []byte) (int64, string, map[string]string) {
 	buf := make([]byte, 0, 3*len(bv))
 	x := buf[1*len(bv) : 3*len(bv)]
 	hex.Encode(x, bv)
