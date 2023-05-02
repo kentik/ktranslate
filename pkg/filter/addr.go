@@ -61,6 +61,14 @@ func (f *AddrFilter) addrEquals(chf map[string]interface{}) bool {
 			vv := net.ParseIP(dim[f.dimension[1]])
 			return f.value.Contains(vv)
 		}
+	} else if dd, ok := chf["custom_str"]; ok { // Fall back and try all strings here.
+		switch dim := dd.(type) {
+		case map[string]string:
+			if _, ok := dim[f.dimension[0]]; ok {
+				vv := net.ParseIP(dim[f.dimension[0]])
+				return f.value.Contains(vv)
+			}
+		}
 	}
 	return false
 }
