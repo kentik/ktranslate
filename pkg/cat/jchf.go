@@ -420,16 +420,17 @@ func int2ip(nn uint32) net.IP {
 
 var (
 	synResultTypes = map[int32]string{
-		0: "error",
-		1: "timeout",
-		2: "ping",
-		3: "fetch",
-		4: "trace",
-		5: "knock",
-		6: "query",
-		7: "shake",
-		8: "pageload",
-		9: "transaction",
+		0:  "error",
+		1:  "timeout",
+		2:  "ping",
+		3:  "fetch",
+		4:  "trace",
+		5:  "knock",
+		6:  "query",
+		7:  "shake",
+		8:  "pageload",
+		9:  "transaction",
+		10: "dnssec",
 	}
 
 	remapCustomStrings = map[string]string{
