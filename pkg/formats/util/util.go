@@ -332,6 +332,10 @@ var (
 		6: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Name: "time"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Name: "code"}},
 
 		7: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Name: "time"}, "lat/long_dest": kt.MetricInfo{Name: "port"}},
+
+		8: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Name: "time"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Name: "code"}},
+
+		9: map[string]kt.MetricInfo{"fetch_status_|_ping_sent_|_trace_time": kt.MetricInfo{Name: "sent"}, "fetch_ttlb_|_ping_lost": kt.MetricInfo{Name: "avg_rtt"}},
 	}
 )
 
