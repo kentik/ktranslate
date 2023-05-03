@@ -393,8 +393,8 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 
 // This processes data from the non-kentik input sets.
 func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
-	if kc.geo != nil || kc.asn != nil {
-		kc.doEnrichments(ctx, msgs)
+	if kc.geo != nil || kc.asn != nil || kc.enricher != nil {
+		msgs = kc.doEnrichments(ctx, msgs)
 	}
 
 	// If we are filtering, cut any out here.

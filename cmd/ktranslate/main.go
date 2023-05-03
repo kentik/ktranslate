@@ -401,7 +401,11 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 				cfg.EnableHTTPInput = v
 			case "enricher":
-				cfg.EnricherURL = val
+				if _, err := os.Stat(val); err == nil { // If this is a file on disk, run as a script.
+					cfg.EnricherScript = val
+				} else {
+					cfg.EnricherURL = val
+				}
 			case "ddog_url":
 				cfg.DDogSink.URL = val
 			// pkg/maps/file
