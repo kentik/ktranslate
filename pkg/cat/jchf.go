@@ -310,7 +310,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			}
 			switch udr.ColumnName { // Fill these in directly if they are set.
 			case "result_type":
-				kc.log.Infof("XXX %v", dst.CustomInt[udr.ColumnName])
 				dst.CustomStr["result_type_str"] = synResultTypes[dst.CustomInt[udr.ColumnName]]
 			case "test_id":
 				dst.CustomStr["test_url"] = fmt.Sprintf("https://portal.kentik.com/v4/synthetics/tests/%d/results", dst.CustomBigInt[udr.ColumnName])
