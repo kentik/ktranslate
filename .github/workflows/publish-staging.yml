@@ -43,17 +43,16 @@ jobs:
           password: ${{ secrets.QUAY_LOGIN_TOKEN }}
 
       - name: Install dependencies
-        run: sudo apt-get install make libpcap-dev golint
+        run: sudo apt-get install make libpcap-dev
 
       - name: Run build
         run: |
           echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
           KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }} make
 
-      - name: Run vet & lint
+      - name: Run vet
         run: |
           go vet .
-          golint .
 
       - name: Run testing
         run: make test
