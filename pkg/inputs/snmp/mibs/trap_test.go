@@ -44,6 +44,9 @@ traps:
         OID: 1.3.6.1.4.1.9.9.666.1.3.4.5.{cHsrpGrpTable:2}.{ifIndex:1}
       - name: chsrpTrapVarYandex
         OID: 1.3.6.1.4.1.9.9.1811.1.3.4.5.{ifIndex:1}.{cHsrpGrpTable:2}
+    attributes:
+      responsible_team: vmware
+      cHsrpGrpTable: 777
 `)
 	// Save test data to local.
 	file, err := ioutil.TempFile("", "")
@@ -62,34 +65,39 @@ traps:
 	tr, attr, err := mdb.GetForKey(".1.3.6.1.4.1.34510.2.1.1.3.2.1.1")
 	assert.NoError(t, err)
 	assert.Equal(t, "vdcAlarmId", tr.Name)
-	assert.Equal(t, 0, len(attr))
+	assert.Equal(t, 2, len(attr))
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.34510.22.1.2.3.4.5.6")
 	assert.NoError(t, err)
 	assert.Equal(t, "vdcMonAttribWild", tr.Name)
-	assert.Equal(t, 0, len(attr))
+	assert.Equal(t, 2, len(attr))
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.187.1.2.1.1.7.2.2.2.3")
 	assert.NoError(t, err)
 	assert.Equal(t, "cbgpPeerLastErrorTxt", tr.Name)
 	assert.Equal(t, "2.2.2.3", attr["bgpPeerRemoteAddr"])
 	assert.Equal(t, "", attr["ifIndex"]) // Since this is after a wildcard, assume nothing because there are no valid tokens to consume.
+	assert.Equal(t, "vmware", attr["responsible_team"])
+	assert.Equal(t, "777", attr["cHsrpGrpTable"])
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.187.1.3.4.5.999.666")
 	assert.NoError(t, err)
 	assert.Equal(t, "chsrpTrapVarBing", tr.Name)
 	assert.Equal(t, "999", attr["ifIndex"])
 	assert.Equal(t, "666", attr["cHsrpGrpTable"])
+	assert.Equal(t, "vmware", attr["responsible_team"])
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.666.1.3.4.5.66.99.333")
 	assert.NoError(t, err)
 	assert.Equal(t, "chsrpTwoOne", tr.Name)
 	assert.Equal(t, "333", attr["ifIndex"])
 	assert.Equal(t, "66.99", attr["cHsrpGrpTable"])
+	assert.Equal(t, "vmware", attr["responsible_team"])
 
 	tr, attr, err = mdb.GetForKey(".1.3.6.1.4.1.9.9.1811.1.3.4.5.66.99.333")
 	assert.NoError(t, err)
 	assert.Equal(t, "chsrpTrapVarYandex", tr.Name)
 	assert.Equal(t, "66", attr["ifIndex"])
 	assert.Equal(t, "99.333", attr["cHsrpGrpTable"])
+	assert.Equal(t, "vmware", attr["responsible_team"])
 }

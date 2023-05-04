@@ -386,6 +386,7 @@ type Mib struct {
 	Condition    *MibCondition
 	Script       Enricher
 	VarSet       map[string][]int
+	XAttr        map[string]string
 }
 
 type Enricher interface {
