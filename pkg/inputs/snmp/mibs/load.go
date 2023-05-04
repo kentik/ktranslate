@@ -95,7 +95,7 @@ func (db *MibDB) GetTrap(oid string) *Trap {
 
 func (db *MibDB) GetForKey(oid string) (*kt.Mib, map[string]string, error) {
 	if res, ok := db.trapMibs[oid]; ok {
-		return res, nil, nil
+		return res, res.XAttr, nil
 	}
 
 	// Now walk resursivly up the tree, seeing what profiles are found via a wildcard or variables.
@@ -113,6 +113,12 @@ func (db *MibDB) GetForKey(oid string) (*kt.Mib, map[string]string, error) {
 					attrs[name] = strings.Join(pts[posits[0]:], ".")
 				} else {
 					attrs[name] = strings.Join(pts[posits[0]:posits[0]+posits[1]], ".")
+				}
+			}
+			// Also fill in any const attrs here if they are not already set.
+			for k, v := range t.XAttr {
+				if _, ok := attrs[k]; !ok {
+					attrs[k] = v
 				}
 			}
 			return t, attrs, nil

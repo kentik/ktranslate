@@ -12,10 +12,11 @@ import (
 )
 
 type Trap struct {
-	Oid           string `yaml:"trap_oid"`
-	Name          string `yaml:"trap_name"`
-	DropUndefined bool   `yaml:"drop_undefined"`
-	Events        []OID  `yaml:"events"`
+	Oid           string            `yaml:"trap_oid"`
+	Name          string            `yaml:"trap_name"`
+	DropUndefined bool              `yaml:"drop_undefined"`
+	Events        []OID             `yaml:"events"`
+	Attributes    map[string]string `yaml:"attributes"`
 }
 
 type TrapBase struct {
@@ -93,6 +94,7 @@ func (mdb *MibDB) parseTrapsFromYml(fname string, file os.DirEntry, extends map[
 				Extra:      trap.Name,
 				Mib:        trap.Oid,
 				VarSet:     kvs,
+				XAttr:      trap.Attributes,
 			}
 			if len(mib.Enum) > 0 {
 				mib.EnumRev = make(map[int64]string)
