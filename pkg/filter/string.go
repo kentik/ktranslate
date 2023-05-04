@@ -53,6 +53,13 @@ func (f *StringFilter) stringEquals(chf map[string]interface{}) bool {
 		case map[string]string:
 			return dim[f.dimension[1]] == f.value
 		}
+	} else if dd, ok := chf["custom_str"]; ok { // Fall back and try all strings here.
+		switch dim := dd.(type) {
+		case map[string]string:
+			if _, ok := dim[f.dimension[0]]; ok {
+				return dim[f.dimension[0]] == f.value
+			}
+		}
 	}
 	return false
 }
@@ -68,6 +75,13 @@ func (f *StringFilter) stringContains(chf map[string]interface{}) bool {
 			return strings.Contains(dim, f.value)
 		case map[string]string:
 			return strings.Contains(dim[f.dimension[1]], f.value)
+		}
+	} else if dd, ok := chf["custom_str"]; ok { // Fall back and try all strings here.
+		switch dim := dd.(type) {
+		case map[string]string:
+			if _, ok := dim[f.dimension[0]]; ok {
+				return strings.Contains(dim[f.dimension[0]], f.value)
+			}
 		}
 	}
 	return false

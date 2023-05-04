@@ -202,10 +202,19 @@ func (e *Enricher) runScript(ctx context.Context, msgs []*kt.JCHF) ([]*kt.JCHF, 
 	case starlark.NoneType:
 		return nil, nil
 	case starlark.Int:
-		e.Infof("RC %d", rv)
+		e.Debugf("RC %d", rv)
 	}
 
-	return msgs, nil
+	out := make([]*kt.JCHF, 0, len(msgs))
+	for _, msg := range inputs {
+		switch rv := msg.(type) {
+		case starlark.NoneType: // Its been set to none, so don't pass this value back up.
+		case *JCHF:
+			out = append(out, rv.Unwrap())
+		}
+	}
+
+	return out, nil
 }
 
 func (e *Enricher) sourceProgram(builtins starlark.StringDict) (*starlark.Program, error) {

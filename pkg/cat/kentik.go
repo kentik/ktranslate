@@ -278,8 +278,8 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 		}
 
 		// Add in any extra things here.
-		if kc.geo != nil || kc.asn != nil {
-			kc.doEnrichments(ctx, msgs)
+		if kc.geo != nil || kc.asn != nil || kc.enricher != nil {
+			msgs = kc.doEnrichments(ctx, msgs)
 		}
 
 		// If we have any rollups defined, send here instead of directly to the output format.

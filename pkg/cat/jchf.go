@@ -461,7 +461,7 @@ var (
 )
 
 // Updates asn and geo if set for any of these inputs.
-func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
+func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.JCHF {
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)
@@ -539,4 +539,6 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
 			msgs = new
 		}
 	}
+
+	return msgs
 }

@@ -149,3 +149,29 @@ def main(n):
 	assert.Equal("fool", out[0].CustomStr["zero"])
 	assert.Equal("barf", out[0].CustomStr["bar"])
 }
+
+func TestRemoveMsg(t *testing.T) {
+	testDataPy := string(`
+def main(n):
+    for i in range(len(n)):
+      if i == 0:
+        n[i] = None
+      else:
+        n[i].company_id = i-1 # Bump everyone up.
+    return len(n)-1
+`)
+
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+	e, err := NewEnricher("", testDataPy, "", l.GetLogger().GetUnderlyingLogger())
+	assert.Nil(err)
+	assert.NotNil(e)
+
+	out, err := e.Enrich(context.Background(), kt.InputTestingSnmp)
+	assert.Nil(err)
+	assert.NotNil(out)
+	assert.Equal(len(kt.InputTestingSnmp)-1, len(out))
+	for i, evt := range out {
+		assert.Equal(i, int(evt.CompanyId), "%v", evt)
+	}
+}
