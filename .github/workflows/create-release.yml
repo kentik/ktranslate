@@ -47,6 +47,6 @@ jobs:
 
       - name: Set Version
         run: |
-           echo "KENTIK_KTRANSLATE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+           echo "KENTIK_KTRANSLATE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
            echo ${{ env.KENTIK_KTRANSLATE_VERSION }}
-           echo ${GITHUB_REF}
+           echo ${{ github.ref_name }}
