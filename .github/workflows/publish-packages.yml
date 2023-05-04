@@ -47,13 +47,13 @@ jobs:
 
       - name: Set Version
         run: |
-           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+           echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
            echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
 
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: '1.18.3'
+          go-version: '1.20.4'
 
       - name: Get Deps
         run: |
