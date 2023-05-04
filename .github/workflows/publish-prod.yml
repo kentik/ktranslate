@@ -27,7 +27,7 @@ jobs:
 
       - name: Set Release Version
         run: |
-           echo "KENTIK_KTRANSLATE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+           echo "KENTIK_KTRANSLATE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
         if: steps.version.outputs.is_valid == 'true'
 
       - name: Set NonRelease Version
