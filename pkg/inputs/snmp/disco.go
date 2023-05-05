@@ -499,6 +499,15 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 		}
 	}
 
+	// Since disco might have taken a while, we need to re-read the file into memory and update the non device sections of the config to get any new changes.
+	confNew, err := parseConfig(ctx, snmpFile, log)
+	if err != nil {
+		return nil, err
+	}
+	conf.Global = confNew.Global
+	conf.Disco = confNew.Disco
+	conf.Trap = confNew.Trap
+
 	// Save out the config file.
 	t, err := yaml.Marshal(conf)
 	if err != nil {
