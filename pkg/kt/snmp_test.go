@@ -76,4 +76,20 @@ context_name: ""
 	ser, err = yaml.Marshal(&ms)
 	assert.NoError(t, err)
 	assert.Equal(t, strings.TrimSpace(string(input)), strings.TrimSpace(string(ser)))
+
+	input = []byte(`${lar}`)
+	t.Setenv("lar", `user_name: mabel
+authentication_protocol: MD5
+authentication_passphrase: password123
+privacy_protocol: AES
+privacy_passphrase: password123
+context_engine_id: aaa
+context_name: ""`)
+	err = yaml.Unmarshal(input, &ms)
+	assert.NoError(t, err)
+	assert.Equal(t, "password123", ms.AuthenticationPassphrase)
+
+	ser, err = yaml.Marshal(&ms)
+	assert.NoError(t, err)
+	assert.Equal(t, strings.TrimSpace(string(input)), strings.TrimSpace(string(ser)))
 }
