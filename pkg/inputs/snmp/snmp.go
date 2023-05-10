@@ -541,36 +541,6 @@ func setDeviceTagsAndMatch(device *kt.SnmpDeviceConfig) {
 	prune(device.MatchAttr)
 }
 
-// Remove any dangling in memory items which should not be propigated to disk.
-func cleanForSave(cfg *kt.SnmpConfig) {
-	if cfg == nil {
-		return
-	}
-
-	set := func(m map[string]string, p kt.Provider) {
-		for k, v := range m {
-			if nk, ok := matchesPrefix(k, p); ok {
-				delete(m, k)
-				if v != "" {
-					m[nk] = v
-				}
-			} else { // Just delete.
-				delete(m, k)
-			}
-		}
-	}
-
-	if cfg.Global != nil {
-		set(cfg.Global.UserTags, kt.GlobalProvider)
-		set(cfg.Global.MatchAttr, kt.GlobalProvider)
-	}
-
-	for _, device := range cfg.Devices {
-		set(device.UserTags, kt.DeviceProvider)
-		set(device.MatchAttr, kt.DeviceProvider)
-	}
-}
-
 // Strip out any tags which shouldn't be there for traps.
 func cleanTagsForCopy(cfg *kt.SnmpConfig) map[string]string {
 	if cfg == nil || cfg.Global == nil {
