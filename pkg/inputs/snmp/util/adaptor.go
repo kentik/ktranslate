@@ -162,6 +162,11 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 		})
 	}
 
+	if device.NoCheckIncreasing {
+		server.AppOpts = map[string]interface{}{"c": true}
+		log.Warnf("Turning off Increasing Oid Check. This can result in an infanite loop.")
+	}
+
 	// We have everything we need -- start connect.
 	times := 0
 	for {
