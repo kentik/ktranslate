@@ -1,6 +1,6 @@
 module github.com/kentik/ktranslate
 
-go 1.18
+go 1.20
 
 require (
 	cloud.google.com/go/pubsub v1.17.1
@@ -44,8 +44,7 @@ require (
 	google.golang.org/genproto v0.0.0-20220405205423-9d709892a2bf
 	google.golang.org/grpc v1.45.0
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
-	gopkg.in/yaml.v2 v2.4.0
-	gopkg.in/yaml.v3 v3.0.0
+	gopkg.in/yaml.v3 v3.0.1
 	zombiezen.com/go/capnproto2 v2.18.2+incompatible
 )
 
@@ -129,4 +128,5 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/alexcesaro/statsd.v2 v2.0.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

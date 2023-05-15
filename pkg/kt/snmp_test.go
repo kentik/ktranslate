@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 func TestIsPollReady(t *testing.T) {
@@ -90,6 +90,26 @@ context_name: ""`)
 	assert.Equal(t, "password123", ms.AuthenticationPassphrase)
 
 	ser, err = yaml.Marshal(&ms)
+	assert.NoError(t, err)
+	assert.Equal(t, strings.TrimSpace(string(input)), strings.TrimSpace(string(ser)))
+}
+
+func TestEAPI(t *testing.T) {
+	input := []byte(`
+host: mabel
+username: MD5
+password: password123
+transport: ""
+port: 8080
+`)
+
+	ms := EAPIConfig{}
+	err := yaml.Unmarshal(input, &ms)
+	assert.NoError(t, err)
+	assert.Equal(t, "password123", ms.Password)
+	assert.Equal(t, 8080, ms.Port)
+
+	ser, err := yaml.Marshal(&ms)
 	assert.NoError(t, err)
 	assert.Equal(t, strings.TrimSpace(string(input)), strings.TrimSpace(string(ser)))
 }

@@ -12,7 +12,7 @@ import (
 
 	"github.com/gosnmp/gosnmp"
 	go_metrics "github.com/kentik/go-metrics"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -539,7 +539,7 @@ func (a *V3SNMPConfig) MarshalYAML() (interface{}, error) {
 			}
 		}
 	}
-	return a, nil
+	return *a, nil
 }
 
 // This lets the config get overriden by a global_v3 string.
@@ -746,7 +746,7 @@ func (a *EAPIConfig) MarshalYAML() (interface{}, error) {
 	if a.origStr != "" {
 		return a.origStr, nil
 	}
-	return a, nil
+	return *a, nil
 }
 
 // This lets the config get overriden by a global_v3 string.
