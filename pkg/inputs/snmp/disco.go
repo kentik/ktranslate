@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/liamg/furious/scan" // Discovery
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
