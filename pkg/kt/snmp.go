@@ -389,6 +389,8 @@ type Mib struct {
 	Script       Enricher
 	VarSet       map[string][]int
 	XAttr        map[string]string
+	WalkTable    bool
+	TableOid     string
 }
 
 type Enricher interface {

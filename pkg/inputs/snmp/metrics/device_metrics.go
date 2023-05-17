@@ -94,10 +94,15 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 			continue
 		}
-		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetrics")
+		walkOid := oid
+		if mib != nil && mib.WalkTable {
+			walkOid = mib.TableOid
+			dm.log.Debugf("Walking %s as a table %s", mib.Name, walkOid)
+		}
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, walkOid, server, dm.log, "CustomDeviceMetrics")
 		if err != nil {
 			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{
-				Error:        fmt.Sprintf("Walking %s: %v", oid, err),
+				Error:        fmt.Sprintf("Walking %s: %v", walkOid, err),
 				customStr:    map[string]string{},
 				customInt:    map[string]int32{},
 				customBigInt: map[string]int64{},
@@ -116,6 +121,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			}
 		}
 		for _, result := range oidResults {
+			if mib != nil && mib.WalkTable {
+				if !strings.HasPrefix(result.Name, oid) { // If we ended up walking the whole table, toss out results which don't match the asked prefix.
+					continue
+				}
+			}
 			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
 	}
