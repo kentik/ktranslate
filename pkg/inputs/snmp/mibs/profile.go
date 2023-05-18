@@ -48,6 +48,7 @@ type MIB struct {
 	ForcedType   string `yaml:"forced_type,omitempty"`
 	Symbol       OID    `yaml:"symbol,omitempty"`
 	IsInterface  bool   `yaml:"is_interface,omitempty"`
+	WalkTable    bool   `yaml:"walk_full_table"`
 	sortKey      string
 	fromExtended bool
 }
@@ -446,6 +447,8 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Format:       metric.Symbol.Format,
 				AllowDup:     metric.Symbol.AllowDup,
 				Condition:    metric.Symbol.GetCondition(p),
+				WalkTable:    metric.WalkTable,
+				TableOid:     metric.Table.Oid,
 			}
 
 			if len(mib.Enum) > 0 {
@@ -499,6 +502,8 @@ func (p *Profile) GetMetrics(enabledMibs []string, counterTimeSec int) (map[stri
 				Format:       s.Format,
 				AllowDup:     s.AllowDup,
 				Condition:    s.GetCondition(p),
+				WalkTable:    metric.WalkTable,
+				TableOid:     metric.Table.Oid,
 			}
 
 			if len(mib.Enum) > 0 {
@@ -634,6 +639,8 @@ func (p *Profile) GetMetadata(enabledMibs []string) (map[string]*kt.Mib, map[str
 					Table:      metric.Table.GetTableName(),
 					Enum:       t.Column.Enum,
 					AllowDup:   t.Column.AllowDup,
+					WalkTable:  metric.WalkTable,
+					TableOid:   metric.Table.Oid,
 				}
 
 				if len(mib.Enum) > 0 {

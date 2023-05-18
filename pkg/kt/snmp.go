@@ -204,7 +204,8 @@ type SnmpDeviceConfig struct {
 	RunPing             bool              `yaml:"response_time,omitempty"`
 	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
 	PingSec             int               `yaml:"ping_interval_sec,omitempty"`
-	PurgeDevice         int               `yaml:"purge_after_num"` // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
+	PurgeDevice         int               `yaml:"purge_after_num"`                    // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
+	NoCheckIncreasing   bool              `yaml:"no_check_increasing_oids,omitempty"` // 'c: do not check returned OIDs are increasing'
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }
@@ -388,6 +389,8 @@ type Mib struct {
 	Script       Enricher
 	VarSet       map[string][]int
 	XAttr        map[string]string
+	WalkTable    bool
+	TableOid     string
 }
 
 type Enricher interface {
