@@ -507,6 +507,7 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
+
 			mtype := name.GetType()
 			if name.Format == kt.FloatMS {
 				ms = append(ms, NRMetric{
