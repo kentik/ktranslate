@@ -18,19 +18,18 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: '1.18.3'
+          go-version: '1.20.4'
 
       - name: Install dependencies
-        run: sudo apt-get install make libpcap-dev golint
+        run: sudo apt-get install make libpcap-dev
 
       - name: Run build
         run: |
           make
 
-      - name: Run vet & lint
+      - name: Run vet
         run: |
           go vet .
-          golint .
 
       - name: Run testing
         run: make test

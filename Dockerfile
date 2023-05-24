@@ -1,5 +1,5 @@
 # build ktranslate
-FROM golang:1.19-alpine as build
+FROM golang:1.20-alpine as build
 RUN apk add -U libpcap-dev alpine-sdk bash libcap
 COPY . /src
 WORKDIR /src
@@ -32,7 +32,7 @@ else \
 fi
 
 # main image
-FROM alpine:3.14
+FROM alpine:3.17
 RUN apk add -U --no-cache ca-certificates libpcap aws-cli
 RUN addgroup -g 1000 ktranslate && \
 	adduser -D -u 1000 -G ktranslate -H -h /etc/ktranslate ktranslate

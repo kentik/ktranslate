@@ -94,10 +94,15 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 			continue
 		}
-		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetrics")
+		walkOid := oid
+		if mib != nil && mib.WalkTable {
+			walkOid = mib.TableOid
+			dm.log.Debugf("Walking %s as a table %s", mib.Name, walkOid)
+		}
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, walkOid, server, dm.log, "CustomDeviceMetrics")
 		if err != nil {
 			m[fmt.Sprintf("err-%s", mib.Name)] = &deviceMetricRow{
-				Error:        fmt.Sprintf("Walking %s: %v", oid, err),
+				Error:        fmt.Sprintf("Walking %s: %v", walkOid, err),
 				customStr:    map[string]string{},
 				customInt:    map[string]int32{},
 				customBigInt: map[string]int64{},
@@ -116,6 +121,11 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 			}
 		}
 		for _, result := range oidResults {
+			if mib != nil && mib.WalkTable {
+				if !strings.HasPrefix(result.Name, oid) { // If we ended up walking the whole table, toss out results which don't match the asked prefix.
+					continue
+				}
+			}
 			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
 	}
@@ -166,13 +176,29 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 		case gosnmp.OctetString, gosnmp.BitString:
 			value := string(wrapper.variable.Value.([]byte))
 			if wrapper.mib.Conversion != "" { // Adjust for any hard coded values here.
-				ival, sval, _ := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
+				ival, sval, mval := snmp_util.GetFromConv(wrapper.variable, wrapper.mib.Conversion, dm.log)
 				if ival > 0 {
 					dmr.customBigInt[oidName] = ival
 					dmr.customStr[kt.StringPrefix+oidName] = sval
 					continue // we have everything we need, no need to continue processing.
 				} else {
-					value = sval
+					if len(mval) > 0 {
+						for k, v := range mval {
+							metricsFound[k] = kt.MetricInfo{Oid: wrapper.mib.Oid, Mib: wrapper.mib.Mib, Profile: dm.profileName, Table: wrapper.mib.Table, PollDur: wrapper.mib.PollDur}
+							if s, err := strconv.ParseInt(v, 10, 64); err == nil {
+								dmr.customBigInt[k] = s
+								dmr.customStr[kt.StringPrefix+k] = v
+							} else {
+								dm.log.Debugf("unable to set string valued metric as numeric: %s %s", k, v)
+								dmr.customStr[kt.StringPrefix+k] = v // Still save this as a string valued field.
+								dmr.customBigInt[k] = 0
+							}
+						}
+						continue // Once we have set everything here, go on.
+					} else {
+						value = sval
+					}
+
 				}
 			}
 			if wrapper.mib.Enum != nil {
@@ -389,7 +415,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dm.ping.sent = sent
 	dm.ping.received = received
 	percnt := 0.0
-	if diffSent > 0 {
+	if diffSent > 0 && diffRecv <= diffSent { // Make sure that if there's more packets recieved than sent we don't get confused.
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
 	} else { // Since we haven't sent any more packets on, sending more information here will be confusing so just return now.
 		return nil, nil

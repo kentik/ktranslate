@@ -63,6 +63,13 @@ func (f *IntFilter) intEquals(chf map[string]interface{}) bool {
 		case map[string]int64:
 			return dim[f.dimension[1]] == f.value
 		}
+	} else if dd, ok := chf["custom_bigint"]; ok { // Fall back and try all ints here.
+		switch dim := dd.(type) {
+		case map[string]int64:
+			if _, ok := dim[f.dimension[0]]; ok {
+				return dim[f.dimension[0]] == f.value
+			}
+		}
 	}
 	return false
 }
@@ -81,6 +88,13 @@ func (f *IntFilter) intLessThan(chf map[string]interface{}) bool {
 		case map[string]int64:
 			return dim[f.dimension[1]] < f.value
 		}
+	} else if dd, ok := chf["custom_bigint"]; ok { // Fall back and try all ints here.
+		switch dim := dd.(type) {
+		case map[string]int64:
+			if _, ok := dim[f.dimension[0]]; ok {
+				return dim[f.dimension[0]] < f.value
+			}
+		}
 	}
 	return false
 }
@@ -94,6 +108,13 @@ func (f *IntFilter) intGreaterThan(chf map[string]interface{}) bool {
 			return dim[f.dimension[1]] > int32(f.value)
 		case map[string]int64:
 			return dim[f.dimension[1]] > f.value
+		}
+	} else if dd, ok := chf["custom_bigint"]; ok { // Fall back and try all ints here.
+		switch dim := dd.(type) {
+		case map[string]int64:
+			if _, ok := dim[f.dimension[0]]; ok {
+				return dim[f.dimension[0]] > f.value
+			}
 		}
 	}
 	return false

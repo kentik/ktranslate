@@ -393,8 +393,8 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 
 // This processes data from the non-kentik input sets.
 func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
-	if kc.geo != nil || kc.asn != nil {
-		kc.doEnrichments(ctx, msgs)
+	if kc.geo != nil || kc.asn != nil || kc.enricher != nil {
+		msgs = kc.doEnrichments(ctx, msgs)
 	}
 
 	// If we are filtering, cut any out here.
@@ -417,7 +417,11 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 	if !kc.doRollups || kc.config.RollupAndAlpha {
 		// Compute and sample rate stuff here.
 		keep := len(msgs)
-		if kc.config.SampleRate > 1 && keep > kc.config.SampleMin {
+		doSample := false
+		if keep > 1 && msgs[0].ApplySample { // Some mesages don't make sense to sample so we avoid this here.
+			doSample = true
+		}
+		if doSample && kc.config.SampleRate > 1 && keep > kc.config.SampleMin {
 			rand.Shuffle(len(msgs), func(i, j int) {
 				msgs[i], msgs[j] = msgs[j], msgs[i]
 			})

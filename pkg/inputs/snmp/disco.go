@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/liamg/furious/scan" // Discovery
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/api"
@@ -351,6 +351,15 @@ func addDevices(ctx context.Context, foundDevices map[string]*kt.SnmpDeviceConfi
 	}
 	origCount := len(conf.Devices)
 
+	// Since disco might have taken a while, we need to re-read the file into memory and update the non device sections of the config to get any new changes.
+	confNew, err := parseConfig(ctx, snmpFile, log)
+	if err != nil {
+		return nil, err
+	}
+	conf.Global = confNew.Global
+	conf.Disco = confNew.Disco
+	conf.Trap = confNew.Trap
+
 	for dip, d := range foundDevices {
 		key := d.DeviceName
 		keyAlt := d.DeviceName + "__" + dip
@@ -597,4 +606,34 @@ func addKentikDevices(apic *api.KentikApi, conf *kt.SnmpConfig) map[string]strin
 	}
 
 	return added
+}
+
+// Remove any dangling in memory items which should not be propigated to disk.
+func cleanForSave(cfg *kt.SnmpConfig) {
+	if cfg == nil {
+		return
+	}
+
+	set := func(m map[string]string, p kt.Provider) {
+		for k, v := range m {
+			if nk, ok := matchesPrefix(k, p); ok {
+				delete(m, k)
+				if v != "" {
+					m[nk] = v
+				}
+			} else { // Just delete.
+				delete(m, k)
+			}
+		}
+	}
+
+	if cfg.Global != nil {
+		set(cfg.Global.UserTags, kt.GlobalProvider)
+		set(cfg.Global.MatchAttr, kt.GlobalProvider)
+	}
+
+	for _, device := range cfg.Devices {
+		set(device.UserTags, kt.DeviceProvider)
+		set(device.MatchAttr, kt.DeviceProvider)
+	}
 }

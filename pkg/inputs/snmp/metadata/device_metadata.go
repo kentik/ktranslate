@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"sort"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/elliotchance/orderedmap"
@@ -105,7 +106,12 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		if !mib.IsPollReady() { // Skip this mib because its time to poll hasn't elapsed yet.
 			continue
 		}
-		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, oid, server, dm.log, "CustomDeviceMetadata")
+		walkOid := oid
+		if mib != nil && mib.WalkTable {
+			walkOid = mib.TableOid
+			dm.log.Debugf("Walking %s as a table %s", mib.Name, walkOid)
+		}
+		oidResults, err := snmp_util.WalkOID(ctx, dm.conf, walkOid, server, dm.log, "CustomDeviceMetadata")
 		if err != nil {
 			dm.metrics.Errors.Mark(1)
 			continue
@@ -121,6 +127,11 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 			}
 		}
 		for _, result := range oidResults {
+			if mib != nil && mib.WalkTable {
+				if !strings.HasPrefix(result.Name, oid) { // If we ended up walking the whole table, toss out results which don't match the asked prefix.
+					continue
+				}
+			}
 			results = append(results, wrapper{variable: result, mib: mib, oid: oid})
 		}
 	}

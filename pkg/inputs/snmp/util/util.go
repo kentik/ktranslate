@@ -267,7 +267,7 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 	case CONV_HEXTOIP:
 		return hexToIP(bv)
 	case CONV_ENGINE_ID:
-		return engineID(bv)
+		return EngineID(bv)
 	case CONV_ONE:
 		return toOne(bv)
 	default:
@@ -313,7 +313,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 	return 0, string(bv), nil // Default down to here.
 }
 
-/**
+/*
+*
 Some OID's don't store IP as a string, they store it as a hex value that we are going to want to translate.
 I need to take this:
 .1.3.6.1.4.1.9.9.42.1.2.2.1.2.1 = Hex-String: 0A00640A
@@ -343,7 +344,7 @@ func hexToIP(bv []byte) (int64, string, map[string]string) {
 	}
 }
 
-func engineID(bv []byte) (int64, string, map[string]string) {
+func EngineID(bv []byte) (int64, string, map[string]string) {
 	buf := make([]byte, 0, 3*len(bv))
 	x := buf[1*len(bv) : 3*len(bv)]
 	hex.Encode(x, bv)
@@ -353,7 +354,8 @@ func engineID(bv []byte) (int64, string, map[string]string) {
 	return 0, string(buf[:len(buf)-1]), nil
 }
 
-/**
+/*
+*
 Ubiquity and maybe others can be annoying in returning a string version of CPU.
 This lets people parse it out.
 
@@ -365,7 +367,7 @@ func fromRegexp(bv []byte, reg string) (int64, string, map[string]string) {
 	if r == nil {
 		rn, err := regexp.Compile(reg)
 		if err != nil {
-			return 0, "", nil
+			return 0, err.Error(), nil
 		}
 		reCache[reg] = rn
 		r = rn

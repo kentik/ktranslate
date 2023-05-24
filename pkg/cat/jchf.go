@@ -420,14 +420,17 @@ func int2ip(nn uint32) net.IP {
 
 var (
 	synResultTypes = map[int32]string{
-		0: "error",
-		1: "timeout",
-		2: "ping",
-		3: "fetch",
-		4: "trace",
-		5: "knock",
-		6: "query",
-		7: "shake",
+		0:  "error",
+		1:  "timeout",
+		2:  "ping",
+		3:  "fetch",
+		4:  "trace",
+		5:  "knock",
+		6:  "query",
+		7:  "shake",
+		8:  "pageload",
+		9:  "transaction",
+		10: "dnssec",
 	}
 
 	remapCustomStrings = map[string]string{
@@ -458,7 +461,7 @@ var (
 )
 
 // Updates asn and geo if set for any of these inputs.
-func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
+func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.JCHF {
 	for _, msg := range msgs {
 		sip := net.ParseIP(msg.SrcAddr)
 		dip := net.ParseIP(msg.DstAddr)
@@ -536,4 +539,6 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) {
 			msgs = new
 		}
 	}
+
+	return msgs
 }

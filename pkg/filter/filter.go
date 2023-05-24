@@ -3,6 +3,8 @@ package filter
 import (
 	"flag"
 	"fmt"
+	"net"
+	"strconv"
 	"strings"
 
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -88,8 +90,18 @@ func (i *FilterDefs) Set(value string) error {
 	inner := FilterDefWrapper{}
 	for _, orSet := range strings.Split(value, OrToken) {
 		pts := strings.Split(orSet, ",")
-		if len(pts) < 4 {
-			return fmt.Errorf("Filter flag is defined by type dimension operator value")
+		if len(pts) < 3 {
+			return fmt.Errorf("Filter flag is defined by <type> dimension operator value")
+		}
+		if len(pts) == 3 {
+			ftype := String
+			// Try to guess the type.
+			if _, err := strconv.Atoi(pts[2]); err == nil {
+				ftype = Int
+			} else if _, _, err := net.ParseCIDR(pts[2]); err == nil {
+				ftype = Addr
+			}
+			pts = append([]string{string(ftype)}, pts...)
 		}
 		ptn := make([]string, len(pts))
 		for i, p := range pts {

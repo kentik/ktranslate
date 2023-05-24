@@ -58,6 +58,7 @@ const (
 	IPV6_DST_ADDR             = 28
 	SRC_MAC                   = 56
 	DST_MAC                   = 80
+	OBSERVATION_POINT_ID      = 138
 	FLOW_START_SECONDS        = 150
 	FLOW_END_SECONDS          = 151
 )
@@ -92,6 +93,7 @@ var fields = []Field{
 	{OUT_BYTES, 8},
 	{IN_PKTS, 8},
 	{OUT_PKTS, 8},
+	{OBSERVATION_POINT_ID, 8}, // uint64
 	{FLOW_START_SECONDS, 4}, // uint32
 	{FLOW_END_SECONDS, 4},
 }
@@ -434,6 +436,8 @@ func encodeFlow(flow *kt.JCHF) (*bytes.Buffer, error) {
 			value = uint64(flow.InPkts)
 		case OUT_PKTS:
 			value = uint64(flow.OutPkts)
+		case OBSERVATION_POINT_ID:
+			value = uint64(flow.CompanyId&0xffff)<<32 + uint64(flow.DeviceId)
 		case FLOW_START_SECONDS:
 			value = uint32(flow.Timestamp)
 		case FLOW_END_SECONDS: // Assume that each flow is 60 sec long.

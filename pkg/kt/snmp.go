@@ -12,7 +12,7 @@ import (
 
 	"github.com/gosnmp/gosnmp"
 	go_metrics "github.com/kentik/go-metrics"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -146,6 +146,7 @@ type V3SNMPConfig struct {
 	ContextName              string `yaml:"context_name" json:"ContextName"`
 	useGlobal                bool
 	origStr                  string
+	origConf                 map[string]string
 }
 
 type EAPIConfig struct {
@@ -203,7 +204,8 @@ type SnmpDeviceConfig struct {
 	RunPing             bool              `yaml:"response_time,omitempty"`
 	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
 	PingSec             int               `yaml:"ping_interval_sec,omitempty"`
-	PurgeDevice         int               `yaml:"purge_after_num"` // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
+	PurgeDevice         int               `yaml:"purge_after_num"`                    // Delete this device if its not seen after X discovery attempts. Default is 0, which means things never get purged unless global value is true. Set to -1 to pin device always.
+	NoCheckIncreasing   bool              `yaml:"no_check_increasing_oids,omitempty"` // 'c: do not check returned OIDs are increasing'
 	allUserTags         map[string]string
 	walker              SNMPTestWalker
 }
@@ -385,6 +387,10 @@ type Mib struct {
 	AllowDup     bool
 	Condition    *MibCondition
 	Script       Enricher
+	VarSet       map[string][]int
+	XAttr        map[string]string
+	WalkTable    bool
+	TableOid     string
 }
 
 type Enricher interface {
@@ -520,7 +526,23 @@ func (a *V3SNMPConfig) MarshalYAML() (interface{}, error) {
 	if a.origStr != "" {
 		return a.origStr, nil
 	}
-	return a, nil
+	if a.origConf != nil { // Also any individual values we swapped in.
+		var conf = V3SNMP{}
+		fields := reflect.VisibleFields(reflect.TypeOf(conf))
+		ps := reflect.ValueOf(a)
+		for k, v := range a.origConf {
+			for _, field := range fields {
+				if field.Type.Kind() == reflect.String && field.Name == k {
+					s := ps.Elem()
+					f := s.FieldByName(field.Name)
+					if f.IsValid() && f.CanSet() {
+						f.SetString(v)
+					}
+				}
+			}
+		}
+	}
+	return *a, nil
 }
 
 // This lets the config get overriden by a global_v3 string.
@@ -562,6 +584,8 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		// Now, see if we need to map in any ENV vars.
 		fields := reflect.VisibleFields(reflect.TypeOf(conf))
 		ps := reflect.ValueOf(&conf)
+		origConf := map[string]string{}
+		setOrig := false
 		for _, field := range fields {
 			if field.Type.Kind() == reflect.String {
 				s := ps.Elem()
@@ -569,8 +593,12 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 				if f.IsValid() && f.CanSet() {
 					if sval, ok := f.Interface().(string); ok {
 						if strings.HasPrefix(sval, "${") { // Expecting values of the form ${V3_AUTH_PROTOCOL}
+							origConf[field.Name] = sval
+							setOrig = true
 							f.SetString(os.Getenv(sval[2 : len(sval)-1]))
 						} else if strings.HasPrefix(sval, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+							origConf[field.Name] = sval
+							setOrig = true
 							f.SetString(loadViaAWSSecrets(sval[len(AwsSmPrefix):]))
 						}
 					}
@@ -578,6 +606,9 @@ func (a *V3SNMPConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 			}
 		}
 		// And pop back what we created.
+		if setOrig {
+			conf.origConf = origConf
+		}
 		*a = V3SNMPConfig(conf)
 	}
 	return nil
@@ -718,7 +749,7 @@ func (a *EAPIConfig) MarshalYAML() (interface{}, error) {
 	if a.origStr != "" {
 		return a.origStr, nil
 	}
-	return a, nil
+	return *a, nil
 }
 
 // This lets the config get overriden by a global_v3 string.

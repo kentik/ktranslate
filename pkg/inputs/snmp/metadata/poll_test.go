@@ -40,3 +40,37 @@ func TestGetDeviceManufacturer(t *testing.T) {
 		}
 	}
 }
+
+func TestToFlows(t *testing.T) {
+	l := lt.NewTestContextL(logger.NilContext, t)
+	conf := &kt.SnmpDeviceConfig{
+		Provider: "foo",
+		UserTags: map[string]string{
+			"foo": "$foo",
+			"aaa": "$SysContact",
+		},
+	}
+	conf.InitUserTags("service")
+
+	p := &Poller{
+		log:  l,
+		conf: conf,
+	}
+
+	input := kt.DeviceData{
+		Manufacturer: "man",
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			SysContact: "ddd",
+			Customs: map[string]string{
+				"foo": "",
+				"bar": "",
+			},
+		},
+	}
+	res, err := p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "ddd", res[0].CustomStr["tags.aaa"])
+	assert.Equal(t, "", res[0].CustomStr["tags.foo"]) // Empty string match for tag here.
+}
