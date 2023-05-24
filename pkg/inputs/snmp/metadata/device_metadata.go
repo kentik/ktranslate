@@ -128,7 +128,7 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		}
 		for _, result := range oidResults {
 			if mib != nil && mib.WalkTable {
-				if !strings.HasPrefix(result.Name, oid) { // If we ended up walking the whole table, toss out results which don't match the asked prefix.
+				if !strings.HasPrefix(result.Name[1:], oid) { // If we ended up walking the whole table, toss out results which don't match the asked prefix.
 					continue
 				}
 			}
