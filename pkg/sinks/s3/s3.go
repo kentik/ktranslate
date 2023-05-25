@@ -88,7 +88,27 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	if s.Bucket == "" {
 		return fmt.Errorf("Not writing to s3 -- no bucket set, use -s3_bucket flag")
 	}
-	if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
+
+	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN == "" {
+		svc := ec2metadata.New(session.Must(session.NewSession()))
+		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
+		sess := session.Must(
+			session.NewSession(&aws.Config{
+				Region:      aws.String(s.config.Region),
+				Credentials: ec2_role_creds,
+			}),
+		)
+		_, err_role := ec2_role_creds.Get()
+		s.Infof("Credentials %v: ", ec2_role_creds)
+		if err_role != nil {
+			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
+		} else {
+			s.Infof("Session is created using EC2 Instance Profile")
+		}
+
+		s.client = s3manager.NewUploader(sess)
+
+	} else if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
 		if err := s.get_tmp_credentials(ctx); err != nil {
 			return err
 		}
@@ -233,26 +253,6 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, erro
 			return nil, err
 		} else {
 			s.Infof("Session is created using assume role based on EC2 Instance Profile")
-		}
-
-		return s3manager.NewUploader(sess), nil
-
-	} else if s.config.EC2InstanceProfile {
-
-		svc := ec2metadata.New(session.Must(session.NewSession()))
-		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
-		)
-		_, err_role := ec2_role_creds.Get()
-		if err_role != nil {
-			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
-			return nil, err_role
-		} else {
-			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
 		return s3manager.NewUploader(sess), nil
