@@ -23,7 +23,7 @@ Every pull request is appreciated!  No matter if it is a typo, documentation, in
 
 ## Connect
 
-To connect with other contributors we have a [Discord](https://discord.gg/kentik) server setup
+To connect with other contributors we have a [Discord](https://discord.gg/XGDNRj528C) server setup
 for more realtime discussion.
 
 ## Conventions
