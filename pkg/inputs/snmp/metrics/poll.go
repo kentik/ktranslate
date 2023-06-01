@@ -211,7 +211,9 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					continue
 				}
 
-				flows, err := p.Poll(ctx)
+				pollCtx, pollCancel := context.WithTimeout(ctx, STATUS_CHECK_TIME)
+				flows, err := p.Poll(pollCtx)
+				pollCancel()
 				if err != nil {
 					p.log.Warnf("There was an error when polling the SNMP counter: %v.", err)
 
@@ -239,7 +241,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 				// send the results to Sinks.
 				p.jchfChan <- flows
 
-			case _ = <-statusCheck.C: // Send in on a seperate timer status about how this system is working.
+			case <-statusCheck.C: // Send in on a seperate timer status about how this system is working.
 				p.jchfChan <- p.deviceMetrics.GetStatusFlows()
 
 			case <-ctx.Done():
@@ -263,12 +265,12 @@ func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 	deviceFlows, err := p.deviceMetrics.Poll(ctx, p.server, p.pinger)
 	if err != nil {
 		p.log.Warnf("Cannot poll device metrics: %v", err)
-		p.metrics.Fail.Update(kt.SNMP_BAD_DEVICE_ERR)
+		p.metrics.Fail.Update(kt.SNMP_BAD_POLL_TIMEOUT)
 	}
 
 	flows, err := p.interfaceMetrics.Poll(ctx, p.server, deviceFlows)
 	if err != nil {
-		p.metrics.Fail.Update(kt.SNMP_BAD_INTERFACE_ERR)
+		p.metrics.Fail.Update(kt.SNMP_BAD_POLL_TIMEOUT)
 		return nil, err
 	}
 
@@ -279,7 +281,7 @@ func (p *Poller) Poll(ctx context.Context) ([]*kt.JCHF, error) {
 	if len(flows) > 0 {
 		p.metrics.Fail.Update(kt.SNMP_GOOD)
 	} else {
-		p.metrics.Fail.Update(kt.SNMP_BAD_NO_DATA) // Otherwise, set to bad because there's no data coming out of this device.
+		p.metrics.Fail.Update(kt.SNMP_BAD_POLL_TIMEOUT) // Otherwise, set to bad because there's no data coming out of this device.
 	}
 
 	return flows, nil
