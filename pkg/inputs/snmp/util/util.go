@@ -113,6 +113,10 @@ func GetIndex(value, prefix string) string {
 // walk the OID subtree under a root, returning a slice of varbinds
 func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, server *gosnmp.GoSNMP, log logger.ContextL, logName string) ([]gosnmp.SnmpPDU, error) {
 
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+
 	// New strategy -- for each varbind, we'll try three times:
 	//   first, with GetBulk
 	//   if that fails, try GetNext without sleeping in-between
@@ -150,7 +154,12 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 	var err error
 	var results []gosnmp.SnmpPDU
 	for i, try := range tries {
-		time.Sleep(try.sleep)
+		select {
+		case <-ctx.Done():
+			log.Warnf("Context canceled in the %s walking OID %s after %d retries: %v.", logName, oid, i, err)
+			return nil, ctx.Err()
+		case <-time.After(try.sleep):
+		}
 
 		results, err = try.walk(oid)
 		if err == nil {

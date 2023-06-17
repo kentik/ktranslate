@@ -28,6 +28,7 @@ type DeviceMetrics struct {
 	conf        *kt.SnmpDeviceConfig
 	gconf       *kt.SnmpGlobalConfig
 	metrics     *kt.SnmpDeviceMetric
+	profile     *mibs.Profile
 	profileName string
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
@@ -56,6 +57,7 @@ func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, met
 		log:         log,
 		conf:        conf,
 		metrics:     metrics,
+		profile:     profile, // Danger, profile can be nil.
 		profileName: profile.GetProfileName(conf.InstrumentationName),
 		oids:        oidMap,
 		missing:     map[string]bool{},
@@ -152,7 +154,8 @@ func (dm *DeviceMetrics) pollFromConfig(ctx context.Context, server *gosnmp.GoSN
 	}
 
 	// Map back into types we know about.
-	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Profile: dm.profileName}}
+	mib, _ := dm.profile.GetMibAndOid()
+	metricsFound := map[string]kt.MetricInfo{"Uptime": kt.MetricInfo{Oid: sysUpTime, Mib: mib, Profile: dm.profileName}}
 	for _, wrapper := range results {
 		if wrapper.variable.Value == nil { // You can get nil w/out getting an error, though.
 			continue
@@ -352,6 +355,8 @@ func assureDeviceMetrics(m map[string]*deviceMetricRow, index string) *deviceMet
 
 // Return a flow with status of SNMP, reguardless of if the rest of the system is working.
 func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
+	mib, oid := dm.profile.GetMibAndOid()
+
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
 	dst.CustomInt = map[string]int32{}
@@ -361,13 +366,26 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	dst.DeviceName = dm.conf.DeviceName
 	dst.SrcAddr = dm.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
-	dst.CustomMetrics = map[string]kt.MetricInfo{"PollingHealth": kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: dm.profileName}}
+	dst.CustomMetrics = map[string]kt.MetricInfo{
+		"PollingHealth": {Oid: oid, Mib: mib, Profile: dm.profileName},
+		"PollingStatus": {Oid: oid, Mib: mib, Profile: dm.profileName},
+	}
 	dm.conf.SetUserTags(dst.CustomStr)
 	if dst.Provider == kt.ProviderDefault { // Add this to trigger a UI element.
 		dst.CustomStr["profile_message"] = kt.DefaultProfileMessage
 	}
-	dst.CustomBigInt["PollingHealth"] = dm.metrics.Fail.Value()
-	reasonVal := kt.SNMP_STATUS_MAP[dst.CustomBigInt["PollingHealth"]]
+
+	pollingHealth := dm.metrics.Fail.Value()
+	pollingStatus := int64(0)
+
+	if pollingHealth == kt.SNMP_GOOD {
+		pollingStatus = 1
+	}
+
+	dst.CustomBigInt["PollingHealth"] = pollingHealth
+	dst.CustomBigInt["PollingStatus"] = pollingStatus
+
+	reasonVal := kt.SNMP_STATUS_MAP[pollingHealth]
 	pts := strings.Split(reasonVal, ": ")
 	if len(pts) == 2 {
 		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = pts[0]
@@ -375,6 +393,7 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	} else {
 		dst.CustomStr[kt.StringPrefix+"PollingHealth"] = reasonVal
 	}
+
 	return []*kt.JCHF{dst}
 }
 
@@ -387,6 +406,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		return nil, nil
 	}
 
+	mib, oid := dm.profile.GetMibAndOid()
 	stats := pinger.Statistics()
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
@@ -399,13 +419,13 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{}
 	dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
-	dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
-	dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["MaxRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["AvgRttMs"] = stats.AvgRtt.Microseconds()
-	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
-	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
 	// Calc these directly
 	sent := uint64(stats.PacketsSent)
@@ -422,12 +442,12 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	}
 
 	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
-	dst.CustomMetrics["PacketsSent"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["PacketsSent"] = kt.MetricInfo{Oid: oid, Mib: mib, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["PacketsRecv"] = int64(diffRecv)
-	dst.CustomMetrics["PacketsRecv"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: "ping", Type: "ping"}
+	dst.CustomMetrics["PacketsRecv"] = kt.MetricInfo{Oid: oid, Mib: mib, Profile: "ping", Type: "ping"}
 	if percnt >= 0.0 {
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
-		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: "computed", Mib: "computed", Format: kt.FloatMS, Profile: "ping", Type: "ping"}
+		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
 		// If percent ~ 100, push rtt down to 0 to avoid bad readings.
 		if math.Abs(percnt-99.) <= 1 {
