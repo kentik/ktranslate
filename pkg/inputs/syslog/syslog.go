@@ -213,7 +213,12 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 			if hs, ok := hostname.(string); ok {
 				if ipr := net.ParseIP(hs); ipr != nil {
 					if ks.resolver != nil {
-						msg["device_name"] = ks.resolver.Resolve(ctx, hs, true)
+						resolved_name := ks.resolver.Resolve(ctx, hs, true)
+						if resolved_name != "" {
+							msg["device_name"] = resolved_name
+						} else {
+							msg["device_name"] = hs
+						}
 					} else {
 						msg["device_name"] = hs
 					}
