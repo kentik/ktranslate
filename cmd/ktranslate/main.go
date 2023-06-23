@@ -437,6 +437,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/sinks/prom
 			case "prom_listen":
 				cfg.PrometheusSink.ListenAddr = val
+			case "prom_remote_write":
+				cfg.PrometheusSink.RemoteWriteUrl = val
 			// pkg/sinks/gcloud
 			case "gcloud_bucket":
 				cfg.GCloudSink.Bucket = val

@@ -40,6 +40,7 @@ const (
 	FORMAT_INFLUX               = "influx"
 	FORMAT_CARBON               = "carbon"
 	FORMAT_PROM                 = "prometheus"
+	FORMAT_PROM_REMOTE          = "prometheus_remote"
 	FORMAT_NR                   = "new_relic"
 	FORMAT_NRM                  = "new_relic_metric"
 	FORMAT_SPLUNK               = "splunk"
@@ -73,6 +74,8 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 		return splunk.NewFormat(log, compression)
 	case FORMAT_KFLOW:
 		return kflow.NewFormat(log, compression)
+	case FORMAT_PROM_REMOTE:
+		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}
