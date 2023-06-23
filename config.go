@@ -37,7 +37,8 @@ type PrometheusFormatConfig struct {
 
 // PrometheusSinkConfig is config for the prometheus sink
 type PrometheusSinkConfig struct {
-	ListenAddr string
+	ListenAddr     string
+	RemoteWriteUrl string
 }
 
 // GCloudSinkConfig is the config for GCP
@@ -361,7 +362,8 @@ func DefaultConfig() *Config {
 			NamespaceToken:    ":",
 		},
 		PrometheusSink: &PrometheusSinkConfig{
-			ListenAddr: ":8082",
+			ListenAddr:     ":8082",
+			RemoteWriteUrl: "",
 		},
 		GCloudSink: &GCloudSinkConfig{
 			Bucket:               "",
