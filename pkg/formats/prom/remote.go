@@ -21,7 +21,6 @@ import (
 type RemotePromFormat struct {
 	logger.ContextL
 	compression  kt.Compression
-	doGz         bool
 	doSnappy     bool
 	lastMetadata map[string]*kt.LastMetadata
 	invalids     map[string]bool
@@ -35,21 +34,16 @@ func NewRemoteFormat(log logger.Underlying, compression kt.Compression, cfg *ktr
 	jf := &RemotePromFormat{
 		compression:  compression,
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "remotePromFormat"}, log),
-		doGz:         false,
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 		config:       cfg,
 	}
 
 	switch compression {
-	case kt.CompressionNone:
-		// noop.
-	case kt.CompressionGzip:
-		jf.doGz = true
 	case kt.CompressionSnappy:
 		jf.doSnappy = true
 	default:
-		return nil, fmt.Errorf("You used an unsupported compression format: %s. For remote_prom, use gzip, snappy or no compression at all.", compression)
+		return nil, fmt.Errorf("You used an unsupported compression format: %s. For remote_prom, use snappy only.", compression)
 	}
 
 	return jf, nil
@@ -79,7 +73,7 @@ func (f *RemotePromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error
 	}
 
 	// No Compression.
-	if !f.doGz && !f.doSnappy {
+	if !f.doSnappy {
 		return kt.NewOutputWithProviderAndCompanySender(pbBytes, msgs[0].Provider, msgs[0].CompanyId, kt.MetricOutput, ""), nil
 	}
 
@@ -162,7 +156,11 @@ func (f *RemotePromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []prompb.TimeSeries
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			labels := make([]prompb.Label, 0, len(attrNew))
+			mtype := name.GetType()
+			labels := []prompb.Label{prompb.Label{
+				Name:  "name",
+				Value: "kentik." + mtype + "." + m,
+			}}
 			for k, v := range attrNew {
 				switch val := v.(type) {
 				case string:
@@ -203,7 +201,64 @@ func (f *RemotePromFormat) fromSnmpDeviceMetric(in *kt.JCHF) []prompb.TimeSeries
 }
 
 func (f *RemotePromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []prompb.TimeSeries {
-	return nil
+	metrics := in.CustomMetrics
+	attr := map[string]interface{}{}
+	f.RLock()
+	defer f.RUnlock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], true)
+	res := []prompb.TimeSeries{}
+	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
+		if _, ok := in.CustomBigInt[m]; ok {
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], false, true)
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+
+			labels := []prompb.Label{prompb.Label{
+				Name:  "name",
+				Value: "kentik.snmp." + m,
+			}}
+			for k, v := range attrNew {
+				switch val := v.(type) {
+				case string:
+					labels = append(labels, prompb.Label{
+						Name:  k,
+						Value: val,
+					})
+				case int64, int32:
+					labels = append(labels, prompb.Label{
+						Name:  k,
+						Value: fmt.Sprintf("%v", val),
+					})
+				}
+			}
+
+			//mtype := name.GetType()
+			ms := make([]prompb.Sample, 1)
+			if name.Format == kt.FloatMS {
+				ms[0] = prompb.Sample{
+					Timestamp: ptime.FromFloatSeconds(float64(in.Timestamp)),
+					Value:     float64(in.CustomBigInt[m]) / 1000.,
+				}
+			} else {
+				ms[0] = prompb.Sample{
+					Timestamp: ptime.FromFloatSeconds(float64(in.Timestamp)),
+					Value:     float64(in.CustomBigInt[m]),
+				}
+			}
+
+			res = append(res, prompb.TimeSeries{
+				Labels:  labels,
+				Samples: ms,
+			})
+		}
+	}
+
+	return res
 }
 
 func (f *RemotePromFormat) fromSnmpMetadata(in *kt.JCHF) []prompb.TimeSeries {
