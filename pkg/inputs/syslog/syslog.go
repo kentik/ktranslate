@@ -59,6 +59,7 @@ const (
 	CHAN_SLACK           = 10000
 	DeviceUpdateDuration = 1 * time.Hour
 	InstNameSyslog       = "ktranslate-syslog"
+	ErrorCheckDuration   = 1 * time.Minute
 )
 
 func NewSyslogSource(ctx context.Context, log logger.Underlying, logchan chan string, registry go_metrics.Registry, apic *api.KentikApi, resolver *resolv.Resolver, cfg *ktranslate.SyslogInputConfig) (*KentikSyslog, error) {
@@ -148,6 +149,9 @@ func (ks *KentikSyslog) process(ctx context.Context, id int, channel syslog.LogP
 	defer deviceTicker.Stop()
 	checkTicker := time.NewTicker(1 * time.Second)
 	defer checkTicker.Stop()
+	errorTicker := time.NewTicker(ErrorCheckDuration)
+	defer errorTicker.Stop()
+	var lastErr error
 
 	ks.Infof("thread %d running", id)
 	for {
@@ -169,6 +173,13 @@ func (ks *KentikSyslog) process(ctx context.Context, id int, channel syslog.LogP
 					ks.Infof("Updating the device list.")
 					ks.devices = ks.apic.GetDevicesAsMap(0)
 				}()
+			}
+		case <-errorTicker.C: // See if there's any new errors?
+			lm := ks.server.GetLastError()
+			if lm != nil && lm != lastErr {
+				lastErr = lm
+				ks.Errorf("%v", lastErr)
+				ks.metrics.Errors.Mark(1)
 			}
 		case <-checkTicker.C:
 			if id == 1 {
