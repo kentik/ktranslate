@@ -547,6 +547,10 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 			f.Errorf("Missing metric name, skipping %v", attr)
 			continue
 		}
+		if strings.HasSuffix(m, "_counter") {
+			// Skip these counters which are not needed.
+			continue
+		}
 		profileName = name.Profile
 		if _, ok := in.CustomBigInt[m]; ok {
 			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], true, false)
