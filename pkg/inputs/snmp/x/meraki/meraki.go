@@ -312,7 +312,7 @@ type client struct {
 
 func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) {
 	clientSet := []*client{}
-	durs := float32(3600) // Look back 1 hour in seconds, get all devices using APs in this range.
+	durs := float32(dur.Seconds())
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
 			params := networks.NewGetNetworkClientsParams()
@@ -462,7 +462,7 @@ func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 
 	c.log.Infof("Got devices for %d networks", len(networkDevs))
 	clientSet := []*client{}
-	durs := float32(3600) // Look back 1 hour in seconds, get all devices using APs in this range.
+	durs := float32(dur.Seconds())
 	for network, deviceSet := range networkDevs {
 		c.log.Infof("Looking at %d devices for network %s", len(deviceSet), network)
 		for _, device := range deviceSet {
