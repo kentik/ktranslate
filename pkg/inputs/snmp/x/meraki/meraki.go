@@ -290,24 +290,29 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) 
 }
 
 type client struct {
-	Usage            map[string]float64 `json:"usage"`
-	ID               string             `json:"id"`
-	Description      string             `json:"description"`
-	Mac              string             `json:"mac"`
-	IP               string             `json:"ip"`
-	User             string             `json:"user"`
-	Vlan             string             `json:"vlan"`
-	NamedVlan        string             `json:"namedVlan"`
-	IPv6             string             `json:"ip6"`
-	Manufacturer     string             `json:"manufacturer"`
-	DeviceType       string             `json:"deviceTypePrediction"`
-	RecentDeviceName string             `json:"recentDeviceName"`
-	Status           string             `json:"status"`
-	MdnsName         string             `json:"mdnsName"`
-	DhcpHostname     string             `json:"dhcpHostname"`
-	network          string
-	device           networkDevice
-	appUsage         []appUsage
+	Usage              map[string]float64 `json:"usage"`
+	ID                 string             `json:"id"`
+	Description        string             `json:"description"`
+	Mac                string             `json:"mac"`
+	IP                 string             `json:"ip"`
+	User               string             `json:"user"`
+	Vlan               string             `json:"vlan"`
+	NamedVlan          string             `json:"namedVlan"`
+	IPv6               string             `json:"ip6"`
+	Manufacturer       string             `json:"manufacturer"`
+	DeviceType         string             `json:"deviceTypePrediction"`
+	RecentDeviceName   string             `json:"recentDeviceName"`
+	RecentDeviceSerial string             `json:"recentDeviceSerial"`
+	RecentDeviceMac    string             `json:"recentDeviceMac"`
+	SSID               string             `json:"ssid"`
+	Status             string             `json:"status"`
+	MdnsName           string             `json:"mdnsName"`
+	DhcpHostname       string             `json:"dhcpHostname"`
+	network            string
+	orgName            string
+	orgId              string
+	device             networkDevice
+	appUsage           []appUsage
 }
 
 func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) {
@@ -337,6 +342,8 @@ func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) 
 			}
 			for _, client := range clients {
 				client.network = network.Name
+				client.orgName = org.Name
+				client.orgId = org.ID
 				clientSet = append(clientSet, client) // Toss these all in together
 			}
 		}
@@ -525,9 +532,14 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			"manufacturer":       client.Manufacturer,
 			"device_type":        client.DeviceType,
 			"recent_device_name": client.RecentDeviceName,
+			"device_mac_addr":    client.RecentDeviceMac,
+			"device_serial":      client.RecentDeviceSerial,
+			"ssid":               client.SSID,
 			"dhcp_hostname":      client.DhcpHostname,
 			"mdns_name":          client.MdnsName,
 			"vlan":               client.Vlan,
+			"org_name":           client.orgName,
+			"org_id":             client.orgId,
 		}
 
 		dst.CustomBigInt = map[string]int64{}
