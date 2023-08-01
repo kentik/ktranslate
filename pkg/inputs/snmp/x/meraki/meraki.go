@@ -101,8 +101,10 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		}
 
 		// Now list the networks for this org.
+		perPageLimit := int64(100000)
 		params := organizations.NewGetOrganizationNetworksParams()
 		params.SetOrganizationID(org.ID)
+		params.SetPerPage(&perPageLimit)
 		prod, err := client.Organizations.GetOrganizationNetworks(params, c.auth)
 		if err != nil {
 			return nil, err
