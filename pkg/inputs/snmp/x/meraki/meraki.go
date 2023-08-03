@@ -914,6 +914,9 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 
 			dst.CustomStr = map[string]string{
 				"network":           device.network.Name,
+				"network_id":        device.NetworkID,
+				"serial":            device.Serial,
+				"model":             device.Model,
 				"status":            uplink.Status,
 				"connection_type":   uplink.ConnectionType,
 				"interface":         uplink.Interface,
