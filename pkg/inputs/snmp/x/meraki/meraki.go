@@ -41,8 +41,9 @@ type orgDesc struct {
 }
 
 type networkDesc struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   string   `json:"id"`
+	Name string   `json:"name"`
+	Tags []string `json:"tags"`
 	org  *organizations.GetOrganizationsOKBodyItems0
 }
 
@@ -74,6 +75,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 
 	orgs := []*regexp.Regexp{}
 	nets := []*regexp.Regexp{}
+	c.client = client
 	for _, org := range conf.Ext.MerakiConfig.Orgs {
 		re := regexp.MustCompile(org)
 		orgs = append(orgs, re)
@@ -101,44 +103,12 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		}
 
 		// Now list the networks for this org.
-		perPageLimit := int64(100000)
-		params := organizations.NewGetOrganizationNetworksParams()
-		params.SetOrganizationID(org.ID)
-		params.SetPerPage(&perPageLimit)
-		prod, err := client.Organizations.GetOrganizationNetworks(params, c.auth)
-		if err != nil {
-			return nil, err
-		}
-
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return nil, err
-		}
-		var networks []networkDesc
-		err = json.Unmarshal(b, &networks)
-		if err != nil {
-			return nil, err
-		}
-
 		netSet := map[string]networkDesc{}
-		for _, network := range networks {
-			if len(nets) > 0 {
-				foundNet := false
-				for _, net := range nets {
-					if net.MatchString(network.Name) {
-						foundNet = true
-						break
-					}
-				}
-				if !foundNet {
-					continue // This network isn't opted in.
-				}
-			}
-			network.org = lorg
-			c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
-			netSet[network.ID] = network
-			numNets++
+		numAdded, err := c.getOrgNetworks(netSet, "", lorg, nets, 0)
+		if err != nil {
+			return nil, err
 		}
+		numNets += numAdded
 
 		if len(netSet) > 0 { // Only add this org in to track if it has some networks.
 			c.log.Infof("Adding organization %s to list to track", org.Name)
@@ -153,9 +123,75 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 
 	// If we get this far, we have a list of things to look at.
 	c.log.Infof("%s connected to API for %s with %d organization(s) and %d network(s).", c.GetName(), conf.DeviceName, len(c.orgs), numNets)
-	c.client = client
 
 	return &c, nil
+}
+
+var reLink = regexp.MustCompile(`startingAfter=(.*)>;`)
+
+func getNextLink(linkSet string) string {
+	for _, link := range strings.Split(linkSet, ",") {
+		if strings.Contains(link, "rel=next") {
+			links := reLink.FindStringSubmatch(link)
+			if len(links) > 1 {
+				return links[1]
+			}
+		}
+	}
+	return ""
+}
+
+func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken string,
+	org *organizations.GetOrganizationsOKBodyItems0, nets []*regexp.Regexp, numNets int) (int, error) {
+
+	perPageLimit := int64(100) // Seems like a good default.
+	params := organizations.NewGetOrganizationNetworksParams()
+	params.SetOrganizationID(org.ID)
+	params.SetPerPage(&perPageLimit)
+	if nextToken != "" {
+		params.SetStartingAfter(&nextToken)
+	}
+	prod, err := c.client.Organizations.GetOrganizationNetworks(params, c.auth)
+	if err != nil {
+		return 0, err
+	}
+
+	b, err := json.Marshal(prod.GetPayload())
+	if err != nil {
+		return 0, err
+	}
+	var networks []networkDesc
+	err = json.Unmarshal(b, &networks)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, network := range networks {
+		if len(nets) > 0 {
+			foundNet := false
+			for _, net := range nets {
+				if net.MatchString(network.Name) {
+					foundNet = true
+					break
+				}
+			}
+			if !foundNet {
+				continue // This network isn't opted in.
+			}
+		}
+		network.org = org
+		c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
+		netSet[network.ID] = network
+		numNets++
+	}
+
+	// Recursion!
+	nextLink := getNextLink(prod.Link)
+	if nextLink != "" {
+		return c.getOrgNetworks(netSet, nextLink, org, nets, numNets)
+	} else {
+		return numNets, nil
+	}
 }
 
 func (c *MerakiClient) GetName() string {
