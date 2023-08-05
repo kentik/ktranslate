@@ -868,10 +868,12 @@ type uplinkUsage struct {
 
 func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
+	ts := float32(dur.Seconds())
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
 			params := appliance.NewGetNetworkApplianceUplinksUsageHistoryParams()
 			params.SetNetworkID(network.ID)
+			params.SetTimespan(&ts)
 
 			prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
 			if err != nil {
