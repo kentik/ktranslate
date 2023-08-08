@@ -868,6 +868,34 @@ type uplinkUsage struct {
 
 func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
+	var getUsage func(params *appliance.GetNetworkApplianceUplinksUsageHistoryParams, network networkDesc) ([]uplinkUsage, error)
+	getUsage = func(params *appliance.GetNetworkApplianceUplinksUsageHistoryParams, network networkDesc) ([]uplinkUsage, error) {
+		prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "status 429") {
+				c.log.Infof("Uplink Usage: %s 429, sleeping", network.Name)
+				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				return getUsage(params, network)
+			} else {
+				c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
+				return nil, err
+			}
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return nil, err
+		}
+
+		var uplinkHistories []uplinkUsage
+		err = json.Unmarshal(b, &uplinkHistories)
+		if err != nil {
+			return nil, err
+		}
+
+		return uplinkHistories, nil
+	}
+
 	ts := float32(dur.Seconds())
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
@@ -875,21 +903,9 @@ func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]de
 			params.SetNetworkID(network.ID)
 			params.SetTimespan(&ts)
 
-			prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
+			uplinkHistories, err := getUsage(params, network)
 			if err != nil {
-				c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
 				continue
-			}
-
-			b, err := json.Marshal(prod.GetPayload())
-			if err != nil {
-				return err
-			}
-
-			var uplinkHistories []uplinkUsage
-			err = json.Unmarshal(b, &uplinkHistories)
-			if err != nil {
-				return err
 			}
 
 			if len(uplinkHistories) > 0 {
