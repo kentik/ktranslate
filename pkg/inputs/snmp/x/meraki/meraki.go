@@ -28,7 +28,7 @@ type MerakiClient struct {
 	jchfChan chan []*kt.JCHF
 	conf     *kt.SnmpDeviceConfig
 	metrics  *kt.SnmpDeviceMetric
-	client   *apiclient.MerakiDashboard
+	client   *apiclient.DashboardAPIGolang
 	auth     runtime.ClientAuthInfoWriter
 	orgs     []orgDesc
 }
@@ -688,7 +688,7 @@ type uplink struct {
 	DNS1           string     `json:"dns1"`
 	DNS2           string     `json:"dns2"`
 	SignalType     string     `json:"signalType"`
-	Usage          []uplinkInterfaceUsage
+	Usage          *appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0ByUplinkItems0
 	LatencyLoss    deviceUplinkLatency
 }
 
@@ -705,31 +705,6 @@ func (du *deviceUplink) SetLatencyLoss(u deviceUplinkLatency) {
 			Interface:   u.Uplink,
 			LatencyLoss: u,
 		})
-	}
-}
-
-func (du *deviceUplink) SetUsage(uplinkHistories []uplinkUsage) {
-	for _, ts := range uplinkHistories {
-		for _, u := range ts.ByInterface {
-			found := false
-			for i, ul := range du.Uplinks {
-				if ul.Interface == u.Interface {
-					if du.Uplinks[i].Usage == nil {
-						du.Uplinks[i].Usage = make([]uplinkInterfaceUsage, 0)
-					}
-					du.Uplinks[i].Usage = append(du.Uplinks[i].Usage, u)
-					found = true
-				}
-			}
-			if !found {
-				du.Uplinks = append(du.Uplinks, uplink{
-					Interface: u.Interface,
-					Usage: []uplinkInterfaceUsage{
-						u,
-					},
-				})
-			}
-		}
 	}
 }
 
@@ -854,67 +829,47 @@ func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[str
 	return nil
 }
 
-type uplinkInterfaceUsage struct {
-	Interface string  `json:"interface"`
-	Sent      float64 `json:"sent"`
-	Received  float64 `json:"received"`
-}
-
-type uplinkUsage struct {
-	StartTime   time.Time              `json:"startTime"`
-	EndTime     time.Time              `json:"endTime"`
-	ByInterface []uplinkInterfaceUsage `json:"byInterface"`
-}
-
 func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
-	var getUsage func(params *appliance.GetNetworkApplianceUplinksUsageHistoryParams, network networkDesc) ([]uplinkUsage, error)
-	getUsage = func(params *appliance.GetNetworkApplianceUplinksUsageHistoryParams, network networkDesc) ([]uplinkUsage, error) {
-		prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
+	var getUsage func(params *appliance.GetOrganizationApplianceUplinksUsageByNetworkParams, org orgDesc) ([]*appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0, error)
+	getUsage = func(params *appliance.GetOrganizationApplianceUplinksUsageByNetworkParams, org orgDesc) ([]*appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0, error) {
+		prod, err := c.client.Appliance.GetOrganizationApplianceUplinksUsageByNetwork(params, c.auth)
 		if err != nil {
 			if strings.Contains(err.Error(), "status 429") {
-				c.log.Infof("Uplink Usage: %s 429, sleeping", network.Name)
+				c.log.Infof("Uplink Usage: %s 429, sleeping", org.Name)
 				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
-				return getUsage(params, network)
+				return getUsage(params, org)
 			} else {
-				c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
+				c.log.Warnf("Cannot get Uplink Usage: %s %v", org.Name, err)
 				return nil, err
 			}
 		}
 
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return nil, err
-		}
-
-		var uplinkHistories []uplinkUsage
-		err = json.Unmarshal(b, &uplinkHistories)
-		if err != nil {
-			return nil, err
-		}
-
-		return uplinkHistories, nil
+		return prod.GetPayload(), nil
 	}
 
 	ts := float32(dur.Seconds())
 	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			params := appliance.NewGetNetworkApplianceUplinksUsageHistoryParams()
-			params.SetNetworkID(network.ID)
-			params.SetTimespan(&ts)
+		params := appliance.NewGetOrganizationApplianceUplinksUsageByNetworkParams()
+		params.SetOrganizationID(org.ID)
+		params.SetTimespan(&ts)
 
-			uplinkHistories, err := getUsage(params, network)
-			if err != nil {
-				continue
-			}
+		uplinkUsage, err := getUsage(params, org)
+		if err != nil {
+			continue
+		}
 
-			if len(uplinkHistories) > 0 {
-				for _, du := range uplinkMap {
-					if du.network.ID == network.ID {
-						du.SetUsage(uplinkHistories)
+		if len(uplinkUsage) > 0 {
+			for _, network := range uplinkUsage {
+				for _, uplink := range network.ByUplink {
+					if _, ok := uplinkMap[uplink.Serial]; ok {
+						for i, _ := range uplinkMap[uplink.Serial].Uplinks {
+							if uplinkMap[uplink.Serial].Uplinks[i].Interface == uplink.Interface {
+								uplinkMap[uplink.Serial].Uplinks[i].Usage = uplink
+							}
+						}
 					}
 				}
-
 			}
 		}
 	}
@@ -951,12 +906,13 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.Timestamp = time.Now().Unix()
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
 
-			sent, recv := getUsage(uplink)
-			dst.CustomBigInt["Sent"] = sent
-			dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+			if uplink.Usage != nil {
+				dst.CustomBigInt["Sent"] = uplink.Usage.Sent
+				dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
 
-			dst.CustomBigInt["Recv"] = recv
-			dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+				dst.CustomBigInt["Recv"] = uplink.Usage.Received
+				dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+			}
 
 			latency, loss := getLatencyLoss(uplink)
 			dst.CustomBigInt["LatencyMS"] = int64(latency * 1000.)
@@ -971,17 +927,6 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 	}
 
 	return res, nil
-}
-
-func getUsage(u uplink) (int64, int64) {
-	sent := int64(0)
-	rcv := int64(0)
-	for _, t := range u.Usage {
-		sent += int64(t.Sent)
-		rcv += int64(t.Received)
-	}
-
-	return sent, rcv
 }
 
 func getLatencyLoss(u uplink) (float64, float64) {

@@ -15,7 +15,7 @@ require (
 	github.com/dchest/siphash v1.2.2
 	github.com/elliotchance/orderedmap v1.4.0
 	github.com/fsnotify/fsnotify v1.6.0
-	github.com/go-openapi/runtime v0.24.1
+	github.com/go-openapi/runtime v0.26.0
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/snappy v0.0.4
@@ -28,7 +28,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
 	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
-	github.com/kentik/dashboard-api-golang v0.0.0-20220617012637-33c5d19ba6de
+	github.com/kentik/dashboard-api-golang v0.0.0-20230808230432-28477cd77336
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
@@ -41,7 +41,7 @@ require (
 	github.com/prometheus/prometheus v0.44.0
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
 	github.com/segmentio/kafka-go v0.4.23
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	github.com/syndtr/goleveldb v1.0.0
 	go.starlark.net v0.0.0-20220926145019-14b050677505
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4
@@ -69,14 +69,16 @@ require (
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/facebookgo/limitgroup v0.0.0-20150612190941-6abd8d71ec01 // indirect
 	github.com/facebookgo/muster v0.0.0-20150708232844-fd3d7953fd52 // indirect
+	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/analysis v0.21.4 // indirect
-	github.com/go-openapi/errors v0.20.3 // indirect
-	github.com/go-openapi/jsonpointer v0.19.6 // indirect
+	github.com/go-openapi/errors v0.20.4 // indirect
+	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/loads v0.21.2 // indirect
-	github.com/go-openapi/spec v0.20.8 // indirect
+	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
-	github.com/go-openapi/swag v0.22.3 // indirect
+	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-openapi/validate v0.22.1 // indirect
 	github.com/golang-jwt/jwt v3.2.1+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -114,8 +116,11 @@ require (
 	github.com/vaughan0/go-ini v0.0.0-20130923145212-a98ad7ee00ec // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	go.mongodb.org/mongo-driver v1.11.3 // indirect
+	go.mongodb.org/mongo-driver v1.12.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
+	go.opentelemetry.io/otel v1.16.0 // indirect
+	go.opentelemetry.io/otel/metric v1.16.0 // indirect
+	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	golang.org/x/crypto v0.7.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
