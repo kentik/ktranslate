@@ -1089,16 +1089,17 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 		// Now add in metrics for peer reachibility
 		for _, peer := range vpn.MerakiVpnPeers {
 			dst := makeChf(vpn)
-			dst.CustomStr["peer_network_name"] = peer.NetworkName
+			dst.CustomStr["peer_name"] = peer.NetworkName
 			dst.CustomStr["peer_network_id"] = peer.NetworkID
 			dst.CustomStr["peer_reachablity"] = peer.Reachability
+			dst.CustomStr["peer_type"] = "Meraki"
 
 			status := int64(0)
 			if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
 				status = 1
 			}
-			dst.CustomBigInt["MerakiPeer"] = status
-			dst.CustomMetrics["MerakiPeer"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+			dst.CustomBigInt["PeerStatus"] = status
+			dst.CustomMetrics["PeerStatus"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
 
 			res = append(res, dst)
 		}
@@ -1108,13 +1109,14 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 			dst.CustomStr["peer_name"] = peer.Name
 			dst.CustomStr["peer_public_ip"] = peer.PublicIp
 			dst.CustomStr["peer_reachablity"] = peer.Reachability
+			dst.CustomStr["peer_type"] = "ThirdParty"
 
 			status := int64(0)
 			if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
 				status = 1
 			}
-			dst.CustomBigInt["ThirdPeer"] = status
-			dst.CustomMetrics["ThirdPeer"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+			dst.CustomBigInt["PeerStatus"] = status
+			dst.CustomMetrics["PeerStatus"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
 
 			res = append(res, dst)
 		}
