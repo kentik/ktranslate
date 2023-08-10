@@ -165,6 +165,7 @@ type MerakiConfig struct {
 	MonitorDevices        bool     `yaml:"monitor_devices"`
 	MonitorOrgChanges     bool     `yaml:"monitor_org_changes"`
 	MonitorNetworkClients bool     `yaml:"monitor_clients"`
+	MonitorVpnStatus      bool     `yaml:"monitor_vpn_status"`
 	Orgs                  []string `yaml:"organizations"` // Only monitor orgs in this list, if set.
 	Networks              []string `yaml:"networks"`      // Only monitor networks in this list, if set.
 }

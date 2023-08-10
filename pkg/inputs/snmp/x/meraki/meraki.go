@@ -206,10 +206,11 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	doDevices := c.conf.Ext.MerakiConfig.MonitorDevices
 	doOrgChanges := c.conf.Ext.MerakiConfig.MonitorOrgChanges
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
-	if !doUplinks && !doDevices && !doOrgChanges && !doNetworkClients {
+	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
+	if !doUplinks && !doDevices && !doOrgChanges && !doNetworkClients && !doVpnStatus {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v, networks=%v", dur, doUplinks, doDevices, doOrgChanges, doNetworkClients)
+	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v, networks=%v, vpn status=%v", dur, doUplinks, doDevices, doOrgChanges, doNetworkClients, doVpnStatus)
 
 	for {
 		select {
@@ -243,6 +244,14 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 			if doUplinks {
 				if res, err := c.getUplinks(dur); err != nil {
 					c.log.Infof("Meraki cannot get Uplink Info: %v", err)
+				} else if len(res) > 0 {
+					c.jchfChan <- res
+				}
+			}
+
+			if doVpnStatus {
+				if res, err := c.getVpnStatus(dur); err != nil {
+					c.log.Infof("Meraki cannot get vpn status Info: %v", err)
 				} else if len(res) > 0 {
 					c.jchfChan <- res
 				}
@@ -943,4 +952,173 @@ func getLatencyLoss(u uplink) (float64, float64) {
 	}
 
 	return latency / float64(len(u.LatencyLoss.TimeSeries)), loss / float64(len(u.LatencyLoss.TimeSeries))
+}
+
+/**
+1) Get all the vpns with status.
+*/
+
+type subnet struct {
+	Subnet string `json:"subnet"`
+	Name   string `json:"name"`
+}
+
+type vpnPeer struct {
+	NetworkID    string `json:"networkId"`
+	NetworkName  string `json:"networkName"`
+	Reachability string `json:"reachability"`
+	Name         string `json:"name"`
+	PublicIp     string `json:"publicIp"`
+}
+
+type vpnStatus struct {
+	NetworkID          string    `json:"networkId"`
+	NetworkName        string    `json:"networkName"`
+	DeviceSerial       string    `json:"deviceSerial"`
+	DeviceStatus       string    `json:"deviceStatus"`
+	Uplinks            []uplink  `json:"uplinks"`
+	VpnMode            string    `json:"vpnMode"`
+	ExportedSubnets    []subnet  `json:"exportedSubnets"`
+	MerakiVpnPeers     []vpnPeer `json:"merakiVpnPeers"`
+	ThirdPartyVpnPeers []vpnPeer `json:"thirdPartyVpnPeers"`
+}
+
+func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
+
+	var getVpnStatus func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error
+	getVpnStatus = func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error {
+		params := appliance.NewGetOrganizationApplianceVpnStatusesParams()
+		params.SetOrganizationID(org.ID)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Appliance.GetOrganizationApplianceVpnStatuses(params, c.auth)
+		if err != nil {
+			return err
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return err
+		}
+
+		var vpnSet []*vpnStatus
+		err = json.Unmarshal(b, &vpnSet)
+		if err != nil {
+			return err
+		}
+
+		// Store these for some tail recursion.
+		*vpns = append(*vpns, vpnSet...)
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getVpnStatus(nextLink, org, vpns)
+		} else {
+			return nil
+		}
+	}
+
+	vpns := make([]*vpnStatus, 0)
+	for _, org := range c.orgs {
+		err := getVpnStatus("", org, &vpns)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(vpns) == 0 {
+		return nil, nil
+	}
+
+	return c.parseVpnStatus(vpns)
+}
+
+func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
+	res := make([]*kt.JCHF, 0)
+
+	makeChf := func(vpn *vpnStatus) *kt.JCHF {
+		dst := kt.NewJCHF()
+		//dst.SrcAddr = uplink.PublicIP
+		dst.DeviceName = vpn.DeviceSerial
+
+		dst.CustomStr = map[string]string{
+			"network":    vpn.NetworkName,
+			"network_id": vpn.NetworkID,
+			"serial":     vpn.DeviceSerial,
+			"status":     vpn.DeviceStatus,
+			"vpn_mode":   vpn.VpnMode,
+		}
+
+		for _, uplink := range vpn.Uplinks {
+			dst.CustomStr[uplink.Interface] = uplink.PublicIP
+		}
+
+		//for _, subnet := range vpn.ExportedSubnets {
+		//	dst.CustomStr["subnets"+subnet.Name] = subnet.Subnet
+		//}
+
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = kt.ProviderMerakiCloud
+
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+		c.conf.SetUserTags(dst.CustomStr)
+
+		return dst
+	}
+
+	for _, vpn := range vpns {
+
+		// Basic status here.
+		dst := makeChf(vpn)
+		status := int64(0)
+		if vpn.DeviceStatus == "online" { // Online is 1, others are 0.
+			status = 1
+		}
+		dst.CustomBigInt["Status"] = status
+		dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+		res = append(res, dst)
+
+		// Now add in metrics for peer reachibility
+		for _, peer := range vpn.MerakiVpnPeers {
+			dst := makeChf(vpn)
+			dst.CustomStr["peer_network_name"] = peer.NetworkName
+			dst.CustomStr["peer_network_id"] = peer.NetworkID
+			dst.CustomStr["peer_reachablity"] = peer.Reachability
+
+			status := int64(0)
+			if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
+				status = 1
+			}
+			dst.CustomBigInt["MerakiPeer"] = status
+			dst.CustomMetrics["MerakiPeer"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+			res = append(res, dst)
+		}
+
+		for _, peer := range vpn.ThirdPartyVpnPeers {
+			dst := makeChf(vpn)
+			dst.CustomStr["peer_name"] = peer.Name
+			dst.CustomStr["peer_public_ip"] = peer.PublicIp
+			dst.CustomStr["peer_reachablity"] = peer.Reachability
+
+			status := int64(0)
+			if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
+				status = 1
+			}
+			dst.CustomBigInt["ThirdPeer"] = status
+			dst.CustomMetrics["ThirdPeer"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+			res = append(res, dst)
+		}
+	}
+
+	return res, nil
 }
