@@ -28,7 +28,7 @@ type MerakiClient struct {
 	jchfChan chan []*kt.JCHF
 	conf     *kt.SnmpDeviceConfig
 	metrics  *kt.SnmpDeviceMetric
-	client   *apiclient.MerakiDashboard
+	client   *apiclient.DashboardAPIGolang
 	auth     runtime.ClientAuthInfoWriter
 	orgs     []orgDesc
 }
@@ -41,8 +41,9 @@ type orgDesc struct {
 }
 
 type networkDesc struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID   string   `json:"id"`
+	Name string   `json:"name"`
+	Tags []string `json:"tags"`
 	org  *organizations.GetOrganizationsOKBodyItems0
 }
 
@@ -74,6 +75,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 
 	orgs := []*regexp.Regexp{}
 	nets := []*regexp.Regexp{}
+	c.client = client
 	for _, org := range conf.Ext.MerakiConfig.Orgs {
 		re := regexp.MustCompile(org)
 		orgs = append(orgs, re)
@@ -101,42 +103,12 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		}
 
 		// Now list the networks for this org.
-		params := organizations.NewGetOrganizationNetworksParams()
-		params.SetOrganizationID(org.ID)
-		prod, err := client.Organizations.GetOrganizationNetworks(params, c.auth)
-		if err != nil {
-			return nil, err
-		}
-
-		b, err := json.Marshal(prod.GetPayload())
-		if err != nil {
-			return nil, err
-		}
-		var networks []networkDesc
-		err = json.Unmarshal(b, &networks)
-		if err != nil {
-			return nil, err
-		}
-
 		netSet := map[string]networkDesc{}
-		for _, network := range networks {
-			if len(nets) > 0 {
-				foundNet := false
-				for _, net := range nets {
-					if net.MatchString(network.Name) {
-						foundNet = true
-						break
-					}
-				}
-				if !foundNet {
-					continue // This network isn't opted in.
-				}
-			}
-			network.org = lorg
-			c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
-			netSet[network.ID] = network
-			numNets++
+		numAdded, err := c.getOrgNetworks(netSet, "", lorg, nets, 0)
+		if err != nil {
+			return nil, err
 		}
+		numNets += numAdded
 
 		if len(netSet) > 0 { // Only add this org in to track if it has some networks.
 			c.log.Infof("Adding organization %s to list to track", org.Name)
@@ -151,9 +123,75 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 
 	// If we get this far, we have a list of things to look at.
 	c.log.Infof("%s connected to API for %s with %d organization(s) and %d network(s).", c.GetName(), conf.DeviceName, len(c.orgs), numNets)
-	c.client = client
 
 	return &c, nil
+}
+
+var reLink = regexp.MustCompile(`startingAfter=(.*)>;`)
+
+func getNextLink(linkSet string) string {
+	for _, link := range strings.Split(linkSet, ",") {
+		if strings.Contains(link, "rel=next") {
+			links := reLink.FindStringSubmatch(link)
+			if len(links) > 1 {
+				return links[1]
+			}
+		}
+	}
+	return ""
+}
+
+func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken string,
+	org *organizations.GetOrganizationsOKBodyItems0, nets []*regexp.Regexp, numNets int) (int, error) {
+
+	perPageLimit := int64(100) // Seems like a good default.
+	params := organizations.NewGetOrganizationNetworksParams()
+	params.SetOrganizationID(org.ID)
+	params.SetPerPage(&perPageLimit)
+	if nextToken != "" {
+		params.SetStartingAfter(&nextToken)
+	}
+	prod, err := c.client.Organizations.GetOrganizationNetworks(params, c.auth)
+	if err != nil {
+		return 0, err
+	}
+
+	b, err := json.Marshal(prod.GetPayload())
+	if err != nil {
+		return 0, err
+	}
+	var networks []networkDesc
+	err = json.Unmarshal(b, &networks)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, network := range networks {
+		if len(nets) > 0 {
+			foundNet := false
+			for _, net := range nets {
+				if net.MatchString(network.Name) {
+					foundNet = true
+					break
+				}
+			}
+			if !foundNet {
+				continue // This network isn't opted in.
+			}
+		}
+		network.org = org
+		c.log.Infof("Adding network %s %s to list to track", network.Name, network.ID)
+		netSet[network.ID] = network
+		numNets++
+	}
+
+	// Recursion!
+	nextLink := getNextLink(prod.Link)
+	if nextLink != "" {
+		return c.getOrgNetworks(netSet, nextLink, org, nets, numNets)
+	} else {
+		return numNets, nil
+	}
 }
 
 func (c *MerakiClient) GetName() string {
@@ -168,10 +206,11 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	doDevices := c.conf.Ext.MerakiConfig.MonitorDevices
 	doOrgChanges := c.conf.Ext.MerakiConfig.MonitorOrgChanges
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
-	if !doUplinks && !doDevices && !doOrgChanges && !doNetworkClients {
+	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
+	if !doUplinks && !doDevices && !doOrgChanges && !doNetworkClients && !doVpnStatus {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v, networks=%v", dur, doUplinks, doDevices, doOrgChanges, doNetworkClients)
+	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v, networks=%v, vpn status=%v", dur, doUplinks, doDevices, doOrgChanges, doNetworkClients, doVpnStatus)
 
 	for {
 		select {
@@ -205,6 +244,14 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 			if doUplinks {
 				if res, err := c.getUplinks(dur); err != nil {
 					c.log.Infof("Meraki cannot get Uplink Info: %v", err)
+				} else if len(res) > 0 {
+					c.jchfChan <- res
+				}
+			}
+
+			if doVpnStatus {
+				if res, err := c.getVpnStatus(dur); err != nil {
+					c.log.Infof("Meraki cannot get vpn status Info: %v", err)
 				} else if len(res) > 0 {
 					c.jchfChan <- res
 				}
@@ -650,7 +697,7 @@ type uplink struct {
 	DNS1           string     `json:"dns1"`
 	DNS2           string     `json:"dns2"`
 	SignalType     string     `json:"signalType"`
-	Usage          []uplinkInterfaceUsage
+	Usage          *appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0ByUplinkItems0
 	LatencyLoss    deviceUplinkLatency
 }
 
@@ -667,31 +714,6 @@ func (du *deviceUplink) SetLatencyLoss(u deviceUplinkLatency) {
 			Interface:   u.Uplink,
 			LatencyLoss: u,
 		})
-	}
-}
-
-func (du *deviceUplink) SetUsage(uplinkHistories []uplinkUsage) {
-	for _, ts := range uplinkHistories {
-		for _, u := range ts.ByInterface {
-			found := false
-			for i, ul := range du.Uplinks {
-				if ul.Interface == u.Interface {
-					if du.Uplinks[i].Usage == nil {
-						du.Uplinks[i].Usage = make([]uplinkInterfaceUsage, 0)
-					}
-					du.Uplinks[i].Usage = append(du.Uplinks[i].Usage, u)
-					found = true
-				}
-			}
-			if !found {
-				du.Uplinks = append(du.Uplinks, uplink{
-					Interface: u.Interface,
-					Usage: []uplinkInterfaceUsage{
-						u,
-					},
-				})
-			}
-		}
 	}
 }
 
@@ -816,49 +838,47 @@ func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[str
 	return nil
 }
 
-type uplinkInterfaceUsage struct {
-	Interface string  `json:"interface"`
-	Sent      float64 `json:"sent"`
-	Received  float64 `json:"received"`
-}
-
-type uplinkUsage struct {
-	StartTime   time.Time              `json:"startTime"`
-	EndTime     time.Time              `json:"endTime"`
-	ByInterface []uplinkInterfaceUsage `json:"byInterface"`
-}
-
 func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
+	var getUsage func(params *appliance.GetOrganizationApplianceUplinksUsageByNetworkParams, org orgDesc) ([]*appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0, error)
+	getUsage = func(params *appliance.GetOrganizationApplianceUplinksUsageByNetworkParams, org orgDesc) ([]*appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0, error) {
+		prod, err := c.client.Appliance.GetOrganizationApplianceUplinksUsageByNetwork(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "status 429") {
+				c.log.Infof("Uplink Usage: %s 429, sleeping", org.Name)
+				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				return getUsage(params, org)
+			} else {
+				c.log.Warnf("Cannot get Uplink Usage: %s %v", org.Name, err)
+				return nil, err
+			}
+		}
+
+		return prod.GetPayload(), nil
+	}
+
+	ts := float32(dur.Seconds())
 	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			params := appliance.NewGetNetworkApplianceUplinksUsageHistoryParams()
-			params.SetNetworkID(network.ID)
+		params := appliance.NewGetOrganizationApplianceUplinksUsageByNetworkParams()
+		params.SetOrganizationID(org.ID)
+		params.SetTimespan(&ts)
 
-			prod, err := c.client.Appliance.GetNetworkApplianceUplinksUsageHistory(params, c.auth)
-			if err != nil {
-				c.log.Warnf("Cannot get Uplink Usage: %s %v", network.Name, err)
-				continue
-			}
+		uplinkUsage, err := getUsage(params, org)
+		if err != nil {
+			continue
+		}
 
-			b, err := json.Marshal(prod.GetPayload())
-			if err != nil {
-				return err
-			}
-
-			var uplinkHistories []uplinkUsage
-			err = json.Unmarshal(b, &uplinkHistories)
-			if err != nil {
-				return err
-			}
-
-			if len(uplinkHistories) > 0 {
-				for _, du := range uplinkMap {
-					if du.network.ID == network.ID {
-						du.SetUsage(uplinkHistories)
+		if len(uplinkUsage) > 0 {
+			for _, network := range uplinkUsage {
+				for _, uplink := range network.ByUplink {
+					if _, ok := uplinkMap[uplink.Serial]; ok {
+						for i, _ := range uplinkMap[uplink.Serial].Uplinks {
+							if uplinkMap[uplink.Serial].Uplinks[i].Interface == uplink.Interface {
+								uplinkMap[uplink.Serial].Uplinks[i].Usage = uplink
+							}
+						}
 					}
 				}
-
 			}
 		}
 	}
@@ -876,6 +896,9 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 
 			dst.CustomStr = map[string]string{
 				"network":           device.network.Name,
+				"network_id":        device.NetworkID,
+				"serial":            device.Serial,
+				"model":             device.Model,
 				"status":            uplink.Status,
 				"connection_type":   uplink.ConnectionType,
 				"interface":         uplink.Interface,
@@ -892,12 +915,13 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.Timestamp = time.Now().Unix()
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
 
-			sent, recv := getUsage(uplink)
-			dst.CustomBigInt["Sent"] = sent
-			dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+			if uplink.Usage != nil {
+				dst.CustomBigInt["Sent"] = uplink.Usage.Sent
+				dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
 
-			dst.CustomBigInt["Recv"] = recv
-			dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+				dst.CustomBigInt["Recv"] = uplink.Usage.Received
+				dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+			}
 
 			latency, loss := getLatencyLoss(uplink)
 			dst.CustomBigInt["LatencyMS"] = int64(latency * 1000.)
@@ -914,17 +938,6 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 	return res, nil
 }
 
-func getUsage(u uplink) (int64, int64) {
-	sent := int64(0)
-	rcv := int64(0)
-	for _, t := range u.Usage {
-		sent += int64(t.Sent)
-		rcv += int64(t.Received)
-	}
-
-	return sent, rcv
-}
-
 func getLatencyLoss(u uplink) (float64, float64) {
 	latency := float64(0)
 	loss := float64(0)
@@ -939,4 +952,185 @@ func getLatencyLoss(u uplink) (float64, float64) {
 	}
 
 	return latency / float64(len(u.LatencyLoss.TimeSeries)), loss / float64(len(u.LatencyLoss.TimeSeries))
+}
+
+/**
+1) Get all the vpns with status.
+*/
+
+type subnet struct {
+	Subnet string `json:"subnet"`
+	Name   string `json:"name"`
+}
+
+type vpnPeer struct {
+	NetworkID    string `json:"networkId"`
+	NetworkName  string `json:"networkName"`
+	Reachability string `json:"reachability"`
+	Name         string `json:"name"`
+	PublicIp     string `json:"publicIp"`
+}
+
+type vpnStatus struct {
+	NetworkID          string    `json:"networkId"`
+	NetworkName        string    `json:"networkName"`
+	DeviceSerial       string    `json:"deviceSerial"`
+	DeviceStatus       string    `json:"deviceStatus"`
+	Uplinks            []uplink  `json:"uplinks"`
+	VpnMode            string    `json:"vpnMode"`
+	ExportedSubnets    []subnet  `json:"exportedSubnets"`
+	MerakiVpnPeers     []vpnPeer `json:"merakiVpnPeers"`
+	ThirdPartyVpnPeers []vpnPeer `json:"thirdPartyVpnPeers"`
+}
+
+func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
+
+	var getVpnStatus func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error
+	getVpnStatus = func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error {
+		params := appliance.NewGetOrganizationApplianceVpnStatusesParams()
+		params.SetOrganizationID(org.ID)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Appliance.GetOrganizationApplianceVpnStatuses(params, c.auth)
+		if err != nil {
+			return err
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return err
+		}
+
+		var vpnSet []*vpnStatus
+		err = json.Unmarshal(b, &vpnSet)
+		if err != nil {
+			return err
+		}
+
+		// Store these for some tail recursion.
+		filtered := make([]*vpnStatus, 0, len(vpnSet))
+		for _, vpn := range vpnSet {
+			if _, ok := org.networks[vpn.NetworkID]; !ok {
+				continue
+			}
+			filtered = append(filtered, vpn)
+		}
+
+		*vpns = append(*vpns, filtered...)
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getVpnStatus(nextLink, org, vpns)
+		} else {
+			return nil
+		}
+	}
+
+	vpns := make([]*vpnStatus, 0)
+	for _, org := range c.orgs {
+		err := getVpnStatus("", org, &vpns)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(vpns) == 0 {
+		return nil, nil
+	}
+
+	return c.parseVpnStatus(vpns)
+}
+
+func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
+	res := make([]*kt.JCHF, 0)
+
+	makeChf := func(vpn *vpnStatus) *kt.JCHF {
+		dst := kt.NewJCHF()
+		//dst.SrcAddr = uplink.PublicIP
+		dst.DeviceName = vpn.DeviceSerial
+
+		dst.CustomStr = map[string]string{
+			"network":    vpn.NetworkName,
+			"network_id": vpn.NetworkID,
+			"serial":     vpn.DeviceSerial,
+			"status":     vpn.DeviceStatus,
+			"vpn_mode":   vpn.VpnMode,
+		}
+
+		for _, uplink := range vpn.Uplinks {
+			dst.CustomStr[uplink.Interface] = uplink.PublicIP
+		}
+
+		//for _, subnet := range vpn.ExportedSubnets {
+		//	dst.CustomStr["subnets"+subnet.Name] = subnet.Subnet
+		//}
+
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = kt.ProviderMerakiCloud
+
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+		c.conf.SetUserTags(dst.CustomStr)
+
+		return dst
+	}
+
+	for _, vpn := range vpns {
+
+		// Basic status here.
+		dst := makeChf(vpn)
+		status := int64(0)
+		if vpn.DeviceStatus == "online" { // Online is 1, others are 0.
+			status = 1
+		}
+		dst.CustomBigInt["Status"] = status
+		dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+		res = append(res, dst)
+
+		// Now add in metrics for peer reachibility
+		if c.conf.Ext.MerakiConfig.Prefs["show_vpn_peers"] {
+			for _, peer := range vpn.MerakiVpnPeers {
+				dst := makeChf(vpn)
+				dst.CustomStr["peer_name"] = peer.NetworkName
+				dst.CustomStr["peer_network_id"] = peer.NetworkID
+				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_type"] = "Meraki"
+
+				status := int64(0)
+				if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
+					status = 1
+				}
+				dst.CustomBigInt["PeerStatus"] = status
+				dst.CustomMetrics["PeerStatus"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+				res = append(res, dst)
+			}
+
+			for _, peer := range vpn.ThirdPartyVpnPeers {
+				dst := makeChf(vpn)
+				dst.CustomStr["peer_name"] = peer.Name
+				dst.CustomStr["peer_public_ip"] = peer.PublicIp
+				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_type"] = "ThirdParty"
+
+				status := int64(0)
+				if peer.Reachability == "reachable" { // Reachable is 1, others are 0.
+					status = 1
+				}
+				dst.CustomBigInt["PeerStatus"] = status
+				dst.CustomMetrics["PeerStatus"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
+
+				res = append(res, dst)
+			}
+		}
+	}
+
+	return res, nil
 }

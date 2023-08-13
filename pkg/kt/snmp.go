@@ -159,14 +159,16 @@ type EAPIConfig struct {
 }
 
 type MerakiConfig struct {
-	ApiKey                string   `yaml:"api_key"`         // Required.
-	Host                  string   `yaml:"host"`            // Optional, defaults to api.meraki.com
-	MonitorUplinks        bool     `yaml:"monitor_uplinks"` // This will be the default if neither is set.
-	MonitorDevices        bool     `yaml:"monitor_devices"`
-	MonitorOrgChanges     bool     `yaml:"monitor_org_changes"`
-	MonitorNetworkClients bool     `yaml:"monitor_clients"`
-	Orgs                  []string `yaml:"organizations"` // Only monitor orgs in this list, if set.
-	Networks              []string `yaml:"networks"`      // Only monitor networks in this list, if set.
+	ApiKey                string          `yaml:"api_key"`         // Required.
+	Host                  string          `yaml:"host"`            // Optional, defaults to api.meraki.com
+	MonitorUplinks        bool            `yaml:"monitor_uplinks"` // This will be the default if neither is set.
+	MonitorDevices        bool            `yaml:"monitor_devices"`
+	MonitorOrgChanges     bool            `yaml:"monitor_org_changes"`
+	MonitorNetworkClients bool            `yaml:"monitor_clients"`
+	MonitorVpnStatus      bool            `yaml:"monitor_vpn_status"`
+	Orgs                  []string        `yaml:"organizations"` // Only monitor orgs in this list, if set.
+	Networks              []string        `yaml:"networks"`      // Only monitor networks in this list, if set.
+	Prefs                 map[string]bool `yaml:"preferences"`   // Additional fine tuning of what data is returned.
 }
 
 // Contain various extensions to snmp which can be used to get data.
