@@ -328,6 +328,8 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) 
 		"network_id":   l.NetworkId,
 		"page":         l.Page,
 		"old_value":    l.OldValue,
+		"org_name":     org.Name,
+		"org_id":       org.ID,
 	}
 	dst.EventType = kt.KENTIK_EVENT_EXT // This gets sent as event, not metric.
 	dst.Provider = kt.ProviderMerakiCloud
@@ -906,6 +908,8 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 				"signal_type":       uplink.SignalType,
 				"signal_rsrp":       uplink.SignalStat.Rsrp,
 				"signal_rsrq":       uplink.SignalStat.Rsrq,
+				"org_name":          device.network.org.Name,
+				"org_id":            device.network.org.ID,
 			}
 			dst.CustomInt = map[string]int32{}
 			dst.CustomBigInt = map[string]int64{}
@@ -981,6 +985,7 @@ type vpnStatus struct {
 	ExportedSubnets    []subnet  `json:"exportedSubnets"`
 	MerakiVpnPeers     []vpnPeer `json:"merakiVpnPeers"`
 	ThirdPartyVpnPeers []vpnPeer `json:"thirdPartyVpnPeers"`
+	org                orgDesc
 }
 
 func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
@@ -1015,6 +1020,7 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 			if _, ok := org.networks[vpn.NetworkID]; !ok {
 				continue
 			}
+			vpn.org = org
 			filtered = append(filtered, vpn)
 		}
 
@@ -1058,6 +1064,8 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 			"serial":     vpn.DeviceSerial,
 			"status":     vpn.DeviceStatus,
 			"vpn_mode":   vpn.VpnMode,
+			"org_name":   vpn.org.Name,
+			"org_id":     vpn.org.ID,
 		}
 
 		for _, uplink := range vpn.Uplinks {
