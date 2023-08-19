@@ -16,15 +16,15 @@ type Extension interface {
 	GetName() string
 }
 
-func NewExtension(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (Extension, error) {
+func NewExtension(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (Extension, error) {
 	if conf.Ext == nil { // No extensions set.
 		return nil, nil
 	}
 
 	if conf.Ext.EAPIConfig != nil {
-		return arista.NewEAPIClient(jchfChan, conf, metrics, log)
+		return arista.NewEAPIClient(jchfChan, gconf, conf, metrics, log)
 	} else if conf.Ext.MerakiConfig != nil {
-		return meraki.NewMerakiClient(jchfChan, conf, metrics, log)
+		return meraki.NewMerakiClient(jchfChan, gconf, conf, metrics, log)
 	}
 
 	return nil, nil
