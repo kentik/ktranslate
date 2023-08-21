@@ -17,16 +17,18 @@ type EAPIClient struct {
 	log      logger.ContextL
 	jchfChan chan []*kt.JCHF
 	conf     *kt.SnmpDeviceConfig
+	gconf    *kt.SnmpGlobalConfig
 	metrics  *kt.SnmpDeviceMetric
 	client   *goeapi.Node
 }
 
-func NewEAPIClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*EAPIClient, error) {
+func NewEAPIClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*EAPIClient, error) {
 	c := EAPIClient{
 		log:      log,
 		jchfChan: jchfChan,
 		conf:     conf,
 		metrics:  metrics,
+		gconf:    gconf,
 	}
 
 	node, err := goeapi.Connect(conf.Ext.EAPIConfig.Transport, conf.DeviceIP, conf.Ext.EAPIConfig.Username, conf.Ext.EAPIConfig.Password, conf.Ext.EAPIConfig.Port)

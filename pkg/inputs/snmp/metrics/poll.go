@@ -81,7 +81,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	}
 
 	// If we are extending the metrics for this device in any way, set it up now.
-	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
+	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log)
 	if err != nil {
 		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else if ext != nil {
@@ -168,7 +168,7 @@ func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig
 	}
 
 	// If we are extending the metrics for this device in any way, set it up now.
-	ext, err := extension.NewExtension(jchfChan, conf, metrics, log)
+	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log)
 	if err != nil {
 		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else if ext != nil {

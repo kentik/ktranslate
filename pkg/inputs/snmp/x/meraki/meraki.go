@@ -27,10 +27,12 @@ type MerakiClient struct {
 	log      logger.ContextL
 	jchfChan chan []*kt.JCHF
 	conf     *kt.SnmpDeviceConfig
+	gconf    *kt.SnmpGlobalConfig
 	metrics  *kt.SnmpDeviceMetric
 	client   *apiclient.DashboardAPIGolang
 	auth     runtime.ClientAuthInfoWriter
 	orgs     []orgDesc
+	timeout  time.Duration
 }
 
 type orgDesc struct {
@@ -47,14 +49,16 @@ type networkDesc struct {
 	org  *organizations.GetOrganizationsOKBodyItems0
 }
 
-func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
+func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
 	c := MerakiClient{
 		log:      log,
 		jchfChan: jchfChan,
 		conf:     conf,
+		gconf:    gconf,
 		metrics:  metrics,
 		orgs:     []orgDesc{},
 		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", conf.Ext.MerakiConfig.ApiKey),
+		timeout:  30 * time.Second,
 	}
 
 	host := conf.Ext.MerakiConfig.Host
@@ -62,12 +66,20 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, conf *kt.SnmpDeviceConfig, metric
 		host = apiclient.DefaultHost
 	}
 
+	// Figure out global or local timeout here.
+	if conf.TimeoutMS > 0 {
+		c.timeout = time.Duration(conf.TimeoutMS) * time.Millisecond
+	} else if gconf.TimeoutMS > 0 {
+		c.timeout = time.Duration(gconf.TimeoutMS) * time.Millisecond
+	}
+	c.log.Infof("Using a timeout of %v", c.timeout)
+
 	trans := apiclient.DefaultTransportConfig().WithHost(host)
 	client := apiclient.NewHTTPClientWithConfig(nil, trans)
 	c.log.Infof("Verifying %s connectivity", c.GetName())
 
 	// First, list out all of the organizations present.
-	params := organizations.NewGetOrganizationsParams()
+	params := organizations.NewGetOrganizationsParamsWithTimeout(c.timeout)
 	prod, err := client.Organizations.GetOrganizations(params, c.auth)
 	if err != nil {
 		return nil, err
@@ -145,7 +157,7 @@ func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken s
 	org *organizations.GetOrganizationsOKBodyItems0, nets []*regexp.Regexp, numNets int) (int, error) {
 
 	perPageLimit := int64(100) // Seems like a good default.
-	params := organizations.NewGetOrganizationNetworksParams()
+	params := organizations.NewGetOrganizationNetworksParamsWithTimeout(c.timeout)
 	params.SetOrganizationID(org.ID)
 	params.SetPerPage(&perPageLimit)
 	if nextToken != "" {
@@ -284,7 +296,7 @@ func (c *MerakiClient) getOrgChanges(dur time.Duration) ([]*kt.JCHF, error) {
 	res := []*kt.JCHF{}
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			params := organizations.NewGetOrganizationConfigurationChangesParams()
+			params := organizations.NewGetOrganizationConfigurationChangesParamsWithTimeout(c.timeout)
 			params.SetOrganizationID(org.ID)
 			params.SetNetworkID(&(network.ID))
 			params.SetT0(&startTimeStr)
@@ -369,7 +381,7 @@ func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) 
 	durs := float32(dur.Seconds())
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			params := networks.NewGetNetworkClientsParams()
+			params := networks.NewGetNetworkClientsParamsWithTimeout(c.timeout)
 			params.SetNetworkID(network.ID)
 			params.SetTimespan(&durs)
 
@@ -418,7 +430,7 @@ func (c *MerakiClient) getNetworkDevices() (map[string][]networkDevice, error) {
 	deviceSet := map[string][]networkDevice{}
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			params := networks.NewGetNetworkDevicesParams()
+			params := networks.NewGetNetworkDevicesParamsWithTimeout(c.timeout)
 			params.SetNetworkID(network.ID)
 
 			prod, err := c.client.Networks.GetNetworkDevices(params, c.auth)
@@ -469,7 +481,7 @@ type applicationUsage struct {
 func (c *MerakiClient) getDeviceClientApplications(dur time.Duration, clients []*client, network networkDesc) error {
 	// Max of 10 clients to check application usage per call.
 	getApps := func(client *client) error {
-		params := networks.NewGetNetworkClientsApplicationUsageParams()
+		params := networks.NewGetNetworkClientsApplicationUsageParamsWithTimeout(c.timeout)
 		params.SetNetworkID(network.ID)
 		params.SetClients(client.ID)
 
@@ -522,7 +534,7 @@ func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 	for network, deviceSet := range networkDevs {
 		c.log.Infof("Looking at %d devices for network %s", len(deviceSet), network)
 		for _, device := range deviceSet {
-			params := devices.NewGetDeviceClientsParams()
+			params := devices.NewGetDeviceClientsParamsWithTimeout(c.timeout)
 			params.SetSerial(device.Serial)
 			params.SetTimespan(&durs)
 
@@ -739,7 +751,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 	uplinkSet := map[string]deviceUplink{}
 	for _, org := range c.orgs {
-		params := organizations.NewGetOrganizationUplinksStatusesParams()
+		params := organizations.NewGetOrganizationUplinksStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 
 		prod, err := c.client.Organizations.GetOrganizationUplinksStatuses(params, c.auth)
@@ -808,7 +820,7 @@ type deviceUplinkLatency struct {
 func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[string]deviceUplink) error {
 
 	for _, org := range c.orgs {
-		params := organizations.NewGetOrganizationDevicesUplinksLossAndLatencyParams()
+		params := organizations.NewGetOrganizationDevicesUplinksLossAndLatencyParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 
 		prod, err := c.client.Organizations.GetOrganizationDevicesUplinksLossAndLatency(params, c.auth)
@@ -861,7 +873,7 @@ func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]de
 
 	ts := float32(dur.Seconds())
 	for _, org := range c.orgs {
-		params := appliance.NewGetOrganizationApplianceUplinksUsageByNetworkParams()
+		params := appliance.NewGetOrganizationApplianceUplinksUsageByNetworkParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		params.SetTimespan(&ts)
 
@@ -992,7 +1004,7 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 	var getVpnStatus func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error
 	getVpnStatus = func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error {
-		params := appliance.NewGetOrganizationApplianceVpnStatusesParams()
+		params := appliance.NewGetOrganizationApplianceVpnStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
 			params.SetStartingAfter(&nextToken)
