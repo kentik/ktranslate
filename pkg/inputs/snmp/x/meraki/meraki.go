@@ -215,14 +215,18 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	defer poll.Stop()
 
 	doUplinks := c.conf.Ext.MerakiConfig.MonitorUplinks
-	doDevices := c.conf.Ext.MerakiConfig.MonitorDevices
+	doDeviceClients := c.conf.Ext.MerakiConfig.MonitorDevices &&
+		!c.conf.Ext.MerakiConfig.Prefs["device_status_only"]
+	doDeviceStatus := c.conf.Ext.MerakiConfig.MonitorDevices &&
+		(c.conf.Ext.MerakiConfig.Prefs["device_status_only"] || c.conf.Ext.MerakiConfig.Prefs["device_status"])
 	doOrgChanges := c.conf.Ext.MerakiConfig.MonitorOrgChanges
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
 	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
-	if !doUplinks && !doDevices && !doOrgChanges && !doNetworkClients && !doVpnStatus {
+	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, devices=%v, orgs=%v, networks=%v, vpn status=%v", dur, doUplinks, doDevices, doOrgChanges, doNetworkClients, doVpnStatus)
+	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v",
+		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus)
 
 	for {
 		select {
@@ -237,9 +241,17 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 				}
 			}
 
-			if doDevices {
+			if doDeviceClients {
 				if res, err := c.getDeviceClients(dur); err != nil {
 					c.log.Infof("Meraki cannot get Device Client Info: %v", err)
+				} else if len(res) > 0 {
+					c.jchfChan <- res
+				}
+			}
+
+			if doDeviceStatus {
+				if res, err := c.getDeviceStatus(dur); err != nil {
+					c.log.Infof("Meraki cannot get Device Status Info: %v", err)
 				} else if len(res) > 0 {
 					c.jchfChan <- res
 				}
@@ -1150,6 +1162,131 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 				res = append(res, dst)
 			}
 		}
+	}
+
+	return res, nil
+}
+
+type deviceStatusWrapper struct {
+	org         orgDesc
+	NetworkName string `json:"networkName"`
+	device      *organizations.GetOrganizationDevicesStatusesOKBodyItems0
+}
+
+func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
+
+	// Build up a map of product types to filter on.
+	productTypes := map[string]bool{}
+	for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
+		productTypes[pt] = true
+	}
+
+	var getDeviceStatus func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper) error
+	getDeviceStatus = func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper) error {
+		params := organizations.NewGetOrganizationDevicesStatusesParamsWithTimeout(c.timeout)
+		params.SetOrganizationID(org.ID)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Organizations.GetOrganizationDevicesStatuses(params, c.auth)
+		if err != nil {
+			return err
+		}
+
+		// Store these for some tail recursion.
+		raw := prod.GetPayload()
+		filtered := make([]*deviceStatusWrapper, 0, len(raw))
+		for _, device := range raw {
+			// Filter for networks here.
+			if _, ok := org.networks[device.NetworkID]; !ok {
+				continue
+			}
+			// Also filter on product types.
+			if len(productTypes) > 0 && !productTypes[device.ProductType] {
+				continue
+			}
+			nd := deviceStatusWrapper{
+				device:      device,
+				org:         org,
+				NetworkName: org.networks[device.NetworkID].Name,
+			}
+			filtered = append(filtered, &nd)
+		}
+
+		*devices = append(*devices, filtered...)
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getDeviceStatus(nextLink, org, devices)
+		} else {
+			return nil
+		}
+	}
+
+	devices := make([]*deviceStatusWrapper, 0)
+	for _, org := range c.orgs {
+		err := getDeviceStatus("", org, &devices)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if len(devices) == 0 {
+		return nil, nil
+	}
+
+	return c.parseDeviceStatus(devices)
+}
+
+func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.JCHF, error) {
+	res := make([]*kt.JCHF, 0)
+
+	makeChf := func(wrap *deviceStatusWrapper) *kt.JCHF {
+		dst := kt.NewJCHF()
+		dst.SrcAddr = wrap.device.PublicIP
+		dst.DeviceName = wrap.device.Name
+
+		dst.CustomStr = map[string]string{
+			"network":          wrap.NetworkName,
+			"network_id":       wrap.device.NetworkID,
+			"serial":           wrap.device.Serial,
+			"status":           wrap.device.Status,
+			"tags":             strings.Join(wrap.device.Tags, ","),
+			"org_name":         wrap.org.Name,
+			"org_id":           wrap.org.ID,
+			"mac":              wrap.device.Mac,
+			"model":            wrap.device.Model,
+			"product_type":     wrap.device.ProductType,
+			"last_reported_at": wrap.device.LastReportedAt,
+		}
+
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = kt.ProviderMerakiCloud
+
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+		c.conf.SetUserTags(dst.CustomStr)
+
+		return dst
+	}
+
+	for _, wrap := range devices {
+
+		// Basic status here.
+		dst := makeChf(wrap)
+		status := int64(0)
+		if wrap.device.Status == "online" { // Online is 1, others are 0.
+			status = 1
+		}
+		dst.CustomBigInt["Status"] = status
+		dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.device_status", Type: "meraki.device_status"}
+
+		res = append(res, dst)
 	}
 
 	return res, nil
