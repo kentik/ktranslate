@@ -169,6 +169,7 @@ type MerakiConfig struct {
 	Orgs                  []string        `yaml:"organizations"` // Only monitor orgs in this list, if set.
 	Networks              []string        `yaml:"networks"`      // Only monitor networks in this list, if set.
 	Prefs                 map[string]bool `yaml:"preferences"`   // Additional fine tuning of what data is returned.
+	ProductTypes          []string        `yaml:"product_types"` // Only monitor these product types, if set.
 }
 
 // Contain various extensions to snmp which can be used to get data.
