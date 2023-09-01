@@ -799,7 +799,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 			return err
 		}
 
-		c.log.Infof("SSS Getting uplinks %d raw: %d", len(*uplinks), len(raw))
+		c.log.Infof("SSS Getting uplinks %d raw: %d %s", len(*uplinks), len(raw), prod.Link)
 
 		filtered := make([]*deviceUplink, 0, len(raw))
 		for _, uplink := range raw {
