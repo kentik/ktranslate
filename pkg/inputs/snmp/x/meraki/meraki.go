@@ -1132,7 +1132,7 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 				dst := makeChf(vpn)
 				dst.CustomStr["peer_name"] = peer.NetworkName
 				dst.CustomStr["peer_network_id"] = peer.NetworkID
-				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_reachability"] = peer.Reachability
 				dst.CustomStr["peer_type"] = "Meraki"
 
 				status := int64(0)
@@ -1149,7 +1149,7 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 				dst := makeChf(vpn)
 				dst.CustomStr["peer_name"] = peer.Name
 				dst.CustomStr["peer_public_ip"] = peer.PublicIp
-				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_reachability"] = peer.Reachability
 				dst.CustomStr["peer_type"] = "ThirdParty"
 
 				status := int64(0)
@@ -1249,17 +1249,16 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 		dst.DeviceName = wrap.device.Name
 
 		dst.CustomStr = map[string]string{
-			"network":          wrap.NetworkName,
-			"network_id":       wrap.device.NetworkID,
-			"serial":           wrap.device.Serial,
-			"status":           wrap.device.Status,
-			"tags":             strings.Join(wrap.device.Tags, ","),
-			"org_name":         wrap.org.Name,
-			"org_id":           wrap.org.ID,
-			"mac":              wrap.device.Mac,
-			"model":            wrap.device.Model,
-			"product_type":     wrap.device.ProductType,
-			"last_reported_at": wrap.device.LastReportedAt,
+			"network":      wrap.NetworkName,
+			"network_id":   wrap.device.NetworkID,
+			"serial":       wrap.device.Serial,
+			"status":       wrap.device.Status,
+			"tags":         strings.Join(wrap.device.Tags, ","),
+			"org_name":     wrap.org.Name,
+			"org_id":       wrap.org.ID,
+			"mac":          wrap.device.Mac,
+			"model":        wrap.device.Model,
+			"product_type": wrap.device.ProductType,
 		}
 
 		dst.CustomInt = map[string]int32{}
