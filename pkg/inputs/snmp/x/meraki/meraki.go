@@ -85,6 +85,16 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		return nil, err
 	}
 
+	// There's some options which are disabled now, we need to check and error.
+	if c.conf.Ext.MerakiConfig.MonitorDevices &&
+		!c.conf.Ext.MerakiConfig.Prefs["device_status_only"] {
+		return nil, fmt.Errorf("monitor_devices option is not supported for Meraki in this version.")
+	}
+
+	if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
+		return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
+	}
+
 	orgs := []*regexp.Regexp{}
 	nets := []*regexp.Regexp{}
 	c.client = client
