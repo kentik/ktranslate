@@ -49,6 +49,10 @@ type networkDesc struct {
 	org  *organizations.GetOrganizationsOKBodyItems0
 }
 
+const (
+	ControllerKey = "meraki_controller_name"
+)
+
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
 	c := MerakiClient{
 		log:      log,
@@ -83,6 +87,16 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 	prod, err := client.Organizations.GetOrganizations(params, c.auth)
 	if err != nil {
 		return nil, err
+	}
+
+	// There's some options which are disabled now, we need to check and error.
+	if c.conf.Ext.MerakiConfig.MonitorDevices &&
+		!c.conf.Ext.MerakiConfig.Prefs["device_status_only"] {
+		return nil, fmt.Errorf("monitor_devices option is not supported for Meraki in this version.")
+	}
+
+	if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
+		return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
 	}
 
 	orgs := []*regexp.Regexp{}
@@ -343,6 +357,7 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) 
 	dst.Timestamp = l.TimeStamp.Unix()
 
 	dst.CustomStr = map[string]string{
+		ControllerKey:  c.conf.DeviceName,
 		"admin_name":   l.AdminName,
 		"network_name": l.NetworkName,
 		"label":        l.Label,
@@ -595,6 +610,7 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			dst.DstAddr = client.IP
 		}
 		dst.CustomStr = map[string]string{
+			ControllerKey:        c.conf.DeviceName,
 			"network":            client.network,
 			"client_id":          client.ID,
 			"description":        client.Description,
@@ -921,6 +937,7 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.DeviceName = strings.Join([]string{device.network.Name, uplink.Interface}, ".")
 
 			dst.CustomStr = map[string]string{
+				ControllerKey:       c.conf.DeviceName,
 				"network":           device.network.Name,
 				"network_id":        device.NetworkID,
 				"serial":            device.Serial,
@@ -1083,13 +1100,14 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 		dst.DeviceName = vpn.DeviceSerial
 
 		dst.CustomStr = map[string]string{
-			"network":    vpn.NetworkName,
-			"network_id": vpn.NetworkID,
-			"serial":     vpn.DeviceSerial,
-			"status":     vpn.DeviceStatus,
-			"vpn_mode":   vpn.VpnMode,
-			"org_name":   vpn.org.Name,
-			"org_id":     vpn.org.ID,
+			ControllerKey: c.conf.DeviceName,
+			"network":     vpn.NetworkName,
+			"network_id":  vpn.NetworkID,
+			"serial":      vpn.DeviceSerial,
+			"status":      vpn.DeviceStatus,
+			"vpn_mode":    vpn.VpnMode,
+			"org_name":    vpn.org.Name,
+			"org_id":      vpn.org.ID,
 		}
 
 		for _, uplink := range vpn.Uplinks {
@@ -1132,7 +1150,7 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 				dst := makeChf(vpn)
 				dst.CustomStr["peer_name"] = peer.NetworkName
 				dst.CustomStr["peer_network_id"] = peer.NetworkID
-				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_reachability"] = peer.Reachability
 				dst.CustomStr["peer_type"] = "Meraki"
 
 				status := int64(0)
@@ -1149,7 +1167,7 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 				dst := makeChf(vpn)
 				dst.CustomStr["peer_name"] = peer.Name
 				dst.CustomStr["peer_public_ip"] = peer.PublicIp
-				dst.CustomStr["peer_reachablity"] = peer.Reachability
+				dst.CustomStr["peer_reachability"] = peer.Reachability
 				dst.CustomStr["peer_type"] = "ThirdParty"
 
 				status := int64(0)
@@ -1249,17 +1267,17 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 		dst.DeviceName = wrap.device.Name
 
 		dst.CustomStr = map[string]string{
-			"network":          wrap.NetworkName,
-			"network_id":       wrap.device.NetworkID,
-			"serial":           wrap.device.Serial,
-			"status":           wrap.device.Status,
-			"tags":             strings.Join(wrap.device.Tags, ","),
-			"org_name":         wrap.org.Name,
-			"org_id":           wrap.org.ID,
-			"mac":              wrap.device.Mac,
-			"model":            wrap.device.Model,
-			"product_type":     wrap.device.ProductType,
-			"last_reported_at": wrap.device.LastReportedAt,
+			ControllerKey:  c.conf.DeviceName,
+			"network":      wrap.NetworkName,
+			"network_id":   wrap.device.NetworkID,
+			"serial":       wrap.device.Serial,
+			"status":       wrap.device.Status,
+			"tags":         strings.Join(wrap.device.Tags, ","),
+			"org_name":     wrap.org.Name,
+			"org_id":       wrap.org.ID,
+			"mac":          wrap.device.Mac,
+			"model":        wrap.device.Model,
+			"product_type": wrap.device.ProductType,
 		}
 
 		dst.CustomInt = map[string]int32{}
