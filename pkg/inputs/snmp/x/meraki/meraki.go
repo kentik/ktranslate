@@ -777,8 +777,8 @@ type deviceUplink struct {
 
 func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
-	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *[]*deviceUplink) error
-	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *[]*deviceUplink) error {
+	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *[]deviceUplink) error
+	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *[]deviceUplink) error {
 		params := organizations.NewGetOrganizationUplinksStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
@@ -802,14 +802,14 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 			return err
 		}
 
-		filtered := make([]*deviceUplink, 0, len(raw))
+		filtered := make([]deviceUplink, 0, len(raw))
 		for _, uplink := range raw {
 			// Filter for networks here.
 			if _, ok := org.networks[uplink.NetworkID]; !ok {
 				continue
 			}
 			uplink.network = org.networks[uplink.NetworkID]
-			filtered = append(filtered, &uplink)
+			filtered = append(filtered, uplink)
 		}
 
 		*uplinks = append(*uplinks, filtered...)
@@ -823,7 +823,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 	}
 
-	uplinks := make([]*deviceUplink, 0)
+	uplinks := make([]deviceUplink, 0)
 	for _, org := range c.orgs {
 		err := getUplinkStatus("", org, &uplinks)
 		if err != nil {
@@ -951,7 +951,7 @@ var uplinkStatus = map[string]int64{
 	"ready":         4,
 }
 
-func (c *MerakiClient) parseUplinks(uplinkSet []*deviceUplink) ([]*kt.JCHF, error) {
+func (c *MerakiClient) parseUplinks(uplinkSet []deviceUplink) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
 	for _, device := range uplinkSet {
 		for _, uplink := range device.Uplinks {
