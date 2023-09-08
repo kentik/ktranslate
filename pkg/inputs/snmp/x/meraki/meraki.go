@@ -777,8 +777,8 @@ type deviceUplink struct {
 
 func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
-	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *[]deviceUplink) error
-	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *[]deviceUplink) error {
+	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink) error
+	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink) error {
 		params := organizations.NewGetOrganizationUplinksStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
@@ -802,17 +802,14 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 			return err
 		}
 
-		filtered := make([]deviceUplink, 0, len(raw))
 		for _, uplink := range raw {
 			// Filter for networks here.
 			if _, ok := org.networks[uplink.NetworkID]; !ok {
 				continue
 			}
 			uplink.network = org.networks[uplink.NetworkID]
-			filtered = append(filtered, uplink)
+			(*uplinks)[uplink.Serial] = uplink
 		}
-
-		*uplinks = append(*uplinks, filtered...)
 
 		// Recursion!
 		nextLink := getNextLink(prod.Link)
@@ -823,7 +820,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 	}
 
-	uplinks := make([]deviceUplink, 0)
+	uplinks := map[string]deviceUplink{}
 	for _, org := range c.orgs {
 		err := getUplinkStatus("", org, &uplinks)
 		if err != nil {
@@ -831,18 +828,18 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 	}
 
-	/**
-	err := c.getUplinkUsage(dur, uplinkSet)
-	if err != nil {
-		return nil, err
-	}
+	if !c.conf.Ext.MerakiConfig.Prefs["hide_uplink_usage"] {
+		err := c.getUplinkUsage(dur, uplinks)
+		if err != nil {
+			return nil, err
+		}
 
-	// Now, load latency for any of these which have them:
-	err = c.getUplinkLatencyLoss(dur, uplinkSet)
-	if err != nil {
-		return nil, err
+		// Now, load latency for any of these which have them:
+		err = c.getUplinkLatencyLoss(dur, uplinks)
+		if err != nil {
+			return nil, err
+		}
 	}
-	*/
 
 	return c.parseUplinks(uplinks)
 }
@@ -886,9 +883,6 @@ func (c *MerakiClient) getUplinkLatencyLoss(dur time.Duration, uplinkMap map[str
 		for _, uplink := range uplinks {
 			if uu, ok := uplinkMap[uplink.Serial]; ok { // We've matched the serial, now add this loss.
 				uu.SetLatencyLoss(uplink)
-			} else {
-				// Not on a network we care about.
-				// c.log.Errorf("Missing Uplink %s In LatencyLoss", uplink.Serial)
 			}
 		}
 	}
@@ -951,9 +945,9 @@ var uplinkStatus = map[string]int64{
 	"ready":         4,
 }
 
-func (c *MerakiClient) parseUplinks(uplinkSet []deviceUplink) ([]*kt.JCHF, error) {
+func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
-	for _, device := range uplinkSet {
+	for _, device := range uplinkMap {
 		for _, uplink := range device.Uplinks {
 			dst := kt.NewJCHF()
 			dst.SrcAddr = uplink.IP
@@ -986,22 +980,22 @@ func (c *MerakiClient) parseUplinks(uplinkSet []deviceUplink) ([]*kt.JCHF, error
 			dst.CustomBigInt["Status"] = uplinkStatus[uplink.Status]
 			dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplink_status", Type: "meraki.uplink_status"}
 
-			/**
-			if uplink.Usage != nil {
-				dst.CustomBigInt["Sent"] = uplink.Usage.Sent
-				dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+			if !c.conf.Ext.MerakiConfig.Prefs["hide_uplink_usage"] {
+				if uplink.Usage != nil {
+					dst.CustomBigInt["Sent"] = uplink.Usage.Sent
+					dst.CustomMetrics["Sent"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
 
-				dst.CustomBigInt["Recv"] = uplink.Usage.Received
-				dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+					dst.CustomBigInt["Recv"] = uplink.Usage.Received
+					dst.CustomMetrics["Recv"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks"}
+				}
+
+				latency, loss := getLatencyLoss(uplink)
+				dst.CustomBigInt["LatencyMS"] = int64(latency * 1000.)
+				dst.CustomMetrics["LatencyMS"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks", Format: kt.FloatMS}
+
+				dst.CustomBigInt["LossPct"] = int64(loss * 1000.)
+				dst.CustomMetrics["LossPct"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks", Format: kt.FloatMS}
 			}
-
-			latency, loss := getLatencyLoss(uplink)
-			dst.CustomBigInt["LatencyMS"] = int64(latency * 1000.)
-			dst.CustomMetrics["LatencyMS"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks", Format: kt.FloatMS}
-
-			dst.CustomBigInt["LossPct"] = int64(loss * 1000.)
-			dst.CustomMetrics["LossPct"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.uplinks", Type: "meraki.uplinks", Format: kt.FloatMS}
-			*/
 
 			c.conf.SetUserTags(dst.CustomStr)
 			res = append(res, dst)
