@@ -41,7 +41,7 @@ jobs:
 
       - name: Get Deps
         run: |
-          if [ "${{ matrix.distro }}" = "centos" || "${{ matrix.distro }}" = "redhat/ubi9" ]
+          if [ "${{ matrix.distro }}" = "centos" ]
           then
             if [ "${{ matrix.release }}" = "7" ]
             then
@@ -51,6 +51,11 @@ jobs:
               yum install -y make gcc diffutils
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
+          else if [ "${{ matrix.distro }}" = "redhat/ubi9" ]
+          then
+            dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+            yum install -y make gcc diffutils
+            dnf -y --enablerepo=powertools install libpcap-devel
           else
             apt-get update
             apt-get -y install make libpcap-dev ca-certificates build-essential curl
