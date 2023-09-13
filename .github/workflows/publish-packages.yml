@@ -17,29 +17,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos
-            release: 7
-            pkg: rpm
-          - distro: centos
-            release: 8
-            pkg: rpm
-          - distro: centos
-            release: 9
+          - distro: redhat/ubi9
+            release: 9.2
             pkg: rpm
 
-          - distro: ubuntu
-            release: focal
-            pkg: deb
-          - distro: ubuntu
-            release: jammy
-            pkg: deb
-          - distro: ubuntu
-            release: kinetic
-            pkg: deb
-
-          - distro: debian
-            release: bullseye
-            pkg: deb
     container:
       image: ${{ matrix.distro }}:${{ matrix.release }}
 
@@ -60,7 +41,7 @@ jobs:
 
       - name: Get Deps
         run: |
-          if [ "${{ matrix.distro }}" = "centos" ]
+          if [ "${{ matrix.distro }}" = "centos" || "${{ matrix.distro }}" = "redhat/ubi9" ]
           then
             if [ "${{ matrix.release }}" = "7" ]
             then
