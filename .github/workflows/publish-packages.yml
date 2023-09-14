@@ -17,10 +17,36 @@ jobs:
     strategy:
       matrix:
         include:
+          - distro: centos
+            release: 7
+            pkg: rpm
+            image: centos
+          - distro: centos
+            release: 8
+            pkg: rpm
+            image: centos
           - distro: ubi9
             release: 9.2
             pkg: rpm
             image: redhat/ubi9
+
+          - distro: ubuntu
+            release: focal
+            pkg: deb
+            image: ubuntu
+          - distro: ubuntu
+            release: jammy
+            pkg: deb
+            image: ubuntu
+          - distro: ubuntu
+            release: kinetic
+            pkg: deb
+            image: ubuntu
+
+          - distro: debian
+            release: bullseye
+            pkg: deb
+            image: debian
 
     container:
       image: ${{ matrix.image }}:${{ matrix.release }}

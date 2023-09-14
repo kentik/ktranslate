@@ -15,35 +15,42 @@ jobs:
             release: 7
             pkg: rpm
             pkg_name: el
+            image: centos
           - distro: centos
             release: 8
             pkg: rpm
             pkg_name: el
-          - distro: centos
-            release: 9
+            image: centos
+          - distro: ubi9
+            release: 9.2
             pkg: rpm
             pkg_name: el
+            image: redhat/ubi9
 
           - distro: ubuntu
             release: focal
             pkg: deb
             pkg_name: ubuntu
+            image: ubuntu
           - distro: ubuntu
             release: jammy
             pkg: deb
             pkg_name: ubuntu
+            image: ubuntu
           - distro: ubuntu
             release: kinetic
             pkg: deb
             pkg_name: ubuntu
+            image: ubuntu
 
           - distro: debian
             release: bullseye
             pkg: deb
             pkg_name: debian
+            image: debian
 
     container:
-      image: ${{ matrix.distro }}:${{ matrix.release }}
+      image: ${{ matrix.image }}:${{ matrix.release }}
 
     steps:
       - name: Checkout code
@@ -74,6 +81,9 @@ jobs:
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
+          elif [ "${{ matrix.distro }}" = "ubi9" ]
+          then
+            yum install -y make gcc diffutils libpcap-devel
           else
             apt-get update
             apt-get -y install make libpcap-dev ca-certificates build-essential curl ruby ruby-dev
