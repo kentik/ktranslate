@@ -17,12 +17,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: redhat/ubi9
+          - distro: ubi9
             release: 9.2
             pkg: rpm
+            image: redhat/ubi9
 
     container:
-      image: ${{ matrix.distro }}:${{ matrix.release }}
+      image: ${{ matrix.image }}:${{ matrix.release }}
 
     # NB: any run steps that need chf src need to have `working-directory: ${{ env.SRCDIR }}`
     steps:
@@ -51,7 +52,7 @@ jobs:
               yum install -y make gcc diffutils
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
-          elif [ "${{ matrix.distro }}" = "redhat/ubi9" ]
+          elif [ "${{ matrix.distro }}" = "ubi9" ]
           then
             yum install -y make gcc diffutils libpcap-devel
           else
