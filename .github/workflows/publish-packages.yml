@@ -53,9 +53,7 @@ jobs:
             fi
           elif [ "${{ matrix.distro }}" = "redhat/ubi9" ]
           then
-            dnf -y --disablerepo '*' --enablerepo=ubi-9-appstream-rpms ubi-9-baseos-rpms
-            yum install -y make gcc diffutils
-            dnf -y --enablerepo=powertools install libpcap-devel
+            yum install -y make gcc diffutils libpcap-devel
           else
             apt-get update
             apt-get -y install make libpcap-dev ca-certificates build-essential curl
