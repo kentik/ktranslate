@@ -12,13 +12,13 @@ jobs:
       matrix:
         include:
           - distro: ubi9
-            release: 9.2
+            release: 9
             pkg: rpm
             pkg_name: el
-            image: redhat/ubi9
+            image: redhat/ubi9:9.2
 
     container:
-      image: ${{ matrix.image }}:${{ matrix.release }}
+      image: ${{ matrix.image }}
 
     steps:
       - name: Checkout code
