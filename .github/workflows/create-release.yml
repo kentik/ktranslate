@@ -37,12 +37,27 @@ jobs:
             pkg: deb
             pkg_name: ubuntu
             image: ubuntu:jammy
+          - distro: ubuntu
+            release: lunar
+            pkg: deb
+            pkg_name: ubuntu
+            image: ubuntu:lunar
 
           - distro: debian
             release: bullseye
             pkg: deb
             pkg_name: debian
             image: debian:bullseye
+          - distro: debian
+            release: buster
+            pkg: deb
+            pkg_name: debian
+            image: debian:buster
+          - distro: debian
+            release: bookworm
+            pkg: deb
+            pkg_name: debian
+            image: debian:bookworm
 
     container:
       image: ${{ matrix.image }}
