@@ -401,9 +401,9 @@ func (dm *DeviceMetrics) ResetPingStats() {
 	dm.ping = pingStatus{}
 }
 
-func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) ([]*kt.JCHF, error) {
+func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) ([]*kt.JCHF, bool, error) {
 	if pinger == nil {
-		return nil, nil
+		return nil, false, nil
 	}
 
 	mib, oid := dm.profile.GetMibAndOid()
@@ -438,7 +438,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	if diffSent > 0 && diffRecv <= diffSent { // Make sure that if there's more packets recieved than sent we don't get confused.
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
 	} else { // Since we haven't sent any more packets on, sending more information here will be confusing so just return now.
-		return nil, nil
+		return nil, false, nil
 	}
 
 	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
@@ -459,7 +459,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	}
 	dm.conf.SetUserTags(dst.CustomStr)
 
-	return []*kt.JCHF{dst}, nil
+	return []*kt.JCHF{dst}, percnt == 100, nil
 }
 
 func (w wrapper) checkCondition(idx string, results []wrapper) bool { // Check condition, if it exists. If this is false, we skip this result.

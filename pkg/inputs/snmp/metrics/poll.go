@@ -30,6 +30,9 @@ type Poller struct {
 	dropIfOutside    bool
 	pinger           *ping.Pinger
 	extension        extension.Extension
+	gconf            *kt.SnmpGlobalConfig
+	isTotalLoss      bool
+	pingSec          int
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -78,6 +81,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		counterTimeSec:   counterTimeSec,
 		jitterTimeSec:    jitterTimeSec,
 		dropIfOutside:    dropIfOutside,
+		gconf:            gconf,
 	}
 
 	// If we are extending the metrics for this device in any way, set it up now.
@@ -126,9 +130,10 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		counterTimeSec: counterTimeSec,
 		jitterTimeSec:  jitterTimeSec,
 		deviceMetrics:  NewDeviceMetrics(gconf, conf, metrics, nil, profile, log),
+		pingSec:        pingSec,
 	}
 
-	p, err := ping.NewPinger(log, conf.DeviceIP, time.Duration(counterTimeSec)*time.Second, pingSec)
+	p, err := ping.NewPinger(log, conf.DeviceIP, pingSec)
 	if err != nil {
 		log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else {
@@ -293,15 +298,15 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 		return
 	}
 
-	// Problem is, SNMP counter polls take some time, and the time varies widely from device to device, based on number of interfaces and
-	// round-trip-time to the device.  So we're going to divide each aligned five minute chunk into two periods: an initial period over which
-	// to jitter the devices, and the rest of the five-minute chunk to actually do the counter-polling.  For any device whose counters we can walk
-	// in less than (5 minutes - jitter period), we should be able to guarantee exactly one datapoint per aligned five-minute chunk.
 	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
 	jitterWindow := time.Duration(p.jitterTimeSec) * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
+	fastDuration := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_DURATION_SEC", 120)) * time.Second
+	if p.gconf.FastPoll { // If we have fast polling set, start its own loop here.
+		go p.runFastPoll(ctx)
+	}
 
 	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v", firstCollection, counterAlignment)
 
@@ -309,7 +314,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 		for {
 			select {
 			case _ = <-counterCheck.C:
-				flows, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+				flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
 				if err != nil {
 					p.log.Warnf("There was an error when getting ping stats: %v.", err)
 					continue
@@ -318,9 +323,57 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 				// Send data on.
 				p.jchfChan <- flows
 
+				// And let fast polling know if there's a total loss or not.
+				if !p.isTotalLoss && isTotalLoss {
+					// If there's a change, reset the pinger also.
+					p.pinger.Reset(fastDuration)
+				}
+				p.isTotalLoss = isTotalLoss
+
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
 				counterCheck.Stop()
+				p.pinger.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func (p *Poller) runFastPoll(ctx context.Context) {
+	if p.pinger == nil {
+		p.log.Errorf("Missing pinger in fast ping loop.")
+		return
+	}
+
+	slowDuration := time.Duration(p.pingSec) * time.Second
+	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
+	p.log.Infof("snmpFastPoll: Running every %v", fastTick)
+	fastCheck := time.NewTicker(fastTick)
+
+	go func() {
+		for {
+			select {
+			case _ = <-fastCheck.C:
+				if p.isTotalLoss { // Only poll if there's currently a total loss.
+					flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+					if err != nil {
+						p.log.Warnf("There was an error when getting ping stats: %v.", err)
+						continue
+					}
+
+					// Send data on.
+					p.jchfChan <- flows
+					if p.isTotalLoss && !isTotalLoss {
+						// If there's a change, reset the pinger also.
+						p.pinger.Reset(slowDuration)
+					}
+					p.isTotalLoss = isTotalLoss
+				}
+
+			case <-ctx.Done():
+				p.log.Infof("Metrics FastPoll Done")
+				fastCheck.Stop()
 				return
 			}
 		}

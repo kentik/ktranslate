@@ -277,6 +277,7 @@ type SnmpGlobalConfig struct {
 	MatchAttr             map[string]string      `yaml:"match_attributes"`
 	ProviderMap           map[string]ProviderMap `yaml:"providers"`
 	JitterTimeSec         int                    `yaml:"jitter_time_sec"`
+	FastPoll              bool                   `yaml:"fast_poll"`
 }
 
 type SnmpConfig struct {
