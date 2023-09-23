@@ -33,6 +33,7 @@ type Poller struct {
 	gconf            *kt.SnmpGlobalConfig
 	isTotalLoss      bool
 	pingSec          int
+	totalLossTime    time.Time
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -304,8 +305,9 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
 	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
 	fastDuration := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_DURATION_SEC", 120)) * time.Second
+	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
 	if p.gconf.FastPoll { // If we have fast polling set, start its own loop here.
-		go p.runFastPoll(ctx)
+		go p.runFastPoll(ctx, fastTick, fastDuration)
 	}
 
 	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v", firstCollection, counterAlignment)
@@ -326,7 +328,8 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 				// And let fast polling know if there's a total loss or not.
 				if !p.isTotalLoss && isTotalLoss {
 					// If there's a change, reset the pinger also.
-					p.pinger.Reset(fastDuration)
+					p.pinger.Reset(fastTick)
+					p.totalLossTime = time.Now()
 				}
 				p.isTotalLoss = isTotalLoss
 
@@ -340,22 +343,21 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	}()
 }
 
-func (p *Poller) runFastPoll(ctx context.Context) {
+func (p *Poller) runFastPoll(ctx context.Context, fastTick time.Duration, fastDuration time.Duration) {
 	if p.pinger == nil {
 		p.log.Errorf("Missing pinger in fast ping loop.")
 		return
 	}
 
 	slowDuration := time.Duration(p.pingSec) * time.Second
-	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
-	p.log.Infof("snmpFastPoll: Running every %v", fastTick)
+	p.log.Infof("snmpFastPoll: Running every %v for %v", fastTick, fastDuration)
 	fastCheck := time.NewTicker(fastTick)
 
 	go func() {
 		for {
 			select {
 			case _ = <-fastCheck.C:
-				if p.isTotalLoss { // Only poll if there's currently a total loss.
+				if p.isTotalLoss && p.totalLossTime.Add(fastDuration).After(time.Now()) { // Only poll if there's currently a total loss.
 					flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
 					if err != nil {
 						p.log.Warnf("There was an error when getting ping stats: %v.", err)
