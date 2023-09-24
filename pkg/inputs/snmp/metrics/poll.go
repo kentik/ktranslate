@@ -31,9 +31,7 @@ type Poller struct {
 	pinger           *ping.Pinger
 	extension        extension.Extension
 	gconf            *kt.SnmpGlobalConfig
-	isTotalLoss      bool
 	pingSec          int
-	totalLossTime    time.Time
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
@@ -308,14 +306,11 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
 	fastDuration := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_DURATION_SEC", 120)) * time.Second
 	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
-	slowDuration := time.Duration(p.pingSec) * time.Second
-	slowFastChan := make(chan bool, 1)
-	if p.gconf.FastPoll { // If we have fast polling set, start its own loop here.
-		p.runFastPoll(ctx, fastTick, fastDuration, slowDuration, slowFastChan)
-	}
+	slowTick := time.Duration(p.pingSec) * time.Second
 
-	p.log.Infof("snmpPingOnly: First run will be at %v. Running every %v", firstCollection, counterAlignment)
+	p.log.Infof("snmpPing: First run will be at %v. Running every %v", firstCollection, counterAlignment)
 	go func() {
+		seenGoodPacketLoss := true
 		for {
 			select {
 			case _ = <-counterCheck.C:
@@ -328,23 +323,18 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 				// Send data on.
 				p.jchfChan <- flows
 
-				// And let fast polling know if there's a total loss or not.
-				if p.gconf.FastPoll {
-					if !p.isTotalLoss && isTotalLoss {
-						// If there's a change, reset the pinger also.
-						p.pinger.Reset(fastTick)
-						p.deviceMetrics.ResetPingStats()
-						p.totalLossTime = time.Now()
-						p.log.Warnf("Starting fast ping operation")
-					}
-					p.isTotalLoss = isTotalLoss
+				if !isTotalLoss { // We don't want to go back into fast polling unless we get <100% packet loss at some point.
+					seenGoodPacketLoss = true
 				}
 
-			case _ = <-slowFastChan:
-				// Halt the fast process here because its past time.
-				p.pinger.Reset(slowDuration)
-				p.deviceMetrics.ResetPingStats()
-				p.log.Warnf("Halting fast ping operation because time elapsed")
+				// If there's total loss, go to fast polling but only if we haven't been here before.
+				if p.gconf.FastPoll && isTotalLoss && seenGoodPacketLoss {
+					p.log.Warnf("Starting fast ping operation due to 100% packet loss.")
+					ctxT, cancel := context.WithTimeout(ctx, fastDuration)
+					p.runFastPoll(ctxT, fastTick, fastDuration, slowTick)
+					cancel() // Done with fast polling.
+					seenGoodPacketLoss = false
+				}
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
@@ -356,48 +346,43 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	}()
 }
 
-func (p *Poller) runFastPoll(ctx context.Context, fastTick time.Duration, fastDuration time.Duration, slowDuration time.Duration, slowFastChan chan bool) {
-	if p.pinger == nil {
-		p.log.Errorf("Missing pinger in fast ping loop.")
-		return
-	}
+func (p *Poller) runFastPoll(ctx context.Context, fastTick time.Duration, fastDuration time.Duration, slowTick time.Duration) {
 
 	p.log.Infof("snmpFastPoll: Running every %v for %v", fastTick, fastDuration)
 	fastCheck := time.NewTicker(fastTick)
 
-	go func() {
-		for {
-			select {
-			case _ = <-fastCheck.C:
-				if p.isTotalLoss {
-					if p.totalLossTime.Add(fastDuration).After(time.Now()) { // Only poll if there's currently a total loss.
-						flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
-						if err != nil {
-							p.log.Warnf("There was an error when getting ping stats: %v.", err)
-							continue
-						}
+	defer func() { // When we leave this loop, return to slow polling.
+		fastCheck.Stop()
+		p.pinger.Reset(slowTick)
+		p.deviceMetrics.ResetPingStats()
+	}()
 
-						// Send data on.
-						p.jchfChan <- flows
-						if p.isTotalLoss && !isTotalLoss {
-							// If there's a change, reset the pinger also.
-							p.pinger.Reset(slowDuration)
-							p.deviceMetrics.ResetPingStats()
-							p.log.Warnf("Halting fast ping operation")
-						}
-						p.isTotalLoss = isTotalLoss
-					} else {
-						slowFastChan <- true // Let the slow polling know that we are timed out here.
-					}
-				}
+	// But for now we need fast polling.
+	p.pinger.Reset(fastTick)
+	p.deviceMetrics.ResetPingStats()
 
-			case <-ctx.Done():
-				p.log.Infof("Metrics FastPoll Done")
-				fastCheck.Stop()
+	for {
+		select {
+		case _ = <-fastCheck.C:
+			flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+			if err != nil {
+				p.log.Warnf("There was an error when getting ping stats: %v.", err)
+				continue
+			}
+
+			// Send data on.
+			p.jchfChan <- flows
+
+			if !isTotalLoss { // Total loss has resolved itself so back to slow polling.
+				p.log.Warnf("snmpFastPoll: FastPoll Done: not total packet loss seen.")
 				return
 			}
+
+		case <-ctx.Done():
+			p.log.Warnf("snmpFastPoll: FastPoll Done: %v.", ctx.Err())
+			return
 		}
-	}()
+	}
 }
 
 // Simpler loop which only runs on ext data, no actual snmp polling.
