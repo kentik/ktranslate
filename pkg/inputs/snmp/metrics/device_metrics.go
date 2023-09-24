@@ -418,6 +418,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.SrcAddr = dm.conf.DeviceIP
 	dst.Timestamp = time.Now().Unix()
 	dst.CustomMetrics = map[string]kt.MetricInfo{}
+	/**
 	dst.CustomBigInt["MinRttMs"] = stats.MinRtt.Microseconds()
 	dst.CustomMetrics["MinRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["MaxRttMs"] = stats.MaxRtt.Microseconds()
@@ -426,7 +427,7 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
-
+	*/
 	// Calc these directly
 	sent := uint64(stats.PacketsSent)
 	received := uint64(stats.PacketsRecv)
