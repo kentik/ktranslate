@@ -16,7 +16,6 @@ require (
 	github.com/elliotchance/orderedmap v1.4.0
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/go-openapi/runtime v0.26.0
-	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
 	github.com/gogo/protobuf v1.3.2
 	github.com/golang/snappy v0.0.4
 	github.com/google/uuid v1.3.0
@@ -37,6 +36,7 @@ require (
 	github.com/netsampler/goflow2 v1.1.1-0.20220818030102-fc42020d1b73
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/pkg/errors v0.9.1
+	github.com/prometheus-community/pro-bing v0.3.0
 	github.com/prometheus/client_golang v1.16.0
 	github.com/prometheus/prometheus v0.46.0
 	github.com/sasha-s/go-hll v0.0.0-20180522065212-c6eb27aee351
