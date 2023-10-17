@@ -51,6 +51,7 @@ type networkDesc struct {
 
 const (
 	ControllerKey = "meraki_controller_name"
+	MerakiApiKey  = "KENTIK_MERAKI_API_KEY"
 )
 
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
@@ -61,7 +62,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		gconf:    gconf,
 		metrics:  metrics,
 		orgs:     []orgDesc{},
-		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", conf.Ext.MerakiConfig.ApiKey),
+		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", kt.LookupEnvString(MerakiApiKey, conf.Ext.MerakiConfig.ApiKey)),
 		timeout:  30 * time.Second,
 	}
 
