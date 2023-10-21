@@ -33,6 +33,7 @@ type MerakiClient struct {
 	auth     runtime.ClientAuthInfoWriter
 	orgs     []orgDesc
 	timeout  time.Duration
+	cache    *clientCache
 }
 
 type orgDesc struct {
@@ -50,8 +51,9 @@ type networkDesc struct {
 }
 
 const (
-	ControllerKey = "meraki_controller_name"
-	MerakiApiKey  = "KENTIK_MERAKI_API_KEY"
+	ControllerKey       = "meraki_controller_name"
+	MerakiApiKey        = "KENTIK_MERAKI_API_KEY"
+	DeviceCacheDuration = time.Duration(24) * time.Hour
 )
 
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
@@ -64,6 +66,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		orgs:     []orgDesc{},
 		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", kt.LookupEnvString(MerakiApiKey, conf.Ext.MerakiConfig.ApiKey)),
 		timeout:  30 * time.Second,
+		cache:    newClientCache(log),
 	}
 
 	host := conf.Ext.MerakiConfig.Host
@@ -1212,6 +1215,7 @@ type deviceStatusWrapper struct {
 	org         orgDesc
 	NetworkName string `json:"networkName"`
 	device      *organizations.GetOrganizationDevicesStatusesOKBodyItems0
+	info        *organizations.GetOrganizationDevicesOKBodyItems0
 }
 
 func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
@@ -1278,7 +1282,116 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		return nil, nil
 	}
 
+	// Next, get device info to add more info about these devices.
+	err := c.getDeviceInfo(devices)
+	if err != nil {
+		return nil, err
+	}
+
 	return c.parseDeviceStatus(devices)
+}
+
+type clientCache struct {
+	log            logger.ContextL
+	deviceInfoTime time.Time
+	deviceInfo     []*organizations.GetOrganizationDevicesOKBodyItems0
+}
+
+func newClientCache(log logger.ContextL) *clientCache {
+	return &clientCache{
+		log: log,
+	}
+}
+
+func (c *clientCache) getDeviceInfo() ([]*organizations.GetOrganizationDevicesOKBodyItems0, bool) {
+	if c.deviceInfoTime.Add(DeviceCacheDuration).Before(time.Now()) { // No information, cache invalid or old.
+		return nil, false
+	}
+
+	return c.deviceInfo, true
+}
+
+func (c *clientCache) setDeviceInfo(infos []*organizations.GetOrganizationDevicesOKBodyItems0) {
+	c.deviceInfo = infos
+	c.deviceInfoTime = time.Now()
+}
+
+func (c *MerakiClient) getDeviceInfo(devices []*deviceStatusWrapper) error {
+	// Build up a map of product types to filter on.
+	productTypes := map[string]bool{}
+	for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
+		productTypes[pt] = true
+	}
+
+	var getDeviceInfo func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper, cache *[]*organizations.GetOrganizationDevicesOKBodyItems0) error
+	getDeviceInfo = func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper, cache *[]*organizations.GetOrganizationDevicesOKBodyItems0) error {
+		params := organizations.NewGetOrganizationDevicesParamsWithTimeout(c.timeout)
+		params.SetOrganizationID(org.ID)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Organizations.GetOrganizationDevices(params, c.auth)
+		if err != nil {
+			return err
+		}
+
+		// Store these for some tail recursion.
+		raw := prod.GetPayload()
+
+		for _, device := range raw {
+			// Filter for networks here.
+			if _, ok := org.networks[device.NetworkID]; !ok {
+				continue
+			}
+			// Also filter on product types.
+			if len(productTypes) > 0 && !productTypes[device.ProductType] {
+				continue
+			}
+
+			ld := device
+			*cache = append(*cache, ld)
+			for _, wrap := range *devices {
+				if wrap.device.Serial == device.Serial {
+					wrap.info = ld
+				}
+			}
+		}
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getDeviceInfo(nextLink, org, devices, cache)
+		} else {
+			return nil
+		}
+	}
+
+	// First check the cache.
+	if cc, ok := c.cache.getDeviceInfo(); ok {
+		// We have a valid cache, don't use rest of call.
+		for _, device := range cc {
+			for _, wrap := range devices {
+				if wrap.device.Serial == device.Serial {
+					ld := device
+					wrap.info = ld
+				}
+			}
+		}
+		return nil
+	}
+
+	// Need to build up cache case here.
+	cache := []*organizations.GetOrganizationDevicesOKBodyItems0{}
+	for _, org := range c.orgs {
+		err := getDeviceInfo("", org, &devices, &cache)
+		if err != nil {
+			return err
+		}
+	}
+	c.cache.setDeviceInfo(cache)
+
+	return nil
 }
 
 func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.JCHF, error) {
@@ -1301,6 +1414,10 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 			"mac":          wrap.device.Mac,
 			"model":        wrap.device.Model,
 			"product_type": wrap.device.ProductType,
+			"lat":          fmt.Sprintf("%f", wrap.info.Lat),
+			"lng":          fmt.Sprintf("%f", wrap.info.Lng),
+			"address":      wrap.info.Address,
+			"notes":        wrap.info.Notes,
 		}
 
 		dst.CustomInt = map[string]int32{}
