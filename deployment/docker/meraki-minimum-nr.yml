@@ -1,18 +1,25 @@
 # this represents a minimalist configuration for Meraki API polling
+# by default we monitor only uplinks, all other items are optional
 ---
-devices:
-  meraki_cloud_controller:
-    device_name: meraki_cloud_controller
-    device_ip: snmp.meraki.com
-    provider: meraki-cloud-controller
-    ext:
-      ext_only: true
-      meraki_config:
-        api_key: ABC123
-        monitor_uplinks: true
-        monitor_devices: true
-        monitor_org_changes: true
-trap: {}
-discovery: {}
-global:
-  poll_time_sec: 60
+ devices:
+    meraki_cloud_controller:
+      device_name: meraki_cloud_controller
+      device_ip: snmp.meraki.com
+      provider: meraki-cloud-controller
+      ext:
+        ext_only: true
+        meraki_config:
+          api_key: "$API_KEY"
+          #monitor_uplinks: true
+          #monitor_devices: true
+          #monitor_org_changes: true
+          #monitor_vpn_status: true
+          #preferences:
+          #  show_vpn_peers: true
+          #  device_status_only: true
+          #  hide_uplink_usage: false
+ trap: {}
+ discovery: {}
+ global:
+   poll_time_sec: 300
+   timeout_ms: 30000
