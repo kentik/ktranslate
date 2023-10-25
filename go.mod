@@ -45,7 +45,7 @@ require (
 	github.com/syndtr/goleveldb v1.0.0
 	go.starlark.net v0.0.0-20220926145019-14b050677505
 	google.golang.org/genproto v0.0.0-20230717213848-3f92550aa753
-	google.golang.org/grpc v1.56.2
+	google.golang.org/grpc v1.56.3
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.1
 	zombiezen.com/go/capnproto2 v2.18.2+incompatible
