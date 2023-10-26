@@ -150,5 +150,10 @@ jobs:
             gem install rake
             gem install thor -v 1.2.2
           fi
-          gem install package_cloud
+          if [ "${{ matrix.release }}" = "8" ] # More hackery.
+          then
+            gem install package_cloud -v 0.3.05
+          else
+            gem install package_cloud # otherwise latest seems to work.
+          fi
           package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
