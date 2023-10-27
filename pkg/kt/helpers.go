@@ -1,6 +1,8 @@
 package kt
 
 import (
+	"encoding/binary"
+	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -34,4 +36,10 @@ func LookupEnvBool(key string, defaultVal bool) bool {
 func FixupName(name string) string {
 	name = strings.ToLower(strings.ReplaceAll(name, " ", "_"))
 	return name
+}
+
+func Int2ip(nn uint32) net.IP {
+	ip := make(net.IP, 4)
+	binary.BigEndian.PutUint32(ip, nn)
+	return ip
 }

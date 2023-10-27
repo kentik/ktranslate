@@ -298,6 +298,22 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
 		case "CustomBytes5":
 			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
+		case "CustomIPv41":
+			in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger1)).String()
+		case "CustomIPv42":
+			in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger2)).String()
+		case "CustomIP1":
+			if len(fmsg.CustomBytes1) == 4 {
+				in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes1[0], fmsg.CustomBytes1[1], fmsg.CustomBytes1[2], fmsg.CustomBytes1[3]).String()
+			} else {
+				in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes1).String()
+			}
+		case "CustomIP2":
+			if len(fmsg.CustomBytes2) == 4 {
+				in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes2[0], fmsg.CustomBytes2[1], fmsg.CustomBytes2[2], fmsg.CustomBytes2[3]).String()
+			} else {
+				in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes2).String()
+			}
 		}
 	}
 
