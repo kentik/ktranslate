@@ -90,7 +90,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 	params := organizations.NewGetOrganizationsParamsWithTimeout(c.timeout)
 	prod, err := client.Organizations.GetOrganizations(params, c.auth)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Invalid API Key. Cannot get organizations. Check config and try again")
 	}
 
 	// There's some options which are disabled now, we need to check and error.

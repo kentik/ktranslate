@@ -168,7 +168,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 	// start with the basic src and dst.
 	if src.CHF.Ipv4DstAddr() > 0 {
-		addr = int2ip(src.CHF.Ipv4DstAddr())
+		addr = kt.Int2ip(src.CHF.Ipv4DstAddr())
 	} else {
 		ipr, _ := src.CHF.Ipv6DstAddr()
 		addr = net.IP(ipr)
@@ -181,7 +181,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	}
 
 	if src.CHF.Ipv4SrcAddr() > 0 {
-		addr = int2ip(src.CHF.Ipv4SrcAddr())
+		addr = kt.Int2ip(src.CHF.Ipv4SrcAddr())
 	} else {
 		ipr, _ := src.CHF.Ipv6SrcAddr()
 		addr = net.IP(ipr)
@@ -189,9 +189,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.SrcAddr = addr.String()
 
 	// These are ipv4 addresses.
-	addr = int2ip(src.CHF.SrcRoutePrefix())
+	addr = kt.Int2ip(src.CHF.SrcRoutePrefix())
 	dst.SrcRoutePrefix = addr.String()
-	addr = int2ip(src.CHF.DstRoutePrefix())
+	addr = kt.Int2ip(src.CHF.DstRoutePrefix())
 	dst.DstRoutePrefix = addr.String()
 
 	if kc.resolver != nil {
@@ -200,7 +200,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 	// next hops
 	if src.CHF.Ipv4SrcNextHop() > 0 {
-		addr = int2ip(src.CHF.Ipv4SrcNextHop())
+		addr = kt.Int2ip(src.CHF.Ipv4SrcNextHop())
 	} else {
 		ipr, _ := src.CHF.Ipv6SrcNextHop()
 		addr = net.IP(ipr)
@@ -208,7 +208,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.SrcNextHop = addr.String()
 
 	if src.CHF.Ipv4DstNextHop() > 0 {
-		addr = int2ip(src.CHF.Ipv4DstNextHop())
+		addr = kt.Int2ip(src.CHF.Ipv4DstNextHop())
 	} else {
 		ipr, _ := src.CHF.Ipv6DstNextHop()
 		addr = net.IP(ipr)
@@ -410,12 +410,6 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.Provider = kc.getProviderType(dst)
 
 	return nil
-}
-
-func int2ip(nn uint32) net.IP {
-	ip := make(net.IP, 4)
-	binary.BigEndian.PutUint32(ip, nn)
-	return ip
 }
 
 var (
