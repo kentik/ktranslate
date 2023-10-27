@@ -244,9 +244,6 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
-		if ms[m] == 0 { // Skip 0 valued metrics.
-			continue
-		}
 		switch m {
 		case "in_bytes":
 			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
@@ -263,6 +260,9 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 
 	res := []PromData{}
 	for k, v := range ms {
+		if v == 0 { // Drop zero valued metrics here.
+			continue
+		}
 		res = append(res, PromData{
 			Name:  "kentik:flow:" + k,
 			Value: float64(v),
