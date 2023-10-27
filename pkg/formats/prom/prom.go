@@ -244,6 +244,9 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 	f.mux.RUnlock()
 	ms := map[string]int64{}
 	for m, _ := range metrics {
+		if ms[m] == 0 { // Skip 0 valued metrics.
+			continue
+		}
 		switch m {
 		case "in_bytes":
 			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
