@@ -67,7 +67,7 @@ type tagVec map[string]map[string]int
 
 type PromFormat struct {
 	logger.ContextL
-	vecs         map[string]*prometheus.CounterVec
+	vecs         map[string]*prometheus.GaugeVec
 	invalids     map[string]bool
 	lastMetadata map[string]*kt.LastMetadata
 	vecTags      tagVec
@@ -83,7 +83,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 	}
 	jf := &PromFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "promFormat"}, log),
-		vecs:         make(map[string]*prometheus.CounterVec),
+		vecs:         make(map[string]*prometheus.GaugeVec),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 		vecTags:      map[string]map[string]int{},
@@ -138,8 +138,8 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			labels := f.toLabels(m.Name)
-			cv := prometheus.NewCounterVec(
-				prometheus.CounterOpts{
+			cv := prometheus.NewGaugeVec(
+				prometheus.GaugeOpts{
 					Name: m.Name,
 				},
 				labels,
@@ -166,8 +166,8 @@ func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			continue
 		}
 		if _, ok := f.vecs[roll.EventType]; !ok {
-			f.vecs[roll.EventType] = prometheus.NewCounterVec(
-				prometheus.CounterOpts{
+			f.vecs[roll.EventType] = prometheus.NewGaugeVec(
+				prometheus.GaugeOpts{
 					Name: strings.ReplaceAll(roll.Name, ".", ":"),
 				},
 				roll.GetDims(),
