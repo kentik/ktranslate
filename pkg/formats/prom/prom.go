@@ -260,6 +260,9 @@ func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
 
 	res := []PromData{}
 	for k, v := range ms {
+		if v == 0 { // Drop zero valued metrics here.
+			continue
+		}
 		res = append(res, PromData{
 			Name:  "kentik:flow:" + k,
 			Value: float64(v),
