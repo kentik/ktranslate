@@ -163,7 +163,7 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail
 }
 
 func (api *KentikApi) UpdateTests(ctx context.Context) {
-	if api == nil || len(api.config.KentikCreds) == 0 {
+	if api == nil || api.config == nil || len(api.config.KentikCreds) == 0 {
 		return
 	}
 

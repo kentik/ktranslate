@@ -102,6 +102,21 @@ jobs:
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
 
+      - name: Build and Publish Docker (Kentik EU)
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: Dockerfile-eu
+          platforms: linux/amd64, linux/arm64
+          push: true
+          tags: kentik/ktranslate:eu, quay.io/kentik/ktranslate:eu
+          build-args: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
+          secrets: |
+            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
+
       - name: Publish binary
         uses: actions/upload-artifact@v2
         with:

@@ -36,6 +36,10 @@ func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
 		}
 	}
 
+	if dst.CustomInt[APP_PROTOCOL_COL] == 18 {
+		return kt.KENTIK_EVENT_SYNTH_GEST
+	}
+
 	return kt.KENTIK_EVENT_TYPE
 }
 
@@ -303,6 +307,11 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				if val, ok := dst.CustomBigInt[col]; ok {
 					dst.CustomBigInt[udr.ColumnName] = val
 					delete(dst.CustomBigInt, col)
+				} else { // Sometimes this is mis-labeled.
+					if val, ok := dst.CustomInt[col]; ok {
+						dst.CustomInt[udr.ColumnName] = val
+						delete(dst.CustomInt, col)
+					}
 				}
 			}
 			if _, ok := dst.CustomStr[UDR_TYPE]; !ok {

@@ -16,10 +16,11 @@ const (
 	CompressionDeflate             = "deflate"
 	CompressionNull                = "null"
 
-	KENTIK_EVENT_TYPE  = "KFlow"
-	KENTIK_EVENT_SNMP  = "KSnmp"
-	KENTIK_EVENT_TRACE = "KTrace"
-	KENTIK_EVENT_SYNTH = "KSynth"
+	KENTIK_EVENT_TYPE       = "KFlow"
+	KENTIK_EVENT_SNMP       = "KSnmp"
+	KENTIK_EVENT_TRACE      = "KTrace"
+	KENTIK_EVENT_SYNTH      = "KSynth"
+	KENTIK_EVENT_SYNTH_GEST = "KSynthgest"
 
 	KENTIK_EVENT_SNMP_DEV_METRIC = "KSnmpDeviceMetric"
 	KENTIK_EVENT_SNMP_INT_METRIC = "KSnmpInterfaceMetric"

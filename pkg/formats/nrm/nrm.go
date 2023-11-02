@@ -201,6 +201,8 @@ func (f *NRMFormat) toNRMetric(in *kt.JCHF) []NRMetric {
 		return f.fromSnmpInterfaceMetric(in)
 	case kt.KENTIK_EVENT_SYNTH:
 		return f.fromKSynth(in)
+	case kt.KENTIK_EVENT_SYNTH_GEST:
+		return f.fromKSyngest(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
@@ -338,6 +340,7 @@ var (
 		"provider":               true,
 		"src_addr":               true,
 		"src_cdn_int":            true,
+		"src_as_name":            true,
 		"src_geo":                true,
 		"test_id":                true,
 		"test_name":              true,
@@ -355,6 +358,7 @@ var (
 		"statusEncoding":         true,
 		"https_validity":         true,
 		"https_expiry_timestamp": true,
+		"dest_ip":                true,
 	}
 
 	synthAttrKeys = []string{
@@ -365,9 +369,48 @@ var (
 	}
 )
 
+func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
+	metrics := util.GetSyngestMetricNameSet()
+	attr := map[string]interface{}{}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+	ms := make([]NRMetric, 0, len(metrics))
+
+	// Hard code these.
+	attr["instrumentation.name"] = InstNameSynthetic
+	if tt, ok := attr["test_type"]; ok {
+		attr["instrumentation.name"] = tt
+	}
+
+	for k, v := range attr { // White list only a few attributes here.
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
+		}
+	}
+
+	for m, name := range metrics {
+		if in.CustomInt[m] > 0 {
+			ms = append(ms, NRMetric{
+				Name:       "kentik.syngest." + name.Name,
+				Type:       NR_GAUGE_TYPE,
+				Value:      int64(in.CustomInt[m]),
+				Attributes: attr,
+			})
+		}
+	}
+
+	return ms
+}
+
 func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	if in.CustomInt["result_type"] <= 1 {
-		return nil // Don't worry about timeouts and errrors for now.
+		return nil // Don't worry about timeouts and errors for now.
 	}
 
 	rawStr := in.CustomStr["error_cause/trace_route"] // Pull this out early.

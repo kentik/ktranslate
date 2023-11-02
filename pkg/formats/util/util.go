@@ -345,6 +345,20 @@ func GetSynMetricNameSet(rt int32) map[string]kt.MetricInfo {
 	return synMetrics[rt]
 }
 
+// [aggregate_interval:0 app_protocol:18 avg_jitter:934 avg_latency:27366 avg_weighted_latency:0 configured_task_type:5 health_moment_task_type:5 jitter_health:300 latency_health:300 member_id:21241 packet_loss_health:300 rolling_avg_jitter:1127 rolling_avg_latency:27172 rolling_avg_weighted_latency:0 rolling_stddev_jitter:303 rolling_stddev_latency:452 size:0 status:0
+func GetSyngestMetricNameSet() map[string]kt.MetricInfo {
+	return map[string]kt.MetricInfo{
+		"avg_jitter":             kt.MetricInfo{Name: "avg_jitter"},
+		"avg_latency":            kt.MetricInfo{Name: "avg_latency"},
+		"rolling_avg_jitter":     kt.MetricInfo{Name: "rolling_avg_jitter"},
+		"rolling_avg_latency":    kt.MetricInfo{Name: "rolling_avg_latency"},
+		"rolling_stddev_jitter":  kt.MetricInfo{Name: "rolling_stddev_jitter"},
+		"rolling_stddev_latency": kt.MetricInfo{Name: "rolling_stddev_latency"},
+		"size":                   kt.MetricInfo{Name: "size"},
+		"status":                 kt.MetricInfo{Name: "status"},
+	}
+}
+
 // List of attributes to not pass to NR.
 var removeAttrForSnmp = []string{
 	"Uptime",
