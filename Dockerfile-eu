@@ -2,8 +2,8 @@
 
 INCLUDE+ Dockerfile
 
-COPY --chown=ktranslate:ktranslate eu/config.json /etc/ktranslate/config/config.json
-COPY --chown=ktranslate:ktranslate eu/udr.csv /etc/ktranslate/config/udr.csv
+COPY --chown=ktranslate:ktranslate eu/config.json /etc/ktranslate/config.json
+COPY --chown=ktranslate:ktranslate eu/udr.csv /etc/ktranslate/udr.csv
 
 USER ktranslate
 ENTRYPOINT ["ktranslate", "-listen", "off", "-mapping", "/etc/ktranslate/config.json", "-geo", "/etc/ktranslate/GeoLite2-Country.mmdb", "-udrs", "/etc/ktranslate/udr.csv", "-api_devices", "/etc/ktranslate/devices.json", "-asn", "/etc/ktranslate/GeoLite2-ASN.mmdb", "-log_level", "info", "-api_root", "https://api.kentik.eu"]
