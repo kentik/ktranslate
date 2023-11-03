@@ -3,6 +3,7 @@ package prom
 import (
 	"flag"
 	"fmt"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -67,7 +68,7 @@ type tagVec map[string]map[string]int
 
 type PromFormat struct {
 	logger.ContextL
-	vecs         map[string]*prometheus.CounterVec
+	vecs         map[string]*prometheus.GaugeVec
 	invalids     map[string]bool
 	lastMetadata map[string]*kt.LastMetadata
 	vecTags      tagVec
@@ -83,7 +84,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 	}
 	jf := &PromFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "promFormat"}, log),
-		vecs:         make(map[string]*prometheus.CounterVec),
+		vecs:         make(map[string]*prometheus.GaugeVec),
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 		vecTags:      map[string]map[string]int{},
@@ -138,8 +139,8 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			labels := f.toLabels(m.Name)
-			cv := prometheus.NewCounterVec(
-				prometheus.CounterOpts{
+			cv := prometheus.NewGaugeVec(
+				prometheus.GaugeOpts{
 					Name: m.Name,
 				},
 				labels,
@@ -166,8 +167,8 @@ func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			continue
 		}
 		if _, ok := f.vecs[roll.EventType]; !ok {
-			f.vecs[roll.EventType] = prometheus.NewCounterVec(
-				prometheus.CounterOpts{
+			f.vecs[roll.EventType] = prometheus.NewGaugeVec(
+				prometheus.GaugeOpts{
 					Name: strings.ReplaceAll(roll.Name, ".", ":"),
 				},
 				roll.GetDims(),
@@ -190,6 +191,8 @@ func (f *PromFormat) toPromMetric(in *kt.JCHF) []PromData {
 		return f.fromSnmpInterfaceMetric(in)
 	case kt.KENTIK_EVENT_SYNTH:
 		return f.fromKSynth(in)
+	case kt.KENTIK_EVENT_SYNTH_GEST:
+		return f.fromKSyngest(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
 	default:
@@ -204,35 +207,130 @@ func (f *PromFormat) toPromMetric(in *kt.JCHF) []PromData {
 	return nil
 }
 
+var (
+	synthWLAttr = map[string]bool{
+		"agent_id":               true,
+		"agent_name":             true,
+		"dst_addr":               true,
+		"dst_cdn_int":            true,
+		"dst_geo":                true,
+		"provider":               true,
+		"src_addr":               true,
+		"src_cdn_int":            true,
+		"src_as_name":            true,
+		"src_geo":                true,
+		"test_id":                true,
+		"test_name":              true,
+		"test_type":              true,
+		"test_url":               true,
+		"src_host":               true,
+		"dst_host":               true,
+		"src_cloud_region":       true,
+		"src_cloud_provider":     true,
+		"src_site":               true,
+		"dst_cloud_region":       true,
+		"dst_cloud_provider":     true,
+		"dst_site":               true,
+		"statusMessage":          true,
+		"statusEncoding":         true,
+		"https_validity":         true,
+		"https_expiry_timestamp": true,
+		"dest_ip":                true,
+	}
+
+	synthAttrKeys = []string{
+		"statusMessage",
+		"statusEncoding",
+		"https_validity",
+		"https_expiry_timestamp",
+	}
+)
+
+func (f *PromFormat) fromKSyngest(in *kt.JCHF) []PromData {
+	metrics := util.GetSyngestMetricNameSet()
+	attr := map[string]interface{}{}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+	ms := make([]PromData, 0, len(metrics))
+
+	for k, v := range attr { // White list only a few attributes here.
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
+		}
+	}
+
+	for m, name := range metrics {
+		if in.CustomInt[m] > 0 {
+			ms = append(ms, PromData{
+				Name:  "kentik:syngest:" + name.Name,
+				Value: float64(in.CustomInt[m]),
+				Tags:  attr,
+			})
+		}
+	}
+
+	return ms
+}
+
 func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
+	if in.CustomInt["result_type"] <= 1 {
+		return nil // Don't worry about timeouts and errors for now.
+	}
+
+	rawStr := in.CustomStr["error_cause/trace_route"] // Pull this out early.
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
-	ms := map[string]int64{}
+	ms := make([]PromData, 0, len(metrics))
 
-	for m, name := range metrics {
-		switch m {
-		case "error", "timeout":
-			ms[name.Name] = 1
-		default:
-			if in.CustomInt["result_type"] > 1 {
-				ms[name.Name] = int64(in.CustomInt[m])
+	// If there's str00 data, try to unserialize and pass in useful bits.
+	if rawStr != "" {
+		strData := []interface{}{}
+		if err := json.Unmarshal([]byte(rawStr), &strData); err == nil {
+			if len(strData) > 0 {
+				switch sd := strData[0].(type) {
+				case map[string]interface{}:
+					for _, key := range synthAttrKeys {
+						if val, ok := sd[key]; ok {
+							attr[key] = val
+						}
+					}
+				}
 			}
 		}
 	}
 
-	res := []PromData{}
-	for k, v := range ms {
-		res = append(res, PromData{
-			Name:  "kentik:synth:" + k,
-			Value: float64(v),
-			Tags:  attr,
-		})
+	for k, v := range attr { // White list only a few attributes here.
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
+		}
 	}
 
-	return res
+	for m, name := range metrics {
+		switch name.Name {
+		case "avg_rtt", "jit_rtt", "time", "code", "port", "status", "ttlb", "size", "trx_time", "validation", "lost", "sent":
+			ms = append(ms, PromData{
+				Name:  "kentik:synth:" + name.Name,
+				Value: float64(in.CustomInt[m]),
+				Tags:  attr,
+			})
+		}
+	}
+
+	return ms
 }
 
 func (f *PromFormat) fromKflow(in *kt.JCHF) []PromData {
