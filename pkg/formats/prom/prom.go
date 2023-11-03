@@ -24,7 +24,7 @@ var (
 
 func init() {
 	flag.BoolVar(&doCollectorStats, "info_collector", false, "Also send stats about this collector")
-	flag.IntVar(&seenNeeded, "prom_seen", 10, "Number of flows needed inbound before we start writting to the collector")
+	flag.IntVar(&seenNeeded, "prom_seen", 4, "Number of flows needed inbound before we start writting to the collector")
 
 }
 
@@ -72,7 +72,7 @@ type PromFormat struct {
 	invalids     map[string]bool
 	lastMetadata map[string]*kt.LastMetadata
 	vecTags      tagVec
-	seen         int
+	seen         map[string]int
 	config       *ktranslate.PrometheusFormatConfig
 
 	mux sync.RWMutex
@@ -89,6 +89,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 		lastMetadata: map[string]*kt.LastMetadata{},
 		vecTags:      map[string]map[string]int{},
 		config:       cfg,
+		seen:         map[string]int{},
 	}
 
 	if cfg.EnableCollectorStats {
@@ -96,12 +97,6 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 	}
 
 	return jf, nil
-}
-
-func (f *PromFormat) addLabels(res []PromData) {
-	for _, m := range res {
-		m.AddTagLabels(f.vecTags)
-	}
 }
 
 func (f *PromFormat) toLabels(name string) []string {
@@ -125,18 +120,18 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	f.mux.Lock()
 	defer f.mux.Unlock()
 
-	if f.seen < f.config.FlowsNeeded {
-		f.addLabels(res)
-		f.seen++
-		if f.seen == f.config.FlowsNeeded {
-			f.Infof("Seen enough!")
-		} else {
-			f.Infof("Seen %d", f.seen)
-		}
-		return nil, nil
-	}
-
 	for _, m := range res {
+		if f.seen[m.Name] < f.config.FlowsNeeded {
+			m.AddTagLabels(f.vecTags)
+			f.seen[m.Name]++
+			if f.seen[m.Name] == f.config.FlowsNeeded {
+				f.Infof("Seen enough %s!", m.Name)
+			} else {
+				f.Infof("Seen %s -> %d", m.Name, f.seen[m.Name])
+			}
+			continue
+		}
+
 		if _, ok := f.vecs[m.Name]; !ok {
 			labels := f.toLabels(m.Name)
 			cv := prometheus.NewGaugeVec(
@@ -149,6 +144,7 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			f.vecs[m.Name] = cv
 			f.Infof("Adding %s %v", m.Name, labels)
 		}
+		//f.Infof("%s, %v, %v %v", m.Name, m.Tags, f.vecTags[m.Name], f.toLabels(m.Name))
 		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Add(m.Value)
 	}
 
