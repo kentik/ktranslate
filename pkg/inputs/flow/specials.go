@@ -5,7 +5,7 @@ import (
 
 	"github.com/kentik/ktranslate"
 
-	"github.com/netsampler/goflow2/producer"
+	producer "github.com/netsampler/goflow2/v2/producer/proto"
 )
 
 func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {

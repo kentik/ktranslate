@@ -19,7 +19,9 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/ic"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
-	flowmessage "github.com/netsampler/goflow2/pb"
+	flowmessage "github.com/netsampler/goflow2/v2/pb"
+	"github.com/netsampler/goflow2/v2/producer"
+	"github.com/netsampler/goflow2/v2/utils"
 )
 
 const (
@@ -42,6 +44,9 @@ type KentikDriver struct {
 	ctx          context.Context
 	config       EntConfig
 	cfg          *ktranslate.FlowInputConfig
+	receiver     *utils.UDPReceiver
+	pipe         utils.FlowPipe
+	producer     producer.ProducerInterface
 }
 
 type FlowMetric struct {
@@ -72,7 +77,11 @@ func (t *KentikDriver) SetConfig(c EntConfig) {
 	t.config = c
 }
 
-func (t *KentikDriver) Init(ctx context.Context) error {
+func (t *KentikDriver) Name() string {
+	return "Kentik CHF"
+}
+
+func (t *KentikDriver) Init() error {
 	return nil
 }
 
@@ -89,7 +98,19 @@ func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
 	return nil, nil, nil
 }
 
-func (t *KentikDriver) Close() {}
+func (t *KentikDriver) Close() {
+	if t.receiver != nil {
+		if err := t.receiver.Stop(); err != nil {
+			t.Errorf("Error stopping flow reciever: %v", err)
+		}
+	}
+	if t.pipe != nil {
+		t.pipe.Close()
+	}
+	if t.producer != nil {
+		t.producer.Close()
+	}
+}
 
 func (t *KentikDriver) HttpInfo() map[string]float64 {
 	flows := map[string]float64{}
@@ -152,18 +173,7 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "Type":
 			in.CustomStr[field] = fmsg.Type.String()
 		case "TimeReceived":
-			in.Timestamp = int64(fmsg.TimeReceived)
-			// Verify this is MS. If not, make it MS.
-			if in.Timestamp < 999999999999 {
-				// Assume seconds and multiply
-				in.Timestamp = in.Timestamp * 1000
-			}
-		case "FlowDirection":
-			if fmsg.FlowDirection == 1 {
-				in.CustomStr[field] = "egress"
-			} else {
-				in.CustomStr[field] = "ingress"
-			}
+			in.Timestamp = int64(fmsg.TimeReceivedNs)
 		case "SequenceNum":
 			in.CustomBigInt[field] = int64(fmsg.SequenceNum)
 		case "SamplingRate":
@@ -173,21 +183,13 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 		case "SamplerAddress":
 			in.CustomStr[field] = net.IP(fmsg.SamplerAddress).String()
 		case "TimeFlowStart":
-			in.CustomBigInt[field] = int64(fmsg.TimeFlowStart)
+			in.CustomBigInt[field] = int64(fmsg.TimeFlowStartNs)
 		case "TimeFlowEnd":
-			in.CustomBigInt[field] = int64(fmsg.TimeFlowEnd)
+			in.CustomBigInt[field] = int64(fmsg.TimeFlowEndNs)
 		case "Bytes":
-			if fmsg.FlowDirection == 1 {
-				in.OutBytes = fmsg.Bytes
-			} else {
-				in.InBytes = fmsg.Bytes
-			}
+			in.InBytes = fmsg.Bytes
 		case "Packets":
-			if fmsg.FlowDirection == 1 {
-				in.OutPkts = fmsg.Packets
-			} else {
-				in.InPkts = fmsg.Packets
-			}
+			in.InPkts = fmsg.Packets
 		case "SrcAddr":
 			in.SrcAddr = net.IP(fmsg.SrcAddr).String()
 		case "DstAddr":
@@ -218,102 +220,76 @@ func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
 			in.VlanOut = fmsg.DstVlan
 		case "VlanId":
 			in.CustomBigInt[field] = int64(fmsg.VlanId)
-		case "IngressVrfID":
-			in.CustomBigInt[field] = int64(fmsg.IngressVrfID)
-		case "EgressVrfID":
-			in.CustomBigInt[field] = int64(fmsg.EgressVrfID)
 		case "IPTos":
-			in.Tos = fmsg.IPTos
+			in.Tos = fmsg.IpTos
 		case "ForwardingStatus":
 			in.CustomBigInt[field] = int64(fmsg.ForwardingStatus)
 		case "IPTTL":
-			in.CustomBigInt[field] = int64(fmsg.IPTTL)
+			in.CustomBigInt[field] = int64(fmsg.IpTtl)
 		case "TCPFlags":
-			in.TcpFlags = fmsg.TCPFlags
+			in.TcpFlags = fmsg.TcpFlags
 		case "IcmpType":
 			in.CustomBigInt[field] = int64(fmsg.IcmpType)
 		case "IcmpCode":
 			in.CustomBigInt[field] = int64(fmsg.IcmpCode)
 		case "IPv6FlowLabel":
-			in.CustomBigInt[field] = int64(fmsg.IPv6FlowLabel)
+			in.CustomBigInt[field] = int64(fmsg.Ipv6FlowLabel)
 		case "FragmentId":
 			in.CustomBigInt[field] = int64(fmsg.FragmentId)
 		case "FragmentOffset":
 			in.CustomBigInt[field] = int64(fmsg.FragmentOffset)
-		case "BiFlowDirection":
-			in.CustomBigInt[field] = int64(fmsg.BiFlowDirection)
 		case "SrcAS":
-			in.SrcAs = fmsg.SrcAS
+			in.SrcAs = fmsg.SrcAs
 		case "DstAS":
-			in.DstAs = fmsg.DstAS
+			in.DstAs = fmsg.DstAs
 		case "NextHop":
 			in.NextHop = net.IP(fmsg.NextHop).String()
 		case "NextHopAS":
-			in.DstNextHopAs = fmsg.NextHopAS
+			in.DstNextHopAs = fmsg.NextHopAs
 		case "SrcNet":
 			in.CustomBigInt[field] = int64(fmsg.SrcNet)
 		case "DstNet":
 			in.CustomBigInt[field] = int64(fmsg.DstNet)
-		case "HasMPLS":
-			if fmsg.HasMPLS {
-				in.CustomInt[field] = 1
-			} else {
-				in.CustomInt[field] = 0
-			}
 		case "MPLSCount":
-			in.CustomBigInt[field] = int64(fmsg.MPLSCount)
-		case "MPLS1TTL":
-			in.CustomBigInt[field] = int64(fmsg.MPLS1TTL)
-		case "MPLS1Label":
-			in.CustomBigInt[field] = int64(fmsg.MPLS1Label)
-		case "MPLS2TTL":
-			in.CustomBigInt[field] = int64(fmsg.MPLS2TTL)
-		case "MPLS2Label":
-			in.CustomBigInt[field] = int64(fmsg.MPLS2Label)
-		case "MPLS3TTL":
-			in.CustomBigInt[field] = int64(fmsg.MPLS3TTL)
-		case "MPLS3Label":
-			in.CustomBigInt[field] = int64(fmsg.MPLS3Label)
-		case "MPLSLastTTL":
-			in.CustomBigInt[field] = int64(fmsg.MPLSLastTTL)
-		case "MPLSLastLabel":
-			in.CustomBigInt[field] = int64(fmsg.MPLSLastLabel)
-		case "CustomInteger1":
-			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger1)
-		case "CustomInteger2":
-			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger2)
-		case "CustomInteger3":
-			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger3)
-		case "CustomInteger4":
-			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger4)
-		case "CustomInteger5":
-			in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger5)
-		case "CustomBytes1":
-			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes1))
-		case "CustomBytes2":
-			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes2))
-		case "CustomBytes3":
-			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes3))
-		case "CustomBytes4":
-			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
-		case "CustomBytes5":
-			in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
-		case "CustomIPv41":
-			in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger1)).String()
-		case "CustomIPv42":
-			in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger2)).String()
-		case "CustomIP1":
-			if len(fmsg.CustomBytes1) == 4 {
-				in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes1[3], fmsg.CustomBytes1[2], fmsg.CustomBytes1[1], fmsg.CustomBytes1[0]).String()
-			} else {
-				in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes1).String()
-			}
-		case "CustomIP2":
-			if len(fmsg.CustomBytes2) == 4 {
-				in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes2[3], fmsg.CustomBytes2[2], fmsg.CustomBytes2[1], fmsg.CustomBytes2[0]).String()
-			} else {
-				in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes2).String()
-			}
+			in.CustomBigInt[field] = int64(len(fmsg.MplsTtl))
+			/**
+			case "CustomInteger1":
+				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger1)
+			case "CustomInteger2":
+				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger2)
+			case "CustomInteger3":
+				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger3)
+			case "CustomInteger4":
+				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger4)
+			case "CustomInteger5":
+				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger5)
+			case "CustomBytes1":
+				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes1))
+			case "CustomBytes2":
+				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes2))
+			case "CustomBytes3":
+				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes3))
+			case "CustomBytes4":
+				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
+			case "CustomBytes5":
+				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
+			case "CustomIPv41":
+				in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger1)).String()
+			case "CustomIPv42":
+				in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger2)).String()
+			case "CustomIP1":
+				if len(fmsg.CustomBytes1) == 4 {
+					in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes1[3], fmsg.CustomBytes1[2], fmsg.CustomBytes1[1], fmsg.CustomBytes1[0]).String()
+				} else {
+					in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes1).String()
+				}
+			case "CustomIP2":
+				if len(fmsg.CustomBytes2) == 4 {
+					in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes2[3], fmsg.CustomBytes2[2], fmsg.CustomBytes2[1], fmsg.CustomBytes2[0]).String()
+				} else {
+					in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes2).String()
+				}
+			*/
 		}
 	}
 
