@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&listen, "prom_listen", ":8082", "Bind to listen for prometheus requests on.")
+	flag.StringVar(&listen, "prom_listen", "127.0.0.1:8083", "Bind to listen for prometheus requests on.")
 	flag.StringVar(&remoteUrl, "prom_remote_write", "", "Pass on remote write to this address.")
 }
 
@@ -91,6 +91,10 @@ func (s *PromSink) Init(ctx context.Context, format formats.Format, compression 
 			return fmt.Errorf("You must set the -prom_remote_write flag to make this work.")
 		}
 
+		if compression != kt.CompressionSnappy {
+			return fmt.Errorf("You used the %s unsupported compression format. Use snappy only.", compression)
+		}
+
 		s.Infof("Sending to remote_write endpoint %s", remoteUrl)
 	default:
 		return fmt.Errorf("Prometheus only supports %s and %s formats, not %s", formats.FORMAT_PROM, formats.FORMAT_PROM_REMOTE, format)
@@ -98,10 +102,6 @@ func (s *PromSink) Init(ctx context.Context, format formats.Format, compression 
 
 	s.remoteUrl = remoteUrl
 	s.compression = compression
-
-	if s.compression != kt.CompressionSnappy {
-		return fmt.Errorf("You used the %s unsupported compression format. Use snappy only.", s.compression)
-	}
 
 	return nil
 }
