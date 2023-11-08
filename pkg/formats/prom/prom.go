@@ -145,7 +145,7 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			f.Infof("Adding %s %v", m.Name, labels)
 		}
 		//f.Infof("%s, %v, %v %v", m.Name, m.Tags, f.vecTags[m.Name], f.toLabels(m.Name))
-		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Add(m.Value)
+		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Set(m.Value)
 	}
 
 	return nil, nil
@@ -171,7 +171,7 @@ func (f *PromFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			)
 			prometheus.MustRegister(f.vecs[roll.EventType])
 		}
-		f.vecs[roll.EventType].WithLabelValues(strings.Split(roll.Dimension, roll.KeyJoin)...).Add(float64(roll.Metric))
+		f.vecs[roll.EventType].WithLabelValues(strings.Split(roll.Dimension, roll.KeyJoin)...).Set(float64(roll.Metric))
 	}
 
 	return nil, nil
