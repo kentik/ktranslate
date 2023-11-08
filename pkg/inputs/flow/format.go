@@ -19,8 +19,8 @@ import (
 	"github.com/kentik/ktranslate/pkg/util/ic"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
-	flowmessage "github.com/netsampler/goflow2/v2/pb"
 	"github.com/netsampler/goflow2/v2/producer"
+	pp "github.com/netsampler/goflow2/v2/producer/proto"
 	"github.com/netsampler/goflow2/v2/utils"
 )
 
@@ -90,7 +90,7 @@ func (t *KentikDriver) Prepare() error {
 }
 
 func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
-	msg, ok := data.(*flowmessage.FlowMessage)
+	msg, ok := data.(*pp.ProtoProducerMessage)
 	if !ok {
 		return nil, nil, fmt.Errorf("message is not protobuf")
 	}
@@ -120,7 +120,7 @@ func (t *KentikDriver) HttpInfo() map[string]float64 {
 	return flows
 }
 
-func (t *KentikDriver) toJCHF(fmsg *flowmessage.FlowMessage) *kt.JCHF {
+func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 	srcmac := make([]byte, 8)
 	dstmac := make([]byte, 8)
 	binary.BigEndian.PutUint64(srcmac, fmsg.SrcMac)
