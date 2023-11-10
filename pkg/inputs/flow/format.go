@@ -87,9 +87,8 @@ func (t *KentikDriver) SetConfig(c EntConfig) {
 	t.pb2ixd = map[int32]pbInfo{}
 	for _, pf := range t.config.FlowConfig.Formatter.Protobuf {
 		t.pb2ixd[pf.Index] = pbInfo{
-			Name:  pf.Name,
-			Type:  pf.Type,
-			Array: pf.Array,
+			Name: pf.Name,
+			Type: pf.Type,
 		}
 	}
 }
@@ -139,7 +138,7 @@ func (t *KentikDriver) HttpInfo() map[string]float64 {
 
 func (t *KentikDriver) mapCustoms(m *pp.ProtoProducerMessage, in *kt.JCHF) {
 	if t.pb2ixd == nil {
-		return nil
+		return
 	}
 
 	fmr := m.ProtoReflect()
@@ -215,7 +214,8 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		in.SampleRate = 1
 	}
 
-	t.mapUnknown(fmsg, in)
+	t.mapCustoms(fmsg, in)
+	ocflowDir := in.CustomBigInt["flow_direction"]
 	for _, field := range t.fields {
 		switch field {
 		case "Type":
@@ -244,13 +244,13 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		case "TimeFlowEnd":
 			in.CustomBigInt[field] = int64(fmsg.TimeFlowEndNs)
 		case "Bytes":
-			if customs["flow_direction"] == 0 {
+			if ocflowDir == 0 {
 				in.InBytes = fmsg.Bytes
 			} else {
 				in.OutBytes = fmsg.Bytes
 			}
 		case "Packets":
-			if customs["flow_direction"] == 0 {
+			if ocflowDir == 0 {
 				in.InPkts = fmsg.Packets
 			} else {
 				in.OutPkts = fmsg.Packets
