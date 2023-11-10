@@ -3,6 +3,7 @@ package flow
 import (
 	"context"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"net"
 	"strconv"
@@ -22,6 +23,7 @@ import (
 	"github.com/netsampler/goflow2/v2/producer"
 	pp "github.com/netsampler/goflow2/v2/producer/proto"
 	"github.com/netsampler/goflow2/v2/utils"
+	"google.golang.org/protobuf/encoding/protowire"
 )
 
 const (
@@ -47,6 +49,13 @@ type KentikDriver struct {
 	receiver     *utils.UDPReceiver
 	pipe         utils.FlowPipe
 	producer     producer.ProducerInterface
+	pb2ixd       map[int32]pbInfo
+}
+
+// For now, don't handle arrays
+type pbInfo struct {
+	Name string
+	Type string
 }
 
 type FlowMetric struct {
@@ -75,6 +84,14 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 
 func (t *KentikDriver) SetConfig(c EntConfig) {
 	t.config = c
+	t.pb2ixd = map[int32]pbInfo{}
+	for _, pf := range t.config.FlowConfig.Formatter.Protobuf {
+		t.pb2ixd[pf.Index] = pbInfo{
+			Name:  pf.Name,
+			Type:  pf.Type,
+			Array: pf.Array,
+		}
+	}
 }
 
 func (t *KentikDriver) Name() string {
@@ -118,6 +135,36 @@ func (t *KentikDriver) HttpInfo() map[string]float64 {
 		flows[d] = f.Flows.Rate1()
 	}
 	return flows
+}
+
+func (t *KentikDriver) mapCustoms(m *pp.ProtoProducerMessage, in *kt.JCHF) {
+	if t.pb2ixd == nil {
+		return nil
+	}
+
+	fmr := m.ProtoReflect()
+	unk := fmr.GetUnknown()
+	var offset int
+	for offset < len(unk) {
+		num, dataType, length := protowire.ConsumeTag(unk[offset:])
+		offset += length
+		length = protowire.ConsumeFieldValue(num, dataType, unk[offset:])
+		data := unk[offset : offset+length]
+		offset += length
+
+		// we check if the index is listed in the config
+		if pbField, ok := t.pb2ixd[int32(num)]; ok {
+			if dataType == protowire.VarintType {
+				v, _ := protowire.ConsumeVarint(data)
+				in.CustomBigInt[pbField.Name] = int64(v)
+			} else if dataType == protowire.BytesType {
+				v, _ := protowire.ConsumeString(data)
+				in.CustomStr[pbField.Name] = hex.EncodeToString([]byte(v))
+			} else {
+				continue
+			}
+		}
+	}
 }
 
 func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
@@ -168,6 +215,7 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		in.SampleRate = 1
 	}
 
+	t.mapUnknown(fmsg, in)
 	for _, field := range t.fields {
 		switch field {
 		case "Type":
@@ -180,6 +228,15 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 			if fmsg.SamplingRate > 0 {
 				in.SampleRate = uint32(fmsg.SamplingRate)
 			}
+		case "FlowDirection":
+			if v, ok := in.CustomBigInt["flow_direction"]; ok {
+				delete(in.CustomBigInt, "flow_direction")
+				if v == 1 {
+					in.CustomStr["FlowDirection"] = "egress"
+				} else {
+					in.CustomStr["FlowDirection"] = "ingress"
+				}
+			}
 		case "SamplerAddress":
 			in.CustomStr[field] = net.IP(fmsg.SamplerAddress).String()
 		case "TimeFlowStart":
@@ -187,9 +244,17 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		case "TimeFlowEnd":
 			in.CustomBigInt[field] = int64(fmsg.TimeFlowEndNs)
 		case "Bytes":
-			in.InBytes = fmsg.Bytes
+			if customs["flow_direction"] == 0 {
+				in.InBytes = fmsg.Bytes
+			} else {
+				in.OutBytes = fmsg.Bytes
+			}
 		case "Packets":
-			in.InPkts = fmsg.Packets
+			if customs["flow_direction"] == 0 {
+				in.InPkts = fmsg.Packets
+			} else {
+				in.OutPkts = fmsg.Packets
+			}
 		case "SrcAddr":
 			in.SrcAddr = net.IP(fmsg.SrcAddr).String()
 		case "DstAddr":
@@ -252,44 +317,6 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 			in.CustomBigInt[field] = int64(fmsg.DstNet)
 		case "MPLSCount":
 			in.CustomBigInt[field] = int64(len(fmsg.MplsTtl))
-			/**
-			case "CustomInteger1":
-				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger1)
-			case "CustomInteger2":
-				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger2)
-			case "CustomInteger3":
-				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger3)
-			case "CustomInteger4":
-				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger4)
-			case "CustomInteger5":
-				in.CustomBigInt[t.config.NameMap[field]] = int64(fmsg.CustomInteger5)
-			case "CustomBytes1":
-				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes1))
-			case "CustomBytes2":
-				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes2))
-			case "CustomBytes3":
-				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes3))
-			case "CustomBytes4":
-				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes4))
-			case "CustomBytes5":
-				in.CustomStr[t.config.NameMap[field]] = fmt.Sprintf("%s", string(fmsg.CustomBytes5))
-			case "CustomIPv41":
-				in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger1)).String()
-			case "CustomIPv42":
-				in.CustomStr[t.config.NameMap[field]] = kt.Int2ip(uint32(fmsg.CustomInteger2)).String()
-			case "CustomIP1":
-				if len(fmsg.CustomBytes1) == 4 {
-					in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes1[3], fmsg.CustomBytes1[2], fmsg.CustomBytes1[1], fmsg.CustomBytes1[0]).String()
-				} else {
-					in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes1).String()
-				}
-			case "CustomIP2":
-				if len(fmsg.CustomBytes2) == 4 {
-					in.CustomStr[t.config.NameMap[field]] = net.IPv4(fmsg.CustomBytes2[3], fmsg.CustomBytes2[2], fmsg.CustomBytes2[1], fmsg.CustomBytes2[0]).String()
-				} else {
-					in.CustomStr[t.config.NameMap[field]] = net.IP(fmsg.CustomBytes2).String()
-				}
-			*/
 		}
 	}
 

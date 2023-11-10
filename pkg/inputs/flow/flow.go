@@ -25,6 +25,7 @@ import (
 	protoproducer "github.com/netsampler/goflow2/v2/producer/proto"
 	"github.com/netsampler/goflow2/v2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"gopkg.in/yaml.v2"
 )
 
 type FlowSource string
@@ -92,12 +93,14 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		config, err = loadMapping(f, proto)
+		//config, err = loadMapping(f, proto)
+		pc, err := LoadYamlMapping(f)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
 			return nil, err
 		}
+		config.FlowConfig = *pc
 	}
 
 	kt.SetConfig(config)
@@ -194,6 +197,13 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 type EntConfig struct {
 	FlowConfig protoproducer.ProducerConfig `json:"flow_config"`
 	NameMap    map[string]string            `json:"name_map"`
+}
+
+func LoadYamlMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
+	config := &protoproducer.ProducerConfig{}
+	dec := yaml.NewDecoder(f)
+	err := dec.Decode(config)
+	return config, err
 }
 
 func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
