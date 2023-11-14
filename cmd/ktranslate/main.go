@@ -400,6 +400,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.EnableHTTPInput = v
+			case "http.remote_ip":
+				cfg.HttpRemoteIp = val
 			case "enricher":
 				if _, err := os.Stat(val); err == nil { // If this is a file on disk, run as a script.
 					cfg.EnricherScript = val

@@ -3,6 +3,7 @@ package http
 import (
 	"compress/gzip"
 	"context"
+	"flag"
 	"fmt"
 	"net"
 	"net/http"
@@ -36,6 +37,14 @@ const (
 	DeviceUpdateDuration = 1 * time.Hour
 	Listen               = "/input"
 )
+
+var (
+	useAsRemoteIP string
+)
+
+func init() {
+	flag.StringVar(&useAsRemoteIP, "http.remote_ip", "", "If set, ignore actual remote IP and use this for device mapping.")
+}
 
 func NewHttpListener(ctx context.Context, host string, log logger.Underlying, registry go_metrics.Registry, jchfChan chan []*kt.JCHF, apic *api.KentikApi) (*KentikHttpListener, error) {
 	ks := KentikHttpListener{
@@ -320,6 +329,9 @@ type handler func(http.ResponseWriter, *http.Request)
 func getIP(r *http.Request) string {
 	res := r.Header.Get("X-FORWARDED-FOR")
 	if res == "" {
+		if useAsRemoteIP != "" {
+			return useAsRemoteIP
+		}
 		res = r.RemoteAddr
 	}
 	pts := strings.SplitN(res, ":", 2)
