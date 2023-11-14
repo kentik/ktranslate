@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"strings"
 	"time"
@@ -14,6 +15,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/kmux"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/ic"
 )
 
 type KentikHttpListener struct {
@@ -55,6 +57,105 @@ func (ks *KentikHttpListener) RegisterRoutes(r *kmux.Router) {
 	r.HandleFunc(Listen+"/telegraf/standard", ks.wrap(ks.readStandard))
 	r.HandleFunc(Listen+"/telegraf/batch", ks.wrap(ks.readBatch))
 	r.HandleFunc(Listen+"/ktranslate/jchf", ks.wrap(ks.readJCHF))
+	r.HandleFunc(Listen+"/gigamon/batch", ks.wrap(ks.readGigaBatch))
+}
+
+type gigaEvent struct {
+	Timestamp                 string `json:"ts"`
+	Vendor                    string `json:"vendor"`
+	Version                   string `json:"version"`
+	Generator                 string `json:"generator"`
+	SrcIP                     net.IP `json:"src_ip"`
+	DstIP                     net.IP `json:"dst_ip"`
+	Protocol                  int    `json:"protocol,string"`
+	SrcPort                   int    `json:"src_port,string"`
+	DstPort                   int    `json:"dst_port,string"`
+	SslCommonName             string `json:"ssl_common_name"`
+	SslIssuer                 string `json:"ssl_issuer"`
+	SslValidityNotBefore      string `json:"ssl_validity_not_before"`
+	SslValidityNotAdter       string `json:"ssl_validity_not_after"`
+	SslExtSigAlgorithumScheme int    `json:"ssl_ext_sig_algorithm_scheme,string"`
+	SslExtSigAlgorithumHash   int    `json:"ssl_ext_sig_algorithm_hash,string"`
+	SslExtSigAlgorithumSig    int    `json:"ssl_ext_sig_algorithm_sig,string"`
+	AppId                     int    `json:"app_id,string"`
+	SrcPackets                int    `json:"src_packets,string"`
+	DstPackets                int    `json:"dst_packets,string"`
+	AppName                   string `json:"app_name"`
+	SrcBytes                  int    `json:"src_bytes,string"`
+	DstBytes                  int    `json:"dst_bytes,string"`
+	Id                        string `json:"id"`
+	SeqNum                    int    `json:"seq_num,string"`
+}
+
+func (ks *KentikHttpListener) readGigaBatch(w http.ResponseWriter, r *http.Request) {
+	var wrap []gigaEvent
+
+	// Decode body in gzip format if the request header is set this way.
+	body := r.Body
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		z, err := gzip.NewReader(r.Body)
+		if err != nil {
+			panic(http.StatusInternalServerError)
+		}
+		body = z
+	}
+	defer body.Close()
+
+	if err := json.NewDecoder(body).Decode(&wrap); err != nil {
+		ks.Infof("Cannot decode input: %v", err)
+		panic(http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+
+	remoteIP := getIP(r)
+	out := make([]*kt.JCHF, len(wrap))
+	for i, m := range wrap {
+		out[i] = ks.getGigaJCHF(&m, remoteIP)
+	}
+
+	ks.metrics.Messages.Mark(int64(len(out)))
+	ks.jchfChan <- out
+}
+
+func (ks *KentikHttpListener) getGigaJCHF(event *gigaEvent, remoteIP string) *kt.JCHF {
+	in := kt.NewJCHF()
+	in.Timestamp = time.Now().Unix()
+	in.CustomStr = map[string]string{
+		"timestamp":       event.Timestamp,
+		"vendor":          event.Vendor,
+		"version":         event.Version,
+		"generator":       event.Generator,
+		"app_name":        event.AppName,
+		"id":              event.Id,
+		"ssl_common_name": event.SslCommonName,
+	}
+	in.CustomInt = map[string]int32{
+		"app_id": int32(event.AppId),
+	}
+	in.CustomBigInt = map[string]int64{
+		"seq_num": int64(event.SeqNum),
+	}
+	in.EventType = event.Vendor
+	in.Provider = kt.ProviderHttpDevice
+	in.SrcAddr = event.SrcIP.String()
+	in.DstAddr = event.DstIP.String()
+	in.Protocol = ic.PROTO_NAMES[uint16(event.Protocol)]
+	in.L4SrcPort = uint32(event.SrcPort)
+	in.L4DstPort = uint32(event.DstPort)
+	in.InPkts = uint64(event.SrcPackets)
+	in.OutPkts = uint64(event.DstPackets)
+	in.InBytes = uint64(event.SrcBytes)
+	in.OutBytes = uint64(event.DstBytes)
+
+	if dev, ok := ks.devices[remoteIP]; ok {
+		in.DeviceName = dev.Name // Copy in any of these info we get
+		in.DeviceId = dev.ID
+		in.CompanyId = dev.CompanyID
+		in.SampleRate = dev.SampleRate
+		dev.SetUserTags(in.CustomStr)
+	}
+
+	return in
 }
 
 type basic struct {
