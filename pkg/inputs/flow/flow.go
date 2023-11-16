@@ -2,7 +2,6 @@ package flow
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -72,7 +71,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config EntConfig
+	var config *protoproducer.ProducerConfig
 
 	// Load a special config if there's a known enriched flow.
 	switch proto {
@@ -82,6 +81,8 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		config = loadNBar(cfg)
 	case PAN:
 		config = loadPAN(cfg)
+	default:
+		config = loadDefault(cfg)
 	}
 
 	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, cfg.MessageFields, resolv, cfg)
@@ -93,19 +94,18 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		//config, err = loadMapping(f, proto)
-		pc, err := LoadYamlMapping(f)
+		pc, err := loadMapping(f)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
 			return nil, err
 		}
-		config.FlowConfig = *pc
+		config = pc
 	}
 
 	kt.SetConfig(config)
 
-	flowProducer, err := protoproducer.CreateProtoProducer(&config.FlowConfig, protoproducer.CreateSamplingSystem)
+	flowProducer, err := protoproducer.CreateProtoProducer(config, protoproducer.CreateSamplingSystem)
 	if err != nil {
 		return nil, err
 	}
@@ -139,19 +139,19 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	case Ipfix, Netflow9, ASA, NBar, PAN, Netflow5, JFlow, CFlow:
 		switch proto {
 		case Ipfix, ASA, NBar, PAN:
-			for _, v := range config.FlowConfig.IPFIX.Mapping {
-				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, config.NameMap[v.Destination])
+			for _, v := range config.IPFIX.Mapping {
+				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, v.Destination)
 			}
 		case Netflow9:
-			for _, v := range config.FlowConfig.NetFlowV9.Mapping {
-				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, config.NameMap[v.Destination])
+			for _, v := range config.NetFlowV9.Mapping {
+				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, v.Destination)
 			}
 		}
 		kt.pipe = utils.NewNetFlowPipe(cfgPipe)
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
 	case Sflow:
-		for _, v := range config.FlowConfig.SFlow.Mapping {
-			kt.Infof("Custom SFlow Field Mapping: Layer=%d, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, config.NameMap[v.Destination])
+		for _, v := range config.SFlow.Mapping {
+			kt.Infof("Custom SFlow Field Mapping: Layer=%d, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, v.Destination)
 		}
 		kt.pipe = utils.NewSFlowPipe(cfgPipe)
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
@@ -187,54 +187,11 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	kt.Infof("Netflow listener sending fields %s", cfg.MessageFields)
 
 	return kt, nil
-	/*
-	 *
-
-
-	 */
 }
 
-type EntConfig struct {
-	FlowConfig protoproducer.ProducerConfig `json:"flow_config"`
-	NameMap    map[string]string            `json:"name_map"`
-}
-
-func LoadYamlMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
+func loadMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
 	config := &protoproducer.ProducerConfig{}
 	dec := yaml.NewDecoder(f)
 	err := dec.Decode(config)
-	return config, err
-}
-
-func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
-	config := EntConfig{}
-	dec := json.NewDecoder(f)
-	err := dec.Decode(&config)
-
-	// Update any non filled in name maps to the default.
-	if config.NameMap == nil {
-		config.NameMap = map[string]string{}
-	}
-	switch proto {
-	case Ipfix, ASA, NBar, PAN:
-		for _, v := range config.FlowConfig.IPFIX.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	case Netflow9:
-		for _, v := range config.FlowConfig.NetFlowV9.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	case Sflow:
-		for _, v := range config.FlowConfig.SFlow.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	}
-
 	return config, err
 }

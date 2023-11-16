@@ -44,7 +44,7 @@ type KentikDriver struct {
 	registry     go_metrics.Registry
 	resolv       *resolv.Resolver
 	ctx          context.Context
-	config       EntConfig
+	config       *pp.ProducerConfig
 	cfg          *ktranslate.FlowInputConfig
 	receiver     *utils.UDPReceiver
 	pipe         utils.FlowPipe
@@ -82,10 +82,10 @@ func NewKentikDriver(ctx context.Context, proto FlowSource, maxBatchSize int, lo
 	return &kt
 }
 
-func (t *KentikDriver) SetConfig(c EntConfig) {
+func (t *KentikDriver) SetConfig(c *pp.ProducerConfig) {
 	t.config = c
 	t.pb2ixd = map[int32]pbInfo{}
-	for _, pf := range t.config.FlowConfig.Formatter.Protobuf {
+	for _, pf := range t.config.Formatter.Protobuf {
 		t.pb2ixd[pf.Index] = pbInfo{
 			Name: pf.Name,
 			Type: pf.Type,
