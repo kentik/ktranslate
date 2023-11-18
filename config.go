@@ -254,6 +254,7 @@ type Config struct {
 	TagMapType          string
 	EnableTeeLogs       bool
 	EnableHTTPInput     bool
+	HttpRemoteIp        string
 	EnricherURL         string
 	EnricherSource      string
 	EnricherScript      string
