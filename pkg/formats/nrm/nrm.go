@@ -330,57 +330,6 @@ func (f *NRMFormat) fromSnmpMetadata(in *kt.JCHF) []NRMetric {
 	return nil
 }
 
-var (
-	synthWLAttr = map[string]bool{
-		"agent_id":                   true,
-		"agent_name":                 true,
-		"dst_addr":                   true,
-		"dst_cdn_int":                true,
-		"dst_geo":                    true,
-		"provider":                   true,
-		"src_addr":                   true,
-		"src_cdn_int":                true,
-		"src_as_name":                true,
-		"src_geo":                    true,
-		"test_id":                    true,
-		"test_name":                  true,
-		"test_type":                  true,
-		"test_url":                   true,
-		"src_host":                   true,
-		"dst_host":                   true,
-		"src_cloud_region":           true,
-		"src_cloud_provider":         true,
-		"src_site":                   true,
-		"dst_cloud_region":           true,
-		"dst_cloud_provider":         true,
-		"dst_site":                   true,
-		"https_validity":             true,
-		"https_expiry_timestamp":     true,
-		"dest_ip":                    true,
-		"statusMessage":              true,
-		"statusEncoding":             true,
-		"connectEnd":                 true,
-		"connectStart":               true,
-		"decodedBodySize":            true,
-		"domComplete":                true,
-		"domContentLoadedEventEnd":   true,
-		"domContentLoadedEventStart": true,
-		"domInteractive":             true,
-		"domainLookupEnd":            true,
-		"domainLookupStart":          true,
-		"duration":                   true,
-		"fetchStart":                 true,
-		"loadEventEnd":               true,
-		"loadEventStart":             true,
-		"redirectCount":              true,
-		"requestStart":               true,
-		"responseEnd":                true,
-		"responseStart":              true,
-		"secureConnectionStart":      true,
-		"tlsProtocol":                true,
-	}
-)
-
 func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 	metrics := util.GetSyngestMetricNameSet()
 	attr := map[string]interface{}{}
@@ -396,7 +345,7 @@ func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 	}
 
 	for k, v := range attr { // White list only a few attributes here.
-		if !synthWLAttr[k] {
+		if !util.SynthWLAttr[k] {
 			delete(attr, k)
 		}
 		if k == "test_id" { // Force this to be a string.
@@ -448,7 +397,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 			if len(strData) > 0 {
 				switch sd := strData[0].(type) {
 				case map[string]interface{}:
-					for key, _ := range synthWLAttr {
+					for key, _ := range util.SynthWLAttr {
 						if val, ok := sd[key]; ok {
 							attr[key] = val
 						}
@@ -459,7 +408,7 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	}
 
 	for k, v := range attr { // White list only a few attributes here.
-		if !synthWLAttr[k] {
+		if !util.SynthWLAttr[k] {
 			delete(attr, k)
 		}
 		if k == "test_id" { // Force this to be a string.

@@ -203,45 +203,6 @@ func (f *PromFormat) toPromMetric(in *kt.JCHF) []PromData {
 	return nil
 }
 
-var (
-	synthWLAttr = map[string]bool{
-		"agent_id":               true,
-		"agent_name":             true,
-		"dst_addr":               true,
-		"dst_cdn_int":            true,
-		"dst_geo":                true,
-		"provider":               true,
-		"src_addr":               true,
-		"src_cdn_int":            true,
-		"src_as_name":            true,
-		"src_geo":                true,
-		"test_id":                true,
-		"test_name":              true,
-		"test_type":              true,
-		"test_url":               true,
-		"src_host":               true,
-		"dst_host":               true,
-		"src_cloud_region":       true,
-		"src_cloud_provider":     true,
-		"src_site":               true,
-		"dst_cloud_region":       true,
-		"dst_cloud_provider":     true,
-		"dst_site":               true,
-		"statusMessage":          true,
-		"statusEncoding":         true,
-		"https_validity":         true,
-		"https_expiry_timestamp": true,
-		"dest_ip":                true,
-	}
-
-	synthAttrKeys = []string{
-		"statusMessage",
-		"statusEncoding",
-		"https_validity",
-		"https_expiry_timestamp",
-	}
-)
-
 func (f *PromFormat) fromKSyngest(in *kt.JCHF) []PromData {
 	metrics := util.GetSyngestMetricNameSet()
 	attr := map[string]interface{}{}
@@ -251,7 +212,7 @@ func (f *PromFormat) fromKSyngest(in *kt.JCHF) []PromData {
 	ms := make([]PromData, 0, len(metrics))
 
 	for k, v := range attr { // White list only a few attributes here.
-		if !synthWLAttr[k] {
+		if !util.SynthWLAttr[k] {
 			delete(attr, k)
 		}
 		if k == "test_id" { // Force this to be a string.
@@ -294,7 +255,7 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 			if len(strData) > 0 {
 				switch sd := strData[0].(type) {
 				case map[string]interface{}:
-					for _, key := range synthAttrKeys {
+					for key, _ := range util.SynthWLAttr {
 						if val, ok := sd[key]; ok {
 							attr[key] = val
 						}
@@ -305,7 +266,7 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 	}
 
 	for k, v := range attr { // White list only a few attributes here.
-		if !synthWLAttr[k] {
+		if !util.SynthWLAttr[k] {
 			delete(attr, k)
 		}
 		if k == "test_id" { // Force this to be a string.
