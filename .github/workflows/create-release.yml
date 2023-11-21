@@ -16,12 +16,12 @@ jobs:
             pkg: rpm
             pkg_name: el
             image: centos:7
-          - distro: centos
+          - distro: ubi
             release: 8
             pkg: rpm
             pkg_name: el
-            image: centos:8
-          - distro: ubi9
+            image: redhat/ubi8:8.9
+          - distro: ubi
             release: 9
             pkg: rpm
             pkg_name: el
@@ -91,9 +91,16 @@ jobs:
               yum install -y make gcc diffutils ruby-devel redhat-rpm-config gcc-c++
               dnf -y --enablerepo=powertools install libpcap-devel
             fi
-          elif [ "${{ matrix.distro }}" = "ubi9" ]
+          elif [ "${{ matrix.distro }}" = "ubi" ]
           then
-            yum install -y make gcc diffutils libpcap-devel ruby-devel gcc-c++ redhat-rpm-config
+            if [ "${{ matrix.release }}" = "8" ]
+            then
+              yum install -y make gcc diffutils libpcap-devel microdnf gcc-c++ redhat-rpm-config
+              microdnf module enable ruby:2.7
+              microdnf install ruby
+            else
+              yum install -y make gcc diffutils libpcap-devel ruby-devel gcc-c++ redhat-rpm-config
+            fi
           else
             apt-get update
             apt-get -y install make libpcap-dev ca-certificates build-essential curl ruby ruby-dev
@@ -121,17 +128,6 @@ jobs:
           format: ${{ matrix.pkg }}
           package: ktranslate-package.yml
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.package.outputs.package }}
-          asset_name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
-          asset_content_type: application/binary
-
       - name: Send to packagecloud
         shell: bash
         env:
@@ -149,11 +145,18 @@ jobs:
           then
             gem install rake
             gem install thor -v 1.2.2
+            gem install domain_name -v 0.5.20190701
           fi
-          if [ "${{ matrix.release }}" = "8" ] # More hackery.
-          then
-            gem install package_cloud -v 0.3.05
-          else
-            gem install package_cloud # otherwise latest seems to work.
-          fi
+          gem install package_cloud
           package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.package.outputs.package }}
+          asset_name: ${{ steps.package.outputs.package }}--${{ matrix.distro }}-${{ matrix.release }}
+          asset_content_type: application/binary
