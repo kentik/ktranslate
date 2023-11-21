@@ -3,7 +3,6 @@ package flow
 import (
 	"context"
 	"encoding/binary"
-	"encoding/hex"
 	"fmt"
 	"net"
 	"strconv"
@@ -155,10 +154,23 @@ func (t *KentikDriver) mapCustoms(m *pp.ProtoProducerMessage, in *kt.JCHF) {
 		if pbField, ok := t.pb2ixd[int32(num)]; ok {
 			if dataType == protowire.VarintType {
 				v, _ := protowire.ConsumeVarint(data)
-				in.CustomBigInt[pbField.Name] = int64(v)
+				if strings.HasPrefix(pbField.Name, "ip_") {
+					in.CustomStr[pbField.Name] = kt.Int2ip(uint32(v)).String()
+				} else {
+					in.CustomBigInt[pbField.Name] = int64(v)
+				}
 			} else if dataType == protowire.BytesType {
-				v, _ := protowire.ConsumeString(data)
-				in.CustomStr[pbField.Name] = hex.EncodeToString([]byte(v))
+				if strings.HasPrefix(pbField.Name, "ip_") {
+					v, _ := protowire.ConsumeBytes(data)
+					if len(v) == 4 {
+						in.CustomStr[pbField.Name] = net.IPv4(v[3], v[2], v[1], v[0]).String()
+					} else {
+						in.CustomStr[pbField.Name] = net.IP(v).String()
+					}
+				} else {
+					v, _ := protowire.ConsumeString(data)
+					in.CustomStr[pbField.Name] = v
+				}
 			} else {
 				continue
 			}
