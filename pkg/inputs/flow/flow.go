@@ -151,7 +151,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
 	case Sflow:
 		for _, v := range config.SFlow.Mapping {
-			kt.Infof("Custom SFlow Field Mapping: Layer=%d, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, v.Destination)
+			kt.Infof("Custom SFlow Field Mapping: Layer=%s, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, v.Destination)
 		}
 		kt.pipe = utils.NewSFlowPipe(cfgPipe)
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
