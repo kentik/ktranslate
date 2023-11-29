@@ -175,7 +175,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 					} else if errors.Is(err, net.ErrClosed) {
 						kt.Infof("closed receiver")
 					} else {
-						kt.Errorf("error: %v", err)
+						kt.Warnf("error: %v", err)
 					}
 
 				}
