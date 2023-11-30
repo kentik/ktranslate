@@ -26,6 +26,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
+	"github.com/kentik/ktranslate/pkg/sinks/s3"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -205,6 +206,15 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 
 	// Get some randomness
 	rand.Seed(time.Now().UnixNano())
+
+	// If configured, install the s3 sink as a cloud objmgr.
+	if config.S3Sink.Bucket != "" {
+		s3mgr, err := s3.NewSink(log.GetLogger().GetUnderlyingLogger(), registry, config.S3Sink)
+		if err != nil {
+			return nil, err
+		}
+		kc.objmgr = s3mgr
+	}
 
 	return kc, nil
 }
@@ -613,6 +623,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// Connect our sinks.
 	for _, sink := range kc.sinks {
 		err := sink.Init(ctx, format, compression, kc.format)
+		if err != nil {
+			return err
+		}
+	}
+
+	// If there's a objmgr, init this also.
+	if kc.objmgr != nil {
+		err := kc.objmgr.Init(ctx, format, compression, kc.format)
 		if err != nil {
 			return err
 		}

@@ -75,6 +75,11 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 		}
 	}
 
+	// Copy this over as a deap struct.
+	if in.Har != nil {
+		attr["har_file"] = &in.Har
+	}
+
 	if lastMetadata != nil {
 		for k, v := range lastMetadata.DeviceInfo {
 			attr[k] = v

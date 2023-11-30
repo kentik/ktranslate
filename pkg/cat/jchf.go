@@ -531,6 +531,56 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 			msg.CustomStr["src_host"] = kc.resolver.Resolve(ctx, msg.SrcAddr, false)
 			msg.CustomStr["dst_host"] = kc.resolver.Resolve(ctx, msg.DstAddr, false)
 		}
+
+		// This data is typically json, try to parse and pull out.
+		if msg.EventType == kt.KENTIK_EVENT_SYNTH {
+			if rawStr, ok := msg.CustomStr["error_cause/trace_route"]; ok {
+				if rawStr != "" {
+					strData := []interface{}{}
+					if err := json.Unmarshal([]byte(rawStr), &strData); err == nil {
+						if len(strData) > 0 {
+							switch sd := strData[0].(type) {
+							case map[string]interface{}:
+								for key, val := range sd {
+									switch tv := val.(type) {
+									case string:
+										msg.CustomStr[key] = tv
+									case int:
+										msg.CustomInt[key] = int32(tv)
+									case int64:
+										msg.CustomBigInt[key] = tv
+									case float64:
+										msg.CustomBigInt[key] = int64(tv)
+									case map[string]interface{}:
+										if hv, ok := tv["har"]; ok {
+											switch av := hv.(type) {
+											case []interface{}:
+												if len(av) > 0 {
+													switch iner := av[0].(type) {
+													case map[string]interface{}:
+														if path, ok := iner["path"]; ok {
+															switch pt := path.(type) {
+															case string:
+																kc.getHar(ctx, pt, msg)
+															}
+														}
+													}
+												}
+											}
+										}
+									case nil:
+										// Noop here.
+									default:
+										// And noop here.
+									}
+								}
+								delete(msg.CustomStr, "error_cause/trace_route")
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// If there's an outside enrichment service, send over here.
@@ -544,4 +594,20 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 	}
 
 	return msgs
+}
+
+// Pulls in a har file if possible.
+func (kc *KTranslate) getHar(ctx context.Context, path string, msg *kt.JCHF) {
+	if kc.objmgr != nil {
+		data, err := kc.objmgr.Get(ctx, path)
+		if err != nil {
+			kc.log.Errorf("Cannot get path %s %v", path, err)
+			return
+		}
+
+		var har kt.HarFile
+		if err := json.Unmarshal(data, &har); err == nil {
+			msg.Har = &har
+		}
+	}
 }

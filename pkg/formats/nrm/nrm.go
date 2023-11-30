@@ -378,6 +378,7 @@ var (
 		"responseStart":              true,
 		"secureConnectionStart":      true,
 		"tlsProtocol":                true,
+		"har_file":                   true,
 	}
 )
 
@@ -425,7 +426,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 		return nil // Don't worry about timeouts and errors for now.
 	}
 
-	rawStr := in.CustomStr["error_cause/trace_route"] // Pull this out early.
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
@@ -439,23 +439,6 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	attr["instrumentation.name"] = InstNameSynthetic
 	if tt, ok := attr["test_type"]; ok {
 		attr["instrumentation.name"] = tt
-	}
-
-	// If there's str00 data, try to unserialize and pass in useful bits.
-	if rawStr != "" {
-		strData := []interface{}{}
-		if err := json.Unmarshal([]byte(rawStr), &strData); err == nil {
-			if len(strData) > 0 {
-				switch sd := strData[0].(type) {
-				case map[string]interface{}:
-					for key, _ := range synthWLAttr {
-						if val, ok := sd[key]; ok {
-							attr[key] = val
-						}
-					}
-				}
-			}
-		}
 	}
 
 	for k, v := range attr { // White list only a few attributes here.
