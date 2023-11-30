@@ -183,7 +183,8 @@ type JCHF struct {
 	CustomMetrics           map[string]MetricInfo          `json:"-"`
 	CustomTables            map[string]DeviceTableMetadata `json:"-"`
 	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
-	ApplySample             bool                           `json:"-"` // Should this value be subject to sampling?
+	ApplySample             bool                           `json:"-"`        // Should this value be subject to sampling?
+	Har                     *HarFile                       `json:"har_file"` // Let you attatch a har file to this object if needed.
 }
 
 type MetricInfo struct {
@@ -415,4 +416,34 @@ func (o *Output) BodyLen() int {
 		return 0
 	}
 	return len(o.Body)
+}
+
+type HarFile struct {
+	HarLog HarLog `json:"log"`
+}
+
+type HarLog struct {
+	Entries []Entry `json:"entries"`
+}
+
+type Entry struct {
+	Request  Request  `json:"request"`
+	Response Response `json:"response"`
+	Time     float64  `json:"time"`
+}
+
+type Request struct {
+	Method string `json:"method"`
+	Url    string `json:"url"`
+}
+
+type Response struct {
+	Status  int     `json:"status"`
+	Content Content `json:"content"`
+}
+
+type Content struct {
+	MimeType    string `json:"mimeType"`
+	Size        int64  `json:"size"`
+	Compression int64  `json:"compression"`
 }

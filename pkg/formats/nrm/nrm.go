@@ -378,6 +378,7 @@ var (
 		"responseStart":              true,
 		"secureConnectionStart":      true,
 		"tlsProtocol":                true,
+		"har_file":                   true,
 	}
 )
 
@@ -388,8 +389,6 @@ func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := make([]NRMetric, 0, len(metrics))
-
-	return nil
 
 	// Hard code these.
 	attr["instrumentation.name"] = InstNameSynthetic
@@ -425,10 +424,6 @@ func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 	if in.CustomInt["result_type"] <= 1 {
 		return nil // Don't worry about timeouts and errors for now.
-	}
-
-	if in.CustomBigInt["test_id"] != 109569 {
-		return nil
 	}
 
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])

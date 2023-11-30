@@ -207,13 +207,13 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	// Get some randomness
 	rand.Seed(time.Now().UnixNano())
 
-	// If configured, install the s3 manager as a s3 sink.
+	// If configured, install the s3 sink as a cloud objmgr.
 	if config.S3Sink.Bucket != "" {
 		s3mgr, err := s3.NewSink(log.GetLogger().GetUnderlyingLogger(), registry, config.S3Sink)
 		if err != nil {
 			return nil, err
 		}
-		kc.s3mgr = s3mgr
+		kc.objmgr = s3mgr
 	}
 
 	return kc, nil
@@ -628,9 +628,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		}
 	}
 
-	// If there's a s3mgr, init this also.
-	if kc.s3mgr != nil {
-		err := kc.s3mgr.Init(ctx, format, compression, kc.format)
+	// If there's a objmgr, init this also.
+	if kc.objmgr != nil {
+		err := kc.objmgr.Init(ctx, format, compression, kc.format)
 		if err != nil {
 			return err
 		}

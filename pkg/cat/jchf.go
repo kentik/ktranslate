@@ -598,14 +598,16 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 
 // Pulls in a har file if possible.
 func (kc *KTranslate) getHar(ctx context.Context, path string, msg *kt.JCHF) {
-	kc.log.Infof("XXX Getting Har %v", path)
-	if kc.s3mgr != nil {
-		data, err := kc.s3mgr.Get(ctx, path)
+	if kc.objmgr != nil {
+		data, err := kc.objmgr.Get(ctx, path)
 		if err != nil {
 			kc.log.Errorf("Cannot get path %s %v", path, err)
 			return
 		}
 
-		kc.log.Infof("XXX %v", string(data))
+		var har kt.HarFile
+		if err := json.Unmarshal(data, &har); err == nil {
+			msg.Har = &har
+		}
 	}
 }

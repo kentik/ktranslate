@@ -32,7 +32,7 @@ type SinkImpl interface {
 	HttpInfo() map[string]float64
 }
 
-type S3Manager interface {
+type CloudObjectManager interface {
 	Init(context.Context, formats.Format, kt.Compression, formats.Formatter) error
 	Put(context.Context, string, []byte) error
 	Get(context.Context, string) ([]byte, error)
