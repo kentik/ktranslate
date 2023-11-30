@@ -81,6 +81,7 @@ type KTranslate struct {
 	authConfig   *auth.AuthConfig
 	confMgr      config.ConfigManager
 	shutdown     func(string)
+	s3mgr        sinks.S3Manager
 }
 
 type CustomMapper struct {
