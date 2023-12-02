@@ -136,7 +136,8 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		netSet := map[string]networkDesc{}
 		numAdded, err := c.getOrgNetworks(netSet, "", lorg, nets, 0)
 		if err != nil {
-			return nil, err
+			c.log.Warnf("Skipping organization %s because it does not have permission to list networks.", org.Name)
+			continue
 		}
 		numNets += numAdded
 
