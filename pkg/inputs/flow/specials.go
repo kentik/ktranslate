@@ -1,191 +1,310 @@
 package flow
 
 import (
-	"strings"
-
 	"github.com/kentik/ktranslate"
 
-	"github.com/netsampler/goflow2/producer"
+	producer "github.com/netsampler/goflow2/v2/producer/proto"
 )
 
-func loadASA(cfg *ktranslate.FlowInputConfig) EntConfig {
-	config := EntConfig{
-		FlowConfig: producer.ProducerConfig{
-			IPFIX: producer.IPFIXProducerConfig{
-				Mapping: []producer.NetFlowMapField{
-					producer.NetFlowMapField{
-						Type:        231,
-						Destination: "CustomInteger1",
-					},
-					producer.NetFlowMapField{
-						Type:        232,
-						Destination: "CustomInteger2",
-					},
-					producer.NetFlowMapField{
-						Type:        298,
-						Destination: "CustomInteger3",
-					},
-					producer.NetFlowMapField{
-						Type:        299,
-						Destination: "CustomInteger4",
-					},
-					producer.NetFlowMapField{
-						Type:        233,
-						Destination: "CustomInteger5",
-					},
-				},
-			},
-			NetFlowV9: producer.NetFlowV9ProducerConfig{
-				Mapping: []producer.NetFlowMapField{
-					producer.NetFlowMapField{
-						Type:        231,
-						Destination: "CustomInteger1",
-					},
-					producer.NetFlowMapField{
-						Type:        232,
-						Destination: "CustomInteger2",
-					},
-					producer.NetFlowMapField{
-						Type:        298,
-						Destination: "CustomInteger3",
-					},
-					producer.NetFlowMapField{
-						Type:        299,
-						Destination: "CustomInteger4",
-					},
-					producer.NetFlowMapField{
-						Type:        233,
-						Destination: "CustomInteger5",
-					},
+func loadDefault(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
+	config := &producer.ProducerConfig{
+		Formatter: producer.FormatterConfig{
+			Fields: []string{},
+			Key:    []string{"sampler_address"},
+			Protobuf: []producer.ProtobufFormatterConfig{
+				producer.ProtobufFormatterConfig{
+					Name:  "flow_direction",
+					Index: 99,
+					Type:  "varint",
 				},
 			},
 		},
-		NameMap: map[string]string{
-			"CustomInteger1": "in_bytes",
-			"CustomInteger2": "out_bytes",
-			"CustomInteger3": "in_pkts",
-			"CustomInteger4": "out_pkts",
-			"CustomInteger5": "Firewall Event",
+		IPFIX: producer.IPFIXProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+			},
 		},
-	}
-
-	for field, _ := range config.NameMap {
-		if !strings.Contains(cfg.MessageFields, field) {
-			cfg.MessageFields = cfg.MessageFields + "," + field
-		}
+		NetFlowV9: producer.NetFlowV9ProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+			},
+		},
 	}
 
 	return config
 }
 
-func loadNBar(cfg *ktranslate.FlowInputConfig) EntConfig {
-	config := EntConfig{
-		FlowConfig: producer.ProducerConfig{
-			IPFIX: producer.IPFIXProducerConfig{
-				Mapping: []producer.NetFlowMapField{
-					producer.NetFlowMapField{
-						Type:        96,
-						Destination: "CustomBytes1",
-					},
-					producer.NetFlowMapField{
-						Type:        12232,
-						Destination: "CustomBytes2",
-						PenProvided: true,
-						Pen:         9,
-					},
-					producer.NetFlowMapField{
-						Type:        12233,
-						Destination: "CustomBytes3",
-						PenProvided: true,
-						Pen:         9,
-					},
-					producer.NetFlowMapField{
-						Type:        12234,
-						Destination: "CustomBytes4",
-						PenProvided: true,
-						Pen:         9,
-					},
-					producer.NetFlowMapField{
-						Type:        12243,
-						Destination: "CustomBytes5",
-						PenProvided: true,
-						Pen:         9,
-					},
+func loadASA(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
+	config := &producer.ProducerConfig{
+		Formatter: producer.FormatterConfig{
+			Fields: []string{},
+			Key:    []string{"sampler_address"},
+			Protobuf: []producer.ProtobufFormatterConfig{
+				producer.ProtobufFormatterConfig{
+					Name:  "flow_direction",
+					Index: 99,
+					Type:  "varint",
 				},
-			},
-			NetFlowV9: producer.NetFlowV9ProducerConfig{
-				Mapping: []producer.NetFlowMapField{
-					producer.NetFlowMapField{
-						Type:        96,
-						Destination: "CustomBytes1",
-					},
+				producer.ProtobufFormatterConfig{
+					Name:  "in_bytes",
+					Index: 100,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "out_bytes",
+					Index: 101,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "in_pkts",
+					Index: 102,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "put_pkts",
+					Index: 103,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "firewall_event",
+					Index: 104,
+					Type:  "bytes",
 				},
 			},
 		},
-		NameMap: map[string]string{
-			"CustomBytes1": "application",
-			"CustomBytes2": "Application Category",
-			"CustomBytes3": "Application Subcategory",
-			"CustomBytes4": "Application Group",
-			"CustomBytes5": "Application Traffic Class",
+		IPFIX: producer.IPFIXProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+				producer.NetFlowMapField{
+					Type:        231,
+					Destination: "in_bytes",
+				},
+				producer.NetFlowMapField{
+					Type:        232,
+					Destination: "out_bytes",
+				},
+				producer.NetFlowMapField{
+					Type:        298,
+					Destination: "in_pkts",
+				},
+				producer.NetFlowMapField{
+					Type:        299,
+					Destination: "out_pkts",
+				},
+				producer.NetFlowMapField{
+					Type:        233,
+					Destination: "firewall_event",
+				},
+			},
 		},
-	}
-
-	for field, _ := range config.NameMap {
-		if !strings.Contains(cfg.MessageFields, field) {
-			cfg.MessageFields = cfg.MessageFields + "," + field
-		}
+		NetFlowV9: producer.NetFlowV9ProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+				producer.NetFlowMapField{
+					Type:        231,
+					Destination: "in_bytes",
+				},
+				producer.NetFlowMapField{
+					Type:        232,
+					Destination: "out_bytes",
+				},
+				producer.NetFlowMapField{
+					Type:        298,
+					Destination: "in_pkts",
+				},
+				producer.NetFlowMapField{
+					Type:        299,
+					Destination: "out_pkts",
+				},
+				producer.NetFlowMapField{
+					Type:        233,
+					Destination: "firewall_event",
+				},
+			},
+		},
 	}
 
 	return config
 }
 
-func loadPAN(cfg *ktranslate.FlowInputConfig) EntConfig {
-	config := EntConfig{
-		FlowConfig: producer.ProducerConfig{
-			IPFIX: producer.IPFIXProducerConfig{
-				Mapping: []producer.NetFlowMapField{
-					producer.NetFlowMapField{
-						Type:        32,
-						Destination: "CustomInteger1",
-					},
-					producer.NetFlowMapField{
-						Type:        148,
-						Destination: "CustomInteger2",
-					},
-					producer.NetFlowMapField{
-						Type:        233,
-						Destination: "CustomInteger3",
-					},
-					producer.NetFlowMapField{
-						Type:        61,
-						Destination: "CustomInteger4",
-					},
-					producer.NetFlowMapField{
-						Type:        56701,
-						Destination: "CustomBytes1",
-					},
-					producer.NetFlowMapField{
-						Type:        56702,
-						Destination: "CustomBytes2",
-					},
+func loadNBar(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
+	config := &producer.ProducerConfig{
+		Formatter: producer.FormatterConfig{
+			Fields: []string{},
+			Key:    []string{"sampler_address"},
+			Protobuf: []producer.ProtobufFormatterConfig{
+				producer.ProtobufFormatterConfig{
+					Name:  "flow_direction",
+					Index: 99,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application",
+					Index: 100,
+					Type:  "bytes",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application_category",
+					Index: 101,
+					Type:  "bytes",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application_subcategory",
+					Index: 102,
+					Type:  "bytes",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application_group",
+					Index: 103,
+					Type:  "bytes",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application_traffic_class",
+					Index: 104,
+					Type:  "bytes",
 				},
 			},
 		},
-		NameMap: map[string]string{
-			"CustomInteger1": "ICMP Type",
-			"CustomInteger2": "Flow ID",
-			"CustomInteger3": "Firewall Event",
-			"CustomInteger4": "Direction",
-			"CustomBytes1":   "Application ID",
-			"CustomBytes2":   "User ID",
+		IPFIX: producer.IPFIXProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+				producer.NetFlowMapField{
+					Type:        96,
+					Destination: "application",
+				},
+				producer.NetFlowMapField{
+					Type:        12232,
+					Destination: "application_category",
+					PenProvided: true,
+					Pen:         9,
+				},
+				producer.NetFlowMapField{
+					Type:        12233,
+					Destination: "application_subcategory",
+					PenProvided: true,
+					Pen:         9,
+				},
+				producer.NetFlowMapField{
+					Type:        12234,
+					Destination: "application_group",
+					PenProvided: true,
+					Pen:         9,
+				},
+				producer.NetFlowMapField{
+					Type:        12243,
+					Destination: "application_traffic_class",
+					PenProvided: true,
+					Pen:         9,
+				},
+			},
+		},
+		NetFlowV9: producer.NetFlowV9ProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+				producer.NetFlowMapField{
+					Type:        96,
+					Destination: "application",
+				},
+			},
 		},
 	}
 
-	for field, _ := range config.NameMap {
-		if !strings.Contains(cfg.MessageFields, field) {
-			cfg.MessageFields = cfg.MessageFields + "," + field
-		}
+	return config
+}
+
+func loadPAN(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
+	config := &producer.ProducerConfig{
+		Formatter: producer.FormatterConfig{
+			Fields: []string{},
+			Key:    []string{"sampler_address"},
+			Protobuf: []producer.ProtobufFormatterConfig{
+				producer.ProtobufFormatterConfig{
+					Name:  "flow_direction",
+					Index: 99,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "icmp_type",
+					Index: 100,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "flow_id",
+					Index: 101,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "firewall_event",
+					Index: 102,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "direction",
+					Index: 103,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "application_id",
+					Index: 104,
+					Type:  "bytes",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "user_id",
+					Index: 105,
+					Type:  "bytes",
+				},
+			},
+		},
+		IPFIX: producer.IPFIXProducerConfig{
+			Mapping: []producer.NetFlowMapField{
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "flow_direction",
+				},
+				producer.NetFlowMapField{
+					Type:        32,
+					Destination: "icmp_type",
+				},
+				producer.NetFlowMapField{
+					Type:        148,
+					Destination: "flow_id",
+				},
+				producer.NetFlowMapField{
+					Type:        233,
+					Destination: "firewall_event",
+				},
+				producer.NetFlowMapField{
+					Type:        61,
+					Destination: "direction",
+				},
+				producer.NetFlowMapField{
+					Type:        56701,
+					Destination: "application_id",
+				},
+				producer.NetFlowMapField{
+					Type:        56702,
+					Destination: "user_id",
+				},
+			},
+		},
 	}
 
 	return config

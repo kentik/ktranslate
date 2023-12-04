@@ -2,10 +2,11 @@ package flow
 
 import (
 	"context"
-	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 
@@ -17,9 +18,13 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
-	"github.com/netsampler/goflow2/producer"
-	"github.com/netsampler/goflow2/utils"
+	"github.com/netsampler/goflow2/v2/decoders/netflow"
+	"github.com/netsampler/goflow2/v2/format"
+	"github.com/netsampler/goflow2/v2/metrics"
+	protoproducer "github.com/netsampler/goflow2/v2/producer/proto"
+	"github.com/netsampler/goflow2/v2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"gopkg.in/yaml.v2"
 )
 
 type FlowSource string
@@ -66,7 +71,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}()
 
 	// Allow processing of custom ipfix templates here.
-	var config EntConfig
+	var config *protoproducer.ProducerConfig
 
 	// Load a special config if there's a known enriched flow.
 	switch proto {
@@ -76,6 +81,8 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		config = loadNBar(cfg)
 	case PAN:
 		config = loadPAN(cfg)
+	default:
+		config = loadDefault(cfg)
 	}
 
 	kt := NewKentikDriver(ctx, proto, maxBatchSize, log, registry, jchfChan, apic, cfg.MessageFields, resolv, cfg)
@@ -87,108 +94,104 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			kt.Errorf("Cannot load netflow mapping file: %v", err)
 			return nil, err
 		}
-		config, err = loadMapping(f, proto)
+		pc, err := loadMapping(f)
 		f.Close()
 		if err != nil {
 			kt.Errorf("Invalid yaml for netflow mapping file: %v", err)
 			return nil, err
 		}
+		config = pc
+	}
+
+	kt.SetConfig(config)
+
+	flowProducer, err := protoproducer.CreateProtoProducer(config, protoproducer.CreateSamplingSystem)
+	if err != nil {
+		return nil, err
+	}
+
+	flowProducer = metrics.WrapPromProducer(flowProducer)
+	udpCfg := &utils.UDPReceiverConfig{
+		Sockets: cfg.Workers,
+		Workers: cfg.Workers,
+	}
+	recv, err := utils.NewUDPReceiver(udpCfg)
+	if err != nil {
+		return nil, err
+	}
+
+	format.RegisterFormatDriver("chf", kt) // Let goflow know about kt.
+	formatter, err := format.FindFormat("chf")
+	if err != nil {
+		return nil, err
+	}
+
+	cfgPipe := &utils.PipeConfig{
+		Format:           formatter,
+		Transport:        nil,
+		Producer:         flowProducer,
+		NetFlowTemplater: metrics.NewDefaultPromTemplateSystem, // wrap template system to get Prometheus info
+	}
+
+	var decodeFunc utils.DecoderFunc
+
+	switch proto {
+	case Ipfix, Netflow9, ASA, NBar, PAN, Netflow5, JFlow, CFlow:
+		switch proto {
+		case Ipfix, ASA, NBar, PAN:
+			for _, v := range config.IPFIX.Mapping {
+				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, v.Destination)
+			}
+		case Netflow9:
+			for _, v := range config.NetFlowV9.Mapping {
+				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, v.Destination)
+			}
+		}
+		kt.pipe = utils.NewNetFlowPipe(cfgPipe)
+		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
+	case Sflow:
+		for _, v := range config.SFlow.Mapping {
+			kt.Infof("Custom SFlow Field Mapping: Layer=%s, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, v.Destination)
+		}
+		kt.pipe = utils.NewSFlowPipe(cfgPipe)
+		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
+	default:
+		return nil, fmt.Errorf("Unknown flow format %v", proto)
+	}
+
+	kt.producer = flowProducer
+	kt.receiver = recv
+	if err := kt.receiver.Start(cfg.ListenIP, cfg.ListenPort, decodeFunc); err != nil {
+		return nil, err
+	} else {
+		go func() {
+			for {
+				select {
+				case <-ctx.Done():
+					return
+				case err := <-recv.Errors():
+					if errors.Is(err, netflow.ErrorTemplateNotFound) {
+						kt.Warnf("template error: %v", err)
+					} else if errors.Is(err, net.ErrClosed) {
+						kt.Infof("closed receiver")
+					} else {
+						kt.Warnf("error: %v", err)
+					}
+
+				}
+			}
+		}()
 	}
 
 	kt.Infof("Netflow listener running on %s:%d for format %s and a batch size of %d", cfg.ListenIP, cfg.ListenPort, proto, maxBatchSize)
 	kt.Infof("Netflow listener sending fields %s", cfg.MessageFields)
-	kt.SetConfig(config)
 
-	switch proto {
-	case Ipfix, Netflow9, ASA, NBar, PAN:
-		sNF := &utils.StateNetFlow{
-			Format: kt,
-			Logger: &KentikLog{l: kt},
-			Config: &config.FlowConfig,
-		}
-		switch proto {
-		case Ipfix, ASA, NBar, PAN:
-			for _, v := range config.FlowConfig.IPFIX.Mapping {
-				kt.Infof("Custom IPFIX Field Mapping: Field=%v, Pen=%v -> %v", v.Type, v.Pen, config.NameMap[v.Destination])
-			}
-		case Netflow9:
-			for _, v := range config.FlowConfig.NetFlowV9.Mapping {
-				kt.Infof("Custom Netflow9 Field Mapping: Field=%v -> %v", v.Type, config.NameMap[v.Destination])
-			}
-		}
-		go func() { // Let this run, returning flow into the kentik transport struct
-			err := sNF.FlowRoutine(cfg.Workers, cfg.ListenIP, cfg.ListenPort, cfg.EnableReusePort)
-			if err != nil {
-				sNF.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
-			}
-		}()
-		return kt, nil
-	case Sflow:
-		sSF := &utils.StateSFlow{
-			Format: kt,
-			Logger: &KentikLog{l: kt},
-			Config: &config.FlowConfig,
-		}
-		for _, v := range config.FlowConfig.SFlow.Mapping {
-			kt.Infof("Custom SFlow Field Mapping: Layer=%d, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, config.NameMap[v.Destination])
-		}
-		go func() { // Let this run, returning flow into the kentik transport struct
-			err := sSF.FlowRoutine(cfg.Workers, cfg.ListenIP, cfg.ListenPort, cfg.EnableReusePort)
-			if err != nil {
-				sSF.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
-			}
-		}()
-		return kt, nil
-	case Netflow5, JFlow, CFlow:
-		sNFL := &utils.StateNFLegacy{
-			Format: kt,
-			Logger: &KentikLog{l: kt},
-		}
-		go func() { // Let this run, returning flow into the kentik transport struct
-			err := sNFL.FlowRoutine(cfg.Workers, cfg.ListenIP, cfg.ListenPort, cfg.EnableReusePort)
-			if err != nil {
-				sNFL.Logger.Fatalf("Fatal error: could not listen to UDP (%v)", err)
-			}
-		}()
-		return kt, nil
-	}
-	return nil, fmt.Errorf("Unknown flow format %v", proto)
+	return kt, nil
 }
 
-type EntConfig struct {
-	FlowConfig producer.ProducerConfig `json:"flow_config"`
-	NameMap    map[string]string       `json:"name_map"`
-}
-
-func loadMapping(f io.Reader, proto FlowSource) (EntConfig, error) {
-	config := EntConfig{}
-	dec := json.NewDecoder(f)
-	err := dec.Decode(&config)
-
-	// Update any non filled in name maps to the default.
-	if config.NameMap == nil {
-		config.NameMap = map[string]string{}
-	}
-	switch proto {
-	case Ipfix, ASA, NBar, PAN:
-		for _, v := range config.FlowConfig.IPFIX.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	case Netflow9:
-		for _, v := range config.FlowConfig.NetFlowV9.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	case Sflow:
-		for _, v := range config.FlowConfig.SFlow.Mapping {
-			if _, ok := config.NameMap[v.Destination]; !ok {
-				config.NameMap[v.Destination] = v.Destination
-			}
-		}
-	}
-
+func loadMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
+	config := &protoproducer.ProducerConfig{}
+	dec := yaml.NewDecoder(f)
+	err := dec.Decode(config)
 	return config, err
 }
