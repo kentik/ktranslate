@@ -557,6 +557,9 @@ func (c *MerakiClient) getDeviceClientApplications(dur time.Duration, clients []
 func (c *MerakiClient) getDeviceClients(dur time.Duration) ([]*kt.JCHF, error) {
 	networkDevs, err := c.getNetworkDevices()
 	if err != nil {
+		if strings.Contains(err.Error(), "(status 400)") { // There are no valid network devices to worry about here.
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -829,6 +832,9 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 	for _, org := range c.orgs {
 		err := getUplinkStatus("", org, &uplinks)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
+				return nil, nil
+			}
 			return nil, err
 		}
 	}
@@ -1107,6 +1113,9 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 	for _, org := range c.orgs {
 		err := getVpnStatus("", org, &vpns)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid vpns to worry about here.
+				return nil, nil
+			}
 			return nil, err
 		}
 	}
@@ -1275,6 +1284,9 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 	for _, org := range c.orgs {
 		err := getDeviceStatus("", org, &devices)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid devices to worry about here.
+				return nil, nil
+			}
 			return nil, err
 		}
 	}
