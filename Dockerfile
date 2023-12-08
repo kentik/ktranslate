@@ -40,7 +40,9 @@ RUN addgroup -g 1000 ktranslate && \
 #	groupadd --gid 1000 ktranslate; \
 #	useradd --home-dir /etc/ktranslate --gid ktranslate --no-create-home --uid 1000 ktranslate
 
-COPY --chown=ktranslate:ktranslate config/ /etc/ktranslate/
+# Some people want to specify an alternative config dir. This lets them override with --build-arg CONFIG-DIR=my-new-dir
+ARG CONFIG_DIR=config
+COPY --chown=ktranslate:ktranslate ${CONFIG_DIR}/ /etc/ktranslate/
 COPY --chown=ktranslate:ktranslate lib/ /etc/ktranslate/
 
 # maxmind db
