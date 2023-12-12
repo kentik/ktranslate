@@ -54,6 +54,7 @@ const (
 	ControllerKey       = "meraki_controller_name"
 	MerakiApiKey        = "KENTIK_MERAKI_API_KEY"
 	DeviceCacheDuration = time.Duration(24) * time.Hour
+	MAX_TIMEOUT_RETRY   = 5 // Don't retry a call more than this many times.
 )
 
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
@@ -785,8 +786,8 @@ type deviceUplink struct {
 
 func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
-	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink) error
-	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink) error {
+	var getUplinkStatus func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink, timeouts int) error
+	getUplinkStatus = func(nextToken string, org orgDesc, uplinks *map[string]deviceUplink, timeouts int) error {
 		params := organizations.NewGetOrganizationUplinksStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
@@ -795,6 +796,12 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 		prod, err := c.client.Organizations.GetOrganizationUplinksStatuses(params, c.auth)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
+				c.log.Warnf("Uplink Status: %s 429, sleeping", org.Name)
+				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getUplinkStatus(nextToken, org, uplinks, timeouts)
+			}
 			return err
 		}
 
@@ -822,7 +829,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 		// Recursion!
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
-			return getUplinkStatus(nextLink, org, uplinks)
+			return getUplinkStatus(nextLink, org, uplinks, timeouts)
 		} else {
 			return nil
 		}
@@ -830,7 +837,7 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 	uplinks := map[string]deviceUplink{}
 	for _, org := range c.orgs {
-		err := getUplinkStatus("", org, &uplinks)
+		err := getUplinkStatus("", org, &uplinks, 0)
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
 				return nil, nil
@@ -1064,8 +1071,8 @@ type vpnStatus struct {
 
 func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
-	var getVpnStatus func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error
-	getVpnStatus = func(nextToken string, org orgDesc, vpns *[]*vpnStatus) error {
+	var getVpnStatus func(nextToken string, org orgDesc, vpns *[]*vpnStatus, timeouts int) error
+	getVpnStatus = func(nextToken string, org orgDesc, vpns *[]*vpnStatus, timeouts int) error {
 		params := appliance.NewGetOrganizationApplianceVpnStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
@@ -1074,6 +1081,12 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 		prod, err := c.client.Appliance.GetOrganizationApplianceVpnStatuses(params, c.auth)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
+				c.log.Warnf("Vpn Status: %s 429, sleeping", org.Name)
+				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getVpnStatus(nextToken, org, vpns, timeouts)
+			}
 			return err
 		}
 
@@ -1103,7 +1116,7 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		// Recursion!
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
-			return getVpnStatus(nextLink, org, vpns)
+			return getVpnStatus(nextLink, org, vpns, timeouts)
 		} else {
 			return nil
 		}
@@ -1111,7 +1124,7 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 	vpns := make([]*vpnStatus, 0)
 	for _, org := range c.orgs {
-		err := getVpnStatus("", org, &vpns)
+		err := getVpnStatus("", org, &vpns, 0)
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 400)") { // There are no valid vpns to worry about here.
 				return nil, nil
@@ -1236,8 +1249,8 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		productTypes[pt] = true
 	}
 
-	var getDeviceStatus func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper) error
-	getDeviceStatus = func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper) error {
+	var getDeviceStatus func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper, timeouts int) error
+	getDeviceStatus = func(nextToken string, org orgDesc, devices *[]*deviceStatusWrapper, timeouts int) error {
 		params := organizations.NewGetOrganizationDevicesStatusesParamsWithTimeout(c.timeout)
 		params.SetOrganizationID(org.ID)
 		if nextToken != "" {
@@ -1246,6 +1259,12 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 		prod, err := c.client.Organizations.GetOrganizationDevicesStatuses(params, c.auth)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
+				c.log.Warnf("Device Status: %s 429, sleeping", org.Name)
+				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getDeviceStatus(nextToken, org, devices, timeouts)
+			}
 			return err
 		}
 
@@ -1274,7 +1293,7 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		// Recursion!
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
-			return getDeviceStatus(nextLink, org, devices)
+			return getDeviceStatus(nextLink, org, devices, timeouts)
 		} else {
 			return nil
 		}
@@ -1282,7 +1301,7 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 	devices := make([]*deviceStatusWrapper, 0)
 	for _, org := range c.orgs {
-		err := getDeviceStatus("", org, &devices)
+		err := getDeviceStatus("", org, &devices, 0)
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 400)") { // There are no valid devices to worry about here.
 				return nil, nil
