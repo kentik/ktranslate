@@ -34,6 +34,7 @@ type MerakiClient struct {
 	orgs     []orgDesc
 	timeout  time.Duration
 	cache    *clientCache
+	maxRetry int
 }
 
 type orgDesc struct {
@@ -51,10 +52,12 @@ type networkDesc struct {
 }
 
 const (
-	ControllerKey       = "meraki_controller_name"
-	MerakiApiKey        = "KENTIK_MERAKI_API_KEY"
-	DeviceCacheDuration = time.Duration(24) * time.Hour
-	MAX_TIMEOUT_RETRY   = 5 // Don't retry a call more than this many times.
+	ControllerKey         = "meraki_controller_name"
+	MerakiApiKey          = "KENTIK_MERAKI_API_KEY"
+	DeviceCacheDuration   = time.Duration(24) * time.Hour
+	MAX_TIMEOUT_RETRY     = 10 // Don't retry a call more than this many times.
+	MAX_TIMEOUT_SEC       = 5  // Sleep this many sec each 429.
+	DEFAULT_TIMEOUT_RETRY = 2
 )
 
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
@@ -68,11 +71,17 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		auth:     httptransport.APIKeyAuth("X-Cisco-Meraki-API-Key", "header", kt.LookupEnvString(MerakiApiKey, conf.Ext.MerakiConfig.ApiKey)),
 		timeout:  30 * time.Second,
 		cache:    newClientCache(log),
+		maxRetry: conf.Ext.MerakiConfig.MaxAPIRetry,
 	}
 
 	host := conf.Ext.MerakiConfig.Host
 	if host == "" {
 		host = apiclient.DefaultHost
+	}
+
+	// Figure out max retries.
+	if c.maxRetry == 0 || c.maxRetry > MAX_TIMEOUT_RETRY {
+		c.maxRetry = DEFAULT_TIMEOUT_RETRY
 	}
 
 	// Figure out global or local timeout here.
@@ -796,9 +805,10 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 		prod, err := c.client.Organizations.GetOrganizationUplinksStatuses(params, c.auth)
 		if err != nil {
-			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
-				c.log.Warnf("Uplink Status: %s 429, sleeping", org.Name)
-				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Uplink Status: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
 				timeouts++
 				return getUplinkStatus(nextToken, org, uplinks, timeouts)
 			}
@@ -915,8 +925,9 @@ func (c *MerakiClient) getUplinkUsage(dur time.Duration, uplinkMap map[string]de
 		prod, err := c.client.Appliance.GetOrganizationApplianceUplinksUsageByNetwork(params, c.auth)
 		if err != nil {
 			if strings.Contains(err.Error(), "status 429") {
-				c.log.Infof("Uplink Usage: %s 429, sleeping", org.Name)
-				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Infof("Uplink Usage: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
 				return getUsage(params, org)
 			} else {
 				c.log.Warnf("Cannot get Uplink Usage: %s %v", org.Name, err)
@@ -1081,9 +1092,10 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 
 		prod, err := c.client.Appliance.GetOrganizationApplianceVpnStatuses(params, c.auth)
 		if err != nil {
-			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
-				c.log.Warnf("Vpn Status: %s 429, sleeping", org.Name)
-				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Vpn Status: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
 				timeouts++
 				return getVpnStatus(nextToken, org, vpns, timeouts)
 			}
@@ -1258,10 +1270,12 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 
 		prod, err := c.client.Organizations.GetOrganizationDevicesStatuses(params, c.auth)
+		err = fmt.Errorf("(status 429)")
 		if err != nil {
-			if strings.Contains(err.Error(), "(status 429)") && timeouts < MAX_TIMEOUT_RETRY {
-				c.log.Warnf("Device Status: %s 429, sleeping", org.Name)
-				time.Sleep(3 * time.Second) // For right now guess on this, need to add 429 to spec.
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Device Status: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
 				timeouts++
 				return getDeviceStatus(nextToken, org, devices, timeouts)
 			}
