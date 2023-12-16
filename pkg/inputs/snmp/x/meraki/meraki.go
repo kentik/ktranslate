@@ -336,38 +336,39 @@ func (c *MerakiClient) getOrgChanges(dur time.Duration) ([]*kt.JCHF, error) {
 
 	res := []*kt.JCHF{}
 	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			params := organizations.NewGetOrganizationConfigurationChangesParamsWithTimeout(c.timeout)
-			params.SetOrganizationID(org.ID)
-			params.SetNetworkID(&(network.ID))
-			params.SetT0(&startTimeStr)
+		params := organizations.NewGetOrganizationConfigurationChangesParamsWithTimeout(c.timeout)
+		params.SetOrganizationID(org.ID)
+		params.SetT0(&startTimeStr)
 
-			prod, err := c.client.Organizations.GetOrganizationConfigurationChanges(params, c.auth)
-			if err != nil {
-				return nil, err
-			}
+		prod, err := c.client.Organizations.GetOrganizationConfigurationChanges(params, c.auth)
+		if err != nil {
+			return nil, err
+		}
 
-			b, err := json.Marshal(prod.GetPayload())
-			if err != nil {
-				return nil, err
-			}
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return nil, err
+		}
 
-			var logs []*orgLog
-			err = json.Unmarshal(b, &logs)
-			if err != nil {
-				return nil, err
-			}
+		var logs []*orgLog
+		err = json.Unmarshal(b, &logs)
+		if err != nil {
+			return nil, err
+		}
 
-			for _, lg := range logs {
-				res = append(res, c.parseOrgLog(lg, network, org))
+		for _, lg := range logs {
+			// Filter for networks here.
+			if _, ok := org.networks[lg.NetworkId]; !ok {
+				continue
 			}
+			res = append(res, c.parseOrgLog(lg, org))
 		}
 	}
 
 	return res, nil
 }
 
-func (c *MerakiClient) parseOrgLog(l *orgLog, network networkDesc, org orgDesc) *kt.JCHF {
+func (c *MerakiClient) parseOrgLog(l *orgLog, org orgDesc) *kt.JCHF {
 	dst := kt.NewJCHF()
 	dst.Timestamp = l.TimeStamp.Unix()
 
