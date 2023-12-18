@@ -621,7 +621,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
 						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
@@ -641,7 +641,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
 				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
 						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
