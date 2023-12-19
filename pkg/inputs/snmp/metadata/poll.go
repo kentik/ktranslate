@@ -275,7 +275,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomStr["if."+intr+".Address"] = id.Address
 		dst.CustomStr["if."+intr+".Netmask"] = id.Netmask
 		dst.CustomStr["if."+intr+".Index"] = id.Index
-		dst.CustomInt["if."+intr+".Speed"] = int32(id.HSpeed) * 1000000 // Go from MB -> Bytes.
+		dst.CustomBigInt["if."+intr+".Speed"] = int64(id.HSpeed) * 1000000 // Go from MB -> Bytes.
 		dst.CustomStr["if."+intr+".Description"] = id.Description
 		dst.CustomStr["if."+intr+".Alias"] = id.Alias
 		dst.CustomStr["if."+intr+".Type"] = id.Type
@@ -291,8 +291,8 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		}
 
 		// If there's no data on an interface from HSpeed, see if Speed is set.
-		if id.HSpeed == 0 {
-			dst.CustomInt["if."+intr+".Speed"] = int32(id.Speed)
+		if dst.CustomBigInt["if."+intr+".Speed"] == 0 {
+			dst.CustomBigInt["if."+intr+".Speed"] = int64(id.Speed)
 		}
 	}
 

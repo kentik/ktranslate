@@ -415,7 +415,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 		if speed, ok := ii["Speed"]; ok {
 			if ispeed, ok := speed.(int32); ok {
 				uptime := in.CustomBigInt["Uptime"]
-				uptimeSpeed := uptime * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+				uptimeSpeed := uptime * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 				if uptimeSpeed > 0 {
 					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
 					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {

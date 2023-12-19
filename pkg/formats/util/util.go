@@ -305,6 +305,24 @@ func SetMetadata(in *kt.JCHF) *kt.LastMetadata {
 			lm.DeviceInfo[k] = v
 		}
 	}
+	for k, v := range in.CustomBigInt {
+		if DroppedAttrs[k] {
+			continue // Skip because we don't want this messing up cardinality.
+		}
+		if strings.HasPrefix(k, "if.") {
+			pts := strings.SplitN(k, ".", 3)
+			if len(pts) == 3 {
+				if ifint, err := strconv.Atoi(pts[1]); err == nil {
+					if _, ok := lm.InterfaceInfo[kt.IfaceID(ifint)]; !ok {
+						lm.InterfaceInfo[kt.IfaceID(ifint)] = map[string]interface{}{}
+					}
+					lm.InterfaceInfo[kt.IfaceID(ifint)][pts[2]] = v
+				}
+			}
+		} else {
+			lm.DeviceInfo[k] = v
+		}
+	}
 	lm.Tables = in.CustomTables
 	lm.MatchAttr = in.MatchAttr
 	lm.XtraInfo = in.CustomMetrics
