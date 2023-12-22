@@ -410,7 +410,7 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 	if f.lastMetadata[in.DeviceName] != nil {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
+				if ispeed, ok := speed.(int64); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						msF["IfInUtilization"] = float64(in.CustomBigInt["ifHCInOctets"]*8*100) / float64(uptimeSpeed)
@@ -420,7 +420,7 @@ func (f *PromFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []PromData {
 		}
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
+				if ispeed, ok := speed.(int64); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						msF["IfOutUtilization"] = float64(in.CustomBigInt["ifHCOutOctets"]*8*100) / float64(uptimeSpeed)

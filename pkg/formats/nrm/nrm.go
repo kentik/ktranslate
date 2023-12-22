@@ -620,7 +620,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	if f.lastMetadata[in.DeviceName] != nil {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
 			if speed, ok := ii["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
+				if ispeed, ok := speed.(int64); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
@@ -640,7 +640,7 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 		}
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
 			if speed, ok := oi["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
+				if ispeed, ok := speed.(int64); ok {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)

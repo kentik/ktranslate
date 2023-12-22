@@ -413,7 +413,7 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 
 	if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[port]; ok {
 		if speed, ok := ii["Speed"]; ok {
-			if ispeed, ok := speed.(int32); ok {
+			if ispeed, ok := speed.(int64); ok {
 				uptime := in.CustomBigInt["Uptime"]
 				uptimeSpeed := uptime * (int64(ispeed) / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
 				if uptimeSpeed > 0 {
