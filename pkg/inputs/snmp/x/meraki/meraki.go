@@ -1271,7 +1271,6 @@ func (c *MerakiClient) getDeviceStatus(dur time.Duration) ([]*kt.JCHF, error) {
 		}
 
 		prod, err := c.client.Organizations.GetOrganizationDevicesStatuses(params, c.auth)
-		err = fmt.Errorf("(status 429)")
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
 				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
