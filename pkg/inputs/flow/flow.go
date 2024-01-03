@@ -39,6 +39,7 @@ const (
 	PAN                 = "pan"
 	JFlow               = "jflow"
 	CFlow               = "cflow"
+	Auto                = "auto"
 )
 
 var (
@@ -105,7 +106,7 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 
 	kt.SetConfig(config)
 
-	flowProducer, err := protoproducer.CreateProtoProducer(config, protoproducer.CreateSamplingSystem)
+	flowProducer, err := protoproducer.CreateProtoProducer(config, doSample)
 	if err != nil {
 		return nil, err
 	}
@@ -155,6 +156,9 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		}
 		kt.pipe = utils.NewSFlowPipe(cfgPipe)
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
+	case Auto:
+		kt.pipe = utils.NewFlowPipe(cfgPipe)
+		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
 	default:
 		return nil, fmt.Errorf("Unknown flow format %v", proto)
 	}
@@ -194,4 +198,10 @@ func loadMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
 	dec := yaml.NewDecoder(f)
 	err := dec.Decode(config)
 	return config, err
+}
+
+func doSample() protoproducer.SamplingRateSystem {
+	return &protoproducer.SingleSamplingRateSystem{
+		Sampling: 1,
+	}
 }

@@ -91,7 +91,7 @@ func init() {
 	flag.StringVar(&sslKeyFile, "ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 	flag.StringVar(&tagMapType, "tag_map_type", "", "type of mapping to use for tag values. file|null")
 	flag.StringVar(&vpcSource, "vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
-	flag.StringVar(&flowSource, "nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan")
+	flag.StringVar(&flowSource, "nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan|auto")
 	flag.BoolVar(&teeLog, "tee_logs", false, "Tee log messages to sink")
 	flag.StringVar(&appMap, "application_map", "", "File containing custom application mappings")
 	flag.StringVar(&syslog, "syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
