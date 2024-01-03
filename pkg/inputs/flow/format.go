@@ -256,16 +256,16 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		case "TimeFlowEnd":
 			in.CustomBigInt[field] = int64(fmsg.TimeFlowEndNs)
 		case "Bytes":
-			if ocflowDir == 0 {
-				in.InBytes = fmsg.Bytes
-			} else {
+			if ocflowDir == 1 {
 				in.OutBytes = fmsg.Bytes
+			} else {
+				in.InBytes = fmsg.Bytes
 			}
 		case "Packets":
-			if ocflowDir == 0 {
-				in.InPkts = fmsg.Packets
-			} else {
+			if ocflowDir == 1 {
 				in.OutPkts = fmsg.Packets
+			} else {
+				in.InPkts = fmsg.Packets
 			}
 		case "SrcAddr":
 			in.SrcAddr = net.IP(fmsg.SrcAddr).String()
