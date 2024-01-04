@@ -340,6 +340,11 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 		}
 	}
 
+	// Default in direction if its not already set. Assume its ingress unless otherwise told.
+	if _, ok := in.CustomStr["FlowDirection"]; !ok {
+		in.CustomStr["FlowDirection"] = "ingress"
+	}
+
 	// Now add some combo fields.
 	in.CustomStr["src_endpoint"] = in.SrcAddr + ":" + strconv.Itoa(int(in.L4SrcPort))
 	in.CustomStr["dst_endpoint"] = in.DstAddr + ":" + strconv.Itoa(int(in.L4DstPort))
