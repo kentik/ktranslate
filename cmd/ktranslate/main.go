@@ -209,6 +209,10 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		cfg.Rollup.Formats = append(cfg.Rollup.Formats, "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.flow":
 		cfg.SNMPInput.FlowOnly = true
+		cfg.FlowInput.Enable = true
+		if cfg.FlowInput.Protocol == "" {
+			cfg.FlowInput.Protocol = "auto"
+		}
 		setNr()
 	case "nr1.discovery":
 		cfg.EnableSNMPDiscovery = true

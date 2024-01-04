@@ -480,7 +480,7 @@ func DefaultConfig() *Config {
 		},
 		FlowInput: &FlowInputConfig{
 			Enable:               false,
-			Protocol:             "netflow5",
+			Protocol:             "",
 			ListenIP:             "0.0.0.0",
 			ListenPort:           9995,
 			EnableReusePort:      false,
