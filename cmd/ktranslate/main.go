@@ -732,6 +732,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.FlowInput.Workers = v
+			case "nf.queuesize":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.FlowInput.QueueSize = v
 			case "nf.message.fields":
 				cfg.FlowInput.MessageFields = val
 			case "nf.prom.listen":

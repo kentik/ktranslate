@@ -104,6 +104,11 @@ func (t *KentikDriver) Prepare() error {
 	return nil
 }
 
+// Noop for now. Possibly add later?
+func (t *KentikDriver) Send(key, data []byte) error {
+	return nil
+}
+
 func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
 	msg, ok := data.(*pp.ProtoProducerMessage)
 	if !ok {
@@ -113,7 +118,7 @@ func (t *KentikDriver) Format(data interface{}) ([]byte, []byte, error) {
 	return nil, nil, nil
 }
 
-func (t *KentikDriver) Close() {
+func (t *KentikDriver) Close() error {
 	if t.receiver != nil {
 		if err := t.receiver.Stop(); err != nil {
 			t.Errorf("Error stopping flow reciever: %v", err)
@@ -125,12 +130,15 @@ func (t *KentikDriver) Close() {
 	if t.producer != nil {
 		t.producer.Close()
 	}
+
+	return nil
 }
 
 func (t *KentikDriver) HttpInfo() map[string]float64 {
 	flows := map[string]float64{}
 	for d, f := range t.metrics {
-		flows[d] = f.Flows.Rate1()
+		flows[d+"_rate"] = f.Flows.Rate1()
+		flows[d+"_count"] = float64(f.Flows.Count())
 	}
 	return flows
 }

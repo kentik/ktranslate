@@ -205,6 +205,7 @@ type FlowInputConfig struct {
 	ListenPort           int
 	EnableReusePort      bool
 	Workers              int
+	QueueSize            int
 	MessageFields        string
 	PrometheusListenAddr string
 	MappingFile          string
@@ -483,7 +484,8 @@ func DefaultConfig() *Config {
 			ListenIP:             "0.0.0.0",
 			ListenPort:           9995,
 			EnableReusePort:      false,
-			Workers:              1,
+			Workers:              2,
+			QueueSize:            10000,
 			MessageFields:        FlowDefaultFields,
 			PrometheusListenAddr: "",
 			MappingFile:          "",
