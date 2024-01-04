@@ -22,6 +22,7 @@ import (
 	"github.com/netsampler/goflow2/v2/format"
 	"github.com/netsampler/goflow2/v2/metrics"
 	protoproducer "github.com/netsampler/goflow2/v2/producer/proto"
+	"github.com/netsampler/goflow2/v2/transport"
 	"github.com/netsampler/goflow2/v2/utils"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"gopkg.in/yaml.v2"
@@ -39,6 +40,7 @@ const (
 	PAN                 = "pan"
 	JFlow               = "jflow"
 	CFlow               = "cflow"
+	Auto                = "auto"
 )
 
 var (
@@ -46,6 +48,7 @@ var (
 	port        int
 	reuse       bool
 	workers     int
+	queueSize   int
 	fields      string
 	promListen  string
 	mappingFile string
@@ -55,7 +58,8 @@ func init() {
 	flag.StringVar(&addr, "nf.addr", "0.0.0.0", "Sflow/NetFlow/IPFIX listening address")
 	flag.IntVar(&port, "nf.port", 9995, "Sflow/NetFlow/IPFIX listening port")
 	flag.BoolVar(&reuse, "nf.reuserport", false, "Enable so_reuseport for Sflow/NetFlow/IPFIX")
-	flag.IntVar(&workers, "nf.workers", 1, "Number of workers per flow collector")
+	flag.IntVar(&workers, "nf.workers", 2, "Number of workers per flow collector")
+	flag.IntVar(&queueSize, "nf.queuesize", 10000, "How big of a queue to hold for incomming flow packets.")
 	flag.StringVar(&fields, "nf.message.fields", ktranslate.FlowDefaultFields, "The list of fields to include in flow messages. Can be any of "+ktranslate.FlowFields)
 	flag.StringVar(&promListen, "nf.prom.listen", "", "Run a promethues metrics collector here")
 	flag.StringVar(&mappingFile, "nf.mapping", "", "Configuration file for custom netflow mappings")
@@ -112,8 +116,9 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 
 	flowProducer = metrics.WrapPromProducer(flowProducer)
 	udpCfg := &utils.UDPReceiverConfig{
-		Sockets: cfg.Workers,
-		Workers: cfg.Workers,
+		Sockets:   cfg.Workers,
+		Workers:   cfg.Workers,
+		QueueSize: cfg.QueueSize,
 	}
 	recv, err := utils.NewUDPReceiver(udpCfg)
 	if err != nil {
@@ -126,9 +131,15 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 		return nil, err
 	}
 
+	transport.RegisterTransportDriver("chf", kt)
+	transporter, err := transport.FindTransport("chf")
+	if err != nil {
+		return nil, err
+	}
+
 	cfgPipe := &utils.PipeConfig{
 		Format:           formatter,
-		Transport:        nil,
+		Transport:        transporter,
 		Producer:         flowProducer,
 		NetFlowTemplater: metrics.NewDefaultPromTemplateSystem, // wrap template system to get Prometheus info
 	}
@@ -154,6 +165,9 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 			kt.Infof("Custom SFlow Field Mapping: Layer=%s, Offset=%d, Length=%d -> %v", v.Layer, v.Offset, v.Length, v.Destination)
 		}
 		kt.pipe = utils.NewSFlowPipe(cfgPipe)
+		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
+	case Auto:
+		kt.pipe = utils.NewFlowPipe(cfgPipe)
 		decodeFunc = metrics.PromDecoderWrapper(kt.pipe.DecodeFlow, string(proto))
 	default:
 		return nil, fmt.Errorf("Unknown flow format %v", proto)
@@ -194,4 +208,10 @@ func loadMapping(f io.Reader) (*protoproducer.ProducerConfig, error) {
 	dec := yaml.NewDecoder(f)
 	err := dec.Decode(config)
 	return config, err
+}
+
+func doSample() protoproducer.SamplingRateSystem {
+	return &protoproducer.SingleSamplingRateSystem{
+		Sampling: 1,
+	}
 }

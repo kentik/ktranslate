@@ -91,7 +91,7 @@ func init() {
 	flag.StringVar(&sslKeyFile, "ssl_key_file", "", "SSL Key file to use for serving HTTPS traffic")
 	flag.StringVar(&tagMapType, "tag_map_type", "", "type of mapping to use for tag values. file|null")
 	flag.StringVar(&vpcSource, "vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
-	flag.StringVar(&flowSource, "nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan")
+	flag.StringVar(&flowSource, "nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan|auto")
 	flag.BoolVar(&teeLog, "tee_logs", false, "Tee log messages to sink")
 	flag.StringVar(&appMap, "application_map", "", "File containing custom application mappings")
 	flag.StringVar(&syslog, "syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
@@ -209,6 +209,10 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		cfg.Rollup.Formats = append(cfg.Rollup.Formats, "s_sum,pkts.rcv,in_pkts+out_pkts,device_name,dst_addr,custom_str.dst_as_name,dst_geo,l4_dst_port,protocol")
 	case "nr1.flow":
 		cfg.SNMPInput.FlowOnly = true
+		cfg.FlowInput.Enable = true
+		if cfg.FlowInput.Protocol == "" {
+			cfg.FlowInput.Protocol = "auto"
+		}
 		setNr()
 	case "nr1.discovery":
 		cfg.EnableSNMPDiscovery = true
@@ -732,6 +736,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.FlowInput.Workers = v
+			case "nf.queuesize":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.FlowInput.QueueSize = v
 			case "nf.message.fields":
 				cfg.FlowInput.MessageFields = val
 			case "nf.prom.listen":
