@@ -1058,8 +1058,8 @@ func (c *MerakiClient) getNetworkAttr(dur time.Duration) ([]*kt.JCHF, error) {
 				"org_name":    network.org.Name,
 				"org_id":      network.org.ID,
 			}
-			for _, tag := range network.Tags {
-				dst.CustomStr[tag] = "set"
+			for i, tag := range network.Tags {
+				dst.CustomStr[fmt.Sprintf("tag_%d", i+1)] = tag
 			}
 
 			dst.CustomInt = map[string]int32{}
