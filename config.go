@@ -35,6 +35,12 @@ type PrometheusFormatConfig struct {
 	FlowsNeeded          int
 }
 
+// OtelFormatConfig is the config for the otel format
+type OtelFormatConfig struct {
+	Endpoint    string
+	FlowsNeeded int
+}
+
 // PrometheusSinkConfig is config for the prometheus sink
 type PrometheusSinkConfig struct {
 	ListenAddr     string
@@ -268,6 +274,8 @@ type Config struct {
 	PrometheusFormat *PrometheusFormatConfig
 	// pkg/formats/influxdb
 	InfluxDBFormat *InfluxDBFormatConfig
+	// pkg/formats/otel
+	OtelFormat *OtelFormatConfig
 
 	// pkg/sinks/prom
 	PrometheusSink *PrometheusSinkConfig
@@ -358,6 +366,10 @@ func DefaultConfig() *Config {
 		PrometheusFormat: &PrometheusFormatConfig{
 			EnableCollectorStats: false,
 			FlowsNeeded:          10,
+		},
+		OtelFormat: &OtelFormatConfig{
+			Endpoint:    "",
+			FlowsNeeded: 10,
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
 			MeasurementPrefix: "",
