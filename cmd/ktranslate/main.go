@@ -435,6 +435,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.PrometheusFormat.FlowsNeeded = v
+			// pkg/formats/otel
+			case "otel.endpoint":
+				cfg.OtelFormat.Endpoint = val
 			// pkg/formats/influxdb
 			case "influxdb_measurement_prefix":
 				cfg.InfluxDBFormat.MeasurementPrefix = val

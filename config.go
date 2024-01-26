@@ -368,7 +368,7 @@ func DefaultConfig() *Config {
 			FlowsNeeded:          10,
 		},
 		OtelFormat: &OtelFormatConfig{
-			Endpoint:    "",
+			Endpoint:    "stdout",
 			FlowsNeeded: 10,
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{

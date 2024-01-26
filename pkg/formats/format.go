@@ -79,7 +79,7 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 	case FORMAT_PROM_REMOTE:
 		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_OTEL:
-		return otel.NewFormat(log, compression, cfg.OtelFormat)
+		return otel.NewFormat(log, cfg.OtelFormat)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}

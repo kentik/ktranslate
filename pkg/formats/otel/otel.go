@@ -2,6 +2,7 @@ package otel
 
 import (
 	"context"
+	"flag"
 	"strconv"
 	"sync"
 
@@ -14,40 +15,54 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
+	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 )
 
 type OtelFormat struct {
 	logger.ContextL
-	compression  kt.Compression
-	doGz         bool
 	lastMetadata map[string]*kt.LastMetadata
 	mux          sync.RWMutex
-	exp          *otlpmetrichttp.Exporter
-	vecTags      tagVec
-	seen         map[string]int
+	exp          sdkmetric.Exporter
 	invalids     map[string]bool
 	config       *ktranslate.OtelFormatConfig
-	vecs         map[string]metric.Float64Counter
+	vecs         map[string]metric.Float64Histogram
 	ctx          context.Context
 }
 
 var (
-	otelm = otel.Meter("base")
+	endpoint string
+	otelm    metric.Meter
 )
 
-func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
+func init() {
+	flag.StringVar(&endpoint, "otel.endpoint", "", "Send data to this endpoint or stdout")
+}
+
+func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
 	jf := &OtelFormat{
-		compression:  compression,
-		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "nrmFormat"}, log),
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
+		invalids:     map[string]bool{},
 		ctx:          context.Background(),
+		vecs:         map[string]metric.Float64Histogram{},
+		config:       cfg,
 	}
 
-	exp, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
-	if err != nil {
-		return nil, err
+	var exp sdkmetric.Exporter
+	if cfg.Endpoint == "stdout" {
+		metricExporter, err := stdoutmetric.New()
+		if err != nil {
+			return nil, err
+		}
+		exp = metricExporter
+	} else {
+		metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
+		if err != nil {
+			return nil, err
+		}
+		exp = metricExporter
 	}
 
 	meterProvider := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exp)))
@@ -55,6 +70,7 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 	jf.exp = exp
 
 	otelm = otel.Meter("ktranslate")
+	jf.Infof("Running exporting to %s", cfg.Endpoint)
 
 	return jf, nil
 }
@@ -73,27 +89,15 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	defer f.mux.Unlock()
 
 	for _, m := range res {
-		if f.seen[m.Name] < f.config.FlowsNeeded {
-			m.AddTagLabels(f.vecTags)
-			f.seen[m.Name]++
-			if f.seen[m.Name] == f.config.FlowsNeeded {
-				f.Infof("Seen enough %s!", m.Name)
-			} else {
-				f.Infof("Seen %s -> %d", m.Name, f.seen[m.Name])
-			}
-			continue
-		}
-
-		labels := m.GetTagValues(f.vecTags)
 		if _, ok := f.vecs[m.Name]; !ok {
-			cv, err := otelm.Float64Counter(m.Name)
+			cv, err := otelm.Float64Histogram(m.Name)
 			if err != nil {
 				return nil, err
 			}
 			f.vecs[m.Name] = cv
-			f.Infof("Adding %s %v", m.Name, labels)
+			f.Infof("Adding %s", m.Name)
 		}
-		f.vecs[m.Name].Add(f.ctx, m.Value, metric.WithAttributes(labels...))
+		f.vecs[m.Name].Record(f.ctx, m.Value, metric.WithAttributeSet(m.GetTagValues()))
 	}
 
 	return nil, nil
@@ -110,6 +114,8 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 
 func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 	switch in.EventType {
+	case kt.KENTIK_EVENT_TYPE:
+		return f.fromKflow(in)
 	case kt.KENTIK_EVENT_SYNTH:
 		return f.fromKSynth(in)
 	case kt.KENTIK_EVENT_SYNTH_GEST:
@@ -187,7 +193,7 @@ func (f *OtelFormat) fromKSyngest(in *kt.JCHF) []OtelData {
 	for m, name := range metrics {
 		if in.CustomInt[m] > 0 {
 			ms = append(ms, OtelData{
-				Name:  "kentik:syngest:" + name.Name,
+				Name:  "kentik.syngest." + name.Name,
 				Value: float64(in.CustomInt[m]),
 				Tags:  attr,
 			})
@@ -242,7 +248,7 @@ func (f *OtelFormat) fromKSynth(in *kt.JCHF) []OtelData {
 		switch name.Name {
 		case "avg_rtt", "jit_rtt", "time", "code", "port", "status", "ttlb", "size", "trx_time", "validation", "lost", "sent":
 			ms = append(ms, OtelData{
-				Name:  "kentik:synth:" + name.Name,
+				Name:  "kentik.synth." + name.Name,
 				Value: float64(in.CustomInt[m]),
 				Tags:  attr,
 			})
@@ -252,41 +258,63 @@ func (f *OtelFormat) fromKSynth(in *kt.JCHF) []OtelData {
 	return ms
 }
 
+func (f *OtelFormat) fromKflow(in *kt.JCHF) []OtelData {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+	ms := map[string]int64{}
+	for m, _ := range metrics {
+		switch m {
+		case "in_bytes":
+			ms[m] = int64(in.InBytes * uint64(in.SampleRate))
+		case "out_bytes":
+			ms[m] = int64(in.OutBytes * uint64(in.SampleRate))
+		case "in_pkts":
+			ms[m] = int64(in.InPkts * uint64(in.SampleRate))
+		case "out_pkts":
+			ms[m] = int64(in.OutPkts * uint64(in.SampleRate))
+		case "latency_ms":
+			ms[m] = int64(in.CustomInt["appl_latency_ms"])
+		}
+	}
+
+	res := []OtelData{}
+	for k, v := range ms {
+		if v == 0 { // Drop zero valued metrics here.
+			continue
+		}
+		res = append(res, OtelData{
+			Name:  "kentik.flow." + k,
+			Value: float64(v),
+			Tags:  attr,
+		})
+	}
+
+	return res
+}
+
 type OtelData struct {
 	Name  string
 	Value float64
 	Tags  map[string]interface{}
 }
 
-func (d *OtelData) AddTagLabels(vecTags tagVec) {
-	if _, ok := vecTags[d.Name]; !ok {
-		vecTags[d.Name] = make([]attribute.KeyValue, 0)
-	}
+func (d *OtelData) GetTagValues() attribute.Set {
+	res := make([]attribute.KeyValue, 0, len(d.Tags))
 	for k, v := range d.Tags {
-		found := false
-		for _, kk := range vecTags[d.Name] {
-			if string(kk.Key) == k {
-				found = true
-				break // Key already exists.
-			}
-		}
-		// If here, new key.
-		if !found {
-			switch t := v.(type) {
-			case string:
-				vecTags[d.Name] = append(vecTags[d.Name], attribute.String(k, t))
-			case int64:
-				vecTags[d.Name] = append(vecTags[d.Name], attribute.Int64(k, t))
-			case float64:
-				vecTags[d.Name] = append(vecTags[d.Name], attribute.Float64(k, t))
-			default:
-			}
+		switch t := v.(type) {
+		case string:
+			res = append(res, attribute.String(k, t))
+		case int64:
+			res = append(res, attribute.Int64(k, t))
+		case float64:
+			res = append(res, attribute.Float64(k, t))
+		default:
 		}
 	}
+	s, _ := attribute.NewSetWithFiltered(res, func(kv attribute.KeyValue) bool { return true })
+	return s
 }
-
-func (d *OtelData) GetTagValues(vecTags tagVec) []attribute.KeyValue {
-	return vecTags[d.Name]
-}
-
-type tagVec map[string][]attribute.KeyValue
