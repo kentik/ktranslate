@@ -251,11 +251,12 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	doOrgChanges := c.conf.Ext.MerakiConfig.MonitorOrgChanges
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
 	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
-	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus {
+	doNetworkAttr := c.conf.Ext.MerakiConfig.Prefs["show_network_attr"]
+	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus && !doNetworkAttr {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v",
-		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus)
+	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v, network_attr=%v",
+		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr)
 
 	for {
 		select {
@@ -305,6 +306,14 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 			if doVpnStatus {
 				if res, err := c.getVpnStatus(dur); err != nil {
 					c.log.Infof("Meraki cannot get vpn status Info: %v", err)
+				} else if len(res) > 0 {
+					c.jchfChan <- res
+				}
+			}
+
+			if doNetworkAttr {
+				if res, err := c.getNetworkAttr(dur); err != nil {
+					c.log.Infof("Meraki cannot get network attr: %v", err)
 				} else if len(res) > 0 {
 					c.jchfChan <- res
 				}
@@ -1030,6 +1039,67 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			c.conf.SetUserTags(dst.CustomStr)
 			res = append(res, dst)
 		}
+	}
+
+	return res, nil
+}
+
+func (c *MerakiClient) getNetworkAttr(dur time.Duration) ([]*kt.JCHF, error) {
+	res := make([]*kt.JCHF, 0)
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			dst := kt.NewJCHF()
+			dst.DeviceName = network.Name
+
+			dst.CustomStr = map[string]string{
+				ControllerKey: c.conf.DeviceName,
+				"network":     network.Name,
+				"network_id":  network.ID,
+				"org_name":    network.org.Name,
+				"org_id":      network.org.ID,
+			}
+			for i, tag := range network.Tags {
+				dst.CustomStr[fmt.Sprintf("tag_%d", i+1)] = tag
+			}
+
+			dst.CustomInt = map[string]int32{}
+			dst.CustomBigInt = map[string]int64{}
+			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+			dst.Provider = kt.ProviderMerakiCloud
+
+			dst.Timestamp = time.Now().Unix()
+			dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+			dst.CustomBigInt["Count"] = 1
+			dst.CustomMetrics["Count"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.network", Type: "meraki.network"}
+
+			c.conf.SetUserTags(dst.CustomStr)
+			res = append(res, dst)
+		}
+
+		// Now add in 1 count per organization.
+		dst := kt.NewJCHF()
+		dst.DeviceName = org.Name
+
+		dst.CustomStr = map[string]string{
+			ControllerKey: c.conf.DeviceName,
+			"org_name":    org.Name,
+			"org_id":      org.ID,
+		}
+
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = kt.ProviderMerakiCloud
+
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+		dst.CustomBigInt["Count"] = 1
+		dst.CustomMetrics["Count"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.organization", Type: "meraki.organization"}
+
+		c.conf.SetUserTags(dst.CustomStr)
+		res = append(res, dst)
 	}
 
 	return res, nil
