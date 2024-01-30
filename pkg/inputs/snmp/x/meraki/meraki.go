@@ -1076,6 +1076,30 @@ func (c *MerakiClient) getNetworkAttr(dur time.Duration) ([]*kt.JCHF, error) {
 			c.conf.SetUserTags(dst.CustomStr)
 			res = append(res, dst)
 		}
+
+		// Now add in 1 count per organization.
+		dst := kt.NewJCHF()
+		dst.DeviceName = org.Name
+
+		dst.CustomStr = map[string]string{
+			ControllerKey: c.conf.DeviceName,
+			"org_name":    org.Name,
+			"org_id":      org.ID,
+		}
+
+		dst.CustomInt = map[string]int32{}
+		dst.CustomBigInt = map[string]int64{}
+		dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
+		dst.Provider = kt.ProviderMerakiCloud
+
+		dst.Timestamp = time.Now().Unix()
+		dst.CustomMetrics = map[string]kt.MetricInfo{}
+
+		dst.CustomBigInt["Count"] = 1
+		dst.CustomMetrics["Count"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.organization", Type: "meraki.organization"}
+
+		c.conf.SetUserTags(dst.CustomStr)
+		res = append(res, dst)
 	}
 
 	return res, nil
