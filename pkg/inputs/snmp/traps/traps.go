@@ -227,7 +227,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		}
 
 		// If we don't want undefined vars, pass along here.
-		if res == nil && trap.DropUndefinedVars() {
+		if res == nil && (s.conf.Trap.DropUndefined || trap.DropUndefinedVars()) {
 			continue
 		}
 
