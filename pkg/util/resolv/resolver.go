@@ -91,7 +91,11 @@ func (r *Resolver) Resolve(ctx context.Context, ip string, log bool) string {
 				final = strings.ToLower(final[0 : len(final)-1]) // Remove trailing . and also make lower case (because I always forget this)
 			}
 		}
-	} // ignore errors here
+	} else {
+		if log {
+			r.Warnf("Resolve of %s failed: %v", ip, err)
+		}
+	}
 	r.mux.Lock()
 	r.cache[ip] = final // cache.
 	r.mux.Unlock()
