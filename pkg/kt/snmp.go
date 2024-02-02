@@ -119,6 +119,7 @@ type InterfaceData struct {
 	IPAddr                        // embedded
 	AliasAddr   []IPAddr          `yaml:"alias_address"`
 	Index       string            `yaml:"index"`
+	HSpeed      uint64            `yaml:"hspeed"`
 	Speed       uint64            `yaml:"speed"`
 	Description string            `yaml:"desc"`
 	Alias       string            `yaml:"alias"`

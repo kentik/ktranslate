@@ -619,40 +619,36 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 	// Grap capacity utilization if possible.
 	if f.lastMetadata[in.DeviceName] != nil {
 		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
-			if speed, ok := ii["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
-					if uptimeSpeed > 0 {
-						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
-						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
-							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-								ms = append(ms, NRMetric{
-									Name:       "kentik.snmp.IfInUtilization",
-									Type:       NR_GAUGE_TYPE,
-									Value:      float64(inBytes*8*100) / float64(uptimeSpeed),
-									Attributes: attrNew,
-								})
-							}
+			if speed, ok := util.GetSpeed(ii); ok {
+				uptimeSpeed := in.CustomBigInt["Uptime"] * (speed / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
+				if uptimeSpeed > 0 {
+					attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+					if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
+						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+							ms = append(ms, NRMetric{
+								Name:       "kentik.snmp.IfInUtilization",
+								Type:       NR_GAUGE_TYPE,
+								Value:      float64(inBytes*8*100) / float64(uptimeSpeed),
+								Attributes: attrNew,
+							})
 						}
 					}
 				}
 			}
 		}
 		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
-			if speed, ok := oi["Speed"]; ok {
-				if ispeed, ok := speed.(int32); ok {
-					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
-					if uptimeSpeed > 0 {
-						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
-						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
-							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-								ms = append(ms, NRMetric{
-									Name:       "kentik.snmp.IfOutUtilization",
-									Type:       NR_GAUGE_TYPE,
-									Value:      float64(outBytes*8*100) / float64(uptimeSpeed),
-									Attributes: attrNew,
-								})
-							}
+			if speed, ok := util.GetSpeed(oi); ok {
+				uptimeSpeed := in.CustomBigInt["Uptime"] * (speed / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
+				if uptimeSpeed > 0 {
+					attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+					if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
+						if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+							ms = append(ms, NRMetric{
+								Name:       "kentik.snmp.IfOutUtilization",
+								Type:       NR_GAUGE_TYPE,
+								Value:      float64(outBytes*8*100) / float64(uptimeSpeed),
+								Attributes: attrNew,
+							})
 						}
 					}
 				}

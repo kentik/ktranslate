@@ -20,6 +20,7 @@ import (
 const (
 	SNMP_ifDescr            = "ifDescr"
 	SNMP_ifAlias            = "ifAlias"
+	SNMP_ifHSpeed           = "ifHSpeed"
 	SNMP_ifSpeed            = "ifSpeed"
 	SNMP_ipAdEntIfIndex     = "ipAdEntIfIndex"
 	SNMP_ipAdEntNetMask     = "ipAdEntNetMask"
@@ -39,11 +40,12 @@ var (
 		// change the order unless you know what you're doing.  Add new ones on
 		// the end.
 		m := orderedmap.NewOrderedMap()
-		m.Set("1.3.6.1.2.1.31.1.1.1.15", SNMP_ifSpeed)       // Index ifIndex
+		m.Set("1.3.6.1.2.1.31.1.1.1.15", SNMP_ifHSpeed)      // Index ifIndex
 		m.Set("1.3.6.1.2.1.4.20.1.2", SNMP_ipAdEntIfIndex)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)   // Index ipAddr
 		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix) // Index ipv6IfIndex, ipv6Addr
 		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)     // (ifPhysAddress)
+		m.Set("1.3.6.1.2.1.2.2.1.5", SNMP_ifSpeed)           // Index ifIndex
 		return m
 	}()
 
@@ -64,7 +66,6 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
 		m.Set(el.Key, el.Value)
 	}
-
 
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
@@ -190,6 +191,9 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 				case SNMP_ifSpeed:
 					value := gosnmp.ToBigInt(variable.Value).Uint64()
 					data.Speed = value
+				case SNMP_ifHSpeed:
+					value := gosnmp.ToBigInt(variable.Value).Uint64()
+					data.HSpeed = value
 				case SNMP_ipv6AddrPrefix:
 					switch variable.Type {
 					case gosnmp.Integer:

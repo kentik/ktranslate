@@ -412,52 +412,50 @@ func (f *DDogFormat) setRates(ms *datadogV2.MetricPayload, direction string, in 
 	totalPkts := in.CustomBigInt[fmt.Sprintf("ifHC%sUcastPkts", direction)] + in.CustomBigInt[fmt.Sprintf("ifHC%sMulticastPkts", direction)] + in.CustomBigInt[fmt.Sprintf("ifHC%sBroadcastPkts", direction)]
 
 	if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[port]; ok {
-		if speed, ok := ii["Speed"]; ok {
-			if ispeed, ok := speed.(int32); ok {
-				uptime := in.CustomBigInt["Uptime"]
-				uptimeSpeed := uptime * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
-				if uptimeSpeed > 0 {
-					attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
-					if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
-						tags := getDDMetricTags(attrNew)
-						if totalBytes > 0 {
-							ms.Series = append(ms.Series, datadogV2.MetricSeries{
-								Metric: "kentik.snmp." + utilName,
+		if speed, ok := util.GetSpeed(ii); ok {
+			uptime := in.CustomBigInt["Uptime"]
+			uptimeSpeed := uptime * (speed / 100) // Divide by 100 to convert uptime into seconds, from centi-seconds.
+			if uptimeSpeed > 0 {
+				attrNew := util.CopyAttrForSnmp(attr, utilName, kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+				if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+					tags := getDDMetricTags(attrNew)
+					if totalBytes > 0 {
+						ms.Series = append(ms.Series, datadogV2.MetricSeries{
+							Metric: "kentik.snmp." + utilName,
+							Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+							Points: []datadogV2.MetricPoint{
+								{
+									Timestamp: datadog.PtrInt64(in.Timestamp),
+									Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptimeSpeed)),
+								},
+							},
+							Tags: tags,
+						},
+							datadogV2.MetricSeries{
+								Metric: "kentik.snmp." + bitRate,
 								Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
 								Points: []datadogV2.MetricPoint{
 									{
 										Timestamp: datadog.PtrInt64(in.Timestamp),
-										Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptimeSpeed)),
+										Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptime)),
 									},
 								},
 								Tags: tags,
 							},
-								datadogV2.MetricSeries{
-									Metric: "kentik.snmp." + bitRate,
-									Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
-									Points: []datadogV2.MetricPoint{
-										{
-											Timestamp: datadog.PtrInt64(in.Timestamp),
-											Value:     datadog.PtrFloat64(float64(totalBytes*8*100) / float64(uptime)),
-										},
-									},
-									Tags: tags,
+						)
+					}
+					if totalPkts > 0 {
+						ms.Series = append(ms.Series, datadogV2.MetricSeries{
+							Metric: "kentik.snmp." + pktRate,
+							Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+							Points: []datadogV2.MetricPoint{
+								{
+									Timestamp: datadog.PtrInt64(in.Timestamp),
+									Value:     datadog.PtrFloat64(float64(totalPkts*100) / float64(uptime)),
 								},
-							)
-						}
-						if totalPkts > 0 {
-							ms.Series = append(ms.Series, datadogV2.MetricSeries{
-								Metric: "kentik.snmp." + pktRate,
-								Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
-								Points: []datadogV2.MetricPoint{
-									{
-										Timestamp: datadog.PtrInt64(in.Timestamp),
-										Value:     datadog.PtrFloat64(float64(totalPkts*100) / float64(uptime)),
-									},
-								},
-								Tags: tags,
-							})
-						}
+							},
+							Tags: tags,
+						})
 					}
 				}
 			}
