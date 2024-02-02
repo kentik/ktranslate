@@ -216,12 +216,13 @@ type SnmpDeviceConfig struct {
 }
 
 type SnmpTrapConfig struct {
-	Listen    string        `yaml:"listen"`
-	Community string        `yaml:"community"`
-	Version   string        `yaml:"version"`
-	Transport string        `yaml:"transport"`
-	V3        *V3SNMPConfig `yaml:"v3_config"`
-	TrapOnly  bool          `yaml:"trap_only"`
+	Listen        string        `yaml:"listen"`
+	Community     string        `yaml:"community"`
+	Version       string        `yaml:"version"`
+	Transport     string        `yaml:"transport"`
+	V3            *V3SNMPConfig `yaml:"v3_config"`
+	TrapOnly      bool          `yaml:"trap_only"`
+	DropUndefined bool          `yaml:"drop_undefined"`
 }
 
 type KentikMatch struct {
