@@ -3,6 +3,7 @@ package prom
 import (
 	"flag"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -20,6 +21,7 @@ import (
 var (
 	doCollectorStats bool
 	seenNeeded       int
+	invalidTag       = regexp.MustCompile(`^\d+$`)
 )
 
 func init() {
@@ -40,6 +42,9 @@ func (d *PromData) AddTagLabels(vecTags tagVec) {
 	}
 	next := len(vecTags[d.Name])
 	for k, _ := range d.Tags {
+		if invalidTag.MatchString(k) {
+			continue
+		}
 		if _, ok := vecTags[d.Name][k]; !ok {
 			vecTags[d.Name][k] = next
 			next++
