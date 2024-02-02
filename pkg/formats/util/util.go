@@ -492,9 +492,9 @@ func GetSpeed(info map[string]interface{}) (int64, bool) {
 	if speed, ok := info["Speed"]; ok {
 		if ispeed, ok := speed.(int32); ok {
 			if _, ok := info["SpeedFromMIB2"]; ok {
-				return int64(ispeed), true // Already in bytes
+				return int64(ispeed), true // Already in bits/sec
 			} else {
-				return int64(ispeed * 1000000), true // Go from MB -> Bytes.
+				return int64(ispeed * 1000000), true // Go from mbits/sec -> bits/sec.
 			}
 		}
 	}
