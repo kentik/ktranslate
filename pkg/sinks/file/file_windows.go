@@ -6,7 +6,6 @@ package file
 import (
 	"context"
 	"os"
-	"os/signal"
 	"time"
 )
 

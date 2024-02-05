@@ -7,7 +7,6 @@ import (
 	"context"
 	"os"
 	"os/signal"
-	"syscall"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
