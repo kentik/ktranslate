@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/signal"
 	"strings"
 	"time"
 
@@ -147,6 +146,7 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
+<<<<<<< HEAD
 func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, confMgr config.ConfigManager, logchan chan string) {
 	ctxSnmp, cancel := context.WithCancel(ctx)
 	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg, logchan)
@@ -177,6 +177,9 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 }
 
 func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, logchan chan string) error {
+=======
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) error {
+>>>>>>> d44d2a0 (Masking out file operations also)
 	// Parse again to make sure nothing's changed.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
