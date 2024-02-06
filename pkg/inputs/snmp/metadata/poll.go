@@ -275,7 +275,7 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		dst.CustomStr["if."+intr+".Address"] = id.Address
 		dst.CustomStr["if."+intr+".Netmask"] = id.Netmask
 		dst.CustomStr["if."+intr+".Index"] = id.Index
-		dst.CustomInt["if."+intr+".Speed"] = int32(id.HSpeed) // First try setting from hspeed.
+		dst.CustomInt["if."+intr+".Speed"] = int32(id.Speed)
 		dst.CustomStr["if."+intr+".Description"] = id.Description
 		dst.CustomStr["if."+intr+".Alias"] = id.Alias
 		dst.CustomStr["if."+intr+".Type"] = id.Type
@@ -288,12 +288,6 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 					dst.CustomMetrics["if_"+k] = kt.MetricInfo{Oid: mib.Oid, Mib: mib.Mib, Table: mib.Table, Tables: mib.OtherTables}
 				}
 			}
-		}
-
-		// If there's no data on an interface from HSpeed, see if Speed is set.
-		if dst.CustomInt["if."+intr+".Speed"] == 0 && id.Speed > 0 {
-			dst.CustomInt["if."+intr+".Speed"] = int32(id.Speed)
-			dst.CustomStr["if."+intr+".SpeedFromMIB2"] = "true"
 		}
 	}
 
