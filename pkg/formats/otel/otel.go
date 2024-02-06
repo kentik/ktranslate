@@ -5,6 +5,7 @@ import (
 	"flag"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -27,8 +28,9 @@ type OtelFormat struct {
 	exp          sdkmetric.Exporter
 	invalids     map[string]bool
 	config       *ktranslate.OtelFormatConfig
-	vecs         map[string]metric.Float64Histogram
+	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
+	queues       map[string]chan OtelData
 }
 
 var (
@@ -46,8 +48,9 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		lastMetadata: map[string]*kt.LastMetadata{},
 		invalids:     map[string]bool{},
 		ctx:          context.Background(),
-		vecs:         map[string]metric.Float64Histogram{},
+		vecs:         map[string]metric.Float64ObservableGauge{},
 		config:       cfg,
+		queues:       map[string]chan OtelData{},
 	}
 
 	var exp sdkmetric.Exporter
@@ -65,7 +68,8 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		exp = metricExporter
 	}
 
-	meterProvider := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exp)))
+	meterProvider := sdkmetric.NewMeterProvider(
+		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exp, sdkmetric.WithInterval(30*time.Second))))
 	otel.SetMeterProvider(meterProvider)
 	jf.exp = exp
 
@@ -90,14 +94,26 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
-			cv, err := otelm.Float64Histogram(m.Name)
+			cv, err := otelm.Float64ObservableGauge(m.Name)
 			if err != nil {
 				return nil, err
 			}
 			f.vecs[m.Name] = cv
+			f.queues[m.Name] = make(chan OtelData, 10000)
 			f.Infof("Adding %s", m.Name)
+			_, err = otelm.RegisterCallback(func(_ context.Context, o metric.Observer) error {
+				num := len(f.queues[m.Name])
+				for i := 0; i < num; i++ {
+					m := <-f.queues[m.Name]
+					o.ObserveFloat64(cv, m.Value, metric.WithAttributeSet(m.GetTagValues()))
+				}
+				return nil
+			}, f.vecs[m.Name])
+			if err != nil {
+				return nil, err
+			}
 		}
-		f.vecs[m.Name].Record(f.ctx, m.Value, metric.WithAttributeSet(m.GetTagValues()))
+		f.queues[m.Name] <- m
 	}
 
 	return nil, nil
