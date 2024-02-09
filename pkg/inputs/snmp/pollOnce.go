@@ -14,7 +14,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
-func pollOnce(ctx context.Context, tdevice string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, log logger.ContextL) error {
+func pollOnce(ctx context.Context, tdevice string, conf *kt.SnmpConfig, connectTimeout time.Duration, retries int, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, log logger.ContextL, logchan chan string) error {
 	device := conf.Devices[tdevice]
 	if device == nil {
 		for _, dev := range conf.Devices {
@@ -50,7 +50,7 @@ func pollOnce(ctx context.Context, tdevice string, conf *kt.SnmpConfig, connectT
 
 	nm := kt.NewSnmpDeviceMetric(registry, device.DeviceName)
 	metadataPoller := metadata.NewPoller(metadataServer, conf.Global, device, jchfChan, nm, profile, log)
-	metricPoller := snmp_metrics.NewPoller(metricsServer, conf.Global, device, jchfChan, nm, profile, log)
+	metricPoller := snmp_metrics.NewPoller(metricsServer, conf.Global, device, jchfChan, nm, profile, log, logchan)
 
 	metadataPoller.StartLoop(ctx)
 	// Give a little time to get this done.

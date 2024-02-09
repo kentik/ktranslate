@@ -35,6 +35,7 @@ type MerakiClient struct {
 	timeout  time.Duration
 	cache    *clientCache
 	maxRetry int
+	logchan  chan string
 }
 
 type orgDesc struct {
@@ -60,6 +61,7 @@ const (
 	DEFAULT_TIMEOUT_RETRY = 2
 )
 
+<<<<<<< HEAD
 var (
 	DeviceStatusEnum = map[string]int64{
 		"online":   1,
@@ -70,6 +72,9 @@ var (
 )
 
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
+=======
+func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL, logchan chan string) (*MerakiClient, error) {
+>>>>>>> 8f8f622 (wip: Adding in meraki logs for events)
 	c := MerakiClient{
 		log:      log,
 		jchfChan: jchfChan,
@@ -81,6 +86,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		timeout:  30 * time.Second,
 		cache:    newClientCache(log),
 		maxRetry: conf.Ext.MerakiConfig.MaxAPIRetry,
+		logchan:  logchan,
 	}
 
 	host := conf.Ext.MerakiConfig.Host
@@ -333,6 +339,59 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 			return
 		}
 	}
+}
+
+func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) ([]*kt.JCHF, error) {
+	startTime := time.Now().Add(-1 * dur)
+	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
+
+	res := []*kt.JCHF{}
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
+			params.SetNetworkID(network.ID)
+			params.SetT0(&startTimeStr)
+
+			prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
+			if err != nil {
+				return nil, err
+			}
+
+			_ = prod.GetPayload()
+		}
+
+	}
+
+	return res, nil
+}
+
+func (c *MerakiClient) getNetworkEvents(dur time.Duration) ([]*kt.JCHF, error) {
+	res := []*kt.JCHF{}
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
+				params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
+				params.SetNetworkID(network.ID)
+				lpt := pt
+				params.SetProductType(&lpt)
+
+				prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
+				if err != nil {
+					return nil, err
+				}
+
+				results := prod.GetPayload()
+				b, err := json.Marshal(results)
+				if err != nil {
+					return nil, err
+				}
+				c.logchan <- string(b)
+			}
+		}
+
+	}
+
+	return res, nil
 }
 
 type orgLog struct {
