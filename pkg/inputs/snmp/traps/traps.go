@@ -117,7 +117,7 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 		},
 	})
 	st.tl = tl
-	log.Infof("Trap listener setup with version %s on %s.", conf.Trap.Version, conf.Trap.Listen)
+	log.Infof("Trap listener setup with version %s on %s. DropUndefined: %v", conf.Trap.Version, conf.Trap.Listen, conf.Trap.DropUndefined)
 
 	for _, device := range conf.Devices {
 		st.deviceMap[device.DeviceIP] = device
@@ -197,6 +197,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	}
 
 	// What trap is this from?
+	found := false
 	var trap *mibs.Trap
 	for _, v := range packet.Variables {
 		if v.Name == snmpTrapOID || v.Name == snmpTrapOID_0 {
@@ -210,6 +211,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 					if idx != "" {
 						dst.CustomStr["Index"] = idx
 					}
+					found = true
 				}
 			}
 		}
@@ -235,6 +237,9 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		for n, value := range vars {
 			dst.CustomStr[n] = value
 		}
+
+		// We at least are adding something here.
+		found = true
 
 		switch v.Type {
 		case gosnmp.OctetString:
@@ -275,5 +280,12 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		}
 	}
 
-	s.jchfChan <- []*kt.JCHF{dst}
+	// If dropping, only send on if found.
+	if s.conf.Trap.DropUndefined || trap.DropUndefinedVars() {
+		if found {
+			s.jchfChan <- []*kt.JCHF{dst}
+		}
+	} else { // Else, keep to current behavor.
+		s.jchfChan <- []*kt.JCHF{dst}
+	}
 }
