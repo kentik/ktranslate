@@ -43,6 +43,7 @@ func newStatsRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.RollupC
 	r := &StatsRollup{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "sumRollup"}, log),
 		state:    map[string][]float64{},
+		config:   cfg,
 	}
 
 	r.keyJoin = cfg.JoinKey
