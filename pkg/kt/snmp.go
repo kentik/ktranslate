@@ -528,6 +528,11 @@ func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 type V3SNMP V3SNMPConfig // Need a 2nd type alias to avoid stack overflow on parsing.
 
+func (a *V3SNMPConfig) String() string {
+	return fmt.Sprintf("UserName: %s, AuthenticationProtocol: %s, AuthenticationPassphrase: %s PrivacyProtocol: %s PrivacyPassphrase: %s ContextEngineID: %s ContextName: %s",
+		a.UserName, a.AuthenticationProtocol, a.AuthenticationPassphrase, a.PrivacyProtocol, a.PrivacyPassphrase, a.ContextEngineID, a.ContextName)
+}
+
 // Make sure that things serialize back to how they were.
 func (a *V3SNMPConfig) MarshalYAML() (interface{}, error) {
 	if a.origStr != "" {

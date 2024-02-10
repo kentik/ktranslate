@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	gSMClient *secretmanager.Client
+	gSMClient  *secretmanager.Client
+	gcpProject = ""
 )
 
 const (
@@ -34,7 +35,17 @@ func loadViaGCPSecrets(key string) string {
 		gSMClient = client
 	}
 
+	// We need this project explicitly set for us also.
+	if gcpProject == "" {
+		gcpProject = LookupEnvString("GOOGLE_CLOUD_PROJECT", "")
+		if gcpProject == "" {
+			log.Printf("Missing env var GOOGLE_CLOUD_PROJECT")
+			return fmt.Sprintf("Missing env var GOOGLE_CLOUD_PROJECT")
+		}
+	}
+
 	// Build the request.
+	key = fmt.Sprintf("projects/%s/secrets/%s/versions/latest", gcpProject, key)
 	req := &secretmanagerpb.AccessSecretVersionRequest{
 		Name: key,
 	}
