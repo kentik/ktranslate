@@ -276,11 +276,9 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr, doNetworkApplianceSecurityEvents, doNetworkEvents)
 
 	// This gets all network events, I can't find a way to not start at the beginning of each week.
-	// Pulling it out here so its only on startup for now.
+	// Pulling it out here so its only on startup for now. Will run weekly, very slowly over the orgs and networks selected.
 	if doNetworkEvents {
-		if err := c.getNetworkEvents(dur); err != nil {
-			c.log.Infof("Meraki cannot get network events: %v", err)
-		}
+		go c.getNetworkEventsWrapper(ctx)
 	}
 
 	for {
@@ -404,10 +402,41 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 	return nil
 }
 
-func (c *MerakiClient) getNetworkEvents(dur time.Duration) error {
+func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
+	c.log.Infof("Network Events Check Starting")
+	logCheck := time.NewTicker(1 * time.Hour)
 
-	var getNetworkEvents func(nextToken string, network networkDesc, prodType string) error
-	getNetworkEvents = func(nextToken string, network networkDesc, prodType string) error {
+	nextPageEndAt := "" // Start from the very beginning.
+
+	// Check once on startup.
+	err, np := c.getNetworkEvents(nextPageEndAt)
+	if err != nil {
+		c.log.Errorf("Cannot get network events: %v", err)
+	} else {
+		nextPageEndAt = np
+	}
+
+	for {
+		select {
+		case _ = <-logCheck.C:
+			err, np := c.getNetworkEvents(nextPageEndAt)
+			if err != nil {
+				c.log.Errorf("Cannot get network events: %v", err)
+			} else {
+				nextPageEndAt = np
+			}
+
+		case <-ctx.Done():
+			c.log.Infof("Network Events Check Done")
+			logCheck.Stop()
+			return
+		}
+	}
+}
+
+func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
+	var getNetworkEvents func(nextToken string, network networkDesc, prodType string) (error, string)
+	getNetworkEvents = func(nextToken string, network networkDesc, prodType string) (error, string) {
 		params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
 		params.SetNetworkID(network.ID)
 		if prodType != "" {
@@ -420,45 +449,55 @@ func (c *MerakiClient) getNetworkEvents(dur time.Duration) error {
 		prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
-				return nil
+				return nil, nextToken
 			}
-			return err
+			return err, nextToken
 		}
 
 		results := prod.GetPayload()
-		b, err := json.Marshal(results)
-		if err != nil {
-			return err
+		for _, event := range results.Events {
+			b, err := json.Marshal(event)
+			if err != nil {
+				return err, nextToken
+			}
+			c.logchan <- string(b)
 		}
-		c.logchan <- string(b)
 
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
 			return getNetworkEvents(nextLink, network, prodType)
 		} else {
-			return nil
+			return nil, results.PageEndAt
 		}
 	}
 
+	nextPageEndAt := lastPageEndAt
+	c.log.Infof("Starting network events download from %s.", lastPageEndAt)
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
 			if len(c.conf.Ext.MerakiConfig.ProductTypes) > 0 {
 				for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
-					err := getNetworkEvents("", network, pt)
+					err, lp := getNetworkEvents(lastPageEndAt, network, pt)
 					if err != nil {
-						return err
+						return err, nextPageEndAt
 					}
+					nextPageEndAt = lp
 				}
 			} else {
-				err := getNetworkEvents("", network, "")
+				err, lp := getNetworkEvents(lastPageEndAt, network, "")
 				if err != nil {
-					return err
+					return err, nextPageEndAt
 				}
+				nextPageEndAt = lp
 			}
+
+			// after each network, sleep for a while so we don't hit rate limiting.
+			time.Sleep(30 * time.Second)
 		}
 	}
 
-	return nil
+	c.log.Infof("Done with network events download to %s", nextPageEndAt)
+	return nil, nextPageEndAt
 }
 
 type orgLog struct {
