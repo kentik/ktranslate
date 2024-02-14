@@ -267,11 +267,21 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
 	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
 	doNetworkAttr := c.conf.Ext.MerakiConfig.Prefs["show_network_attr"]
-	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus && !doNetworkAttr {
+	doNetworkApplianceSecurityEvents := c.conf.Ext.MerakiConfig.Prefs["log_network_security_events"]
+	doNetworkEvents := c.conf.Ext.MerakiConfig.Prefs["log_network_events"]
+	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus && !doNetworkAttr && !doNetworkApplianceSecurityEvents && !doNetworkEvents {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v, network_attr=%v",
-		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr)
+	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v, network_attr=%v, network_security_events=%v, network_events=%v",
+		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr, doNetworkApplianceSecurityEvents, doNetworkEvents)
+
+	// This gets all network events, I can't find a way to not start at the beginning of each week.
+	// Pulling it out here so its only on startup for now.
+	if doNetworkEvents {
+		if err := c.getNetworkEvents(dur); err != nil {
+			c.log.Infof("Meraki cannot get network events: %v", err)
+		}
+	}
 
 	for {
 		select {
@@ -334,6 +344,12 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 				}
 			}
 
+			if doNetworkApplianceSecurityEvents {
+				if err := c.getNetworkApplianceSecurityEvents(dur); err != nil {
+					c.log.Infof("Meraki cannot get network security events: %v", err)
+				}
+			}
+
 		case <-ctx.Done():
 			c.log.Infof("Meraki Poll Done")
 			return
@@ -341,57 +357,108 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	}
 }
 
-func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) ([]*kt.JCHF, error) {
+func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) error {
 	startTime := time.Now().Add(-1 * dur)
 	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
 
-	res := []*kt.JCHF{}
-	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
-			params.SetNetworkID(network.ID)
-			params.SetT0(&startTimeStr)
-
-			prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
-			if err != nil {
-				return nil, err
-			}
-
-			_ = prod.GetPayload()
+	var getNetworkEvents func(nextToken string, network networkDesc) error
+	getNetworkEvents = func(nextToken string, network networkDesc) error {
+		params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		params.SetT0(&startTimeStr)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
 		}
 
+		prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
+				return nil
+			}
+			return err
+		}
+
+		results := prod.GetPayload()
+		b, err := json.Marshal(results)
+		if err != nil {
+			return err
+		}
+		c.logchan <- string(b)
+
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkEvents(nextLink, network)
+		} else {
+			return nil
+		}
 	}
 
-	return res, nil
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			err := getNetworkEvents("", network)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
-func (c *MerakiClient) getNetworkEvents(dur time.Duration) ([]*kt.JCHF, error) {
-	res := []*kt.JCHF{}
-	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
-				params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
-				params.SetNetworkID(network.ID)
-				lpt := pt
-				params.SetProductType(&lpt)
+func (c *MerakiClient) getNetworkEvents(dur time.Duration) error {
 
-				prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
-				if err != nil {
-					return nil, err
-				}
-
-				results := prod.GetPayload()
-				b, err := json.Marshal(results)
-				if err != nil {
-					return nil, err
-				}
-				c.logchan <- string(b)
-			}
+	var getNetworkEvents func(nextToken string, network networkDesc, prodType string) error
+	getNetworkEvents = func(nextToken string, network networkDesc, prodType string) error {
+		params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		if prodType != "" {
+			params.SetProductType(&prodType)
+		}
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
 		}
 
+		prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
+				return nil
+			}
+			return err
+		}
+
+		results := prod.GetPayload()
+		b, err := json.Marshal(results)
+		if err != nil {
+			return err
+		}
+		c.logchan <- string(b)
+
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkEvents(nextLink, network, prodType)
+		} else {
+			return nil
+		}
 	}
 
-	return res, nil
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			if len(c.conf.Ext.MerakiConfig.ProductTypes) > 0 {
+				for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
+					err := getNetworkEvents("", network, pt)
+					if err != nil {
+						return err
+					}
+				}
+			} else {
+				err := getNetworkEvents("", network, "")
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 type orgLog struct {
