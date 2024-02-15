@@ -132,7 +132,7 @@ func GetRollups(log logger.Underlying, cfg *ktranslate.RollupConfig) ([]Roller, 
 	for _, rf := range rollups {
 		switch rf.Method {
 		case Unique:
-			ur, err := newUniqueRollup(log, rf)
+			ur, err := newUniqueRollup(log, rf, cfg)
 			if err != nil {
 				return nil, err
 			}

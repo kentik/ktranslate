@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
@@ -25,6 +26,7 @@ type UniqueRollup struct {
 	rollupBase
 	kvs       chan *uset
 	exportKvs chan chan []Rollup
+	config    *ktranslate.RollupConfig
 }
 
 type uset struct {
@@ -33,12 +35,16 @@ type uset struct {
 	prov    map[string]kt.Provider
 }
 
-func newUniqueRollup(log logger.Underlying, rd RollupDef) (*UniqueRollup, error) {
+func newUniqueRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.RollupConfig) (*UniqueRollup, error) {
 	r := &UniqueRollup{
 		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "uniqueRollup"}, log),
 		kvs:       make(chan *uset, CHAN_SLACK),
 		exportKvs: make(chan chan []Rollup),
+		config:    cfg,
 	}
+
+	r.keyJoin = cfg.JoinKey
+	r.topK = cfg.TopK
 
 	err := r.init(rd)
 	if err != nil {
@@ -171,13 +177,17 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 func (r *UniqueRollup) getTopkUniques(keys []Rollup, totalc uint64, ot time.Time, prov kt.Provider, rc chan []Rollup) {
 	top := make([]Rollup, 0, len(keys))
 	seen := map[string]int{}
+	seenPrimay := map[string]bool{}
 
 	for _, roll := range keys {
 		pts := strings.Split(roll.Dimension, r.keyJoin)
-		if seen[pts[r.primaryDim]] < r.topK { // If the primary key for this rollup has less than the topk set, add it to the list.
-			top = append(top, roll)
+		if seen[pts[r.primaryDim]] < r.config.TopK { // If the primary key for this rollup has less than the topk set, add it to the list.
+			if len(seenPrimay) <= r.config.TopK { // And, if the number of primary keys is also less than topk, add.
+				top = append(top, roll)
+			}
 		}
 		seen[pts[r.primaryDim]]++
+		seenPrimay[pts[r.primaryDim]] = true
 	}
 
 	rc <- top
