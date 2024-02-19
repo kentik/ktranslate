@@ -359,8 +359,8 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 	startTime := time.Now().Add(-1 * dur)
 	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
 
-	var getNetworkEvents func(nextToken string, network networkDesc) error
-	getNetworkEvents = func(nextToken string, network networkDesc) error {
+	var getNetworkEvents func(nextToken string, network networkDesc, timeouts int) error
+	getNetworkEvents = func(nextToken string, network networkDesc, timeouts int) error {
 		params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
 		params.SetNetworkID(network.ID)
 		params.SetT0(&startTimeStr)
@@ -370,8 +370,12 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 
 		prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
 		if err != nil {
-			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
-				return nil
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Security Events: %s 429, sleeping %v", network.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkEvents(nextToken, network, timeouts)
 			}
 			return err
 		}
@@ -381,11 +385,13 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 		if err != nil {
 			return err
 		}
-		c.logchan <- string(b)
+		if string(b) != "[]" { // Don't send on the empty set.
+			c.logchan <- string(b)
+		}
 
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
-			return getNetworkEvents(nextLink, network)
+			return getNetworkEvents(nextLink, network, timeouts)
 		} else {
 			return nil
 		}
@@ -393,8 +399,11 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			err := getNetworkEvents("", network)
+			err := getNetworkEvents("", network, 0)
 			if err != nil {
+				if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
+					return nil
+				}
 				return err
 			}
 		}
@@ -435,8 +444,8 @@ func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
 }
 
 func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
-	var getNetworkEvents func(nextToken string, network networkDesc, prodType string) (error, string)
-	getNetworkEvents = func(nextToken string, network networkDesc, prodType string) (error, string) {
+	var getNetworkEvents func(nextToken string, network networkDesc, prodType string, timeouts int) (error, string)
+	getNetworkEvents = func(nextToken string, network networkDesc, prodType string, timeouts int) (error, string) {
 		params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
 		params.SetNetworkID(network.ID)
 		if prodType != "" {
@@ -448,6 +457,13 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 
 		prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
 		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Events: %s 429, sleeping %v", network.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkEvents(nextToken, network, prodType, timeouts)
+			}
 			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
 				return nil, nextToken
 			}
@@ -465,7 +481,7 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
-			return getNetworkEvents(nextLink, network, prodType)
+			return getNetworkEvents(nextLink, network, prodType, timeouts)
 		} else {
 			return nil, results.PageEndAt
 		}
@@ -477,14 +493,14 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 		for _, network := range org.networks {
 			if len(c.conf.Ext.MerakiConfig.ProductTypes) > 0 {
 				for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
-					err, lp := getNetworkEvents(lastPageEndAt, network, pt)
+					err, lp := getNetworkEvents(lastPageEndAt, network, pt, 0)
 					if err != nil {
 						return err, nextPageEndAt
 					}
 					nextPageEndAt = lp
 				}
 			} else {
-				err, lp := getNetworkEvents(lastPageEndAt, network, "")
+				err, lp := getNetworkEvents(lastPageEndAt, network, "", 0)
 				if err != nil {
 					return err, nextPageEndAt
 				}
