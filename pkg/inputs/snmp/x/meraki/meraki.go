@@ -358,6 +358,7 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) error {
 	startTime := time.Now().Add(-1 * dur)
 	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
+	c.log.Infof("Starting network security events")
 
 	var getNetworkEvents func(nextToken string, network networkDesc, timeouts int) error
 	getNetworkEvents = func(nextToken string, network networkDesc, timeouts int) error {
@@ -381,12 +382,17 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 		}
 
 		results := prod.GetPayload()
-		b, err := json.Marshal(results)
-		if err != nil {
-			return err
-		}
-		if string(b) != "[]" { // Don't send on the empty set.
-			c.logchan <- string(b)
+		for _, result := range results {
+			if emap, ok := result.(map[string]interface{}); ok {
+				emap["network"] = network.Name
+				emap["orgName"] = network.org.Name
+				emap["orgId"] = network.org.ID
+				b, err := json.Marshal(emap)
+				if err != nil {
+					return err
+				}
+				c.logchan <- string(b)
+			}
 		}
 
 		nextLink := getNextLink(prod.Link)
@@ -402,12 +408,14 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 			err := getNetworkEvents("", network, 0)
 			if err != nil {
 				if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
-					return nil
+					continue
 				}
 				return err
 			}
 		}
 	}
+
+	c.log.Infof("Done with network security events")
 	return nil
 }
 
@@ -415,7 +423,7 @@ func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
 	c.log.Infof("Network Events Check Starting")
 	logCheck := time.NewTicker(1 * time.Hour)
 
-	nextPageEndAt := "" // Start from the very beginning.
+	nextPageEndAt := "" // Start from the very beginning. Looks like 1 week ago.
 
 	// Check once on startup.
 	err, np := c.getNetworkEvents(nextPageEndAt)
@@ -441,6 +449,13 @@ func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
 			return
 		}
 	}
+}
+
+type eventWrapper struct {
+	networks.GetNetworkEventsOKBodyEventsItems0
+	Network string `json:"network"`
+	OrgName string `json:"orgName"`
+	OrgId   string `json:"orgId"`
 }
 
 func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
@@ -472,7 +487,8 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 
 		results := prod.GetPayload()
 		for _, event := range results.Events {
-			b, err := json.Marshal(event)
+			ew := eventWrapper{*event, network.Name, network.org.Name, network.org.ID}
+			b, err := json.Marshal(ew)
 			if err != nil {
 				return err, nextToken
 			}
