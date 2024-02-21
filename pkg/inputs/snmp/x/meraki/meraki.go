@@ -387,6 +387,7 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 				emap["network"] = network.Name
 				emap["orgName"] = network.org.Name
 				emap["orgId"] = network.org.ID
+				emap["eventType"] = kt.KENTIK_EVENT_EXT
 				b, err := json.Marshal(emap)
 				if err != nil {
 					return err
@@ -453,9 +454,10 @@ func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
 
 type eventWrapper struct {
 	networks.GetNetworkEventsOKBodyEventsItems0
-	Network string `json:"network"`
-	OrgName string `json:"orgName"`
-	OrgId   string `json:"orgId"`
+	Network   string `json:"network"`
+	OrgName   string `json:"orgName"`
+	OrgId     string `json:"orgId"`
+	EventType string `json:"eventType"`
 }
 
 func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
@@ -487,7 +489,7 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 
 		results := prod.GetPayload()
 		for _, event := range results.Events {
-			ew := eventWrapper{*event, network.Name, network.org.Name, network.org.ID}
+			ew := eventWrapper{*event, network.Name, network.org.Name, network.org.ID, kt.KENTIK_EVENT_EXT}
 			b, err := json.Marshal(ew)
 			if err != nil {
 				return err, nextToken
