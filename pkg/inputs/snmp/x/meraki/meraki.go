@@ -60,6 +60,15 @@ const (
 	DEFAULT_TIMEOUT_RETRY = 2
 )
 
+var (
+	DeviceStatusEnum = map[string]int64{
+		"online":   1,
+		"alerting": 2,
+		"offline":  3,
+		"dormant":  0,
+	}
+)
+
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
 	c := MerakiClient{
 		log:      log,
@@ -1267,11 +1276,7 @@ func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 
 		// Basic status here.
 		dst := makeChf(vpn)
-		status := int64(0)
-		if vpn.DeviceStatus == "online" { // Online is 1, others are 0.
-			status = 1
-		}
-		dst.CustomBigInt["Status"] = status
+		dst.CustomBigInt["Status"] = DeviceStatusEnum[vpn.DeviceStatus]
 		dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.vpn_status", Type: "meraki.vpn_status"}
 
 		res = append(res, dst)
@@ -1553,11 +1558,7 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 
 		// Basic status here.
 		dst := makeChf(wrap)
-		status := int64(0)
-		if wrap.device.Status == "online" { // Online is 1, others are 0.
-			status = 1
-		}
-		dst.CustomBigInt["Status"] = status
+		dst.CustomBigInt["Status"] = DeviceStatusEnum[wrap.device.Status]
 		dst.CustomMetrics["Status"] = kt.MetricInfo{Oid: "meraki", Mib: "meraki", Profile: "meraki.device_status", Type: "meraki.device_status"}
 
 		res = append(res, dst)
