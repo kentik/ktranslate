@@ -65,7 +65,7 @@ func (s *NetSink) Init(ctx context.Context, format formats.Format, compression k
 		case "unix":
 			serverAddr, err = net.ResolveUnixAddr(s.config.Protocol, endpoint)
 		default:
-			err = fmt.Errorf("Invalid protocol: %s. Supported: udp|tcp|unix", endpoint)
+			err = fmt.Errorf("Invalid protocol: %s. Supported: udp|tcp|unix", s.config.Protocol)
 
 		}
 		if err != nil {
