@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
@@ -19,13 +20,13 @@ var (
 )
 
 func init() {
-	flag.StringVar(&server, "net_server", "", "Write flows seen to this address (host and port)")
+	flag.StringVar(&server, "net_server", "", "Write flows seen to this address (host and port). Comma seperate to send to multiple servers.")
 	flag.StringVar(&protocol, "net_protocol", "udp", "Use this protocol for writing data (udp|tcp|unix)")
 }
 
 type NetSink struct {
 	logger.ContextL
-	conn     net.Conn
+	conns    []net.Conn
 	registry go_metrics.Registry
 	metrics  *NetMetric
 	config   *ktranslate.NetSinkConfig
@@ -53,47 +54,56 @@ func (s *NetSink) Init(ctx context.Context, format formats.Format, compression k
 		return fmt.Errorf("Net requires -net_server or NetSink.Endpoint to be set")
 	}
 
-	var serverAddr net.Addr
-	var err error
-	switch s.config.Protocol {
-	case "udp":
-		serverAddr, err = net.ResolveUDPAddr(s.config.Protocol, s.config.Endpoint)
-	case "tcp":
-		serverAddr, err = net.ResolveTCPAddr(s.config.Protocol, s.config.Endpoint)
-	case "unix":
-		serverAddr, err = net.ResolveUnixAddr(s.config.Protocol, s.config.Endpoint)
-	default:
-		err = fmt.Errorf("Invalid protocol: %s. Supported: udp|tcp|unix", s.config.Protocol)
+	for _, endpoint := range strings.Split(s.config.Endpoint, ",") {
+		var serverAddr net.Addr
+		var err error
+		switch s.config.Protocol {
+		case "udp":
+			serverAddr, err = net.ResolveUDPAddr(s.config.Protocol, endpoint)
+		case "tcp":
+			serverAddr, err = net.ResolveTCPAddr(s.config.Protocol, endpoint)
+		case "unix":
+			serverAddr, err = net.ResolveUnixAddr(s.config.Protocol, endpoint)
+		default:
+			err = fmt.Errorf("Invalid protocol: %s. Supported: udp|tcp|unix", endpoint)
 
-	}
-	if err != nil {
-		return err
-	}
+		}
+		if err != nil {
+			return err
+		}
 
-	conn, err := (&net.Dialer{}).DialContext(ctx, s.config.Protocol, serverAddr.String())
-	if err != nil {
-		return err
-	}
+		conn, err := (&net.Dialer{}).DialContext(ctx, s.config.Protocol, serverAddr.String())
+		if err != nil {
+			return err
+		}
 
-	s.conn = conn
-	s.Infof("Network: sending to %s:%s", s.config.Protocol, s.config.Endpoint)
+		s.conns = append(s.conns, conn)
+		s.Infof("Network: sending to %s:%s", s.config.Protocol, endpoint)
+	}
 
 	return nil
 }
 
 func (s *NetSink) Send(ctx context.Context, payload *kt.Output) {
-	_, err := s.conn.Write(payload.Body)
-	if err != nil {
-		s.Errorf("There was an error when writing: %v.", err)
-		s.metrics.DeliveryErr.Mark(1)
-	} else {
-		s.metrics.DeliveryWin.Mark(1)
+	// Don't block on any long sends here.
+	go s.sendNet(ctx, payload)
+}
+
+func (s *NetSink) sendNet(ctx context.Context, payload *kt.Output) {
+	for _, conn := range s.conns {
+		_, err := conn.Write(payload.Body)
+		if err != nil {
+			s.Errorf("There was an error when writing: %v.", err)
+			s.metrics.DeliveryErr.Mark(1)
+		} else {
+			s.metrics.DeliveryWin.Mark(1)
+		}
 	}
 }
 
 func (s *NetSink) Close() {
-	if s.conn != nil {
-		s.conn.Close()
+	for _, conn := range s.conns {
+		conn.Close()
 	}
 }
 
