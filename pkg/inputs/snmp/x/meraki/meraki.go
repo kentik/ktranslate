@@ -985,12 +985,25 @@ var uplinkStatus = map[string]int64{
 }
 
 func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JCHF, error) {
+
+	// See if we have a cache of device info. If so, use this for getting device name.
+	deviceSerialToName := map[string]string{}
+	if cc, ok := c.cache.getDeviceInfo(); ok {
+		for _, device := range cc { // Since there's a valid cache of device info, use it here.
+			deviceSerialToName[device.Serial] = device.Name
+		}
+	}
+
 	res := make([]*kt.JCHF, 0)
 	for _, device := range uplinkMap {
 		for _, uplink := range device.Uplinks {
 			dst := kt.NewJCHF()
 			dst.SrcAddr = uplink.IP
-			dst.DeviceName = strings.Join([]string{device.network.Name, uplink.Interface}, ".")
+			if dn, ok := deviceSerialToName[device.Serial]; ok {
+				dst.DeviceName = dn
+			} else { // Old way, if not in cache.
+				dst.DeviceName = strings.Join([]string{device.network.Name, uplink.Interface}, ".")
+			}
 
 			dst.CustomStr = map[string]string{
 				ControllerKey:       c.conf.DeviceName,
@@ -1007,6 +1020,7 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 				"signal_rsrq":       uplink.SignalStat.Rsrq,
 				"org_name":          device.network.org.Name,
 				"org_id":            device.network.org.ID,
+				"uplink_name":       strings.Join([]string{device.network.Name, uplink.Interface}, "."),
 			}
 			dst.CustomInt = map[string]int32{}
 			dst.CustomBigInt = map[string]int64{}
@@ -1226,10 +1240,22 @@ func (c *MerakiClient) getVpnStatus(dur time.Duration) ([]*kt.JCHF, error) {
 func (c *MerakiClient) parseVpnStatus(vpns []*vpnStatus) ([]*kt.JCHF, error) {
 	res := make([]*kt.JCHF, 0)
 
+	// See if we have a cache of device info. If so, use this for getting device name.
+	deviceSerialToName := map[string]string{}
+	if cc, ok := c.cache.getDeviceInfo(); ok {
+		for _, device := range cc { // Since there's a valid cache of device info, use it here.
+			deviceSerialToName[device.Serial] = device.Name
+		}
+	}
+
 	makeChf := func(vpn *vpnStatus) *kt.JCHF {
 		dst := kt.NewJCHF()
 		//dst.SrcAddr = uplink.PublicIP
-		dst.DeviceName = vpn.DeviceSerial
+		if dn, ok := deviceSerialToName[vpn.DeviceSerial]; ok {
+			dst.DeviceName = dn
+		} else { // Old way, if not in cache.
+			dst.DeviceName = vpn.DeviceSerial
+		}
 
 		dst.CustomStr = map[string]string{
 			ControllerKey: c.conf.DeviceName,
