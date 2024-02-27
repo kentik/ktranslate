@@ -405,6 +405,9 @@ func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 				attr[k] = strconv.Itoa(vi)
 			}
 		}
+		if k == "har_file" { // syngest doesn't like har files, they are too large.
+			delete(attr, k)
+		}
 	}
 
 	for m, name := range metrics {
