@@ -197,7 +197,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	}
 
 	// What trap is this from?
-	found := false
+	found := false // Set to true ONLY if the TrapName is set.
 	var trap *mibs.Trap
 	for _, v := range packet.Variables {
 		if v.Name == snmpTrapOID || v.Name == snmpTrapOID_0 {
@@ -237,9 +237,6 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		for n, value := range vars {
 			dst.CustomStr[n] = value
 		}
-
-		// We at least are adding something here.
-		found = true
 
 		switch v.Type {
 		case gosnmp.OctetString:
