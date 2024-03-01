@@ -216,6 +216,12 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		kc.objmgr = s3mgr
 	}
 
+	// If the default provider env var is set, pass this into the system.
+	dp := kt.LookupEnvString("KENTIK_DEFAULT_PROVIDER_TYPE", "")
+	if dp != "" {
+		defaultProvider = kt.Provider(dp)
+	}
+
 	return kc, nil
 }
 

@@ -18,6 +18,8 @@ import (
 var (
 	DEFAULT_GEO        = []byte("--")
 	DEFAULT_GEO_PACKED = patricia.PackGeo(DEFAULT_GEO)
+
+	defaultProvider = kt.ProviderFlowDevice
 )
 
 func (kc *KTranslate) getEventType(dst *kt.JCHF) string {
@@ -47,12 +49,12 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 
 	udr, ok := dst.CustomStr[UDR_TYPE]
 	if !ok { // Return this right away.
-		return kt.ProviderFlowDevice
+		return defaultProvider
 	}
 
 	// Or maybe its a host.
 	if udr == "kprobe" || udr == "kappa" {
-		return kt.ProviderFlowDevice
+		return defaultProvider
 	}
 
 	// Else, if its synth, return this.
@@ -66,7 +68,7 @@ func (kc *KTranslate) getProviderType(dst *kt.JCHF) kt.Provider {
 	}
 
 	// Default to provider.
-	return kt.ProviderFlowDevice
+	return defaultProvider
 }
 
 func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, currentTS int64, tagcache map[uint64]string) error {
