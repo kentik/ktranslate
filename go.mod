@@ -1,6 +1,8 @@
 module github.com/kentik/ktranslate
 
-go 1.20
+go 1.21
+
+toolchain go1.21.6
 
 require (
 	cloud.google.com/go/pubsub v1.33.0
@@ -29,6 +31,7 @@ require (
 	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
 	github.com/kentik/dashboard-api-golang v0.0.0-20230907014229-dbe46f378ac6
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
+	github.com/kentik/go-syslog v0.0.0-20240302065219-cea330e269ea
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.1
@@ -52,7 +55,6 @@ require (
 	google.golang.org/genproto v0.0.0-20231002182017-d307bd883b97
 	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.32.0
-	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	zombiezen.com/go/capnproto2 v2.18.2+incompatible

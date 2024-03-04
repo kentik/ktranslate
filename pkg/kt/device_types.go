@@ -1,7 +1,7 @@
 package kt
 
 import (
-	sfmt "gopkg.in/mcuadros/go-syslog.v2/format"
+	sfmt "github.com/kentik/go-syslog/format"
 
 	"net"
 )

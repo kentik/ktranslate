@@ -9,9 +9,9 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/kentik/go-syslog"
+	sfmt "github.com/kentik/go-syslog/format"
 	"github.com/kentik/ktranslate"
-	"gopkg.in/mcuadros/go-syslog.v2"
-	sfmt "gopkg.in/mcuadros/go-syslog.v2/format"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -32,7 +32,7 @@ func init() {
 	flag.BoolVar(&doUDP, "syslog.udp", true, "Listen on UDP for syslog messages.")
 	flag.BoolVar(&doTCP, "syslog.tcp", true, "Listen on TCP for syslog messages.")
 	flag.BoolVar(&doUnix, "syslog.unix", false, "Listen on a Unix socket for syslog messages.")
-	flag.StringVar(&format, "syslog.format", "Automatic", "Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587.")
+	flag.StringVar(&format, "syslog.format", "Automatic", "Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587|NoFormat.")
 	flag.IntVar(&threads, "syslog.threads", 1, "Number of threads to use to process messages.")
 }
 
@@ -93,8 +93,10 @@ func NewSyslogSource(ctx context.Context, log logger.Underlying, logchan chan st
 		server.SetFormat(syslog.RFC6587)
 	case "Automatic":
 		server.SetFormat(syslog.Automatic)
+	case "NoFormat":
+		server.SetFormat(syslog.NoFormat)
 	default:
-		return nil, fmt.Errorf("Invalid syslog format (%s). Options are RFC3164|RFC5424|RFC6587", cfg.Format)
+		return nil, fmt.Errorf("Invalid syslog format (%s). Options are Automatic|RFC3164|RFC5424|RFC6587|NoFormat", cfg.Format)
 	}
 
 	server.SetHandler(handler)
