@@ -698,6 +698,7 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			"vlan":               client.Vlan,
 			"org_name":           client.orgName,
 			"org_id":             client.orgId,
+			"notes":              client.Notes,
 		}
 
 		dst.CustomBigInt = map[string]int64{}
