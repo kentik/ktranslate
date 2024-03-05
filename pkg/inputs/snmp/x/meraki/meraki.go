@@ -118,9 +118,9 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		return nil, fmt.Errorf("monitor_devices option is not supported for Meraki in this version.")
 	}
 
-	if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
-		return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
-	}
+	//if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
+	//	return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
+	//}
 
 	orgs := []*regexp.Regexp{}
 	nets := []*regexp.Regexp{}
@@ -430,6 +430,7 @@ type client struct {
 	Status             string             `json:"status"`
 	MdnsName           string             `json:"mdnsName"`
 	DhcpHostname       string             `json:"dhcpHostname"`
+	Notes              string             `json:"notes,omitempty"`
 	network            string
 	orgName            string
 	orgId              string
@@ -440,34 +441,65 @@ type client struct {
 func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) {
 	clientSet := []*client{}
 	durs := float32(dur.Seconds())
+	perPage := int64(5000)
+
+	var getNetworkClients func(nextToken string, org orgDesc, network networkDesc, timeouts int) error
+	getNetworkClients = func(nextToken string, org orgDesc, network networkDesc, timeouts int) error {
+		params := networks.NewGetNetworkClientsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		params.SetTimespan(&durs)
+		params.SetPerPage(&perPage)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+		prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Clients: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkClients(nextToken, org, network, timeouts)
+			}
+			return err
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return err
+		}
+
+		var clients []*client
+		err = json.Unmarshal(b, &clients)
+		if err != nil {
+			return err
+		}
+		for _, client := range clients {
+			client.network = network.Name
+			client.orgName = org.Name
+			client.orgId = org.ID
+			clientSet = append(clientSet, client) // Toss these all in together
+		}
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkClients(nextLink, org, network, timeouts)
+		} else {
+			return nil
+		}
+	}
+
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			params := networks.NewGetNetworkClientsParamsWithTimeout(c.timeout)
-			params.SetNetworkID(network.ID)
-			params.SetTimespan(&durs)
-
-			prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
+			err := getNetworkClients("", org, network, 0)
 			if err != nil {
-				c.log.Warnf("Cannot get network clients for %s: %v", network.Name, err)
-				continue
-			}
-
-			b, err := json.Marshal(prod.GetPayload())
-			if err != nil {
+				if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
+					continue
+				}
 				return nil, err
 			}
-
-			var clients []*client
-			err = json.Unmarshal(b, &clients)
-			if err != nil {
-				return nil, err
-			}
-			for _, client := range clients {
-				client.network = network.Name
-				client.orgName = org.Name
-				client.orgId = org.ID
-				clientSet = append(clientSet, client) // Toss these all in together
-			}
+			time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Make sure we don't hit the API too hard.
 		}
 	}
 

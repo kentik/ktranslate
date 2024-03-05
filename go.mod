@@ -29,7 +29,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
 	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
-	github.com/kentik/dashboard-api-golang v0.0.0-20230907014229-dbe46f378ac6
+	github.com/kentik/dashboard-api-golang v0.0.0-20240305065153-1c88e8477770
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/go-syslog v0.0.0-20240302065219-cea330e269ea
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
