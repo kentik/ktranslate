@@ -790,7 +790,8 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 				dst.CustomStr["org_id"] = client.device.network.org.ID
 			}
 		} else {
-			dst.DeviceName = client.network // Here, device is this network's name.
+			// Device name is recent device name and then this client's ID.
+			dst.DeviceName = strings.Join([]string{client.RecentDeviceName, client.ID}, ".")
 			dst.SrcAddr = c.conf.DeviceIP
 		}
 
