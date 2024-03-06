@@ -118,9 +118,9 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		return nil, fmt.Errorf("monitor_devices option is not supported for Meraki in this version.")
 	}
 
-	if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
-		return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
-	}
+	//if c.conf.Ext.MerakiConfig.MonitorNetworkClients {
+	//	return nil, fmt.Errorf("monitor_clients option is not supported for Meraki in this version.")
+	//}
 
 	orgs := []*regexp.Regexp{}
 	nets := []*regexp.Regexp{}
@@ -412,62 +412,160 @@ func (c *MerakiClient) parseOrgLog(l *orgLog, org orgDesc) *kt.JCHF {
 }
 
 type client struct {
-	Usage              map[string]float64 `json:"usage"`
-	ID                 string             `json:"id"`
-	Description        string             `json:"description"`
-	Mac                string             `json:"mac"`
-	IP                 string             `json:"ip"`
-	User               string             `json:"user"`
-	Vlan               string             `json:"vlan"`
-	NamedVlan          string             `json:"namedVlan"`
-	IPv6               string             `json:"ip6"`
-	Manufacturer       string             `json:"manufacturer"`
-	DeviceType         string             `json:"deviceTypePrediction"`
-	RecentDeviceName   string             `json:"recentDeviceName"`
-	RecentDeviceSerial string             `json:"recentDeviceSerial"`
-	RecentDeviceMac    string             `json:"recentDeviceMac"`
-	SSID               string             `json:"ssid"`
-	Status             string             `json:"status"`
-	MdnsName           string             `json:"mdnsName"`
-	DhcpHostname       string             `json:"dhcpHostname"`
-	network            string
-	orgName            string
-	orgId              string
-	device             networkDevice
-	appUsage           []appUsage
+	Usage map[string]float64 `json:"usage"`
+
+	// The adaptive policy group of the client
+	AdaptivePolicyGroup string `json:"adaptivePolicyGroup,omitempty"`
+
+	// Short description of the client
+	Description string `json:"description,omitempty"`
+
+	// Prediction of the client's device type
+	DeviceTypePrediction string `json:"deviceTypePrediction,omitempty"`
+
+	// Timestamp client was first seen in the network
+	FirstSeen string `json:"firstSeen,omitempty"`
+
+	// 802.1x group policy of the client
+	GroupPolicy8021x string `json:"groupPolicy8021x,omitempty"`
+
+	// The ID of the client
+	ID string `json:"id,omitempty"`
+
+	// The IP address of the client
+	IP string `json:"ip,omitempty"`
+
+	// The IPv6 address of the client
+	Ip6 string `json:"ip6,omitempty"`
+
+	// Local IPv6 address of the client
+	Ip6Local string `json:"ip6Local,omitempty"`
+
+	// Timestamp client was last seen in the network
+	LastSeen string `json:"lastSeen,omitempty"`
+
+	// The MAC address of the client
+	Mac string `json:"mac,omitempty"`
+
+	// Manufacturer of the client
+	Manufacturer string `json:"manufacturer,omitempty"`
+
+	// Named VLAN of the client
+	NamedVlan string `json:"namedVlan,omitempty"`
+
+	// Notes on the client
+	Notes string `json:"notes,omitempty"`
+
+	// The operating system of the client
+	Os string `json:"os,omitempty"`
+
+	// iPSK name of the client
+	PskGroup string `json:"pskGroup,omitempty"`
+
+	// Client's most recent connection type
+	// Enum: [Wired Wireless]
+	RecentDeviceConnection string `json:"recentDeviceConnection,omitempty"`
+
+	// The MAC address of the node that the device was last connected to
+	RecentDeviceMac string `json:"recentDeviceMac,omitempty"`
+
+	// The name of the node the device was last connected to
+	RecentDeviceName string `json:"recentDeviceName,omitempty"`
+
+	// The serial of the node the device was last connected to
+	RecentDeviceSerial string `json:"recentDeviceSerial,omitempty"`
+
+	// Status of SM for the client
+	SmInstalled bool `json:"smInstalled,omitempty"`
+
+	// The name of the SSID that the client is connected to
+	Ssid string `json:"ssid,omitempty"`
+
+	// The connection status of the client
+	// Enum: [Offline Online]
+	Status string `json:"status,omitempty"`
+
+	// The switch port that the client is connected to
+	Switchport string `json:"switchport,omitempty"`
+
+	// The username of the user of the client
+	User string `json:"user,omitempty"`
+
+	// The name of the VLAN that the client is connected to
+	Vlan string `json:"vlan,omitempty"`
+
+	// Wireless capabilities of the client
+	WirelessCapabilities string `json:"wirelessCapabilities,omitempty"`
+
+	network  string
+	orgName  string
+	orgId    string
+	device   networkDevice
+	appUsage []appUsage
 }
 
 func (c *MerakiClient) getNetworkClients(dur time.Duration) ([]*kt.JCHF, error) {
 	clientSet := []*client{}
 	durs := float32(dur.Seconds())
+	perPage := int64(5000)
+
+	var getNetworkClients func(nextToken string, org orgDesc, network networkDesc, timeouts int) error
+	getNetworkClients = func(nextToken string, org orgDesc, network networkDesc, timeouts int) error {
+		params := networks.NewGetNetworkClientsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		params.SetTimespan(&durs)
+		params.SetPerPage(&perPage)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+		prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Clients: %s 429, sleeping %v", org.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkClients(nextToken, org, network, timeouts)
+			}
+			return err
+		}
+
+		b, err := json.Marshal(prod.GetPayload())
+		if err != nil {
+			return err
+		}
+
+		var clients []*client
+		err = json.Unmarshal(b, &clients)
+		if err != nil {
+			return err
+		}
+		for _, client := range clients {
+			client.network = network.Name
+			client.orgName = org.Name
+			client.orgId = org.ID
+			clientSet = append(clientSet, client) // Toss these all in together
+		}
+
+		// Recursion!
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkClients(nextLink, org, network, timeouts)
+		} else {
+			return nil
+		}
+	}
+
 	for _, org := range c.orgs {
 		for _, network := range org.networks {
-			params := networks.NewGetNetworkClientsParamsWithTimeout(c.timeout)
-			params.SetNetworkID(network.ID)
-			params.SetTimespan(&durs)
-
-			prod, err := c.client.Networks.GetNetworkClients(params, c.auth)
+			err := getNetworkClients("", org, network, 0)
 			if err != nil {
-				c.log.Warnf("Cannot get network clients for %s: %v", network.Name, err)
-				continue
-			}
-
-			b, err := json.Marshal(prod.GetPayload())
-			if err != nil {
+				if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
+					continue
+				}
 				return nil, err
 			}
-
-			var clients []*client
-			err = json.Unmarshal(b, &clients)
-			if err != nil {
-				return nil, err
-			}
-			for _, client := range clients {
-				client.network = network.Name
-				client.orgName = org.Name
-				client.orgId = org.ID
-				clientSet = append(clientSet, client) // Toss these all in together
-			}
+			time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Make sure we don't hit the API too hard.
 		}
 	}
 
@@ -641,8 +739,8 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 
 	makeJCHF := func(client *client) *kt.JCHF {
 		dst := kt.NewJCHF()
-		if client.IPv6 != "" {
-			dst.DstAddr = client.IPv6
+		if client.Ip6 != "" {
+			dst.DstAddr = client.Ip6
 		} else {
 			dst.DstAddr = client.IP
 		}
@@ -650,22 +748,27 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			ControllerKey:        c.conf.DeviceName,
 			"network":            client.network,
 			"client_id":          client.ID,
+			"policy_group":       client.AdaptivePolicyGroup,
 			"description":        client.Description,
 			"status":             client.Status,
 			"vlan_name":          client.NamedVlan,
 			"client_mac_addr":    client.Mac,
 			"user":               client.User,
 			"manufacturer":       client.Manufacturer,
-			"device_type":        client.DeviceType,
+			"device_type":        client.DeviceTypePrediction,
+			"psk_group":          client.PskGroup,
+			"os":                 client.Os,
 			"recent_device_name": client.RecentDeviceName,
 			"device_mac_addr":    client.RecentDeviceMac,
 			"device_serial":      client.RecentDeviceSerial,
-			"ssid":               client.SSID,
-			"dhcp_hostname":      client.DhcpHostname,
-			"mdns_name":          client.MdnsName,
+			"ssid":               client.Ssid,
+			"switchport":         client.Switchport,
 			"vlan":               client.Vlan,
 			"org_name":           client.orgName,
 			"org_id":             client.orgId,
+			"notes":              client.Notes,
+			"last_seen":          client.LastSeen,
+			"first_seen":         client.FirstSeen,
 		}
 
 		dst.CustomBigInt = map[string]int64{}
@@ -687,7 +790,8 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 				dst.CustomStr["org_id"] = client.device.network.org.ID
 			}
 		} else {
-			dst.DeviceName = client.network // Here, device is this network's name.
+			// Device name is recent device name and then this client's ID.
+			dst.DeviceName = strings.Join([]string{client.RecentDeviceName, client.ID}, ".")
 			dst.SrcAddr = c.conf.DeviceIP
 		}
 
