@@ -34,7 +34,7 @@ type Poller struct {
 	pingSec          int
 }
 
-func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
+func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) *Poller {
 	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
 	counterTimeSec := 5 * 60
 	if conf != nil && conf.PollTimeSec > 0 {
@@ -84,7 +84,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	}
 
 	// If we are extending the metrics for this device in any way, set it up now.
-	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log)
+	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log, logchan)
 	if err != nil {
 		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else if ext != nil {
@@ -144,7 +144,7 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 	return &poller
 }
 
-func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
+func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) *Poller {
 	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
 	counterTimeSec := 5 * 60
 	if conf != nil && conf.PollTimeSec > 0 {
@@ -174,7 +174,7 @@ func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig
 	}
 
 	// If we are extending the metrics for this device in any way, set it up now.
-	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log)
+	ext, err := extension.NewExtension(jchfChan, gconf, conf, metrics, log, logchan)
 	if err != nil {
 		log.Errorf("Cannot setup extension for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else if ext != nil {

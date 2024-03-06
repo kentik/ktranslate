@@ -57,7 +57,7 @@ func init() {
 	flag.BoolVar(&validateMib, "snmp_validate", false, "If true, validate mib profiles and exit.")
 }
 
-func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver, confMgr config.ConfigManager) error {
+func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver, confMgr config.ConfigManager, logchan chan string) error {
 	snmpFile := cfg.SNMPFile
 	// Do this once here just to see if we need to exit right away.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
@@ -92,12 +92,12 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 
 	// If we just want to poll one device and exit, do this here.
 	if v := cfg.PollNowTarget; v != "" {
-		return pollOnce(ctx, v, conf, connectTimeout, retries, jchfChan, metrics, registry, log)
+		return pollOnce(ctx, v, conf, connectTimeout, retries, jchfChan, metrics, registry, log, logchan)
 	}
 
 	// Now, launch a metadata and metrics server for each configured or discovered device.
 	if conf.Trap == nil || !conf.Trap.TrapOnly { // Unless we are turning off everything but snmp traps.
-		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg, confMgr)
+		go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, 0, cfg, confMgr, logchan)
 	}
 
 	// Run a trap listener?
@@ -147,9 +147,9 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
-func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, confMgr config.ConfigManager) {
+func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, confMgr config.ConfigManager, logchan chan string) {
 	ctxSnmp, cancel := context.WithCancel(ctx)
-	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg)
+	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg, logchan)
 	if err != nil {
 		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
 	}
@@ -173,10 +173,10 @@ func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.J
 	// If we got this signal, redo the snmp system.
 	cancel()
 
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg, confMgr) // Track how many times through here we've been.
+	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg, confMgr, logchan) // Track how many times through here we've been.
 }
 
-func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig) error {
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, logchan chan string) error {
 	// Parse again to make sure nothing's changed.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
@@ -238,7 +238,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 			return err
 		}
 
-		err = launchSnmp(ctx, conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl)
+		err = launchSnmp(ctx, conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl, logchan)
 		if err != nil {
 			return err
 		}
@@ -261,7 +261,7 @@ func launchSnmpTrap(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*k
 	return nil
 }
 
-func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
+func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) error {
 	// Sometimes this device is pinging only. In this case, start the ping loop and return.
 	if device.PingOnly {
 		return launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
@@ -273,7 +273,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 
 	// Sometimes a device is only going to be running its extention.
 	if device.Ext != nil && device.Ext.ExtOnly {
-		return launchExtOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
+		return launchExtOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log, logchan)
 	}
 
 	// We need two of these, to avoid concurrent access by the two pollers.
@@ -293,7 +293,7 @@ func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpD
 	}
 
 	metadataPoller := metadata.NewPoller(metadataServer, conf, device, jchfChan, metrics, profile, log)
-	metricPoller := snmp_metrics.NewPoller(metricsServer, conf, device, jchfChan, metrics, profile, log)
+	metricPoller := snmp_metrics.NewPoller(metricsServer, conf, device, jchfChan, metrics, profile, log, logchan)
 
 	// We've now done everything we can do synchronously -- return to the client initialization
 	// code, and do everything else in the background
@@ -469,8 +469,8 @@ func launchPingOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.S
 *
 Handle the case where we're only doing a extention loop of a device.
 */
-func launchExtOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) error {
-	metricPoller := snmp_metrics.NewPollerForExtention(conf, device, jchfChan, metrics, profile, log)
+func launchExtOnly(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) error {
+	metricPoller := snmp_metrics.NewPollerForExtention(conf, device, jchfChan, metrics, profile, log, logchan)
 
 	// We've now done everything we can do synchronously -- return to the client initialization
 	// code, and do everything else in the background

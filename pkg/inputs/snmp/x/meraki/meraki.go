@@ -35,6 +35,7 @@ type MerakiClient struct {
 	timeout  time.Duration
 	cache    *clientCache
 	maxRetry int
+	logchan  chan string
 }
 
 type orgDesc struct {
@@ -69,7 +70,7 @@ var (
 	}
 )
 
-func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
+func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL, logchan chan string) (*MerakiClient, error) {
 	c := MerakiClient{
 		log:      log,
 		jchfChan: jchfChan,
@@ -81,6 +82,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 		timeout:  30 * time.Second,
 		cache:    newClientCache(log),
 		maxRetry: conf.Ext.MerakiConfig.MaxAPIRetry,
+		logchan:  logchan,
 	}
 
 	host := conf.Ext.MerakiConfig.Host
@@ -261,11 +263,19 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	doNetworkClients := c.conf.Ext.MerakiConfig.MonitorNetworkClients
 	doVpnStatus := c.conf.Ext.MerakiConfig.MonitorVpnStatus
 	doNetworkAttr := c.conf.Ext.MerakiConfig.Prefs["show_network_attr"]
-	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus && !doNetworkAttr {
+	doNetworkApplianceSecurityEvents := c.conf.Ext.MerakiConfig.Prefs["log_network_security_events"]
+	doNetworkEvents := c.conf.Ext.MerakiConfig.Prefs["log_network_events"]
+	if !doUplinks && !doDeviceClients && !doDeviceStatus && !doOrgChanges && !doNetworkClients && !doVpnStatus && !doNetworkAttr && !doNetworkApplianceSecurityEvents && !doNetworkEvents {
 		doUplinks = true
 	}
-	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v, network_attr=%v",
-		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr)
+	c.log.Infof("Running Every %v with uplinks=%v, device_clients=%v, device_status=%v, orgs=%v, networks=%v, vpn_status=%v, network_attr=%v, network_security_events=%v, network_events=%v",
+		dur, doUplinks, doDeviceClients, doDeviceStatus, doOrgChanges, doNetworkClients, doVpnStatus, doNetworkAttr, doNetworkApplianceSecurityEvents, doNetworkEvents)
+
+	// This gets all network events, I can't find a way to not start at the beginning of each week.
+	// Pulling it out here so its only on startup for now. Will run weekly, very slowly over the orgs and networks selected.
+	if doNetworkEvents {
+		go c.getNetworkEventsWrapper(ctx)
+	}
 
 	for {
 		select {
@@ -328,11 +338,196 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 				}
 			}
 
+			if doNetworkApplianceSecurityEvents {
+				if err := c.getNetworkApplianceSecurityEvents(dur); err != nil {
+					c.log.Infof("Meraki cannot get network security events: %v", err)
+				}
+			}
+
 		case <-ctx.Done():
 			c.log.Infof("Meraki Poll Done")
 			return
 		}
 	}
+}
+
+func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) error {
+	startTime := time.Now().Add(-1 * dur)
+	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
+	c.log.Infof("Starting network security events")
+
+	var getNetworkEvents func(nextToken string, network networkDesc, timeouts int) error
+	getNetworkEvents = func(nextToken string, network networkDesc, timeouts int) error {
+		params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		params.SetT0(&startTimeStr)
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Security Events: %s 429, sleeping %v", network.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkEvents(nextToken, network, timeouts)
+			}
+			return err
+		}
+
+		results := prod.GetPayload()
+		for _, result := range results {
+			if emap, ok := result.(map[string]interface{}); ok {
+				emap["network"] = network.Name
+				emap["orgName"] = network.org.Name
+				emap["orgId"] = network.org.ID
+				emap["eventType"] = kt.KENTIK_EVENT_EXT
+				b, err := json.Marshal(emap)
+				if err != nil {
+					return err
+				}
+				c.logchan <- string(b)
+			}
+		}
+
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkEvents(nextLink, network, timeouts)
+		} else {
+			return nil
+		}
+	}
+
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			err := getNetworkEvents("", network, 0)
+			if err != nil {
+				if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
+					continue
+				}
+				return err
+			}
+		}
+	}
+
+	c.log.Infof("Done with network security events")
+	return nil
+}
+
+func (c *MerakiClient) getNetworkEventsWrapper(ctx context.Context) {
+	c.log.Infof("Network Events Check Starting")
+	logCheck := time.NewTicker(1 * time.Hour)
+
+	nextPageEndAt := "" // Start from the very beginning. Looks like 1 week ago.
+
+	// Check once on startup.
+	err, np := c.getNetworkEvents(nextPageEndAt)
+	if err != nil {
+		c.log.Errorf("Cannot get network events: %v", err)
+	} else {
+		nextPageEndAt = np
+	}
+
+	for {
+		select {
+		case _ = <-logCheck.C:
+			err, np := c.getNetworkEvents(nextPageEndAt)
+			if err != nil {
+				c.log.Errorf("Cannot get network events: %v", err)
+			} else {
+				nextPageEndAt = np
+			}
+
+		case <-ctx.Done():
+			c.log.Infof("Network Events Check Done")
+			logCheck.Stop()
+			return
+		}
+	}
+}
+
+type eventWrapper struct {
+	networks.GetNetworkEventsOKBodyEventsItems0
+	Network   string `json:"network"`
+	OrgName   string `json:"orgName"`
+	OrgId     string `json:"orgId"`
+	EventType string `json:"eventType"`
+}
+
+func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
+	var getNetworkEvents func(nextToken string, network networkDesc, prodType string, timeouts int) (error, string)
+	getNetworkEvents = func(nextToken string, network networkDesc, prodType string, timeouts int) (error, string) {
+		params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+		if prodType != "" {
+			params.SetProductType(&prodType)
+		}
+		if nextToken != "" {
+			params.SetStartingAfter(&nextToken)
+		}
+
+		prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Network Events: %s 429, sleeping %v", network.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getNetworkEvents(nextToken, network, prodType, timeouts)
+			}
+			if strings.Contains(err.Error(), "(status 400)") { // There are no valid logs to worry about here.
+				return nil, nextToken
+			}
+			return err, nextToken
+		}
+
+		results := prod.GetPayload()
+		for _, event := range results.Events {
+			ew := eventWrapper{*event, network.Name, network.org.Name, network.org.ID, kt.KENTIK_EVENT_EXT}
+			b, err := json.Marshal(ew)
+			if err != nil {
+				return err, nextToken
+			}
+			c.logchan <- string(b)
+		}
+
+		nextLink := getNextLink(prod.Link)
+		if nextLink != "" {
+			return getNetworkEvents(nextLink, network, prodType, timeouts)
+		} else {
+			return nil, results.PageEndAt
+		}
+	}
+
+	nextPageEndAt := lastPageEndAt
+	c.log.Infof("Starting network events download from %s.", lastPageEndAt)
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			if len(c.conf.Ext.MerakiConfig.ProductTypes) > 0 {
+				for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
+					err, lp := getNetworkEvents(lastPageEndAt, network, pt, 0)
+					if err != nil {
+						return err, nextPageEndAt
+					}
+					nextPageEndAt = lp
+				}
+			} else {
+				err, lp := getNetworkEvents(lastPageEndAt, network, "", 0)
+				if err != nil {
+					return err, nextPageEndAt
+				}
+				nextPageEndAt = lp
+			}
+
+			// after each network, sleep for a while so we don't hit rate limiting.
+			time.Sleep(30 * time.Second)
+		}
+	}
+
+	c.log.Infof("Done with network events download to %s", nextPageEndAt)
+	return nil, nextPageEndAt
 }
 
 type orgLog struct {
