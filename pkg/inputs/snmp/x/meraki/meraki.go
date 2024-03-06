@@ -61,7 +61,6 @@ const (
 	DEFAULT_TIMEOUT_RETRY = 2
 )
 
-<<<<<<< HEAD
 var (
 	DeviceStatusEnum = map[string]int64{
 		"online":   1,
@@ -71,20 +70,8 @@ var (
 	}
 )
 
-<<<<<<< HEAD
-func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL) (*MerakiClient, error) {
-=======
-func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL, logchan chan string) (*MerakiClient, error) {
->>>>>>> 8f8f622 (wip: Adding in meraki logs for events)
-	c := MerakiClient{
-=======
-<<<<<<< HEAD
-	c `  := MerakiClient{
-=======
 func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, log logger.ContextL, logchan chan string) (*MerakiClient, error) {
 	c := MerakiClient{
->>>>>>> 81472d3 (wip: Adding in meraki logs for events)
->>>>>>> eb50ab8 (wip: Adding in meraki logs for events)
 		log:      log,
 		jchfChan: jchfChan,
 		conf:     conf,
@@ -364,7 +351,6 @@ func (c *MerakiClient) Run(ctx context.Context, dur time.Duration) {
 	}
 }
 
-<<<<<<< HEAD
 func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) error {
 	startTime := time.Now().Add(-1 * dur)
 	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
@@ -401,57 +387,11 @@ func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) erro
 				b, err := json.Marshal(emap)
 				if err != nil {
 					return err
-=======
-func (c *MerakiClient) getNetworkApplianceSecurityEvents(dur time.Duration) ([]*kt.JCHF, error) {
-	startTime := time.Now().Add(-1 * dur)
-	startTimeStr := fmt.Sprintf("%v", startTime.Unix())
-
-	res := []*kt.JCHF{}
-	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			params := appliance.NewGetNetworkApplianceSecurityEventsParamsWithTimeout(c.timeout)
-			params.SetNetworkID(network.ID)
-			params.SetT0(&startTimeStr)
-
-			prod, err := c.client.Appliance.GetNetworkApplianceSecurityEvents(params, c.auth)
-			if err != nil {
-				return nil, err
-			}
-
-			_ = prod.GetPayload()
-		}
-
-	}
-
-	return res, nil
-}
-
-func (c *MerakiClient) getNetworkEvents(dur time.Duration) ([]*kt.JCHF, error) {
-	res := []*kt.JCHF{}
-	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			for _, pt := range c.conf.Ext.MerakiConfig.ProductTypes {
-				params := networks.NewGetNetworkEventsParamsWithTimeout(c.timeout)
-				params.SetNetworkID(network.ID)
-				lpt := pt
-				params.SetProductType(&lpt)
-
-				prod, err := c.client.Networks.GetNetworkEvents(params, c.auth)
-				if err != nil {
-					return nil, err
-				}
-
-				results := prod.GetPayload()
-				b, err := json.Marshal(results)
-				if err != nil {
-					return nil, err
->>>>>>> 81472d3 (wip: Adding in meraki logs for events)
 				}
 				c.logchan <- string(b)
 			}
 		}
 
-<<<<<<< HEAD
 		nextLink := getNextLink(prod.Link)
 		if nextLink != "" {
 			return getNetworkEvents(nextLink, network, timeouts)
@@ -588,11 +528,6 @@ func (c *MerakiClient) getNetworkEvents(lastPageEndAt string) (error, string) {
 
 	c.log.Infof("Done with network events download to %s", nextPageEndAt)
 	return nil, nextPageEndAt
-=======
-	}
-
-	return res, nil
->>>>>>> 81472d3 (wip: Adding in meraki logs for events)
 }
 
 type orgLog struct {
