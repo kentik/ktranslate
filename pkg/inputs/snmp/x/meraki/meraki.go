@@ -424,7 +424,7 @@ type client struct {
 	DeviceTypePrediction string `json:"deviceTypePrediction,omitempty"`
 
 	// Timestamp client was first seen in the network
-	FirstSeen int64 `json:"firstSeen,omitempty"`
+	FirstSeen string `json:"firstSeen,omitempty"`
 
 	// 802.1x group policy of the client
 	GroupPolicy8021x string `json:"groupPolicy8021x,omitempty"`
@@ -442,7 +442,7 @@ type client struct {
 	Ip6Local string `json:"ip6Local,omitempty"`
 
 	// Timestamp client was last seen in the network
-	LastSeen int64 `json:"lastSeen,omitempty"`
+	LastSeen string `json:"lastSeen,omitempty"`
 
 	// The MAC address of the client
 	Mac string `json:"mac,omitempty"`
@@ -748,6 +748,7 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			ControllerKey:        c.conf.DeviceName,
 			"network":            client.network,
 			"client_id":          client.ID,
+			"policy_group":       client.AdaptivePolicyGroup,
 			"description":        client.Description,
 			"status":             client.Status,
 			"vlan_name":          client.NamedVlan,
@@ -755,14 +756,19 @@ func (c *MerakiClient) parseClients(cs []*client) ([]*kt.JCHF, error) {
 			"user":               client.User,
 			"manufacturer":       client.Manufacturer,
 			"device_type":        client.DeviceTypePrediction,
+			"psk_group":          client.PskGroup,
+			"os":                 client.Os,
 			"recent_device_name": client.RecentDeviceName,
 			"device_mac_addr":    client.RecentDeviceMac,
 			"device_serial":      client.RecentDeviceSerial,
 			"ssid":               client.Ssid,
+			"switchport":         client.Switchport,
 			"vlan":               client.Vlan,
 			"org_name":           client.orgName,
 			"org_id":             client.orgId,
 			"notes":              client.Notes,
+			"last_seen":          client.LastSeen,
+			"first_seen":         client.FirstSeen,
 		}
 
 		dst.CustomBigInt = map[string]int64{}
