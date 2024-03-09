@@ -320,6 +320,10 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 					continue
 				}
 
+				// Reset so that we don't keep avg/min/max across checks.
+				p.pinger.Reset(slowTick)
+				p.deviceMetrics.ResetPingStats()
+
 				// Send data on.
 				p.jchfChan <- flows
 
