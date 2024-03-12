@@ -57,7 +57,7 @@ func (p *Pinger) Reset(inter time.Duration) error {
 	}
 	pinger.SetPrivileged(p.priv)
 	pinger.OnFinish = func(stats *ping.Statistics) {
-		p.log.Infof("Ping run %d finished.", p.num)
+		p.log.Debugf("Ping run %d finished.", p.num)
 		p.num++
 	}
 
