@@ -280,6 +280,7 @@ type SnmpGlobalConfig struct {
 	ProviderMap           map[string]ProviderMap `yaml:"providers"`
 	JitterTimeSec         int                    `yaml:"jitter_time_sec"`
 	FastPoll              bool                   `yaml:"fast_poll"`
+	WatchProfileChanges   bool                   `yaml:"watch_profile_changes"`
 }
 
 type SnmpConfig struct {
