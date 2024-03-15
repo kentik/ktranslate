@@ -156,7 +156,12 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 
 	// If we are watching for snmp profile changes, start this here:
 	if conf.Global.WatchProfileChanges {
-		go watchProfileChange(ctx, conf, log, changeSig)
+		go func() {
+			err := watchProfileChange(ctx, conf, log, changeSig)
+			if err != nil {
+				log.Errorf("Problem with profile watcher: %v", err)
+			}
+		}()
 	}
 
 	log.Infof("Client SNMP: Setting up for %d devices", len(conf.Devices))
@@ -242,8 +247,10 @@ func watchProfileChange(ctx context.Context, conf *kt.SnmpConfig, log logger.Con
 			if !ok {
 				return nil
 			}
-			log.Infof("event: %v", event)
-			changeSig <- kt.SIGUSR2 // Restart the main loop with a new config.
+			log.Debugf("event: %v", event)
+			if event.Has(fsnotify.Write) || event.Has(fsnotify.Remove) {
+				changeSig <- kt.SIGUSR2 // Restart the main loop with a new config.
+			}
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return nil
