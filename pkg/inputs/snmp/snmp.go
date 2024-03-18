@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/signal"
 	"strings"
 	"time"
 
@@ -23,6 +22,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
 
+	"github.com/fsnotify/fsnotify"
 	"gopkg.in/yaml.v3"
 )
 
@@ -147,40 +147,21 @@ func initSnmp(ctx context.Context, snmpFile string, log logger.ContextL) (*kt.Sn
 	return conf, connectTimeout, retries, nil
 }
 
-func wrapSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, confMgr config.ConfigManager, logchan chan string) {
-	ctxSnmp, cancel := context.WithCancel(ctx)
-	err := runSnmpPolling(ctxSnmp, snmpFile, jchfChan, metrics, registry, apic, log, restartCount, cfg, logchan)
-	if err != nil {
-		log.Errorf("There was an error when polling for SNMP devices: %v.", err)
-	}
-
-	// We only want to run a disco on start when restartCount is 0. Otherwise you end up doing 2 discos if a new device is found on start.
-	runOnStart := cfg.DiscoveryOnStart
-	if restartCount > 0 {
-		runOnStart = false
-	}
-
-	// Now, wait for sigusr2 to re-do or if there's a discovery with new devices.
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, kt.SIGUSR2)
-	if v := cfg.DiscoveryIntervalMinutes; v > 0 || runOnStart { // If we are re-running snmp discovery every interval AND/OR running on start, start the ticker here.
-		go RunDiscoOnTimer(ctxSnmp, c, log, v, runOnStart, cfg, apic, confMgr)
-	}
-
-	// Block here
-	_ = <-c
-
-	// If we got this signal, redo the snmp system.
-	cancel()
-
-	go wrapSnmpPolling(ctx, snmpFile, jchfChan, metrics, registry, apic, log, restartCount+1, cfg, confMgr, logchan) // Track how many times through here we've been.
-}
-
-func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, logchan chan string) error {
+func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, restartCount int, cfg *ktranslate.SNMPInputConfig, logchan chan string, changeSig chan os.Signal) error {
 	// Parse again to make sure nothing's changed.
 	conf, connectTimeout, retries, err := initSnmp(ctx, snmpFile, log)
 	if err != nil || conf == nil || conf.Global == nil {
 		return err
+	}
+
+	// If we are watching for snmp profile changes, start this here:
+	if conf.Global.WatchProfileChanges {
+		go func() {
+			err := watchProfileChange(ctx, conf, log, changeSig)
+			if err != nil {
+				log.Errorf("Problem with profile watcher: %v", err)
+			}
+		}()
 	}
 
 	log.Infof("Client SNMP: Setting up for %d devices", len(conf.Devices))
@@ -241,6 +222,44 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		err = launchSnmp(ctx, conf.Global, device, jchfChan, connectTimeout, retries, nm, profile, cl, logchan)
 		if err != nil {
 			return err
+		}
+	}
+
+	return nil
+}
+
+func watchProfileChange(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, changeSig chan os.Signal) error {
+	log.Infof("Starting watch loop on %s", conf.Global.MibProfileDir)
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		return err
+	}
+
+	// Add a path.
+	err = watcher.Add(conf.Global.MibProfileDir)
+	if err != nil {
+		return err
+	}
+
+	for {
+		select {
+		case event, ok := <-watcher.Events:
+			if !ok {
+				return nil
+			}
+			log.Debugf("event: %v", event)
+			if event.Has(fsnotify.Write) || event.Has(fsnotify.Remove) {
+				changeSig <- kt.SIGUSR2 // Restart the main loop with a new config.
+			}
+		case err, ok := <-watcher.Errors:
+			if !ok {
+				return nil
+			}
+			log.Errorf("error watching: %v", err)
+		case <-ctx.Done():
+			log.Infof("FSWatcher Done")
+			watcher.Close()
+			return nil
 		}
 	}
 
