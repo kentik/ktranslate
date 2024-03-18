@@ -598,24 +598,13 @@ func (f *NRMFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []NRMetric {
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
-			switch name.Format {
-			case kt.CountMetric:
-				ms = append(ms, NRMetric{
-					Name:       "kentik.snmp." + m,
-					Type:       NR_COUNT_TYPE,
-					Value:      int64(in.CustomBigInt[m]),
-					Attributes: attrNew,
-					Interval:   in.CustomBigInt["Uptime"] * 10, // Values are in 100's of a second, so multiply by 10 to get milliseconds.
-				})
-			default:
-				ms = append(ms, NRMetric{
-					Name:       "kentik.snmp." + m,
-					Type:       NR_GAUGE_TYPE,
-					Value:      int64(in.CustomBigInt[m]),
-					Attributes: attrNew,
-					Interval:   in.CustomBigInt["Uptime"] * 10, // Values are in 100's of a second, so multiply by 10 to get milliseconds.
-				})
-			}
+			ms = append(ms, NRMetric{
+				Name:       "kentik.snmp." + m,
+				Type:       NR_GAUGE_TYPE,
+				Value:      int64(in.CustomBigInt[m]),
+				Attributes: attrNew,
+				Interval:   in.CustomBigInt["Uptime"] * 10, // Values are in 100's of a second, so multiply by 10 to get milliseconds.
+			})
 		}
 	}
 
