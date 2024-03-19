@@ -11,13 +11,13 @@ if [ -z ${MAXMIND_LICENSE_KEY} ]; then
 fi
 
 mkdir -p config
-curl -o mm.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz"
+curl -L -o mm.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
 tar -zxf mm.tar.gz
 mv GeoLite2-Country_*/GeoLite2-Country.mmdb config/GeoLite2-Country.mmdb
 rm mm.tar.gz
 rm -r GeoLite2-Country_*
 
-curl -o mm.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz"
+curl -L -o mm.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
 tar -zxf mm.tar.gz
 mv GeoLite2-ASN_*/GeoLite2-ASN.mmdb config/GeoLite2-ASN.mmdb
 rm mm.tar.gz
