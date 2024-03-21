@@ -94,13 +94,17 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           name: GeoLite2-Country.mmdb
-          path: config
+          path: ./config
+          run_id: ${{ github.run_id }}
+          search_artifacts: true
 
       - name: Get MM Asn
         uses: dawidd6/action-download-artifact@v2
         with:
           name: GeoLite2-ASN.mmdb
-          path: config
+          path: ./config
+          run_id: ${{ github.run_id }}
+          search_artifacts: true
 
       - name: Set Version
         run: |
