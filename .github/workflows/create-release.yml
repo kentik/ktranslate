@@ -139,14 +139,16 @@ jobs:
         run: make test
 
       - name: Get MM Geo
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: GeoLite2-Country.mmdb
+          path: config/GeoLite2-Country.mmdb
 
       - name: Get MM Asn
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: GeoLite2-ASN.mmdb
+          path: config/GeoLite2-ASN.mmdb
 
       - name: Create package
         id: package
