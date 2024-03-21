@@ -8,6 +8,9 @@ jobs:
   get_mm:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Install MM DBs
         run: |
           YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }} MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
@@ -29,6 +32,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     continue-on-error: true
+    needs: get_mm
     strategy:
       matrix:
         include:
@@ -87,6 +91,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Get MM Geo
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: GeoLite2-Country.mmdb
+          path: ./config
+          run_id: ${{ github.run_id }}
+
+      - name: Get MM Asn
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: GeoLite2-ASN.mmdb
+          path: ./config
+          run_id: ${{ github.run_id }}
+
       - name: Set Version
         run: |
            echo "KENTIK_KTRANSLATE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
@@ -134,16 +152,6 @@ jobs:
 
       - name: Run Test
         run: make test
-
-      - name: Get MM Geo
-        uses: actions/download-artifact@v4
-        with:
-          name: GeoLite2-Country.mmdb
-
-      - name: Get MM Asn
-        uses: actions/download-artifact@v4
-        with:
-          name: GeoLite2-ASN.mmdb
 
       - name: Create package
         id: package
