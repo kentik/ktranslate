@@ -1959,14 +1959,14 @@ func (c *MerakiClient) getUplinkExtraInfo(uplinkMap map[string]deviceUplink) err
 	if cc, ok := c.cache.getUplinkBW(); ok {
 		for _, device := range uplinkMap {
 			if info, ok := cc[device.NetworkID]; ok {
-				for _, ul := range device.Uplinks {
+				for i, ul := range device.Uplinks {
 					switch ul.Interface {
 					case "cellular":
-						ul.BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Cellular.LimitDown, LimitUp: info.BandwidthLimits.Cellular.LimitUp}
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Cellular.LimitDown, LimitUp: info.BandwidthLimits.Cellular.LimitUp}
 					case "wan1":
-						ul.BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan1.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan1.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
 					case "wan2":
-						ul.BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan2.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan2.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
 					}
 				}
 			}
