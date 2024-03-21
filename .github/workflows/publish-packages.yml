@@ -92,7 +92,7 @@ jobs:
         with:
           name: GeoLite2-Country.mmdb
           path: ./config
-          run_id: ${{ github.run_id }}
+          run_id: ${{ github.event.workflow_run.id }}
           search_artifacts: true
 
       - name: Get MM Asn
@@ -100,7 +100,7 @@ jobs:
         with:
           name: GeoLite2-ASN.mmdb
           path: ./config
-          run_id: ${{ github.run_id }}
+          run_id: ${{ github.event.workflow_run.id }}
           search_artifacts: true
 
       - name: Set Version
