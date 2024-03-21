@@ -5,6 +5,27 @@ on:
 name: Upload Release
 
 jobs:
+  get_mm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MM DBs
+        run: |
+          YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }} MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+
+      - name: 'Upload MM Geo DB'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoLite2-Country.mmdb
+          path: config/GeoLite2-Country.mmdb
+          retention-days: 1
+
+      - name: 'Upload MM ASN DB'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoLite2-ASN.mmdb
+          path: config/GeoLite2-ASN.mmdb
+          retention-days: 1
+
   build:
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -114,9 +135,15 @@ jobs:
       - name: Run Test
         run: make test
 
-      - name: Install MM DBs
-        run: |
-          YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }} MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
+      - name: Get MM Geo
+        uses: actions/download-artifact@v4
+        with:
+          name: GeoLite2-Country.mmdb
+
+      - name: Get MM Asn
+        uses: actions/download-artifact@v4
+        with:
+          name: GeoLite2-ASN.mmdb
 
       - name: Create package
         id: package

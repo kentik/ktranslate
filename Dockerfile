@@ -9,13 +9,14 @@ RUN make
 # maxmind dbs
 FROM alpine:latest as maxmind
 ARG MAXMIND_LICENSE_KEY
+ARG YOUR_ACCOUNT_ID
 RUN apk add -U curl tar
 ENV GEOLITE2_COUNTRY_FILE=GeoLite2-Country.mmdb
 ENV GEOLITE2_ASN_FILE=GeoLite2-ASN.mmdb
 RUN if [ -z "${MAXMIND_LICENSE_KEY}" ]; then echo "MAXMIND_LICENSE_KEY" not set; exit 1; fi
-RUN curl -o /tmp/country.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" && \
+RUN curl -L -o /tmp/country.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz" && \
 	tar zxf /tmp/country.tar.gz --strip-components 1 -C /
-RUN curl -o /tmp/asn.tar.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-ASN&license_key=${MAXMIND_LICENSE_KEY}&suffix=tar.gz" && \
+RUN curl -L -o /tmp/asn.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz" && \
 	tar zxf /tmp/asn.tar.gz --strip-components 1 -C /
 
 # snmp profiles
