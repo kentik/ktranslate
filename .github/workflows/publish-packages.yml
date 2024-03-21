@@ -10,6 +10,9 @@ jobs:
   get_mm:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Install MM DBs
         run: |
           YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }} MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
