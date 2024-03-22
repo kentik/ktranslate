@@ -56,6 +56,7 @@ const (
 	ControllerKey         = "meraki_controller_name"
 	MerakiApiKey          = "KENTIK_MERAKI_API_KEY"
 	DeviceCacheDuration   = time.Duration(24) * time.Hour
+	UplinkBWCacheDuration = time.Duration(24) * time.Hour
 	MAX_TIMEOUT_RETRY     = 10 // Don't retry a call more than this many times.
 	MAX_TIMEOUT_SEC       = 5  // Sleep this many sec each 429.
 	DEFAULT_TIMEOUT_RETRY = 2
@@ -1057,26 +1058,35 @@ func (a *signalStat) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type uplinkBWLimit struct {
+	// configured DOWN limit for the uplink (in Kbps).  Null indicated unlimited
+	LimitDown int64 `json:"limitDown,omitempty"`
+
+	// configured UP limit for the uplink (in Kbps).  Null indicated unlimited
+	LimitUp int64 `json:"limitUp,omitempty"`
+}
+
 type uplink struct {
-	PrimaryDNS     string     `json:"primaryDns"`
-	SecondaryDNS   string     `json:"secondaryDns"`
-	IpAssignedBy   string     `json:"ipAssignedBy"`
-	Interface      string     `json:"interface"`
-	Status         string     `json:"status"`
-	IP             string     `json:"ip"`
-	Gateway        string     `json:"gateway"`
-	PublicIP       string     `json:"publicIp"`
-	Provider       string     `json:"provider"`
-	ICCID          string     `json:"iccid"`
-	ConnectionType string     `json:"connectionType"`
-	Model          string     `json:"model"`
-	APN            string     `json:"apn"`
-	SignalStat     signalStat `json:"signalStat"`
-	DNS1           string     `json:"dns1"`
-	DNS2           string     `json:"dns2"`
-	SignalType     string     `json:"signalType"`
-	Usage          *appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0ByUplinkItems0
-	LatencyLoss    deviceUplinkLatency
+	PrimaryDNS      string     `json:"primaryDns"`
+	SecondaryDNS    string     `json:"secondaryDns"`
+	IpAssignedBy    string     `json:"ipAssignedBy"`
+	Interface       string     `json:"interface"`
+	Status          string     `json:"status"`
+	IP              string     `json:"ip"`
+	Gateway         string     `json:"gateway"`
+	PublicIP        string     `json:"publicIp"`
+	Provider        string     `json:"provider"`
+	ICCID           string     `json:"iccid"`
+	ConnectionType  string     `json:"connectionType"`
+	Model           string     `json:"model"`
+	APN             string     `json:"apn"`
+	SignalStat      signalStat `json:"signalStat"`
+	DNS1            string     `json:"dns1"`
+	DNS2            string     `json:"dns2"`
+	SignalType      string     `json:"signalType"`
+	Usage           *appliance.GetOrganizationApplianceUplinksUsageByNetworkOKBodyItems0ByUplinkItems0
+	LatencyLoss     deviceUplinkLatency
+	BandwidthLimits uplinkBWLimit
 }
 
 func (du *deviceUplink) SetLatencyLoss(u deviceUplinkLatency) {
@@ -1182,6 +1192,14 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 
 		// Now, load latency for any of these which have them:
 		err = c.getUplinkLatencyLoss(dur, uplinks)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// Optional, this is MX only. Also a per network call so may be slow when not cached and lots of networks,
+	if c.conf.Ext.MerakiConfig.Prefs["show_uplink_bandwidth_limits"] {
+		err := c.getUplinkExtraInfo(uplinks)
 		if err != nil {
 			return nil, err
 		}
@@ -1334,6 +1352,14 @@ func (c *MerakiClient) parseUplinks(uplinkMap map[string]deviceUplink) ([]*kt.JC
 			dst.CustomBigInt = map[string]int64{}
 			dst.EventType = kt.KENTIK_EVENT_SNMP_DEV_METRIC
 			dst.Provider = kt.ProviderMerakiCloud
+
+			// Optional, MX only!
+			if uplink.BandwidthLimits.LimitUp > 0 {
+				dst.CustomBigInt["bw_limit_up"] = uplink.BandwidthLimits.LimitUp
+			}
+			if uplink.BandwidthLimits.LimitDown > 0 {
+				dst.CustomBigInt["bw_limit_down"] = uplink.BandwidthLimits.LimitDown
+			}
 
 			dst.Timestamp = time.Now().Unix()
 			dst.CustomMetrics = map[string]kt.MetricInfo{}
@@ -1741,6 +1767,8 @@ type clientCache struct {
 	log            logger.ContextL
 	deviceInfoTime time.Time
 	deviceInfo     []*organizations.GetOrganizationDevicesOKBodyItems0
+	uplinkBWTime   time.Time
+	uplinkInfoBW   map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody
 }
 
 func newClientCache(log logger.ContextL) *clientCache {
@@ -1757,9 +1785,22 @@ func (c *clientCache) getDeviceInfo() ([]*organizations.GetOrganizationDevicesOK
 	return c.deviceInfo, true
 }
 
+func (c *clientCache) getUplinkBW() (map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody, bool) {
+	if c.uplinkBWTime.Add(UplinkBWCacheDuration).Before(time.Now()) { // No information, cache invalid or old.
+		return nil, false
+	}
+
+	return c.uplinkInfoBW, true
+}
+
 func (c *clientCache) setDeviceInfo(infos []*organizations.GetOrganizationDevicesOKBodyItems0) {
 	c.deviceInfo = infos
 	c.deviceInfoTime = time.Now()
+}
+
+func (c *clientCache) setUplinkBW(infos map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody) {
+	c.uplinkInfoBW = infos
+	c.uplinkBWTime = time.Now()
 }
 
 func (c *MerakiClient) getDeviceInfo(devices []*deviceStatusWrapper) error {
@@ -1890,4 +1931,82 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 	}
 
 	return res, nil
+}
+
+func (c *MerakiClient) getUplinkExtraInfo(uplinkMap map[string]deviceUplink) error {
+
+	var getUplinkExtraInfo func(network networkDesc, timeouts int) (*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody, error)
+	getUplinkExtraInfo = func(network networkDesc, timeouts int) (*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody, error) {
+		params := appliance.NewGetNetworkApplianceTrafficShapingUplinkBandwidthParamsWithTimeout(c.timeout)
+		params.SetNetworkID(network.ID)
+
+		prod, err := c.client.Appliance.GetNetworkApplianceTrafficShapingUplinkBandwidth(params, c.auth)
+		if err != nil {
+			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
+				sleepDur := time.Duration(MAX_TIMEOUT_SEC) * time.Second
+				c.log.Warnf("Uplink Extra Info: %s 429, sleeping %v", network.Name, sleepDur)
+				time.Sleep(sleepDur) // For right now guess on this, need to add 429 to spec.
+				timeouts++
+				return getUplinkExtraInfo(network, timeouts)
+			}
+			return nil, err
+		}
+
+		return prod.GetPayload(), nil
+	}
+
+	// First check the cache.
+	if cc, ok := c.cache.getUplinkBW(); ok {
+		for _, device := range uplinkMap {
+			if info, ok := cc[device.NetworkID]; ok {
+				for i, ul := range device.Uplinks {
+					switch ul.Interface {
+					case "cellular":
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Cellular.LimitDown, LimitUp: info.BandwidthLimits.Cellular.LimitUp}
+					case "wan1":
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan1.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+					case "wan2":
+						device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan2.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+					}
+				}
+			}
+		}
+		return nil
+	}
+
+	// Else we have to build the map up here.
+	uplinkInfoBW := map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody{}
+	for _, org := range c.orgs {
+		for _, network := range org.networks {
+			info, err := getUplinkExtraInfo(network, 0)
+			if err != nil {
+				if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
+					continue
+				}
+				return err
+			}
+			uplinkInfoBW[network.ID] = info
+			time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Make sure we don't hit the API too hard.
+		}
+	}
+
+	c.cache.setUplinkBW(uplinkInfoBW)
+
+	// And finally add to the result.
+	for _, device := range uplinkMap {
+		if info, ok := uplinkInfoBW[device.NetworkID]; ok {
+			for i, ul := range device.Uplinks {
+				switch ul.Interface {
+				case "cellular":
+					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Cellular.LimitDown, LimitUp: info.BandwidthLimits.Cellular.LimitUp}
+				case "wan1":
+					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan1.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+				case "wan2":
+					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan2.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
+				}
+			}
+		}
+	}
+
+	return nil
 }
