@@ -1786,7 +1786,7 @@ func (c *clientCache) getDeviceInfo() ([]*organizations.GetOrganizationDevicesOK
 }
 
 func (c *clientCache) getUplinkBW() (map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody, bool) {
-	if c.deviceInfoTime.Add(UplinkBWCacheDuration).Before(time.Now()) { // No information, cache invalid or old.
+	if c.uplinkBWTime.Add(UplinkBWCacheDuration).Before(time.Now()) { // No information, cache invalid or old.
 		return nil, false
 	}
 
