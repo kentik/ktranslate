@@ -207,7 +207,7 @@ func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken s
 	}
 	prod, err := c.client.Organizations.GetOrganizationNetworks(params, c.auth)
 	if err != nil {
-		if c.conf.Ext.MerakiConfig.Prefs["retry_org_networks"] && retries >= MaxRetriesGetOrgNetworks {
+		if !c.conf.Ext.MerakiConfig.Prefs["retry_org_networks"] || retries >= MaxRetriesGetOrgNetworks {
 			return numNets, err
 		}
 		retries += 1
