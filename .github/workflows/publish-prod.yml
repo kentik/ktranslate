@@ -89,21 +89,6 @@ jobs:
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
 
-      - name: Build and Publish Docker (AWS Lambda)
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          platforms: linux/arm64
-          push: true
-          tags: kentik/ktranslate:v2arm64
-          build-args: |
-            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
-            YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }}
-            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
-          secrets: |
-            MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
-
       - name: Build and Publish Docker (Kentik EU)
         uses: docker/build-push-action@v2
         with:
