@@ -53,13 +53,14 @@ type networkDesc struct {
 }
 
 const (
-	ControllerKey         = "meraki_controller_name"
-	MerakiApiKey          = "KENTIK_MERAKI_API_KEY"
-	DeviceCacheDuration   = time.Duration(24) * time.Hour
-	UplinkBWCacheDuration = time.Duration(24) * time.Hour
-	MAX_TIMEOUT_RETRY     = 10 // Don't retry a call more than this many times.
-	MAX_TIMEOUT_SEC       = 5  // Sleep this many sec each 429.
-	DEFAULT_TIMEOUT_RETRY = 2
+	ControllerKey            = "meraki_controller_name"
+	MerakiApiKey             = "KENTIK_MERAKI_API_KEY"
+	DeviceCacheDuration      = time.Duration(24) * time.Hour
+	UplinkBWCacheDuration    = time.Duration(24) * time.Hour
+	MAX_TIMEOUT_RETRY        = 10 // Don't retry a call more than this many times.
+	MAX_TIMEOUT_SEC          = 5  // Sleep this many sec each 429.
+	DEFAULT_TIMEOUT_RETRY    = 2
+	MaxRetriesGetOrgNetworks = 3
 )
 
 var (
@@ -156,7 +157,7 @@ func NewMerakiClient(jchfChan chan []*kt.JCHF, gconf *kt.SnmpGlobalConfig, conf 
 
 		// Now list the networks for this org.
 		netSet := map[string]networkDesc{}
-		numAdded, err := c.getOrgNetworks(netSet, "", lorg, nets, 0)
+		numAdded, err := c.getOrgNetworks(netSet, "", lorg, nets, 0, 0)
 		if err != nil {
 			c.log.Warnf("Skipping organization %s because it does not have permission to list networks.", org.Name)
 			continue
@@ -195,7 +196,7 @@ func getNextLink(linkSet string) string {
 }
 
 func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken string,
-	org *organizations.GetOrganizationsOKBodyItems0, nets []*regexp.Regexp, numNets int) (int, error) {
+	org *organizations.GetOrganizationsOKBodyItems0, nets []*regexp.Regexp, numNets int, retries int) (int, error) {
 
 	perPageLimit := int64(100) // Seems like a good default.
 	params := organizations.NewGetOrganizationNetworksParamsWithTimeout(c.timeout)
@@ -206,7 +207,11 @@ func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken s
 	}
 	prod, err := c.client.Organizations.GetOrganizationNetworks(params, c.auth)
 	if err != nil {
-		return 0, err
+		if !c.conf.Ext.MerakiConfig.Prefs["retry_org_networks"] || retries >= MaxRetriesGetOrgNetworks {
+			return numNets, err
+		}
+		retries += 1
+		return c.getOrgNetworks(netSet, nextToken, org, nets, numNets, retries)
 	}
 
 	b, err := json.Marshal(prod.GetPayload())
@@ -241,7 +246,7 @@ func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken s
 	// Recursion!
 	nextLink := getNextLink(prod.Link)
 	if nextLink != "" {
-		return c.getOrgNetworks(netSet, nextLink, org, nets, numNets)
+		return c.getOrgNetworks(netSet, nextLink, org, nets, numNets, retries)
 	} else {
 		return numNets, nil
 	}
