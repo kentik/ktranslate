@@ -210,7 +210,9 @@ func (c *MerakiClient) getOrgNetworks(netSet map[string]networkDesc, nextToken s
 		if !c.conf.Ext.MerakiConfig.Prefs["retry_org_networks"] || retries >= MaxRetriesGetOrgNetworks {
 			return numNets, err
 		}
+		c.log.Warnf("Retrying getOrgNetworks with error: %v", err)
 		retries += 1
+		time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Sleep a bit to catch up.
 		return c.getOrgNetworks(netSet, nextToken, org, nets, numNets, retries)
 	}
 
