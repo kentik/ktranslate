@@ -60,7 +60,7 @@ const (
 	MAX_TIMEOUT_RETRY        = 10 // Don't retry a call more than this many times.
 	MAX_TIMEOUT_SEC          = 5  // Sleep this many sec each 429.
 	DEFAULT_TIMEOUT_RETRY    = 2
-	MaxRetriesGetOrgNetworks = 2
+	MaxRetriesGetOrgNetworks = 3
 )
 
 var (
