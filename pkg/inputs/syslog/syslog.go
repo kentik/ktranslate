@@ -255,6 +255,9 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 		}
 	}
 
+	// Do we want to delete older timestamps?
+	delete(msg, "timestamp")
+
 	msg["plugin.type"] = kt.PluginSyslog         // NR Processing.
 	msg["instrumentation.name"] = InstNameSyslog // NR Processing.
 
