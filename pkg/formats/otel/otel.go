@@ -3,6 +3,7 @@ package otel
 import (
 	"context"
 	"flag"
+	"fmt"
 	"strconv"
 	"sync"
 
@@ -14,6 +15,7 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/metric"
@@ -33,11 +35,13 @@ type OtelFormat struct {
 
 var (
 	endpoint string
+	protocol string
 	otelm    metric.Meter
 )
 
 func init() {
-	flag.StringVar(&endpoint, "otel.endpoint", "", "Send data to this endpoint or stdout")
+	flag.StringVar(&endpoint, "otel.endpoint", "", "Send data to this endpoint.")
+	flag.StringVar(&protocol, "otel.protocol", "stdout", "Send data using this protocol. (grpc,http,https,stdout)")
 }
 
 func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
@@ -51,18 +55,27 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 	}
 
 	var exp sdkmetric.Exporter
-	if cfg.Endpoint == "stdout" {
+	switch cfg.Protocol {
+	case "stdout":
 		metricExporter, err := stdoutmetric.New()
 		if err != nil {
 			return nil, err
 		}
 		exp = metricExporter
-	} else {
+	case "http", "https": // Use OTEL_EXPORTER_OTLP_COMPRESSION env var to turn on gzip compression.
 		metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
 		if err != nil {
 			return nil, err
 		}
 		exp = metricExporter
+	case "grpc": // Same, use OTEL_EXPORTER_OTLP_COMPRESSION env var to turn on gzip compression.
+		metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpoint(cfg.Endpoint))
+		if err != nil {
+			return nil, err
+		}
+		exp = metricExporter
+	default:
+		return nil, fmt.Errorf("Invalid otel.protocol value. Currently supported: grpc,http,https,stdout")
 	}
 
 	meterProvider := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exp)))
