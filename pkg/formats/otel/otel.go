@@ -112,11 +112,12 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
+			lm := m
 			cv, err := otelm.Float64ObservableGauge(
-				m.Name,
+				lm.Name,
 				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					for _, m := range f.getLatestInputs(m.Name) {
-						o.Observe(m.Value, metric.WithAttributeSet(m.GetTagValues()))
+					for _, mm := range f.getLatestInputs(lm.Name) {
+						o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
 					}
 					return nil
 				}),
@@ -124,9 +125,8 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			if err != nil {
 				return nil, err
 			}
-			f.vecs[m.Name] = cv
-			f.inputs[m.Name] = make([]OtelData, 0)
-			f.Infof("Adding %s", m.Name)
+			f.vecs[lm.Name] = cv
+			f.inputs[lm.Name] = make([]OtelData, 0)
 		}
 		// Save this for later, for the next time the async callback is run.
 		f.inputs[m.Name] = append(f.inputs[m.Name], m)
