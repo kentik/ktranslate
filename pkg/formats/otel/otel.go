@@ -63,12 +63,18 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		}
 		exp = metricExporter
 	case "http", "https": // Use OTEL_EXPORTER_OTLP_COMPRESSION env var to turn on gzip compression.
+		if cfg.Endpoint == "" {
+			return nil, fmt.Errorf("-otel.endpoint required for http(s) exports.")
+		}
 		metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
 		if err != nil {
 			return nil, err
 		}
 		exp = metricExporter
 	case "grpc": // Same, use OTEL_EXPORTER_OTLP_COMPRESSION env var to turn on gzip compression.
+		if cfg.Endpoint == "" {
+			return nil, fmt.Errorf("-otel.endpoint required for grpc exports.")
+		}
 		metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpoint(cfg.Endpoint))
 		if err != nil {
 			return nil, err
@@ -83,7 +89,7 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 	jf.exp = exp
 
 	otelm = otel.Meter("ktranslate")
-	jf.Infof("Running exporting to %s", cfg.Endpoint)
+	jf.Infof("Running exporting via %s to %s", cfg.Protocol, cfg.Endpoint)
 
 	return jf, nil
 }
