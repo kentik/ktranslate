@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 
 	"github.com/kentik/ktranslate"
@@ -29,8 +30,9 @@ type OtelFormat struct {
 	exp          sdkmetric.Exporter
 	invalids     map[string]bool
 	config       *ktranslate.OtelFormatConfig
-	vecs         map[string]metric.Float64Histogram
+	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
+	inputs       map[string][]OtelData
 }
 
 var (
@@ -50,8 +52,9 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		lastMetadata: map[string]*kt.LastMetadata{},
 		invalids:     map[string]bool{},
 		ctx:          context.Background(),
-		vecs:         map[string]metric.Float64Histogram{},
+		vecs:         map[string]metric.Float64ObservableGauge{},
 		config:       cfg,
+		inputs:       map[string][]OtelData{},
 	}
 
 	var exp sdkmetric.Exporter
@@ -109,14 +112,24 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
-			cv, err := otelm.Float64Histogram(m.Name)
+			cv, err := otelm.Float64ObservableGauge(
+				m.Name,
+				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
+					for _, m := range f.getLatestInputs(m.Name) {
+						o.Observe(m.Value, metric.WithAttributeSet(m.GetTagValues()))
+					}
+					return nil
+				}),
+			)
 			if err != nil {
 				return nil, err
 			}
 			f.vecs[m.Name] = cv
+			f.inputs[m.Name] = make([]OtelData, 0)
 			f.Infof("Adding %s", m.Name)
 		}
-		f.vecs[m.Name].Record(f.ctx, m.Value, metric.WithAttributeSet(m.GetTagValues()))
+		// Save this for later, for the next time the async callback is run.
+		f.inputs[m.Name] = append(f.inputs[m.Name], m)
 	}
 
 	return nil, nil
@@ -131,6 +144,15 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	return nil, nil
 }
 
+func (f *OtelFormat) getLatestInputs(name string) []OtelData {
+	f.mux.Lock()
+	defer f.mux.Unlock()
+
+	nv := f.inputs[name]
+	f.inputs[name] = make([]OtelData, 0)
+	return nv
+}
+
 func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 	switch in.EventType {
 	case kt.KENTIK_EVENT_TYPE:
@@ -139,6 +161,12 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		return f.fromKSynth(in)
 	case kt.KENTIK_EVENT_SYNTH_GEST:
 		return f.fromKSyngest(in)
+	case kt.KENTIK_EVENT_SNMP_DEV_METRIC:
+		return f.fromSnmpDeviceMetric(in)
+	case kt.KENTIK_EVENT_SNMP_INT_METRIC:
+		return f.fromSnmpInterfaceMetric(in)
+	case kt.KENTIK_EVENT_SNMP_METADATA:
+		return f.fromSnmpMetadata(in)
 	default:
 		f.mux.Lock()
 		defer f.mux.Unlock()
@@ -313,6 +341,145 @@ func (f *OtelFormat) fromKflow(in *kt.JCHF) []OtelData {
 	}
 
 	return res
+}
+
+func (f *OtelFormat) fromSnmpDeviceMetric(in *kt.JCHF) []OtelData {
+	metrics := in.CustomMetrics
+	attr := map[string]interface{}{}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+
+	ms := make([]OtelData, 0, len(metrics))
+	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
+		if _, ok := in.CustomBigInt[m]; ok {
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], true, false)
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], false) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+
+			mtype := name.GetType()
+			if name.Format == kt.FloatMS {
+				ms = append(ms, OtelData{
+					Name:  "kentik." + mtype + "." + m,
+					Value: float64(float64(in.CustomBigInt[m]) / 1000),
+					Tags:  attrNew,
+				})
+			} else {
+				ms = append(ms, OtelData{
+					Name:  "kentik." + mtype + "." + m,
+					Value: float64(in.CustomBigInt[m]),
+					Tags:  attrNew,
+				})
+			}
+		}
+	}
+
+	return ms
+}
+
+func (f *OtelFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []OtelData {
+	metrics := in.CustomMetrics
+	attr := map[string]interface{}{}
+	f.mux.RLock()
+	defer f.mux.RUnlock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	if f.lastMetadata[in.DeviceName] == nil {
+		f.Debugf("Missing interface metadata for %s", in.DeviceName)
+	}
+
+	ms := make([]OtelData, 0, len(metrics))
+	profileName := "snmp"
+	for m, name := range metrics {
+		if m == "" {
+			f.Errorf("Missing metric name, skipping %v", attr)
+			continue
+		}
+		if strings.HasSuffix(m, "_counter") {
+			// Skip these counters which are not needed.
+			continue
+		}
+		profileName = name.Profile
+		if _, ok := in.CustomBigInt[m]; ok {
+			attrNew := util.CopyAttrForSnmp(attr, m, name, f.lastMetadata[in.DeviceName], true, false)
+			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+				continue // This Metric isn't in the white list so lets drop it.
+			}
+			ms = append(ms, OtelData{
+				Name:  "kentik.snmp." + m,
+				Value: float64(in.CustomBigInt[m]),
+				Tags:  attrNew,
+			})
+		}
+	}
+
+	// Grap capacity utilization if possible.
+	if f.lastMetadata[in.DeviceName] != nil {
+		if ii, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.InputPort]; ok {
+			if speed, ok := ii["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+					if uptimeSpeed > 0 {
+						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
+							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+								ms = append(ms, OtelData{
+									Name:  "kentik.snmp.IfInUtilization",
+									Value: float64(inBytes*8*100) / float64(uptimeSpeed),
+									Tags:  attrNew,
+								})
+							}
+						}
+					}
+				}
+			}
+		}
+		if oi, ok := f.lastMetadata[in.DeviceName].InterfaceInfo[in.OutputPort]; ok {
+			if speed, ok := oi["Speed"]; ok {
+				if ispeed, ok := speed.(int32); ok {
+					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
+					if uptimeSpeed > 0 {
+						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
+							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
+								ms = append(ms, OtelData{
+									Name:  "kentik.snmp.IfOutUtilization",
+									Value: float64(outBytes*8*100) / float64(uptimeSpeed),
+									Tags:  attrNew,
+								})
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ms
+}
+
+func (f *OtelFormat) fromSnmpMetadata(in *kt.JCHF) []OtelData {
+	if in.DeviceName == "" { // Only run if this is set.
+		return nil
+	}
+
+	lm := util.SetMetadata(in)
+
+	f.mux.Lock()
+	defer f.mux.Unlock()
+	if f.lastMetadata[in.DeviceName] == nil || lm.Size() >= f.lastMetadata[in.DeviceName].Size() {
+		f.Infof("New Metadata for %s", in.DeviceName)
+		f.lastMetadata[in.DeviceName] = lm
+	} else {
+		f.Infof("The metadata for %s was not updated since the attribute size is smaller. New = %d < Old = %d, Size difference = %v.",
+			in.DeviceName, lm.Size(), f.lastMetadata[in.DeviceName].Size(), f.lastMetadata[in.DeviceName].Missing(lm))
+	}
+
+	return nil
 }
 
 type OtelData struct {
