@@ -46,6 +46,13 @@ func init() {
 	flag.StringVar(&protocol, "otel.protocol", "stdout", "Send data using this protocol. (grpc,http,https,stdout)")
 }
 
+/*
+*
+Some usefule env vars to think about setting:
+
+* OTEL_METRIC_EXPORT_INTERVAL=30000 -- time in ms to export. Default 60,000 (1 min).
+* OTEL_EXPORTER_OTLP_COMPRESSION=gzip -- turn on gzip compression.
+*/
 func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
 	jf := &OtelFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
