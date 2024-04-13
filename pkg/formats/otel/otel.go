@@ -174,6 +174,8 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		return f.fromSnmpInterfaceMetric(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
+	case kt.KENTIK_EVENT_KTRANS_METRIC:
+		return f.fromKtranslate(in)
 	default:
 		f.mux.Lock()
 		defer f.mux.Unlock()
@@ -487,6 +489,60 @@ func (f *OtelFormat) fromSnmpMetadata(in *kt.JCHF) []OtelData {
 	}
 
 	return nil
+}
+
+func (f *OtelFormat) fromKtranslate(in *kt.JCHF) []OtelData {
+	// Map the basic strings into here.
+	attr := map[string]interface{}{}
+	metrics := map[string]kt.MetricInfo{"name": kt.MetricInfo{}, "value": kt.MetricInfo{}, "count": kt.MetricInfo{}, "one-minute": kt.MetricInfo{}, "95-percentile": kt.MetricInfo{}, "du": kt.MetricInfo{}}
+	f.mux.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.mux.RUnlock()
+	ms := make([]OtelData, 0)
+
+	switch in.CustomStr["type"] {
+	case "counter":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["count"] > 0 {
+			ms = append(ms, OtelData{
+				Name:  "kentik.ktranslate." + in.CustomStr["name"],
+				Value: float64(in.CustomBigInt["count"]) / 100,
+				Tags:  attr,
+			})
+		}
+	case "gauge":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["value"] > 0 {
+			ms = append(ms, OtelData{
+				Name:  "kentik.ktranslate." + in.CustomStr["name"],
+				Value: float64(in.CustomBigInt["value"]) / 100,
+				Tags:  attr,
+			})
+		}
+	case "histogram":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
+			ms = append(ms, OtelData{
+				Name:  "kentik.ktranslate." + in.CustomStr["name"],
+				Value: float64(in.CustomBigInt["95-percentile"]) / 100,
+				Tags:  attr,
+			})
+		}
+	case "meter":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["one-minute"] > 0 {
+			ms = append(ms, OtelData{
+				Name:  "kentik.ktranslate." + in.CustomStr["name"],
+				Value: float64(in.CustomBigInt["one-minute"]) / 100,
+				Tags:  attr,
+			})
+		}
+	case "timer":
+		if in.CustomStr["force"] == "true" || in.CustomBigInt["95-percentile"] > 0 {
+			ms = append(ms, OtelData{
+				Name:  "kentik.ktranslate." + in.CustomStr["name"],
+				Value: float64(in.CustomBigInt["95-percentile"]) / 100,
+				Tags:  attr,
+			})
+		}
+	}
+	return ms
 }
 
 type OtelData struct {
