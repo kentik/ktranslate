@@ -85,7 +85,7 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		if cfg.Endpoint == "" {
 			return nil, fmt.Errorf("-otel.endpoint required for grpc exports.")
 		}
-		metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpoint(cfg.Endpoint))
+		metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpointURL(cfg.Endpoint))
 		if err != nil {
 			return nil, err
 		}
