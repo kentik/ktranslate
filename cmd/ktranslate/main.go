@@ -438,6 +438,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/formats/otel
 			case "otel.endpoint":
 				cfg.OtelFormat.Endpoint = val
+			case "otel.protocol":
+				cfg.OtelFormat.Protocol = val
 			// pkg/formats/influxdb
 			case "influxdb_measurement_prefix":
 				cfg.InfluxDBFormat.MeasurementPrefix = val

@@ -38,6 +38,7 @@ type PrometheusFormatConfig struct {
 // OtelFormatConfig is the config for the otel format
 type OtelFormatConfig struct {
 	Endpoint    string
+	Protocol    string
 	FlowsNeeded int
 }
 
@@ -368,7 +369,8 @@ func DefaultConfig() *Config {
 			FlowsNeeded:          10,
 		},
 		OtelFormat: &OtelFormatConfig{
-			Endpoint:    "stdout",
+			Endpoint:    "",
+			Protocol:    "stdout",
 			FlowsNeeded: 10,
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
