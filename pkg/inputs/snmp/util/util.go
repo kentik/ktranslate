@@ -27,6 +27,7 @@ const (
 	CONV_ENGINE_ID = "engine_id"
 	CONV_REGEXP    = "regexp"
 	CONV_ONE       = "to_one"
+	CONV_TIMESTAMP = "hextodatetime"
 
 	ConstantOidPrefix       = "1.3.6.1.6.3.1135.6169."
 	ConstantOidMetricPrefix = ".1.3.6.1.6.3.1136.6169."
@@ -279,6 +280,8 @@ func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, s
 		return EngineID(bv)
 	case CONV_ONE:
 		return toOne(bv)
+	case CONV_TIMESTAMP:
+		return hexToDateTime(bv)
 	default:
 		// Otherwise, try out some custom conversions.
 		split := strings.Split(conv, ":")
@@ -413,4 +416,68 @@ func fromRegexp(bv []byte, reg string) (int64, string, map[string]string) {
 // This one is used for certain string valued oids which we want to poll as metrics. Just converts to 1.
 func toOne(bv []byte) (int64, string, map[string]string) {
 	return 1, string(bv), nil
+}
+
+/*
+DateAndTime ::= TEXTUAL-CONVENTION
+
+	DISPLAY-HINT "2d-1d-1d,1d:1d:1d.1d,1a1d:1d"
+	STATUS       current
+	DESCRIPTION
+	        "A date-time specification.
+
+	        field  octets  contents                  range
+	        -----  ------  --------                  -----
+	          1      1-2   year*                     0..65536
+	          2       3    month                     1..12
+	          3       4    day                       1..31
+	          4       5    hour                      0..23
+	          5       6    minutes                   0..59
+	          6       7    seconds                   0..60
+	                       (use 60 for leap-second)
+	          7       8    deci-seconds              0..9
+	          8       9    direction from UTC        '+' / '-'
+	          9      10    hours from UTC*           0..13
+	         10      11    minutes from UTC          0..59
+
+	        * Notes:
+	        - the value of year is in network-byte order
+	        - daylight saving time in New Zealand is +13
+
+	        For example, Tuesday May 26, 1992 at 1:30:15 PM EDT would be
+	        displayed as:
+
+	                         1992-5-26,13:30:15.0,-4:0
+
+	        Note that if only local time is known, then timezone
+	        information (fields 8-10) is not present."
+	SYNTAX       OCTET STRING (SIZE (8 | 11))
+
+E.g. spsActiveAlarmLogTime for SilverPeak SD-WAN devices:
+iso.3.6.1.4.1.23867.3.1.1.2.1.1.11.1 = Hex-STRING: 07 E7 0A 1C 15 35 34 00 2B 00 00
+
+Using the conversion above the timestamp value would be converted to:
+2023-10-28,21:53:52.0,+0:0
+*/
+func hexToDateTime(bv []byte) (int64, string, map[string]string) {
+	if len(bv) != 8 && len(bv) != 11 {
+		return 0, "", nil // value is 8 or 11 bytes long only.
+	}
+
+	year := binary.BigEndian.Uint16(bv[0:2]) // Network byte order == big endian.
+	month := uint8(bv[2])
+	day := uint8(bv[3])
+	hour := uint8(bv[4])
+	min := uint8(bv[5])
+	sec := uint8(bv[6])
+	deciSec := uint8(bv[7])
+
+	if len(bv) == 11 {
+		dirUtc := string(bv[8:9])
+		hrsUtc := uint8(bv[9])
+		minUtc := uint8(bv[10])
+		return 0, fmt.Sprintf("%d-%d-%d,%d:%d:%d.%d,%s%d:%d", year, month, day, hour, min, sec, deciSec, dirUtc, hrsUtc, minUtc), nil
+	} else {
+		return 0, fmt.Sprintf("%d-%d-%d,%d:%d:%d.%d", year, month, day, hour, min, sec, deciSec), nil
+	}
 }
