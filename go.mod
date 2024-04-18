@@ -48,8 +48,8 @@ require (
 	github.com/syndtr/goleveldb v1.0.0
 	go.opentelemetry.io/otel v1.25.0
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.25.0
-	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp v0.45.0
-	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v0.45.0
+	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp v1.25.0
+	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v1.25.0
 	go.opentelemetry.io/otel/metric v1.25.0
 	go.opentelemetry.io/otel/sdk/metric v1.25.0
 	go.starlark.net v0.0.0-20220926145019-14b050677505

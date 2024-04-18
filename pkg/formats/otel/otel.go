@@ -2,8 +2,11 @@ package otel
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -21,6 +24,7 @@ import (
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/metric"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"google.golang.org/grpc/credentials"
 )
 
 type OtelFormat struct {
@@ -36,14 +40,20 @@ type OtelFormat struct {
 }
 
 var (
-	endpoint string
-	protocol string
-	otelm    metric.Meter
+	endpoint   string
+	protocol   string
+	otelm      metric.Meter
+	clientCert string
+	clientKey  string
+	rootCA     string
 )
 
 func init() {
 	flag.StringVar(&endpoint, "otel.endpoint", "", "Send data to this endpoint.")
 	flag.StringVar(&protocol, "otel.protocol", "stdout", "Send data using this protocol. (grpc,http,https,stdout)")
+	flag.StringVar(&clientCert, "otel.tls_cert", "", "Load TLS client cert from file.")
+	flag.StringVar(&clientKey, "otel.tls_key", "", "Load TLS client key from file.")
+	flag.StringVar(&rootCA, "otel.root_ca", "", "Load TLS root CA from file.")
 }
 
 /*
@@ -76,20 +86,57 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		if cfg.Endpoint == "" {
 			return nil, fmt.Errorf("-otel.endpoint required for http(s) exports.")
 		}
-		metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
-		if err != nil {
-			return nil, err
+
+		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
+			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+			if err != nil {
+				return nil, err
+			}
+			metricExporter, err := otlpmetrichttp.New(jf.ctx,
+				otlpmetrichttp.WithEndpointURL(cfg.Endpoint),
+				otlpmetrichttp.WithTLSClientConfig(c),
+			)
+			if err != nil {
+				return nil, err
+			}
+			exp = metricExporter
+		} else {
+			metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
+			if err != nil {
+				return nil, err
+			}
+			exp = metricExporter
 		}
-		exp = metricExporter
 	case "grpc": // Same, use OTEL_EXPORTER_OTLP_COMPRESSION env var to turn on gzip compression.
 		if cfg.Endpoint == "" {
 			return nil, fmt.Errorf("-otel.endpoint required for grpc exports.")
 		}
-		metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpointURL(cfg.Endpoint))
-		if err != nil {
-			return nil, err
+
+		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
+			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+			if err != nil {
+				return nil, err
+			}
+			metricExporter, err := otlpmetricgrpc.New(jf.ctx,
+				otlpmetricgrpc.WithEndpointURL(cfg.Endpoint),
+				otlpmetricgrpc.WithTLSCredentials(
+					// mutual tls.
+					credentials.NewTLS(c),
+				),
+			)
+			if err != nil {
+				return nil, err
+			}
+			exp = metricExporter
+		} else {
+			metricExporter, err := otlpmetricgrpc.New(jf.ctx, otlpmetricgrpc.WithEndpointURL(cfg.Endpoint))
+			if err != nil {
+				return nil, err
+			}
+			exp = metricExporter
 		}
-		exp = metricExporter
 	default:
 		return nil, fmt.Errorf("Invalid otel.protocol value. Currently supported: grpc,http,https,stdout")
 	}
@@ -566,4 +613,26 @@ func (d *OtelData) GetTagValues() attribute.Set {
 	}
 	s, _ := attribute.NewSetWithFiltered(res, func(kv attribute.KeyValue) bool { return true })
 	return s
+}
+
+// getTls returns a configuration that enables the use of mutual TLS.
+func getTls(clientCert string, clientKey string, rootCA string) (*tls.Config, error) {
+	clientAuth, err := tls.LoadX509KeyPair(clientCert, clientKey)
+	if err != nil {
+		return nil, err
+	}
+
+	caCert, err := os.ReadFile(rootCA)
+	if err != nil {
+		return nil, err
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	c := &tls.Config{
+		RootCAs:      caCertPool,
+		Certificates: []tls.Certificate{clientAuth},
+	}
+
+	return c, nil
 }
