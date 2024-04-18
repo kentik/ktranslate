@@ -160,6 +160,23 @@ func TestHexToIP(t *testing.T) {
 	}
 }
 
+func TestHexDatetime(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+
+	tests := map[string][]byte{
+		"2023-10-28,21:53:52.0,+0:0": []byte{0x07, 0xE7, 0x0A, 0x1C, 0x15, 0x35, 0x34, 0x00, 0x2B, 0x00, 0x00},
+		"":                           []byte{0x07, 0xE7, 0x0A},                               // Too small
+		"2023-10-28,21:53:52.1":      []byte{0x07, 0xE7, 0x0A, 0x1C, 0x15, 0x35, 0x34, 0x01}, // No timezone.
+	}
+
+	for expt, in := range tests {
+		pdu := gosnmp.SnmpPDU{Value: in}
+		_, str, _ := GetFromConv(pdu, CONV_TIMESTAMP, l)
+		assert.Equal(expt, str, "%s", in)
+	}
+}
+
 func TestEngineID(t *testing.T) {
 	assert := assert.New(t)
 	l := lt.NewTestContextL(logger.NilContext, t)
