@@ -1,6 +1,7 @@
 package formats
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kentik/ktranslate"
@@ -50,7 +51,7 @@ const (
 	FORMAT_OTEL                 = "otel"
 )
 
-func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config) (Formatter, error) {
+func NewFormat(ctx context.Context, format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config) (Formatter, error) {
 	switch format {
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
@@ -79,7 +80,7 @@ func NewFormat(format Format, log logger.Underlying, registry go_metrics.Registr
 	case FORMAT_PROM_REMOTE:
 		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_OTEL:
-		return otel.NewFormat(log, cfg.OtelFormat)
+		return otel.NewFormat(ctx, log, cfg.OtelFormat)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}

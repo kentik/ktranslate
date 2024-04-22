@@ -37,6 +37,7 @@ type OtelFormat struct {
 	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
 	inputs       map[string][]OtelData
+	trapLog      *OtelLogger
 }
 
 var (
@@ -63,7 +64,7 @@ Some usefule env vars to think about setting:
 * OTEL_METRIC_EXPORT_INTERVAL=30000 -- time in ms to export. Default 60,000 (1 min).
 * OTEL_EXPORTER_OTLP_COMPRESSION=gzip -- turn on gzip compression.
 */
-func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
+func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
 	jf := &OtelFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
@@ -145,6 +146,12 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 	otel.SetMeterProvider(meterProvider)
 	jf.exp = exp
 
+	ol, err := NewLogger(ctx, jf, cfg)
+	if err != nil {
+		return nil, err
+	}
+	jf.trapLog = ol
+
 	otelm = otel.Meter("ktranslate")
 	jf.Infof("Running exporting via %s to %s", cfg.Protocol, cfg.Endpoint)
 
@@ -223,6 +230,12 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		return f.fromSnmpMetadata(in)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
 		return f.fromKtranslate(in)
+	case kt.KENTIK_EVENT_SNMP_TRAP, kt.KENTIK_EVENT_EXT:
+		// This is actually an event, send out as an event to sink directly.
+		err := f.trapLog.RecordTrap(in)
+		if err != nil {
+			f.Errorf("There was an error when sending an event: %v.", err)
+		}
 	default:
 		f.mux.Lock()
 		defer f.mux.Unlock()
