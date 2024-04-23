@@ -88,16 +88,15 @@ func (ol *OtelLogger) watchForClose(ctx context.Context, loggerProvider *sdk.Log
 
 // For now, just log everything as json
 func (ol *OtelLogger) RecordTrap(msg *kt.JCHF) error {
-	msgsNew := []map[string]interface{}{msg.Flatten()}
-	for i, _ := range msgsNew {
-		strip(msgsNew[i])
-	}
-	t, err := json.Marshal(msgsNew)
-	if err != nil {
-		return err
-	}
+	flat := msg.Flatten()
+	strip(flat)
 
-	slog.LogAttrs(ol.ctx, slog.LevelInfo, string(t))
+	atrs := make([]slog.Attr, 0)
+	for k, v := range flat {
+		atrs = append(atrs, slog.Any(k, v))
+	}
+	slog.LogAttrs(ol.ctx, slog.LevelInfo, "New Trap Event", atrs...)
+
 	return nil
 }
 
