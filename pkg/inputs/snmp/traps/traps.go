@@ -198,6 +198,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 
 	// What trap is this from?
 	found := false // Set to true ONLY if the TrapName is set.
+	trapOid := ""
 	var trap *mibs.Trap
 	for _, v := range packet.Variables {
 		if v.Name == snmpTrapOID || v.Name == snmpTrapOID_0 {
@@ -205,6 +206,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 				toid := v.Value.(string)
 				trap = s.mibdb.GetTrap(toid)
 				dst.CustomStr["TrapOID"] = toid
+				trapOid = toid
 				if trap != nil {
 					dst.CustomStr["TrapName"] = trap.Name
 					idx := snmp_util.GetIndex(toid, trap.Oid)
@@ -230,6 +232,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 
 		// If we don't want undefined vars, pass along here.
 		if res == nil && (s.conf.Trap.DropUndefined || trap.DropUndefinedVars()) {
+			s.log.Infof("Trap variable dropped: %s", v.Name)
 			continue
 		}
 
@@ -281,6 +284,8 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	if s.conf.Trap.DropUndefined || trap.DropUndefinedVars() {
 		if found {
 			s.jchfChan <- []*kt.JCHF{dst}
+		} else {
+			s.log.Infof("Whole trap packet dropped: %s", trapOid)
 		}
 	} else { // Else, keep to current behavor.
 		s.jchfChan <- []*kt.JCHF{dst}
