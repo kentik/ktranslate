@@ -75,6 +75,16 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		inputs:       map[string][]OtelData{},
 	}
 
+	var tlsC *tls.Config = nil
+	if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
+		jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+		c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+		if err != nil {
+			return nil, err
+		}
+		tlsC = c
+	}
+
 	var exp sdkmetric.Exporter
 	switch cfg.Protocol {
 	case "stdout":
@@ -88,15 +98,10 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 			return nil, fmt.Errorf("-otel.endpoint required for http(s) exports.")
 		}
 
-		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
-			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			if err != nil {
-				return nil, err
-			}
+		if tlsC != nil {
 			metricExporter, err := otlpmetrichttp.New(jf.ctx,
 				otlpmetrichttp.WithEndpointURL(cfg.Endpoint),
-				otlpmetrichttp.WithTLSClientConfig(c),
+				otlpmetrichttp.WithTLSClientConfig(tlsC),
 			)
 			if err != nil {
 				return nil, err
@@ -114,17 +119,12 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 			return nil, fmt.Errorf("-otel.endpoint required for grpc exports.")
 		}
 
-		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
-			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			if err != nil {
-				return nil, err
-			}
+		if tlsC != nil {
 			metricExporter, err := otlpmetricgrpc.New(jf.ctx,
 				otlpmetricgrpc.WithEndpointURL(cfg.Endpoint),
 				otlpmetricgrpc.WithTLSCredentials(
 					// mutual tls.
-					credentials.NewTLS(c),
+					credentials.NewTLS(tlsC),
 				),
 			)
 			if err != nil {
@@ -146,7 +146,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 	otel.SetMeterProvider(meterProvider)
 	jf.exp = exp
 
-	ol, err := NewLogger(ctx, jf, cfg)
+	ol, err := NewLogger(ctx, jf, cfg, tlsC)
 	if err != nil {
 		return nil, err
 	}

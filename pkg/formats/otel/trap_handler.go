@@ -2,7 +2,9 @@ package otel
 
 import (
 	"context"
+	"crypto/tls"
 	"log/slog"
+	"net/url"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -11,8 +13,10 @@ import (
 	"github.com/agoda-com/opentelemetry-go/otelslog"
 	"github.com/agoda-com/opentelemetry-logs-go/exporters/otlp/otlplogs"
 	"github.com/agoda-com/opentelemetry-logs-go/exporters/otlp/otlplogs/otlplogsgrpc"
+	"github.com/agoda-com/opentelemetry-logs-go/exporters/otlp/otlplogs/otlplogshttp"
 	"github.com/agoda-com/opentelemetry-logs-go/exporters/stdout/stdoutlogs"
 	sdk "github.com/agoda-com/opentelemetry-logs-go/sdk/logs"
+	"google.golang.org/grpc/credentials"
 
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
@@ -36,22 +40,50 @@ type OtelLogger struct {
 	log    logger.ContextL
 }
 
-func NewLogger(ctx context.Context, log logger.ContextL, cfg *ktranslate.OtelFormatConfig) (*OtelLogger, error) {
+func NewLogger(ctx context.Context, log logger.ContextL, cfg *ktranslate.OtelFormatConfig, tlsC *tls.Config) (*OtelLogger, error) {
 	// configure opentelemetry logger provider
 	var logExporter sdk.LogRecordExporter
+
+	// Doesn't support Url style conns so we have to figure it out direclty here.
+	u, err := url.Parse(cfg.Endpoint)
+	if err != nil {
+		return nil, err
+	}
 
 	switch cfg.Protocol {
 	case "stdout":
 		le, _ := stdoutlogs.NewExporter()
 		logExporter = le
 	case "http", "https":
-		le, err := otlplogs.NewExporter(ctx)
+		log.Infof("Connecting logs via http to %s", u.Host)
+
+		opts := []otlplogshttp.Option{otlplogshttp.WithEndpoint(u.Host)}
+		switch u.Scheme {
+		case "http":
+			opts = append(opts, otlplogshttp.WithInsecure())
+		case "https":
+			if tlsC != nil {
+				opts = append(opts, otlplogshttp.WithTLSClientConfig(tlsC))
+			}
+		}
+		le, err := otlplogs.NewExporter(ctx, otlplogs.WithClient(otlplogshttp.NewClient(opts...)))
 		if err != nil {
 			return nil, err
 		}
 		logExporter = le
 	case "grpc":
-		le, err := otlplogs.NewExporter(ctx, otlplogs.WithClient(otlplogsgrpc.NewClient(otlplogsgrpc.WithEndpoint(cfg.Endpoint))))
+		log.Infof("Connecting logs via grpc to %s", u.Host)
+
+		opts := []otlplogsgrpc.Option{otlplogsgrpc.WithEndpoint(u.Host)}
+		switch u.Scheme {
+		case "http":
+			opts = append(opts, otlplogsgrpc.WithInsecure())
+		case "https":
+			if tlsC != nil {
+				opts = append(opts, otlplogsgrpc.WithTLSCredentials(credentials.NewTLS(tlsC)))
+			}
+		}
+		le, err := otlplogs.NewExporter(ctx, otlplogs.WithClient(otlplogsgrpc.NewClient(opts...)))
 		if err != nil {
 			return nil, err
 		}
