@@ -245,15 +245,23 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 		case gosnmp.OctetString:
 			if value, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok {
 				if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
-					_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
-				}
-				if !utf8.ValidString(value) { // Print out value as a hex string.
-					value = fmt.Sprintf("%x", v.Value)
-				}
-				if res != nil {
-					dst.CustomStr[res.GetName()] = value
-				} else {
-					dst.CustomStr[v.Name] = value
+					_, sval, mval := snmp_util.GetFromConv(v, res.Conversion, s.log)
+					if len(mval) > 0 { // List the regex matches.
+						for k, v := range mval {
+							dst.CustomStr[k] = v
+						}
+					} else {
+						dst.CustomStr[res.GetName()] = sval
+					}
+				} else { // No conversion.
+					if !utf8.ValidString(value) { // Print out value as a hex string.
+						value = fmt.Sprintf("%x", v.Value)
+					}
+					if res != nil {
+						dst.CustomStr[res.GetName()] = value
+					} else {
+						dst.CustomStr[v.Name] = value
+					}
 				}
 			}
 		case gosnmp.Counter64, gosnmp.Counter32, gosnmp.Gauge32, gosnmp.TimeTicks, gosnmp.Uinteger32, gosnmp.Integer:

@@ -232,6 +232,13 @@ func TestRegex(t *testing.T) {
 				"Exhaust": "26",
 			},
 		},
+		multiRe{
+			input: []byte("There is an issue with: 992-227-332 . The cpu is too high"),
+			re:    `:\:\s(?P<hostid>[0-9]+-[0-9]+-[0-9]+)\s`,
+			outputs: map[string]string{
+				"hostid": "992-227-332",
+			},
+		},
 	}
 
 	for _, in := range testStr {
