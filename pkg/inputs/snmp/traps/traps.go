@@ -248,7 +248,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 					_, sval, mval := snmp_util.GetFromConv(v, res.Conversion, s.log)
 					if len(mval) > 0 { // List the regex matches.
 						for k, v := range mval {
-							dst.CustomStr[k] = v
+							dst.CustomStr[res.GetName()+"."+k] = v
 						}
 					} else {
 						dst.CustomStr[res.GetName()] = sval
