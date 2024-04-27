@@ -610,14 +610,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	}
 
 	// Set up formatter
-	fmtr, err := formats.NewFormat(format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
+	fmtr, err := formats.NewFormat(ctx, format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
 	if err != nil {
 		return err
 	}
 	kc.format = fmtr
 
 	if kc.config.FormatRollup != "" { // Rollups default to using the same format as main, but can be seperated out.
-		fmtr, err := formats.NewFormat(formatRollup, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
+		fmtr, err := formats.NewFormat(ctx, formatRollup, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
 		if err != nil {
 			return err
 		}
@@ -753,7 +753,7 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			format = formats.Format(kc.config.FormatMetric)
 		}
 
-		fmtr, err := formats.NewFormat(format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
+		fmtr, err := formats.NewFormat(ctx, format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config)
 		if err != nil {
 			return err
 		}

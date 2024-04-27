@@ -37,6 +37,7 @@ type OtelFormat struct {
 	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
 	inputs       map[string][]OtelData
+	trapLog      *OtelLogger
 }
 
 var (
@@ -63,7 +64,7 @@ Some usefule env vars to think about setting:
 * OTEL_METRIC_EXPORT_INTERVAL=30000 -- time in ms to export. Default 60,000 (1 min).
 * OTEL_EXPORTER_OTLP_COMPRESSION=gzip -- turn on gzip compression.
 */
-func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
+func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFormat, error) {
 	jf := &OtelFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
@@ -72,6 +73,16 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 		vecs:         map[string]metric.Float64ObservableGauge{},
 		config:       cfg,
 		inputs:       map[string][]OtelData{},
+	}
+
+	var tlsC *tls.Config = nil
+	if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
+		jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+		c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
+		if err != nil {
+			return nil, err
+		}
+		tlsC = c
 	}
 
 	var exp sdkmetric.Exporter
@@ -87,15 +98,10 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 			return nil, fmt.Errorf("-otel.endpoint required for http(s) exports.")
 		}
 
-		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
-			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			if err != nil {
-				return nil, err
-			}
+		if tlsC != nil {
 			metricExporter, err := otlpmetrichttp.New(jf.ctx,
 				otlpmetrichttp.WithEndpointURL(cfg.Endpoint),
-				otlpmetrichttp.WithTLSClientConfig(c),
+				otlpmetrichttp.WithTLSClientConfig(tlsC),
 			)
 			if err != nil {
 				return nil, err
@@ -113,17 +119,12 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 			return nil, fmt.Errorf("-otel.endpoint required for grpc exports.")
 		}
 
-		if cfg.ClientCert != "" && cfg.ClientKey != "" && cfg.RootCA != "" {
-			jf.Infof("Loading TLS certs from (cert=%s, key=%s) CA=%s", cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			c, err := getTls(cfg.ClientCert, cfg.ClientKey, cfg.RootCA)
-			if err != nil {
-				return nil, err
-			}
+		if tlsC != nil {
 			metricExporter, err := otlpmetricgrpc.New(jf.ctx,
 				otlpmetricgrpc.WithEndpointURL(cfg.Endpoint),
 				otlpmetricgrpc.WithTLSCredentials(
 					// mutual tls.
-					credentials.NewTLS(c),
+					credentials.NewTLS(tlsC),
 				),
 			)
 			if err != nil {
@@ -144,6 +145,12 @@ func NewFormat(log logger.Underlying, cfg *ktranslate.OtelFormatConfig) (*OtelFo
 	meterProvider := sdkmetric.NewMeterProvider(sdkmetric.WithReader(sdkmetric.NewPeriodicReader(exp)))
 	otel.SetMeterProvider(meterProvider)
 	jf.exp = exp
+
+	ol, err := NewLogger(ctx, jf, cfg, tlsC)
+	if err != nil {
+		return nil, err
+	}
+	jf.trapLog = ol
 
 	otelm = otel.Meter("ktranslate")
 	jf.Infof("Running exporting via %s to %s", cfg.Protocol, cfg.Endpoint)
@@ -223,6 +230,12 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		return f.fromSnmpMetadata(in)
 	case kt.KENTIK_EVENT_KTRANS_METRIC:
 		return f.fromKtranslate(in)
+	case kt.KENTIK_EVENT_SNMP_TRAP, kt.KENTIK_EVENT_EXT:
+		// This is actually an event, send out as an event to sink directly.
+		err := f.trapLog.RecordTrap(in)
+		if err != nil {
+			f.Errorf("There was an error when sending an event: %v.", err)
+		}
 	default:
 		f.mux.Lock()
 		defer f.mux.Unlock()
