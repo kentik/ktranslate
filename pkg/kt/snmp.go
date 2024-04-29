@@ -223,6 +223,8 @@ type SnmpTrapConfig struct {
 	V3            *V3SNMPConfig `yaml:"v3_config"`
 	TrapOnly      bool          `yaml:"trap_only"`
 	DropUndefined bool          `yaml:"drop_undefined"`
+	Endpoint      string        `yaml:"endpoint"`
+	EndpointPort  uint16        `yaml:"endpoint_port"`
 }
 
 type KentikMatch struct {

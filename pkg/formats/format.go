@@ -18,6 +18,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats/nrm"
 	"github.com/kentik/ktranslate/pkg/formats/otel"
 	"github.com/kentik/ktranslate/pkg/formats/prom"
+	"github.com/kentik/ktranslate/pkg/formats/snmp"
 	"github.com/kentik/ktranslate/pkg/formats/splunk"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -49,6 +50,7 @@ const (
 	FORMAT_DDOG                 = "ddog"
 	FORMAT_KFLOW                = "kflow"
 	FORMAT_OTEL                 = "otel"
+	FORMAT_SNMP                 = "snmp"
 )
 
 func NewFormat(ctx context.Context, format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config) (Formatter, error) {
@@ -81,6 +83,8 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_OTEL:
 		return otel.NewFormat(ctx, log, cfg.OtelFormat)
+	case FORMAT_SNMP:
+		return snmp.NewFormat(log, cfg.SnmpFormat)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}
