@@ -152,7 +152,6 @@ func (f *SnmpFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		if err != nil {
 			f.Errorf("SendTrap() err: %v", err)
 		}
-
 	}
 
 	return nil, nil
