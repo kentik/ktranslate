@@ -101,6 +101,10 @@ var (
 	MAX_COUNTER_INTS = 250
 )
 
+func (im *InterfaceMetrics) GetNumberMibsTotal() int {
+	return len(im.oidMap)
+}
+
 // PollSNMPCounter polls SNMP for counter statistics like # bytes and packets transferred.
 func (im *InterfaceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, lastDeviceMetrics []*kt.JCHF) ([]*kt.JCHF, error) {
 	im.mux.Lock()

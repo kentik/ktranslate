@@ -317,7 +317,6 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 					cbErr = err
 					s.metrics.DeliveryErr.Mark(1)
 				} else {
-					s.Debugf("NR Success: %v UUID: %s, RID: %s", nr.Success, nr.Uuid, nr.RequestId)
 					s.metrics.DeliveryWin.Mark(1)
 				}
 			}

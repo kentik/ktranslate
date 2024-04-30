@@ -81,6 +81,14 @@ func (dm *DeviceMetrics) Poll(ctx context.Context, server *gosnmp.GoSNMP, pinger
 	return dm.pollFromConfig(ctx, server, pinger)
 }
 
+func (dm *DeviceMetrics) GetNumberMibsFailed() int64 {
+	return dm.metrics.Missing.Value()
+}
+
+func (dm *DeviceMetrics) GetNumberMibsTotal() int {
+	return len(dm.oids)
+}
+
 type wrapper struct {
 	variable gosnmp.SnmpPDU
 	mib      *kt.Mib

@@ -8,7 +8,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net"
+	"reflect"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -162,11 +164,13 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 		case <-time.After(try.sleep):
 		}
 
+		st := time.Now()
 		results, err = try.walk(oid)
 		if err == nil {
 			if i > 0 {
 				log.Infof("%s SNMP retry %d on OID %s succeeded", logName, i, oid)
 			}
+			log.Debugf("(%s) polling %s using %s took %v. attempt %d of %d.", device.DeviceIP, oid, runtime.FuncForPC(reflect.ValueOf(try.walk).Pointer()).Name(), time.Now().Sub(st), i, len(tries))
 			return results, nil
 		}
 
