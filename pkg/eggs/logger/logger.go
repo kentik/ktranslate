@@ -13,6 +13,7 @@ type Underlying interface {
 	Infof(lp string, f string, params ...interface{})
 	Warnf(lp string, f string, params ...interface{})
 	Errorf(lp string, f string, params ...interface{})
+	GetLogLevel() string
 }
 
 // ---------------

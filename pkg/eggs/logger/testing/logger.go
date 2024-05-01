@@ -52,3 +52,6 @@ func (l *testUnderlyingL) Warnf(lp string, f string, params ...interface{}) {
 func (l *testUnderlyingL) Errorf(lp string, f string, params ...interface{}) {
 	l.logf("%s [ERROR] %s", lp, fmt.Sprintf(f, params...))
 }
+func (l *testUnderlyingL) GetLogLevel() string {
+	return "debug"
+}
