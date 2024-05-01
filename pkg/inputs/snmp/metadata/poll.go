@@ -255,7 +255,9 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 	}
 
 	// Also any device level tags
-	cs := map[string]string{}
+	cs := map[string]string{ // Set log level as a SysLogLevel key here so that Uptime metrics get it only.
+		"SysLogLevel": p.log.GetLogger().GetUnderlyingLogger().GetLogLevel(),
+	}
 	p.conf.SetUserTags(cs)
 	for k, v := range cs {
 		if strings.HasPrefix(v, TagValuePrefix) { // See if we can find this value in the MDS instead.

@@ -90,6 +90,10 @@ func New(level Level) (l *Logger) {
 	return
 }
 
+func (l *Logger) GetLogLevel() string {
+	return l.level.String()
+}
+
 func (l *Logger) Printf(level Level, prefix, format string, v ...interface{}) {
 	if l == nil {
 		// nil logger - ignore

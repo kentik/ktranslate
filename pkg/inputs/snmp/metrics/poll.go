@@ -244,6 +244,10 @@ func (p *Poller) StartLoop(ctx context.Context) {
 				}
 
 				// Great!  We finished the poll in the same block we started it in!
+				p.log.Debugf("Metrics Poll: In %v polled %d mibs, %d missing.",
+					time.Now().Sub(startTime),
+					p.deviceMetrics.GetNumberMibsTotal()+p.interfaceMetrics.GetNumberMibsTotal(),
+					p.deviceMetrics.GetNumberMibsFailed())
 				p.jchfChan <- flows
 
 			case <-statusCheck.C: // Send in on a seperate timer status about how this system is working.
