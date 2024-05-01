@@ -44,6 +44,11 @@ type OtelFormatConfig struct {
 	RootCA     string
 }
 
+// SnmpFormatConfig is the config for the snmp format
+type SnmpFormatConfig struct {
+	ConfigFile string
+}
+
 // PrometheusSinkConfig is config for the prometheus sink
 type PrometheusSinkConfig struct {
 	ListenAddr     string
@@ -279,6 +284,8 @@ type Config struct {
 	InfluxDBFormat *InfluxDBFormatConfig
 	// pkg/formats/otel
 	OtelFormat *OtelFormatConfig
+	// pkg/formats/snmp
+	SnmpFormat *SnmpFormatConfig
 
 	// pkg/sinks/prom
 	PrometheusSink *PrometheusSinkConfig
@@ -376,6 +383,9 @@ func DefaultConfig() *Config {
 			ClientKey:  "",
 			ClientCert: "",
 			RootCA:     "",
+		},
+		SnmpFormat: &SnmpFormatConfig{
+			ConfigFile: "",
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
 			MeasurementPrefix: "",

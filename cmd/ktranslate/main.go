@@ -446,6 +446,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.OtelFormat.ClientKey = val
 			case "otel.root_ca":
 				cfg.OtelFormat.RootCA = val
+			// pkg/formats/snmp
+			case "snmp.format.conf":
+				cfg.SnmpFormat.ConfigFile = val
 			// pkg/formats/influxdb
 			case "influxdb_measurement_prefix":
 				cfg.InfluxDBFormat.MeasurementPrefix = val
