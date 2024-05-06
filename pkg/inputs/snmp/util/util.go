@@ -260,6 +260,23 @@ func DoWalk(device string, baseOid string, format string, conf *kt.SnmpConfig, c
 	return fmt.Errorf("ok")
 }
 
+func GetPollRate(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, log logger.ContextL) int {
+	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
+	counterTimeSec := 5 * 60
+	if conf != nil && conf.PollTimeSec > 0 {
+		counterTimeSec = conf.PollTimeSec
+	} else if gconf != nil && gconf.PollTimeSec > 0 {
+		counterTimeSec = gconf.PollTimeSec
+	}
+	// Lastly, enforece a min polling interval.
+	if counterTimeSec < 30 {
+		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
+		counterTimeSec = 30
+	}
+
+	return counterTimeSec
+}
+
 // Handle the case of wierd ints encoded as byte arrays.
 func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, string, map[string]string) {
 	defer func() {
