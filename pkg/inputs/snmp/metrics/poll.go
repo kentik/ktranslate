@@ -9,6 +9,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/ping"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	extension "github.com/kentik/ktranslate/pkg/inputs/snmp/x"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
@@ -35,18 +36,7 @@ type Poller struct {
 }
 
 func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) *Poller {
-	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
-	counterTimeSec := 5 * 60
-	if conf != nil && conf.PollTimeSec > 0 {
-		counterTimeSec = conf.PollTimeSec
-	} else if gconf != nil && gconf.PollTimeSec > 0 {
-		counterTimeSec = gconf.PollTimeSec
-	}
-	// Lastly, enforece a min polling interval.
-	if counterTimeSec < 30 {
-		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
-		counterTimeSec = 30
-	}
+	counterTimeSec := util.GetPollRate(gconf, conf, log)
 
 	jitterTimeSec := 15 // This is how long to spead the polling load out across.
 	if gconf.JitterTimeSec > 0 {
@@ -96,18 +86,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 }
 
 func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL) *Poller {
-	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
-	counterTimeSec := 5 * 60
-	if conf != nil && conf.PollTimeSec > 0 {
-		counterTimeSec = conf.PollTimeSec
-	} else if gconf != nil && gconf.PollTimeSec > 0 {
-		counterTimeSec = gconf.PollTimeSec
-	}
-	// Lastly, enforece a min polling interval.
-	if counterTimeSec < 30 {
-		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
-		counterTimeSec = 30
-	}
+	counterTimeSec := util.GetPollRate(gconf, conf, log)
 
 	jitterTimeSec := 15 // This is how long to spead the polling load out across.
 	if gconf.JitterTimeSec > 0 {
@@ -145,18 +124,7 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 }
 
 func NewPollerForExtention(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) *Poller {
-	// Default poll rate is 5 min. This is what a lot of SNMP billing is on.
-	counterTimeSec := 5 * 60
-	if conf != nil && conf.PollTimeSec > 0 {
-		counterTimeSec = conf.PollTimeSec
-	} else if gconf != nil && gconf.PollTimeSec > 0 {
-		counterTimeSec = gconf.PollTimeSec
-	}
-	// Lastly, enforece a min polling interval.
-	if counterTimeSec < 30 {
-		log.Warnf("%d poll time is below min of 30. Raising to 30 seconds", counterTimeSec)
-		counterTimeSec = 30
-	}
+	counterTimeSec := util.GetPollRate(gconf, conf, log)
 
 	jitterTimeSec := 15 // This is how long to spead the polling load out across.
 	if gconf.JitterTimeSec > 0 {

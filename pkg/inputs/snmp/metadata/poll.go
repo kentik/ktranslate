@@ -2,6 +2,7 @@ package metadata
 
 import (
 	"context"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/tick"
 )
@@ -29,6 +31,7 @@ type Poller struct {
 	deviceMetadataMibs    map[string]*kt.Mib
 	interfaceMetadataMibs map[string]*kt.Mib
 	matchAttr             map[string]*regexp.Regexp
+	counterTimeSec        string
 }
 
 const (
@@ -87,6 +90,8 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		log.Infof("Added %d Match Attribute(s)", len(attrMap))
 	}
 
+	counterTimeSec := util.GetPollRate(gconf, conf, log)
+
 	return &Poller{
 		gconf:                 gconf,
 		conf:                  conf,
@@ -100,6 +105,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		deviceMetadataMibs:    deviceMetadataMibs,
 		interfaceMetadataMibs: interfaceMetadataMibs,
 		matchAttr:             attrMap,
+		counterTimeSec:        fmt.Sprintf("%v", time.Duration(counterTimeSec)*time.Second),
 	}
 }
 
@@ -256,7 +262,8 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 
 	// Also any device level tags
 	cs := map[string]string{ // Set log level as a SysLogLevel key here so that Uptime metrics get it only.
-		"SysLogLevel": p.log.GetLogger().GetUnderlyingLogger().GetLogLevel(),
+		"SysLogLevel":     p.log.GetLogger().GetUnderlyingLogger().GetLogLevel(),
+		"SysPollInterval": p.counterTimeSec,
 	}
 	p.conf.SetUserTags(cs)
 	for k, v := range cs {
