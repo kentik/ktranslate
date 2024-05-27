@@ -58,6 +58,8 @@ var (
 	TRUNCATE     = true
 	NO_TRUNCATE  = false
 	MAX_SNMP_LEN = 128
+
+	walkCacheMap map[string]gosnmp.SnmpPDU
 )
 
 func ReadOctetString(variable gosnmp.SnmpPDU, truncate bool) (string, bool) {
@@ -152,6 +154,11 @@ func WalkOID(ctx context.Context, device *kt.SnmpDeviceConfig, oid string, serve
 		tries = []pollTry{pollTry{walk: walker.WalkAll, sleep: time.Duration(0)}}
 	} else if device.NoUseBulkWalkAll { // If the device says to not use bulkwalkall, trim this out now.
 		tries = tries[1:]
+	} else if len(walkCacheMap) != 0 { // If we are using canned responses.
+		tries = []pollTry{
+			pollTry{walk: useCachedMap, sleep: time.Duration(0)},
+			pollTry{walk: server.BulkWalkAll, sleep: time.Duration(0)},
+			pollTry{walk: server.WalkAll, sleep: time.Duration(0)}}
 	}
 
 	var err error
