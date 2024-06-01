@@ -30,17 +30,18 @@ var (
 	mibdb       *mibs.MibDB // Global singleton instance here.
 	ServiceName = ""
 
-	dumpMibTable   bool
-	flowOnly       bool
-	jsonToYaml     string
-	snmpWalk       string
-	snmpWalkOid    string
-	snmpWalkFormat string
-	snmpOutFile    string
-	snmpPollNow    string
-	snmpDiscoDur   int
-	snmpDiscoSt    bool
-	validateMib    bool
+	dumpMibTable    bool
+	flowOnly        bool
+	jsonToYaml      string
+	snmpWalk        string
+	snmpWalkOid     string
+	snmpWalkFormat  string
+	snmpOutFile     string
+	snmpPollNow     string
+	snmpDiscoDur    int
+	snmpDiscoSt     bool
+	validateMib     bool
+	runFromWalkFile string
 )
 
 func init() {
@@ -55,6 +56,7 @@ func init() {
 	flag.IntVar(&snmpDiscoDur, "snmp_discovery_min", 0, "If set, run snmp discovery on this interval (in minutes).")
 	flag.BoolVar(&snmpDiscoSt, "snmp_discovery_on_start", false, "If set, run snmp discovery on application start.")
 	flag.BoolVar(&validateMib, "snmp_validate", false, "If true, validate mib profiles and exit.")
+	flag.StringVar(&runFromWalkFile, "snmp_walk_file", "", "If set, use the walk file instead of polling.")
 }
 
 func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, registry go_metrics.Registry, apic *api.KentikApi, log logger.ContextL, cfg *ktranslate.SNMPInputConfig, resolv *resolv.Resolver, confMgr config.ConfigManager, logchan chan string) error {
@@ -71,6 +73,13 @@ func StartSNMPPolls(ctx context.Context, jchfChan chan []*kt.JCHF, metrics *kt.S
 
 	if v := cfg.WalkTarget; v != "" { // If this flag is set, do just a snmp walk on the targeted device and exit
 		return snmp_util.DoWalk(v, cfg.WalkOID, cfg.WalkFormat, conf, connectTimeout, retries, log)
+	}
+
+	if v := cfg.RunFromWalkFile; v != "" { // If this flag is set, tell the util function to return responses based only on the walk.
+		err := snmp_util.LoadFromWalk(ctx, cfg.RunFromWalkFile, log)
+		if err != nil {
+			return err
+		}
 	}
 
 	// Load a mibdb if we have one.

@@ -696,6 +696,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.SNMPInput.ValidateMIBs = v
+			case "snmp_walk_file":
+				cfg.SNMPInput.RunFromWalkFile = val
 			// pkg/inputs/vpc/gcp
 			case "gcp.project":
 				cfg.GCPVPCInput.Enable = true

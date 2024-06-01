@@ -190,6 +190,7 @@ type SNMPInputConfig struct {
 	DiscoveryIntervalMinutes int
 	DiscoveryOnStart         bool
 	ValidateMIBs             bool
+	RunFromWalkFile          string
 	PollNowTarget            string
 }
 
@@ -491,6 +492,7 @@ func DefaultConfig() *Config {
 			DiscoveryIntervalMinutes: 0,
 			DiscoveryOnStart:         false,
 			ValidateMIBs:             false,
+			RunFromWalkFile:          "",
 		},
 		GCPVPCInput: &GCPVPCInputConfig{
 			Enable:     false,
