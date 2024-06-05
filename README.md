@@ -10,10 +10,10 @@ make && make test
 
 # Build Docker Image:
 
-To build and use a Docker image, you must specify `MAXMIND_LICENSE_KEY` as a build arg:
+To build and use a Docker image, you must specify `MAXMIND_LICENSE_KEY` and `YOUR_ACCOUNT_ID` as build args:
 
 ```bash
-docker build --build-arg MAXMIND_LICENSE_KEY=xxxxx -t ktranslate:v2 .
+docker build --build-arg YOUR_ACCOUNT_ID=xxxxx --build-arg MAXMIND_LICENSE_KEY=xxxxx -t ktranslate:v2 .
 ```
 
 To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
