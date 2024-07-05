@@ -224,3 +224,37 @@ func TestGetTableName(t *testing.T) {
 		assert.Equal(t, expected, res)
 	}
 }
+
+type condTest struct {
+	si string
+	ii int
+	r  bool
+}
+
+func TestGetCondition(t *testing.T) {
+	l := lt.NewTestContextL(logger.NilContext, t)
+	tests := map[string][]condTest{
+		`cempMemPoolName="DP System memory"`: []condTest{
+			condTest{si: "ddd", r: false},
+			condTest{si: "DP System memory", r: true},
+		},
+		`MemoryCache=4`: []condTest{
+			condTest{ii: 2, r: false},
+			condTest{ii: 4, r: true},
+		},
+	}
+
+	for cond, expected := range tests {
+		oid := OID{
+			Condition: cond,
+		}
+		res := oid.GetCondition(l)
+		for _, tst := range expected {
+			if tst.ii != 0 {
+				assert.Equal(t, tst.r, res.Check(tst.ii), tst.ii)
+			} else {
+				assert.Equal(t, tst.r, res.Check(tst.si), tst.si)
+			}
+		}
+	}
+}

@@ -953,7 +953,11 @@ func (o *OID) GetCondition(log logger.ContextL) *kt.MibCondition {
 		if len(pts) == 2 {
 			val, err := strconv.Atoi(pts[1])
 			if err != nil {
-				log.Errorf("Skipping invalid profile condition in %s: %s. RHS (%s) must be an int and operator must be '='.", o.Name, o.Condition, pts[1])
+				log.Infof("Using profile condition as string in %s: %s = %s.", o.Name, pts[0], pts[1])
+				return &kt.MibCondition{
+					TargetName:   pts[0],
+					TargetString: strings.Trim(pts[1], ` "`),
+				}
 			} else {
 				return &kt.MibCondition{
 					TargetName:  pts[0],
