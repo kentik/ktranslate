@@ -480,7 +480,7 @@ func (w wrapper) checkCondition(idx string, results []wrapper) bool { // Check c
 			oidNameWr := wr.mib.GetName() // Does the name match our target?
 			if oidNameWr == w.mib.Condition.TargetName {
 				// If it does, does it match our target value?
-				return snmp_util.ToInt64(wr.variable.Value) == w.mib.Condition.TargetValue
+				return w.mib.Condition.Check(wr.variable.Value)
 			}
 		}
 		return true // Keep this one because condition evals to true.

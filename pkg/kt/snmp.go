@@ -373,8 +373,41 @@ const (
 )
 
 type MibCondition struct {
-	TargetName  string
-	TargetValue int64
+	TargetName   string
+	TargetValue  int64
+	TargetString string
+}
+
+func (mc *MibCondition) Check(input interface{}) bool {
+	if mc == nil {
+		return false
+	}
+	switch v := input.(type) {
+	case uint:
+		return int64(v) == mc.TargetValue
+	case uint8: // same as byte
+		return int64(v) == mc.TargetValue
+	case uint16:
+		return int64(v) == mc.TargetValue
+	case uint32:
+		return int64(v) == mc.TargetValue
+	case uint64:
+		return int64(v) == mc.TargetValue
+	case int:
+		return int64(v) == mc.TargetValue
+	case int8:
+		return int64(v) == mc.TargetValue
+	case int16:
+		return int64(v) == mc.TargetValue
+	case int32: // same as rune
+		return int64(v) == mc.TargetValue
+	case int64:
+		return int64(v) == mc.TargetValue
+	case string:
+		return v == mc.TargetString
+	default:
+		return false
+	}
 }
 
 type Mib struct {
