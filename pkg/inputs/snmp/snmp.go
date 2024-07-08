@@ -469,7 +469,11 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 	}
 
 	// Correctly format all the user tags needed here:
-	for _, device := range ms.Devices {
+	for dname, device := range ms.Devices {
+		if device == nil {
+			log.Errorf("Device %s is nil. Skipping.", dname)
+			continue
+		}
 		setDeviceTagsAndMatch(device) // Tweak any per provider tags and match attributes here now that we have the actual provider.
 		device.InitUserTags(ServiceName)
 	}
