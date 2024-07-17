@@ -1981,39 +1981,27 @@ func (c *MerakiClient) getUplinkExtraInfo(uplinkMap map[string]deviceUplink) err
 		return nil
 	}
 
-	// Else we have to build the map up here.
-	uplinkInfoBW := map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody{}
-	for _, org := range c.orgs {
-		for _, network := range org.networks {
-			info, err := getUplinkExtraInfo(network, 0)
-			if err != nil {
-				if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
-					continue
+	// Else we have to build the map up here. This takes too long to do in the forground so lets try backgrounding the problem. Will populate the cache and then future results will pop in.
+	go func() error {
+		uplinkInfoBW := map[string]*appliance.GetNetworkApplianceTrafficShapingUplinkBandwidthOKBody{}
+		for _, org := range c.orgs {
+			for _, network := range org.networks {
+				info, err := getUplinkExtraInfo(network, 0)
+				if err != nil {
+					if strings.Contains(err.Error(), "(status 400)") { // There are no valid uplinks to worry about here.
+						continue
+					}
+					c.log.Errorf("Cannot get bandwidth info: %v", err)
+					return err
 				}
-				return err
-			}
-			uplinkInfoBW[network.ID] = info
-			time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Make sure we don't hit the API too hard.
-		}
-	}
-
-	c.cache.setUplinkBW(uplinkInfoBW)
-
-	// And finally add to the result.
-	for _, device := range uplinkMap {
-		if info, ok := uplinkInfoBW[device.NetworkID]; ok {
-			for i, ul := range device.Uplinks {
-				switch ul.Interface {
-				case "cellular":
-					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Cellular.LimitDown, LimitUp: info.BandwidthLimits.Cellular.LimitUp}
-				case "wan1":
-					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan1.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
-				case "wan2":
-					device.Uplinks[i].BandwidthLimits = uplinkBWLimit{LimitDown: info.BandwidthLimits.Wan2.LimitDown, LimitUp: info.BandwidthLimits.Wan1.LimitUp}
-				}
+				uplinkInfoBW[network.ID] = info
+				time.Sleep(time.Duration(MAX_TIMEOUT_SEC) * time.Second) // Make sure we don't hit the API too hard.
 			}
 		}
-	}
+
+		c.cache.setUplinkBW(uplinkInfoBW)
+		return nil
+	}()
 
 	return nil
 }
