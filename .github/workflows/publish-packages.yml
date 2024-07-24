@@ -42,14 +42,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: centos
-            release: 7
+          - distro: ubi8
+            release: 8.10
             pkg: rpm
-            image: centos
-          - distro: centos
-            release: 8
-            pkg: rpm
-            image: centos
+            image: redhat/ubi8
           - distro: ubi9
             release: 9.2
             pkg: rpm
@@ -116,14 +112,10 @@ jobs:
         run: |
           if [ "${{ matrix.distro }}" = "centos" ]
           then
-            if [ "${{ matrix.release }}" = "7" ]
-            then
-              yum install -y make gcc diffutils libpcap-devel
-            else
-              dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
-              yum install -y make gcc diffutils
-              dnf -y --enablerepo=powertools install libpcap-devel
-            fi
+            yum install -y make gcc diffutils libpcap-devel
+          elif [ "${{ matrix.distro }}" = "ubi8" ]
+          then
+            yum install -y make gcc diffutils libpcap-devel
           elif [ "${{ matrix.distro }}" = "ubi9" ]
           then
             yum install -y make gcc diffutils libpcap-devel
