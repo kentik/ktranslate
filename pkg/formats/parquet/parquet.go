@@ -24,7 +24,6 @@ const (
 type ParquetFormat struct {
 	logger.ContextL
 	compression  kt.Compression
-	doGz         bool
 	lastMetadata map[string]*kt.LastMetadata
 	invalids     map[string]bool
 	mux          sync.RWMutex
@@ -42,7 +41,6 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*ParquetForma
 	jf := &ParquetFormat{
 		compression:  compression,
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "parquetFormat"}, log),
-		doGz:         false,
 		invalids:     map[string]bool{},
 		lastMetadata: map[string]*kt.LastMetadata{},
 	}
@@ -142,7 +140,6 @@ func (f *ParquetFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	}
 
 	//  Now get the rest.
-	f.Infof("XXX %v %v", num, read)
 	for i := 0; i < (num - read); i++ {
 		ms := make([]ParquetMetric, 1)
 		if err = pr.Read(&ms); err != nil {
