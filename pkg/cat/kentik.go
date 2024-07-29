@@ -364,6 +364,7 @@ func (kc *KTranslate) monitorAlphaChan(ctx context.Context, i int, seri func([]*
 						sendBytesOn()
 					}
 				} else {
+					jflow.Reset()
 					kc.jchfChans[i] <- jflow // Toss this guy, he doesn't meet out filter.
 				}
 
