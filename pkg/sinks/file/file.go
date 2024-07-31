@@ -63,6 +63,8 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 	switch format {
 	case formats.FORMAT_JSON, formats.FORMAT_JSON_FLAT, formats.FORMAT_NRM, formats.FORMAT_NR, formats.FORMAT_ELASTICSEARCH:
 		s.suffix = ".json"
+	case formats.FORMAT_PARQUET:
+		s.suffix = ".parquet"
 	}
 
 	// Set up a file first.
