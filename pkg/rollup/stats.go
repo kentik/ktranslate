@@ -303,7 +303,7 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	}
 
 	sort.Sort(byValue(keys))
-	if len(keys) > r.config.TopK {
+	if r.config.TopK > 0 && len(keys) > r.config.TopK {
 		r.getTopkSum(keys, total, totalc, ot, provt, rc)
 	} else {
 		rc <- keys
