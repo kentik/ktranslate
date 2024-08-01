@@ -267,7 +267,12 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				}
 			}
 		case model.Custom_value_Which_uint64Val:
-			dst.CustomBigInt[name] = int64(val.Uint64Val())
+			iv := int64(val.Uint64Val())
+			if tk, tv, ok := kc.tagMap.LookupTagValueBig(dst.CompanyId, iv, name); ok {
+				dst.CustomStr[tk] = tv
+			} else {
+				dst.CustomBigInt[name] = iv
+			}
 		case model.Custom_value_Which_strVal:
 			sv, _ := val.StrVal()
 			dst.CustomStr[name] = sv
