@@ -47,6 +47,8 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 	for scanner.Scan() {
 		pts := strings.SplitN(scanner.Text(), ",", 4)
 		switch len(pts) {
+		case 1:
+			// Noop, just a blank line can skip.
 		case 3: // its a function.
 			switch pts[2] {
 			case "to_hex":
