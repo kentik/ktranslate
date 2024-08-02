@@ -230,7 +230,7 @@ func (r *StatsRollup) Export() []Rollup {
 	}
 
 	sort.Sort(byValue(keys))
-	if len(keys) > r.config.TopK {
+	if r.config.TopK > 0 && len(keys) > r.config.TopK {
 		return keys[0:r.config.TopK]
 	}
 
