@@ -15,6 +15,7 @@ const (
 
 type TagMapper interface {
 	LookupTagValue(kt.Cid, uint32, string) (string, string, bool)
+	LookupTagValueBig(kt.Cid, int64, string) (string, string, bool)
 }
 
 func LoadMapper(mtype Mapper, log logger.Underlying, tagMapFilePath string) (TagMapper, error) {
@@ -31,5 +32,9 @@ type NullType struct {
 }
 
 func (ntm *NullType) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (string, string, bool) {
+	return "", "", false
+}
+
+func (ntm *NullType) LookupTagValueBig(cid kt.Cid, tagval int64, colname string) (string, string, bool) {
 	return "", "", false
 }

@@ -165,7 +165,7 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 	}
 
 	sort.Sort(byValue(keys))
-	if len(keys) > r.topK {
+	if r.config.TopK > 0 && len(keys) > r.topK {
 		r.getTopkUniques(keys, totalc, ot, provt, rc)
 	} else {
 		rc <- keys
