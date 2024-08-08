@@ -122,13 +122,17 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 		s.dl = s3manager.NewDownloader(sess)
 	}
 
-	switch compression {
-	case kt.CompressionNone, kt.CompressionNull:
-		s.suffix = ""
-	case kt.CompressionGzip:
-		s.suffix = ".gz"
-	default:
-		s.suffix = "." + string(compression)
+	if format == formats.FORMAT_PARQUET {
+		s.suffix = ".parquet"
+	} else {
+		switch compression {
+		case kt.CompressionNone, kt.CompressionNull:
+			s.suffix = ""
+		case kt.CompressionGzip:
+			s.suffix = ".gz"
+		default:
+			s.suffix = "." + string(compression)
+		}
 	}
 
 	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(s.config.FlushIntervalSeconds)*time.Second)
