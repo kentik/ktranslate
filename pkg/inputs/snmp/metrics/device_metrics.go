@@ -19,8 +19,9 @@ import (
 )
 
 type pingStatus struct {
-	sent     uint64
-	received uint64
+	sent         uint64
+	received     uint64
+	lastDiffSent uint64
 }
 
 type DeviceMetrics struct {
@@ -440,8 +441,12 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	received := uint64(stats.PacketsRecv)
 	diffSent := sent - dm.ping.sent
 	diffRecv := received - dm.ping.received
+	if diffSent == dm.ping.lastDiffSent+1 { // Sometimes there's a bug where packets bleed across ticks. This tries to work around it.
+		diffSent = dm.ping.lastDiffSent
+	}
 	dm.ping.sent = sent
 	dm.ping.received = received
+	dm.ping.lastDiffSent = diffSent
 	percnt := 0.0
 	if diffSent > 0 && diffRecv <= diffSent { // Make sure that if there's more packets recieved than sent we don't get confused.
 		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
