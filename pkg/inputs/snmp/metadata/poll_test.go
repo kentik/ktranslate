@@ -53,8 +53,9 @@ func TestToFlows(t *testing.T) {
 	conf.InitUserTags("service")
 
 	p := &Poller{
-		log:  l,
-		conf: conf,
+		log:   l,
+		conf:  conf,
+		gconf: &kt.SnmpGlobalConfig{},
 	}
 
 	input := kt.DeviceData{
