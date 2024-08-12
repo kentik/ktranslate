@@ -18,11 +18,6 @@ import (
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 )
 
-type pingStatus struct {
-	sent     uint64
-	received uint64
-}
-
 type DeviceMetrics struct {
 	log         logger.ContextL
 	conf        *kt.SnmpDeviceConfig
@@ -32,7 +27,6 @@ type DeviceMetrics struct {
 	profileName string
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
-	ping        pingStatus
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -405,10 +399,6 @@ func (dm *DeviceMetrics) GetStatusFlows() []*kt.JCHF {
 	return []*kt.JCHF{dst}
 }
 
-func (dm *DeviceMetrics) ResetPingStats() {
-	dm.ping = pingStatus{}
-}
-
 func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) ([]*kt.JCHF, bool, error) {
 	if pinger == nil {
 		return nil, false, nil
@@ -435,23 +425,16 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
-	// Calc these directly
-	sent := uint64(stats.PacketsSent)
-	received := uint64(stats.PacketsRecv)
-	diffSent := sent - dm.ping.sent
-	diffRecv := received - dm.ping.received
-	dm.ping.sent = sent
-	dm.ping.received = received
 	percnt := 0.0
-	if diffSent > 0 && diffRecv <= diffSent { // Make sure that if there's more packets recieved than sent we don't get confused.
-		percnt = float64(diffSent-diffRecv) / float64(diffSent) * 100.
+	if stats.PacketsSent > 0 && stats.PacketsRecv <= stats.PacketsSent { // Make sure that if there's more packets recieved than sent we don't get confused.
+		percnt = float64(stats.PacketsSent-stats.PacketsRecv) / float64(stats.PacketsSent) * 100.
 	} else { // Since we haven't sent any more packets on, sending more information here will be confusing so just return now.
 		return nil, false, nil
 	}
 
-	dst.CustomBigInt["PacketsSent"] = int64(diffSent)
+	dst.CustomBigInt["PacketsSent"] = int64(stats.PacketsSent)
 	dst.CustomMetrics["PacketsSent"] = kt.MetricInfo{Oid: oid, Mib: mib, Profile: "ping", Type: "ping"}
-	dst.CustomBigInt["PacketsRecv"] = int64(diffRecv)
+	dst.CustomBigInt["PacketsRecv"] = int64(stats.PacketsRecv)
 	dst.CustomMetrics["PacketsRecv"] = kt.MetricInfo{Oid: oid, Mib: mib, Profile: "ping", Type: "ping"}
 	if percnt >= 0.0 {
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)

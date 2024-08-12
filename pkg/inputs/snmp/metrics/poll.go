@@ -275,7 +275,6 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	jitterWindow := time.Duration(p.jitterTimeSec) * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
 	counterCheck := tick.NewFixedTimer(firstCollection, counterAlignment)
-	p.deviceMetrics.ResetPingStats() // Initialize to 0 sent and recieved.
 	fastDuration := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_DURATION_SEC", 120)) * time.Second
 	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
 	slowTick := time.Duration(p.pingSec) * time.Second
@@ -294,7 +293,6 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 
 				// Reset so that we don't keep avg/min/max across checks.
 				p.pinger.Reset(slowTick)
-				p.deviceMetrics.ResetPingStats()
 
 				// Send data on.
 				p.jchfChan <- flows
@@ -330,12 +328,10 @@ func (p *Poller) runFastPoll(ctx context.Context, fastTick time.Duration, fastDu
 	defer func() { // When we leave this loop, return to slow polling.
 		fastCheck.Stop()
 		p.pinger.Reset(slowTick)
-		p.deviceMetrics.ResetPingStats()
 	}()
 
 	// But for now we need fast polling.
 	p.pinger.Reset(fastTick)
-	p.deviceMetrics.ResetPingStats()
 
 	for {
 		select {
