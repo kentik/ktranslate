@@ -32,6 +32,7 @@ type Poller struct {
 	interfaceMetadataMibs map[string]*kt.Mib
 	matchAttr             map[string]*regexp.Regexp
 	counterTimeSec        string
+	scache                map[string]string
 }
 
 const (
@@ -89,6 +90,9 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 	if len(attrMap) > 0 {
 		log.Infof("Added %d Match Attribute(s)", len(attrMap))
 	}
+	if gconf.SaveCache {
+		log.Infof("Using an attr cache for MDS.")
+	}
 
 	counterTimeSec := util.GetPollRate(gconf, conf, log)
 
@@ -106,6 +110,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		interfaceMetadataMibs: interfaceMetadataMibs,
 		matchAttr:             attrMap,
 		counterTimeSec:        fmt.Sprintf("%v", time.Duration(counterTimeSec)*time.Second),
+		scache:                map[string]string{},
 	}
 }
 
@@ -302,6 +307,23 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 
 	if len(p.matchAttr) > 0 {
 		dst.MatchAttr = p.matchAttr
+	}
+
+	// Now save the cache if we want to.
+	if p.gconf.SaveCache {
+		// Run over the old values and update them if they are missing.
+		for k, v := range p.scache {
+			if _, ok := dst.CustomStr[k]; !ok {
+				dst.CustomStr[k] = v
+			}
+		}
+
+		// Now construct a new map with new values.
+		scache := map[string]string{}
+		for k, v := range dst.CustomStr {
+			scache[k] = v
+		}
+		p.scache = scache
 	}
 
 	return []*kt.JCHF{dst}, nil
