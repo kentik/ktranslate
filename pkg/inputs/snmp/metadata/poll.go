@@ -33,6 +33,7 @@ type Poller struct {
 	matchAttr             map[string]*regexp.Regexp
 	counterTimeSec        string
 	scache                map[string]string
+	tcache                map[string]kt.DeviceTableMetadata
 }
 
 const (
@@ -111,6 +112,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		matchAttr:             attrMap,
 		counterTimeSec:        fmt.Sprintf("%v", time.Duration(counterTimeSec)*time.Second),
 		scache:                map[string]string{},
+		tcache:                map[string]kt.DeviceTableMetadata{},
 	}
 }
 
@@ -317,13 +319,23 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 				dst.CustomStr[k] = v
 			}
 		}
+		for idx, t := range p.tcache {
+			if _, ok := dst.CustomTables[idx]; !ok {
+				dst.CustomTables[idx] = t
+			}
+		}
 
 		// Now construct a new map with new values.
 		scache := map[string]string{}
+		tcache := map[string]kt.DeviceTableMetadata{}
 		for k, v := range dst.CustomStr {
 			scache[k] = v
 		}
+		for idx, t := range dst.CustomTables {
+			tcache[idx] = t
+		}
 		p.scache = scache
+		p.tcache = tcache
 	}
 
 	for idx, t := range dst.CustomTables {
