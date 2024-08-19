@@ -549,10 +549,6 @@ func (f *NRMFormat) fromSnmpDeviceMetric(in *kt.JCHF) []NRMetric {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
 
-			if m == "vceLinkState" || m == "diskStatus" {
-				f.Infof("Looking at %v for index %v, got %v", m, in.CustomStr[kt.IndexVar], attrNew)
-			}
-
 			mtype := name.GetType()
 			if name.Format == kt.FloatMS {
 				ms = append(ms, NRMetric{

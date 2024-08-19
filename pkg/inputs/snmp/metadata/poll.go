@@ -338,14 +338,6 @@ func (p *Poller) toFlows(dd *kt.DeviceData) ([]*kt.JCHF, error) {
 		p.tcache = tcache
 	}
 
-	for idx, t := range dst.CustomTables {
-		for k, v := range t.Customs {
-			if k == "diskModel" || k == "vceLinkName" || k == "vceLinkItf" {
-				p.log.Infof("Storing Table index %v -> %v = %v", idx, k, v.GetValue())
-			}
-		}
-	}
-
 	return []*kt.JCHF{dst}, nil
 }
 
