@@ -283,6 +283,7 @@ type SnmpGlobalConfig struct {
 	JitterTimeSec         int                    `yaml:"jitter_time_sec"`
 	FastPoll              bool                   `yaml:"fast_poll"`
 	WatchProfileChanges   bool                   `yaml:"watch_profile_changes"`
+	SaveCache             bool                   `yaml:"save_mds_cache"`
 }
 
 type SnmpConfig struct {

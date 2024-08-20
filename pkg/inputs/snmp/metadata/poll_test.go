@@ -53,8 +53,9 @@ func TestToFlows(t *testing.T) {
 	conf.InitUserTags("service")
 
 	p := &Poller{
-		log:  l,
-		conf: conf,
+		log:   l,
+		conf:  conf,
+		gconf: &kt.SnmpGlobalConfig{},
 	}
 
 	input := kt.DeviceData{
@@ -73,4 +74,86 @@ func TestToFlows(t *testing.T) {
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "ddd", res[0].CustomStr["tags.aaa"])
 	assert.Equal(t, "", res[0].CustomStr["tags.foo"]) // Empty string match for tag here.
+}
+
+func TestToFlowsCache(t *testing.T) {
+	l := lt.NewTestContextL(logger.NilContext, t)
+	conf := &kt.SnmpDeviceConfig{
+		Provider: "foo",
+		UserTags: map[string]string{},
+	}
+	conf.InitUserTags("service")
+
+	p := &Poller{
+		log:   l,
+		conf:  conf,
+		gconf: &kt.SnmpGlobalConfig{},
+	}
+
+	input := kt.DeviceData{
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			Customs: map[string]string{
+				"foo": "aaa",
+				"bar": "bbb",
+			},
+		},
+	}
+	res, err := p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "aaa", res[0].CustomStr["foo"])
+	assert.Equal(t, "bbb", res[0].CustomStr["bar"])
+
+	// Now without
+	input = kt.DeviceData{
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			Customs: map[string]string{
+				"foo": "aaa",
+			},
+		},
+	}
+	res, err = p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "aaa", res[0].CustomStr["foo"])
+	assert.Equal(t, "", res[0].CustomStr["bar"])
+
+	// And again, but with caching turned on.
+	p = &Poller{
+		log:   l,
+		conf:  conf,
+		gconf: &kt.SnmpGlobalConfig{SaveCache: true},
+	}
+
+	input = kt.DeviceData{
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			Customs: map[string]string{
+				"foo": "aaa",
+				"bar": "bbb",
+			},
+		},
+	}
+	res, err = p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "aaa", res[0].CustomStr["foo"])
+	assert.Equal(t, "bbb", res[0].CustomStr["bar"])
+
+	// Now without
+	input = kt.DeviceData{
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			Customs: map[string]string{
+				"foo": "aaa",
+			},
+		},
+	}
+	res, err = p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "aaa", res[0].CustomStr["foo"])
+	assert.Equal(t, "bbb", res[0].CustomStr["bar"]) // bbb is picked up from cache.
 }
