@@ -27,7 +27,7 @@ type DeviceMetrics struct {
 	profileName string
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
-	lastSent    int
+	ptime       int
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -406,7 +406,15 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	}
 
 	mib, oid := dm.profile.GetMibAndOid()
-	stats := pinger.Statistics()
+
+	stats, err := pinger.Ping()
+	if err != nil {
+		if strings.Contains(err.Error(), "use of closed network connection") { // We are exiting.
+			return nil, false, nil
+		}
+		return nil, false, err
+	}
+
 	dst := kt.NewJCHF()
 	dst.CustomStr = map[string]string{}
 	dst.CustomInt = map[string]int32{}
@@ -425,15 +433,6 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	dst.CustomMetrics["AvgRttMs"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 	dst.CustomBigInt["StdDevRtt"] = stats.StdDevRtt.Microseconds()
 	dst.CustomMetrics["StdDevRtt"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
-
-	// Guard on case we have 1 over the normal number of pings sent.
-	if dm.lastSent > 0 {
-		if dm.lastSent-stats.PacketsSent == -1 { // There's a bug where were sometimes we sent one too many pings on the boundry.
-			stats.PacketsSent = dm.lastSent
-		}
-	}
-
-	dm.lastSent = stats.PacketsSent
 
 	percnt := 0.0
 	if stats.PacketsSent > 0 && stats.PacketsRecv <= stats.PacketsSent { // Make sure that if there's more packets recieved than sent we don't get confused.
@@ -459,6 +458,12 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		}
 	}
 	dm.conf.SetUserTags(dst.CustomStr)
+
+	if dm.ptime >= 1 {
+		percnt = 100
+	}
+
+	dm.ptime++
 
 	return []*kt.JCHF{dst}, percnt == 100, nil
 }
