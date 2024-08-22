@@ -27,7 +27,6 @@ type DeviceMetrics struct {
 	profileName string
 	oids        map[string]*kt.Mib
 	missing     map[string]bool
-	ptime       int
 }
 
 func NewDeviceMetrics(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, metrics *kt.SnmpDeviceMetric, profileMetrics map[string]*kt.Mib, profile *mibs.Profile, log logger.ContextL) *DeviceMetrics {
@@ -449,6 +448,8 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
 		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
+		dm.log.Infof("SSS %v", percnt)
+
 		// If percent ~ 100, push rtt down to 0 to avoid bad readings.
 		if math.Abs(percnt-99.) <= 1 {
 			dst.CustomBigInt["MinRttMs"] = 0
@@ -458,12 +459,6 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		}
 	}
 	dm.conf.SetUserTags(dst.CustomStr)
-
-	if dm.ptime >= 1 {
-		percnt = 100
-	}
-
-	dm.ptime++
 
 	return []*kt.JCHF{dst}, percnt == 100, nil
 }
