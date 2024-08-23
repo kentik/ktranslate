@@ -1,12 +1,19 @@
 package ping
 
 import (
+	"context"
+	"fmt"
+	"math"
+	"net"
+	"net/netip"
 	"os"
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/ping/kaping"
 
-	ping "github.com/prometheus-community/pro-bing"
+	probing "github.com/prometheus-community/pro-bing"
+	"gonum.org/v1/gonum/stat"
 )
 
 const (
@@ -16,65 +23,124 @@ const (
 type Pinger struct {
 	log      logger.ContextL
 	target   string
-	pinger   *ping.Pinger
+	pinger   *kaping.Pinger
 	priv     bool
-	num      int
+	count    int
+	timeout  time.Duration
 	interval time.Duration
+	citer    time.Duration
 }
 
-func NewPinger(log logger.ContextL, target string, pingSec int) (*Pinger, error) {
+func NewPinger(log logger.ContextL, target string, pingSec int, timeout time.Duration) (*Pinger, error) {
 	p := &Pinger{
 		log:      log,
 		target:   target,
 		interval: time.Second * time.Duration(pingSec), // Send 1 ping every this many seconds.
+		timeout:  timeout,
 	}
 
+	cfg := kaping.DefaultConfig()
 	if os.Getenv(KENTIK_PING_PRIV) != "false" {
 		log.Infof("Running ping service in privileged mode. Ping Interval: %v", p.interval)
-		p.priv = true
+		cfg.RawSocket = true
 	} else {
 		log.Infof("Running ping service in non privileged mode. Ping Interval: %v", p.interval)
+		cfg.RawSocket = false
 	}
 
-	err := p.Reset(p.interval)
-	return p, err
-}
-
-func (p *Pinger) Statistics() *ping.Statistics {
-	return p.pinger.Statistics()
-}
-
-func (p *Pinger) Reset(inter time.Duration) error {
-	pinger, err := ping.NewPinger(p.target)
+	pinger, err := kaping.NewPinger(cfg)
 	if err != nil {
-		return err
-	}
-
-	if inter > 0 {
-		pinger.Interval = inter
-	} else {
-		pinger.Interval = p.interval // Sent 1 packet every X seconds.
-	}
-	pinger.SetPrivileged(p.priv)
-	pinger.OnFinish = func(stats *ping.Statistics) {
-		p.log.Debugf("Ping run %d finished.", p.num)
-		p.num++
-	}
-
-	if p.pinger != nil {
-		p.pinger.Stop()
+		return nil, err
 	}
 	p.pinger = pinger
-	go func() {
-		err := p.pinger.Run()
-		if err != nil {
-			p.log.Errorf("Cannot ping: %v", err)
-		}
-	}()
+	return p, nil
+}
 
-	return nil
+func (p *Pinger) Start(ctx context.Context) {
+	if p.pinger != nil {
+		go p.pinger.Start(ctx)
+	}
 }
 
 func (p *Pinger) Stop() {
-	p.pinger.Stop()
+	// Noop
+}
+
+func (p *Pinger) Reset(inter time.Duration, count int) error {
+	if inter > 0 {
+		p.citer = inter
+	} else {
+		p.citer = p.interval // Sent 1 packet every X seconds.
+	}
+	p.count = count
+
+	p.log.Infof("Pinger reset to interval: %v, count: %v", p.citer, p.count)
+	return nil
+}
+
+func (p *Pinger) Ping() (*probing.Statistics, error) {
+	if p.pinger == nil {
+		return nil, fmt.Errorf("pinger unavailable.")
+	}
+
+	addr, err := p.resolve()
+	if err != nil {
+		return nil, fmt.Errorf("host resolution failed: %w", err)
+	}
+	count := p.count
+	iter := p.citer
+
+	result, err := p.pinger.Ping(addr, count, iter, p.timeout)
+	if err != nil {
+		return nil, err
+	}
+
+	return statistics(p.target, addr, count, result), nil
+}
+
+func (p *Pinger) resolve() (netip.Addr, error) {
+	addrs, err := net.LookupHost(p.target)
+	switch {
+	case err != nil:
+		return netip.Addr{}, err
+	case len(addrs) == 0:
+		return netip.Addr{}, fmt.Errorf("address resolution failed")
+	}
+	return netip.ParseAddr(addrs[0])
+}
+
+func statistics(host string, addr netip.Addr, count int, result *kaping.Result) *probing.Statistics {
+	min := time.Duration(math.MaxInt64)
+	max := time.Duration(0)
+	rtt := make([]float64, len(result.RTT))
+
+	for i, r := range result.RTT {
+		if r < min {
+			min = r
+		}
+
+		if r > max {
+			max = r
+		}
+
+		rtt[i] = float64(r)
+	}
+
+	mean, stdev := stat.MeanStdDev(rtt, nil)
+
+	return &probing.Statistics{
+		PacketsRecv: count - result.Lost,
+		PacketsSent: result.Sent,
+		PacketLoss:  float64(result.Lost) / float64(result.Sent),
+		IPAddr: &net.IPAddr{
+			IP:   net.IP(addr.AsSlice()),
+			Zone: addr.Zone(),
+		},
+		Addr:      host,
+		Rtts:      result.RTT,
+		MinRtt:    min,
+		MaxRtt:    max,
+		AvgRtt:    time.Duration(mean),
+		StdDevRtt: time.Duration(stdev),
+	}
 }

@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	STATUS_CHECK_TIME = 60 * time.Second
+	STATUS_CHECK_TIME  = 60 * time.Second
+	DefaultPingTimeout = 1000 * time.Millisecond
 )
 
 type Poller struct {
@@ -101,6 +102,12 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		pingSec = 60
 	}
 
+	// How long to wait for a response back.
+	timeout := time.Millisecond * time.Duration(conf.TimeoutMS)
+	if timeout == 0 {
+		timeout = DefaultPingTimeout
+	}
+
 	poller := Poller{
 		jchfChan:       jchfChan,
 		log:            log,
@@ -112,12 +119,12 @@ func NewPollerForPing(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, jch
 		gconf:          gconf,
 	}
 
-	p, err := ping.NewPinger(log, conf.DeviceIP, pingSec)
+	p, err := ping.NewPinger(log, conf.DeviceIP, pingSec, timeout)
 	if err != nil {
 		log.Errorf("Cannot setup ping service for %s -> %s: %v", err, conf.DeviceIP, conf.DeviceName)
 	} else {
 		poller.pinger = p
-		log.Infof("Enabling response time service for %s -> %s", conf.DeviceIP, conf.DeviceName)
+		log.Infof("Enabling response time service for %s -> %s with timeout %v", conf.DeviceIP, conf.DeviceName, timeout)
 	}
 
 	return &poller
@@ -271,6 +278,7 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 		return
 	}
 
+	p.pinger.Start(ctx)
 	counterAlignment := time.Duration(p.counterTimeSec) * time.Second
 	jitterWindow := time.Duration(p.jitterTimeSec) * time.Second
 	firstCollection := time.Now().Truncate(counterAlignment).Add(counterAlignment).Add(time.Duration(rand.Int63n(int64(jitterWindow))))
@@ -279,36 +287,44 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	fastTick := time.Duration(kt.LookupEnvInt("KENTIK_FAST_PING_TICK_SEC", 10)) * time.Second
 	slowTick := time.Duration(p.pingSec) * time.Second
 
-	p.log.Infof("snmpPing: First run will be at %v. Running every %v", firstCollection, counterAlignment)
+	p.pinger.Reset(slowTick, p.counterTimeSec/p.pingSec)
+	p.log.Infof("snmpPing: First run will be at %v. Running every %v, Sending %d probes", firstCollection, counterAlignment, p.counterTimeSec/p.pingSec)
+
 	go func() {
 		seenGoodPacketLoss := true
+		runningFast := false
 		for {
 			select {
 			case _ = <-counterCheck.C:
-				flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
-				if err != nil {
-					p.log.Warnf("There was an error when getting ping stats: %v.", err)
-					continue
-				}
+				go func() {
+					if runningFast {
+						return
+					}
 
-				// Reset so that we don't keep avg/min/max across checks.
-				p.pinger.Reset(slowTick)
+					flows, isTotalLoss, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+					if err != nil {
+						p.log.Warnf("There was an error when getting ping stats: %v.", err)
+						return
+					}
 
-				// Send data on.
-				p.jchfChan <- flows
+					// Send data on.
+					p.jchfChan <- flows
 
-				if !isTotalLoss { // We don't want to go back into fast polling unless we get <100% packet loss at some point.
-					seenGoodPacketLoss = true
-				}
+					if !isTotalLoss { // We don't want to go back into fast polling unless we get <100% packet loss at some point.
+						seenGoodPacketLoss = true
+					}
 
-				// If there's total loss, go to fast polling but only if we haven't been here before.
-				if p.gconf.FastPoll && isTotalLoss && seenGoodPacketLoss {
-					p.log.Warnf("Starting fast ping operation due to 100% packet loss.")
-					ctxT, cancel := context.WithTimeout(ctx, fastDuration)
-					p.runFastPoll(ctxT, fastTick, fastDuration, slowTick)
-					cancel() // Done with fast polling.
-					seenGoodPacketLoss = false
-				}
+					// If there's total loss, go to fast polling but only if we haven't been here before.
+					if p.gconf.FastPoll && isTotalLoss && seenGoodPacketLoss && !runningFast {
+						p.log.Warnf("Starting fast ping operation due to 100 percent packet loss.")
+						runningFast = true
+						ctxT, cancel := context.WithTimeout(ctx, fastDuration)
+						p.runFastPoll(ctxT, fastTick, fastDuration, slowTick)
+						cancel() // Done with fast polling.
+						seenGoodPacketLoss = false
+						runningFast = false
+					}
+				}()
 
 			case <-ctx.Done():
 				p.log.Infof("Metrics PingOnly Done")
@@ -327,11 +343,12 @@ func (p *Poller) runFastPoll(ctx context.Context, fastTick time.Duration, fastDu
 
 	defer func() { // When we leave this loop, return to slow polling.
 		fastCheck.Stop()
-		p.pinger.Reset(slowTick)
+		p.pinger.Reset(slowTick, p.counterTimeSec/p.pingSec)
+		p.log.Infof("Fast ping done.")
 	}()
 
 	// But for now we need fast polling.
-	p.pinger.Reset(fastTick)
+	p.pinger.Reset(1*time.Second, int(fastTick.Seconds())) // Run every second.
 
 	for {
 		select {
