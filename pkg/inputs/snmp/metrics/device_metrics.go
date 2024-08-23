@@ -405,7 +405,6 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 	}
 
 	mib, oid := dm.profile.GetMibAndOid()
-
 	stats, err := pinger.Ping()
 	if err != nil {
 		if strings.Contains(err.Error(), "use of closed network connection") { // We are exiting.
