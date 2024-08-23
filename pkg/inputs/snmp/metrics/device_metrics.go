@@ -448,8 +448,6 @@ func (dm *DeviceMetrics) GetPingStats(ctx context.Context, pinger *ping.Pinger) 
 		dst.CustomBigInt["PacketLossPct"] = int64(percnt * 1000.)
 		dst.CustomMetrics["PacketLossPct"] = kt.MetricInfo{Oid: oid, Mib: mib, Format: kt.FloatMS, Profile: "ping", Type: "ping"}
 
-		dm.log.Infof("SSS %v", percnt)
-
 		// If percent ~ 100, push rtt down to 0 to avoid bad readings.
 		if math.Abs(percnt-99.) <= 1 {
 			dst.CustomBigInt["MinRttMs"] = 0

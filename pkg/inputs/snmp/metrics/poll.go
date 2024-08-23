@@ -293,12 +293,10 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	go func() {
 		seenGoodPacketLoss := true
 		runningFast := false
-		run := 0
 		for {
 			select {
 			case _ = <-counterCheck.C:
 				go func() {
-					p.log.Infof("XXX %v %v", runningFast, run)
 					if runningFast {
 						return
 					}
@@ -311,9 +309,6 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 
 					// Send data on.
 					p.jchfChan <- flows
-
-					p.log.Infof("DDD %v", run)
-					run++
 
 					if !isTotalLoss { // We don't want to go back into fast polling unless we get <100% packet loss at some point.
 						seenGoodPacketLoss = true

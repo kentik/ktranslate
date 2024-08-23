@@ -90,9 +90,7 @@ func (p *Pinger) Ping() (*probing.Statistics, error) {
 	count := p.count
 	iter := p.citer
 
-	p.log.Infof("XXX %v %v %v %v ", addr, count, iter, p.timeout)
 	result, err := p.pinger.Ping(addr, count, iter, p.timeout)
-	p.log.Infof("YYY %v %v %v %v ", addr, count, iter, p.timeout)
 	if err != nil {
 		return nil, err
 	}
