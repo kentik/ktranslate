@@ -213,6 +213,7 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 
 	// Tee any flows on to another ktrans instance if this is set up.
 	if kc.tee != nil {
+		kc.log.Infof("Sending %d", len(evt[offset:]))
 		kc.tee.Send(r.Context(), kt.NewOutputWithProviderAndCompanySender(evt[offset:], kt.ProviderKflow, kt.Cid(cid), kt.EventOutput, senderId))
 	}
 
