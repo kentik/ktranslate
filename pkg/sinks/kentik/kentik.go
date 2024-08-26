@@ -110,8 +110,6 @@ func (s *KentikSink) HttpInfo() map[string]float64 {
 }
 
 func (s *KentikSink) sendKentik(ctx context.Context, payload []byte, cid int, senderId string, offset int) {
-	s.Infof("XXX %v %v %v", len(payload), cid, offset)
-
 	if s.isKentik && offset == 0 { // Cut short any flow which is coming from kentik going back to kentik.
 		return
 	}

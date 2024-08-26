@@ -188,7 +188,7 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		if err != nil {
 			return nil, fmt.Errorf("Invalid tee: %s, %v", sink, err)
 		}
-		kc.sinks[sink] = snk
+		kc.tee = snk
 		kc.log.Infof("Using ktrans tee at %s", config.TeeFlow)
 	}
 
