@@ -45,6 +45,7 @@ type KentikSink struct {
 	isKentik        bool
 	config          *ktranslate.Config
 	sendMaxDuration time.Duration
+	compression     kt.Compression
 }
 
 type KentikMetric struct {
@@ -66,12 +67,16 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 }
 
 func (s *KentikSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	if s.config.KentikCreds == nil || len(s.config.KentikCreds) == 0 {
-		return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
-	}
-	s.KentikUrl = strings.ReplaceAll(s.config.APIBaseURL, "api.", "flow.") + "/chf"
-	if v := s.config.KentikSink.RelayURL; v != "" { // If this is set, override and go directly here instead.
-		s.KentikUrl = v
+	if s.config.TeeFlow == "" {
+		if s.config.KentikCreds == nil || len(s.config.KentikCreds) == 0 {
+			return fmt.Errorf("Kentik requires -kentik_email and KENTIK_API_TOKEN env var to be set")
+		}
+		s.KentikUrl = strings.ReplaceAll(s.config.APIBaseURL, "api.", "flow.") + "/chf"
+		if v := s.config.KentikSink.RelayURL; v != "" { // If this is set, override and go directly here instead.
+			s.KentikUrl = v
+		}
+	} else {
+		s.KentikUrl = s.config.TeeFlow
 	}
 
 	s.isKentik = strings.Contains(strings.ToLower(s.KentikUrl), "kentik.com") // Make sure we can't feed data back into kentik in a loop.
@@ -80,6 +85,7 @@ func (s *KentikSink) Init(ctx context.Context, format formats.Format, compressio
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 	}
 	s.client = &http.Client{Transport: s.tr}
+	s.compression = compression
 
 	s.Infof("Exporting to Kentik at %s (isKentik=%v)", s.KentikUrl, s.isKentik)
 
@@ -123,7 +129,9 @@ func (s *KentikSink) sendKentik(ctx context.Context, payload []byte, cid int, se
 	req.Header.Set("X-CH-Auth-Email", s.config.KentikCreds[0].APIEmail)
 	req.Header.Set("X-CH-Auth-API-Token", s.config.KentikCreds[0].APIToken)
 	req.Header.Set("Content-Type", CHF_TYPE)
-	req.Header.Set("Content-Encoding", "gzip")
+	if s.compression == kt.CompressionGzip {
+		req.Header.Set("Content-Encoding", "gzip")
+	}
 
 	resp, err := s.client.Do(req)
 	if err != nil {

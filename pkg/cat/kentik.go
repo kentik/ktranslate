@@ -211,6 +211,11 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	// Tee any flows on to another ktrans instance if this is set up.
+	if kc.tee != nil {
+		kc.tee.Send(r.Context(), kt.NewOutputWithProviderAndCompanySender(evt, kt.ProviderKflow, kt.Cid(cid), kt.EventOutput, senderId))
+	}
+
 	// decompress and read (capnproto "packed" representation)
 	decoder := capn.NewPackedDecoder(bytes.NewBuffer(evt[offset:]))
 	decoder.MaxMessageSize = kentikDefaultCapnprotoDecodeLimit

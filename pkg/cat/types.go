@@ -82,6 +82,7 @@ type KTranslate struct {
 	confMgr      config.ConfigManager
 	shutdown     func(string)
 	objmgr       sinks.CloudObjectManager
+	tee          sinks.SinkImpl
 }
 
 type CustomMapper struct {

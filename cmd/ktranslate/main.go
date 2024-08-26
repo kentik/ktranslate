@@ -58,6 +58,7 @@ var (
 	syslog         string
 	httpInput      bool
 	enricher       string
+	teeFlow        string
 )
 
 func init() {
@@ -72,12 +73,13 @@ func init() {
 	flag.IntVar(&threadsInput, "input_threads", 1, "Number of threads to run for input processing")
 	flag.IntVar(&maxThreads, "max_threads", 1, "Dynamically grow threads up to this number")
 	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog)")
-	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow)")
-	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow)")
+	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
+	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
 	flag.StringVar(&compression, "compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
 	flag.StringVar(&sinks, "sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog)")
 	flag.IntVar(&maxFlows, "max_flows_per_message", 10000, "Max number of flows to put in each emitted message")
 	flag.IntVar(&dumpRollups, "rollup_interval", 0, "Export timer for rollups in seconds")
+	flag.StringVar(&teeFlow, "tee_flow", "", "If set, tee flow to another ktranslate instance here.")
 	flag.BoolVar(&rollupAndAlpha, "rollup_and_alpha", false, "Send both rollups and alpha inputs to sinks")
 	flag.IntVar(&sample, "sample_rate", kt.LookupEnvInt("KENTIK_SAMPLE_RATE", 1), "Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.")
 	flag.IntVar(&sampleMin, "max_before_sample", 1, "Only sample when a set of inputs is at least this many")
@@ -406,6 +408,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.EnableHTTPInput = v
 			case "http.remote_ip":
 				cfg.HttpRemoteIp = val
+			case "tee_flow":
+				cfg.TeeFlow = val
 			case "enricher":
 				if _, err := os.Stat(val); err == nil { // If this is a file on disk, run as a script.
 					cfg.EnricherScript = val
