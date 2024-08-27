@@ -272,6 +272,7 @@ type Config struct {
 	EnableHTTPInput     bool
 	HttpRemoteIp        string
 	EnricherURL         string
+	TeeFlow             string
 	EnricherSource      string
 	EnricherScript      string
 

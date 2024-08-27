@@ -181,6 +181,17 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		kc.log.Infof("Using sink %s", sink)
 	}
 
+	// Set up a tee if we need to.
+	if config.TeeFlow != "" {
+		sink := ss.Sink("kentik")
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, nil, kc.config)
+		if err != nil {
+			return nil, fmt.Errorf("Invalid tee: %s, %v", sink, err)
+		}
+		kc.tee = snk
+		kc.log.Infof("Using ktrans tee at %s", config.TeeFlow)
+	}
+
 	// IP based rules
 	rule, err := rule.NewRuleSet(config.ApplicationFile, log)
 	if err != nil {
@@ -629,6 +640,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 	// Connect our sinks.
 	for _, sink := range kc.sinks {
 		err := sink.Init(ctx, format, compression, kc.format)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Connect the tee to send.
+	if kc.tee != nil {
+		err := kc.tee.Init(ctx, format, compression, kc.format)
 		if err != nil {
 			return err
 		}
