@@ -28,13 +28,14 @@ func TestFilter(t *testing.T) {
 		"fooII,==,12",
 		"src_addr,==,10.2.2.0/24",
 		"foo,==,no or fooII,==,12",
+		"foo,==,bar and fooII,==,12",
 	}
 	fs, err := GetFilters(l, filters)
 	assert.NoError(err)
-	assert.Equal(len(filters), len(fs))
+	assert.Equal(len(filters)+1, len(fs)) // There's an extra and in here.
 
-	results := []bool{true, true, true, false, true, true, true, true, false, true, true, true, true}
+	results := []bool{true, true, true, false, true, true, true, true, false, true, true, true, true, true, true}
 	for i, fs := range fs {
-		assert.Equal(results[i], fs.Filter(kt.InputTesting[0]), "%d -> %v", i, filters[i])
+		assert.Equal(results[i], fs.Filter(kt.InputTesting[0]), "%d", i)
 	}
 }

@@ -122,8 +122,10 @@ func (i *FilterDefs) Set(value string) error {
 func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error) {
 	ff := FilterDefs{}
 	for _, f := range filters {
-		if err := ff.Set(f); err != nil {
-			return nil, err
+		for _, andSet := range strings.Split(f, AndToken) {
+			if err := ff.Set(andSet); err != nil {
+				return nil, err
+			}
 		}
 	}
 	filterSet := make([]FilterWrapper, 0)
@@ -153,6 +155,7 @@ func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error
 				return nil, fmt.Errorf("Invalid type: %s. Valid Types: %s|%s|%s", fd.FType, String, Int, Addr)
 			}
 		}
+		log.Infof("Filter: ", "Added %s", fSet.String())
 		filterSet = append(filterSet, orSet)
 	}
 
