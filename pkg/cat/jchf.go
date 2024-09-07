@@ -134,12 +134,18 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.InputIntAlias = i.SnmpAlias
 			dst.InputInterfaceCapacity = i.SnmpSpeedMbps
 			dst.InputInterfaceIP = i.InterfaceIP
+			dst.CustomStr["input_provider"] = i.Provider
+			dst.CustomStr["input_site_title"] = i.SiteTitle
+			dst.CustomStr["input_site_country"] = i.SiteCountry
 		}
 		if i, ok := d.Interfaces[dst.OutputPort]; ok {
 			dst.OutputIntDesc = i.InterfaceDescription
 			dst.OutputIntAlias = i.SnmpAlias
 			dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
 			dst.OutputInterfaceIP = i.InterfaceIP
+			dst.CustomStr["output_provider"] = i.Provider
+			dst.CustomStr["output_site_title"] = i.SiteTitle
+			dst.CustomStr["output_site_country"] = i.SiteCountry
 		}
 	}
 
