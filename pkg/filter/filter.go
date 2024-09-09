@@ -23,8 +23,10 @@ const (
 	Int               = "int"
 	Addr              = "addr"
 
-	OrToken  = " or "
-	AndToken = " and "
+	OrToken      = " or "
+	AndToken     = " and "
+	AndUpperCase = " AND "
+	OrUpperCase  = " OR "
 )
 
 var (
@@ -88,7 +90,7 @@ func (ff *FilterDefs) String() string {
 
 func (i *FilterDefs) Set(value string) error {
 	inner := FilterDefWrapper{}
-	for _, orSet := range strings.Split(value, OrToken) {
+	for _, orSet := range strings.Split(strings.Replace(value, OrUpperCase, OrToken, 1), OrToken) {
 		pts := strings.Split(orSet, ",")
 		if len(pts) < 3 {
 			return fmt.Errorf("Filter flag is defined by <type> dimension operator value")
@@ -122,7 +124,7 @@ func (i *FilterDefs) Set(value string) error {
 func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error) {
 	ff := FilterDefs{}
 	for _, f := range filters {
-		for _, andSet := range strings.Split(f, AndToken) {
+		for _, andSet := range strings.Split(strings.Replace(f, AndUpperCase, AndToken, 1), AndToken) {
 			if err := ff.Set(andSet); err != nil {
 				return nil, err
 			}
