@@ -69,26 +69,23 @@ type InterfaceCapacityBPS = uint64
 // It corresponds to a row in mn_interface, joined with information
 // from mn_device and mn_site.
 type Interface struct {
-	ID int64 `json:"id"`
+	DeviceID    DeviceID `json:"device_id,string"`
+	Address     string   `json:"interface_ip"`
+	Netmask     string   `json:"interface_ip_netmask"`
+	Description string   `json:"interface_description"`
 
-	DeviceID   DeviceID `json:"device_id,string"`
-	DeviceName string   `json:"device_name"`
-	DeviceType string   `json:"device_type"`
-	SiteID     int      `json:"site_id"`
+	NetworkBoundary  string `json:"network_boundary"`
+	ConnectivityType string `json:"connectivity_type"`
+	Provider         string `json:"provider"`
 
-	SnmpID               IfaceID `json:"snmp_id,string"`
-	SnmpSpeedMbps        int64   `json:"snmp_speed,string"` // unit? TODO: switch to uint64, rename to SnmpSpeedMbps
-	SnmpType             int     `json:"snmp_type"`
-	SnmpAlias            string  `json:"snmp_alias"`
-	InterfaceIP          string  `json:"interface_ip"`
-	InterfaceDescription string  `json:"interface_description"`
-	Provider             string  `json:"provider"`
-	VrfID                int64   `json:"vrf_id"`
-	Netmask              string  `json:"interface_ip_netmask"`
-	Addrs                []Addr  `json:"secondary_ips"`
+	SnmpID        IfaceID `json:"snmp_id,string"`
+	Alias         string  `json:"snmp_alias"`
+	Type          uint64  `json:"snmp_type"`
+	SnmpSpeedMbps int64   `json:"snmp_speed,string"` // unit? TODO: switch to uint64, rename to SnmpSpeedMbps
+	SnmpType      int     `json:"snmp_type"`
 
-	SiteTitle   string `json:"site_title"`
-	SiteCountry string `json:"site_country"`
+	Addrs     []Addr            `json:"secondary_ips"`
+	ExtraInfo map[string]string `json:"extra_info"`
 }
 
 type Addr struct {
