@@ -592,6 +592,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.Rollup.TopK = v
 			case "rollups":
 				cfg.Rollup.Formats = strings.Split(val, filter.AndToken)
+			case "rollup_keep_undefined":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.Rollup.KeepUndefined = v
 			// pkg/eggs/kmux
 			case "dir":
 				cfg.KMux.Dir = val
