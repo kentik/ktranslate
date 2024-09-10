@@ -234,6 +234,16 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	return nil
 }
 
+func (api *KentikApi) getInterfaces(ctx context.Context, did kt.DeviceID, info ktranslate.KentikCred) ([]kt.Interface, error) {
+	res, err := api.getDeviceInfo(ctx, fmt.Sprintf(api.config.APIBaseURL+"/api/internal/device/%d/interfaces", did), info.APIEmail, info.APIToken)
+	if err != nil {
+		return nil, err
+	}
+	interfaces := []kt.Interface{}
+	err = json.Unmarshal(res, &interfaces)
+	return interfaces, err
+}
+
 func (api *KentikApi) getDevices(ctx context.Context) error {
 	stime := time.Now()
 	resDev := map[kt.Cid]kt.Devices{}
@@ -254,9 +264,15 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 			if _, ok := resDev[device.CompanyID]; !ok {
 				resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
 			}
-			device.Interfaces = map[kt.IfaceID]kt.Interface{}
-			for _, intf := range device.AllInterfaces {
-				device.Interfaces[intf.SnmpID] = intf
+			myd.Interfaces = map[kt.IfaceID]kt.Interface{}
+			interfaces, err := api.getInterfaces(ctx, device.ID, info)
+			if err != nil {
+				api.Errorf("Cannot get interfaces for %v: %v", device.Name, err)
+			} else {
+				for _, intf := range interfaces {
+					intfl := intf // Should this be a pointer?
+					myd.Interfaces[intf.SnmpID] = intfl
+				}
 			}
 			resDev[device.CompanyID][device.ID] = &myd
 			num++

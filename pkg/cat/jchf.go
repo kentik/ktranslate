@@ -130,22 +130,22 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		}
 		if i, ok := d.Interfaces[dst.InputPort]; ok {
-			dst.InputIntDesc = i.InterfaceDescription
-			dst.InputIntAlias = i.SnmpAlias
+			dst.InputIntDesc = i.Description
+			dst.InputIntAlias = i.Alias
 			dst.InputInterfaceCapacity = i.SnmpSpeedMbps
-			dst.InputInterfaceIP = i.InterfaceIP
+			dst.InputInterfaceIP = i.Address
 			dst.CustomStr["input_provider"] = i.Provider
-			dst.CustomStr["input_site_title"] = i.SiteTitle
-			dst.CustomStr["input_site_country"] = i.SiteCountry
+			dst.CustomStr["input_network_boundary"] = i.NetworkBoundary
+			dst.CustomStr["input_connectivity_type"] = i.ConnectivityType
 		}
 		if i, ok := d.Interfaces[dst.OutputPort]; ok {
-			dst.OutputIntDesc = i.InterfaceDescription
-			dst.OutputIntAlias = i.SnmpAlias
+			dst.OutputIntDesc = i.Description
+			dst.OutputIntAlias = i.Alias
 			dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
-			dst.OutputInterfaceIP = i.InterfaceIP
+			dst.OutputInterfaceIP = i.Address
 			dst.CustomStr["output_provider"] = i.Provider
-			dst.CustomStr["output_site_title"] = i.SiteTitle
-			dst.CustomStr["output_site_country"] = i.SiteCountry
+			dst.CustomStr["output_network_boundary"] = i.NetworkBoundary
+			dst.CustomStr["output_connectivity_type"] = i.ConnectivityType
 		}
 	}
 
