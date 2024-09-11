@@ -26,12 +26,14 @@ const (
 	Percentile            = "entropy"
 
 	KENTIK_EVENT_TYPE = "KFlow:%s:%s"
+	UndefinedKey      = "undefined"
 )
 
 var (
-	rollups RollupFlag
-	keyJoin string
-	topK    int
+	rollups       RollupFlag
+	keyJoin       string
+	topK          int
+	keepUndefined bool
 )
 
 type RollupFlag []string
@@ -48,6 +50,7 @@ func init() {
 	flag.Var(&rollups, "rollups", "Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr")
 	flag.StringVar(&keyJoin, "rollup_key_join", "^", "Token to use to join dimension keys together")
 	flag.IntVar(&topK, "rollup_top_k", 10, "Export only these top values")
+	flag.BoolVar(&keepUndefined, "rollup_keep_undefined", false, "If set, mark undefined values with the string undefined.")
 }
 
 type Roller interface {
@@ -146,6 +149,9 @@ func GetRollups(log logger.Underlying, cfg *ktranslate.RollupConfig) ([]Roller, 
 		}
 	}
 
+	// If true, don't drop the rollups which don't get matched.
+	keepUndefined = cfg.KeepUndefined
+
 	return rolls, nil
 }
 
@@ -230,6 +236,9 @@ func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 				// Skip?
 			}
 		}
+		if keepUndefined && keyPts[i] == "" {
+			keyPts[i] = UndefinedKey
+		}
 	}
 	next := len(r.dims)
 	for _, d := range r.multiDims { // Now handle the 2 level deep maps
@@ -249,6 +258,9 @@ func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 			case map[string]int64:
 				keyPts[next] = strconv.Itoa(int(dd[d[1]]))
 			}
+		}
+		if keepUndefined && keyPts[next] == "" {
+			keyPts[next] = UndefinedKey
 		}
 		next++
 	}
