@@ -1138,6 +1138,12 @@ func (c *MerakiClient) getUplinks(dur time.Duration) ([]*kt.JCHF, error) {
 			params.SetStartingAfter(&nextToken)
 		}
 
+		// Hack to try and cover up a nil pointer bug which happens sometimes.
+		if uplinks == nil || org.networks == nil || c.client == nil || c.client.Organizations == nil {
+			c.log.Warnf("Returning nil due to missing pointer.")
+			return nil
+		}
+
 		prod, err := c.client.Organizations.GetOrganizationUplinksStatuses(params, c.auth)
 		if err != nil {
 			if strings.Contains(err.Error(), "(status 429)") && timeouts < c.maxRetry {
