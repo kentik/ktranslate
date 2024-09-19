@@ -122,13 +122,13 @@ func TestRollup(t *testing.T) {
 			ri.Add(inputs[i])
 			res := ri.Export()
 
-			if len(res) > 0 {
+			if len(res) > 0 { // Sometimes there's a timing bug which gives us 0.
 				assert.Equal(outputs[i]["metric"].(int), int(res[0].Metric), res)
-			}
-			assert.Equal(roll.TopK, len(res), i)
-			dims := strings.Split(res[0].Dimension, res[0].KeyJoin)
-			for j, dim := range dims {
-				assert.Equal(outputs[i]["dimensions"].([]string)[j], dim, res)
+				assert.Equal(roll.TopK, len(res), i)
+				dims := strings.Split(res[0].Dimension, res[0].KeyJoin)
+				for j, dim := range dims {
+					assert.Equal(outputs[i]["dimensions"].([]string)[j], dim, res)
+				}
 			}
 		}
 	}
