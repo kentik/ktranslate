@@ -3,7 +3,6 @@ package rollup
 import (
 	"encoding/binary"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate"
@@ -153,7 +152,6 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 	r.dtime = time.Now()
 	keys := make([]Rollup, 0, len(uniques))
 	totalc := uint64(0)
-	var provt kt.Provider
 	for k, v := range uniques {
 		keys = append(keys, Rollup{
 			Name: r.name, EventType: r.eventType, Dimension: k,
@@ -161,34 +159,14 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 			Count: count[k], Provider: prov[k],
 		})
 		totalc += count[k]
-		provt = prov[k]
 	}
 
 	sort.Sort(byValue(keys))
 	if r.config.TopK > 0 && len(keys) > r.topK {
-		r.getTopkUniques(keys, totalc, ot, provt, rc)
+		rc <- keys[0:r.config.TopK] // Return only the expected number, as sorted.
 	} else {
 		rc <- keys
 	}
 
 	return
-}
-
-func (r *UniqueRollup) getTopkUniques(keys []Rollup, totalc uint64, ot time.Time, prov kt.Provider, rc chan []Rollup) {
-	top := make([]Rollup, 0, len(keys))
-	seen := map[string]int{}
-	seenPrimay := map[string]bool{}
-
-	for _, roll := range keys {
-		pts := strings.Split(roll.Dimension, r.keyJoin)
-		if seen[pts[r.primaryDim]] < r.config.TopK { // If the primary key for this rollup has less than the topk set, add it to the list.
-			if len(seenPrimay) <= r.config.TopK { // And, if the number of primary keys is also less than topk, add.
-				top = append(top, roll)
-			}
-		}
-		seen[pts[r.primaryDim]]++
-		seenPrimay[pts[r.primaryDim]] = true
-	}
-
-	rc <- top
 }

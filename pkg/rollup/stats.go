@@ -290,7 +290,6 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	keys := make([]Rollup, 0, len(sum))
 	total := uint64(0)
 	totalc := uint64(0)
-	var provt kt.Provider
 	for k, v := range sum {
 		keys = append(keys, Rollup{
 			Name: r.name, EventType: r.eventType, Dimension: k,
@@ -299,51 +298,14 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 		})
 		total += v
 		totalc += count[k]
-		provt = prov[k]
 	}
 
 	sort.Sort(byValue(keys))
 	if r.config.TopK > 0 && len(keys) > r.config.TopK {
-		r.getTopkSum(keys, total, totalc, ot, provt, rc)
+		rc <- keys[0:r.config.TopK] // Return only the expected number, as sorted.
 	} else {
 		rc <- keys
 	}
 
 	return
-}
-
-func (r *StatsRollup) getTopkSum(keys []Rollup, total uint64, totalc uint64, ot time.Time, prov kt.Provider, rc chan []Rollup) {
-	top := make([]Rollup, 0, len(keys))
-	seen := map[string]int{}
-	seenPrimay := map[string]bool{}
-
-	for _, roll := range keys {
-		pts := strings.Split(roll.Dimension, r.keyJoin)
-		if seen[pts[r.primaryDim]] < r.config.TopK { // If the primary key for this rollup has less than the topk set, add it to the list.
-			if len(seenPrimay) <= r.config.TopK { // And, if the number of primary keys is also less than topk, add.
-				top = append(top, roll)
-			}
-		}
-		seen[pts[r.primaryDim]]++
-		seenPrimay[pts[r.primaryDim]] = true
-	}
-
-	// Fill in the total value here, unless the name has total in it.
-	/** Taking this out per NR ask.
-	if !strings.Contains(r.name, "vpc.") {
-		dims := combo(r.dims, r.multiDims)
-		totals := make([]string, len(dims))
-		for i, _ := range dims {
-			totals[i] = "total"
-		}
-		top = append(top, Rollup{
-			Name: r.name, EventType: r.eventType, Dimension: strings.Join(totals, r.keyJoin),
-			Metric: float64(total), KeyJoin: r.keyJoin, dims: dims, Interval: r.dtime.Sub(ot),
-			Min: 0, Max: 0, Count: totalc, Provider: prov,
-		})
-	}
-	*/
-
-	// Return out filled out set.
-	rc <- top
 }

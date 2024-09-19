@@ -265,6 +265,13 @@ func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 		next++
 	}
 
+	// The primary dimension is always first now.
+	if r.primaryDim > 0 {
+		tmp := keyPts[0]
+		keyPts[0] = keyPts[r.primaryDim]
+		keyPts[r.primaryDim] = tmp
+	}
+
 	return strings.Join(keyPts, r.keyJoin)
 }
 
