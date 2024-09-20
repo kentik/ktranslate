@@ -121,9 +121,8 @@ func TestRollup(t *testing.T) {
 
 		for _, ri := range rd {
 			ri.Add(inputs[i])
-			time.Sleep(50 * time.Millisecond)
+			time.Sleep(50 * time.Microsecond)
 			res := ri.Export()
-			time.Sleep(50 * time.Millisecond)
 
 			assert.Equal(outputs[i]["metric"].(int), int(res[0].Metric), res)
 			assert.Equal(roll.TopK, len(res), i)
@@ -131,6 +130,60 @@ func TestRollup(t *testing.T) {
 			for j, dim := range dims {
 				assert.Equal(outputs[i]["dimensions"].([]string)[j], dim, res)
 			}
+		}
+	}
+}
+
+func BenchmarkRollups(b *testing.B) {
+	l := lt.NewBenchContextL(logger.NilContext, b).GetLogger().GetUnderlyingLogger()
+	assert := assert.New(b)
+	// filters are type,dimension,operator,value
+	roll := ktranslate.RollupConfig{
+		JoinKey:       "^",
+		TopK:          2,
+		Formats:       []string{"sum,sum_bytes_in,in_bytes,custom_str.foo,bar"},
+		KeepUndefined: false,
+	}
+
+	inputs := []map[string]interface{}{
+		map[string]interface{}{
+			"in_bytes":    int64(10),
+			"custom_str":  map[string]string{"foo": "ddd"},
+			"bar":         "ccc",
+			"sample_rate": int64(1),
+			"provider":    kt.Provider("pp"),
+		},
+		map[string]interface{}{
+			"in_bytes":    int64(20),
+			"custom_str":  map[string]string{"foo": "ddd"},
+			"bar":         "ccc",
+			"sample_rate": int64(1),
+			"provider":    kt.Provider("pp"),
+		},
+		map[string]interface{}{
+			"in_bytes":    int64(20),
+			"custom_str":  map[string]string{"foo": "ddd"},
+			"bar":         "eee",
+			"sample_rate": int64(1),
+			"provider":    kt.Provider("pp"),
+		},
+		map[string]interface{}{
+			"in_bytes":    int64(2),
+			"custom_str":  map[string]string{"foo": "ddd"},
+			"bar":         "fff",
+			"sample_rate": int64(1),
+			"provider":    kt.Provider("pp"),
+		},
+	}
+
+	rd, err := GetRollups(l, &roll)
+	assert.NoError(err)
+	for n := 0; n < b.N; n++ {
+		for _, ri := range rd {
+			ri.Add(inputs)
+			time.Sleep(50 * time.Microsecond)
+			res := ri.Export()
+			assert.Equal(roll.TopK, len(res))
 		}
 	}
 }
