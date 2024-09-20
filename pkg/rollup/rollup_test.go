@@ -3,6 +3,7 @@ package rollup
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -120,15 +121,15 @@ func TestRollup(t *testing.T) {
 
 		for _, ri := range rd {
 			ri.Add(inputs[i])
+			time.Sleep(50 * time.Millisecond)
 			res := ri.Export()
+			time.Sleep(50 * time.Millisecond)
 
-			if len(res) > 0 { // Sometimes there's a timing bug which gives us 0.
-				assert.Equal(outputs[i]["metric"].(int), int(res[0].Metric), res)
-				assert.Equal(roll.TopK, len(res), i)
-				dims := strings.Split(res[0].Dimension, res[0].KeyJoin)
-				for j, dim := range dims {
-					assert.Equal(outputs[i]["dimensions"].([]string)[j], dim, res)
-				}
+			assert.Equal(outputs[i]["metric"].(int), int(res[0].Metric), res)
+			assert.Equal(roll.TopK, len(res), i)
+			dims := strings.Split(res[0].Dimension, res[0].KeyJoin)
+			for j, dim := range dims {
+				assert.Equal(outputs[i]["dimensions"].([]string)[j], dim, res)
 			}
 		}
 	}
