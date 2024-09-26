@@ -129,6 +129,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 		if len(d.SendingIps) > 0 {
 			dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		}
+		dst.CustomStr["device_site"] = d.Site.SiteName
 		if i, ok := d.Interfaces[dst.InputPort]; ok {
 			dst.InputIntDesc = i.Description
 			dst.InputIntAlias = i.Alias
