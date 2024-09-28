@@ -54,6 +54,7 @@ type FilterType string
 type Filter interface {
 	Filter(*kt.JCHF) bool
 	FilterMap(map[string]interface{}) bool
+	GetName() string
 }
 
 type FilterWrapper []Filter
@@ -63,12 +64,13 @@ type FilterDef struct {
 	Operator  Operator
 	Value     string
 	FType     FilterType
+	Name      string
 }
 
 type FilterDefWrapper []FilterDef
 
 func (f *FilterDef) String() string {
-	return fmt.Sprintf("%s Filter: %s %s %s", f.FType, f.Dimension, f.Operator, f.Value)
+	return fmt.Sprintf("%s Filter: %s %s %s name=%s", f.FType, f.Dimension, f.Operator, f.Value, f.Name)
 }
 
 func (f FilterDefWrapper) String() string {
@@ -106,6 +108,10 @@ func (i *FilterDefs) Set(value string) error {
 			}
 			pts = append([]string{string(ftype)}, pts...)
 		}
+		name := "" // default to a global filter, so no name.
+		if len(pts) == 5 {
+			name = pts[4]
+		}
 		ptn := make([]string, len(pts))
 		for i, p := range pts {
 			ptn[i] = strings.TrimSpace(p)
@@ -115,6 +121,7 @@ func (i *FilterDefs) Set(value string) error {
 			Dimension: ptn[1],
 			Operator:  Operator(ptn[2]),
 			Value:     ptn[3],
+			Name:      name,
 		})
 	}
 	*i = append(*i, inner)
@@ -182,4 +189,11 @@ func (fs FilterWrapper) FilterMap(chf map[string]interface{}) bool {
 		}
 	}
 	return false
+}
+
+func (fs FilterWrapper) GetName() string {
+	if len(fs) > 0 {
+		return fs[0].GetName()
+	}
+	return ""
 }

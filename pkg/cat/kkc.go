@@ -121,6 +121,7 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	for _, filter := range filters {
 		if filter.GetName() == "" { // No name means a global application.
 			fullSet = append(fullSet, filter)
+			continue
 		}
 
 		found := false
@@ -135,8 +136,8 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		}
 	}
 
-	kc.filters = filters
-	kc.doFilter = len(filters) > 0
+	kc.filters = fullSet
+	kc.doFilter = len(fullSet) > 0
 
 	// Grab the custom data directly from a file.
 	if config.MappingFile != "" {

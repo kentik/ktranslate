@@ -15,12 +15,14 @@ type IntFilter struct {
 	cf        func(map[string]interface{}) bool
 	dimension []string
 	value     int64
+	name      string
 }
 
 func newIntFilter(log logger.Underlying, fd FilterDef) (*IntFilter, error) {
 	sf := &IntFilter{
 		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "intFilter"}, log),
 		dimension: strings.Split(fd.Dimension, "."),
+		name:      fd.Name,
 	}
 
 	val, err := strconv.Atoi(fd.Value)
@@ -55,6 +57,10 @@ func (f *IntFilter) FilterMap(mapr map[string]interface{}) bool {
 		return false
 	}
 	return true
+}
+
+func (f *IntFilter) GetName() string {
+	return f.name
 }
 
 func (f *IntFilter) intEquals(chf map[string]interface{}) bool {

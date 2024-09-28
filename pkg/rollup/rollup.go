@@ -321,11 +321,12 @@ func (r *rollupBase) filter(in []map[string]interface{}) []map[string]interface{
 	return res
 }
 
-func (r *rollupBase) SetFilter(filter filter.FilterWrapper) {
+func (r *rollupBase) SetFilter(fw filter.FilterWrapper) {
 	if r.filters == nil {
+		r.filters = []filter.FilterWrapper{}
 		r.hasFilters = true
 	}
-	r.filters = append(r.filters, filter)
+	r.filters = append(r.filters, fw)
 }
 
 func (r *rollupBase) GetName() string {

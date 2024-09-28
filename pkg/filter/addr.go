@@ -15,12 +15,14 @@ type AddrFilter struct {
 	cf        func(map[string]interface{}) bool
 	dimension []string
 	value     *net.IPNet
+	name      string
 }
 
 func newAddrFilter(log logger.Underlying, fd FilterDef) (*AddrFilter, error) {
 	sf := &AddrFilter{
 		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "addrFilter"}, log),
 		dimension: strings.Split(fd.Dimension, "."),
+		name:      fd.Name,
 	}
 
 	_, val, err := net.ParseCIDR(fd.Value)
@@ -53,6 +55,10 @@ func (f *AddrFilter) FilterMap(mapr map[string]interface{}) bool {
 		return false
 	}
 	return true
+}
+
+func (f *AddrFilter) GetName() string {
+	return f.name
 }
 
 func (f *AddrFilter) addrEquals(chf map[string]interface{}) bool {
