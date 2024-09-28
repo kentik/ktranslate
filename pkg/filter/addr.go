@@ -45,6 +45,10 @@ func newAddrFilter(log logger.Underlying, fd FilterDef) (*AddrFilter, error) {
 
 func (f *AddrFilter) Filter(in *kt.JCHF) bool {
 	mapr := in.ToMap()
+	return f.FilterMap(mapr)
+}
+
+func (f *AddrFilter) FilterMap(mapr map[string]interface{}) bool {
 	if !f.cf(mapr) {
 		return false
 	}

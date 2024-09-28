@@ -56,6 +56,8 @@ func init() {
 type Roller interface {
 	Add([]map[string]interface{})
 	Export() []Rollup
+	SetFilter(filter.FilterWrapper)
+	GetName() string
 }
 
 type Rollup struct {
@@ -81,6 +83,16 @@ type RollupDef struct {
 	Dimensions []string
 	Name       string
 }
+
+/**
+  -filters "string,custom_str.dst_network_bndry,==,external,sum_external"
+
+       -rollups s_sum,sum_external,in_bytes,custom_str.src_subscriber_id
+       -rollups s_sum,sum_external,in_bytes,custom_str.output_provider
+
+  -filters "string,custom_str.src_subscriber_id,!=,'',sum_all_sub_id"
+       -rollups s_sum,sum_all_sub_id,in_bytes,custom_str.output_provider
+*/
 
 func (r *RollupDef) String() string {
 	return fmt.Sprintf("Name: %s, Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.Name, r.Method, r.Sample, r.Metrics, r.Dimensions)
@@ -174,6 +186,8 @@ type rollupBase struct {
 	dtime        time.Time
 	name         string
 	primaryDim   int
+	filters      []filter.FilterWrapper
+	hasFilters   bool
 }
 
 func (r *rollupBase) init(rd RollupDef) error {
@@ -288,4 +302,32 @@ func combo(dims []string, multiDims [][]string) []string {
 		ret = append(ret, d[1])
 	}
 	return ret
+}
+
+func (r *rollupBase) filter(in []map[string]interface{}) []map[string]interface{} {
+	res := make([]map[string]interface{}, 0, len(in))
+	for _, flow := range in {
+		keep := true
+		for _, f := range r.filters {
+			if !f.FilterMap(flow) {
+				keep = false
+				break
+			}
+		}
+		if keep {
+			res = append(res, flow)
+		}
+	}
+	return res
+}
+
+func (r *rollupBase) SetFilter(filter filter.FilterWrapper) {
+	if r.filters == nil {
+		r.hasFilters = true
+	}
+	r.filters = append(r.filters, filter)
+}
+
+func (r *rollupBase) GetName() string {
+	return r.name
 }

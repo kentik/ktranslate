@@ -53,6 +53,7 @@ type FilterType string
 
 type Filter interface {
 	Filter(*kt.JCHF) bool
+	FilterMap(map[string]interface{}) bool
 }
 
 type FilterWrapper []Filter
@@ -168,6 +169,15 @@ func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error
 func (fs FilterWrapper) Filter(chf *kt.JCHF) bool {
 	for _, f := range fs {
 		if f.Filter(chf) {
+			return true
+		}
+	}
+	return false
+}
+
+func (fs FilterWrapper) FilterMap(chf map[string]interface{}) bool {
+	for _, f := range fs {
+		if f.FilterMap(chf) {
 			return true
 		}
 	}

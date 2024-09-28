@@ -56,6 +56,10 @@ func newUniqueRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.Rollup
 }
 
 func (r *UniqueRollup) Add(in []map[string]interface{}) {
+	if r.hasFilters {
+		in = r.filter(in)
+	}
+
 	uniques := map[string]gohll.HLL{}
 	count := map[string]uint64{}
 	prov := map[string]kt.Provider{}

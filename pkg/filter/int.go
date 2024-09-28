@@ -47,6 +47,10 @@ func newIntFilter(log logger.Underlying, fd FilterDef) (*IntFilter, error) {
 
 func (f *IntFilter) Filter(in *kt.JCHF) bool {
 	mapr := in.ToMap()
+	return f.FilterMap(mapr)
+}
+
+func (f *IntFilter) FilterMap(mapr map[string]interface{}) bool {
 	if !f.cf(mapr) {
 		return false
 	}
