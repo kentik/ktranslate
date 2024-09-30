@@ -14,6 +14,7 @@ type StringFilter struct {
 	cf        func(map[string]interface{}) bool
 	dimension []string
 	value     string
+	name      string
 }
 
 func newStringFilter(log logger.Underlying, fd FilterDef) (*StringFilter, error) {
@@ -21,6 +22,7 @@ func newStringFilter(log logger.Underlying, fd FilterDef) (*StringFilter, error)
 		ContextL:  logger.NewContextLFromUnderlying(logger.SContext{S: "stringFilter"}, log),
 		dimension: strings.Split(fd.Dimension, "."),
 		value:     fd.Value,
+		name:      fd.Name,
 	}
 
 	switch fd.Operator {
@@ -39,10 +41,18 @@ func newStringFilter(log logger.Underlying, fd FilterDef) (*StringFilter, error)
 
 func (f *StringFilter) Filter(in *kt.JCHF) bool {
 	mapr := in.ToMap()
+	return f.FilterMap(mapr)
+}
+
+func (f *StringFilter) FilterMap(mapr map[string]interface{}) bool {
 	if !f.cf(mapr) {
 		return false
 	}
 	return true
+}
+
+func (f *StringFilter) GetName() string {
+	return f.name
 }
 
 func (f *StringFilter) stringEquals(chf map[string]interface{}) bool {

@@ -150,6 +150,10 @@ func (r *StatsRollup) addSum(in []map[string]interface{}) {
 }
 
 func (r *StatsRollup) Add(in []map[string]interface{}) {
+	if r.hasFilters {
+		in = r.filter(in)
+	}
+
 	if r.isSum { // this is a fast path for pure additive rollups.
 		r.addSum(in)
 		return

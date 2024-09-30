@@ -116,8 +116,28 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	if err != nil {
 		return nil, err
 	}
-	kc.filters = filters
-	kc.doFilter = len(filters) > 0
+
+	fullSet := []filter.FilterWrapper{}
+	for _, filter := range filters {
+		if filter.GetName() == "" { // No name means a global application.
+			fullSet = append(fullSet, filter)
+			continue
+		}
+
+		found := false
+		for _, roll := range rolls { // If the name matches, only use this filter for this rollup.
+			if filter.GetName() == roll.GetName() {
+				roll.SetFilter(filter)
+				found = true
+			}
+		}
+		if !found {
+			log.Warnf("Skipping named filter %s, no matching rollup found.", filter.GetName())
+		}
+	}
+
+	kc.filters = fullSet
+	kc.doFilter = len(fullSet) > 0
 
 	// Grab the custom data directly from a file.
 	if config.MappingFile != "" {
