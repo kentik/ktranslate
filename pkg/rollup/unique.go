@@ -159,7 +159,7 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 	for k, v := range uniques {
 		keys = append(keys, Rollup{
 			Name: r.name, EventType: r.eventType, Dimension: k,
-			Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot),
+			Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
 			Count: count[k], Provider: prov[k],
 		})
 		totalc += count[k]

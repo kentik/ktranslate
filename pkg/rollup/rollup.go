@@ -176,7 +176,6 @@ func (a byValue) Less(i, j int) bool { return a[j].Metric < a[i].Metric }
 type rollupBase struct {
 	metrics      []string
 	multiMetrics [][]string
-	dims         []string
 	multiDims    [][]string
 	keyJoin      string
 	topK         int
@@ -185,7 +184,6 @@ type rollupBase struct {
 	sample       bool
 	dtime        time.Time
 	name         string
-	primaryDim   int
 	filters      []filter.FilterWrapper
 	hasFilters   bool
 }
@@ -193,33 +191,21 @@ type rollupBase struct {
 func (r *rollupBase) init(rd RollupDef) error {
 	r.metrics = make([]string, 0)
 	r.multiMetrics = make([][]string, 0)
-	r.dims = make([]string, 0)
 	r.multiDims = make([][]string, 0)
 	r.dtime = time.Now()
 	r.name = rd.Name
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
-	isMultiPrimary := false
-	for i, d := range rd.Dimensions {
+	for _, d := range rd.Dimensions {
 		pts := strings.Split(d, ".")
+		r.multiDims = append(r.multiDims, pts)
 		switch len(pts) {
-		case 1:
-			r.dims = append(r.dims, d)
-		case 2:
-			r.multiDims = append(r.multiDims, pts)
-			if i == 0 {
-				isMultiPrimary = true
-			}
+		case 1: // noop
+		case 2: // noop
 		default:
 			return fmt.Errorf("Invalid dimension: %s", d)
 		}
-	}
-
-	if isMultiPrimary { // How do we sort by?
-		r.primaryDim = len(r.dims)
-	} else {
-		r.primaryDim = 0
 	}
 
 	for _, m := range rd.Metrics {
@@ -238,52 +224,44 @@ func (r *rollupBase) init(rd RollupDef) error {
 }
 
 func (r *rollupBase) getKey(mapr map[string]interface{}) string {
-	keyPts := make([]string, len(r.dims)+len(r.multiDims))
-	for i, d := range r.dims {
-		if dd, ok := mapr[d]; ok {
-			switch v := dd.(type) {
-			case string:
-				keyPts[i] = v
-			case int64:
-				keyPts[i] = strconv.Itoa(int(v))
-			default:
-				// Skip?
-			}
-		}
-		if keepUndefined && keyPts[i] == "" {
-			keyPts[i] = UndefinedKey
-		}
-	}
-	next := len(r.dims)
-	for _, d := range r.multiDims { // Now handle the 2 level deep maps
-		if d1, ok := mapr[d[0]]; ok {
-			switch dd := d1.(type) {
-			case map[string]string:
-				keyPts[next] = dd[d[1]]
-				if keyPts[next] == "" {
-					if strings.HasPrefix(d[1], "source_") {
-						keyPts[next] = dd["dest_"+d[1][7:]]
-					} else if strings.HasPrefix(d[1], "dest_") {
-						keyPts[next] = dd["source_"+d[1][5:]]
-					}
+	keyPts := make([]string, len(r.multiDims))
+	for i, d := range r.multiDims {
+		if len(d) == 1 {
+			if dd, ok := mapr[d[0]]; ok {
+				switch v := dd.(type) {
+				case string:
+					keyPts[i] = v
+				case int64:
+					keyPts[i] = strconv.Itoa(int(v))
+				default:
+					// Skip?
 				}
-			case map[string]int32:
-				keyPts[next] = strconv.Itoa(int(dd[d[1]]))
-			case map[string]int64:
-				keyPts[next] = strconv.Itoa(int(dd[d[1]]))
+			}
+			if keepUndefined && keyPts[i] == "" {
+				keyPts[i] = UndefinedKey
+			}
+		} else {
+			if d1, ok := mapr[d[0]]; ok {
+				switch dd := d1.(type) {
+				case map[string]string:
+					keyPts[i] = dd[d[1]]
+					if keyPts[i] == "" {
+						if strings.HasPrefix(d[1], "source_") {
+							keyPts[i] = dd["dest_"+d[1][7:]]
+						} else if strings.HasPrefix(d[1], "dest_") {
+							keyPts[i] = dd["source_"+d[1][5:]]
+						}
+					}
+				case map[string]int32:
+					keyPts[i] = strconv.Itoa(int(dd[d[1]]))
+				case map[string]int64:
+					keyPts[i] = strconv.Itoa(int(dd[d[1]]))
+				}
+			}
+			if keepUndefined && keyPts[i] == "" {
+				keyPts[i] = UndefinedKey
 			}
 		}
-		if keepUndefined && keyPts[next] == "" {
-			keyPts[next] = UndefinedKey
-		}
-		next++
-	}
-
-	// The primary dimension is always first now.
-	if r.primaryDim > 0 {
-		tmp := keyPts[0]
-		keyPts[0] = keyPts[r.primaryDim]
-		keyPts[r.primaryDim] = tmp
 	}
 
 	return strings.Join(keyPts, r.keyJoin)
@@ -293,13 +271,14 @@ func (r *Rollup) GetDims() []string {
 	return r.dims
 }
 
-func combo(dims []string, multiDims [][]string) []string {
-	ret := make([]string, len(dims))
-	for i, d := range dims {
-		ret[i] = d
-	}
-	for _, d := range multiDims {
-		ret = append(ret, d[1])
+func combo(multiDims [][]string) []string {
+	ret := make([]string, len(multiDims))
+	for i, d := range multiDims {
+		if len(d) == 1 {
+			ret[i] = d[0]
+		} else {
+			ret[i] = d[1]
+		}
 	}
 	return ret
 }
