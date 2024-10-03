@@ -18,6 +18,8 @@ const (
 	LessThan             = "<"
 	GreaterThan          = ">"
 	Contains             = "%"
+	Has                  = "~="
+	NotHas               = "!~"
 
 	String FilterType = "string"
 	Int               = "int"
