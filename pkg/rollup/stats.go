@@ -228,7 +228,7 @@ func (r *StatsRollup) Export() []Rollup {
 		if err != nil {
 			r.Errorf("Error calculating: %v", err)
 		} else {
-			keys[next] = Rollup{Name: r.name, EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot)}
+			keys[next] = Rollup{Name: r.name, EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot)}
 			next++
 		}
 	}
@@ -297,7 +297,7 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 	for k, v := range sum {
 		keys = append(keys, Rollup{
 			Name: r.name, EventType: r.eventType, Dimension: k,
-			Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.dims, r.multiDims), Interval: r.dtime.Sub(ot),
+			Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
 			Count: count[k], Min: min[k], Max: max[k], Provider: prov[k],
 		})
 		total += v
