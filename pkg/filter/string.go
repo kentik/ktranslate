@@ -32,6 +32,10 @@ func newStringFilter(log logger.Underlying, fd FilterDef) (*StringFilter, error)
 		sf.cf = sf.stringNotEquals
 	case Contains:
 		sf.cf = sf.stringContains
+	case Has:
+		sf.cf = sf.stringHas
+	case NotHas:
+		sf.cf = sf.stringNotHas
 	default:
 		return nil, fmt.Errorf("Invalid operator for string: %s", fd.Operator)
 	}
@@ -95,4 +99,27 @@ func (f *StringFilter) stringContains(chf map[string]interface{}) bool {
 		}
 	}
 	return false
+}
+
+func (f *StringFilter) stringHas(chf map[string]interface{}) bool {
+	if dd, ok := chf[f.dimension[0]]; ok {
+		switch dim := dd.(type) {
+		case string:
+			return true
+		case map[string]string:
+			_, ok := dim[f.dimension[1]]
+			return ok
+		}
+	} else if dd, ok := chf["custom_str"]; ok {
+		switch dim := dd.(type) {
+		case map[string]string:
+			_, ok := dim[f.dimension[0]]
+			return ok
+		}
+	}
+	return false
+}
+
+func (f *StringFilter) stringNotHas(chf map[string]interface{}) bool {
+	return !f.stringHas(chf)
 }
