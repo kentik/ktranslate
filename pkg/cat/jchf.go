@@ -387,6 +387,18 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 		}
 	}
 
+	// Check if there is ultimate exit data and pull this in also.
+	if udid, ok := dst.CustomInt["ult_exit_device_id"]; ok {
+		if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(udid)); d != nil {
+			if ui, ok := dst.CustomInt["ult_exit_port"]; ok {
+				if i, ok := d.Interfaces[kt.IfaceID(ui)]; ok {
+					dst.CustomStr["ult_exit_port_alias"] = i.Alias
+					dst.CustomStr["ult_exit_port_description"] = i.Description
+				}
+			}
+		}
+	}
+
 	// Do we need to remap any of the custom strings?
 	for k, v := range dst.CustomStr {
 		switch dst.CustomStr[UDR_TYPE] { // Kick out any cross contaminated tags.
