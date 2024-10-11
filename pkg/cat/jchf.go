@@ -265,6 +265,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				dst.CustomInt[name] = int32(v)
 				if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(v)); d != nil {
 					dst.CustomStr["ult_exit_device"] = d.Name
+					dst.CustomStr["ult_device_site"] = d.Site.SiteName
 				}
 			default:
 				if tk, tv, ok := kc.tagMap.LookupTagValue(dst.CompanyId, v, name); ok {
@@ -382,6 +383,19 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 					}
 				} else {
 					dst.CustomStr["agent_name"] = ""
+				}
+			}
+		}
+	}
+
+	// Check if there is ultimate exit data interface and pull this in also.
+	if udid, ok := dst.CustomInt["ult_exit_device_id"]; ok {
+		if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(udid)); d != nil {
+			if ui, ok := dst.CustomInt["ult_exit_port"]; ok {
+				if i, ok := d.Interfaces[kt.IfaceID(ui)]; ok {
+					dst.CustomStr["ult_exit_port_alias"] = i.Alias
+					dst.CustomStr["ult_exit_port_description"] = i.Description
+					dst.CustomStr["ult_exit_port_provider"] = i.Provider
 				}
 			}
 		}

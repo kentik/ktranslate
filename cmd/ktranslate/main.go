@@ -72,7 +72,7 @@ func init() {
 	flag.IntVar(&threads, "threads", 1, "Number of threads to run for processing")
 	flag.IntVar(&threadsInput, "input_threads", 1, "Number of threads to run for input processing")
 	flag.IntVar(&maxThreads, "max_threads", 1, "Dynamically grow threads up to this number")
-	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog)")
+	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog|otel|snmp|parquet)")
 	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
 	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
 	flag.StringVar(&compression, "compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
