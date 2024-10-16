@@ -1,0 +1,42 @@
+devices:
+    bart__192.168.0.1:
+        device_name: bart
+        device_ip: 192.168.0.1
+        snmp_comm: public
+        debug: false
+        port: 161
+        oid: .1.3.6.1.4.1.8072.3.2.10
+trap:
+    listen: 0.0.0.0:1620
+    community: public
+    version: v2c
+    trap_only: false
+    drop_undefined: true
+discovery:
+  cidrs:
+  - 127.0.0.1/32
+  ignore_list: []
+  debug: false
+  ports:
+  - 161
+  default_communities:
+  - public
+  use_snmp_v1: false
+  default_v3: null
+  add_devices: true
+  add_mibs: false
+  threads: 16
+  replace_devices: true
+global:
+  poll_time_sec: 30
+  drop_if_outside_poll: false
+  mib_profile_dir: /etc/ktranslate/profiles
+  mibs_db: /etc/ktranslate/mibs.db
+  mibs_enabled:
+  - IF-MIB
+  timeout_ms: 3000
+  retries: 0
+  global_v3: null
+  response_time: false
+  user_tags: {}
+  match_attributes: {}

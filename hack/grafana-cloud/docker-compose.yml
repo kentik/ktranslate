@@ -1,0 +1,37 @@
+services:
+  ktranslate:
+    image: kentik/ktranslate:latest
+    restart: always
+    pull_policy: always
+    environment:
+      - "OTEL_SERVICE_NAME=ktranslate"
+    volumes:
+      - type: bind
+        source: ./snmp.yml
+        target: /snmp.yml
+    depends_on:
+      - alloy
+    command:
+      - --format=otel
+      - --otel.protocol=grpc
+      - --otel.endpoint=http://alloy:4317/
+      - --snmp=/snmp.yml
+    ports:
+      - 9995:9995/udp
+      - 1620:1620/udp
+  alloy:
+    image: grafana/alloy:latest
+    restart: always
+    pull_policy: always
+    volumes:
+      - type: bind
+        source: ./config.alloy
+        target: /config.alloy
+    ports:
+      - 4317:4317
+      - 4318:4318
+    command:
+      - --server.http.listen-addr=0.0.0.0:4319
+      - --storage.path=/var/lib/alloy/data
+      - run
+      - /config.alloy
