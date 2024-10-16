@@ -265,7 +265,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				dst.CustomInt[name] = int32(v)
 				if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(v)); d != nil {
 					dst.CustomStr["ult_exit_device"] = d.Name
-					dst.CustomStr["ult_device_site"] = d.Site.SiteName
+					dst.CustomStr["ult_exit_site"] = d.Site.SiteName
 				}
 			default:
 				if tk, tv, ok := kc.tagMap.LookupTagValue(dst.CompanyId, v, name); ok {
