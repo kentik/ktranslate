@@ -375,7 +375,13 @@ func (f *OtelFormat) fromKSynth(in *kt.JCHF) []OtelData {
 }
 
 func (f *OtelFormat) fromKflow(in *kt.JCHF) []OtelData {
+	err := f.trapLog.RecordTrap(in)
+	if err != nil {
+		f.Errorf("There was an error when sending an event: %v.", err)
+	}
+
 	// Map the basic strings into here.
+	/**
 	attr := map[string]interface{}{}
 	metrics := map[string]kt.MetricInfo{"in_bytes": kt.MetricInfo{}, "out_bytes": kt.MetricInfo{}, "in_pkts": kt.MetricInfo{}, "out_pkts": kt.MetricInfo{}, "latency_ms": kt.MetricInfo{}}
 	f.mux.RLock()
@@ -410,6 +416,8 @@ func (f *OtelFormat) fromKflow(in *kt.JCHF) []OtelData {
 	}
 
 	return res
+	*/
+	return nil
 }
 
 func (f *OtelFormat) fromSnmpDeviceMetric(in *kt.JCHF) []OtelData {
