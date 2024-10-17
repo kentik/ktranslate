@@ -267,7 +267,7 @@ func (f *OtelFormat) toOtelDataRollup(in []rollup.Rollup) []OtelData {
 			if aname == "src_port" || aname == "dst_port" { // Remap high ports down here.
 				port, _ := strconv.Atoi(pt)
 				if port > 32768 {
-					attr[aname] = 32768
+					attr[aname] = "32768"
 				}
 			}
 		}
@@ -667,8 +667,12 @@ func (d *OtelData) GetTagValues() attribute.Set {
 			res = append(res, attribute.String(k, t))
 		case int64:
 			res = append(res, attribute.Int64(k, t))
+		case int32:
+			res = append(res, attribute.Int64(k, int64(t)))
 		case float64:
 			res = append(res, attribute.Float64(k, t))
+		case uint32:
+			res = append(res, attribute.Int64(k, int64(t)))
 		case uint64:
 			res = append(res, attribute.Int64(k, int64(t)))
 		default:
