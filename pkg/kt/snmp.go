@@ -257,6 +257,7 @@ type SnmpDiscoConfig struct {
 	Kentik             *KentikDisco    `yaml:"kentik"`
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`
+	NoUseBulkWalkAll   bool            `yaml:"no_use_bulkwalkall"`
 }
 
 type ProviderMap struct {
