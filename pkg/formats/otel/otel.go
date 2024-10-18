@@ -247,13 +247,7 @@ func (f *OtelFormat) toOtelDataRollup(in []rollup.Rollup) []OtelData {
 	ms := make([]OtelData, 0, len(in))
 	for _, roll := range in {
 		dims := roll.GetDims()
-		attr := map[string]interface{}{
-			"count":    roll.Count,
-			"sum":      uint64(roll.Metric),
-			"min":      roll.Min,
-			"max":      roll.Max,
-			"interval": roll.Interval.Microseconds(),
-		}
+		attr := map[string]interface{}{}
 		bad := false
 		for i, pt := range strings.Split(roll.Dimension, roll.KeyJoin) {
 			aname := dims[i]
