@@ -216,14 +216,15 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		for _, config := range v3configs { // Now loop over all the possible configs.
 			testConfig := config // Capture this as a local var.
 			device = kt.SnmpDeviceConfig{
-				DeviceName: result.Name,
-				DeviceIP:   result.Host.String(),
-				Community:  "", // Run using v3 here.
-				UseV1:      conf.Disco.UseV1,
-				V3:         testConfig,
-				Debug:      conf.Disco.Debug,
-				Port:       uint16(conf.Disco.Ports[0]),
-				Checked:    time.Now(),
+				DeviceName:       result.Name,
+				DeviceIP:         result.Host.String(),
+				Community:        "", // Run using v3 here.
+				UseV1:            conf.Disco.UseV1,
+				V3:               testConfig,
+				Debug:            conf.Disco.Debug,
+				Port:             uint16(conf.Disco.Ports[0]),
+				Checked:          time.Now(),
+				NoUseBulkWalkAll: conf.Disco.NoUseBulkWalkAll,
 			}
 			serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
 			if err != nil {
@@ -249,13 +250,14 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 		for _, usev1 := range versions {
 			for _, community := range conf.Disco.DefaultCommunities {
 				device = kt.SnmpDeviceConfig{
-					DeviceName: result.Name,
-					DeviceIP:   result.Host.String(),
-					Community:  community,
-					UseV1:      usev1,
-					Debug:      conf.Disco.Debug,
-					Port:       uint16(conf.Disco.Ports[0]),
-					Checked:    time.Now(),
+					DeviceName:       result.Name,
+					DeviceIP:         result.Host.String(),
+					Community:        community,
+					UseV1:            usev1,
+					Debug:            conf.Disco.Debug,
+					Port:             uint16(conf.Disco.Ports[0]),
+					Checked:          time.Now(),
+					NoUseBulkWalkAll: conf.Disco.NoUseBulkWalkAll,
 				}
 				serv, err := snmp_util.InitSNMP(&device, timeout, conf.Global.Retries, posit, log)
 				if err != nil {
