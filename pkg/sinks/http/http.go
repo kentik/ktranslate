@@ -158,8 +158,9 @@ func (s *HttpSink) Close() {}
 
 func (s *HttpSink) HttpInfo() map[string]float64 {
 	return map[string]float64{
-		"DeliveryErr": s.metrics.DeliveryErr.Rate1(),
-		"DeliveryWin": s.metrics.DeliveryWin.Rate1(),
+		"DeliveryErr":  s.metrics.DeliveryErr.Rate1(),
+		"DeliveryWin":  s.metrics.DeliveryWin.Rate1(),
+		"DeliveryLogs": s.metrics.DeliveryLogs.Rate1(),
 	}
 }
 
