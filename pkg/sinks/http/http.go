@@ -12,23 +12,33 @@ import (
 	"strings"
 	"time"
 
+	jsoniter "github.com/json-iterator/go"
 	go_metrics "github.com/kentik/go-metrics"
+	"github.com/pkg/errors"
+
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
-	"github.com/pkg/errors"
 )
+
+var json = jsoniter.ConfigFastest
 
 var (
 	targetURL          string
+	targetLogURL       string
 	insecureSkipVerify bool
 	timeoutSec         int
 	headers            HeaderFlag
 )
 
+const (
+	HttpHostname = "ktranslate"
+)
+
 func init() {
 	flag.StringVar(&targetURL, "http_url", "http://localhost:8086/write?db=kentik", "URL to post to")
+	flag.StringVar(&targetLogURL, "http_log_url", "http://localhost:8088/services/collector/event", "URL to post logs to")
 	flag.BoolVar(&insecureSkipVerify, "http_insecure", false, "Allow insecure urls.")
 	flag.IntVar(&timeoutSec, "http_timeout_sec", 30, "Timeout each request after this long.")
 	flag.Var(&headers, "http_header", "Any custom http headers to set on outbound requests")
@@ -36,7 +46,8 @@ func init() {
 
 type HttpSink struct {
 	logger.ContextL
-	TargetUrl string
+	TargetUrl  string
+	HttpLogUrl string
 
 	client          *http.Client
 	tr              *http.Transport
@@ -46,11 +57,13 @@ type HttpSink struct {
 	targetUrls      []string
 	sendMaxDuration time.Duration
 	config          *ktranslate.HTTPSinkConfig
+	logTee          chan string
 }
 
 type HttpMetric struct {
-	DeliveryErr go_metrics.Meter
-	DeliveryWin go_metrics.Meter
+	DeliveryErr  go_metrics.Meter
+	DeliveryWin  go_metrics.Meter
+	DeliveryLogs go_metrics.Meter
 }
 
 type HeaderFlag []string
@@ -64,18 +77,21 @@ func (h *HeaderFlag) Set(value string) error {
 	return nil
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, cfg *ktranslate.HTTPSinkConfig) (*HttpSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, cfg *ktranslate.HTTPSinkConfig, logTee chan string) (*HttpSink, error) {
 	nr := HttpSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "httpSink"}, log),
 		registry: registry,
 		metrics: &HttpMetric{
-			DeliveryErr: go_metrics.GetOrRegisterMeter("delivery_errors_http", registry),
-			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_http", registry),
+			DeliveryErr:  go_metrics.GetOrRegisterMeter("delivery_errors_http", registry),
+			DeliveryWin:  go_metrics.GetOrRegisterMeter("delivery_wins_http", registry),
+			DeliveryLogs: go_metrics.GetOrRegisterMeter("delivery_logs_http", registry),
 		},
 		headers:         map[string]string{},
 		targetUrls:      []string{},
 		sendMaxDuration: time.Duration(cfg.TimeoutInSeconds) * time.Second,
 		config:          cfg,
+		logTee:          logTee,
+		HttpLogUrl:      cfg.TargetLogs,
 	}
 
 	for _, u := range strings.Split(cfg.Target, ",") {
@@ -117,6 +133,13 @@ func (s *HttpSink) Init(ctx context.Context, format formats.Format, compression 
 	if compression == kt.CompressionGzip {
 		s.headers["Content-Encoding"] = "GZIP"
 	}
+
+	// Send logs on if this is set.
+	if s.logTee != nil {
+		go s.watchLogs(ctx)
+	}
+
+	s.Infof("Exporting via HTTP at %v, logs %s", s.targetUrls, s.HttpLogUrl)
 
 	return nil
 }
@@ -170,4 +193,57 @@ func (s *HttpSink) sendHttp(ctx context.Context, payload []byte, url string) {
 			}
 		}
 	}
+}
+
+// Forwards any logs recieved to the NR log API.
+func (s *HttpSink) watchLogs(ctx context.Context) {
+	s.Infof("Receiving logs...")
+	logTicker := time.NewTicker(1 * time.Second)
+	defer logTicker.Stop()
+	batch := make([]string, 0, 100)
+	for {
+		select {
+		case log := <-s.logTee:
+			batch = append(batch, log)
+			s.metrics.DeliveryLogs.Mark(1)
+		case _ = <-logTicker.C:
+			if len(batch) > 0 {
+				ob := batch
+				batch = make([]string, 0, 100)
+				go s.sendLogBatch(ctx, ob)
+			}
+		case <-ctx.Done():
+			s.Infof("Logs received")
+			return
+		}
+	}
+}
+
+type log struct {
+	Host       string `json:"host"`
+	SourceType string `json:"sourcetype"`
+	Timestamp  int64  `json:"time"`
+	Event      string `json:"event"`
+}
+
+func (s *HttpSink) sendLogBatch(ctx context.Context, logs []string) {
+	ts := time.Now().Unix()
+	var buf bytes.Buffer
+	for _, l := range logs {
+		ll := log{
+			Timestamp:  ts,
+			SourceType: string(kt.ProviderLogs),
+			Event:      l,
+			Host:       HttpHostname,
+		}
+		target, err := json.Marshal(ll)
+		if err != nil {
+			s.Errorf("There was an error with logs: %v.", err)
+			return
+		}
+		buf.Write(target)
+		buf.WriteString("\n") // Because splunk
+	}
+
+	s.sendHttp(ctx, buf.Bytes(), s.HttpLogUrl)
 }

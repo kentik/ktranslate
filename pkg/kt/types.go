@@ -70,6 +70,7 @@ const (
 	ProviderHttpDevice         Provider = "kentik-http"
 	ProviderMerakiCloud        Provider = "meraki-cloud-controller"
 	ProviderKflow              Provider = "kentik-kflow"
+	ProviderLogs               Provider = "kentik-logs"
 )
 
 const (

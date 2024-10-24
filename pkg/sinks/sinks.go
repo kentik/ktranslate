@@ -74,7 +74,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 	case NetSink:
 		return net.NewSink(log, registry, config.NetSink)
 	case HttpSink, SplunkSink:
-		return http.NewSink(log, registry, string(sink), config.HTTPSink)
+		return http.NewSink(log, registry, string(sink), config.HTTPSink, logTee)
 	case PromSink:
 		return prom.NewSink(log, registry, config.PrometheusSink)
 	case S3Sink:
