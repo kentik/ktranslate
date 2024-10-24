@@ -20,6 +20,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/sinks/net"
 	"github.com/kentik/ktranslate/pkg/sinks/nr"
 	"github.com/kentik/ktranslate/pkg/sinks/nrmulti"
+	"github.com/kentik/ktranslate/pkg/sinks/otel"
 	"github.com/kentik/ktranslate/pkg/sinks/prom"
 	"github.com/kentik/ktranslate/pkg/sinks/s3"
 	"github.com/kentik/ktranslate/pkg/sinks/stdout"
@@ -55,6 +56,7 @@ const (
 	GCPPubSub          = "gcppubsub"
 	NewRelicMulti      = "new_relic_multi"
 	DDogSink           = "ddog"
+	OtelSink           = "otel"
 )
 
 func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
@@ -74,7 +76,7 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 	case NetSink:
 		return net.NewSink(log, registry, config.NetSink)
 	case HttpSink, SplunkSink:
-		return http.NewSink(log, registry, string(sink), config.HTTPSink)
+		return http.NewSink(log, registry, string(sink), config.HTTPSink, logTee)
 	case PromSink:
 		return prom.NewSink(log, registry, config.PrometheusSink)
 	case S3Sink:
@@ -85,6 +87,8 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 		return gcppubsub.NewSink(log, registry, config.GCloudPubSubSink)
 	case NewRelicMulti:
 		return nrmulti.NewSink(log, registry, tooBig, logTee, config.NewRelicSink, config.NewRelicMultiSink)
+	case OtelSink:
+		return otel.NewSink(log, registry, logTee)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
 }

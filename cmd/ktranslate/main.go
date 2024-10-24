@@ -556,6 +556,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/sinks/http
 			case "http_url":
 				cfg.HTTPSink.Target = val
+			case "http_log_url":
+				cfg.HTTPSink.TargetLogs = val
 			case "http_insecure":
 				v, err := strconv.ParseBool(val)
 				if err != nil {

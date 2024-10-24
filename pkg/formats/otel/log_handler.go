@@ -111,7 +111,7 @@ func (ol *OtelLogger) watchForClose(ctx context.Context, loggerProvider *sdk.Log
 		select {
 		case <-ctx.Done():
 			// gracefully shutdown logger to flush accumulated signals before program finish
-			ol.log.Infof("Done with Trap Logger.")
+			ol.log.Infof("Done with Log Logger.")
 			loggerProvider.Shutdown(ctx)
 			return
 		}
