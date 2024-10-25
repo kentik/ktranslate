@@ -196,6 +196,9 @@ func doubleCheckHost(result scan.Result, timeout time.Duration, ctl chan bool, m
 	// Get the token to allow us to run.
 	_ = <-ctl
 	defer func() {
+		if r := recover(); r != nil {
+			log.Errorf("Recovered from panic, skipping device: %v", r)
+		}
 		wg.Done()
 		ctl <- true
 	}()
