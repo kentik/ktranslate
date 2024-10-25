@@ -27,6 +27,7 @@ const (
 
 	KENTIK_EVENT_TYPE = "KFlow:%s:%s"
 	UndefinedKey      = "undefined"
+	DimJoinToken      = "$$"
 )
 
 var (
@@ -177,6 +178,7 @@ type rollupBase struct {
 	metrics      []string
 	multiMetrics [][]string
 	multiDims    [][]string
+	splitDims    map[string][]string
 	keyJoin      string
 	topK         int
 	eventType    string
@@ -192,12 +194,23 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.metrics = make([]string, 0)
 	r.multiMetrics = make([][]string, 0)
 	r.multiDims = make([][]string, 0)
+	r.splitDims = map[string][]string{}
 	r.dtime = time.Now()
 	r.name = rd.Name
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
 	for _, d := range rd.Dimensions {
+		if strings.Contains(d, DimJoinToken) {
+			joins := strings.SplitN(d, DimJoinToken, 3)
+			if len(joins) == 3 {
+				lht := joins[0]
+				token := joins[1]
+				rhs := joins[2]
+				r.splitDims[d] = joins
+			}
+		}
+
 		pts := strings.Split(d, ".")
 		r.multiDims = append(r.multiDims, pts)
 		switch len(pts) {
