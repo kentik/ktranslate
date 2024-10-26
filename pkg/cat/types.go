@@ -78,6 +78,7 @@ type KTranslate struct {
 	http         *http.KentikHttpListener
 	enricher     *enrich.Enricher
 	logTee       chan string
+	logTeeSinks  []chan string
 	authConfig   *auth.AuthConfig
 	confMgr      config.ConfigManager
 	shutdown     func(string)

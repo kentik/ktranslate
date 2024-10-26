@@ -189,17 +189,24 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		}
 	}
 
+	// We want a copy of each log to go to each sink so we need to make a set of them here.
+	logTeeSplit := make([]chan string, len(sinks))
+
 	// Define our sinks for where to send data to.
 	kc.sinks = make(map[ss.Sink]ss.SinkImpl)
-	for _, sinkStr := range sinks {
+	for i, sinkStr := range sinks {
 		sink := ss.Sink(sinkStr)
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, logTee, kc.config)
+		logTeeSplit[i] = make(chan string, CHAN_SLACK)
+		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, logTeeSplit[i], kc.config)
 		if err != nil {
 			return nil, fmt.Errorf("Invalid sink: %s, %v", sink, err)
 		}
 		kc.sinks[sink] = snk
 		kc.log.Infof("Using sink %s", sink)
 	}
+
+	// Keep these to be mapped across.
+	kc.logTeeSinks = logTeeSplit
 
 	// Set up a tee if we need to.
 	if config.TeeFlow != "" {
@@ -715,6 +722,9 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 			}
 		}
 	}
+
+	// System for copying logs across to each sink
+	go kc.splitLogsForSinks(ctx)
 
 	// If SNMP is configured, start this system too. Poll for metrics and metadata, also handle traps.
 	if kc.config.SNMPInput.Enable {

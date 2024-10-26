@@ -115,6 +115,7 @@ type GCloudPubSubSinkConfig struct {
 // HTTPSinkConfig is the config for the HTTP sink
 type HTTPSinkConfig struct {
 	Target             string
+	TargetLogs         string
 	Headers            []string
 	InsecureSkipVerify bool
 	TimeoutInSeconds   int
@@ -440,6 +441,7 @@ func DefaultConfig() *Config {
 		},
 		HTTPSink: &HTTPSinkConfig{
 			Target:             "http://localhost:8086/write?db=kentik",
+			TargetLogs:         "http://localhost:8088/services/collector/event",
 			Headers:            []string{},
 			InsecureSkipVerify: false,
 			TimeoutInSeconds:   30,
