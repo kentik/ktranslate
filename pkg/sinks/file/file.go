@@ -89,7 +89,7 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 
 func (s *FileSink) Send(ctx context.Context, payload *kt.Output) {
 	// In the un-buffered case, write this out right away.
-	if payload.NoBuffer {
+	if payload.NoBuffer && len(payload.Body) > 0 {
 		go s.writeFileNow(ctx, payload.Body)
 		return
 	}

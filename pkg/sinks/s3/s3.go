@@ -166,7 +166,7 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 
 func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
 	// In the un-buffered case, write this out right away.
-	if payload.NoBuffer {
+	if payload.NoBuffer && len(payload.Body) > 0 {
 		go s.send(ctx, payload.Body)
 		return
 	}
