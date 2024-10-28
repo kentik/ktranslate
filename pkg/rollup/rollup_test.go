@@ -42,6 +42,18 @@ func TestRollup(t *testing.T) {
 			Formats:       []string{"sum,sum_bytes_in,in_bytes,ccc,custom_str.foo,bar"},
 			KeepUndefined: false,
 		},
+		ktranslate.RollupConfig{
+			JoinKey:       "^",
+			TopK:          1,
+			Formats:       []string{"sum,sum_bytes_in,in_bytes,aaa$$---$$bbb,ccc"},
+			KeepUndefined: true,
+		},
+		ktranslate.RollupConfig{
+			JoinKey:       "^",
+			TopK:          1,
+			Formats:       []string{"sum,sum_bytes_in,in_bytes,ccc,custom_str.aaa$$---$$custom_str.bbb"},
+			KeepUndefined: true,
+		},
 	}
 
 	inputs := [][]map[string]interface{}{
@@ -121,6 +133,40 @@ func TestRollup(t *testing.T) {
 				"provider":    kt.Provider("pp"),
 			},
 		},
+		[]map[string]interface{}{
+			map[string]interface{}{
+				"in_bytes":    int64(30),
+				"aaa":         "aaa",
+				"bbb":         "bbb",
+				"ccc":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(10),
+				"custom_str":  map[string]string{"foo": "ddd"},
+				"aaa":         "aaa",
+				"bbb":         "bbb",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+		},
+		[]map[string]interface{}{
+			map[string]interface{}{
+				"in_bytes":    int64(30),
+				"custom_str":  map[string]string{"aaa": "aaa", "bbb": "bbb"},
+				"ccc":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(10),
+				"custom_str":  map[string]string{"aaa": "aaa", "bbb": "bbb"},
+				"ccc":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+		},
 	}
 
 	outputs := []map[string]interface{}{
@@ -139,6 +185,14 @@ func TestRollup(t *testing.T) {
 		map[string]interface{}{
 			"metric":     75,
 			"dimensions": []string{"fff", "ddd", "ccc"},
+		},
+		map[string]interface{}{
+			"metric":     30,
+			"dimensions": []string{"aaa---bbb", "ccc"},
+		},
+		map[string]interface{}{
+			"metric":     40,
+			"dimensions": []string{"ccc", "aaa---bbb"},
 		},
 	}
 

@@ -27,6 +27,7 @@ const (
 
 	KENTIK_EVENT_TYPE = "KFlow:%s:%s"
 	UndefinedKey      = "undefined"
+	DimJoinToken      = "$$"
 )
 
 var (
@@ -177,6 +178,7 @@ type rollupBase struct {
 	metrics      []string
 	multiMetrics [][]string
 	multiDims    [][]string
+	splitDims    map[int]splitDim
 	keyJoin      string
 	topK         int
 	eventType    string
@@ -188,23 +190,43 @@ type rollupBase struct {
 	hasFilters   bool
 }
 
+type splitDim struct {
+	lhs  []string
+	join string
+	rhs  []string
+}
+
 func (r *rollupBase) init(rd RollupDef) error {
 	r.metrics = make([]string, 0)
 	r.multiMetrics = make([][]string, 0)
 	r.multiDims = make([][]string, 0)
+	r.splitDims = map[int]splitDim{}
 	r.dtime = time.Now()
 	r.name = rd.Name
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
-	for _, d := range rd.Dimensions {
-		pts := strings.Split(d, ".")
-		r.multiDims = append(r.multiDims, pts)
-		switch len(pts) {
-		case 1: // noop
-		case 2: // noop
-		default:
-			return fmt.Errorf("Invalid dimension: %s", d)
+	for i, d := range rd.Dimensions {
+		if strings.Contains(d, DimJoinToken) {
+			joins := strings.SplitN(d, DimJoinToken, 3)
+			if len(joins) == 3 {
+				lhs := strings.Split(joins[0], ".")
+				join := joins[1]
+				rhs := strings.Split(joins[2], ".")
+				r.splitDims[i] = splitDim{lhs: lhs, join: join, rhs: rhs}
+				r.multiDims = append(r.multiDims, []string{d})
+			} else {
+				return fmt.Errorf("Invalid dimension grouping: %s", d)
+			}
+		} else {
+			pts := strings.Split(d, ".")
+			r.multiDims = append(r.multiDims, pts)
+			switch len(pts) {
+			case 1: // noop
+			case 2: // noop
+			default:
+				return fmt.Errorf("Invalid dimension: %s", d)
+			}
 		}
 	}
 
@@ -225,42 +247,53 @@ func (r *rollupBase) init(rd RollupDef) error {
 
 func (r *rollupBase) getKey(mapr map[string]interface{}) string {
 	keyPts := make([]string, len(r.multiDims))
-	for i, d := range r.multiDims {
+
+	setKey := func(d []string) string {
+		key := ""
 		if len(d) == 1 {
 			if dd, ok := mapr[d[0]]; ok {
 				switch v := dd.(type) {
 				case string:
-					keyPts[i] = v
+					key = v
 				case int64:
-					keyPts[i] = strconv.Itoa(int(v))
+					key = strconv.Itoa(int(v))
 				default:
 					// Skip?
 				}
-			}
-			if keepUndefined && keyPts[i] == "" {
-				keyPts[i] = UndefinedKey
 			}
 		} else {
 			if d1, ok := mapr[d[0]]; ok {
 				switch dd := d1.(type) {
 				case map[string]string:
-					keyPts[i] = dd[d[1]]
-					if keyPts[i] == "" {
+					key = dd[d[1]]
+					if key == "" {
 						if strings.HasPrefix(d[1], "source_") {
-							keyPts[i] = dd["dest_"+d[1][7:]]
+							key = dd["dest_"+d[1][7:]]
 						} else if strings.HasPrefix(d[1], "dest_") {
-							keyPts[i] = dd["source_"+d[1][5:]]
+							key = dd["source_"+d[1][5:]]
 						}
 					}
 				case map[string]int32:
-					keyPts[i] = strconv.Itoa(int(dd[d[1]]))
+					key = strconv.Itoa(int(dd[d[1]]))
 				case map[string]int64:
-					keyPts[i] = strconv.Itoa(int(dd[d[1]]))
+					key = strconv.Itoa(int(dd[d[1]]))
 				}
 			}
-			if keepUndefined && keyPts[i] == "" {
-				keyPts[i] = UndefinedKey
-			}
+		}
+		if keepUndefined && key == "" {
+			key = UndefinedKey
+		}
+		return key
+	}
+
+	for i, d := range r.multiDims {
+		if md, ok := r.splitDims[i]; !ok {
+			keyPts[i] = setKey(d) // There's no join so just go here.
+		} else {
+			// We're doing a join so have to get a few keys at once.
+			lhs := setKey(md.lhs)
+			rhs := setKey(md.rhs)
+			keyPts[i] = lhs + md.join + rhs
 		}
 	}
 
