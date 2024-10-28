@@ -98,7 +98,7 @@ func (f *ParquetFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 	fw.Close()
 
-	return kt.NewOutput(fw.Bytes()), nil
+	return kt.NewOutputNoBuffer(fw.Bytes()), nil
 }
 
 func (f *ParquetFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
@@ -194,7 +194,7 @@ func (f *ParquetFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	}
 	fw.Close()
 
-	return kt.NewOutput(fw.Bytes()), nil
+	return kt.NewOutputNoBuffer(fw.Bytes()), nil
 }
 
 func (f *ParquetFormat) toParquetMetricRollup(in []rollup.Rollup, ts int64) []ParquetMetric {

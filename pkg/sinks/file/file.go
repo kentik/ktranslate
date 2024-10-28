@@ -39,6 +39,10 @@ type FileSink struct {
 	config   *ktranslate.FileSinkConfig
 }
 
+const (
+	filePerms = os.FileMode(0664)
+)
+
 func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.FileSinkConfig) (*FileSink, error) {
 	rand.Seed(time.Now().UnixNano())
 	fs := &FileSink{
@@ -84,6 +88,12 @@ func (s *FileSink) Init(ctx context.Context, format formats.Format, compression 
 }
 
 func (s *FileSink) Send(ctx context.Context, payload *kt.Output) {
+	// In the un-buffered case, write this out right away.
+	if payload.NoBuffer {
+		go s.writeFileNow(ctx, payload.Body)
+		return
+	}
+
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	if s.doWrite && s.fd != nil {
@@ -113,5 +123,15 @@ func (s *FileSink) HttpInfo() map[string]float64 {
 
 	return map[string]float64{
 		"Write": doWrite,
+	}
+}
+
+func (s *FileSink) writeFileNow(ctx context.Context, data []byte) {
+	if s.doWrite {
+		name := s.getName()
+		err := os.WriteFile(name, data, filePerms)
+		if err != nil {
+			s.Errorf("There was an error when writing the %s file: %v.", name, err)
+		}
 	}
 }
