@@ -164,7 +164,11 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
 		case SNMP_sysObjectID:
-			md.SysObjectID = value.(string)
+			if s, ok := value.(string); ok {
+				md.SysObjectID = s
+			} else if s, ok := value.([]byte); ok {
+				md.SysObjectID = string(s)
+			}
 		case SNMP_sysContact:
 			md.SysContact = string(value.([]byte))
 		case SNMP_sysName:
@@ -315,7 +319,11 @@ func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.Dev
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
 		case SNMP_sysObjectID:
-			md.SysObjectID = value.(string)
+			if s, ok := value.(string); ok {
+				md.SysObjectID = s
+			} else if s, ok := value.([]byte); ok {
+				md.SysObjectID = string(s)
+			}
 		case SNMP_sysContact:
 			md.SysContact = string(value.([]byte))
 		case SNMP_sysName:
