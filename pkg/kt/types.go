@@ -354,9 +354,10 @@ type OutputContext struct {
 }
 
 type Output struct {
-	Body []byte
-	Ctx  OutputContext
-	CB   func(error) // Called when this is sent to a sink.
+	Body     []byte
+	Ctx      OutputContext
+	CB       func(error) // Called when this is sent to a sink.
+	NoBuffer bool        // If true, write out right away.
 }
 
 func NewOutput(body []byte) *Output {
@@ -369,6 +370,10 @@ func NewOutputWithProvider(body []byte, prov Provider, stype OutputType) *Output
 
 func NewOutputWithProviderAndCompanySender(body []byte, prov Provider, cid Cid, stype OutputType, senderid string) *Output {
 	return &Output{Body: body, Ctx: OutputContext{Provider: prov, Type: stype, CompanyId: cid, SenderId: senderid}}
+}
+
+func NewOutputNoBuffer(body []byte) *Output {
+	return &Output{Body: body, NoBuffer: true}
 }
 
 func (o *Output) IsEvent() bool {

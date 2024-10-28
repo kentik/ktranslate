@@ -116,6 +116,12 @@ func (s *GCloudSink) Init(ctx context.Context, format formats.Format, compressio
 }
 
 func (s *GCloudSink) Send(ctx context.Context, payload *kt.Output) {
+	// In the un-buffered case, write this out right away.
+	if payload.NoBuffer && len(payload.Body) > 0 {
+		go s.send(ctx, payload.Body)
+		return
+	}
+
 	s.mux.Lock()
 	defer s.mux.Unlock()
 	s.buf.Write(payload.Body)
