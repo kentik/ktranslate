@@ -19,7 +19,8 @@ import (
 )
 
 const (
-	kentikDefaultCapnprotoDecodeLimit = 128 << 20 // 128 MiB
+	kentikDefaultCapnprotoDecodeLimit      = 128 << 20 // 128 MiB
+	kentikDefaultCapnprotoDecodeLimitLarge = 130 << 20
 )
 
 // Handler for json data, useful for testing mostly. Requires you to set content-type: application/json
@@ -221,7 +222,16 @@ func (kc *KTranslate) handleFlow(w http.ResponseWriter, r *http.Request) {
 	decoder.MaxMessageSize = kentikDefaultCapnprotoDecodeLimit
 	capnprotoMessage, err := decoder.Decode()
 	if err != nil {
-		return
+		if err.Error() == "capnp: message too large" {
+			dd := capn.NewPackedDecoder(bytes.NewBuffer(evt[offset:]))
+			dd.MaxMessageSize = kentikDefaultCapnprotoDecodeLimitLarge
+			capnprotoMessage, err = dd.Decode()
+			if err != nil {
+				return
+			}
+		} else {
+			return
+		}
 	}
 
 	// unpack flow messages and pass them down
