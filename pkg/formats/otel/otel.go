@@ -493,6 +493,40 @@ func (f *OtelFormat) fromSnmpDeviceMetric(in *kt.JCHF) []OtelData {
 	return ms
 }
 
+var (
+	attrCacheOps   map[string]interface{} = map[string]interface{}{}
+	attrCacheAdmin map[string]interface{} = map[string]interface{}{}
+)
+
+func (f *OtelFormat) verifyInterfaceAttr(attr map[string]interface{}) map[string]interface{} {
+	dn, okd := attr["device_name"].(string)
+	di, oki := attr["if_Index"].(string)
+	if !okd || !oki {
+		f.Warnf("Missing key for %v", attr)
+		return attr
+	}
+	ifKey := dn + "." + di
+	if _, ok := attr["if_OperStatus"]; !ok {
+		if old, ok := attrCacheOps[ifKey]; ok {
+			f.Warnf("Missing if_OperStatus for interface data: %v", attr)
+			attr["if_OperStatus"] = old
+		}
+	} else {
+		attrCacheOps[ifKey] = attr["if_OperStatus"]
+	}
+
+	if _, ok := attr["if_AdminStatus"]; !ok {
+		if old, ok := attrCacheAdmin[ifKey]; ok {
+			f.Warnf("Missing if_AdminStatus for interface data: %v", attr)
+			attr["if_AdminStatus"] = old
+		}
+	} else {
+		attrCacheAdmin[ifKey] = attr["if_AdminStatus"]
+	}
+
+	return attr
+}
+
 func (f *OtelFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []OtelData {
 	metrics := in.CustomMetrics
 	attr := map[string]interface{}{}
@@ -520,6 +554,8 @@ func (f *OtelFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []OtelData {
 			if util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 				continue // This Metric isn't in the white list so lets drop it.
 			}
+
+			attrNew = f.verifyInterfaceAttr(attrNew)
 			ms = append(ms, OtelData{
 				Name:  "kentik.snmp." + m,
 				Value: float64(in.CustomBigInt[m]),
@@ -536,6 +572,7 @@ func (f *OtelFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []OtelData {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfInUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+						attrNew = f.verifyInterfaceAttr(attrNew)
 						if inBytes, ok := in.CustomBigInt["ifHCInOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								ms = append(ms, OtelData{
@@ -555,6 +592,7 @@ func (f *OtelFormat) fromSnmpInterfaceMetric(in *kt.JCHF) []OtelData {
 					uptimeSpeed := in.CustomBigInt["Uptime"] * (int64(ispeed) * 10000) // Convert into bits here, from megabits. Also divide by 100 to convert uptime into seconds, from centi-seconds.
 					if uptimeSpeed > 0 {
 						attrNew := util.CopyAttrForSnmp(attr, "IfOutUtilization", kt.MetricInfo{Oid: "computed", Mib: "computed", Profile: profileName, Table: "if"}, f.lastMetadata[in.DeviceName], true, false)
+						attrNew = f.verifyInterfaceAttr(attrNew)
 						if outBytes, ok := in.CustomBigInt["ifHCOutOctets"]; ok {
 							if !util.DropOnFilter(attrNew, f.lastMetadata[in.DeviceName], true) {
 								ms = append(ms, OtelData{
