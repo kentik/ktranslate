@@ -9,13 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/ec2rolecreds"
+	s3manager "github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -92,34 +90,39 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	}
 
 	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN == "" {
-		svc := ec2metadata.New(session.Must(session.NewSession()))
-		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
+		appCreds := aws.NewCredentialsCache(ec2rolecreds.New())
+		cfg, err := config.LoadDefaultConfig(ctx,
+			config.WithRegion(s.config.Region),
+			config.WithCredentialsProvider(appCreds),
 		)
-		_, err_role := ec2_role_creds.Get()
-		s.Infof("Credentials %v: ", ec2_role_creds)
+		if err != nil {
+			return err
+		}
+
+		value, err_role := appCreds.Retrieve(ctx)
+		s.Infof("Credentials %v: ", value)
 		if err_role != nil {
 			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
+			return err_role
 		} else {
 			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		s.client = s3manager.NewUploader(sess)
-		s.dl = s3manager.NewDownloader(sess)
+		s.client = s3manager.NewUploader(s3.NewFromConfig(cfg))
+		s.dl = s3manager.NewDownloader(s3.NewFromConfig(cfg))
 
 	} else if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
 		if err := s.get_tmp_credentials(ctx); err != nil {
 			return err
 		}
 	} else {
-		sess := session.Must(session.NewSession())
+		cfg, err := config.LoadDefaultConfig(ctx)
+		if err != nil {
+			return err
+		}
 		s.Infof("Session is created using default settings")
-		s.client = s3manager.NewUploader(sess)
-		s.dl = s3manager.NewDownloader(sess)
+		s.client = s3manager.NewUploader(s3.NewFromConfig(cfg))
+		s.dl = s3manager.NewDownloader(s3.NewFromConfig(cfg))
 	}
 
 	if format == formats.FORMAT_PARQUET {
@@ -178,8 +181,9 @@ func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
 }
 
 func (s *S3Sink) Get(ctx context.Context, path string) ([]byte, error) {
-	buf := aws.NewWriteAtBuffer([]byte{})
-	size, err := s.dl.DownloadWithContext(ctx, buf, &s3.GetObjectInput{
+	var bufb bytes.Buffer
+	buf := s3manager.NewWriteAtBuffer(bufb.Bytes())
+	size, err := s.dl.Download(ctx, buf, &s3.GetObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Key:    aws.String(path),
 	})
@@ -190,7 +194,7 @@ func (s *S3Sink) Get(ctx context.Context, path string) ([]byte, error) {
 }
 
 func (s *S3Sink) Put(ctx context.Context, path string, data []byte) error {
-	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
+	_, err := s.client.Upload(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Body:   bytes.NewBuffer(data),
 		Key:    aws.String(path),
@@ -199,7 +203,7 @@ func (s *S3Sink) Put(ctx context.Context, path string, data []byte) error {
 }
 
 func (s *S3Sink) send(ctx context.Context, payload []byte) {
-	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
+	_, err := s.client.Upload(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Body:   bytes.NewBuffer(payload),
 		Key:    aws.String(s.getName()),
