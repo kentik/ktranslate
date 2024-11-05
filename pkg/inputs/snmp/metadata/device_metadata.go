@@ -164,10 +164,17 @@ func (dm *DeviceMetadata) poll(ctx context.Context, server *gosnmp.GoSNMP) (*kt.
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
 		case SNMP_sysObjectID:
-			if s, ok := value.(string); ok {
-				md.SysObjectID = s
-			} else if s, ok := value.([]byte); ok {
-				md.SysObjectID = string(s)
+			switch sd := value.(type) {
+			case string:
+				md.SysObjectID = sd
+			case []byte:
+				md.SysObjectID = string(sd)
+			default:
+				if wrapper.variable.Type == gosnmp.ObjectIdentifier {
+					md.SysObjectID = string(sd.(string))
+				} else {
+					dm.log.Warnf("Unknown type for sysoid: %v %T", value, value)
+				}
 			}
 		case SNMP_sysContact:
 			md.SysContact = string(value.([]byte))
@@ -319,10 +326,17 @@ func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.Dev
 		case SNMP_sysDescr:
 			md.SysDescr = string(value.([]byte))
 		case SNMP_sysObjectID:
-			if s, ok := value.(string); ok {
-				md.SysObjectID = s
-			} else if s, ok := value.([]byte); ok {
-				md.SysObjectID = string(s)
+			switch sd := value.(type) {
+			case string:
+				md.SysObjectID = sd
+			case []byte:
+				md.SysObjectID = string(sd)
+			default:
+				if pdu.Type == gosnmp.ObjectIdentifier {
+					md.SysObjectID = string(sd.(string))
+				} else {
+					log.Warnf("Unknown type for sysoid: %v %T", value, value)
+				}
 			}
 		case SNMP_sysContact:
 			md.SysContact = string(value.([]byte))
