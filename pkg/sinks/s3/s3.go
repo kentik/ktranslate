@@ -319,3 +319,55 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 
 	return nil, nil, nil
 }
+
+// Sometimes there can be a _$folder$ object which needs to get cleaned up.
+func (s *S3Sink) checkForDangling(ctx context.Context) {
+	dangCheck := time.NewTicker(TimeCheckDangling)
+	defer dangCheck.Stop()
+
+	for {
+		select {
+		case _ = <-dangCheck.C:
+			err := s.checkForDangling()
+			if err != nil {
+				s.Errorf("Cannot check for dangling objects: %v", err)
+			}
+
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+func (s *S3Sink) checkForDangling(context ctx) error {
+	params := &s3.ListObjectsV2Input{
+		Bucket: aws.String(s.Bucket),
+	}
+
+	// Create the Paginator for the ListObjectsV2 operation.
+	p := s3.NewListObjectsV2Paginator(client, params, func(o *s3.ListObjectsV2PaginatorOptions) {
+		if v := int32(maxKeys); v != 0 {
+			o.Limit = 4092
+		}
+	})
+
+	for p.HasMorePages() {
+		// Next Page takes a new context for each page retrieval. This is where
+		// you could add timeouts or deadlines.
+		page, err := p.NextPage(ctx)
+		if err != nil {
+			return err
+		}
+
+		// Log the objects found
+		for _, obj := range page.Contents {
+			di := DeleteObjectInput{
+				Bucket: aws.String(s.Bucket),
+				Key:    *obj.Key,
+			}
+			client.DeleteObject(ctx, di)
+		}
+	}
+
+	return nil
+}
