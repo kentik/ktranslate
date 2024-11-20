@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 
@@ -33,6 +34,9 @@ var (
 	s3Region                                      string
 	ec2InstanceProfile                            bool
 	ec2assumeRoleOrInstanceProfileIntervalSeconds int
+	checkDangling                                 bool
+
+	TimeCheckDangling = time.Duration(1) * time.Hour
 )
 
 // var wg sync.WaitGroup
@@ -45,12 +49,12 @@ func init() {
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 	flag.BoolVar(&ec2InstanceProfile, "ec2_instance_profile", false, "EC2 Instance Profile")
 	flag.IntVar(&ec2assumeRoleOrInstanceProfileIntervalSeconds, "assume_role_or_instance_profile_interval_seconds", 900, "Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds")
+	flag.BoolVar(&checkDangling, "s3_check_dangling", false, "Check every hour for dangling folders if enabled.")
 }
 
 type S3Sink struct {
 	logger.ContextL
 	Bucket   string
-	ul       *s3manager.Uploader
 	registry go_metrics.Registry
 	metrics  *S3Metric
 	prefix   string
@@ -58,6 +62,8 @@ type S3Sink struct {
 	buf      *bytes.Buffer
 	mux      sync.RWMutex
 	config   *ktranslate.S3SinkConfig
+	client   *s3.Client
+	ul       *s3manager.Uploader
 	dl       *s3manager.Downloader
 }
 
@@ -112,8 +118,9 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		s.ul = s3manager.NewUploader(s3.NewFromConfig(cfg))
-		s.dl = s3manager.NewDownloader(s3.NewFromConfig(cfg))
+		s.client = s3.NewFromConfig(cfg)
+		s.ul = s3manager.NewUploader(s.client)
+		s.dl = s3manager.NewDownloader(s.client)
 
 	} else if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
 		if err := s.get_tmp_credentials(ctx); err != nil {
@@ -125,8 +132,9 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 			return err
 		}
 		s.Infof("Session is created using default settings")
-		s.ul = s3manager.NewUploader(s3.NewFromConfig(cfg))
-		s.dl = s3manager.NewDownloader(s3.NewFromConfig(cfg))
+		s.client = s3.NewFromConfig(cfg)
+		s.ul = s3manager.NewUploader(s.client)
+		s.dl = s3manager.NewDownloader(s.client)
 	}
 
 	if format == formats.FORMAT_PARQUET {
@@ -143,6 +151,10 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	}
 
 	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(s.config.FlushIntervalSeconds)*time.Second)
+
+	if s.config.CheckDangling {
+		go s.checkForDangling(ctx)
+	}
 
 	go func() {
 		dumpTick := time.NewTicker(time.Duration(s.config.FlushIntervalSeconds) * time.Second)
@@ -278,8 +290,8 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 			return nil, nil, err
 		}
 
-		client := sts.NewFromConfig(cfg)
-		appCreds := stscreds.NewAssumeRoleProvider(client, s.config.AssumeRoleARN)
+		stsc := sts.NewFromConfig(cfg)
+		appCreds := stscreds.NewAssumeRoleProvider(stsc, s.config.AssumeRoleARN)
 		cfgRole, err := config.LoadDefaultConfig(ctx,
 			config.WithRegion(s.config.Region),
 			config.WithCredentialsProvider(appCreds),
@@ -297,7 +309,8 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		return s3manager.NewUploader(s3.NewFromConfig(cfgRole)), s3manager.NewDownloader(s3.NewFromConfig(cfgRole)), nil
+		s.client = s3.NewFromConfig(cfgRole)
+		return s3manager.NewUploader(s.client), s3manager.NewDownloader(s.client), nil
 	} else {
 		cfg, err := config.LoadDefaultConfig(ctx,
 			config.WithRegion(s.config.Region),
@@ -314,7 +327,8 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		return s3manager.NewUploader(s3.NewFromConfig(cfg)), s3manager.NewDownloader(s3.NewFromConfig(cfg)), nil
+		s.client = s3.NewFromConfig(cfg)
+		return s3manager.NewUploader(s.client), s3manager.NewDownloader(s.client), nil
 	}
 
 	return nil, nil, nil
@@ -325,13 +339,16 @@ func (s *S3Sink) checkForDangling(ctx context.Context) {
 	dangCheck := time.NewTicker(TimeCheckDangling)
 	defer dangCheck.Stop()
 
+	s.Infof("starting check for dangling objects.")
 	for {
 		select {
 		case _ = <-dangCheck.C:
-			err := s.checkForDangling()
-			if err != nil {
-				s.Errorf("Cannot check for dangling objects: %v", err)
-			}
+			go func() {
+				err := s.runRemoveDangle(ctx)
+				if err != nil {
+					s.Errorf("Cannot check for dangling objects: %v", err)
+				}
+			}()
 
 		case <-ctx.Done():
 			return
@@ -339,17 +356,13 @@ func (s *S3Sink) checkForDangling(ctx context.Context) {
 	}
 }
 
-func (s *S3Sink) checkForDangling(context ctx) error {
+func (s *S3Sink) runRemoveDangle(ctx context.Context) error {
 	params := &s3.ListObjectsV2Input{
 		Bucket: aws.String(s.Bucket),
 	}
 
 	// Create the Paginator for the ListObjectsV2 operation.
-	p := s3.NewListObjectsV2Paginator(client, params, func(o *s3.ListObjectsV2PaginatorOptions) {
-		if v := int32(maxKeys); v != 0 {
-			o.Limit = 4092
-		}
-	})
+	p := s3.NewListObjectsV2Paginator(s.client, params, func(o *s3.ListObjectsV2PaginatorOptions) {})
 
 	for p.HasMorePages() {
 		// Next Page takes a new context for each page retrieval. This is where
@@ -361,11 +374,17 @@ func (s *S3Sink) checkForDangling(context ctx) error {
 
 		// Log the objects found
 		for _, obj := range page.Contents {
-			di := DeleteObjectInput{
-				Bucket: aws.String(s.Bucket),
-				Key:    *obj.Key,
+			if strings.Contains(*obj.Key, "_$folder$") {
+				di := &s3.DeleteObjectInput{
+					Bucket: aws.String(s.Bucket),
+					Key:    obj.Key,
+				}
+				_, err := s.client.DeleteObject(ctx, di)
+				if err != nil {
+					return err
+				}
+				s.Infof("Removed dangling: %s", *obj.Key)
 			}
-			client.DeleteObject(ctx, di)
 		}
 	}
 

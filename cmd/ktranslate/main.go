@@ -507,6 +507,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.S3Sink.AssumeRoleOrInstanceProfileIntervalSeconds = v
+			case "s3_check_dangling":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.S3Sink.CheckDangling = v
 			// pkg/sinks/net
 			case "net_server":
 				cfg.NetSink.Endpoint = val

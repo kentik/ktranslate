@@ -72,6 +72,7 @@ type S3SinkConfig struct {
 	Region                                     string
 	EC2InstanceProfile                         bool
 	AssumeRoleOrInstanceProfileIntervalSeconds int
+	CheckDangling                              bool
 }
 
 // NetSinkConfig is the config for the net sink
@@ -413,6 +414,7 @@ func DefaultConfig() *Config {
 			Region:               "us-east-1",
 			EC2InstanceProfile:   false,
 			AssumeRoleOrInstanceProfileIntervalSeconds: 900,
+			CheckDangling: false,
 		},
 		NetSink: &NetSinkConfig{
 			Endpoint: "",
