@@ -6,17 +6,20 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/ec2rolecreds"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
+	s3manager "github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
+
 	go_metrics "github.com/kentik/go-metrics"
+
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats"
@@ -31,6 +34,9 @@ var (
 	s3Region                                      string
 	ec2InstanceProfile                            bool
 	ec2assumeRoleOrInstanceProfileIntervalSeconds int
+	checkDangling                                 bool
+
+	TimeCheckDangling = time.Duration(1) * time.Hour
 )
 
 // var wg sync.WaitGroup
@@ -43,12 +49,12 @@ func init() {
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 	flag.BoolVar(&ec2InstanceProfile, "ec2_instance_profile", false, "EC2 Instance Profile")
 	flag.IntVar(&ec2assumeRoleOrInstanceProfileIntervalSeconds, "assume_role_or_instance_profile_interval_seconds", 900, "Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds")
+	flag.BoolVar(&checkDangling, "s3_check_dangling", false, "Check every hour for dangling folders if enabled.")
 }
 
 type S3Sink struct {
 	logger.ContextL
 	Bucket   string
-	client   *s3manager.Uploader
 	registry go_metrics.Registry
 	metrics  *S3Metric
 	prefix   string
@@ -56,6 +62,8 @@ type S3Sink struct {
 	buf      *bytes.Buffer
 	mux      sync.RWMutex
 	config   *ktranslate.S3SinkConfig
+	client   *s3.Client
+	ul       *s3manager.Uploader
 	dl       *s3manager.Downloader
 }
 
@@ -92,34 +100,41 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	}
 
 	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN == "" {
-		svc := ec2metadata.New(session.Must(session.NewSession()))
-		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
+		appCreds := aws.NewCredentialsCache(ec2rolecreds.New())
+		cfg, err := config.LoadDefaultConfig(ctx,
+			config.WithRegion(s.config.Region),
+			config.WithCredentialsProvider(appCreds),
 		)
-		_, err_role := ec2_role_creds.Get()
-		s.Infof("Credentials %v: ", ec2_role_creds)
+		if err != nil {
+			return err
+		}
+
+		value, err_role := cfg.Credentials.Retrieve(ctx)
+		s.Infof("Credentials %v: ", value)
 		if err_role != nil {
 			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
+			return err_role
 		} else {
 			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		s.client = s3manager.NewUploader(sess)
-		s.dl = s3manager.NewDownloader(sess)
+		s.client = s3.NewFromConfig(cfg)
+		s.ul = s3manager.NewUploader(s.client)
+		s.dl = s3manager.NewDownloader(s.client)
 
 	} else if s.config.AssumeRoleARN != "" || s.config.EC2InstanceProfile {
 		if err := s.get_tmp_credentials(ctx); err != nil {
 			return err
 		}
 	} else {
-		sess := session.Must(session.NewSession())
+		cfg, err := config.LoadDefaultConfig(ctx)
+		if err != nil {
+			return err
+		}
 		s.Infof("Session is created using default settings")
-		s.client = s3manager.NewUploader(sess)
-		s.dl = s3manager.NewDownloader(sess)
+		s.client = s3.NewFromConfig(cfg)
+		s.ul = s3manager.NewUploader(s.client)
+		s.dl = s3manager.NewDownloader(s.client)
 	}
 
 	if format == formats.FORMAT_PARQUET {
@@ -136,6 +151,10 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 	}
 
 	s.Infof("System connected to s3, bucket is %s, dumping on %v", s.Bucket, time.Duration(s.config.FlushIntervalSeconds)*time.Second)
+
+	if s.config.CheckDangling {
+		go s.checkForDangling(ctx)
+	}
 
 	go func() {
 		dumpTick := time.NewTicker(time.Duration(s.config.FlushIntervalSeconds) * time.Second)
@@ -178,8 +197,9 @@ func (s *S3Sink) Send(ctx context.Context, payload *kt.Output) {
 }
 
 func (s *S3Sink) Get(ctx context.Context, path string) ([]byte, error) {
-	buf := aws.NewWriteAtBuffer([]byte{})
-	size, err := s.dl.DownloadWithContext(ctx, buf, &s3.GetObjectInput{
+	var bufb bytes.Buffer
+	buf := s3manager.NewWriteAtBuffer(bufb.Bytes())
+	size, err := s.dl.Download(ctx, buf, &s3.GetObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Key:    aws.String(path),
 	})
@@ -190,7 +210,7 @@ func (s *S3Sink) Get(ctx context.Context, path string) ([]byte, error) {
 }
 
 func (s *S3Sink) Put(ctx context.Context, path string, data []byte) error {
-	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
+	_, err := s.ul.Upload(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Body:   bytes.NewBuffer(data),
 		Key:    aws.String(path),
@@ -199,7 +219,7 @@ func (s *S3Sink) Put(ctx context.Context, path string, data []byte) error {
 }
 
 func (s *S3Sink) send(ctx context.Context, payload []byte) {
-	_, err := s.client.UploadWithContext(ctx, &s3manager.UploadInput{
+	_, err := s.ul.Upload(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Body:   bytes.NewBuffer(payload),
 		Key:    aws.String(s.getName()),
@@ -225,11 +245,11 @@ func (s *S3Sink) HttpInfo() map[string]float64 {
 
 func (s *S3Sink) get_tmp_credentials(ctx context.Context) error {
 	// First, make sure we can get some credentials:
-	creds, dlc, err := s.tmp_credentials(ctx)
+	ulc, dlc, err := s.tmp_credentials(ctx)
 	if err != nil {
 		return err
 	}
-	s.client = creds
+	s.ul = ulc
 	s.dl = dlc
 
 	// Now loop forever getting new creds.
@@ -240,12 +260,12 @@ func (s *S3Sink) get_tmp_credentials(ctx context.Context) error {
 		for {
 			select {
 			case _ = <-newCredTick.C:
-				creds, dlc, err := s.tmp_credentials(ctx)
+				ulc, dlc, err := s.tmp_credentials(ctx)
 				if err != nil {
 					// In this case, keep trying while not replacing the old creds, maybe next time around will work.
 					s.Errorf("Cannot get new AWS creds: %v", err)
 				} else {
-					s.client = creds
+					s.ul = ulc
 					s.dl = dlc
 				}
 
@@ -261,73 +281,112 @@ func (s *S3Sink) get_tmp_credentials(ctx context.Context) error {
 func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3manager.Downloader, error) {
 
 	if s.config.EC2InstanceProfile && s.config.AssumeRoleARN != "" {
-
-		svc := ec2metadata.New(session.Must(session.NewSession()))
-		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess_tmp := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
+		cache := aws.NewCredentialsCache(ec2rolecreds.New())
+		cfg, err := config.LoadDefaultConfig(ctx,
+			config.WithRegion(s.config.Region),
+			config.WithCredentialsProvider(cache),
 		)
-		_, err_role := ec2_role_creds.Get()
+		if err != nil {
+			return nil, nil, err
+		}
+
+		stsc := sts.NewFromConfig(cfg)
+		appCreds := stscreds.NewAssumeRoleProvider(stsc, s.config.AssumeRoleARN)
+		cfgRole, err := config.LoadDefaultConfig(ctx,
+			config.WithRegion(s.config.Region),
+			config.WithCredentialsProvider(appCreds),
+		)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		value, err_role := cfgRole.Credentials.Retrieve(ctx)
+		s.Infof("Credentials %v: ", value)
 		if err_role != nil {
 			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
 			return nil, nil, err_role
-		}
-
-		creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
-		_, err_creds := creds.Get()
-		if err_creds != nil {
-			s.Errorf("Assume Role ARN doesn't work. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_creds)
-			return nil, nil, err_creds
-		}
-
-		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
-		if err != nil {
-			s.Errorf("Session is not created ERROR: %v", err)
-			return nil, nil, err
 		} else {
-			s.Infof("Session is created using assume role based on EC2 Instance Profile")
+			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		return s3manager.NewUploader(sess), s3manager.NewDownloader(sess), nil
-
+		s.client = s3.NewFromConfig(cfgRole)
+		return s3manager.NewUploader(s.client), s3manager.NewDownloader(s.client), nil
 	} else {
-
-		// Getting credentials from assume role ARN
-		sess_tmp := session.Must(
-			session.NewSessionWithOptions(session.Options{
-				SharedConfigState: session.SharedConfigEnable,
-			}),
+		cfg, err := config.LoadDefaultConfig(ctx,
+			config.WithRegion(s.config.Region),
 		)
-		creds := stscreds.NewCredentials(sess_tmp, s.config.AssumeRoleARN)
-		_, err := creds.Get()
 		if err != nil {
-			s.Errorf("Assume Role ARN doesn't work. ARN: %v, %v", s.config.AssumeRoleARN, err)
 			return nil, nil, err
 		}
-
-		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
-		if err != nil {
-			s.Errorf("Session is not created with region %v, %v", s.config.Region, err)
-			return nil, nil, err
+		value, err_role := cfg.Credentials.Retrieve(ctx)
+		s.Infof("Credentials %v: ", value)
+		if err_role != nil {
+			s.Errorf("Not able to retrieve credentials via Instance Profile. ERROR: %v", err_role)
+			return nil, nil, err_role
 		} else {
-			s.Infof("Session is created using assume role via shared configuration")
+			s.Infof("Session is created using EC2 Instance Profile")
 		}
 
-		return s3manager.NewUploader(sess), s3manager.NewDownloader(sess), nil
+		s.client = s3.NewFromConfig(cfg)
+		return s3manager.NewUploader(s.client), s3manager.NewDownloader(s.client), nil
 	}
+
+	return nil, nil, nil
+}
+
+// Sometimes there can be a _$folder$ object which needs to get cleaned up.
+func (s *S3Sink) checkForDangling(ctx context.Context) {
+	dangCheck := time.NewTicker(TimeCheckDangling)
+	defer dangCheck.Stop()
+
+	s.Infof("starting check for dangling objects.")
+	for {
+		select {
+		case _ = <-dangCheck.C:
+			go func() {
+				err := s.runRemoveDangle(ctx)
+				if err != nil {
+					s.Errorf("Cannot check for dangling objects: %v", err)
+				}
+			}()
+
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+func (s *S3Sink) runRemoveDangle(ctx context.Context) error {
+	params := &s3.ListObjectsV2Input{
+		Bucket: aws.String(s.Bucket),
+	}
+
+	// Create the Paginator for the ListObjectsV2 operation.
+	p := s3.NewListObjectsV2Paginator(s.client, params, func(o *s3.ListObjectsV2PaginatorOptions) {})
+
+	for p.HasMorePages() {
+		// Next Page takes a new context for each page retrieval. This is where
+		// you could add timeouts or deadlines.
+		page, err := p.NextPage(ctx)
+		if err != nil {
+			return err
+		}
+
+		// Log the objects found
+		for _, obj := range page.Contents {
+			if strings.Contains(*obj.Key, "_$folder$") {
+				di := &s3.DeleteObjectInput{
+					Bucket: aws.String(s.Bucket),
+					Key:    obj.Key,
+				}
+				_, err := s.client.DeleteObject(ctx, di)
+				if err != nil {
+					return err
+				}
+				s.Infof("Removed dangling: %s", *obj.Key)
+			}
+		}
+	}
+
+	return nil
 }
