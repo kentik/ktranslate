@@ -286,13 +286,15 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr[name] = sv
 		case model.Custom_value_Which_addrVal:
 			sv, _ := val.AddrVal()
-			var addr net.IP
-			if sv[0] == 4 {
-				addr = net.IP(sv[1:5])
-			} else {
-				addr = net.IP(sv[1:])
+			if len(sv) > 1 {
+				var addr net.IP
+				if sv[0] == 4 && len(sv) == 5 {
+					addr = net.IP(sv[1:5])
+				} else {
+					addr = net.IP(sv[1:])
+				}
+				dst.CustomStr[name] = addr.String()
 			}
-			dst.CustomStr[name] = addr.String()
 		}
 	}
 
