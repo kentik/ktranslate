@@ -293,6 +293,19 @@ func (p *Poller) StartPingOnlyLoop(ctx context.Context) {
 	go func() {
 		seenGoodPacketLoss := true
 		runningFast := false
+
+		// Run one ping first.
+		go func() {
+			flows, _, err := p.deviceMetrics.GetPingStats(ctx, p.pinger)
+			if err != nil {
+				p.log.Warnf("There was an error when getting ping stats: %v.", err)
+			}
+
+			// Send data on.
+			p.jchfChan <- flows
+		}()
+
+		// And now wait for the normal ticker to go.
 		for {
 			select {
 			case _ = <-counterCheck.C:
