@@ -218,6 +218,9 @@ func (t *KentikDriver) toJCHF(fmsg *pp.ProtoProducerMessage) *kt.JCHF {
 				in.DeviceName = dm
 			}
 		}
+		if mdev, ok := t.devices[kt.MissingDeviceIP]; ok {
+			mdev.SetUserTags(in.CustomStr)
+		}
 	}
 
 	if _, ok := t.metrics[in.DeviceName]; !ok {
