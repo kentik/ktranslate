@@ -91,6 +91,9 @@ const (
 	GaugeMetric    = "gauge"
 	CountMetric    = "count"
 	FromGCP        = "gcppubsub"
+
+	MissingDeviceName = "KT_MISSING_DEVICE"
+	MissingDeviceIP   = "1.1.1.255"
 )
 
 type IntId uint64

@@ -81,6 +81,15 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL, serviceNa
 				s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}
+
+			// Now add a blank missing device device.
+			nd := &kt.Device{
+				ID:         nextID,
+				Name:       kt.MissingDeviceName,
+				SendingIps: []net.IP{net.ParseIP(kt.MissingDeviceIP)},
+			}
+			nd.InitUserTags(serviceName, map[string]string{})
+			s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 		}
 	}
 
