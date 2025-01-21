@@ -225,15 +225,21 @@ func (ks *KentikSyslog) formatMessage(ctx context.Context, msg sfmt.LogParts) ([
 		if hostname, ok := msg["hostname"]; ok {
 			if hs, ok := hostname.(string); ok {
 				if ipr := net.ParseIP(hs); ipr != nil {
-					if ks.resolver != nil {
-						resolved_name := ks.resolver.Resolve(ctx, hs, true)
-						if resolved_name != "" {
-							msg["device_name"] = resolved_name
+					// First check if this ip is in our devices list.
+					if dev, ok := ks.devices[hs]; ok {
+						msg["device_name"] = dev.Name // Copy in any of these info we get
+						dev.SetMsgUserTags(msg)
+					} else { // If not, try to resolve via dns.
+						if ks.resolver != nil {
+							resolved_name := ks.resolver.Resolve(ctx, hs, true)
+							if resolved_name != "" {
+								msg["device_name"] = resolved_name
+							} else {
+								msg["device_name"] = hs
+							}
 						} else {
 							msg["device_name"] = hs
 						}
-					} else {
-						msg["device_name"] = hs
 					}
 				} else {
 					msg["device_name"] = hs
