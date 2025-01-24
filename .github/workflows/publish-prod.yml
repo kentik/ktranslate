@@ -38,7 +38,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
-          go-version: '1.22.6'
+          go-version: '1.23.5'
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -75,7 +75,7 @@ jobs:
         run: make test
 
       - name: Build and Publish Docker
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
