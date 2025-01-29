@@ -21,9 +21,10 @@ const (
 	Has                  = "=~"
 	NotHas               = "!~"
 
-	String FilterType = "string"
-	Int               = "int"
-	Addr              = "addr"
+	String    FilterType = "string"
+	Int                  = "int"
+	Addr                 = "addr"
+	Whitelist            = "whitelist"
 
 	OrToken      = " or "
 	AndToken     = " and "
@@ -67,6 +68,7 @@ type FilterDef struct {
 	Value     string
 	FType     FilterType
 	Name      string
+	Whitelist []string
 }
 
 type FilterDefWrapper []FilterDef
@@ -97,6 +99,16 @@ func (i *FilterDefs) Set(value string) error {
 	inner := FilterDefWrapper{}
 	for _, orSet := range strings.Split(strings.Replace(value, OrUpperCase, OrToken, 1), OrToken) {
 		pts := strings.Split(orSet, ",")
+
+		// Handle the whitelist filter seperately.
+		if len(pts) > 1 && pts[0] == Whitelist {
+			inner = append(inner, FilterDef{
+				FType:     FilterType(pts[0]),
+				Whitelist: pts[1:],
+			})
+			continue
+		}
+
 		if len(pts) < 3 {
 			return fmt.Errorf("Filter flag is defined by <type> dimension operator value")
 		}
@@ -159,6 +171,12 @@ func GetFilters(log logger.Underlying, filters []string) ([]FilterWrapper, error
 				orSet = append(orSet, newf)
 			case Addr:
 				newf, err := newAddrFilter(log, fd)
+				if err != nil {
+					return nil, err
+				}
+				orSet = append(orSet, newf)
+			case Whitelist:
+				newf, err := newWhitelistFilter(log, fd)
 				if err != nil {
 					return nil, err
 				}
