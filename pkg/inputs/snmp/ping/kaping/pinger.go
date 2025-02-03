@@ -19,21 +19,26 @@ type Pinger struct {
 	error chan error
 }
 
-func NewPinger(cfg Config) (*Pinger, error) {
+func NewPinger(cfg Config, addrs []netip.Addr) (*Pinger, error) {
 	mode := ICMP
 
 	if cfg.RawSocket {
 		mode = RAW
 	}
 
+	has4, has6 := checkFam(addrs) // If we don't need 4 or 6, don't worry about a socket for them.
 	sock4, err := NewSocket(cfg.BindAddr4, mode)
 	if err != nil {
-		return nil, fmt.Errorf("IPv4 socket: %w", err)
+		if has4 {
+			return nil, fmt.Errorf("IPv4 socket: %w", err)
+		}
 	}
 
 	sock6, err := NewSocket(cfg.BindAddr6, mode)
 	if err != nil {
-		return nil, fmt.Errorf("IPv6 socket: %w", err)
+		if has6 {
+			return nil, fmt.Errorf("IPv6 socket: %w", err)
+		}
 	}
 
 	state := NewState()
@@ -43,13 +48,21 @@ func NewPinger(cfg Config) (*Pinger, error) {
 }
 
 func (p *Pinger) Start(ctx context.Context) {
-	go p.receive(p.sock4)
-	go p.receive(p.sock6)
+	if p.sock4 != nil {
+		go p.receive(p.sock4)
+	}
+	if p.sock6 != nil {
+		go p.receive(p.sock6)
+	}
 
 	<-ctx.Done()
 
-	p.sock4.Close()
-	p.sock6.Close()
+	if p.sock4 != nil {
+		p.sock4.Close()
+	}
+	if p.sock6 != nil {
+		p.sock6.Close()
+	}
 }
 
 func (p *Pinger) Ping(addr netip.Addr, count int, delay, timeout time.Duration) (*Result, error) {
@@ -159,3 +172,16 @@ func (p *Pinger) receive(sock Socket) {
 }
 
 var ErrTimeout = errors.New("probe timeout")
+
+func checkFam(addrs []netip.Addr) (bool, bool) {
+	has4 := false
+	has6 := false
+	for _, addr := range addrs {
+		if addr.Is4() {
+			has4 = true
+		} else {
+			has6 = true
+		}
+	}
+	return has4, has6
+}

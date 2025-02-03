@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"math/rand"
 	"net"
 	"net/netip"
 	"os"
@@ -39,6 +40,12 @@ func NewPinger(log logger.ContextL, target string, pingSec int, timeout time.Dur
 		timeout:  timeout,
 	}
 
+	// Figure out who are we pinging.
+	addrs, err := p.resolve()
+	if err != nil {
+		return nil, err
+	}
+
 	cfg := kaping.DefaultConfig()
 	if os.Getenv(KENTIK_PING_PRIV) != "false" {
 		log.Infof("Running ping service in privileged mode. Ping Interval: %v", p.interval)
@@ -48,7 +55,7 @@ func NewPinger(log logger.ContextL, target string, pingSec int, timeout time.Dur
 		cfg.RawSocket = false
 	}
 
-	pinger, err := kaping.NewPinger(cfg)
+	pinger, err := kaping.NewPinger(cfg, addrs)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +90,7 @@ func (p *Pinger) Ping() (*probing.Statistics, error) {
 		return nil, fmt.Errorf("pinger unavailable.")
 	}
 
-	addr, err := p.resolve()
+	addr, err := p.resolveOne()
 	if err != nil {
 		return nil, fmt.Errorf("host resolution failed: %w", err)
 	}
@@ -98,15 +105,34 @@ func (p *Pinger) Ping() (*probing.Statistics, error) {
 	return statistics(p.target, addr, count, result), nil
 }
 
-func (p *Pinger) resolve() (netip.Addr, error) {
+func (p *Pinger) resolveOne() (netip.Addr, error) {
+	addrs, err := p.resolve()
+	if err != nil {
+		return netip.Addr{}, err
+	}
+
+	return addrs[rand.Intn(len(addrs))], nil
+}
+
+func (p *Pinger) resolve() ([]netip.Addr, error) {
 	addrs, err := net.LookupHost(p.target)
 	switch {
 	case err != nil:
-		return netip.Addr{}, err
+		return nil, err
 	case len(addrs) == 0:
-		return netip.Addr{}, fmt.Errorf("address resolution failed")
+		return nil, fmt.Errorf("address resolution failed")
 	}
-	return netip.ParseAddr(addrs[0])
+
+	res := make([]netip.Addr, len(addrs))
+	for i, addr := range addrs {
+		ipr, err := netip.ParseAddr(addr)
+		if err != nil {
+			return nil, err
+		}
+		res[i] = ipr
+	}
+
+	return res, nil
 }
 
 func statistics(host string, addr netip.Addr, count int, result *kaping.Result) *probing.Statistics {
