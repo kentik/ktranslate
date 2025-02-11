@@ -28,12 +28,13 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_ACCESS_TOKEN }}
-          ec2-image-id: ami-02a036a7fd2307ec3
-          ec2-instance-type: t2.2xlarge
+          ec2-image-id: ami-0d50c93df57f35c03
+          ec2-instance-type: r8g.large
           subnet-id: subnet-0edcea7e32066f83b
           security-group-id: sg-06737d9dcf1c13e5c
 
   deploy:
+    needs: start-runner
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
