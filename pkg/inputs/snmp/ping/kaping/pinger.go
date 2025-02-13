@@ -31,6 +31,8 @@ func NewPinger(cfg Config, addrs []netip.Addr) (*Pinger, error) {
 	if err != nil {
 		if has4 {
 			return nil, fmt.Errorf("IPv4 socket: %w", err)
+		} else {
+			sock4 = nil
 		}
 	}
 
@@ -38,6 +40,8 @@ func NewPinger(cfg Config, addrs []netip.Addr) (*Pinger, error) {
 	if err != nil {
 		if has6 {
 			return nil, fmt.Errorf("IPv6 socket: %w", err)
+		} else {
+			sock6 = nil
 		}
 	}
 
