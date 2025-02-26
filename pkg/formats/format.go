@@ -60,7 +60,7 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
 	case FORMAT_ELASTICSEARCH:
-		return elasticsearch.NewFormat(log, compression)
+		return elasticsearch.NewFormat(log, compression, cfg.ElasticFormat)
 	case FORMAT_JSON:
 		return json.NewFormat(log, compression, false)
 	case FORMAT_NETFLOW:
