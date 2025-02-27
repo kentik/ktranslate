@@ -28,7 +28,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&actionEntrySet, "elastic.action", "index", "Use this action to when sending to elastic.")
+	flag.StringVar(&actionEntrySet, "elastic.action", "index", "Use this action when sending to elastic.")
 }
 
 var json = jsoniter.ConfigFastest
