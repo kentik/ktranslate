@@ -35,6 +35,11 @@ type PrometheusFormatConfig struct {
 	FlowsNeeded          int
 }
 
+// ElasticFormatConfig is the config for the elastic format
+type ElasticFormatConfig struct {
+	Action string
+}
+
 // OtelFormatConfig is the config for the otel format
 type OtelFormatConfig struct {
 	Endpoint   string
@@ -291,6 +296,8 @@ type Config struct {
 	OtelFormat *OtelFormatConfig
 	// pkg/formats/snmp
 	SnmpFormat *SnmpFormatConfig
+	// pkg/formats/elasticsearch
+	ElasticFormat *ElasticFormatConfig
 
 	// pkg/sinks/prom
 	PrometheusSink *PrometheusSinkConfig
@@ -388,6 +395,9 @@ func DefaultConfig() *Config {
 			ClientKey:  "",
 			ClientCert: "",
 			RootCA:     "",
+		},
+		ElasticFormat: &ElasticFormatConfig{
+			Action: "index",
 		},
 		SnmpFormat: &SnmpFormatConfig{
 			ConfigFile: "",

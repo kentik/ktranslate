@@ -450,6 +450,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.OtelFormat.ClientKey = val
 			case "otel.root_ca":
 				cfg.OtelFormat.RootCA = val
+			// pkg/formats/elasticsearch
+			case "elastic.action":
+				cfg.ElasticFormat.Action = val
 			// pkg/formats/snmp
 			case "snmp.format.conf":
 				cfg.SnmpFormat.ConfigFile = val

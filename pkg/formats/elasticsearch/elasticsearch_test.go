@@ -3,6 +3,9 @@ package elasticsearch
 import (
 	"testing"
 
+	"github.com/kentik/ktranslate"
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/stretchr/testify/assert"
 )
@@ -10,8 +13,9 @@ import (
 func TestSerializeElasticsearch(t *testing.T) {
 	serBuf := make([]byte, 0)
 	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
 
-	f, err := NewFormat(nil, kt.CompressionNone)
+	f, err := NewFormat(l, kt.CompressionNone, &ktranslate.ElasticFormatConfig{Action: "index"})
 	assert.NoError(err)
 
 	res, err := f.To(kt.InputTesting, serBuf)
@@ -29,7 +33,8 @@ func TestSerializeElasticsearch(t *testing.T) {
 func TestSerializeElasticsearchGzip(t *testing.T) {
 	serBuf := make([]byte, 0)
 	assert := assert.New(t)
-	f, err := NewFormat(nil, kt.CompressionGzip)
+	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
+	f, err := NewFormat(l, kt.CompressionGzip, &ktranslate.ElasticFormatConfig{Action: "index"})
 	assert.NoError(err)
 	res, err := f.To(kt.InputTesting, serBuf)
 	assert.NoError(err)

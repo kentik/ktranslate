@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
+	"flag"
 	"fmt"
 	"io"
 	"strings"
 	"time"
 
+	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/formats/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -18,8 +20,16 @@ import (
 )
 
 const (
-	actionEntry = `{"index":{}}`
+	actionEntryFormat = `{"%s":{}}`
 )
+
+var (
+	actionEntrySet string
+)
+
+func init() {
+	flag.StringVar(&actionEntrySet, "elastic.action", "index", "Use this action when sending to elastic.")
+}
 
 var json = jsoniter.ConfigFastest
 
@@ -27,12 +37,14 @@ type ElasticsearchFormat struct {
 	logger.ContextL
 	compression kt.Compression
 	useGzip     bool
+	action      string
 }
 
-func NewFormat(log logger.Underlying, compression kt.Compression) (*ElasticsearchFormat, error) {
+func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslate.ElasticFormatConfig) (*ElasticsearchFormat, error) {
 	ef := &ElasticsearchFormat{
 		ContextL:    logger.NewContextLFromUnderlying(logger.SContext{S: "elasticsearchFormat"}, log),
 		compression: compression,
+		action:      fmt.Sprintf(actionEntryFormat, cfg.Action),
 	}
 
 	switch compression {
@@ -43,6 +55,8 @@ func NewFormat(log logger.Underlying, compression kt.Compression) (*Elasticsearc
 	default:
 		return nil, fmt.Errorf("Invalid compression (%s): format json only supports none|gzip", compression)
 	}
+
+	ef.Infof("Using action %s", ef.action)
 
 	return ef, nil
 }
@@ -62,7 +76,7 @@ func (f *ElasticsearchFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, er
 
 	esBulkData := []string{}
 	for _, m := range msgsNew {
-		data, err := serialize(m)
+		data, err := serialize(m, f.action)
 		if err != nil {
 			return nil, err
 		}
@@ -108,7 +122,7 @@ func (f *ElasticsearchFormat) From(raw *kt.Output) ([]map[string]interface{}, er
 	for sc.Scan() {
 		// check for ES action and ignore
 		v := sc.Text()
-		if v == actionEntry {
+		if v == f.action {
 			continue
 		}
 		msg := &kt.JCHF{}
@@ -131,7 +145,7 @@ func (f *ElasticsearchFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) 
 	// serialize rolls
 	esBulkData := []string{}
 	for _, m := range rolls {
-		data, err := serialize(m)
+		data, err := serialize(m, f.action)
 		if err != nil {
 			return nil, err
 		}
@@ -166,8 +180,8 @@ func (f *ElasticsearchFormat) handleSynth(in *kt.JCHF) map[string]interface{} {
 	return attr
 }
 
-func serialize(o interface{}) (string, error) {
-	s := actionEntry + "\n"
+func serialize(o interface{}, action string) (string, error) {
+	s := action + "\n"
 	data, err := json.Marshal(o)
 	if err != nil {
 		return "", err
