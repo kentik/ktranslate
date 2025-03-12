@@ -183,6 +183,10 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	yaml file containing snmp config to use
   -snmp_discovery
     	If true, try to discover snmp devices on this network as configured.
+  -snmp_discovery_min int
+    	If set, run snmp discovery on this interval (in minutes).
+  -snmp_discovery_on_start
+    	If set, run snmp discovery on application start.
   -snmp_do_walk string
     	If set, try to perform a snmp walk against the targeted device.
   -snmp_dump_mibs
