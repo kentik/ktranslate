@@ -87,6 +87,14 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	}
 	defer mdb.Close()
 
+	if conf.Disco.NetboxAPIHost != "" {
+		err = getDevicesFromNetbox(ctx, conf, log)
+		if err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+
 	ignoreMap := map[string]bool{}
 	for _, ip := range conf.Disco.IgnoreList {
 		ignoreMap[ip] = true
