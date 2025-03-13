@@ -260,6 +260,7 @@ type SnmpDiscoConfig struct {
 	NoUseBulkWalkAll   bool            `yaml:"no_use_bulkwalkall"`
 	NetboxAPIHost      string          `yaml:"netbox_host"`
 	NetboxAPIToken     string          `yaml:"netbox_token"`
+	NetboxTag          string          `yaml:"netbox_tag"`
 }
 
 type ProviderMap struct {

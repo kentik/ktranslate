@@ -87,20 +87,46 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	}
 	defer mdb.Close()
 
-	if conf.Disco.NetboxAPIHost != "" {
-		err = getDevicesFromNetbox(ctx, conf, log)
-		if err != nil {
-			return nil, err
-		}
-		return nil, nil
-	}
-
 	ignoreMap := map[string]bool{}
 	for _, ip := range conf.Disco.IgnoreList {
 		ignoreMap[ip] = true
 	}
 
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
+	if conf.Disco.NetboxAPIHost != "" {
+		log.Infof("Discovering devices from Netbox with tag %s", conf.Disco.NetboxTag)
+		err = getDevicesFromNetbox(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		log.Infof("Discovering devices from network scan")
+		err := runScanCheckDisco(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var stats *SnmpDiscoDeviceStat
+	if conf.Disco.AddDevices {
+		stats, err = addDevices(ctx, foundDevices, snmpFile, conf, false, log, pollDuration)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// Phone home if we have one of these set up.
+	if confMgr != nil && (stats.added > 0 || stats.replaced > 0) {
+		confMgr.DeviceDiscovery(conf.Devices)
+	}
+
+	time.Sleep(2 * time.Second) // Give logs time to get sent back.
+
+	return stats, nil
+}
+
+func runScanCheckDisco(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
+	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
 	for _, ipr := range conf.Disco.Cidrs {
 		_, _, err := net.ParseCIDR(ipr)
 		if err != nil {
@@ -121,11 +147,11 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 		scanner := scan.NewDeviceScanner(targetIterator, timeout)
 		if err := scanner.Start(); err != nil {
-			return nil, err
+			return err
 		}
 		results, err := scanner.Scan(ctx, conf.Disco.Ports)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		var wg sync.WaitGroup
 		var mux sync.RWMutex
@@ -145,22 +171,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		log.Infof("Checked %d ips in %v (from start: %v)", len(results), time.Now().Sub(st), time.Now().Sub(stb))
 	}
 
-	var stats *SnmpDiscoDeviceStat
-	if conf.Disco.AddDevices {
-		stats, err = addDevices(ctx, foundDevices, snmpFile, conf, false, log, pollDuration)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	// Phone home if we have one of these set up.
-	if confMgr != nil && (stats.added > 0 || stats.replaced > 0) {
-		confMgr.DeviceDiscovery(conf.Devices)
-	}
-
-	time.Sleep(2 * time.Second) // Give logs time to get sent back.
-
-	return stats, nil
+	return nil
 }
 
 func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi, confMgr config.ConfigManager) {
