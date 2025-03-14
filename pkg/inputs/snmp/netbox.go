@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net"
 	"net/netip"
+	"net/url"
+	"strconv"
 	"sync"
 	"time"
 
@@ -23,48 +25,63 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
 	c := netbox.NewAPIClientFor(conf.Disco.NetboxAPIHost, conf.Disco.NetboxAPIToken.String())
 
-	limit := int32(0) // This implies we see all. Do we need to implement paging?
-	res, _, err := c.DcimAPI.
-		DcimDevicesList(ctx).
-		Status([]string{"active"}). // Only look at active devices.
-		Limit(limit).
-		Execute()
+	var getDeviceList func(offset int32, results *[]scan.Result) error
+	getDeviceList = func(offset int32, results *[]scan.Result) error {
+		limit := int32(500) // @TODO, what's a good limit here?
+		res, _, err := c.DcimAPI.
+			DcimDevicesList(ctx).
+			Status([]string{"active"}). // Only look at active devices.
+			Limit(limit).
+			Offset(offset).
+			Execute()
+		if err != nil {
+			return err
+		}
 
-	if err != nil {
-		return err
-	}
+		for _, res := range res.Results {
+			keep := true // Default to add all.
 
-	timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
-	stb := time.Now()
-	results := make([]scan.Result, 0)
-	for _, res := range res.Results {
-		keep := true // Default to add all.
+			if conf.Disco.NetboxTag != "" {
+				keep = false // If we are filtering with tags, only allow those tags which match though.
+				for _, tag := range res.Tags {
+					if tag.Display == conf.Disco.NetboxTag {
+						keep = true
+						continue
+					}
+				}
+			}
+			if conf.Disco.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
+				if res.Site.GetDisplay() != conf.Disco.NetboxSite {
+					keep = false
+				}
+			}
 
-		if conf.Disco.NetboxTag != "" {
-			keep = false // If we are filtering with tags, only allow those tags which match though.
-			for _, tag := range res.Tags {
-				if tag.Display == conf.Disco.NetboxTag {
-					keep = true
-					continue
+			if keep && res.PrimaryIp.IsSet() {
+				addr := res.PrimaryIp.Get().GetAddress()
+				ipv, err := netip.ParsePrefix(addr)
+				if err != nil {
+					log.Infof("Skipping %s with bad PrimaryIP: %v", res.Display, addr)
+				} else {
+					*results = append(*results, scan.Result{Name: res.Display, Manufacturer: res.DeviceType.GetDisplay(), Host: net.ParseIP(ipv.Addr().String())})
 				}
 			}
 		}
-		if conf.Disco.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
-			if res.Site.GetDisplay() != conf.Disco.NetboxSite {
-				keep = false
-			}
+
+		// Now, do we need to recurse further to get more results?
+		nextOffset := getNextOffset(res.Next)
+		if nextOffset > offset {
+			return getDeviceList(nextOffset, results)
 		}
 
-		if keep && res.PrimaryIp.IsSet() {
-			addr := res.PrimaryIp.Get().GetAddress()
-			ipv, err := netip.ParsePrefix(addr)
-			if err != nil {
-				log.Infof("Skipping %s with bad PrimaryIP: %v", res.Display, addr)
-			} else {
-				results = append(results, scan.Result{Name: res.Display, Manufacturer: res.DeviceType.GetDisplay(), Host: net.ParseIP(ipv.Addr().String())})
-			}
-		}
+		return nil
+	}
 
+	results := make([]scan.Result, 0)
+	timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
+	stb := time.Now()
+	err := getDeviceList(0, &results)
+	if err != nil {
+		return err
 	}
 
 	var wg sync.WaitGroup
@@ -83,4 +100,22 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	log.Infof("Checked %d ips in %v (from start: %v)", len(results), time.Now().Sub(st), time.Now().Sub(stb))
 
 	return nil
+}
+
+// Pull out the offset value from a url.
+func getNextOffset(next netbox.NullableString) int32 {
+	val := next.Get()
+	if val == nil {
+		return 0
+	}
+	u, err := url.Parse(*val)
+	if err != nil {
+		return 0
+	}
+	q := u.Query()
+	no, err := strconv.Atoi(q.Get("offset"))
+	if err != nil {
+		return 0
+	}
+	return int32(no)
 }
