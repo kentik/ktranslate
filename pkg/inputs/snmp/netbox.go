@@ -21,7 +21,7 @@ import (
 
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
-	c := netbox.NewAPIClientFor(conf.Disco.NetboxAPIHost, conf.Disco.NetboxAPIToken)
+	c := netbox.NewAPIClientFor(conf.Disco.NetboxAPIHost, conf.Disco.NetboxAPIToken.String())
 
 	limit := int32(0) // This implies we see all. Do we need to implement paging?
 	res, _, err := c.DcimAPI.
@@ -38,15 +38,24 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	stb := time.Now()
 	results := make([]scan.Result, 0)
 	for _, res := range res.Results {
-		hasTag := false
-		for _, tag := range res.Tags {
-			if tag.Display == conf.Disco.NetboxTag {
-				hasTag = true
-				continue
+		keep := true // Default to add all.
+
+		if conf.Disco.NetboxTag != "" {
+			keep = false // If we are filtering with tags, only allow those tags which match though.
+			for _, tag := range res.Tags {
+				if tag.Display == conf.Disco.NetboxTag {
+					keep = true
+					continue
+				}
+			}
+		}
+		if conf.Disco.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
+			if res.Site.GetDisplay() != conf.Disco.NetboxSite {
+				keep = false
 			}
 		}
 
-		if hasTag && res.PrimaryIp.IsSet() {
+		if keep && res.PrimaryIp.IsSet() {
 			addr := res.PrimaryIp.Get().GetAddress()
 			ipv, err := netip.ParsePrefix(addr)
 			if err != nil {

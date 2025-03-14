@@ -173,6 +173,11 @@ type MerakiConfig struct {
 	MaxAPIRetry           int             `yaml:"max_http_retry"` // retry up to this many times on 429 errors. Default 2.
 }
 
+type SecureToken struct {
+	origStr string
+	Token   string
+}
+
 // Contain various extensions to snmp which can be used to get data.
 type ExtensionSet struct {
 	ExtOnly      bool          `yaml:"ext_only"`
@@ -259,8 +264,9 @@ type SnmpDiscoConfig struct {
 	IgnoreOrig         string          `yaml:"-"`
 	NoUseBulkWalkAll   bool            `yaml:"no_use_bulkwalkall"`
 	NetboxAPIHost      string          `yaml:"netbox_host"`
-	NetboxAPIToken     string          `yaml:"netbox_token"`
+	NetboxAPIToken     *SecureToken    `yaml:"netbox_token"`
 	NetboxTag          string          `yaml:"netbox_tag"`
+	NetboxSite         string          `yaml:"netbox_site"`
 }
 
 type ProviderMap struct {
@@ -565,6 +571,41 @@ func (a *StringArray) UnmarshalYAML(unmarshal func(interface{}) error) error {
 		*a = multi
 	}
 	return nil
+}
+
+func (a *SecureToken) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var orig = ""
+	err := unmarshal(&orig)
+	if err != nil {
+		return err
+	}
+	new := orig
+
+	if strings.HasPrefix(orig, "${") {
+		new = os.Getenv(orig[2 : len(orig)-1])
+	} else if strings.HasPrefix(orig, AwsSmPrefix) { // See if we can pull these out of AWS Secret Manager directly
+		new = loadViaAWSSecrets(orig[len(AwsSmPrefix):])
+	} else if strings.HasPrefix(orig, AzureKVPrefix) { // Same but use Azure.
+		new = loadViaAzureKeyVault(orig[len(AzureKVPrefix):])
+	} else if strings.HasPrefix(orig, GCPSmPrefix) { // And Same again but use GCP.
+		new = loadViaGCPSecrets(orig[len(GCPSmPrefix):])
+	}
+	*a = SecureToken{Token: new, origStr: orig}
+	return nil
+}
+
+func (a *SecureToken) MarshalYAML() (interface{}, error) {
+	if a.origStr != "" {
+		return a.origStr, nil
+	}
+	return "", nil
+}
+
+func (a *SecureToken) String() string {
+	if a == nil {
+		return ""
+	}
+	return string(a.Token)
 }
 
 type V3SNMP V3SNMPConfig // Need a 2nd type alias to avoid stack overflow on parsing.
