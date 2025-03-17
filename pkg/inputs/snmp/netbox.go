@@ -23,7 +23,7 @@ import (
 
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
-	c := netbox.NewAPIClientFor(conf.Disco.NetboxAPIHost, conf.Disco.NetboxAPIToken.String())
+	c := netbox.NewAPIClientFor(conf.Disco.Netbox.NetboxAPIHost, conf.Disco.Netbox.NetboxAPIToken.String())
 
 	var getDeviceList func(offset int32, results *[]scan.Result) error
 	getDeviceList = func(offset int32, results *[]scan.Result) error {
@@ -41,17 +41,17 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 		for _, res := range res.Results {
 			keep := true // Default to add all.
 
-			if conf.Disco.NetboxTag != "" {
+			if conf.Disco.Netbox.NetboxTag != "" {
 				keep = false // If we are filtering with tags, only allow those tags which match though.
 				for _, tag := range res.Tags {
-					if tag.Display == conf.Disco.NetboxTag {
+					if tag.Display == conf.Disco.Netbox.NetboxTag {
 						keep = true
 						continue
 					}
 				}
 			}
-			if conf.Disco.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
-				if res.Site.GetDisplay() != conf.Disco.NetboxSite {
+			if conf.Disco.Netbox.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
+				if res.Site.GetDisplay() != conf.Disco.Netbox.NetboxSite {
 					keep = false
 				}
 			}

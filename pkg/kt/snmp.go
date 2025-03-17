@@ -263,10 +263,14 @@ type SnmpDiscoConfig struct {
 	CidrOrig           string          `yaml:"-"`
 	IgnoreOrig         string          `yaml:"-"`
 	NoUseBulkWalkAll   bool            `yaml:"no_use_bulkwalkall"`
-	NetboxAPIHost      string          `yaml:"netbox_host"`
-	NetboxAPIToken     *SecureToken    `yaml:"netbox_token"`
-	NetboxTag          string          `yaml:"netbox_tag"`
-	NetboxSite         string          `yaml:"netbox_site"`
+	Netbox             *NetboxConfig   `yaml:"netbox"`
+}
+
+type NetboxConfig struct {
+	NetboxAPIHost  string       `yaml:"host"`
+	NetboxAPIToken *SecureToken `yaml:"token"`
+	NetboxTag      string       `yaml:"tag"`
+	NetboxSite     string       `yaml:"site"`
 }
 
 type ProviderMap struct {

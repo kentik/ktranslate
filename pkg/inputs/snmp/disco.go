@@ -93,8 +93,8 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	}
 
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
-	if conf.Disco.NetboxAPIHost != "" {
-		log.Infof("Discovering devices from Netbox with tag [%s] and site [%s]", conf.Disco.NetboxTag, conf.Disco.NetboxSite)
+	if conf.Disco.Netbox != nil && conf.Disco.Netbox.NetboxAPIHost != "" {
+		log.Infof("Discovering devices from Netbox with tag [%s] and site [%s]", conf.Disco.Netbox.NetboxTag, conf.Disco.Netbox.NetboxSite)
 		err = getDevicesFromNetbox(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap)
 		if err != nil {
 			return nil, err
