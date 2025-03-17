@@ -56,11 +56,10 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 				}
 			}
 
-			if keep && res.PrimaryIp.IsSet() {
-				addr := res.PrimaryIp.Get().GetAddress()
-				ipv, err := netip.ParsePrefix(addr)
+			if keep {
+				ipv, err := getIP(res, conf.Disco.Netbox)
 				if err != nil {
-					log.Infof("Skipping %s with bad PrimaryIP: %v", res.Display, addr)
+					log.Infof("Skipping %s with bad IP: %v", res.Display, err)
 				} else {
 					*results = append(*results, scan.Result{Name: res.Display, Manufacturer: res.DeviceType.GetDisplay(), Host: net.ParseIP(ipv.Addr().String())})
 				}
@@ -118,4 +117,34 @@ func getNextOffset(next netbox.NullableString) int32 {
 		return 0
 	}
 	return int32(no)
+}
+
+func getIP(res netbox.DeviceWithConfigContext, conf *kt.NetboxConfig) (netip.Prefix, error) {
+	switch conf.NetboxIP {
+	case "primary":
+		if res.PrimaryIp.IsSet() {
+			addr := res.PrimaryIp.Get().GetAddress()
+			if addr != "" {
+				ipv, err := netip.ParsePrefix(addr)
+				return ipv, err
+			}
+		}
+	case "oob":
+		if res.OobIp.IsSet() {
+			addr := res.OobIp.Get().GetAddress()
+			if addr != "" {
+				ipv, err := netip.ParsePrefix(addr)
+				return ipv, err
+			}
+		}
+	default:
+		if res.PrimaryIp.IsSet() {
+			addr := res.PrimaryIp.Get().GetAddress()
+			if addr != "" {
+				ipv, err := netip.ParsePrefix(addr)
+				return ipv, err
+			}
+		}
+	}
+	return netip.Prefix{}, fmt.Errorf("IP %s not set", conf.NetboxIP)
 }

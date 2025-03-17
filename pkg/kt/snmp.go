@@ -271,6 +271,7 @@ type NetboxConfig struct {
 	NetboxAPIToken *SecureToken `yaml:"token"`
 	NetboxTag      string       `yaml:"tag"`
 	NetboxSite     string       `yaml:"site"`
+	NetboxIP       string       `yaml:"ip_to_pick"` // One of primary or oob. Default to primary.
 }
 
 type ProviderMap struct {
