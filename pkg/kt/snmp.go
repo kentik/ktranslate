@@ -299,6 +299,8 @@ type SnmpGlobalConfig struct {
 	FastPoll              bool                   `yaml:"fast_poll"`
 	WatchProfileChanges   bool                   `yaml:"watch_profile_changes"`
 	SaveCache             bool                   `yaml:"save_mds_cache"`
+	MibGitUrl             string                 `yaml:"profile_git_url"`
+	MibGitHash            string                 `yaml:"profile_git_commit"`
 }
 
 type SnmpConfig struct {

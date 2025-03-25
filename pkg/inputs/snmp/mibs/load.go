@@ -1,6 +1,7 @@
 package mibs
 
 import (
+	"context"
 	"regexp"
 	"strconv"
 	"strings"
@@ -41,7 +42,7 @@ var (
 	}
 )
 
-func NewMibDB(mibpath string, profileDir string, validate bool, log logger.ContextL) (*MibDB, error) {
+func NewMibDB(ctx context.Context, mibpath string, profileDir string, validate bool, log logger.ContextL, gitUrl string, gitHash string) (*MibDB, error) {
 	mdb := &MibDB{
 		log:      log,
 		profiles: map[string]*Profile{},
@@ -57,6 +58,14 @@ func NewMibDB(mibpath string, profileDir string, validate bool, log logger.Conte
 			return nil, err
 		}
 		mdb.db = db
+	}
+
+	if gitUrl != "" {
+		err := cloneFromGit(ctx, profileDir, gitUrl, gitHash, log)
+		if err != nil {
+			return nil, err
+		}
+		log.Infof("Cloned new profiles from %s:%s into %s", gitUrl, gitHash, profileDir)
 	}
 
 	if profileDir != "" {
