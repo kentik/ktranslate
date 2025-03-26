@@ -2,6 +2,7 @@ package mibs
 
 import (
 	"context"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -60,11 +61,18 @@ func NewMibDB(ctx context.Context, mibpath string, profileDir string, validate b
 		mdb.db = db
 	}
 
-	if gitUrl != "" {
-		err := cloneFromGit(ctx, profileDir, gitUrl, gitHash, log)
+	if gitUrl != "" { // Load into a temp dir to keep from squashing into other stuff.
+		dir, err := os.MkdirTemp("", "profile")
 		if err != nil {
 			return nil, err
 		}
+		defer os.RemoveAll(dir)
+
+		err = cloneFromGit(ctx, dir, gitUrl, gitHash, log)
+		if err != nil {
+			return nil, err
+		}
+		profileDir = dir
 		log.Infof("Cloned new profiles from %s:%s into %s", gitUrl, gitHash, profileDir)
 	}
 
