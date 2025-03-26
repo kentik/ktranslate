@@ -1,6 +1,7 @@
 package mibs
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,7 +34,7 @@ func TestCheckForProvider(t *testing.T) {
 
 func TestFullProvider(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	mdb, err := NewMibDB("", "", false, l)
+	mdb, err := NewMibDB(context.Background(), "", "", false, l, "", "")
 	assert.NoError(t, err)
 	defer mdb.Close()
 
@@ -86,7 +87,7 @@ func TestFullProvider(t *testing.T) {
 
 func TestGetForKey(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	mdb, err := NewMibDB("", "", false, l)
+	mdb, err := NewMibDB(context.Background(), "", "", false, l, "", "")
 	assert.NoError(t, err)
 	defer mdb.Close()
 

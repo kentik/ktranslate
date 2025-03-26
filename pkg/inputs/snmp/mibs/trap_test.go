@@ -1,6 +1,7 @@
 package mibs
 
 import (
+	"context"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -14,7 +15,7 @@ import (
 
 func TestLoadTraps(t *testing.T) {
 	l := lt.NewTestContextL(logger.NilContext, t)
-	mdb, err := NewMibDB("", "", false, l)
+	mdb, err := NewMibDB(context.Background(), "", "", false, l, "", "")
 	assert.NoError(t, err)
 	defer mdb.Close()
 	content := []byte(`

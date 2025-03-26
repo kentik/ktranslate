@@ -81,7 +81,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	kentikDevices := addKentikDevices(apic, conf)
 
 	// Use this for auto-discovering metrics to pull.
-	mdb, err := mibs.NewMibDB(conf.Global.MibDB, conf.Global.MibProfileDir, false, log)
+	mdb, err := mibs.NewMibDB(ctx, conf.Global.MibDB, conf.Global.MibProfileDir, false, log, conf.Global.MibGitUrl, conf.Global.MibGitHash)
 	if err != nil {
 		return nil, fmt.Errorf("There was an error when setting up the %s mibDB database and the %s profiles: %v.", conf.Global.MibDB, conf.Global.MibProfileDir, err)
 	}
