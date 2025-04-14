@@ -105,9 +105,20 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 }
 
 func (f *PromFormat) toLabels(name string) []string {
+	// Map out any chars which prom can't handle as label names.
+	makeSafe := func(r rune) rune {
+		switch {
+		case r == '.':
+			return '_'
+		case r == ' ':
+			return '_'
+		}
+		return r
+	}
+
 	res := make([]string, len(f.vecTags[name]))
 	for k, v := range f.vecTags[name] {
-		res[v] = strings.ReplaceAll(k, " ", "_")
+		res[v] = strings.Map(makeSafe, k)
 	}
 	return res
 }
@@ -149,7 +160,6 @@ func (f *PromFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			f.vecs[m.Name] = cv
 			f.Infof("Adding %s %v", m.Name, labels)
 		}
-		//f.Infof("%s, %v, %v %v", m.Name, m.Tags, f.vecTags[m.Name], f.toLabels(m.Name))
 		f.vecs[m.Name].WithLabelValues(m.GetTagValues(f.vecTags)...).Set(m.Value)
 	}
 
