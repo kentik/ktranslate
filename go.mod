@@ -60,7 +60,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.25.0
 	go.opentelemetry.io/otel/sdk/metric v1.25.0
 	go.starlark.net v0.0.0-20220926145019-14b050677505
-	golang.org/x/net v0.37.0
+	golang.org/x/net v0.38.0
 	gonum.org/v1/gonum v0.15.1
 	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de
 	google.golang.org/grpc v1.63.2
