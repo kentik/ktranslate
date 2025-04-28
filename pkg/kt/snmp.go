@@ -304,6 +304,7 @@ type SnmpGlobalConfig struct {
 }
 
 type SnmpConfig struct {
+	sync.RWMutex
 	Devices    DeviceMap         `yaml:"devices"`
 	Trap       *SnmpTrapConfig   `yaml:"trap"`
 	Disco      *SnmpDiscoConfig  `yaml:"discovery"`
@@ -884,6 +885,9 @@ func (a *EAPIConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 func (p *ProviderMap) Init(provider string, cfg *SnmpConfig) {
+	cfg.Lock()
+	defer cfg.Unlock()
+
 	if cfg.Global == nil {
 		cfg.Global = &SnmpGlobalConfig{}
 	}
@@ -900,32 +904,44 @@ func (p *ProviderMap) Init(provider string, cfg *SnmpConfig) {
 	if !cfg.doneInit {
 		cfg.doneInit = true
 		for k, v := range g.UserTags {
-			delete(g.UserTags, k)
-			g.UserTags[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			if !strings.HasPrefix(k, ProviderPrefix) {
+				delete(g.UserTags, k)
+				g.UserTags[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			}
 		}
 		for k, v := range g.MatchAttr {
-			delete(g.MatchAttr, k)
-			g.MatchAttr[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			if !strings.HasPrefix(k, ProviderPrefix) {
+				delete(g.MatchAttr, k)
+				g.MatchAttr[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			}
 		}
 
 		// Set up device prefix for device level ones.
 		for _, device := range cfg.Devices {
 			for k, v := range device.UserTags {
-				delete(device.UserTags, k)
-				device.UserTags[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				if !strings.HasPrefix(k, ProviderPrefix) {
+					delete(device.UserTags, k)
+					device.UserTags[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				}
 			}
 			for k, v := range device.MatchAttr {
-				delete(device.MatchAttr, k)
-				device.MatchAttr[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				if !strings.HasPrefix(k, ProviderPrefix) {
+					delete(device.MatchAttr, k)
+					device.MatchAttr[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				}
 			}
 		}
 	}
 
 	// Copy these over in the right order to get processed by the regular per device system.
 	for k, v := range p.UserTags {
-		g.UserTags[ProviderPrefix+provider+ProviderToken+k] = v
+		if !strings.HasPrefix(k, ProviderPrefix) {
+			g.UserTags[ProviderPrefix+provider+ProviderToken+k] = v
+		}
 	}
 	for k, v := range p.MatchAttr {
-		g.MatchAttr[ProviderPrefix+provider+ProviderToken+k] = v
+		if !strings.HasPrefix(k, ProviderPrefix) {
+			g.MatchAttr[ProviderPrefix+provider+ProviderToken+k] = v
+		}
 	}
 }
