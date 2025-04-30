@@ -202,6 +202,7 @@ type SnmpDeviceConfig struct {
 	FlowOnly            bool              `yaml:"flow_only,omitempty"`
 	PingOnly            bool              `yaml:"ping_only,omitempty"`
 	UserTags            map[string]string `yaml:"user_tags"`
+	ExpectedDevTags     int               `yaml:"expected_device_tags"`
 	DiscoveredMibs      []string          `yaml:"discovered_mibs,omitempty"`
 	PollTimeSec         int               `yaml:"poll_time_sec,omitempty"`
 	TimeoutMS           int               `yaml:"timeout_ms,omitempty"`
@@ -304,6 +305,7 @@ type SnmpGlobalConfig struct {
 }
 
 type SnmpConfig struct {
+	sync.RWMutex
 	Devices    DeviceMap         `yaml:"devices"`
 	Trap       *SnmpTrapConfig   `yaml:"trap"`
 	Disco      *SnmpDiscoConfig  `yaml:"discovery"`
@@ -764,6 +766,9 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	if d.UserTags == nil && old.UserTags != nil {
 		d.UserTags = map[string]string{}
 	}
+	if old.ExpectedDevTags != 0 {
+		d.ExpectedDevTags = old.ExpectedDevTags
+	}
 	for k, v := range old.UserTags {
 		if _, ok := d.UserTags[k]; !ok {
 			if _, ok := conf.Global.UserTags[k]; !ok {
@@ -796,6 +801,10 @@ func (d *SnmpDeviceConfig) AddUserTag(k string, v string) {
 
 func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
 	d.allUserTags = map[string]string{}
+	if d.ExpectedDevTags > 0 && len(d.UserTags) != d.ExpectedDevTags {
+		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, d.ExpectedDevTags, len(d.UserTags)))
+	}
+
 	if serviceName != "ktranslate" {
 		if d.UserTags == nil { // Prevent nil map assignment.
 			d.UserTags = map[string]string{}
@@ -884,6 +893,9 @@ func (a *EAPIConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 func (p *ProviderMap) Init(provider string, cfg *SnmpConfig) {
+	cfg.Lock()
+	defer cfg.Unlock()
+
 	if cfg.Global == nil {
 		cfg.Global = &SnmpGlobalConfig{}
 	}
@@ -900,32 +912,44 @@ func (p *ProviderMap) Init(provider string, cfg *SnmpConfig) {
 	if !cfg.doneInit {
 		cfg.doneInit = true
 		for k, v := range g.UserTags {
-			delete(g.UserTags, k)
-			g.UserTags[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			if !strings.HasPrefix(k, ProviderPrefix) {
+				delete(g.UserTags, k)
+				g.UserTags[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			}
 		}
 		for k, v := range g.MatchAttr {
-			delete(g.MatchAttr, k)
-			g.MatchAttr[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			if !strings.HasPrefix(k, ProviderPrefix) {
+				delete(g.MatchAttr, k)
+				g.MatchAttr[ProviderPrefix+GlobalProvider+ProviderToken+k] = v
+			}
 		}
 
 		// Set up device prefix for device level ones.
 		for _, device := range cfg.Devices {
 			for k, v := range device.UserTags {
-				delete(device.UserTags, k)
-				device.UserTags[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				if !strings.HasPrefix(k, ProviderPrefix) {
+					delete(device.UserTags, k)
+					device.UserTags[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				}
 			}
 			for k, v := range device.MatchAttr {
-				delete(device.MatchAttr, k)
-				device.MatchAttr[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				if !strings.HasPrefix(k, ProviderPrefix) {
+					delete(device.MatchAttr, k)
+					device.MatchAttr[ProviderPrefix+DeviceProvider+ProviderToken+k] = v
+				}
 			}
 		}
 	}
 
 	// Copy these over in the right order to get processed by the regular per device system.
 	for k, v := range p.UserTags {
-		g.UserTags[ProviderPrefix+provider+ProviderToken+k] = v
+		if !strings.HasPrefix(k, ProviderPrefix) {
+			g.UserTags[ProviderPrefix+provider+ProviderToken+k] = v
+		}
 	}
 	for k, v := range p.MatchAttr {
-		g.MatchAttr[ProviderPrefix+provider+ProviderToken+k] = v
+		if !strings.HasPrefix(k, ProviderPrefix) {
+			g.MatchAttr[ProviderPrefix+provider+ProviderToken+k] = v
+		}
 	}
 }
