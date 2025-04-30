@@ -202,6 +202,7 @@ type SnmpDeviceConfig struct {
 	FlowOnly            bool              `yaml:"flow_only,omitempty"`
 	PingOnly            bool              `yaml:"ping_only,omitempty"`
 	UserTags            map[string]string `yaml:"user_tags"`
+	ExpectedDevTags     int               `yaml:"expected_device_tags"`
 	DiscoveredMibs      []string          `yaml:"discovered_mibs,omitempty"`
 	PollTimeSec         int               `yaml:"poll_time_sec,omitempty"`
 	TimeoutMS           int               `yaml:"timeout_ms,omitempty"`
@@ -765,6 +766,9 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	if d.UserTags == nil && old.UserTags != nil {
 		d.UserTags = map[string]string{}
 	}
+	if old.ExpectedDevTags != 0 {
+		d.ExpectedDevTags = old.ExpectedDevTags
+	}
 	for k, v := range old.UserTags {
 		if _, ok := d.UserTags[k]; !ok {
 			if _, ok := conf.Global.UserTags[k]; !ok {
@@ -797,6 +801,10 @@ func (d *SnmpDeviceConfig) AddUserTag(k string, v string) {
 
 func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
 	d.allUserTags = map[string]string{}
+	if d.ExpectedDevTags > 0 && len(d.UserTags) != d.ExpectedDevTags {
+		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, d.ExpectedDevTags, len(d.UserTags)))
+	}
+
 	if serviceName != "ktranslate" {
 		if d.UserTags == nil { // Prevent nil map assignment.
 			d.UserTags = map[string]string{}
