@@ -802,7 +802,7 @@ func (d *SnmpDeviceConfig) AddUserTag(k string, v string) {
 func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
 	d.allUserTags = map[string]string{}
 	if d.ExpectedDevTags > 0 && len(d.UserTags) != d.ExpectedDevTags {
-		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, d.ExpectedDevTags, len(d.UserTags)))
+		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, len(d.UserTags), d.ExpectedDevTags))
 	}
 
 	if serviceName != "ktranslate" {
