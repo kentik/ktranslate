@@ -30,7 +30,7 @@ func NewPinger(cfg Config, addrs []netip.Addr) (*Pinger, error) {
 	sock4, err := NewSocket(cfg.BindAddr4, mode)
 	if err != nil {
 		if has4 {
-			return nil, fmt.Errorf("IPv4 socket: %w", err)
+			return nil, fmt.Errorf("IPv4 socket: %w | %v", err, addrs)
 		} else {
 			sock4 = nil
 		}
@@ -39,7 +39,7 @@ func NewPinger(cfg Config, addrs []netip.Addr) (*Pinger, error) {
 	sock6, err := NewSocket(cfg.BindAddr6, mode)
 	if err != nil {
 		if has6 {
-			return nil, fmt.Errorf("IPv6 socket: %w", err)
+			return nil, fmt.Errorf("IPv6 socket: %w | %v", err, addrs)
 		} else {
 			sock6 = nil
 		}
@@ -183,7 +183,7 @@ func checkFam(addrs []netip.Addr) (bool, bool) {
 	for _, addr := range addrs {
 		if addr.Is4() {
 			has4 = true
-		} else {
+		} else if addr.Is6() {
 			has6 = true
 		}
 	}
