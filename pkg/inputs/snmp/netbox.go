@@ -4,11 +4,16 @@ package snmp
 Use netbox API to pull down list of devices to target. Get all devices matching a given tag.
 */
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net"
+	"net/http"
 	"net/netip"
 	"net/url"
+	"os"
 	"strconv"
 	"sync"
 	"time"
@@ -21,9 +26,95 @@ import (
 	"github.com/netbox-community/go-netbox/v4"
 )
 
+var (
+	tokenExp    time.Time
+	accessToken string
+)
+
+const (
+	authHeaderName      = "Authorization"
+	authHeaderFormat    = "Token %v"
+	bearerHeaderFormat  = "Bearer %v"
+	languageHeaderName  = "Accept-Language"
+	languageHeaderValue = "en-US"
+)
+
+type OauthResp struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+}
+
+func getToken() (string, error) {
+	if time.Now().Before(tokenExp) {
+		return accessToken, nil
+	}
+
+	payload := map[string]string{
+		"grant_type":    "client_credentials",
+		"client_id":     os.Getenv("KTRANS_OAUTH_CLIENT_ID"),
+		"client_secret": os.Getenv("KTRANS_OAUTH_CLIENT_SECRET"),
+		"scope":         os.Getenv("KTRANS_OAUTH_SCOPE"),
+	}
+	jsonValue, err := json.Marshal(payload)
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := http.Post(os.Getenv("KTRANS_OAUTH_TOKEN_URL"), "application/json", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		return "", err
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	var res OauthResp
+	err = json.Unmarshal(body, &res)
+	if err != nil {
+		return "", err
+	}
+
+	accessToken = res.AccessToken
+	tokenExp = time.Now().Add(time.Duration(res.ExpiresIn-60) * time.Second)
+	return accessToken, nil
+}
+
+func newAPIClientFor(host string, token string) (*netbox.APIClient, error) {
+	cfg := netbox.NewConfiguration()
+
+	// If needed, get a token via oauth
+	if token == "" {
+		t, err := getToken()
+		if err != nil {
+			return nil, err
+		}
+		cfg.AddDefaultHeader(
+			authHeaderName,
+			fmt.Sprintf(bearerHeaderFormat, t),
+		)
+	} else {
+		cfg.AddDefaultHeader(
+			authHeaderName,
+			fmt.Sprintf(authHeaderFormat, token),
+		)
+	}
+
+	cfg.Servers[0].URL = host
+
+	cfg.AddDefaultHeader(
+		languageHeaderName,
+		languageHeaderValue,
+	)
+
+	return netbox.NewAPIClient(cfg), nil
+}
+
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
-	c := netbox.NewAPIClientFor(conf.Disco.Netbox.NetboxAPIHost, conf.Disco.Netbox.NetboxAPIToken.String())
+	c, err := newAPIClientFor(conf.Disco.Netbox.NetboxAPIHost, conf.Disco.Netbox.NetboxAPIToken.String())
+	if err != nil {
+		return err
+	}
 
 	var getDeviceList func(offset int32, results *[]scan.Result) error
 	getDeviceList = func(offset int32, results *[]scan.Result) error {
@@ -33,11 +124,11 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			Status([]string{"active"}). // Only look at active devices.
 			Limit(limit).
 			Offset(offset).
+			InterfaceCountGt([]int32{0}). // We want only devices with at least one iterface.
 			Execute()
 		if err != nil {
 			return err
 		}
-
 		for _, res := range res.Results {
 			keep := true // Default to add all.
 
@@ -67,7 +158,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 		}
 
 		// Now, do we need to recurse further to get more results?
-		nextOffset := getNextOffset(res.Next)
+		nextOffset := getNextOffset(res.Next, log)
 		if nextOffset > offset {
 			return getDeviceList(nextOffset, results)
 		}
@@ -78,7 +169,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	results := make([]scan.Result, 0)
 	timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 	stb := time.Now()
-	err := getDeviceList(0, &results)
+	err = getDeviceList(0, &results)
 	if err != nil {
 		return err
 	}
@@ -102,7 +193,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 }
 
 // Pull out the offset value from a url.
-func getNextOffset(next netbox.NullableString) int32 {
+func getNextOffset(next netbox.NullableString, log logger.ContextL) int32 {
 	val := next.Get()
 	if val == nil {
 		return 0
