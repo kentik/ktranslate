@@ -109,12 +109,55 @@ func newAPIClientFor(host string, token string) (*netbox.APIClient, error) {
 	return netbox.NewAPIClient(cfg), nil
 }
 
+func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL) (string, error) {
+
+	v := url.Values{}
+	v.Add("limit", "500")
+	v.Add("status", "active")
+	v.Add("offset", "0")
+	v.Add("tag", conf.Disco.Netbox.NetboxTag)
+	v.Add("site", conf.Disco.Netbox.NetboxSite)
+	v.Add("interface_count__gt", "0")
+
+	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + "/api/dcim/devices/")
+	if err != nil {
+		return "", err
+	}
+	u.RawQuery = v.Encode()
+	log.Infof("XXX %v", u.String())
+
+	client := &http.Client{}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set(authHeaderName, fmt.Sprintf(authHeaderFormat, conf.Disco.Netbox.NetboxAPIToken.String()))
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
+}
+
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
 	c, err := newAPIClientFor(conf.Disco.Netbox.NetboxAPIHost, conf.Disco.Netbox.NetboxAPIToken.String())
 	if err != nil {
 		return err
 	}
+
+	res, err := getDcimDevicesApi(ctx, conf, log)
+	if err != nil {
+		return err
+	}
+	log.Infof("XX %s", res)
 
 	var getDeviceList func(offset int32, results *[]scan.Result) error
 	getDeviceList = func(offset int32, results *[]scan.Result) error {
