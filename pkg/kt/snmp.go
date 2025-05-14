@@ -270,9 +270,13 @@ type SnmpDiscoConfig struct {
 type NetboxConfig struct {
 	NetboxAPIHost  string       `yaml:"host"`
 	NetboxAPIToken *SecureToken `yaml:"token"`
-	NetboxTag      string       `yaml:"tag"`
-	NetboxSite     string       `yaml:"site"`
+	Tag            string       `yaml:"tag"`
+	Site           string       `yaml:"site"`
 	NetboxIP       string       `yaml:"ip_to_pick"` // One of primary or oob. Default to primary.
+	Location       string       `yaml:"location"`
+	Tenant         string       `yaml:"tenant"`
+	Status         string       `yaml:"status"`
+	Role           string       `yaml:"role"`
 }
 
 type ProviderMap struct {

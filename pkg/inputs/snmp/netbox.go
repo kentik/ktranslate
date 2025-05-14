@@ -23,7 +23,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	"github.com/liamg/furious/scan"
-	"github.com/netbox-community/go-netbox/v4"
 )
 
 var (
@@ -44,23 +43,66 @@ type OauthResp struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
+type NBRespOK struct {
+	Count    int        `json:"count"`
+	Next     *string    `json:"next"`
+	Previous *string    `json:"previous"`
+	Results  []NBResult `json:"results"`
+}
+
+type NBResult struct {
+	ID          int           `json:"id"`
+	Url         *string       `json:"url"`
+	Display     *string       `json:"display"`
+	DeviceType  *NBDeviceType `json:"device_type"`
+	PrimaryIp   *NBIP         `json:"primary_ip"`
+	PrimaryIpv4 *NBIP         `json:"primary_ip4"`
+	PrimaryIpv6 *NBIP         `json:"primary_ip6"`
+	OobIp       *NBIP         `json:"oob_ip"`
+}
+
+type NBDeviceType struct {
+	Display *string `json:"display"`
+}
+
+type NBIP struct {
+	Address *string `json:"address"`
+}
+
 func getToken() (string, error) {
 	if time.Now().Before(tokenExp) {
 		return accessToken, nil
 	}
 
+	client_id := os.Getenv("KTRANS_OAUTH_CLIENT_ID")
+	if client_id == "" {
+		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_CLIENT_ID")
+	}
+	client_secret := os.Getenv("KTRANS_OAUTH_CLIENT_SECRET")
+	if client_secret == "" {
+		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_CLIENT_SECRET")
+	}
+	client_scope := os.Getenv("KTRANS_OAUTH_SCOPE")
+	if client_scope == "" {
+		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_SCOPE")
+	}
+
 	payload := map[string]string{
 		"grant_type":    "client_credentials",
-		"client_id":     os.Getenv("KTRANS_OAUTH_CLIENT_ID"),
-		"client_secret": os.Getenv("KTRANS_OAUTH_CLIENT_SECRET"),
-		"scope":         os.Getenv("KTRANS_OAUTH_SCOPE"),
+		"client_id":     client_id,
+		"client_secret": client_secret,
+		"scope":         client_scope,
 	}
 	jsonValue, err := json.Marshal(payload)
 	if err != nil {
 		return "", err
 	}
 
-	resp, err := http.Post(os.Getenv("KTRANS_OAUTH_TOKEN_URL"), "application/json", bytes.NewBuffer(jsonValue))
+	url := os.Getenv("KTRANS_OAUTH_TOKEN_URL")
+	if url == "" {
+		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_TOKEN_URL")
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		return "", err
 	}
@@ -79,123 +121,111 @@ func getToken() (string, error) {
 	return accessToken, nil
 }
 
-func newAPIClientFor(host string, token string) (*netbox.APIClient, error) {
-	cfg := netbox.NewConfiguration()
+func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) (*NBRespOK, error) {
 
-	// If needed, get a token via oauth
-	if token == "" {
-		t, err := getToken()
-		if err != nil {
-			return nil, err
-		}
-		cfg.AddDefaultHeader(
-			authHeaderName,
-			fmt.Sprintf(bearerHeaderFormat, t),
-		)
-	} else {
-		cfg.AddDefaultHeader(
-			authHeaderName,
-			fmt.Sprintf(authHeaderFormat, token),
-		)
-	}
-
-	cfg.Servers[0].URL = host
-
-	cfg.AddDefaultHeader(
-		languageHeaderName,
-		languageHeaderValue,
-	)
-
-	return netbox.NewAPIClient(cfg), nil
-}
-
-func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL) (string, error) {
-
+	// Set up some url filters here.
 	v := url.Values{}
-	v.Add("limit", "500")
-	v.Add("status", "active")
-	v.Add("offset", "0")
-	v.Add("tag", conf.Disco.Netbox.NetboxTag)
-	v.Add("site", conf.Disco.Netbox.NetboxSite)
+	v.Add("limit", fmt.Sprintf("%d", limit))
+	v.Add("offset", fmt.Sprintf("%d", offset))
 	v.Add("interface_count__gt", "0")
+
+	if conf.Disco.Netbox.Tag != "" {
+		log.Infof("Adding netbox filter for tag %s", conf.Disco.Netbox.Tag)
+		v.Add("tag", conf.Disco.Netbox.Tag)
+	}
+	if conf.Disco.Netbox.Site != "" {
+		log.Infof("Adding netbox filter for site %s", conf.Disco.Netbox.Site)
+		v.Add("site", conf.Disco.Netbox.Site)
+	}
+	if conf.Disco.Netbox.Tenant != "" {
+		log.Infof("Adding netbox filter for tenant %s", conf.Disco.Netbox.Tenant)
+		v.Add("tenant", conf.Disco.Netbox.Tenant)
+	}
+	if conf.Disco.Netbox.Status != "" {
+		log.Infof("Adding netbox filter for status %s", conf.Disco.Netbox.Status)
+		v.Add("status", conf.Disco.Netbox.Status)
+	} else { // Default to active.
+		log.Infof("Adding netbox filter for status active")
+		v.Add("status", "active")
+	}
+	if conf.Disco.Netbox.Role != "" {
+		log.Infof("Adding netbox filter for role %s", conf.Disco.Netbox.Role)
+		v.Add("role", conf.Disco.Netbox.Role)
+	}
+	if conf.Disco.Netbox.Location != "" {
+		log.Infof("Adding netbox filter for location %s", conf.Disco.Netbox.Location)
+		v.Add("location", conf.Disco.Netbox.Location)
+	}
 
 	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + "/api/dcim/devices/")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	u.RawQuery = v.Encode()
-	log.Infof("XXX %v", u.String())
 
 	client := &http.Client{}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	req.Header.Set(authHeaderName, fmt.Sprintf(authHeaderFormat, conf.Disco.Netbox.NetboxAPIToken.String()))
+
 	req.Header.Set("Content-Type", "application/json")
+	if conf.Disco.Netbox.NetboxAPIToken.String() == "" {
+		t, err := getToken()
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Set(authHeaderName, fmt.Sprintf(bearerHeaderFormat, t))
+	} else {
+		req.Header.Set(authHeaderName, fmt.Sprintf(authHeaderFormat, conf.Disco.Netbox.NetboxAPIToken.String()))
+	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(body), nil
+
+	if res.StatusCode == http.StatusOK {
+		nbRes := NBRespOK{}
+		err = json.Unmarshal(body, &nbRes)
+		if err != nil {
+			return nil, err
+		}
+		return &nbRes, nil
+	} else {
+		myErr := map[string][]string{}
+		err := json.Unmarshal(body, &myErr)
+		if err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf("%v", myErr)
+	}
 }
 
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
-	c, err := newAPIClientFor(conf.Disco.Netbox.NetboxAPIHost, conf.Disco.Netbox.NetboxAPIToken.String())
-	if err != nil {
-		return err
-	}
 
-	res, err := getDcimDevicesApi(ctx, conf, log)
-	if err != nil {
-		return err
-	}
-	log.Infof("XX %s", res)
+	log.Infof("Discovering devices from Netbox.")
 
 	var getDeviceList func(offset int32, results *[]scan.Result) error
 	getDeviceList = func(offset int32, results *[]scan.Result) error {
 		limit := int32(500) // @TODO, what's a good limit here?
-		res, _, err := c.DcimAPI.
-			DcimDevicesList(ctx).
-			Status([]string{"active"}). // Only look at active devices.
-			Limit(limit).
-			Offset(offset).
-			InterfaceCountGt([]int32{0}). // We want only devices with at least one iterface.
-			Execute()
+		res, err := getDcimDevicesApi(ctx, conf, log, offset, limit)
 		if err != nil {
 			return err
 		}
 		for _, res := range res.Results {
-			keep := true // Default to add all.
-
-			if conf.Disco.Netbox.NetboxTag != "" {
-				keep = false // If we are filtering with tags, only allow those tags which match though.
-				for _, tag := range res.Tags {
-					if tag.Display == conf.Disco.Netbox.NetboxTag {
-						keep = true
-						continue
-					}
-				}
-			}
-			if conf.Disco.Netbox.NetboxSite != "" { // Furthermore, if we filter with site, only the selected site.
-				if res.Site.GetDisplay() != conf.Disco.Netbox.NetboxSite {
-					keep = false
-				}
-			}
-
-			if keep {
-				ipv, err := getIP(res, conf.Disco.Netbox)
-				if err != nil {
-					log.Infof("Skipping %s with bad IP: %v", res.Display, err)
-				} else {
-					*results = append(*results, scan.Result{Name: res.Display, Manufacturer: res.DeviceType.GetDisplay(), Host: net.ParseIP(ipv.Addr().String())})
+			ipv, err := getIP(res, conf.Disco.Netbox)
+			if err != nil {
+				log.Infof("Skipping %s with bad IP: %v", res.Display, err)
+			} else {
+				if res.Display != nil && res.DeviceType != nil && res.DeviceType.Display != nil {
+					*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: *res.DeviceType.Display, Host: net.ParseIP(ipv.Addr().String())})
 				}
 			}
 		}
@@ -212,7 +242,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	results := make([]scan.Result, 0)
 	timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 	stb := time.Now()
-	err = getDeviceList(0, &results)
+	err := getDeviceList(0, &results)
 	if err != nil {
 		return err
 	}
@@ -236,12 +266,11 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 }
 
 // Pull out the offset value from a url.
-func getNextOffset(next netbox.NullableString, log logger.ContextL) int32 {
-	val := next.Get()
-	if val == nil {
+func getNextOffset(next *string, log logger.ContextL) int32 {
+	if next == nil {
 		return 0
 	}
-	u, err := url.Parse(*val)
+	u, err := url.Parse(*next)
 	if err != nil {
 		return 0
 	}
@@ -253,27 +282,27 @@ func getNextOffset(next netbox.NullableString, log logger.ContextL) int32 {
 	return int32(no)
 }
 
-func getIP(res netbox.DeviceWithConfigContext, conf *kt.NetboxConfig) (netip.Prefix, error) {
+func getIP(res NBResult, conf *kt.NetboxConfig) (netip.Prefix, error) {
 	switch conf.NetboxIP {
 	case "primary":
-		if res.PrimaryIp.IsSet() {
-			addr := res.PrimaryIp.Get().GetAddress()
+		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
+			addr := *res.PrimaryIp.Address
 			if addr != "" {
 				ipv, err := netip.ParsePrefix(addr)
 				return ipv, err
 			}
 		}
 	case "oob":
-		if res.OobIp.IsSet() {
-			addr := res.OobIp.Get().GetAddress()
+		if res.OobIp != nil && res.OobIp.Address != nil {
+			addr := *res.OobIp.Address
 			if addr != "" {
 				ipv, err := netip.ParsePrefix(addr)
 				return ipv, err
 			}
 		}
 	default:
-		if res.PrimaryIp.IsSet() {
-			addr := res.PrimaryIp.Get().GetAddress()
+		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
+			addr := *res.PrimaryIp.Address
 			if addr != "" {
 				ipv, err := netip.ParsePrefix(addr)
 				return ipv, err
