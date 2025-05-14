@@ -69,7 +69,7 @@ type NBIP struct {
 	Address *string `json:"address"`
 }
 
-func getToken() (string, error) {
+func getToken(oauthTokenUrl string) (string, error) {
 	if time.Now().Before(tokenExp) {
 		return accessToken, nil
 	}
@@ -98,11 +98,7 @@ func getToken() (string, error) {
 		return "", err
 	}
 
-	url := os.Getenv("KTRANS_OAUTH_TOKEN_URL")
-	if url == "" {
-		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_TOKEN_URL")
-	}
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post(oauthTokenUrl, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		return "", err
 	}
@@ -121,8 +117,7 @@ func getToken() (string, error) {
 	return accessToken, nil
 }
 
-func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) (*NBRespOK, error) {
-
+func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) url.Values {
 	// Set up some url filters here.
 	v := url.Values{}
 	v.Add("limit", fmt.Sprintf("%d", limit))
@@ -157,11 +152,16 @@ func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.Cont
 		v.Add("location", conf.Disco.Netbox.Location)
 	}
 
+	return v
+}
+
+func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) (*NBRespOK, error) {
+
 	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + "/api/dcim/devices/")
 	if err != nil {
 		return nil, err
 	}
-	u.RawQuery = v.Encode()
+	u.RawQuery = setupDcimFilter(conf, log, offset, limit).Encode()
 
 	client := &http.Client{}
 
@@ -172,11 +172,17 @@ func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.Cont
 
 	req.Header.Set("Content-Type", "application/json")
 	if conf.Disco.Netbox.NetboxAPIToken.String() == "" {
-		t, err := getToken()
-		if err != nil {
-			return nil, err
+		oauthTokenUrl := os.Getenv("KTRANS_OAUTH_TOKEN_URL")
+		if oauthTokenUrl != "" {
+			log.Infof("Trying to get bearer token from %s", oauthTokenUrl)
+			t, err := getToken(oauthTokenUrl)
+			if err != nil {
+				return nil, err
+			}
+			req.Header.Set(authHeaderName, fmt.Sprintf(bearerHeaderFormat, t))
+		} else {
+			log.Infof("Skipping authentication")
 		}
-		req.Header.Set(authHeaderName, fmt.Sprintf(bearerHeaderFormat, t))
 	} else {
 		req.Header.Set(authHeaderName, fmt.Sprintf(authHeaderFormat, conf.Disco.Netbox.NetboxAPIToken.String()))
 	}
@@ -198,7 +204,8 @@ func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.Cont
 		}
 		return &nbRes, nil
 	} else {
-		myErr := map[string][]string{}
+		log.Warnf("Invalid response from netbox server: %v", res.Status)
+		myErr := map[string]interface{}{}
 		err := json.Unmarshal(body, &myErr)
 		if err != nil {
 			return nil, err
