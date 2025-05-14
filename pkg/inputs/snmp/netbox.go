@@ -251,6 +251,12 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			} else {
 				if res.Display != nil && res.DeviceType != nil && res.DeviceType.Display != nil {
 					*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: *res.DeviceType.Display, Host: net.ParseIP(ipv.Addr().String())})
+				} else {
+					if res.Display != nil {
+						*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: "unknwn", Host: net.ParseIP(ipv.Addr().String())})
+					} else {
+						log.Infof("Skipping device with IP %v because of null Display value.", ipv.Addr().String())
+					}
 				}
 			}
 		}
@@ -313,7 +319,7 @@ func getIP(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) (netip.Pref
 		log.Infof("Looking at primary_ip %s", res.PrimaryIp.GetVal())
 		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
 			addr := *res.PrimaryIp.Address
-			if addr == "" {
+			if addr != "" {
 				ipv, err := netip.ParsePrefix(addr)
 				return ipv, err
 			}
