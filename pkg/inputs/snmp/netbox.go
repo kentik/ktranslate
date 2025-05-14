@@ -36,6 +36,7 @@ const (
 	bearerHeaderFormat  = "Bearer %v"
 	languageHeaderName  = "Accept-Language"
 	languageHeaderValue = "en-US"
+	DefaultApiRoot      = "/api"
 )
 
 type OauthResp struct {
@@ -67,6 +68,13 @@ type NBDeviceType struct {
 
 type NBIP struct {
 	Address *string `json:"address"`
+}
+
+func (i *NBIP) GetVal() string {
+	if i == nil || i.Address == nil {
+		return "<nil>"
+	}
+	return *i.Address
 }
 
 func getToken(oauthTokenUrl string) (string, error) {
@@ -157,11 +165,17 @@ func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, lim
 
 func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) (*NBRespOK, error) {
 
-	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + "/api/dcim/devices/")
+	apiRoot := os.Getenv("KTRANS_NETBOX_API_ROOT")
+	if apiRoot == "" {
+		apiRoot = DefaultApiRoot
+	}
+
+	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + apiRoot + "/dcim/devices/")
 	if err != nil {
 		return nil, err
 	}
 	u.RawQuery = setupDcimFilter(conf, log, offset, limit).Encode()
+	log.Infof("Calling netbox at %s", u.String())
 
 	client := &http.Client{}
 
@@ -227,9 +241,13 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			return err
 		}
 		for _, res := range res.Results {
-			ipv, err := getIP(res, conf.Disco.Netbox)
+			ipv, err := getIP(res, conf.Disco.Netbox, log)
 			if err != nil {
-				log.Infof("Skipping %s with bad IP: %v", res.Display, err)
+				if res.Display != nil {
+					log.Infof("Skipping %v with bad IP: %v", *res.Display, err)
+				} else {
+					log.Infof("Skipping null device with bad IP: %v", err)
+				}
 			} else {
 				if res.Display != nil && res.DeviceType != nil && res.DeviceType.Display != nil {
 					*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: *res.DeviceType.Display, Host: net.ParseIP(ipv.Addr().String())})
@@ -289,17 +307,19 @@ func getNextOffset(next *string, log logger.ContextL) int32 {
 	return int32(no)
 }
 
-func getIP(res NBResult, conf *kt.NetboxConfig) (netip.Prefix, error) {
+func getIP(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) (netip.Prefix, error) {
 	switch conf.NetboxIP {
 	case "primary":
+		log.Infof("Looking at primary_ip %s", res.PrimaryIp.GetVal())
 		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
 			addr := *res.PrimaryIp.Address
-			if addr != "" {
+			if addr == "" {
 				ipv, err := netip.ParsePrefix(addr)
 				return ipv, err
 			}
 		}
 	case "oob":
+		log.Infof("Looking at oob %v", res.OobIp.GetVal())
 		if res.OobIp != nil && res.OobIp.Address != nil {
 			addr := *res.OobIp.Address
 			if addr != "" {
@@ -308,6 +328,7 @@ func getIP(res NBResult, conf *kt.NetboxConfig) (netip.Prefix, error) {
 			}
 		}
 	default:
+		log.Infof("Looking at primary_ip %v", res.PrimaryIp.GetVal())
 		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
 			addr := *res.PrimaryIp.Address
 			if addr != "" {
