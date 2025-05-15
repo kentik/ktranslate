@@ -268,7 +268,7 @@ type SnmpDiscoConfig struct {
 }
 
 type NetboxConfig struct {
-	NetboxAPIHost  string       `yaml:"host"`
+	NetboxAPIUrl   string       `yaml:"url"`
 	NetboxAPIToken *SecureToken `yaml:"token"`
 	Tag            string       `yaml:"tag"`
 	Site           string       `yaml:"site"`

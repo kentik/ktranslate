@@ -36,7 +36,6 @@ const (
 	bearerHeaderFormat  = "Bearer %v"
 	languageHeaderName  = "Accept-Language"
 	languageHeaderValue = "en-US"
-	DefaultApiRoot      = "/api"
 )
 
 type OauthResp struct {
@@ -166,21 +165,22 @@ func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, lim
 
 func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) (*NBRespOK, error) {
 
-	apiRoot := os.Getenv("KTRANS_NETBOX_API_ROOT")
-	if apiRoot == "" {
-		apiRoot = DefaultApiRoot
+	var url *url.URL
+	if conf.Disco.Netbox.NetboxAPIUrl != "" {
+		u, err := url.Parse(conf.Disco.Netbox.NetboxAPIUrl)
+		if err != nil {
+			return nil, err
+		}
+		url = u
+	} else {
+		return nil, fmt.Errorf("Missing url for netbox.")
 	}
-
-	u, err := url.Parse(conf.Disco.Netbox.NetboxAPIHost + apiRoot + "/dcim/devices/")
-	if err != nil {
-		return nil, err
-	}
-	u.RawQuery = setupDcimFilter(conf, log, offset, limit).Encode()
-	log.Infof("Calling netbox at %s", u.String())
+	url.RawQuery = setupDcimFilter(conf, log, offset, limit).Encode()
+	log.Infof("Calling netbox at %s", url.String())
 
 	client := &http.Client{}
 
-	req, err := http.NewRequestWithContext(ctx, "GET", u.String(), nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", url.String(), nil)
 	if err != nil {
 		return nil, err
 	}
