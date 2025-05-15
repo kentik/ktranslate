@@ -95,18 +95,14 @@ func getToken(oauthTokenUrl string) (string, error) {
 		return "", fmt.Errorf("Set envroment variable KTRANS_OAUTH_SCOPE")
 	}
 
-	payload := map[string]string{
-		"grant_type":    "client_credentials",
-		"client_id":     client_id,
-		"client_secret": client_secret,
-		"scope":         client_scope,
-	}
-	jsonValue, err := json.Marshal(payload)
-	if err != nil {
-		return "", err
-	}
+	// Load up the url encoded payload here.
+	payload := url.Values{}
+	payload.Set("grant_type", "client_credentials")
+	payload.Set("client_id", client_id)
+	payload.Set("client_secret", client_secret)
+	payload.Set("scope", client_scope)
 
-	resp, err := http.Post(oauthTokenUrl, "application/json", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post(oauthTokenUrl, "application/x-www-form-urlencoded", bytes.NewBufferString(payload.Encode()))
 	if err != nil {
 		return "", err
 	}
@@ -114,15 +110,20 @@ func getToken(oauthTokenUrl string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	var res OauthResp
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return "", err
-	}
 
-	accessToken = res.AccessToken
-	tokenExp = time.Now().Add(time.Duration(res.ExpiresIn-60) * time.Second)
-	return accessToken, nil
+	if resp.StatusCode == http.StatusOK {
+		var res OauthResp
+		err = json.Unmarshal(body, &res)
+		if err != nil {
+			return "", err
+		}
+
+		accessToken = res.AccessToken
+		tokenExp = time.Now().Add(time.Duration(res.ExpiresIn-60) * time.Second)
+		return accessToken, nil
+	} else {
+		return "", fmt.Errorf("Invalid response from oauth server: %v %v", resp.StatusCode, string(body))
+	}
 }
 
 func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, limit int32) url.Values {
