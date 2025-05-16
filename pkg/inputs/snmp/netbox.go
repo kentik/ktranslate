@@ -51,14 +51,15 @@ type NBRespOK struct {
 }
 
 type NBResult struct {
-	ID          int           `json:"id"`
-	Url         *string       `json:"url"`
-	Name        *string       `json:"name"`
-	DeviceType  *NBDeviceType `json:"device_type"`
-	PrimaryIp   *NBIP         `json:"primary_ip"`
-	PrimaryIpv4 *NBIP         `json:"primary_ip4"`
-	PrimaryIpv6 *NBIP         `json:"primary_ip6"`
-	OobIp       *NBIP         `json:"oob_ip"`
+	ID           int                    `json:"id"`
+	Url          *string                `json:"url"`
+	Name         *string                `json:"name"`
+	DeviceType   *NBDeviceType          `json:"device_type"`
+	PrimaryIp    *NBIP                  `json:"primary_ip"`
+	PrimaryIpv4  *NBIP                  `json:"primary_ip4"`
+	PrimaryIpv6  *NBIP                  `json:"primary_ip6"`
+	OobIp        *NBIP                  `json:"oob_ip"`
+	CustomFields map[string]interface{} `json:"custom_fields"`
 }
 
 type NBDeviceType struct {
@@ -230,6 +231,22 @@ func getDcimDevicesApi(ctx context.Context, conf *kt.SnmpConfig, log logger.Cont
 	}
 }
 
+// See if any the fields in the conf are in the devices custom_fields map.
+func checkCustomFields(conf *kt.SnmpConfig, res NBResult) bool {
+	for k, v := range conf.Disco.Netbox.CustomFields {
+		if val, ok := res.CustomFields[k]; ok {
+			switch tv := val.(type) {
+			case string:
+				if v == tv {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
+
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
 
@@ -243,6 +260,12 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			return err
 		}
 		for _, res := range res.Results {
+			if len(conf.Disco.Netbox.CustomFields) > 0 && len(res.CustomFields) > 0 {
+				if !checkCustomFields(conf, res) {
+					continue
+				}
+			}
+
 			ipv, err := getIP(res, conf.Disco.Netbox, log)
 			if err != nil {
 				if res.Name != nil {
