@@ -62,7 +62,8 @@ type NBResult struct {
 }
 
 type NBDeviceType struct {
-	Name *string `json:"name"`
+	Name  *string `json:"name"`
+	Model *string `json:"model"`
 }
 
 type NBIP struct {
@@ -245,19 +246,19 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			ipv, err := getIP(res, conf.Disco.Netbox, log)
 			if err != nil {
 				if res.Name != nil {
-					log.Infof("Skipping %v with bad IP: %v", *res.Name, err)
+					log.Warnf("Skipping %v with bad IP: %v", *res.Name, err)
 				} else {
-					log.Infof("Skipping null device with bad IP: %v", err)
+					log.Warnf("Skipping null device with bad IP: %v", err)
 				}
 			} else {
-				if res.Name != nil && res.DeviceType != nil && res.DeviceType.Name != nil {
-					*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: *res.DeviceType.Name, Host: net.ParseIP(ipv.Addr().String())})
-				} else {
-					if res.Name != nil {
-						*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: "unknwn", Host: net.ParseIP(ipv.Addr().String())})
-					} else {
-						log.Infof("Skipping device with IP %v because of null Name value.", ipv.Addr().String())
+				if res.Name != nil {
+					model := "unknown"
+					if res.DeviceType != nil && res.DeviceType.Model != nil {
+						model = *res.DeviceType.Model
 					}
+					*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: model, Host: net.ParseIP(ipv.Addr().String())})
+				} else {
+					log.Warnf("Skipping device with IP %v because of null Name value.", ipv.Addr().String())
 				}
 			}
 		}
