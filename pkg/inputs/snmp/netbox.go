@@ -53,7 +53,7 @@ type NBRespOK struct {
 type NBResult struct {
 	ID          int           `json:"id"`
 	Url         *string       `json:"url"`
-	Display     *string       `json:"display"`
+	Name        *string       `json:"name"`
 	DeviceType  *NBDeviceType `json:"device_type"`
 	PrimaryIp   *NBIP         `json:"primary_ip"`
 	PrimaryIpv4 *NBIP         `json:"primary_ip4"`
@@ -62,7 +62,7 @@ type NBResult struct {
 }
 
 type NBDeviceType struct {
-	Display *string `json:"display"`
+	Name *string `json:"name"`
 }
 
 type NBIP struct {
@@ -244,19 +244,19 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 		for _, res := range res.Results {
 			ipv, err := getIP(res, conf.Disco.Netbox, log)
 			if err != nil {
-				if res.Display != nil {
-					log.Infof("Skipping %v with bad IP: %v", *res.Display, err)
+				if res.Name != nil {
+					log.Infof("Skipping %v with bad IP: %v", *res.Name, err)
 				} else {
 					log.Infof("Skipping null device with bad IP: %v", err)
 				}
 			} else {
-				if res.Display != nil && res.DeviceType != nil && res.DeviceType.Display != nil {
-					*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: *res.DeviceType.Display, Host: net.ParseIP(ipv.Addr().String())})
+				if res.Name != nil && res.DeviceType != nil && res.DeviceType.Name != nil {
+					*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: *res.DeviceType.Name, Host: net.ParseIP(ipv.Addr().String())})
 				} else {
-					if res.Display != nil {
-						*results = append(*results, scan.Result{Name: *res.Display, Manufacturer: "unknwn", Host: net.ParseIP(ipv.Addr().String())})
+					if res.Name != nil {
+						*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: "unknwn", Host: net.ParseIP(ipv.Addr().String())})
 					} else {
-						log.Infof("Skipping device with IP %v because of null Display value.", ipv.Addr().String())
+						log.Infof("Skipping device with IP %v because of null Name value.", ipv.Addr().String())
 					}
 				}
 			}
