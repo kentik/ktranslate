@@ -2,6 +2,7 @@ package snmp
 
 import (
 	"fmt"
+	"net/netip"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -175,5 +176,31 @@ func TestSetTagsMatch(t *testing.T) {
 			assert.Equal(expt, device.UserTags["tag"], "%s -> %s %v", test, device.Provider, device.UserTags)
 			assert.Equal(expt, device.MatchAttr["match"], "%s -> %s %v", test, device.Provider, device.MatchAttr)
 		}
+	}
+}
+
+func TestIgnoreList(t *testing.T) {
+	assert := assert.New(t)
+
+	ignores := []string{"10.2.3.1", "10.2.10.0/24"}
+
+	tests := map[string]bool{
+		"10.2.3.1":   true,
+		"10.2.10.10": true,
+		"10.2.11.10": false,
+	}
+
+	ignoreMap := map[string]bool{}
+	ignoreList := []netip.Prefix{}
+	for _, ip := range ignores {
+		if ipr, err := netip.ParsePrefix(ip); err != nil {
+			ignoreMap[ip] = true
+		} else {
+			ignoreList = append(ignoreList, ipr)
+		}
+	}
+
+	for tst, res := range tests {
+		assert.Equal(res, checkIfIgnored(tst, ignoreMap, ignoreList), tst)
 	}
 }
