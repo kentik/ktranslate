@@ -134,17 +134,17 @@ func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, lim
 	v.Add("offset", fmt.Sprintf("%d", offset))
 	v.Add("interface_count__gt", "0")
 
-	if conf.Disco.Netbox.Tag != "" {
-		log.Infof("Adding netbox filter for tag %s", conf.Disco.Netbox.Tag)
-		v.Add("tag", conf.Disco.Netbox.Tag)
+	for _, t := range conf.Disco.Netbox.Tag {
+		log.Infof("Adding netbox filter for tag %s", t)
+		v.Add("tag", t)
 	}
-	if conf.Disco.Netbox.Site != "" {
-		log.Infof("Adding netbox filter for site %s", conf.Disco.Netbox.Site)
-		v.Add("site", conf.Disco.Netbox.Site)
+	for _, s := range conf.Disco.Netbox.Site {
+		log.Infof("Adding netbox filter for site %s", s)
+		v.Add("site", s)
 	}
-	if conf.Disco.Netbox.Tenant != "" {
-		log.Infof("Adding netbox filter for tenant %s", conf.Disco.Netbox.Tenant)
-		v.Add("tenant", conf.Disco.Netbox.Tenant)
+	for _, t := range conf.Disco.Netbox.Tenant {
+		log.Infof("Adding netbox filter for tenant %s", t)
+		v.Add("tenant", t)
 	}
 	if conf.Disco.Netbox.Status != "" {
 		log.Infof("Adding netbox filter for status %s", conf.Disco.Netbox.Status)
@@ -153,13 +153,13 @@ func setupDcimFilter(conf *kt.SnmpConfig, log logger.ContextL, offset int32, lim
 		log.Infof("Adding netbox filter for status active")
 		v.Add("status", "active")
 	}
-	if conf.Disco.Netbox.Role != "" {
-		log.Infof("Adding netbox filter for role %s", conf.Disco.Netbox.Role)
-		v.Add("role", conf.Disco.Netbox.Role)
+	for _, r := range conf.Disco.Netbox.Role {
+		log.Infof("Adding netbox filter for role %s", r)
+		v.Add("role", r)
 	}
-	if conf.Disco.Netbox.Location != "" {
-		log.Infof("Adding netbox filter for location %s", conf.Disco.Netbox.Location)
-		v.Add("location", conf.Disco.Netbox.Location)
+	for _, l := range conf.Disco.Netbox.Location {
+		log.Infof("Adding netbox filter for location %s", l)
+		v.Add("location", l)
 	}
 
 	return v
