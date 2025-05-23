@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
+	"net/netip"
 	"os"
 	"sort"
 	"strings"
@@ -88,19 +89,24 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 	defer mdb.Close()
 
 	ignoreMap := map[string]bool{}
+	ignoreList := []netip.Prefix{}
 	for _, ip := range conf.Disco.IgnoreList {
-		ignoreMap[ip] = true
+		if ipr, err := netip.ParsePrefix(ip); err != nil {
+			ignoreMap[ip] = true
+		} else {
+			ignoreList = append(ignoreList, ipr)
+		}
 	}
 
 	foundDevices := map[string]*kt.SnmpDeviceConfig{}
 	if conf.Disco.Netbox != nil {
-		err = getDevicesFromNetbox(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap)
+		err = getDevicesFromNetbox(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap, ignoreList)
 		if err != nil {
 			return nil, err
 		}
 	} else {
 		log.Infof("Discovering devices from network scan")
-		err := runScanCheckDisco(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap)
+		err := runScanCheckDisco(ctx, ctl, foundDevices, mdb, conf, kentikDevices, log, ignoreMap, ignoreList)
 		if err != nil {
 			return nil, err
 		}
@@ -125,7 +131,7 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 }
 
 func runScanCheckDisco(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
-	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
+	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool, ignoreList []netip.Prefix) error {
 	for _, ipr := range conf.Disco.Cidrs {
 		_, _, err := net.ParseCIDR(ipr)
 		if err != nil {
@@ -158,7 +164,7 @@ func runScanCheckDisco(ctx context.Context, ctl chan bool, foundDevices map[stri
 		log.Infof("Starting to check %d ips in %s", len(results), ipr)
 		for i, result := range results {
 			if strings.HasSuffix(ipr, "/32") || result.IsHostUp() || conf.Disco.CheckAll {
-				if ignoreMap[result.Host.String()] { // If we have marked this ip as to be ignored, don't do anything more with it.
+				if checkIfIgnored(result.Host.String(), ignoreMap, ignoreList) {
 					continue
 				}
 				wg.Add(1)
@@ -171,6 +177,24 @@ func runScanCheckDisco(ctx context.Context, ctl chan bool, foundDevices map[stri
 	}
 
 	return nil
+}
+
+// Does the IP exist in an ignore block?
+func checkIfIgnored(ip string, ignoreMap map[string]bool, ignoreList []netip.Prefix) bool {
+	if ignoreMap[ip] { // If we have marked this ip as to be ignored, don't do anything more with it.
+		return true
+	}
+	aa, err := netip.ParseAddr(ip)
+	if err != nil {
+		return false
+	}
+
+	for _, ignorer := range ignoreList {
+		if ignorer.Contains(aa) {
+			return true
+		}
+	}
+	return false
 }
 
 func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL, pollTimeMin int, checkNow bool, cfg *ktranslate.SNMPInputConfig, apic *api.KentikApi, confMgr config.ConfigManager) {

@@ -248,7 +248,7 @@ func checkCustomFields(conf *kt.SnmpConfig, res NBResult) bool {
 }
 
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
-	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool) error {
+	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool, ignoreList []netip.Prefix) error {
 
 	log.Infof("Discovering devices from Netbox.")
 
@@ -308,7 +308,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	st := time.Now()
 	log.Infof("Starting to check %d ips from netbox", len(results))
 	for i, result := range results {
-		if ignoreMap[result.Host.String()] { // If we have marked this ip as to be ignored, don't do anything more with it.
+		if checkIfIgnored(result.Host.String(), ignoreMap, ignoreList) {
 			continue
 		}
 		wg.Add(1)
