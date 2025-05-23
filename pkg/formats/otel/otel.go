@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"unicode/utf8"
 
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -656,9 +657,14 @@ type OtelData struct {
 func (d *OtelData) GetTagValues() attribute.Set {
 	res := make([]attribute.KeyValue, 0, len(d.Tags))
 	for k, v := range d.Tags {
+		if !utf8.ValidString(k) {
+			continue
+		}
 		switch t := v.(type) {
 		case string:
-			res = append(res, attribute.String(k, t))
+			if utf8.ValidString(t) {
+				res = append(res, attribute.String(k, t))
+			}
 		case int64:
 			res = append(res, attribute.Int64(k, t))
 		case int32:
