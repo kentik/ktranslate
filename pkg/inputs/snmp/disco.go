@@ -184,12 +184,14 @@ func checkIfIgnored(ip string, ignoreMap map[string]bool, ignoreList []netip.Pre
 	if ignoreMap[ip] { // If we have marked this ip as to be ignored, don't do anything more with it.
 		return true
 	}
+	aa, err := netip.ParseAddr(ip)
+	if err != nil {
+		return false
+	}
+
 	for _, ignorer := range ignoreList {
-		aa, err := netip.ParseAddr(ip)
-		if err == nil {
-			if ignorer.Contains(aa) {
-				return true
-			}
+		if ignorer.Contains(aa) {
+			return true
 		}
 	}
 	return false
