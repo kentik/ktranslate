@@ -149,6 +149,7 @@ func (f *InfluxFormat) Bytes(s InfluxDataSet) []byte {
 
 	// Then format for output.
 	var enc lineprotocol.Encoder
+	enc.SetPrecision(lineprotocol.Nanosecond)
 line:
 	for _, l := range merged {
 		if l != nil {
@@ -201,7 +202,7 @@ line:
 					}
 				}
 			}
-			enc.EndLine(time.Unix(0, l.Timestamp))
+			//enc.EndLine(time.Unix(0, l.Timestamp))
 			if enc.Err() != nil {
 				f.report(enc.Err(), "end of line on measurement '%s'", l.Name)
 				continue line
@@ -702,7 +703,7 @@ func getMib(attr map[string]interface{}, ip interface{}) string {
 	mibTable, ok := attr["mib-table"].(string)
 	if ok {
 		// If the MIB is normalized use "/" as separator
-		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/"){
+		if strings.HasPrefix(mib, "/") || strings.HasSuffix(mib, "/") {
 			mib = strings.TrimRight(mib, "/") + "/" + strings.TrimLeft(mibTable, "/")
 		} else {
 			mib = mib + "::" + mibTable
