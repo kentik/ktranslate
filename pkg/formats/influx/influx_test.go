@@ -1,7 +1,7 @@
 package influx
 
 import (
-	//"strings"
+	"strings"
 	"testing"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -26,10 +26,10 @@ func TestSeriToInflux(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(res)
 
-	//assert.Equal(byte('\n'), res.Body[len(res.Body)-1])
+	assert.Equal(byte('\n'), res.Body[len(res.Body)-1])
 
-	//pts := strings.Split(string(res.Body[:len(res.Body)-1]), "\n")
-	//assert.Equal(len(pts), len(kt.InputTesting))
+	pts := strings.Split(string(res.Body[:len(res.Body)-1]), "\n")
+	assert.Equal(len(pts), len(kt.InputTesting))
 }
 
 func TestNewline(t *testing.T) {

@@ -202,7 +202,7 @@ line:
 					}
 				}
 			}
-			//enc.EndLine(time.Unix(0, l.Timestamp))
+			enc.EndLine(time.Unix(l.Timestamp, 0))
 			if enc.Err() != nil {
 				f.report(enc.Err(), "end of line on measurement '%s'", l.Name)
 				continue line
