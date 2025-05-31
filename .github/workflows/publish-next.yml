@@ -78,6 +78,18 @@ jobs:
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
 
+      - name: Build and Publish Nopriv
+        uses: docker/build-push-action@v6
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: Dockerfile-nopriv-next
+          platforms: linux/amd64, linux/arm64
+          push: true
+          tags: kentik/ktranslate:next-nopriv, quay.io/kentik/ktranslate:next-nopriv
+          build-args: |
+            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
+
       - name: Publish binary
         uses: actions/upload-artifact@v4
         with:

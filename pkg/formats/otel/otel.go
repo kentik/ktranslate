@@ -108,7 +108,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 			}
 			exp = metricExporter
 		} else {
-			metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpoint(cfg.Endpoint))
+			metricExporter, err := otlpmetrichttp.New(jf.ctx, otlpmetrichttp.WithEndpointURL(cfg.Endpoint))
 			if err != nil {
 				return nil, err
 			}

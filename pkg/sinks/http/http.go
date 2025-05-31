@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	nurl "net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -58,6 +59,8 @@ type HttpSink struct {
 	sendMaxDuration time.Duration
 	config          *ktranslate.HTTPSinkConfig
 	logTee          chan string
+	username        string
+	passwd          string
 }
 
 type HttpMetric struct {
@@ -113,6 +116,14 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, c
 
 	for k, v := range nr.headers {
 		nr.Infof(`Adding HTTP header "%s: %s"`, k, v)
+	}
+
+	username := os.Getenv("KENTIK_HTTP_USERNAME")
+	passwd := os.Getenv("KENTIK_HTTP_PASSWORD")
+	if username != "" && passwd != "" {
+		nr.username = username
+		nr.passwd = passwd
+		nr.Infof("Setting username for basic auth: %s", username)
 	}
 
 	if sink == "splunk" {
@@ -173,6 +184,10 @@ func (s *HttpSink) sendHttp(ctx context.Context, payload []byte, url string) {
 
 	for k, v := range s.headers {
 		req.Header.Set(k, v)
+	}
+	// Technically a header but slightly easier here sometimes.
+	if s.username != "" && s.passwd != "" {
+		req.SetBasicAuth(s.username, s.passwd)
 	}
 
 	resp, err := s.client.Do(req)
