@@ -36,9 +36,13 @@ type OtelFormat struct {
 	config       *ktranslate.OtelFormatConfig
 	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
-	inputs       map[string][]OtelData
+	inputs       map[string]chan OtelData
 	trapLog      *OtelLogger
 }
+
+const (
+	CHAN_SLACK = 10000
+)
 
 var (
 	endpoint   string
@@ -72,7 +76,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		ctx:          context.Background(),
 		vecs:         map[string]metric.Float64ObservableGauge{},
 		config:       cfg,
-		inputs:       map[string][]OtelData{},
+		inputs:       map[string]chan OtelData{},
 	}
 
 	var tlsC *tls.Config = nil
@@ -168,9 +172,7 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	f.mux.Lock()
-	defer f.mux.Unlock()
-
+	f.mux.RLock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			lm := m
@@ -184,15 +186,22 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 				}),
 			)
 			if err != nil {
+				f.mux.RUnlock()
 				return nil, err
 			}
+			f.mux.RUnlock()
+			f.mux.Lock()
 			f.vecs[lm.Name] = cv
-			f.inputs[lm.Name] = make([]OtelData, 0)
+			f.inputs[lm.Name] = make(chan OtelData, CHAN_SLACK)
+			f.mux.Unlock()
+			f.mux.RLock()
+			f.Infof("Creating otel export for %s", m.Name)
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] = append(f.inputs[m.Name], m)
+		f.inputs[m.Name] <- m
 	}
 
+	f.mux.RUnlock()
 	return nil, nil
 }
 
@@ -207,8 +216,7 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	f.mux.Lock()
-	defer f.mux.Unlock()
+	f.mux.RLock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			lm := m
@@ -222,15 +230,21 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 				}),
 			)
 			if err != nil {
+				f.mux.RUnlock()
 				return nil, err
 			}
+			f.mux.RUnlock()
+			f.mux.Lock()
 			f.vecs[lm.Name] = cv
-			f.inputs[lm.Name] = make([]OtelData, 0)
+			f.inputs[lm.Name] = make(chan OtelData, CHAN_SLACK)
+			f.mux.Unlock()
+			f.mux.RLock()
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] = append(f.inputs[m.Name], m)
+		f.inputs[m.Name] <- m
 	}
 
+	f.mux.RUnlock()
 	return nil, nil
 }
 
@@ -277,12 +291,16 @@ func (f *OtelFormat) toOtelDataRollup(in []rollup.Rollup) []OtelData {
 }
 
 func (f *OtelFormat) getLatestInputs(name string) []OtelData {
-	f.mux.Lock()
-	defer f.mux.Unlock()
-
-	nv := f.inputs[name]
-	f.inputs[name] = make([]OtelData, 0)
-	return nv
+	f.Debugf("Exporting data from otel for %s", name)
+	nv := make([]OtelData, 0, len(f.inputs[name]))
+	for {
+		select {
+		case v := <-f.inputs[name]:
+			nv = append(nv, v)
+		default:
+			return nv
+		}
+	}
 }
 
 func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
