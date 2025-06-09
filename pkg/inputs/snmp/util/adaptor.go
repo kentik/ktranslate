@@ -154,10 +154,10 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 	if device.Debug {
 		server.Logger = gosnmp.NewLogger(logWrapper{
 			print: func(v ...interface{}) {
-				log.Debugf("GoSNMP:" + fmt.Sprint(v...))
+				log.Debugf("GoSNMP: [hostname=" + device.DeviceName + "]" + fmt.Sprint(v...))
 			},
 			printf: func(format string, v ...interface{}) {
-				log.Debugf("GoSNMP:  "+format, v...)
+				log.Debugf("GoSNMP: [hostname="+device.DeviceName+"]"+format, v...)
 			},
 		})
 	}
