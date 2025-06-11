@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/go-logr/stdr"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats/util"
@@ -88,6 +89,11 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		}
 		tlsC = c
 	}
+
+	// Set up a logger for otel.
+	stdr.SetVerbosity(int(stdr.Info))
+	logger := stdr.NewWithOptions(jf, stdr.Options{Depth: 2})
+	otel.SetLogger(logger)
 
 	var exp sdkmetric.Exporter
 	switch cfg.Protocol {
@@ -714,4 +720,10 @@ func getTls(clientCert string, clientKey string, rootCA string) (*tls.Config, er
 	}
 
 	return c, nil
+}
+
+// From best I can tell, calldepth is always 2 here.
+func (f *OtelFormat) Output(calldepth int, logline string) error {
+	f.Infof("Otel: %s", logline)
+	return nil
 }
