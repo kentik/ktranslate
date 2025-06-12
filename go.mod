@@ -34,8 +34,8 @@ require (
 	github.com/kentik/api-schema-public v0.0.0-20220322181339-896729e59945
 	github.com/kentik/dashboard-api-golang v0.0.0-20240305065153-1c88e8477770
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
-	github.com/kentik/go-syslog v0.0.0-20240302065219-cea330e269ea
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e
+	github.com/kentik/the-library-formally-known-as-go-syslog v0.0.0-20250612051242-5618a3ded605
 	github.com/liamg/furious v0.0.0-20191231090757-c295c872d6c1
 	github.com/linkedin/goavro/v2 v2.10.1
 	github.com/montanaflynn/stats v0.7.0
