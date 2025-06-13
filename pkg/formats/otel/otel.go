@@ -185,10 +185,15 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			cv, err := otelm.Float64ObservableGauge(
 				lm.Name,
 				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					for _, mm := range f.getLatestInputs(lm.Name) {
-						o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+					f.Debugf("Exporting data from otel for %s", lm.Name)
+					for {
+						select {
+						case mm := <-f.inputs[lm.Name]:
+							o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+						default:
+							return nil
+						}
 					}
-					return nil
 				}),
 			)
 			if err != nil {
@@ -229,10 +234,15 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			cv, err := otelm.Float64ObservableGauge(
 				lm.Name,
 				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					for _, mm := range f.getLatestInputs(lm.Name) {
-						o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+					f.Debugf("Exporting data from otel for %s", lm.Name)
+					for {
+						select {
+						case mm := <-f.inputs[lm.Name]:
+							o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+						default:
+							return nil
+						}
 					}
-					return nil
 				}),
 			)
 			if err != nil {
@@ -294,19 +304,6 @@ func (f *OtelFormat) toOtelDataRollup(in []rollup.Rollup) []OtelData {
 		}
 	}
 	return ms
-}
-
-func (f *OtelFormat) getLatestInputs(name string) []OtelData {
-	f.Debugf("Exporting data from otel for %s", name)
-	nv := make([]OtelData, 0, len(f.inputs[name]))
-	for {
-		select {
-		case v := <-f.inputs[name]:
-			nv = append(nv, v)
-		default:
-			return nv
-		}
-	}
 }
 
 func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
