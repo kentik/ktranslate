@@ -54,9 +54,10 @@ type InterfaceMetadata struct {
 	log           logger.ContextL
 	mibs          map[string]*kt.Mib
 	interfaceOids *orderedmap.OrderedMap
+	debug         bool
 }
 
-func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL) *InterfaceMetadata {
+func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL, debug bool) *InterfaceMetadata {
 	mibs := map[string]*kt.Mib{}
 	m := orderedmap.NewOrderedMap()
 
@@ -64,7 +65,6 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
 		m.Set(el.Key, el.Value)
 	}
-
 
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
@@ -88,6 +88,7 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 
 	return &InterfaceMetadata{
 		log:           log,
+		debug:         debug,
 		mibs:          mibs,
 		interfaceOids: m,
 	}
@@ -116,7 +117,9 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 
 		for _, variable := range results {
 			parts := strings.Split(variable.Name, oidVal)
-			im.log.Debugf("SNMP %v:%+v", variable.Name, variable.Value)
+			if im.debug {
+				im.log.Debugf("SNMP %v:%+v", variable.Name, variable.Value)
+			}
 			if len(parts) != 2 || len(parts[1]) == 0 {
 				continue
 			}
@@ -382,7 +385,9 @@ func (im *InterfaceMetadata) UpdateForHuawei(server *gosnmp.GoSNMP, d *kt.Device
 	id2snmp := map[string]string{}
 	for _, variable := range results {
 		prts := strings.Split(variable.Name, SNMP_HUAWEI_ID_MAP_OID)
-		im.log.Debugf("[API] ", "SNMP %+v:%+v", variable.Name, variable.Value)
+		if im.debug {
+			im.log.Debugf("[API] ", "SNMP %+v:%+v", variable.Name, variable.Value)
+		}
 		if len(prts) == 2 {
 			// variable.Name looks like this: .<oid>.<intVal> (.1.3.6.1.2.1.31.1.1.1.10.219)
 			oidIdx := prts[1][1:]

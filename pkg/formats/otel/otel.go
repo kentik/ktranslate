@@ -11,6 +11,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/go-logr/stdr"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats/util"
@@ -36,9 +37,13 @@ type OtelFormat struct {
 	config       *ktranslate.OtelFormatConfig
 	vecs         map[string]metric.Float64ObservableGauge
 	ctx          context.Context
-	inputs       map[string][]OtelData
+	inputs       map[string]chan OtelData
 	trapLog      *OtelLogger
 }
+
+const (
+	CHAN_SLACK = 10000
+)
 
 var (
 	endpoint   string
@@ -72,7 +77,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		ctx:          context.Background(),
 		vecs:         map[string]metric.Float64ObservableGauge{},
 		config:       cfg,
-		inputs:       map[string][]OtelData{},
+		inputs:       map[string]chan OtelData{},
 	}
 
 	var tlsC *tls.Config = nil
@@ -84,6 +89,11 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		}
 		tlsC = c
 	}
+
+	// Set up a logger for otel.
+	stdr.SetVerbosity(int(stdr.Info))
+	logger := stdr.NewWithOptions(jf, stdr.Options{Depth: 2})
+	otel.SetLogger(logger)
 
 	var exp sdkmetric.Exporter
 	switch cfg.Protocol {
@@ -168,31 +178,41 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	f.mux.Lock()
-	defer f.mux.Unlock()
-
+	f.mux.RLock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			lm := m
 			cv, err := otelm.Float64ObservableGauge(
 				lm.Name,
 				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					for _, mm := range f.getLatestInputs(lm.Name) {
-						o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+					f.Debugf("Exporting data from otel for %s", lm.Name)
+					for {
+						select {
+						case mm := <-f.inputs[lm.Name]:
+							o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+						default:
+							return nil
+						}
 					}
-					return nil
 				}),
 			)
 			if err != nil {
+				f.mux.RUnlock()
 				return nil, err
 			}
+			f.mux.RUnlock()
+			f.mux.Lock()
 			f.vecs[lm.Name] = cv
-			f.inputs[lm.Name] = make([]OtelData, 0)
+			f.inputs[lm.Name] = make(chan OtelData, CHAN_SLACK)
+			f.mux.Unlock()
+			f.mux.RLock()
+			f.Infof("Creating otel export for %s", m.Name)
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] = append(f.inputs[m.Name], m)
+		f.inputs[m.Name] <- m
 	}
 
+	f.mux.RUnlock()
 	return nil, nil
 }
 
@@ -207,30 +227,40 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 		return nil, nil
 	}
 
-	f.mux.Lock()
-	defer f.mux.Unlock()
+	f.mux.RLock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
 			lm := m
 			cv, err := otelm.Float64ObservableGauge(
 				lm.Name,
 				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					for _, mm := range f.getLatestInputs(lm.Name) {
-						o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+					f.Debugf("Exporting data from otel for %s", lm.Name)
+					for {
+						select {
+						case mm := <-f.inputs[lm.Name]:
+							o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
+						default:
+							return nil
+						}
 					}
-					return nil
 				}),
 			)
 			if err != nil {
+				f.mux.RUnlock()
 				return nil, err
 			}
+			f.mux.RUnlock()
+			f.mux.Lock()
 			f.vecs[lm.Name] = cv
-			f.inputs[lm.Name] = make([]OtelData, 0)
+			f.inputs[lm.Name] = make(chan OtelData, CHAN_SLACK)
+			f.mux.Unlock()
+			f.mux.RLock()
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] = append(f.inputs[m.Name], m)
+		f.inputs[m.Name] <- m
 	}
 
+	f.mux.RUnlock()
 	return nil, nil
 }
 
@@ -274,15 +304,6 @@ func (f *OtelFormat) toOtelDataRollup(in []rollup.Rollup) []OtelData {
 		}
 	}
 	return ms
-}
-
-func (f *OtelFormat) getLatestInputs(name string) []OtelData {
-	f.mux.Lock()
-	defer f.mux.Unlock()
-
-	nv := f.inputs[name]
-	f.inputs[name] = make([]OtelData, 0)
-	return nv
 }
 
 func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
@@ -696,4 +717,10 @@ func getTls(clientCert string, clientKey string, rootCA string) (*tls.Config, er
 	}
 
 	return c, nil
+}
+
+// From best I can tell, calldepth is always 2 here.
+func (f *OtelFormat) Output(calldepth int, logline string) error {
+	f.Infof("Otel: %s", logline)
+	return nil
 }
