@@ -1,7 +1,7 @@
 package kt
 
 import (
-	sfmt "github.com/kentik/go-syslog/format"
+	sfmt "github.com/kentik/the-library-formally-known-as-go-syslog/format"
 
 	"net"
 )
