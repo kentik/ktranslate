@@ -9,9 +9,9 @@ import (
 	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
-	"github.com/kentik/go-syslog"
-	sfmt "github.com/kentik/go-syslog/format"
 	"github.com/kentik/ktranslate"
+	syslog "github.com/kentik/the-library-formally-known-as-go-syslog"
+	sfmt "github.com/kentik/the-library-formally-known-as-go-syslog/format"
 
 	"github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
