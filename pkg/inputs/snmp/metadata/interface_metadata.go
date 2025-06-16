@@ -62,9 +62,9 @@ func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.C
 	m := orderedmap.NewOrderedMap()
 
 	// Copy the global values into this map which is per device.
-	for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
-		m.Set(el.Key, el.Value)
-	}
+	//for el := SNMP_Interface_OIDS.Front(); el != nil; el = el.Next() {
+	//	m.Set(el.Key, el.Value)
+	//}
 
 	if len(interfaceMetadataMibs) > 0 {
 		oids := getFromCustomMap(interfaceMetadataMibs)
