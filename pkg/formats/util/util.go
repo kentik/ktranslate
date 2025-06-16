@@ -462,11 +462,11 @@ func CopyAttrForSnmp(attr map[string]interface{}, metricName string, name kt.Met
 		}
 
 		// These are getting dropped sometimes and we don't need to one in the other series.
-		if metricName == "if_AdminStatus" {
-			delete(attrNew, "if_OperStatus")
-		} else if metricName == "if_OperStatus" {
-			delete(attrNew, "if_AdminStatus")
-		}
+		//if metricName == "if_AdminStatus" {
+		//	delete(attrNew, "if_OperStatus")
+		//} else if metricName == "if_OperStatus" {
+		//	delete(attrNew, "if_AdminStatus")
+		//}
 
 		if len(attrNew) > MAX_ATTR_FOR_SNMP {
 			// Since NR limits us to 100 attributes, we need to prune. Take the first 100 lexographical keys.
