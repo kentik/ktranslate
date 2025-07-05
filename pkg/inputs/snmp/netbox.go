@@ -248,13 +248,18 @@ func checkCustomFields(conf *kt.SnmpConfig, res NBResult) bool {
 	return false
 }
 
+type netboxDeviceToCheck struct {
+	Name    string
+	Results []scan.Result
+}
+
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
 	mdb *mibs.MibDB, conf *kt.SnmpConfig, kentikDevices map[string]string, log logger.ContextL, ignoreMap map[string]bool, ignoreList []netip.Prefix) error {
 
 	log.Infof("Discovering devices from Netbox.")
 
-	var getDeviceList func(offset int32, results *[]scan.Result) error
-	getDeviceList = func(offset int32, results *[]scan.Result) error {
+	var getDeviceList func(offset int32, results *[]netboxDeviceToCheck) error
+	getDeviceList = func(offset int32, results *[]netboxDeviceToCheck) error {
 		limit := int32(500) // @TODO, what's a good limit here?
 		res, err := getDcimDevicesApi(ctx, conf, log, offset, limit)
 		if err != nil {
@@ -267,7 +272,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 				}
 			}
 
-			ipv, err := getIP(res, conf.Disco.Netbox, log)
+			ipvs, err := getIPs(res, conf.Disco.Netbox, log)
 			if err != nil {
 				if res.Name != nil {
 					log.Warnf("Skipping %v with bad IP: %v", *res.Name, err)
@@ -280,9 +285,13 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 					if res.DeviceType != nil && res.DeviceType.Model != nil {
 						model = *res.DeviceType.Model
 					}
-					*results = append(*results, scan.Result{Name: *res.Name, Manufacturer: model, Host: net.ParseIP(ipv.Addr().String())})
+					rr := make([]scan.Result, len(ipvs))
+					for i, ipv := range ipvs {
+						rr[i] = scan.Result{Name: *res.Name, Manufacturer: model, Host: net.ParseIP(ipv.Addr().String())}
+					}
+					*results = append(*results, netboxDeviceToCheck{Name: *res.Name, Results: rr})
 				} else {
-					log.Warnf("Skipping device with IP %v because of null Name value.", ipv.Addr().String())
+					log.Warnf("Skipping device with IP %v because of null Name value.", ipvs)
 				}
 			}
 		}
@@ -296,7 +305,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 		return nil
 	}
 
-	results := make([]scan.Result, 0)
+	results := make([]netboxDeviceToCheck, 0)
 	timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
 	stb := time.Now()
 	err := getDeviceList(0, &results)
@@ -309,15 +318,30 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 	st := time.Now()
 	log.Infof("Starting to check %d ips from netbox", len(results))
 	for i, result := range results {
-		if checkIfIgnored(result.Host.String(), ignoreMap, ignoreList) {
-			continue
+		for _, rr := range result.Results {
+			if checkIfIgnored(rr.Host.String(), ignoreMap, ignoreList) {
+				continue
+			}
+			wg.Add(1)
+			posit := fmt.Sprintf("%d/%d)", i+1, len(results))
+			go doubleCheckHost(rr, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
 		}
-		wg.Add(1)
-		posit := fmt.Sprintf("%d/%d)", i+1, len(results))
-		go doubleCheckHost(result, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
 	}
 	wg.Wait()
 	log.Infof("Checked %d ips in %v (from start: %v)", len(results), time.Now().Sub(st), time.Now().Sub(stb))
+
+	// Dedupe any extra devices which got added to the found devices set.
+	for _, result := range results {
+		for ii, rr := range result.Results {
+			if _, ok := foundDevices[rr.Host.String()]; ok {
+				// Since this current ip is valid, remove any subsequent ips which might have been added.
+				for i := ii + 1; i < len(result.Results); i++ {
+					delete(foundDevices, result.Results[i].Host.String())
+				}
+				break // We're good here, move on to next top level result.
+			}
+		}
+	}
 
 	return nil
 }
@@ -339,7 +363,7 @@ func getNextOffset(next *string, log logger.ContextL) int32 {
 	return int32(no)
 }
 
-func getIP(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) (netip.Prefix, error) {
+func getIPs(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) ([]netip.Prefix, error) {
 
 	getMyIP := func(target string) (netip.Prefix, error) {
 		switch target {
@@ -393,14 +417,19 @@ func getIP(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) (netip.Pref
 	}
 
 	pts := strings.Split(conf.NetboxIP, ",")
+	ires := []netip.Prefix{}
 	for _, target := range pts {
 		ipv, err := getMyIP(target)
 		if err != nil {
 			log.Warnf("Cannot get ip from target %s: %v", target, err)
 		} else {
-			return ipv, nil
+			ires = append(ires, ipv)
 		}
 	}
 
-	return netip.Prefix{}, fmt.Errorf("IP %s not set", conf.NetboxIP)
+	if len(ires) > 0 {
+		return ires, nil
+	}
+
+	return nil, fmt.Errorf("IP %s not set", conf.NetboxIP)
 }

@@ -14,7 +14,7 @@ import (
 type ntest struct {
 	nbresult []byte
 	target   string
-	res      string
+	res      []string
 }
 
 func TestGetIP(t *testing.T) {
@@ -23,7 +23,7 @@ func TestGetIP(t *testing.T) {
 
 	tests := []ntest{
 		ntest{
-			res:    "10.249.157.132",
+			res:    []string{"10.249.157.132"},
 			target: "primary",
 			nbresult: []byte(`{"primary_ip":{
         "id": 1639742,
@@ -34,7 +34,7 @@ func TestGetIP(t *testing.T) {
         "address": "10.249.157.132/32"
       }}`)},
 		ntest{
-			res:    "10.249.157.135",
+			res:    []string{"10.249.157.135"},
 			target: "oob",
 			nbresult: []byte(`{"oob_ip":{
         "id": 1639742,
@@ -45,7 +45,7 @@ func TestGetIP(t *testing.T) {
         "address": "10.249.157.135/32"
       }}`)},
 		ntest{
-			res:    "10.249.157.135",
+			res:    []string{"10.249.157.135"},
 			target: "oob,primary_ip4",
 			nbresult: []byte(`{"oob_ip":null,"primary_ip4":{
         "id": 1639742,
@@ -56,9 +56,20 @@ func TestGetIP(t *testing.T) {
         "address": "10.249.157.135/32"
       }}`)},
 		ntest{
-			res:    "dead::beef",
+			res:    []string{"dead::beef"},
 			target: "oob,primary_ip4,primary_ip6",
 			nbresult: []byte(`{"oob_ip":null,"primary_ip4":null,"primary_ip6":{
+        "id": 1639742,
+        "family": {
+          "value": 6,
+          "label": "IPv6"
+        },
+        "address": "dead::beef/64"
+      }}`)},
+		ntest{
+			res:    []string{"dead::beef", "127.0.0.1"},
+			target: "primary_ip6,primary",
+			nbresult: []byte(`{"primary_ip":{"address":"127.0.0.1/32"},"primary_ip6":{
         "id": 1639742,
         "family": {
           "value": 6,
@@ -73,8 +84,10 @@ func TestGetIP(t *testing.T) {
 		nbRes := NBResult{}
 		err := json.Unmarshal(test.nbresult, &nbRes)
 		assert.Nil(err)
-		ipv, err := getIP(nbRes, &conf, l)
+		ipvs, err := getIPs(nbRes, &conf, l)
 		assert.Nil(err)
-		assert.Equal(test.res, ipv.Addr().String())
+		for i, ipv := range ipvs {
+			assert.Equal(test.res[i], ipv.Addr().String())
+		}
 	}
 }
