@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -339,34 +340,67 @@ func getNextOffset(next *string, log logger.ContextL) int32 {
 }
 
 func getIP(res NBResult, conf *kt.NetboxConfig, log logger.ContextL) (netip.Prefix, error) {
-	switch conf.NetboxIP {
-	case "primary":
-		log.Infof("Looking at primary_ip %s", res.PrimaryIp.GetVal())
-		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
-			addr := *res.PrimaryIp.Address
-			if addr != "" {
-				ipv, err := netip.ParsePrefix(addr)
-				return ipv, err
+
+	getMyIP := func(target string) (netip.Prefix, error) {
+		switch target {
+		case "primary":
+			log.Infof("Looking at primary_ip %s", res.PrimaryIp.GetVal())
+			if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
+				addr := *res.PrimaryIp.Address
+				if addr != "" {
+					ipv, err := netip.ParsePrefix(addr)
+					return ipv, err
+				}
+			}
+		case "primary_ip4":
+			log.Infof("Looking at primary_ip4 %s", res.PrimaryIpv4.GetVal())
+			if res.PrimaryIpv4 != nil && res.PrimaryIpv4.Address != nil {
+				addr := *res.PrimaryIpv4.Address
+				if addr != "" {
+					ipv, err := netip.ParsePrefix(addr)
+					return ipv, err
+				}
+			}
+		case "primary_ip6":
+			log.Infof("Looking at primary_ip6 %s", res.PrimaryIpv6.GetVal())
+			if res.PrimaryIpv6 != nil && res.PrimaryIpv6.Address != nil {
+				addr := *res.PrimaryIpv6.Address
+				if addr != "" {
+					ipv, err := netip.ParsePrefix(addr)
+					return ipv, err
+				}
+			}
+		case "oob":
+			log.Infof("Looking at oob %v", res.OobIp.GetVal())
+			if res.OobIp != nil && res.OobIp.Address != nil {
+				addr := *res.OobIp.Address
+				if addr != "" {
+					ipv, err := netip.ParsePrefix(addr)
+					return ipv, err
+				}
+			}
+		default:
+			log.Infof("Looking at primary_ip %v", res.PrimaryIp.GetVal())
+			if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
+				addr := *res.PrimaryIp.Address
+				if addr != "" {
+					ipv, err := netip.ParsePrefix(addr)
+					return ipv, err
+				}
 			}
 		}
-	case "oob":
-		log.Infof("Looking at oob %v", res.OobIp.GetVal())
-		if res.OobIp != nil && res.OobIp.Address != nil {
-			addr := *res.OobIp.Address
-			if addr != "" {
-				ipv, err := netip.ParsePrefix(addr)
-				return ipv, err
-			}
-		}
-	default:
-		log.Infof("Looking at primary_ip %v", res.PrimaryIp.GetVal())
-		if res.PrimaryIp != nil && res.PrimaryIp.Address != nil {
-			addr := *res.PrimaryIp.Address
-			if addr != "" {
-				ipv, err := netip.ParsePrefix(addr)
-				return ipv, err
-			}
+		return netip.Prefix{}, fmt.Errorf("IP %s not set", conf.NetboxIP)
+	}
+
+	pts := strings.Split(conf.NetboxIP, ",")
+	for _, target := range pts {
+		ipv, err := getMyIP(target)
+		if err != nil {
+			log.Warnf("Cannot get ip from target %s: %v", target, err)
+		} else {
+			return ipv, nil
 		}
 	}
+
 	return netip.Prefix{}, fmt.Errorf("IP %s not set", conf.NetboxIP)
 }
