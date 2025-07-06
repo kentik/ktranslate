@@ -336,7 +336,9 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			if _, ok := foundDevices[rr.Host.String()]; ok {
 				// Since this current ip is valid, remove any subsequent ips which might have been added.
 				for i := ii + 1; i < len(result.Results); i++ {
-					delete(foundDevices, result.Results[i].Host.String())
+					if rr.Host.String() != result.Results[i].Host.String() {
+						delete(foundDevices, result.Results[i].Host.String())
+					}
 				}
 				break // We're good here, move on to next top level result.
 			}
