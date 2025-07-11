@@ -24,7 +24,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -api_device_file string
     	File to sideload devices without hitting API
   -api_devices string
-    	json file containing dumy devices to use for the stub Kentik API
+    	json file containing dummy devices to use for the stub Kentik API
   -api_root string
     	API url prefix. If not set, defaults to https://api.kentik.com (default "https://api.kentik.com")
   -application_map string
@@ -48,7 +48,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -file_flush_sec int
     	Create a new output file every this many seconds (default 60)
   -file_on
-    	If true, start writting to file sink right away. Otherwise, wait for a USR1 signal
+    	If true, start writing to file sink right away. Otherwise, wait for a USR1 signal
   -file_out string
     	Write flows seen to log to this directory if set (default "./")
   -filters value
@@ -126,7 +126,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nf.port int
     	Sflow/NetFlow/IPFIX listening port (default 9995)
   -nf.prom.listen string
-    	Run a promethues metrics collector here
+    	Run a Prometheus metrics collector here
   -nf.reuserport
     	Enable so_reuseport for Sflow/NetFlow/IPFIX
   -nf.source string
@@ -148,7 +148,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -prom_listen string
     	Bind to listen for prometheus requests on. (default ":8082")
   -prom_seen int
-    	Number of flows needed inbound before we start writting to the collector (default 10)
+    	Number of flows needed inbound before we start writing to the collector (default 10)
   -rollup_and_alpha
     	Send both rollups and alpha inputs to sinks
   -rollup_interval int
