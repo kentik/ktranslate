@@ -69,11 +69,6 @@ jobs:
             pkg_name: debian
             image: debian:bullseye
           - distro: debian
-            release: buster
-            pkg: deb
-            pkg_name: debian
-            image: debian:buster
-          - distro: debian
             release: bookworm
             pkg: deb
             pkg_name: debian
@@ -171,12 +166,6 @@ jobs:
             gem -v
           fi
           REPO="${{ github.event.repository.name }}"
-          if [ "${{ matrix.release }}" = "buster" ] # Also some special casing here for buster
-          then
-            gem install rake
-            gem install thor -v 1.2.2
-            gem install domain_name -v 0.5.20190701
-          fi
           gem install package_cloud
           package_cloud push kentik/$REPO/${{ matrix.pkg_name }}/${{ matrix.release }} ${{ steps.package.outputs.package }}
 
