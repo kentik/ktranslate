@@ -1908,10 +1908,13 @@ func (c *MerakiClient) parseDeviceStatus(devices []*deviceStatusWrapper) ([]*kt.
 			"mac":          wrap.device.Mac,
 			"model":        wrap.device.Model,
 			"product_type": wrap.device.ProductType,
-			"lat":          fmt.Sprintf("%f", wrap.info.Lat),
-			"lng":          fmt.Sprintf("%f", wrap.info.Lng),
-			"address":      wrap.info.Address,
-			"notes":        wrap.info.Notes,
+		}
+
+		if wrap.info != nil {
+			dst.CustomStr["lat"] = fmt.Sprintf("%f", wrap.info.Lat)
+			dst.CustomStr["lng"] = fmt.Sprintf("%f", wrap.info.Lng)
+			dst.CustomStr["address"] = wrap.info.Address
+			dst.CustomStr["notes"] = wrap.info.Notes
 		}
 
 		dst.CustomInt = map[string]int32{}
