@@ -496,6 +496,10 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.S3Sink.AssumeRoleARN = val
 			case "s3_region":
 				cfg.S3Sink.Region = val
+			case "s3_endpoint":
+				cfg.S3Sink.Endpoint = val
+			case "s3_signing_region":
+				cfg.S3Sink.SigningRegion = val
 			case "ec2_instance_profile":
 				v, err := strconv.ParseBool(val)
 				if err != nil {
