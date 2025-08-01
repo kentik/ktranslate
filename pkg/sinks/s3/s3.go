@@ -10,9 +10,11 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/ec2metadata"
+	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -31,6 +33,8 @@ var (
 	s3Region                                      string
 	ec2InstanceProfile                            bool
 	ec2assumeRoleOrInstanceProfileIntervalSeconds int
+	s3Endpoint                                    string
+	s3SigningRegion                               string
 )
 
 // var wg sync.WaitGroup
@@ -43,6 +47,8 @@ func init() {
 	flag.StringVar(&s3Region, "s3_region", "us-east-1", "S3 Bucket region where S3 bucket is created")
 	flag.BoolVar(&ec2InstanceProfile, "ec2_instance_profile", false, "EC2 Instance Profile")
 	flag.IntVar(&ec2assumeRoleOrInstanceProfileIntervalSeconds, "assume_role_or_instance_profile_interval_seconds", 900, "Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds")
+	flag.StringVar(&s3Endpoint, "s3_endpoint", "", "S3 Endpoint")
+	flag.StringVar(&s3SigningRegion, "s3_signing_region", "", "S3 endpoint signing region")
 }
 
 type S3Sink struct {
@@ -95,10 +101,7 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 		svc := ec2metadata.New(session.Must(session.NewSession()))
 		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
 		sess := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
+			session.NewSession(s.getAwsConfig(ec2_role_creds)),
 		)
 		_, err_role := ec2_role_creds.Get()
 		s.Infof("Credentials %v: ", ec2_role_creds)
@@ -116,7 +119,7 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 			return err
 		}
 	} else {
-		sess := session.Must(session.NewSession())
+		sess := session.Must(session.NewSession(s.getAwsConfig(nil)))
 		s.Infof("Session is created using default settings")
 		s.client = s3manager.NewUploader(sess)
 		s.dl = s3manager.NewDownloader(sess)
@@ -124,6 +127,8 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 
 	if format == formats.FORMAT_PARQUET {
 		s.suffix = ".parquet"
+	} else if format == formats.FORMAT_AVRO {
+		s.suffix = ".avro"
 	} else {
 		switch compression {
 		case kt.CompressionNone, kt.CompressionNull:
@@ -264,12 +269,7 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 
 		svc := ec2metadata.New(session.Must(session.NewSession()))
 		ec2_role_creds := ec2rolecreds.NewCredentialsWithClient(svc)
-		sess_tmp := session.Must(
-			session.NewSession(&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: ec2_role_creds,
-			}),
-		)
+		sess_tmp := session.Must(session.NewSession(s.getAwsConfig(ec2_role_creds)))
 		_, err_role := ec2_role_creds.Get()
 		if err_role != nil {
 			s.Errorf("Not able to retrieve credentials via Instance Profile. ARN: %v. ERROR: %v", s.config.AssumeRoleARN, err_role)
@@ -284,12 +284,7 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 		}
 
 		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
+		sess, err := session.NewSession(s.getAwsConfig(creds))
 		if err != nil {
 			s.Errorf("Session is not created ERROR: %v", err)
 			return nil, nil, err
@@ -315,12 +310,7 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 		}
 
 		// Creating a new session from assume role
-		sess, err := session.NewSession(
-			&aws.Config{
-				Region:      aws.String(s.config.Region),
-				Credentials: creds,
-			},
-		)
+		sess, err := session.NewSession(s.getAwsConfig(creds))
 		if err != nil {
 			s.Errorf("Session is not created with region %v, %v", s.config.Region, err)
 			return nil, nil, err
@@ -330,4 +320,28 @@ func (s *S3Sink) tmp_credentials(ctx context.Context) (*s3manager.Uploader, *s3m
 
 		return s3manager.NewUploader(sess), s3manager.NewDownloader(sess), nil
 	}
+}
+
+func (s *S3Sink) getAwsConfig(creds *credentials.Credentials) *aws.Config {
+	config := aws.Config{
+		Region:      aws.String(s.config.Region),
+		Credentials: creds,
+	}
+
+	myCustomResolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+		if service == endpoints.S3ServiceID {
+			return endpoints.ResolvedEndpoint{
+				URL:           s.config.Endpoint,
+				SigningRegion: s.config.SigningRegion,
+			}, nil
+		}
+
+		return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
+	}
+
+	if s.config.Endpoint != "" {
+		config.EndpointResolver = endpoints.ResolverFunc(myCustomResolver)
+	}
+
+	return &config
 }

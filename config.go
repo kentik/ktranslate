@@ -78,6 +78,8 @@ type S3SinkConfig struct {
 	EC2InstanceProfile                         bool
 	AssumeRoleOrInstanceProfileIntervalSeconds int
 	CheckDangling                              bool
+	Endpoint                                   string
+	SigningRegion                              string
 }
 
 // NetSinkConfig is the config for the net sink
@@ -425,6 +427,8 @@ func DefaultConfig() *Config {
 			EC2InstanceProfile:   false,
 			AssumeRoleOrInstanceProfileIntervalSeconds: 900,
 			CheckDangling: false,
+			Endpoint:      "",
+			SigningRegion: "",
 		},
 		NetSink: &NetSinkConfig{
 			Endpoint: "",
