@@ -691,6 +691,8 @@ func (d *OtelData) GetTagValues() attribute.Set {
 		case uint64:
 			res = append(res, attribute.Int64(k, int64(t)))
 		default:
+			// Convert unknown types to string representation
+			res = append(res, attribute.String(k, fmt.Sprintf("%v", t)))
 		}
 	}
 	s, _ := attribute.NewSetWithFiltered(res, func(kv attribute.KeyValue) bool { return true })
