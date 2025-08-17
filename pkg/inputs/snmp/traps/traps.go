@@ -23,6 +23,18 @@ const (
 	snmpTrapOID_0 = ".1.3.6.1.6.3.1.1.4.1.0"
 )
 
+var (
+	v1TrapEnum = map[int]string{
+		0: "coldStart",
+		1: "warmStart",
+		2: "linkDown",
+		3: "linkUp",
+		4: "authenticationFailure",
+		5: "egpNeighborLoss",
+		6: "enterpriseSpeciﬁc",
+	}
+)
+
 type SnmpTrap struct {
 	log       logger.ContextL
 	jchfChan  chan []*kt.JCHF
@@ -217,6 +229,14 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 				}
 			}
 		}
+	}
+
+	// Handle v1 traps here.
+	if packet.Version == gosnmp.Version1 {
+		dst.CustomStr["GenericTrap"] = fmt.Sprintf("%s (%d)", v1TrapEnum[packet.GenericTrap], packet.GenericTrap)
+		dst.CustomInt["SpecificTrap"] = int32(packet.SpecificTrap)
+		dst.CustomStr["Enterprise"] = packet.Enterprise
+		dst.CustomBigInt["Timestamp"] = int64(packet.Timestamp)
 	}
 
 	for _, v := range packet.Variables {
