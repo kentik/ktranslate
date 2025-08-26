@@ -70,6 +70,10 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 			if vt > 0 {
 				attr[k] = int(vt)
 			}
+		case uint64:
+			if vt > 0 {
+				attr[k] = int(vt)
+			}
 		default:
 			panic(fmt.Sprintf("Unknown type: %v", v.(int32)))
 		}

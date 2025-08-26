@@ -34,6 +34,6 @@ func TestNine(t *testing.T) {
 		assert.Equal(kt.InputTesting[i].DstAddr, out[i]["dst_addr"])
 		assert.Equal(int(kt.InputTesting[i].L4DstPort), int(out[i]["l4_dst_port"].(int64)))
 		assert.Equal(int(kt.InputTesting[i].OutputPort), int(out[i]["output_port"].(int64)))
-		assert.Equal(int(kt.InputTesting[i].InBytes), int(out[i]["in_bytes"].(int64)))
+		assert.Equal(int(kt.InputTesting[i].InBytes), int(out[i]["in_bytes"].(uint64)))
 	}
 }

@@ -145,6 +145,10 @@ func (f *AvroFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	values := make([]map[string]interface{}, len(msgs))
 	for i, m := range msgs {
 		values[i] = m.ToMap()
+		values[i]["in_bytes"] = int64(values[i]["in_bytes"].(uint64))
+		values[i]["in_pkts"] = int64(values[i]["in_pkts"].(uint64))
+		values[i]["out_bytes"] = int64(values[i]["out_bytes"].(uint64))
+		values[i]["out_pkts"] = int64(values[i]["out_pkts"].(uint64))
 	}
 
 	cfg := goavro.OCFConfig{

@@ -273,8 +273,8 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["tos"] = int64(j.Tos)
 	j.avroSet["vlan_in"] = int64(j.VlanIn)
 	j.avroSet["vlan_out"] = int64(j.VlanOut)
-	j.avroSet["out_bytes"] = int64(j.OutBytes)
-	j.avroSet["out_pkts"] = int64(j.OutPkts)
+	j.avroSet["out_bytes"] = uint64(j.OutBytes)
+	j.avroSet["out_pkts"] = uint64(j.OutPkts)
 	j.avroSet["tcp_rx"] = int64(j.TcpRetransmit)
 	j.avroSet["src_flow_tags"] = j.SrcFlowTags
 	j.avroSet["dst_flow_tags"] = j.DstFlowTags
