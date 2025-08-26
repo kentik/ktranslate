@@ -257,8 +257,8 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["dst_as"] = int64(j.DstAs)
 	j.avroSet["dst_geo"] = j.DstGeo
 	j.avroSet["header_len"] = int64(j.HeaderLen)
-	j.avroSet["in_bytes"] = int64(j.InBytes)
-	j.avroSet["in_pkts"] = int64(j.InPkts)
+	j.avroSet["in_bytes"] = uint64(j.InBytes)
+	j.avroSet["in_pkts"] = uint64(j.InPkts)
 	j.avroSet["input_port"] = int64(j.InputPort)
 	j.avroSet["dst_addr"] = j.DstAddr
 	j.avroSet["src_addr"] = j.SrcAddr
