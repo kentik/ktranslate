@@ -378,31 +378,58 @@ type log struct {
 
 func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	ts := time.Now().Unix()
-	ls := logSet{
+	ls_non_syslogs := logSet{
 		Common: &common{
 			Attributes: map[string]string{
 				"instrumentation.provider": kt.InstProvider,
 				"collector.name":           kt.CollectorName,
 			},
 		},
-		Logs: make([]log, len(logs)),
-	}
-	hasSyslog := false
-	for i, l := range logs {
-		ls.Logs[i] = log{
-			Timestamp: ts,
-			Message:   l,
-		}
-		if !hasSyslog && strings.Contains(l, kt.PluginSyslog) {
-			hasSyslog = true
-		}
-	}
-	if !hasSyslog {
-		ls.Common.Attributes["plugin.type"] = kt.PluginHealth
-		ls.Common.Attributes["logtype"] = "ktranslate-health"
+		Logs: make([]log, 0, len(logs)),
 	}
 
-	target, err := json.Marshal([]logSet{ls}) // Has to be an array here, no idea why.
+	ls_syslogs := logSet{
+		Common: &common{
+			Attributes: map[string]string{
+				"instrumentation.provider": kt.InstProvider,
+				"collector.name":           kt.CollectorName,
+			},
+		},
+		Logs: make([]log, 0, len(logs)),
+	}
+
+	for _, l := range logs {
+		if strings.Contains(l, kt.PluginSyslog) {
+			ls_syslogs.Logs = append(ls_syslogs.Logs, log{
+				Timestamp: ts,
+				Message:   l,
+				})
+		}else{
+			ls_non_syslogs.Logs = append(ls_non_syslogs.Logs, log{
+				Timestamp: ts,
+				Message:   l,
+				})
+
+		}
+	}
+
+	if len(ls_non_syslogs.Logs) > 0 {
+		ls_non_syslogs.Common.Attributes["plugin.type"] = kt.PluginHealth
+		ls_non_syslogs.Common.Attributes["logtype"] = "ktranslate-health"
+
+		s.sendLogBatchToNR(ctx, ls_non_syslogs)
+	}
+
+	if len(ls_syslogs.Logs) > 0 {
+		s.sendLogBatchToNR(ctx, ls_syslogs)
+	}
+
+	return
+}
+
+func (s *NRSink) sendLogBatchToNR(ctx context.Context, logset logSet) {
+
+	target, err := json.Marshal([]logSet{logset}) // Has to be an array here, no idea why.
 	if err != nil {
 		s.Errorf("There was an error with logs: %v.", err)
 		return
