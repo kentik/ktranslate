@@ -378,7 +378,7 @@ type log struct {
 
 func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	ts := time.Now().Unix()
-	ls_non_syslogs := logSet{
+	ls_healthlogs := logSet{
 		Common: &common{
 			Attributes: map[string]string{
 				"instrumentation.provider": kt.InstProvider,
@@ -399,25 +399,26 @@ func (s *NRSink) sendLogBatch(ctx context.Context, logs []string) {
 	}
 
 	for _, l := range logs {
+		//The ktranslate-health logs have to be sent in a different
+		//  batch than syslogs because they have different logtypes
 		if strings.Contains(l, kt.PluginSyslog) {
 			ls_syslogs.Logs = append(ls_syslogs.Logs, log{
 				Timestamp: ts,
 				Message:   l,
 				})
 		}else{
-			ls_non_syslogs.Logs = append(ls_non_syslogs.Logs, log{
+			ls_healthlogs.Logs = append(ls_healthlogs.Logs, log{
 				Timestamp: ts,
 				Message:   l,
 				})
-
 		}
 	}
 
-	if len(ls_non_syslogs.Logs) > 0 {
-		ls_non_syslogs.Common.Attributes["plugin.type"] = kt.PluginHealth
-		ls_non_syslogs.Common.Attributes["logtype"] = "ktranslate-health"
+	if len(ls_healthlogs.Logs) > 0 {
+		ls_healthlogs.Common.Attributes["plugin.type"] = kt.PluginHealth
+		ls_healthlogs.Common.Attributes["logtype"] = "ktranslate-health"
 
-		s.sendLogBatchToNR(ctx, ls_non_syslogs)
+		s.sendLogBatchToNR(ctx, ls_healthlogs)
 	}
 
 	if len(ls_syslogs.Logs) > 0 {
