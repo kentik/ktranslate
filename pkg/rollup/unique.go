@@ -3,6 +3,7 @@ package rollup
 import (
 	"encoding/binary"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/kentik/ktranslate"
@@ -156,9 +157,10 @@ func (r *UniqueRollup) exportUnique(uniques map[string]gohll.HLL, count map[stri
 	r.dtime = time.Now()
 	keys := make([]Rollup, 0, len(uniques))
 	totalc := uint64(0)
+	fullName := strings.Join(r.nameSet, ";")
 	for k, v := range uniques {
 		keys = append(keys, Rollup{
-			Name: r.name, EventType: r.eventType, Dimension: k,
+			Name: fullName, EventType: r.eventType, Dimension: k,
 			Metric: float64(v.EstimateCardinality()), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
 			Count: count[k], Provider: prov[k],
 		})

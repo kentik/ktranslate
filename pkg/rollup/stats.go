@@ -217,6 +217,7 @@ func (r *StatsRollup) Export() []Rollup {
 	r.dtime = time.Now()
 	keys := make([]Rollup, len(os))
 	next := 0
+	fullName := strings.Join(r.nameSet, ";")
 	for k, v := range os {
 		var value float64
 		var err error
@@ -228,7 +229,7 @@ func (r *StatsRollup) Export() []Rollup {
 		if err != nil {
 			r.Errorf("Error calculating: %v", err)
 		} else {
-			keys[next] = Rollup{Name: r.name, EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot)}
+			keys[next] = Rollup{Name: fullName, EventType: r.eventType, Dimension: k, Metric: value, KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot)}
 			next++
 		}
 	}
@@ -291,24 +292,27 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 
 	ot := r.dtime
 	r.dtime = time.Now()
-	keys := make([]Rollup, 0, len(sum))
-	total := uint64(0)
-	totalc := uint64(0)
-	for k, v := range sum {
-		keys = append(keys, Rollup{
-			Name: r.name, EventType: r.eventType, Dimension: k,
-			Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
-			Count: count[k], Min: min[k], Max: max[k], Provider: prov[k],
-		})
-		total += v
-		totalc += count[k]
-	}
+	for _, name := range r.nameSet {
+		r.Infof("XXX %v", name)
+		keys := make([]Rollup, 0, len(sum))
+		total := uint64(0)
+		totalc := uint64(0)
+		for k, v := range sum {
+			keys = append(keys, Rollup{
+				Name: name, EventType: r.eventType, Dimension: k,
+				Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
+				Count: count[k], Min: min[k], Max: max[k], Provider: prov[k],
+			})
+			total += v
+			totalc += count[k]
+		}
 
-	sort.Sort(byValue(keys))
-	if r.config.TopK > 0 && len(keys) > r.config.TopK {
-		rc <- keys[0:r.config.TopK] // Return only the expected number, as sorted.
-	} else {
-		rc <- keys
+		sort.Sort(byValue(keys))
+		if r.config.TopK > 0 && len(keys) > r.config.TopK {
+			rc <- keys[0:r.config.TopK] // Return only the expected number, as sorted.
+		} else {
+			rc <- keys
+		}
 	}
 
 	return

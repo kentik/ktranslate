@@ -54,6 +54,12 @@ func TestRollup(t *testing.T) {
 			Formats:       []string{"sum,sum_bytes_in,in_bytes,ccc,custom_str.aaa$$---$$custom_str.bbb"},
 			KeepUndefined: true,
 		},
+		ktranslate.RollupConfig{
+			JoinKey:       "^",
+			TopK:          2,
+			Formats:       []string{"sum,sum_bytes_in;sum_bytes_out,in_bytes;out_bytes,foo,bar"},
+			KeepUndefined: false,
+		},
 	}
 
 	inputs := [][]map[string]interface{}{
@@ -167,6 +173,32 @@ func TestRollup(t *testing.T) {
 				"provider":    kt.Provider("pp"),
 			},
 		},
+		[]map[string]interface{}{
+			map[string]interface{}{
+				"in_bytes":    int64(10),
+				"out_bytes":   int64(10),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(34),
+				"out_bytes":   int64(34),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(44),
+				"out_bytes":   int64(55),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+		},
 	}
 
 	outputs := []map[string]interface{}{
@@ -193,6 +225,10 @@ func TestRollup(t *testing.T) {
 		map[string]interface{}{
 			"metric":     40,
 			"dimensions": []string{"ccc", "aaa---bbb"},
+		},
+		map[string]interface{}{
+			"metric":     44,
+			"dimensions": []string{"bbb", "ccc"},
 		},
 	}
 
