@@ -188,6 +188,7 @@ type rollupBase struct {
 	nameSet      []string
 	filters      []filter.FilterWrapper
 	hasFilters   bool
+	splitMetrics bool
 }
 
 type splitDim struct {
@@ -234,7 +235,13 @@ func (r *rollupBase) init(rd RollupDef) error {
 		pts := strings.Split(m, ".")
 		switch len(pts) {
 		case 1:
-			r.metrics = append(r.metrics, m)
+			splitSet := strings.Split(m, ";")
+			if len(splitSet) > 1 {
+				r.splitMetrics = true
+				r.metrics = append(r.metrics, splitSet...)
+			} else {
+				r.metrics = append(r.metrics, m)
+			}
 		case 2:
 			r.multiMetrics = append(r.multiMetrics, pts)
 		default:

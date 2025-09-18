@@ -2,6 +2,7 @@ package rollup
 
 import (
 	"fmt"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -32,11 +33,11 @@ type StatsRollup struct {
 }
 
 type sumset struct {
-	sum   map[string]uint64
-	count map[string]uint64
-	min   map[string]uint64
-	max   map[string]uint64
-	prov  map[string]kt.Provider
+	sum   map[string][]uint64
+	count uint64
+	min   uint64
+	max   uint64
+	prov  kt.Provider
 }
 
 func newStatsRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.RollupConfig) (*StatsRollup, error) {
@@ -95,50 +96,68 @@ func newStatsRollup(log logger.Underlying, rd RollupDef, cfg *ktranslate.RollupC
 }
 
 func (r *StatsRollup) addSum(in []map[string]interface{}) {
-	sum := map[string]uint64{}
-	count := map[string]uint64{}
-	min := map[string]uint64{}
-	max := map[string]uint64{}
-	prov := map[string]kt.Provider{}
+	sum := map[string][]uint64{}
+	count := uint64(0)
+	min := uint64(math.MaxUint64)
+	max := uint64(0)
+	prov := kt.Provider("")
 
 	for _, mapr := range in {
 		key := r.getKey(mapr)
 		sr := uint64(mapr["sample_rate"].(int64))
 		value := uint64(0)
+		if sum[key] == nil {
+			sum[key] = make([]uint64, len(r.nameSet))
+		}
 
-		for _, metric := range r.metrics { // 1 level deap one first.
-			if mm, ok := mapr[metric]; ok {
-				if m, ok := mm.(int64); ok {
-					value += uint64(m)
+		if r.splitMetrics {
+			for i, metric := range r.metrics { // 1 level deap one first.
+				vv := uint64(0)
+				if mm, ok := mapr[metric]; ok {
+					if m, ok := mm.(int64); ok {
+						vv += uint64(m)
+					}
+				}
+				if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
+					vv *= sr
+				}
+				sum[key][i] += vv
+				value += vv
+			}
+		} else {
+			for _, metric := range r.metrics { // 1 level deap one first.
+				if mm, ok := mapr[metric]; ok {
+					if m, ok := mm.(int64); ok {
+						value += uint64(m)
+					}
 				}
 			}
-		}
-
-		for _, m := range r.multiMetrics { // Now handle the 2 level deep metrics
-			if m1, ok := mapr[m[0]]; ok {
-				switch mm := m1.(type) {
-				case map[string]int32:
-					value += uint64(mm[m[1]])
-				case map[string]int64:
-					value += uint64(mm[m[1]])
+			for _, m := range r.multiMetrics { // Now handle the 2 level deep metrics
+				if m1, ok := mapr[m[0]]; ok {
+					switch mm := m1.(type) {
+					case map[string]int32:
+						value += uint64(mm[m[1]])
+					case map[string]int64:
+						value += uint64(mm[m[1]])
+					}
 				}
 			}
+
+			if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
+				value *= sr
+			}
+			sum[key][0] += value
+		}
+		count++
+
+		if min > value {
+			min = value
+		}
+		if max < value {
+			max = value
 		}
 
-		if r.sample && sr > 0 { // If we are adjusting for sample rate for this rollup, do so now.
-			value *= sr
-		}
-		sum[key] += value
-		count[key]++
-		if _, ok := min[key]; !ok {
-			min[key] = value
-		} else if min[key] > value {
-			min[key] = value
-		}
-		if max[key] < value {
-			max[key] = value
-		}
-		prov[key] = mapr["provider"].(kt.Provider)
+		prov = mapr["provider"].(kt.Provider)
 	}
 
 	// Dump into our hash map here
@@ -243,48 +262,43 @@ func (r *StatsRollup) Export() []Rollup {
 }
 
 func (r *StatsRollup) sumKvs() {
-	sum := map[string]uint64{}
-	count := map[string]uint64{}
-	min := map[string]uint64{}
-	max := map[string]uint64{}
-	prov := map[string]kt.Provider{}
+	sum := map[string][]uint64{}
+	count := uint64(0)
+	min := uint64(math.MaxUint64)
+	max := uint64(0)
+	prov := kt.Provider("")
 
 	for {
 		select {
 		case itm := <-r.kvs: // Just add to our map // 	case r.kvs <- []map[string]int64{sum, count, min, max}:
 			for k, v := range itm.sum {
-				sum[k] += v
-			}
-			for k, v := range itm.count {
-				count[k] += v
-			}
-			for k, v := range itm.min {
-				if _, ok := min[k]; !ok {
-					min[k] = v
-				} else if min[k] > v {
-					min[k] = v
+				if sum[k] == nil {
+					sum[k] = make([]uint64, len(v))
+				}
+				for i, vv := range v {
+					sum[k][i] += vv
 				}
 			}
-			for k, v := range itm.max {
-				if max[k] < v {
-					max[k] = v
-				}
+			count += itm.count
+			if min > itm.min {
+				min = itm.min
 			}
-			for k, v := range itm.prov {
-				prov[k] = v
+			if max < itm.max {
+				max = itm.max
 			}
+			prov = itm.prov
 		case rc := <-r.exportKvs: // Return the top results
 			go r.exportSum(sum, count, min, max, prov, rc)
-			sum = map[string]uint64{}
-			count = map[string]uint64{}
-			min = map[string]uint64{}
-			max = map[string]uint64{}
-			prov = map[string]kt.Provider{}
+			sum = map[string][]uint64{}
+			count = 0
+			min = 0
+			max = 0
+			prov = kt.Provider("")
 		}
 	}
 }
 
-func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, min map[string]uint64, max map[string]uint64, prov map[string]kt.Provider, rc chan []Rollup) {
+func (r *StatsRollup) exportSum(sum map[string][]uint64, count uint64, min uint64, max uint64, prov kt.Provider, rc chan []Rollup) {
 	if len(sum) == 0 {
 		rc <- nil
 		return
@@ -292,28 +306,26 @@ func (r *StatsRollup) exportSum(sum map[string]uint64, count map[string]uint64, 
 
 	ot := r.dtime
 	r.dtime = time.Now()
-	for _, name := range r.nameSet {
-		r.Infof("XXX %v", name)
+	fullKeys := make([]Rollup, 0, len(sum))
+	for i, name := range r.nameSet {
 		keys := make([]Rollup, 0, len(sum))
-		total := uint64(0)
-		totalc := uint64(0)
 		for k, v := range sum {
 			keys = append(keys, Rollup{
 				Name: name, EventType: r.eventType, Dimension: k,
-				Metric: float64(v), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
-				Count: count[k], Min: min[k], Max: max[k], Provider: prov[k],
+				Metric: float64(v[i]), KeyJoin: r.keyJoin, dims: combo(r.multiDims), Interval: r.dtime.Sub(ot),
+				Count: count, Min: min, Max: max, Provider: prov,
 			})
-			total += v
-			totalc += count[k]
 		}
 
 		sort.Sort(byValue(keys))
 		if r.config.TopK > 0 && len(keys) > r.config.TopK {
-			rc <- keys[0:r.config.TopK] // Return only the expected number, as sorted.
+			fullKeys = append(fullKeys, keys[0:r.config.TopK]...) // Return only the expected number, as sorted.
 		} else {
-			rc <- keys
+			fullKeys = append(fullKeys, keys...)
 		}
 	}
+
+	rc <- fullKeys
 
 	return
 }
