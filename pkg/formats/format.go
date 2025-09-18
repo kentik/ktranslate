@@ -55,7 +55,7 @@ const (
 	FORMAT_PARQUET              = "parquet"
 )
 
-func NewFormat(ctx context.Context, format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config) (Formatter, error) {
+func NewFormat(ctx context.Context, format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config, logTee chan string) (Formatter, error) {
 	switch format {
 	case FORMAT_AVRO:
 		return avro.NewFormat(log, compression)
@@ -84,7 +84,7 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 	case FORMAT_PROM_REMOTE:
 		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_OTEL:
-		return otel.NewFormat(ctx, log, cfg.OtelFormat)
+		return otel.NewFormat(ctx, log, cfg.OtelFormat, logTee)
 	case FORMAT_SNMP:
 		return snmp.NewFormat(log, cfg.SnmpFormat)
 	case FORMAT_PARQUET:
