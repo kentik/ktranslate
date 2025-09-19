@@ -54,6 +54,12 @@ func TestRollup(t *testing.T) {
 			Formats:       []string{"sum,sum_bytes_in,in_bytes,ccc,custom_str.aaa$$---$$custom_str.bbb"},
 			KeepUndefined: true,
 		},
+		ktranslate.RollupConfig{
+			JoinKey:       "^",
+			TopK:          2,
+			Formats:       []string{"sum,sum_bytes_in;sum_bytes_out,in_bytes;out_bytes,foo,bar"},
+			KeepUndefined: false,
+		},
 	}
 
 	inputs := [][]map[string]interface{}{
@@ -167,6 +173,32 @@ func TestRollup(t *testing.T) {
 				"provider":    kt.Provider("pp"),
 			},
 		},
+		[]map[string]interface{}{
+			map[string]interface{}{
+				"in_bytes":    int64(10),
+				"out_bytes":   int64(5),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(34),
+				"out_bytes":   int64(10),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+			map[string]interface{}{
+				"in_bytes":    int64(44),
+				"out_bytes":   int64(1000),
+				"foo":         "bbb",
+				"bar":         "ccc",
+				"sample_rate": int64(1),
+				"provider":    kt.Provider("pp"),
+			},
+		},
 	}
 
 	outputs := []map[string]interface{}{
@@ -194,6 +226,11 @@ func TestRollup(t *testing.T) {
 			"metric":     40,
 			"dimensions": []string{"ccc", "aaa---bbb"},
 		},
+		map[string]interface{}{
+			"metric":     88,
+			"alt_metric": 1015,
+			"dimensions": []string{"bbb", "ccc"},
+		},
 	}
 
 	for i, roll := range rolls {
@@ -207,6 +244,9 @@ func TestRollup(t *testing.T) {
 			res := ri.Export()
 
 			assert.Equal(outputs[i]["metric"].(int), int(res[0].Metric), res)
+			if _, ok := outputs[i]["alt_metric"]; ok {
+				assert.Equal(outputs[i]["alt_metric"].(int), int(res[1].Metric), res)
+			}
 			assert.Equal(roll.TopK, len(res), i)
 			dims := strings.Split(res[0].Dimension, res[0].KeyJoin)
 			for j, dim := range dims {

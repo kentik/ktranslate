@@ -82,7 +82,7 @@ type RollupDef struct {
 	Method     Method
 	Metrics    []string
 	Dimensions []string
-	Name       string
+	NameSet    []string
 }
 
 /**
@@ -96,7 +96,7 @@ type RollupDef struct {
 */
 
 func (r *RollupDef) String() string {
-	return fmt.Sprintf("Name: %s, Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.Name, r.Method, r.Sample, r.Metrics, r.Dimensions)
+	return fmt.Sprintf("Name(s): %v, Method: %s, Adjust Sample Rate: %v, Metric: %v, Dimensions: %v", r.NameSet, r.Method, r.Sample, r.Metrics, r.Dimensions)
 }
 
 type RollupDefs []RollupDef
@@ -121,7 +121,7 @@ func (i *RollupDefs) Set(value string) error {
 	if len(ptn[0]) > 2 && ptn[0][0:2] == "s_" {
 		*i = append(*i, RollupDef{
 			Method:     Method(ptn[0][2:]),
-			Name:       ptn[1],
+			NameSet:    strings.Split(ptn[1], ";"),
 			Metrics:    strings.Split(ptn[2], "+"),
 			Dimensions: ptn[3:],
 			Sample:     true,
@@ -129,7 +129,7 @@ func (i *RollupDefs) Set(value string) error {
 	} else {
 		*i = append(*i, RollupDef{
 			Method:     Method(ptn[0]),
-			Name:       ptn[1],
+			NameSet:    strings.Split(ptn[1], ";"),
 			Metrics:    strings.Split(ptn[2], "+"),
 			Dimensions: ptn[3:],
 		})
@@ -185,9 +185,10 @@ type rollupBase struct {
 	mux          sync.RWMutex
 	sample       bool
 	dtime        time.Time
-	name         string
+	nameSet      []string
 	filters      []filter.FilterWrapper
 	hasFilters   bool
+	splitMetrics bool
 }
 
 type splitDim struct {
@@ -202,7 +203,7 @@ func (r *rollupBase) init(rd RollupDef) error {
 	r.multiDims = make([][]string, 0)
 	r.splitDims = map[int]splitDim{}
 	r.dtime = time.Now()
-	r.name = rd.Name
+	r.nameSet = rd.NameSet
 	r.eventType = strings.ReplaceAll(fmt.Sprintf(KENTIK_EVENT_TYPE, strings.Join(rd.Metrics, "_"), strings.Join(rd.Dimensions, ":")), ".", "_")
 	r.sample = rd.Sample
 
@@ -234,7 +235,13 @@ func (r *rollupBase) init(rd RollupDef) error {
 		pts := strings.Split(m, ".")
 		switch len(pts) {
 		case 1:
-			r.metrics = append(r.metrics, m)
+			splitSet := strings.Split(m, ";")
+			if len(splitSet) > 1 {
+				r.splitMetrics = true
+				r.metrics = append(r.metrics, splitSet...)
+			} else {
+				r.metrics = append(r.metrics, m)
+			}
 		case 2:
 			r.multiMetrics = append(r.multiMetrics, pts)
 		default:
@@ -342,5 +349,5 @@ func (r *rollupBase) SetFilter(fw filter.FilterWrapper) {
 }
 
 func (r *rollupBase) GetName() string {
-	return r.name
+	return strings.Join(r.nameSet, ";")
 }
