@@ -326,12 +326,6 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		return f.fromKtranslate(in)
 	case kt.KENTIK_EVENT_SNMP_TRAP, kt.KENTIK_EVENT_EXT:
 		// This is actually an event, send out as an event to sink directly.
-
-		//err := f.trapLog.RecordLog(in, "New Trap Event")
-		//if err != nil {
-		//	f.Errorf("There was an error when sending an event: %v.", err)
-		//	}
-		// Debug in progress. Again.
 		flat := in.Flatten()
 		strip(flat)
 		b, err := json.Marshal(flat)
