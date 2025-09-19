@@ -331,7 +331,7 @@ func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
 		//if err != nil {
 		//	f.Errorf("There was an error when sending an event: %v.", err)
 		//	}
-		// Debug in progress.
+		// Debug in progress. Again.
 		flat := in.Flatten()
 		strip(flat)
 		b, err := json.Marshal(flat)
