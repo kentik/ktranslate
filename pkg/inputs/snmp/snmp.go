@@ -291,7 +291,7 @@ func launchSnmpTrap(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*k
 
 func launchSnmp(ctx context.Context, conf *kt.SnmpGlobalConfig, device *kt.SnmpDeviceConfig, jchfChan chan []*kt.JCHF, connectTimeout time.Duration, retries int, metrics *kt.SnmpDeviceMetric, profile *mibs.Profile, log logger.ContextL, logchan chan string) error {
 	// Sometimes this device is pinging only. In this case, start the ping loop and return.
-	if device.PingOnly {
+	if conf.PingOnly || device.PingOnly {
 		return launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log)
 	} else if conf.RunPing || device.RunPing {
 		if err := launchPingOnly(ctx, conf, device, jchfChan, connectTimeout, retries, metrics, profile, log); err != nil {
