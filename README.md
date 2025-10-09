@@ -126,7 +126,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nf.port int
     	Sflow/NetFlow/IPFIX listening port (default 9995)
   -nf.prom.listen string
-    	Run a promethues metrics collector here
+    	Run a prometheus metrics collector here
   -nf.reuserport
     	Enable so_reuseport for Sflow/NetFlow/IPFIX
   -nf.source string
