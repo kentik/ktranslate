@@ -40,14 +40,15 @@ var (
 		// change the order unless you know what you're doing.  Add new ones on
 		// the end.
 		m := orderedmap.NewOrderedMap()
-		m.Set(kt.LookupEnvString(KT_IFSPEED_OID, "1.3.6.1.2.1.31.1.1.1.15"), SNMP_ifSpeed) // Index ifIndex. Uses IfHighSpeed by default but overridable if needed.
-		m.Set("1.3.6.1.2.1.4.20.1.2", SNMP_ipAdEntIfIndex)                                 // Index ipAddr
-		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)                                 // Index ipAddr
-		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix)                               // Index ipv6IfIndex, ipv6Addr
-		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)                                   // (ifPhysAddress)
+		m.Set(getIfSpeedOid(), SNMP_ifSpeed)                 // Index ifIndex. Uses IfHighSpeed by default but overridable if needed.
+		m.Set("1.3.6.1.2.1.4.20.1.2", SNMP_ipAdEntIfIndex)   // Index ipAddr
+		m.Set("1.3.6.1.2.1.4.20.1.3", SNMP_ipAdEntNetMask)   // Index ipAddr
+		m.Set("1.3.6.1.2.1.55.1.8.1.2", SNMP_ipv6AddrPrefix) // Index ipv6IfIndex, ipv6Addr
+		m.Set("1.3.6.1.2.1.2.2.1.6", SNMP_ifPhysAddress)     // (ifPhysAddress)
 		return m
 	}()
 
+	isIfSpeed          = false
 	getHuaweiVersionRE = regexp.MustCompile(`Version (\d)\.(\d+)`)
 )
 
@@ -56,6 +57,14 @@ type InterfaceMetadata struct {
 	mibs          map[string]*kt.Mib
 	interfaceOids *orderedmap.OrderedMap
 	debug         bool
+}
+
+func getIfSpeedOid() string {
+	speed := kt.LookupEnvString(KT_IFSPEED_OID, "1.3.6.1.2.1.31.1.1.1.15")
+	if speed != "1.3.6.1.2.1.31.1.1.1.15" {
+		isIfSpeed = true
+	}
+	return speed
 }
 
 func NewInterfaceMetadata(interfaceMetadataMibs map[string]*kt.Mib, log logger.ContextL, debug bool) *InterfaceMetadata {
@@ -194,6 +203,9 @@ func (im *InterfaceMetadata) Poll(ctx context.Context, conf *kt.SnmpDeviceConfig
 				case SNMP_ifSpeed:
 					value := gosnmp.ToBigInt(variable.Value).Uint64()
 					data.Speed = value
+					if isIfSpeed {
+						data.Speed = uint64(float64(data.Speed) / float64(1000000))
+					}
 				case SNMP_ipv6AddrPrefix:
 					switch variable.Type {
 					case gosnmp.Integer:
