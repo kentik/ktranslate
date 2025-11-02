@@ -2,8 +2,12 @@ package kafka
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"flag"
 	"fmt"
+	"os"
+	"strings"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
@@ -16,11 +20,13 @@ import (
 var (
 	topic            string
 	bootstrapServers string
+	tlsConfig        string
 )
 
 func init() {
 	flag.StringVar(&topic, "kafka_topic", "", "kafka topic to produce on")
 	flag.StringVar(&bootstrapServers, "bootstrap.servers", "", "bootstrap.servers")
+	flag.StringVar(&tlsConfig, "kafka.tls.config", "", "tls config to use for kafka. Can be basic|cert.pem,key.pem|cert.pem,key.pem,ca-cert.pem")
 }
 
 /**
@@ -34,6 +40,7 @@ type KafkaSink struct {
 	registry go_metrics.Registry
 	metrics  *KafkaMetric
 	config   *ktranslate.KafkaSinkConfig
+	tlsConf  *tls.Config
 }
 
 type KafkaMetric struct {
@@ -42,7 +49,8 @@ type KafkaMetric struct {
 }
 
 func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.KafkaSinkConfig) (*KafkaSink, error) {
-	return &KafkaSink{
+
+	ks := KafkaSink{
 		registry: registry,
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kafkaSink"}, log),
 		metrics: &KafkaMetric{
@@ -50,7 +58,48 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 			DeliveryWin: go_metrics.GetOrRegisterMeter("delivery_wins_kafka", registry),
 		},
 		config: cfg,
-	}, nil
+	}
+
+	pts := strings.Split(cfg.TlsConfig, ",")
+	switch len(pts) {
+	case 1:
+		if strings.ToLower(pts[0]) == "basic" {
+			ks.tlsConf = &tls.Config{} // Just a basic config to force using tls.
+		} else {
+			return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
+		}
+	case 2:
+		cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
+		if err != nil {
+			return nil, err
+		}
+		ks.tlsConf = &tls.Config{Certificates: []tls.Certificate{cert}}
+	case 3:
+		// Load client cert
+		cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
+		if err != nil {
+			return nil, err
+		}
+
+		// Load CA cert
+		caCert, err := os.ReadFile(pts[2])
+		if err != nil {
+			return nil, err
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		// Setup client
+		ks.tlsConf = &tls.Config{
+			Certificates: []tls.Certificate{cert},
+			RootCAs:      caCertPool,
+		}
+		ks.tlsConf.BuildNameToCertificate()
+	default:
+		return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
+	}
+
+	return &ks, nil
 }
 
 func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
@@ -63,6 +112,13 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 		Addr:     kafka.TCP(s.config.BootstrapServers),
 		Topic:    s.config.Topic,
 		Balancer: &kafka.LeastBytes{},
+	}
+
+	if s.tlsConf != nil {
+		s.Infof("Adding TLS Support")
+		s.kp.Transport = &kafka.Transport{
+			TLS: s.tlsConf,
+		}
 	}
 
 	s.Infof("System connected to kafka, topic is %s", s.Topic)
