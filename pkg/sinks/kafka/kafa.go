@@ -35,7 +35,6 @@ Config options at https://github.com/edenhill/librdkafka/blob/master/CONFIGURATI
 
 type KafkaSink struct {
 	logger.ContextL
-	Topic    string
 	kp       *kafka.Writer
 	registry go_metrics.Registry
 	metrics  *KafkaMetric
@@ -60,43 +59,45 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 		config: cfg,
 	}
 
-	pts := strings.Split(cfg.TlsConfig, ",")
-	switch len(pts) {
-	case 1:
-		if strings.ToLower(pts[0]) == "basic" {
-			ks.tlsConf = &tls.Config{} // Just a basic config to force using tls.
-		} else {
+	if cfg.TlsConfig != "" {
+		pts := strings.Split(cfg.TlsConfig, ",")
+		switch len(pts) {
+		case 1:
+			if strings.ToLower(pts[0]) == "basic" {
+				ks.tlsConf = &tls.Config{} // Just a basic config to force using tls.
+			} else {
+				return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
+			}
+		case 2:
+			cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
+			if err != nil {
+				return nil, err
+			}
+			ks.tlsConf = &tls.Config{Certificates: []tls.Certificate{cert}}
+		case 3:
+			// Load client cert
+			cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
+			if err != nil {
+				return nil, err
+			}
+
+			// Load CA cert
+			caCert, err := os.ReadFile(pts[2])
+			if err != nil {
+				return nil, err
+			}
+			caCertPool := x509.NewCertPool()
+			caCertPool.AppendCertsFromPEM(caCert)
+
+			// Setup client
+			ks.tlsConf = &tls.Config{
+				Certificates: []tls.Certificate{cert},
+				RootCAs:      caCertPool,
+			}
+			ks.tlsConf.BuildNameToCertificate()
+		default:
 			return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
 		}
-	case 2:
-		cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
-		if err != nil {
-			return nil, err
-		}
-		ks.tlsConf = &tls.Config{Certificates: []tls.Certificate{cert}}
-	case 3:
-		// Load client cert
-		cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
-		if err != nil {
-			return nil, err
-		}
-
-		// Load CA cert
-		caCert, err := os.ReadFile(pts[2])
-		if err != nil {
-			return nil, err
-		}
-		caCertPool := x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM(caCert)
-
-		// Setup client
-		ks.tlsConf = &tls.Config{
-			Certificates: []tls.Certificate{cert},
-			RootCAs:      caCertPool,
-		}
-		ks.tlsConf.BuildNameToCertificate()
-	default:
-		return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
 	}
 
 	return &ks, nil
@@ -121,7 +122,7 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 		}
 	}
 
-	s.Infof("System connected to kafka, topic is %s", s.Topic)
+	s.Infof("System connected to kafka, topic is %s", s.config.Topic)
 
 	return nil
 }
