@@ -133,6 +133,7 @@ type HTTPSinkConfig struct {
 type KafkaSinkConfig struct {
 	Topic            string
 	BootstrapServers string
+	TlsConfig        string
 }
 
 // KentikSinkConfig is the config for the Kentik sink
@@ -465,6 +466,7 @@ func DefaultConfig() *Config {
 		KafkaSink: &KafkaSinkConfig{
 			Topic:            "",
 			BootstrapServers: "",
+			TlsConfig:        "",
 		},
 		KentikSink: &KentikSinkConfig{
 			RelayURL: "",
