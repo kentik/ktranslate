@@ -200,7 +200,7 @@ func (bs *BaseServer) Init(mextra interface{}) {
 
 func (bs *BaseServer) Fail(msg string) {
 	if bs.Logger != nil {
-		bs.Logger.Panic(bs.LogPrefix, msg)
+		bs.Logger.Panic(bs.LogPrefix, "%s", msg)
 	}
 	fmt.Printf("%s\n", msg)
 

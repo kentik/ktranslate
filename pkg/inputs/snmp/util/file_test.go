@@ -19,7 +19,7 @@ func TestLoadFile(t *testing.T) {
 
 	// Some test server
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, string(content))
+		fmt.Fprintf(w, "%s", string(content))
 	}))
 	defer svr.Close()
 

@@ -666,7 +666,7 @@ func (f *NRMFormat) handleInvalid(in []*kt.JCHF, output []byte) (*kt.Output, err
 		f.seenInvalid = true
 		msg = fmt.Sprintf("%s (%v)", msg, string(output))
 	}
-	return nil, fmt.Errorf(msg)
+	return nil, fmt.Errorf("%s", msg)
 }
 
 func (f *NRMFormat) fromKtranslate(in *kt.JCHF) []NRMetric {

@@ -11,5 +11,5 @@ var debug = os.Getenv("NETFLOWDEBUG") != ""
 var debugLog = log.New(os.Stderr, "netflow9: ", log.Lmicroseconds|log.Lmicroseconds)
 
 func hexdump(data []byte) {
-	fmt.Fprintf(os.Stderr, hex.Dump(data))
+	fmt.Fprintf(os.Stderr, "%s", hex.Dump(data))
 }
