@@ -234,7 +234,7 @@ func applyMode(cfg *ktranslate.Config, mode string) error {
 		cfg.Format = "new_relic_metric"
 		cfg.MaxFlowsPerMessage = 100
 	default:
-		return fmt.Errorf("Invalid mode " + mode + ". Options = nr1.vpc|nr1.flow|nr1.snmp|vpc|flow")
+		return fmt.Errorf("Invalid mode %s. Options = nr1.vpc|nr1.flow|nr1.snmp|vpc|flow", mode)
 	}
 
 	return nil
