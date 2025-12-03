@@ -251,7 +251,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				dst.CustomStr[name] = ic.NETWORK_CLASS_INT_TO_NAME[v]
 			case "src_network_bndry", "dst_network_bndry", "ult_exit_network_bndry":
 				dst.CustomStr[name] = ic.NameFromNBInt(int(v))
-			case "src_connect_type", "dst_connect_type", "utl_exit_connect_type":
+			case "src_connect_type", "dst_connect_type", "ult_exit_connect_type":
 				dst.CustomStr[name] = ic.NameFromCTInt(int(v))
 			case "dst_rpki":
 				if v > ic.RPKI_MAX_NUM || v == ic.RPKI_INVALID {
