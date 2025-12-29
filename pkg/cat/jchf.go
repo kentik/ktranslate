@@ -123,6 +123,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.DstThirdAsn = src.CHF.DstThirdAsn()
 
 	// Do we have info about this device?
+	custColNames := map[uint32]string{}
 	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
 		dst.DeviceName = d.Name
 		dst.CustomStr[UDR_TYPE] = d.DeviceSubtype
@@ -147,6 +148,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["output_provider"] = i.Provider
 			dst.CustomStr["output_network_boundary"] = i.NetworkBoundary
 			dst.CustomStr["output_connectivity_type"] = i.ConnectivityType
+		}
+		for _, v := range d.Customs {
+			custColNames[v.ID] = v.Name
 		}
 	}
 
@@ -236,8 +240,12 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 		isInt := false
 		if !ok {
-			name = strconv.Itoa(int(cust.Id()))
-			isInt = true
+			if k, ok := custColNames[cust.Id()]; ok {
+				name = k
+			} else {
+				name = strconv.Itoa(int(cust.Id()))
+				isInt = true
+			}
 		}
 		switch val.Which() {
 		case model.Custom_value_Which_uint16Val:
