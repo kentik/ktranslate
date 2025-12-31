@@ -26,7 +26,7 @@ type tagfunc struct {
 
 type FileTagMapper struct {
 	logger.ContextL
-	tags  map[uint32][2]string
+	tags  map[uint32]map[string][2]string
 	funcs map[string]tagfunc
 }
 
@@ -42,7 +42,7 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "fileMapper"}, log),
 	}
 
-	tm := map[uint32][2]string{}
+	tm := map[uint32]map[string][2]string{}
 	funcs := map[string]tagfunc{}
 	for scanner.Scan() {
 		pts := strings.SplitN(scanner.Text(), ",", 4)
@@ -68,7 +68,11 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 			}
 
 			id := uint32(ida)
-			tm[id] = [2]string{kt.FixupName(pts[1]), kt.FixupName(pts[3])}
+			if _, ok := tm[id]; !ok {
+				tm[id] = map[string][2]string{kt.FixupName(pts[0]): [2]string{kt.FixupName(pts[1]), kt.FixupName(pts[3])}}
+			} else {
+				tm[id][kt.FixupName(pts[0])] = [2]string{kt.FixupName(pts[1]), kt.FixupName(pts[3])}
+			}
 		default: // its a mistake.
 			ftm.Errorf("Invalid line %v, skipping", pts)
 			continue
@@ -90,8 +94,10 @@ func (ftm *FileTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname stri
 	if tf, ok := ftm.funcs[colname]; ok {
 		return tf.c, tf.f(int64(tagval)), ok
 	}
-	if tv, ok := ftm.tags[tagval]; ok {
-		return tv[0], tv[1], ok
+	if tvv, ok := ftm.tags[tagval]; ok {
+		if tv, ok := tvv[colname]; ok {
+			return tv[0], tv[1], ok
+		}
 	}
 	return "", "", false
 }
@@ -100,8 +106,10 @@ func (ftm *FileTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname st
 	if tf, ok := ftm.funcs[colname]; ok {
 		return tf.c, tf.f(tagval), ok
 	}
-	if tv, ok := ftm.tags[uint32(tagval)]; ok {
-		return tv[0], tv[1], ok
+	if tvv, ok := ftm.tags[uint32(tagval)]; ok {
+		if tv, ok := tvv[colname]; ok {
+			return tv[0], tv[1], ok
+		}
 	}
 	return "", "", false
 }
