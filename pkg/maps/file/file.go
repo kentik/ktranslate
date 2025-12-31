@@ -44,6 +44,7 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 
 	tm := map[uint32]map[string][2]string{}
 	funcs := map[string]tagfunc{}
+	tmFound := 0
 	for scanner.Scan() {
 		pts := strings.SplitN(scanner.Text(), ",", 4)
 		switch len(pts) {
@@ -73,6 +74,7 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 			} else {
 				tm[id][kt.FixupName(pts[0])] = [2]string{kt.FixupName(pts[1]), kt.FixupName(pts[3])}
 			}
+			tmFound++
 		default: // its a mistake.
 			ftm.Errorf("Invalid line %v, skipping", pts)
 			continue
@@ -85,7 +87,7 @@ func NewFileTagMapper(log logger.Underlying, tagMapFilePath string) (*FileTagMap
 
 	ftm.tags = tm
 	ftm.funcs = funcs
-	ftm.Infof("Loaded %d tag mappings and %d functions", len(ftm.tags), len(ftm.funcs))
+	ftm.Infof("Loaded %d tag mappings and %d functions", tmFound, len(ftm.funcs))
 
 	return &ftm, nil
 }
