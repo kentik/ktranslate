@@ -284,6 +284,53 @@ func (api *KentikApi) getDevices(ctx context.Context) error {
 	api.setTime = time.Now()
 	api.Infof("Loaded %d Kentik devices via API in %v", num, api.setTime.Sub(stime))
 	api.devices = resDev
+
+	// Now pull in site info for these devices.
+	err := api.getSites(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (api *KentikApi) getSites(ctx context.Context) error {
+	stime := time.Now()
+	num := 0
+	mapped := 0
+	siteMap := map[int]*kt.FullSite{}
+	for _, info := range api.config.KentikCreds {
+		res, err := api.getDeviceInfo(ctx, api.config.GRPCBaseURL+"/site/v202509/sites", info.APIEmail, info.APIToken)
+		if err != nil {
+			return err
+		}
+		var sites kt.SiteList
+		err = json.Unmarshal(res, &sites)
+		if err != nil {
+			return err
+		}
+
+		for _, site := range sites.Sites {
+			if idInt, err := strconv.Atoi(site.ID); err == nil {
+				ls := site
+				siteMap[idInt] = &ls
+				num++
+			}
+		}
+
+		// Now map sites into devices.
+		for _, cd := range api.devices {
+			for _, d := range cd {
+				if ds, ok := siteMap[d.Site.ID]; ok {
+					d.FullSite = ds
+					mapped++
+				}
+			}
+		}
+	}
+
+	api.setTime = time.Now()
+	api.Infof("Loaded %d Kentik sites via API in %v, mapped to %d devices", num, api.setTime.Sub(stime), mapped)
 	return nil
 }
 

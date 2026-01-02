@@ -152,6 +152,10 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 		for _, v := range d.Customs {
 			custColNames[v.ID] = v.Name
 		}
+		if d.FullSite != nil {
+			dst.CustomStr["device_site_market"] = d.FullSite.SiteMarket.Name
+			dst.CustomStr["device_site_country"] = d.FullSite.PostalAddress.Country
+		}
 	}
 
 	// Now the strings.

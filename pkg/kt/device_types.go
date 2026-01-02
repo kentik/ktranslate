@@ -35,6 +35,7 @@ type Device struct {
 	Labels        []DeviceLabel         `json:"labels"`
 	Site          DeviceSite            `json:"site"`
 	allUserTags   map[string]string
+	FullSite      *FullSite
 }
 
 type DeviceLabel struct {
@@ -129,4 +130,32 @@ func (d *Device) SetUserTags(in map[string]string) {
 	for k, v := range d.allUserTags {
 		in[k] = v
 	}
+}
+
+type SiteList struct {
+	Sites []FullSite `json:"sites"`
+}
+
+type FullSite struct {
+	ID            string        `json:"id": "33467"`
+	Title         string        `json:"title"`
+	Lat           float64       `json:"lat"`
+	Lon           float64       `json:"lon"`
+	PostalAddress PostalAddress `json:"postalAddress"`
+	Type          string        `json:"type"`
+	SiteMarket    SiteMarket    `json:"siteMarket"`
+}
+
+type PostalAddress struct {
+	Address    string `json:"address"`
+	City       string `json:"city"`
+	Region     string `json:"region"`
+	PostalCode string `json:"postalCode"`
+	Country    string `json:"country"`
+}
+
+type SiteMarket struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"description"`
 }
