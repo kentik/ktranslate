@@ -35,6 +35,7 @@ type Device struct {
 	Labels        []DeviceLabel         `json:"labels"`
 	Site          DeviceSite            `json:"site"`
 	allUserTags   map[string]string
+	FullSite      *FullSite
 }
 
 type DeviceLabel struct {
@@ -47,23 +48,6 @@ type DeviceSite struct {
 	ID       int    `json:"id"`
 	SiteName string `json:"site_name"`
 }
-
-// A CustomColumn corresponds a row in mn_kflow_field, which represents
-// a field in the "Custom" field of a kflow record. This could either be
-// a field we add to most kflow (e.g. i_ult_exit_network_bndry_name), or
-// a "custom dimension" for a company (e.g. c_customer, c_kentik_services, etc.).
-// The CustomMapValues field is filled in with data from mn_flow_tag_kv if
-// it exists, but in a post HSCD (hyper-scale custom dimensions aka hippo tagging)
-// world, these generally won't be there.
-type CustomColumn struct {
-	ID              uint32
-	Name            string
-	Type            string // kt.FORMAT_UINT32 or kt.FORMAT_STRING or kt.FORMAT_ADDR
-	CustomMapValues map[uint32]string
-}
-
-// InterfaceCapacityBPS denotes capacity of interface in bits per second
-type InterfaceCapacityBPS = uint64
 
 // An Interface is everything we know about a device's interfaces.
 // It corresponds to a row in mn_interface, joined with information
@@ -124,7 +108,7 @@ type Plan struct {
 }
 
 type Column struct {
-	ID   uint64 `json:"field_id,string"`
+	ID   uint32 `json:"field_id,string"`
 	Name string `json:"col_name"`
 	Type string `json:"col_type"`
 }
@@ -146,4 +130,32 @@ func (d *Device) SetUserTags(in map[string]string) {
 	for k, v := range d.allUserTags {
 		in[k] = v
 	}
+}
+
+type SiteList struct {
+	Sites []FullSite `json:"sites"`
+}
+
+type FullSite struct {
+	ID            string        `json:"id": "33467"`
+	Title         string        `json:"title"`
+	Lat           float64       `json:"lat"`
+	Lon           float64       `json:"lon"`
+	PostalAddress PostalAddress `json:"postalAddress"`
+	Type          string        `json:"type"`
+	SiteMarket    SiteMarket    `json:"siteMarket"`
+}
+
+type PostalAddress struct {
+	Address    string `json:"address"`
+	City       string `json:"city"`
+	Region     string `json:"region"`
+	PostalCode string `json:"postalCode"`
+	Country    string `json:"country"`
+}
+
+type SiteMarket struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Desc string `json:"description"`
 }

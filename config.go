@@ -276,6 +276,7 @@ type Config struct {
 	KentikCreds         []KentikCred
 	KentikPlan          int
 	APIBaseURL          string
+	GRPCBaseURL         string
 	SSLCertFile         string
 	SSLKeyFile          string
 	TagMapType          string

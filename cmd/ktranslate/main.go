@@ -362,6 +362,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.KentikCreds = []ktranslate.KentikCred{ktranslate.KentikCred{APIEmail: val, APIToken: os.Getenv(ktranslate.KentikAPITokenEnvVar)}}
 			case "api_root":
 				cfg.APIBaseURL = val
+				cfg.GRPCBaseURL = strings.Replace(val, "api.kentik", "grpc.api.kentik", 1)
 			case "kentik_plan":
 				v, err := strconv.Atoi(val)
 				if err != nil {
