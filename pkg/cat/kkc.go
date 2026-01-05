@@ -167,6 +167,20 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	}
 	kc.tagMap = m
 
+	mc, err := maps.LoadMapper(maps.Mapper(config.TagMapType), log.GetLogger().GetUnderlyingLogger(), config.TagMapCity)
+	if err != nil {
+		kc.log.Errorf("There was an error when opening the city tag service: %v.", err)
+		return nil, err
+	}
+	kc.tagMapCity = mc
+
+	mr, err := maps.LoadMapper(maps.Mapper(config.TagMapType), log.GetLogger().GetUnderlyingLogger(), config.TagMapRegion)
+	if err != nil {
+		kc.log.Errorf("There was an error when opening the tag region service: %v.", err)
+		return nil, err
+	}
+	kc.tagMapRegion = mr
+
 	// Load up a geo file if one is passed in.
 	if config.GeoFile != "" {
 		geo, err := patricia.NewMapFromMM(config.GeoFile, log)

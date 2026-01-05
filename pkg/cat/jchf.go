@@ -86,6 +86,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.DstGeo = "--"
 		}
 	}
+	dst.DstGeoRegion = kc.tagMapRegion.LookupKV(src.CHF.DstGeoRegion())
+	dst.DstGeoCity = kc.tagMapCity.LookupKV(src.CHF.DstGeoCity())
 	dst.HeaderLen = src.CHF.HeaderLen()
 	dst.InBytes = src.CHF.InBytes()
 	dst.InPkts = src.CHF.InPkts()
@@ -103,6 +105,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.SrcGeo = "--"
 		}
 	}
+	dst.SrcGeoRegion = kc.tagMapRegion.LookupKV(src.CHF.SrcGeoRegion())
+	dst.SrcGeoCity = kc.tagMapCity.LookupKV(src.CHF.SrcGeoCity())
 	dst.TcpFlags = src.CHF.TcpFlags()
 	dst.Tos = src.CHF.Tos()
 	dst.VlanIn = src.CHF.VlanIn()

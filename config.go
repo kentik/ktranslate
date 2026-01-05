@@ -290,6 +290,10 @@ type Config struct {
 
 	// pkg/maps/file
 	TagMapFile string
+	// pkg/maps/file
+	TagMapCity string
+	// pkg/maps/file
+	TagMapRegion string
 	// pkg/formats/netflow
 	NetflowFormat *NetflowFormatConfig
 	// pkg/formats/prom

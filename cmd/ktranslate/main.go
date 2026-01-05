@@ -422,6 +422,10 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/maps/file
 			case "tag_map":
 				cfg.TagMapFile = val
+			case "geo_city_map":
+				cfg.TagMapCity = val
+			case "geo_region_map":
+				cfg.TagMapRegion = val
 			// pkg/formats/netflow
 			case "netflow_version":
 				cfg.NetflowFormat.Version = val
