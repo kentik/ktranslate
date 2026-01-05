@@ -276,6 +276,7 @@ type Config struct {
 	KentikCreds         []KentikCred
 	KentikPlan          int
 	APIBaseURL          string
+	GRPCBaseURL         string
 	SSLCertFile         string
 	SSLKeyFile          string
 	TagMapType          string
@@ -289,6 +290,10 @@ type Config struct {
 
 	// pkg/maps/file
 	TagMapFile string
+	// pkg/maps/file
+	TagMapCity string
+	// pkg/maps/file
+	TagMapRegion string
 	// pkg/formats/netflow
 	NetflowFormat *NetflowFormatConfig
 	// pkg/formats/prom

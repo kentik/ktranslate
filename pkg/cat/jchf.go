@@ -86,6 +86,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.DstGeo = "--"
 		}
 	}
+	dst.DstGeoRegion = kc.tagMapRegion.LookupKV(src.CHF.DstGeoRegion())
+	dst.DstGeoCity = kc.tagMapCity.LookupKV(src.CHF.DstGeoCity())
 	dst.HeaderLen = src.CHF.HeaderLen()
 	dst.InBytes = src.CHF.InBytes()
 	dst.InPkts = src.CHF.InPkts()
@@ -103,6 +105,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.SrcGeo = "--"
 		}
 	}
+	dst.SrcGeoRegion = kc.tagMapRegion.LookupKV(src.CHF.SrcGeoRegion())
+	dst.SrcGeoCity = kc.tagMapCity.LookupKV(src.CHF.SrcGeoCity())
 	dst.TcpFlags = src.CHF.TcpFlags()
 	dst.Tos = src.CHF.Tos()
 	dst.VlanIn = src.CHF.VlanIn()
@@ -123,6 +127,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.DstThirdAsn = src.CHF.DstThirdAsn()
 
 	// Do we have info about this device?
+	custColNames := map[uint32]string{}
 	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
 		dst.DeviceName = d.Name
 		dst.CustomStr[UDR_TYPE] = d.DeviceSubtype
@@ -147,6 +152,13 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["output_provider"] = i.Provider
 			dst.CustomStr["output_network_boundary"] = i.NetworkBoundary
 			dst.CustomStr["output_connectivity_type"] = i.ConnectivityType
+		}
+		for _, v := range d.Customs {
+			custColNames[v.ID] = v.Name
+		}
+		if d.FullSite != nil {
+			dst.CustomStr["device_site_market"] = d.FullSite.SiteMarket.Name
+			dst.CustomStr["device_site_country"] = d.FullSite.PostalAddress.Country
 		}
 	}
 
@@ -236,8 +248,12 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 		isInt := false
 		if !ok {
-			name = strconv.Itoa(int(cust.Id()))
-			isInt = true
+			if k, ok := custColNames[cust.Id()]; ok {
+				name = k
+			} else {
+				name = strconv.Itoa(int(cust.Id()))
+				isInt = true
+			}
 		}
 		switch val.Which() {
 		case model.Custom_value_Which_uint16Val:

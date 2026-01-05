@@ -16,12 +16,17 @@ const (
 type TagMapper interface {
 	LookupTagValue(kt.Cid, uint32, string) (string, string, bool)
 	LookupTagValueBig(kt.Cid, int64, string) (string, string, bool)
+	LookupKV(uint32) string
 }
 
 func LoadMapper(mtype Mapper, log logger.Underlying, tagMapFilePath string) (TagMapper, error) {
 	switch mtype {
 	case FileMapper:
-		return file.NewFileTagMapper(log, tagMapFilePath)
+		if tagMapFilePath != "" {
+			return file.NewFileTagMapper(log, tagMapFilePath)
+		} else {
+			return &NullType{ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nullMapper"}, log)}, nil
+		}
 	default:
 		return &NullType{ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "nullMapper"}, log)}, nil
 	}
@@ -37,4 +42,8 @@ func (ntm *NullType) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (
 
 func (ntm *NullType) LookupTagValueBig(cid kt.Cid, tagval int64, colname string) (string, string, bool) {
 	return "", "", false
+}
+
+func (ntm *NullType) LookupKV(k uint32) string {
+	return ""
 }

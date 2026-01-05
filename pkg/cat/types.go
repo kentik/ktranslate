@@ -71,6 +71,8 @@ type KTranslate struct {
 	apic         *api.KentikApi
 	tooBig       chan int
 	tagMap       maps.TagMapper
+	tagMapCity   maps.TagMapper
+	tagMapRegion maps.TagMapper
 	vpc          vpc.VpcImpl
 	nfs          *flow.KentikDriver
 	rule         *rule.RuleSet
