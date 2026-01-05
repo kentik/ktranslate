@@ -22,8 +22,8 @@ var testTags = []byte(`
 100323,C_MARKET_DST,1353464487,LCHTR - SLO
 100323,C_MARKET_DST,1353464485,LCHTR - Louisiana
 100323,C_MARKET_DST,1353465119,LCHTR - Nevada
-25229,C_DST_CUSTOMERNETWORK,1069501801,OSIRI_IDCA_10078
-24588,C_SRC_CUSTOMERNETWORK,1069501801,OSIRI_IDCA_10078
+22,C_DST_CUSTOMERNETWORK,44,FOO
+33,C_SRC_CUSTOMERNETWORK,44,BAR
 101199,DST_SUBSCRIBER_ID,to_hex
 0,
 1,-
@@ -68,15 +68,15 @@ func TestGenMap(t *testing.T) {
 	assert.Equal(k, "dst_subscriber_id")
 	assert.Equal(v, "dc360c52d9f8")
 
-	k, v, ok = f.LookupTagValue(kt.Cid(10), 1069501801, "25229")
+	k, v, ok = f.LookupTagValue(kt.Cid(10), 44, "22")
 	assert.True(ok)
 	assert.Equal(k, "c_dst_customernetwork")
-	assert.Equal(v, "osiri_idca_10078")
+	assert.Equal(v, "foo")
 
-	k, v, ok = f.LookupTagValue(kt.Cid(10), 1069501801, "24588")
+	k, v, ok = f.LookupTagValue(kt.Cid(10), 44, "33")
 	assert.True(ok)
 	assert.Equal(k, "c_src_customernetwork")
-	assert.Equal(v, "osiri_idca_10078")
+	assert.Equal(v, "bar")
 
 	v = f.LookupKV(6)
 	assert.Equal(v, "Tokyo")
