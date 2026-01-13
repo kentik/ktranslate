@@ -134,6 +134,9 @@ type KafkaSinkConfig struct {
 	Topic            string
 	BootstrapServers string
 	TlsConfig        string
+	SaslUser         string
+	SaslPass         string
+	SaslMech         string
 }
 
 // KentikSinkConfig is the config for the Kentik sink
@@ -472,6 +475,9 @@ func DefaultConfig() *Config {
 			Topic:            "",
 			BootstrapServers: "",
 			TlsConfig:        "",
+			SaslUser:         "",
+			SaslPass:         "",
+			SaslMech:         "",
 		},
 		KentikSink: &KentikSinkConfig{
 			RelayURL: "",
