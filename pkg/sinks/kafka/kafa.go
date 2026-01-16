@@ -15,18 +15,27 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats"
 	"github.com/kentik/ktranslate/pkg/kt"
 	kafka "github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/sasl"
+	"github.com/segmentio/kafka-go/sasl/plain"
+	"github.com/segmentio/kafka-go/sasl/scram"
 )
 
 var (
 	topic            string
 	bootstrapServers string
 	tlsConfig        string
+	saslUser         string
+	saslPass         string
+	saslMech         string
 )
 
 func init() {
 	flag.StringVar(&topic, "kafka_topic", "", "kafka topic to produce on")
 	flag.StringVar(&bootstrapServers, "bootstrap.servers", "", "bootstrap.servers")
 	flag.StringVar(&tlsConfig, "kafka.tls.config", "", "tls config to use for kafka. Can be basic|cert.pem,key.pem|cert.pem,key.pem,ca-cert.pem")
+	flag.StringVar(&saslUser, "kafka.sasl.user", "", "kafka user")
+	flag.StringVar(&saslPass, "kafka.sasl.password", "", "kafka password")
+	flag.StringVar(&saslMech, "kafka.sasl.mechanism", "", "plain|scram")
 }
 
 /**
@@ -115,10 +124,36 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 		Balancer: &kafka.LeastBytes{},
 	}
 
+	var mech sasl.Mechanism
+
+	if s.config.SaslMech != "" {
+		s.Infof("Adding Sasl Support")
+		switch s.config.SaslMech {
+		case "plain":
+			mech = plain.Mechanism{
+				Username: s.config.SaslUser,
+				Password: s.config.SaslPass,
+			}
+		case "scram":
+			mechl, err := scram.Mechanism(scram.SHA512, s.config.SaslUser, s.config.SaslPass)
+			if err != nil {
+				return err
+			}
+			mech = mechl
+		default:
+			return fmt.Errorf("Invalid kafka.sasl.mechanism flag=%s. Valid is plain|scram", s.config.SaslMech)
+		}
+	}
+
 	if s.tlsConf != nil {
 		s.Infof("Adding TLS Support")
 		s.kp.Transport = &kafka.Transport{
-			TLS: s.tlsConf,
+			TLS:  s.tlsConf,
+			SASL: mech,
+		}
+	} else if mech != nil {
+		s.kp.Transport = &kafka.Transport{
+			SASL: mech,
 		}
 	}
 

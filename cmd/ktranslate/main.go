@@ -600,6 +600,12 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.KafkaSink.BootstrapServers = val
 			case "kafka.tls.config":
 				cfg.KafkaSink.TlsConfig = val
+			case "kafka.sasl.user":
+				cfg.KafkaSink.SaslUser = val
+			case "kafka.sasl.password":
+				cfg.KafkaSink.SaslPass = val
+			case "kafka.sasl.mechanism":
+				cfg.KafkaSink.SaslMech = val
 			// pkg/sinks/kentik
 			case "kentik_relay_url":
 				cfg.KentikSink.RelayURL = val
