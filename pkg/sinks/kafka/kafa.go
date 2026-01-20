@@ -27,6 +27,7 @@ var (
 	saslUser         string
 	saslPass         string
 	saslMech         string
+	skipVerify       bool
 )
 
 func init() {
@@ -36,6 +37,7 @@ func init() {
 	flag.StringVar(&saslUser, "kafka.sasl.user", "", "kafka user")
 	flag.StringVar(&saslPass, "kafka.sasl.password", "", "kafka password")
 	flag.StringVar(&saslMech, "kafka.sasl.mechanism", "", "plain|scram")
+	flag.BoolVar(&skipVerify, "kafka.tls.skip.verify", false, "Skip the cert verification for kafka")
 }
 
 /**
@@ -73,7 +75,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 		switch len(pts) {
 		case 1:
 			if strings.ToLower(pts[0]) == "basic" {
-				ks.tlsConf = &tls.Config{} // Just a basic config to force using tls.
+				ks.tlsConf = &tls.Config{InsecureSkipVerify: ks.config.SkipVerify} // Just a basic config to force using tls.
 			} else {
 				return nil, fmt.Errorf("Invalid kafka.tls.config value: %v.", cfg.TlsConfig)
 			}
@@ -82,7 +84,7 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 			if err != nil {
 				return nil, err
 			}
-			ks.tlsConf = &tls.Config{Certificates: []tls.Certificate{cert}}
+			ks.tlsConf = &tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: ks.config.SkipVerify}
 		case 3:
 			// Load client cert
 			cert, err := tls.LoadX509KeyPair(pts[0], pts[1])
@@ -100,8 +102,9 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslat
 
 			// Setup client
 			ks.tlsConf = &tls.Config{
-				Certificates: []tls.Certificate{cert},
-				RootCAs:      caCertPool,
+				Certificates:       []tls.Certificate{cert},
+				RootCAs:            caCertPool,
+				InsecureSkipVerify: ks.config.SkipVerify,
 			}
 			ks.tlsConf.BuildNameToCertificate()
 		default:

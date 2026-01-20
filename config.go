@@ -137,6 +137,7 @@ type KafkaSinkConfig struct {
 	SaslUser         string
 	SaslPass         string
 	SaslMech         string
+	SkipVerify       bool
 }
 
 // KentikSinkConfig is the config for the Kentik sink
@@ -478,6 +479,7 @@ func DefaultConfig() *Config {
 			SaslUser:         "",
 			SaslPass:         "",
 			SaslMech:         "",
+			SkipVerify:       false,
 		},
 		KentikSink: &KentikSinkConfig{
 			RelayURL: "",
