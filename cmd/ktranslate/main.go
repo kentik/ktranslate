@@ -606,6 +606,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.KafkaSink.SaslPass = val
 			case "kafka.sasl.mechanism":
 				cfg.KafkaSink.SaslMech = val
+			case "kafka.tls.skip.verify":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.SkipVerify = v
 			// pkg/sinks/kentik
 			case "kentik_relay_url":
 				cfg.KentikSink.RelayURL = val
