@@ -42,11 +42,12 @@ type ElasticFormatConfig struct {
 
 // OtelFormatConfig is the config for the otel format
 type OtelFormatConfig struct {
-	Endpoint   string
-	Protocol   string
-	ClientCert string
-	ClientKey  string
-	RootCA     string
+	Endpoint      string
+	Protocol      string
+	ClientCert    string
+	ClientKey     string
+	RootCA        string
+	NoBlockExport bool
 }
 
 // SnmpFormatConfig is the config for the snmp format
@@ -402,11 +403,12 @@ func DefaultConfig() *Config {
 			FlowsNeeded:          10,
 		},
 		OtelFormat: &OtelFormatConfig{
-			Endpoint:   "",
-			Protocol:   "stdout",
-			ClientKey:  "",
-			ClientCert: "",
-			RootCA:     "",
+			Endpoint:      "",
+			Protocol:      "stdout",
+			ClientKey:     "",
+			ClientCert:    "",
+			RootCA:        "",
+			NoBlockExport: false,
 		},
 		ElasticFormat: &ElasticFormatConfig{
 			Action: "index",

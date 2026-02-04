@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/go-logr/stdr"
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats/util"
@@ -40,6 +41,7 @@ type OtelFormat struct {
 	inputs       map[string]chan OtelData
 	trapLog      *OtelLogger
 	logTee       chan string
+	metrics      *OtelMetrics
 }
 
 const (
@@ -47,12 +49,13 @@ const (
 )
 
 var (
-	endpoint   string
-	protocol   string
-	otelm      metric.Meter
-	clientCert string
-	clientKey  string
-	rootCA     string
+	endpoint      string
+	protocol      string
+	otelm         metric.Meter
+	clientCert    string
+	clientKey     string
+	rootCA        string
+	noBlockExport bool
 )
 
 func init() {
@@ -61,6 +64,11 @@ func init() {
 	flag.StringVar(&clientCert, "otel.tls_cert", "", "Load TLS client cert from file.")
 	flag.StringVar(&clientKey, "otel.tls_key", "", "Load TLS client key from file.")
 	flag.StringVar(&rootCA, "otel.root_ca", "", "Load TLS root CA from file.")
+	flag.BoolVar(&noBlockExport, "otel.no_block", false, "If set, drop metrics when the sending chan is full.")
+}
+
+type OtelMetrics struct {
+	ExportDrops go_metrics.Counter
 }
 
 /*
@@ -70,7 +78,7 @@ Some usefule env vars to think about setting:
 * OTEL_METRIC_EXPORT_INTERVAL=30000 -- time in ms to export. Default 60,000 (1 min).
 * OTEL_EXPORTER_OTLP_COMPRESSION=gzip -- turn on gzip compression.
 */
-func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelFormatConfig, logTee chan string) (*OtelFormat, error) {
+func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelFormatConfig, logTee chan string, registry go_metrics.Registry) (*OtelFormat, error) {
 	jf := &OtelFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
@@ -80,6 +88,9 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		config:       cfg,
 		inputs:       map[string]chan OtelData{},
 		logTee:       logTee,
+		metrics: &OtelMetrics{
+			ExportDrops: go_metrics.GetOrRegisterCounter("otel_export_drops", registry),
+		},
 	}
 
 	var tlsC *tls.Config = nil
@@ -165,7 +176,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 	jf.trapLog = ol
 
 	otelm = otel.Meter("ktranslate")
-	jf.Infof("Running exporting via %s to %s", cfg.Protocol, cfg.Endpoint)
+	jf.Infof("Running exporting via %s to %s. Blocking: %v", cfg.Protocol, cfg.Endpoint, cfg.NoBlockExport)
 
 	return jf, nil
 }
@@ -211,7 +222,20 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			f.Infof("Creating otel export for %s", m.Name)
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] <- m
+		ch := f.inputs[m.Name]
+		queueDepth := len(ch)
+		if queueDepth >= CHAN_SLACK {
+			f.Debugf("Channel queue at CHAN_SLACK limit for %s: %d/%d (100%%)", m.Name, queueDepth, CHAN_SLACK)
+		}
+		if f.config.NoBlockExport {
+			select {
+			case ch <- m:
+			default:
+				f.metrics.ExportDrops.Inc(1)
+			}
+		} else {
+			ch <- m
+		}
 	}
 
 	f.mux.RUnlock()
@@ -259,7 +283,20 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			f.mux.RLock()
 		}
 		// Save this for later, for the next time the async callback is run.
-		f.inputs[m.Name] <- m
+		ch := f.inputs[m.Name]
+		queueDepth := len(ch)
+		if queueDepth >= CHAN_SLACK {
+			f.Debugf("Channel queue at CHAN_SLACK limit for %s: %d/%d (100%%)", m.Name, queueDepth, CHAN_SLACK)
+		}
+		if f.config.NoBlockExport {
+			select {
+			case ch <- m:
+			default:
+				f.metrics.ExportDrops.Inc(1)
+			}
+		} else {
+			ch <- m
+		}
 	}
 
 	f.mux.RUnlock()
