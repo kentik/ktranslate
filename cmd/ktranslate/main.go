@@ -596,23 +596,94 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/sinks/kafka
 			case "kafka_topic":
 				cfg.KafkaSink.Topic = val
+			case "kafka_brokers":
+				cfg.KafkaSink.BootstrapServers = val
 			case "bootstrap.servers":
 				cfg.KafkaSink.BootstrapServers = val
-			case "kafka.tls.config":
-				cfg.KafkaSink.TlsConfig = val
-			case "kafka.sasl.user":
-				cfg.KafkaSink.SaslUser = val
-			case "kafka.sasl.password":
-				cfg.KafkaSink.SaslPass = val
-			case "kafka.sasl.mechanism":
-				cfg.KafkaSink.SaslMech = val
-			case "kafka.tls.skip.verify":
+			case "kafka_security_protocol":
+				cfg.KafkaSink.SecurityProtocol = val
+			case "kafka_sasl_mechanism":
+				cfg.KafkaSink.SASLMechanism = val
+			case "kafka_sasl_username":
+				cfg.KafkaSink.SASLUsername = val
+			case "kafka_sasl_password":
+				cfg.KafkaSink.SASLPassword = val
+			case "kafka_kerberos_service_name":
+				cfg.KafkaSink.KerberosServiceName = val
+			case "kafka_kerberos_realm":
+				cfg.KafkaSink.KerberosRealm = val
+			case "kafka_kerberos_config_path":
+				cfg.KafkaSink.KerberosConfigPath = val
+			case "kafka_kerberos_keytab_path":
+				cfg.KafkaSink.KerberosKeytabPath = val
+			case "kafka_kerberos_principal":
+				cfg.KafkaSink.KerberosPrincipal = val
+			case "kafka_kerberos_disable_pafx_fast":
 				v, err := strconv.ParseBool(val)
 				if err != nil {
 					errCh <- err
 					return
 				}
-				cfg.KafkaSink.SkipVerify = v
+				cfg.KafkaSink.KerberosDisablePAFXFAST = v
+			case "kafka_ssl_ca_file":
+				cfg.KafkaSink.SSLCAFile = val
+			case "kafka_ssl_cert_file":
+				cfg.KafkaSink.SSLCertFile = val
+			case "kafka_ssl_key_file":
+				cfg.KafkaSink.SSLKeyFile = val
+			case "kafka_ssl_key_password":
+				cfg.KafkaSink.SSLKeyPassword = val
+			case "kafka_ssl_insecure":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.SSLInsecure = v
+			case "kafka_required_acks":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.RequiredAcks = v
+			case "kafka_compression":
+				cfg.KafkaSink.Compression = val
+			case "kafka_max_message_bytes":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.MaxMessageBytes = v
+			case "kafka_retry_max":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.RetryMax = v
+			case "kafka_flush_frequency":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.FlushFrequency = v
+			case "kafka_flush_messages":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.FlushMessages = v
+			case "kafka_flush_bytes":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.KafkaSink.FlushBytes = v
 			// pkg/sinks/kentik
 			case "kentik_relay_url":
 				cfg.KentikSink.RelayURL = val

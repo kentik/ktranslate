@@ -133,11 +133,32 @@ type HTTPSinkConfig struct {
 type KafkaSinkConfig struct {
 	Topic            string
 	BootstrapServers string
-	TlsConfig        string
-	SaslUser         string
-	SaslPass         string
-	SaslMech         string
-	SkipVerify       bool
+	// Security settings
+	SecurityProtocol string // PLAINTEXT, SASL_PLAINTEXT, SASL_SSL, SSL
+	SASLMechanism    string // PLAIN, SCRAM-SHA-256, SCRAM-SHA-512, GSSAPI (Kerberos), OAUTHBEARER
+	SASLUsername     string
+	SASLPassword     string
+	// Kerberos (GSSAPI) settings
+	KerberosServiceName     string // Usually "kafka"
+	KerberosRealm           string
+	KerberosConfigPath      string // Path to krb5.conf
+	KerberosKeytabPath      string // Path to keytab file
+	KerberosPrincipal       string // Kerberos principal
+	KerberosDisablePAFXFAST bool   // Disable PA-FX-FAST
+	// SSL/TLS settings
+	SSLCAFile      string // CA certificate file
+	SSLCertFile    string // Client certificate file
+	SSLKeyFile     string // Client private key file
+	SSLKeyPassword string // Private key password
+	SSLInsecure    bool   // Skip certificate verification
+	// Producer settings
+	RequiredAcks    int    // 0=NoResponse, 1=WaitForLocal, -1=WaitForAll
+	Compression     string // none, gzip, snappy, lz4, zstd
+	MaxMessageBytes int    // Maximum message size
+	RetryMax        int    // Maximum retries
+	FlushFrequency  int    // Flush frequency in milliseconds
+	FlushMessages   int    // Flush after this many messages
+	FlushBytes      int    // Flush after this many bytes
 }
 
 // KentikSinkConfig is the config for the Kentik sink
@@ -473,13 +494,30 @@ func DefaultConfig() *Config {
 			TimeoutInSeconds:   30,
 		},
 		KafkaSink: &KafkaSinkConfig{
-			Topic:            "",
-			BootstrapServers: "",
-			TlsConfig:        "",
-			SaslUser:         "",
-			SaslPass:         "",
-			SaslMech:         "",
-			SkipVerify:       false,
+			Topic:                   "",
+			BootstrapServers:        "",
+			SecurityProtocol:        "PLAINTEXT",
+			SASLMechanism:           "",
+			SASLUsername:            "",
+			SASLPassword:            "",
+			KerberosServiceName:     "kafka",
+			KerberosRealm:           "",
+			KerberosConfigPath:      "/etc/krb5.conf",
+			KerberosKeytabPath:      "",
+			KerberosPrincipal:       "",
+			KerberosDisablePAFXFAST: false,
+			SSLCAFile:               "",
+			SSLCertFile:             "",
+			SSLKeyFile:              "",
+			SSLKeyPassword:          "",
+			SSLInsecure:             false,
+			RequiredAcks:            1,
+			Compression:             "none",
+			MaxMessageBytes:         1000000,
+			RetryMax:                3,
+			FlushFrequency:          100,
+			FlushMessages:           100,
+			FlushBytes:              64 * 1024,
 		},
 		KentikSink: &KentikSinkConfig{
 			RelayURL: "",
