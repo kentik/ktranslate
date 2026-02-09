@@ -49,18 +49,19 @@ func init() {
 
 type KentikApi struct {
 	logger.ContextL
-	tr            *http.Transport
-	client        *http.Client
-	devices       map[kt.Cid]kt.Devices
-	synAgents     map[kt.AgentId]*synthetics.Agent
-	synAgentsByIP map[string]*synthetics.Agent
-	synTests      map[kt.TestId]*synthetics.Test
-	setTime       time.Time
-	apiTimeout    time.Duration
-	synClient     synthetics.SyntheticsAdminServiceClient
-	mux           sync.RWMutex
-	lastSynth     time.Time
-	config        *ktranslate.Config
+	tr              *http.Transport
+	client          *http.Client
+	devices         map[kt.Cid]kt.Devices
+	synAgents       map[kt.AgentId]*synthetics.Agent
+	synAgentsByIP   map[string]*synthetics.Agent
+	synTests        map[kt.TestId]*synthetics.Test
+	setTime         time.Time
+	apiTimeout      time.Duration
+	synClient       synthetics.SyntheticsAdminServiceClient
+	mux             sync.RWMutex
+	lastSynth       time.Time
+	config          *ktranslate.Config
+	tagLookupClient *int
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -91,7 +92,7 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	}
 
 	// Now, check to see if synthetics API works.
-	err := kapi.connectSynth(ctx)
+	err := kapi.connectSynthAndLookup(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -412,8 +413,7 @@ func (api *KentikApi) getClientKeepAlive() keepalive.ClientParameters {
 	}
 }
 
-func (api *KentikApi) connectSynth(ctxIn context.Context) error {
-
+func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	ctx, cancel := context.WithTimeout(ctxIn, api.apiTimeout)
 	defer cancel()
 
@@ -442,6 +442,10 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 	client := synthetics.NewSyntheticsAdminServiceClient(conn)
 	api.Infof("Connected to Synth API server at %s", address)
 	api.synClient = client
+
+	//clientLookup := tagging.NewLookupAdminServiceClient(conn)
+	//api.Infof("Connected to Tag Lookup API server at %s", address)
+	//api.tagLookupClient = clientLookup
 
 	return api.getSynthInfo(ctx)
 }
@@ -613,4 +617,39 @@ type deviceCreate struct {
 func userAgent(comments ...string) string {
 	comments = append([]string{runtime.GOOS, runtime.GOARCH}, comments...)
 	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
+}
+
+func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums []uint32) (map[uint32]string, error) {
+	if api.tagLookupClient == nil {
+		return nil, nil
+	}
+	return nil, nil
+
+	/**
+
+	lt := &tagging.LookupValuesRequest{
+		Enumerations: enums,
+	}
+
+	res := map[uint32]string{}
+
+	for _, info := range api.config.KentikCreds {
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		r, err := api.tagClient.LookupValues(ctxo, lt)
+		if err != nil {
+			return nil, err
+		}
+
+		for e, s := range r.GetMappings() {
+			res[e] = s
+		}
+	}
+
+	return res, nil
+	*/
 }
