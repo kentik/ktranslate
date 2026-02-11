@@ -455,6 +455,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.OtelFormat.ClientKey = val
 			case "otel.root_ca":
 				cfg.OtelFormat.RootCA = val
+			case "otel.no_block":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.OtelFormat.NoBlockExport = v
 			// pkg/formats/elasticsearch
 			case "elastic.action":
 				cfg.ElasticFormat.Action = val

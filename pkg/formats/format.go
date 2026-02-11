@@ -84,7 +84,7 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 	case FORMAT_PROM_REMOTE:
 		return prom.NewRemoteFormat(log, compression, cfg.PrometheusFormat)
 	case FORMAT_OTEL:
-		return otel.NewFormat(ctx, log, cfg.OtelFormat, logTee)
+		return otel.NewFormat(ctx, log, cfg.OtelFormat, logTee, registry)
 	case FORMAT_SNMP:
 		return snmp.NewFormat(log, cfg.SnmpFormat)
 	case FORMAT_PARQUET:
