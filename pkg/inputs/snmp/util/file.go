@@ -10,12 +10,16 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/go-git/go-git/v5"
+	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
 
 // Utility to load a config file from various places
@@ -32,6 +36,8 @@ func LoadFile(ctx context.Context, file string) ([]byte, error) {
 		return loadFromS3(ctx, u, getS3Downloader())
 	case "s3m":
 		return loadFromS3(ctx, u, getMockS3Client())
+	case "git":
+		return loadFromGit(ctx, u)
 	default:
 		return ioutil.ReadFile(file)
 	}
@@ -51,6 +57,8 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 		return writeToS3(ctx, u, payload, getS3Uploader())
 	case "s3m":
 		return writeToS3(ctx, u, payload, getMockS3Client())
+	case "git":
+		return writeToGit(ctx, u, payload)
 	default:
 		return ioutil.WriteFile(file, payload, perms)
 	}
@@ -118,6 +126,50 @@ func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3Clien
 		Key:    aws.String(url.Path),
 	})
 	return err
+}
+
+// noop, assume that file is not to be changed.
+// @todo, allow a commit after disco?
+func writeToGit(ctx context.Context, url *url.URL, payload []byte) error {
+	return nil
+}
+
+func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
+	dir, err := os.MkdirTemp("", "ktrans")
+	if err != nil {
+		return nil, err
+	}
+	defer os.RemoveAll(dir) // clean up
+
+	pts := strings.Split(url.String(), "/")
+	gitRepo := ""
+	filePath := ""
+	if len(pts) >= 6 {
+		gitRepo = "https://" + strings.Join(pts[2:5], "/") + ".git"
+		filePath = strings.Join(pts[5:], "/")
+	} else {
+		return nil, fmt.Errorf("Invalid git url path: %s", url.String())
+	}
+
+	var auth *githttp.BasicAuth
+	if token := os.Getenv("KT_GITHUB_ACCESS_TOKEN"); token != "" {
+		auth = &githttp.BasicAuth{
+			Username: "foo", // yes, this can be anything except an empty string
+			Password: token,
+		}
+	}
+
+	_, err = git.PlainCloneContext(ctx, dir, false, &git.CloneOptions{
+		URL:      gitRepo,
+		Auth:     auth,
+		Progress: os.Stdout,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	file := path.Join(dir, filePath)
+	return ioutil.ReadFile(file)
 }
 
 type s3ClientDown interface {
