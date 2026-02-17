@@ -270,6 +270,14 @@ func (s *NRSink) sendNR(ctx context.Context, payload *kt.Output, url string) {
 
 	s.metrics.DeliveryMetrics.Mark(1) // Compression will effect this, but we can do our best.
 	if s.estimate {                   // here, just mark how much we would have sent.
+		uncompressedSize := len(payload.Body)
+		// Always calculate gzip size for estimate since NR uses compression
+		var buf bytes.Buffer
+		gz := gzip.NewWriter(&buf)
+		gz.Write(payload.Body)
+		gz.Close()
+		compressedSize := buf.Len()
+		s.Infof("NR Estimate: would send %d bytes (compressed: %d bytes, ratio: %.1fx) to %s", uncompressedSize, compressedSize, float64(uncompressedSize)/float64(compressedSize), url)
 		return
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload.Body))
