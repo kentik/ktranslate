@@ -18,7 +18,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v6"
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
 
@@ -159,7 +159,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 		}
 	}
 
-	_, err = git.PlainCloneContext(ctx, dir, false, &git.CloneOptions{
+	_, err = git.PlainCloneContext(ctx, dir, &git.CloneOptions{
 		URL:      gitRepo,
 		Auth:     auth,
 		Progress: os.Stdout,

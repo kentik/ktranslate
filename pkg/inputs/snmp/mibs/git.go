@@ -6,8 +6,8 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v6"
+	"github.com/go-git/go-git/v6/plumbing"
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
 
@@ -20,7 +20,7 @@ func cloneFromGit(ctx context.Context, profileDir string, gitUrl string, gitHash
 		}
 	}
 
-	r, err := git.PlainCloneContext(ctx, profileDir, false, &git.CloneOptions{
+	r, err := git.PlainCloneContext(ctx, profileDir, &git.CloneOptions{
 		URL:  gitUrl,
 		Auth: auth,
 	})
