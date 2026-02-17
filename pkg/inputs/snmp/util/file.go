@@ -145,7 +145,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	gitRepo := ""
 	filePath := ""
 	if len(pts) >= 6 {
-		gitRepo = "https://" + strings.Join(pts[2:5], "/") + ".git"
+		gitRepo = "https://" + strings.Join(pts[2:5], "/")
 		filePath = strings.Join(pts[5:], "/")
 	} else {
 		return nil, fmt.Errorf("Invalid git url path: %s", url.String())
@@ -162,7 +162,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	_, err = git.PlainCloneContext(ctx, dir, &git.CloneOptions{
 		URL:      gitRepo,
 		Auth:     auth,
-		Progress: os.Stdout,
+		Progress: io.Discard,
 	})
 	if err != nil {
 		return nil, err
