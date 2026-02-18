@@ -22,6 +22,11 @@ import (
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
 
+const (
+	KT_GIT_ACCESS_TOKEN    = "KT_GIT_ACCESS_TOKEN"
+	KT_GIT_ACCESS_USERNAME = "KT_GIT_ACCESS_USERNAME"
+)
+
 // Utility to load a config file from various places
 func LoadFile(ctx context.Context, file string) ([]byte, error) {
 	u, err := url.Parse(file)
@@ -152,9 +157,9 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	}
 
 	var auth *githttp.BasicAuth
-	if token := os.Getenv("KT_GITHUB_ACCESS_TOKEN"); token != "" {
+	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
 		auth = &githttp.BasicAuth{
-			Username: "foo", // yes, this can be anything except an empty string
+			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
 			Password: token,
 		}
 	}
