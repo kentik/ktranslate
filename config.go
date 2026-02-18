@@ -574,8 +574,8 @@ func LoadConfig(ctx context.Context, configPath string) (*Config, error) {
 		return nil, err
 	}
 
-	var cfg *Config
-	if err := yaml.Unmarshal(confBytes, cfg); err != nil {
+	cfg := Config{}
+	if err := yaml.Unmarshal(confBytes, &cfg); err != nil {
 		return nil, err
 	}
 
@@ -583,7 +583,7 @@ func LoadConfig(ctx context.Context, configPath string) (*Config, error) {
 		cfg.MaxFlowsPerMessage = MaxNetflowsPerMessage
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }
 
 // SaveConfig saves the ktranslate configuration to the specified path

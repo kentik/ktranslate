@@ -146,16 +146,22 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	}
 	defer os.RemoveAll(dir) // clean up
 
-	pts := strings.Split(url.String(), "/")
-	gitRepo := ""
-	filePath := ""
-	if len(pts) >= 6 {
-		gitRepo = "https://" + strings.Join(pts[2:5], "/")
-		filePath = strings.Join(pts[5:], "/")
-	} else {
-		return nil, fmt.Errorf("Invalid git url path: %s", url.String())
+	// Derive gitRepo from host and the first two path segments (owner/repo),
+	// trimming an optional ".git" suffix from the repo name.
+	cleanPath := strings.TrimPrefix(url.Path, "/")
+	segments := strings.Split(cleanPath, "/")
+	if len(segments) < 3 {
+		return nil, fmt.Errorf("invalid git url path: %s", url.String())
 	}
+	owner := segments[0]
+	repo := segments[1]
+	if strings.HasSuffix(repo, ".git") {
+		repo = strings.TrimSuffix(repo, ".git")
+	}
+	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
+	filePath := path.Join(segments[2:]...)
 
+	// Load up the auth if set via env var.
 	var auth *githttp.BasicAuth
 	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
 		auth = &githttp.BasicAuth{
