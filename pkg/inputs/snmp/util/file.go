@@ -20,6 +20,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-git/go-git/v6"
+	"github.com/go-git/go-git/v6/plumbing/object"
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
 
@@ -64,7 +65,7 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 	case "s3m":
 		return writeToS3(ctx, u, payload, getMockS3Client())
 	case "git":
-		return writeToGit(ctx, u, payload)
+		return writeToGit(ctx, u, payload, perms)
 	default:
 		return ioutil.WriteFile(file, payload, perms)
 	}
@@ -136,12 +137,82 @@ func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3Clien
 
 // noop, assume that file is not to be changed.
 // @todo, allow a commit after disco?
-func writeToGit(ctx context.Context, url *url.URL, payload []byte) error {
+func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.FileMode) error {
 	// Get repo cloned
+	dir, err := os.MkdirTemp("", "ktrans")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(dir) // clean up
+
+	// Derive gitRepo from host and the first two path segments (owner/repo),
+	// trimming an optional ".git" suffix from the repo name.
+	cleanPath := strings.TrimPrefix(url.Path, "/")
+	segments := strings.Split(cleanPath, "/")
+	if len(segments) < 3 {
+		return fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
+	}
+	owner := segments[0]
+	repo := segments[1]
+	if strings.HasSuffix(repo, ".git") {
+		repo = strings.TrimSuffix(repo, ".git")
+	}
+	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
+	filePath := filepath.Clean(path.Join(segments[2:]...))
+
+	// Load up the auth if set via env var.
+	var auth *githttp.BasicAuth
+	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
+		auth = &githttp.BasicAuth{
+			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
+			Password: token,
+		}
+	}
+
+	r, err := git.PlainCloneContext(ctx, dir, &git.CloneOptions{
+		URL:      gitRepo,
+		Auth:     auth,
+		Progress: io.Discard,
+	})
+	if err != nil {
+		return err
+	}
+
+	file := path.Join(dir, filePath)
+
 	// Copy new file onto path
+	err = ioutil.WriteFile(file, payload, perms)
+	if err != nil {
+		return err
+	}
+
 	// Commit repo
+	w, err := r.Worktree()
+	if err != nil {
+		return err
+	}
+
+	// Adds the new file to the staging area.
+	_, err = w.Add(filePath)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Commit("ktranslate adding new version of config file", &git.CommitOptions{
+		Author: &object.Signature{
+			Name:  "Ktranslate internal",
+			Email: "ktranslate@kentik.com",
+			When:  time.Now(),
+		},
+	})
+	if err != nil {
+		return err
+	}
+
 	// Push repo.
-	return nil
+	return r.Push(&git.PushOptions{
+		Auth: auth,
+	})
 }
 
 func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
@@ -249,6 +320,8 @@ func TouchFile(path string) error {
 	case "s3":
 		return nil
 	case "s3m":
+		return nil
+	case "git":
 		return nil
 	}
 
