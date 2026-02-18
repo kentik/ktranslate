@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -136,6 +137,10 @@ func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3Clien
 // noop, assume that file is not to be changed.
 // @todo, allow a commit after disco?
 func writeToGit(ctx context.Context, url *url.URL, payload []byte) error {
+	// Get repo cloned
+	// Copy new file onto path
+	// Commit repo
+	// Push repo.
 	return nil
 }
 
@@ -151,7 +156,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	cleanPath := strings.TrimPrefix(url.Path, "/")
 	segments := strings.Split(cleanPath, "/")
 	if len(segments) < 3 {
-		return nil, fmt.Errorf("invalid git url path: %s", url.String())
+		return nil, fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
 	}
 	owner := segments[0]
 	repo := segments[1]
@@ -159,7 +164,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 		repo = strings.TrimSuffix(repo, ".git")
 	}
 	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
-	filePath := path.Join(segments[2:]...)
+	filePath := filepath.Clean(path.Join(segments[2:]...))
 
 	// Load up the auth if set via env var.
 	var auth *githttp.BasicAuth
@@ -174,6 +179,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 		URL:      gitRepo,
 		Auth:     auth,
 		Progress: io.Discard,
+		Depth:    1,
 	})
 	if err != nil {
 		return nil, err
