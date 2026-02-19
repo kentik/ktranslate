@@ -145,35 +145,7 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	}
 	defer os.RemoveAll(dir) // clean up
 
-	// Derive gitRepo from host and the first two path segments (owner/repo),
-	// trimming an optional ".git" suffix from the repo name.
-	cleanPath := strings.TrimPrefix(url.Path, "/")
-	segments := strings.Split(cleanPath, "/")
-	if len(segments) < 3 {
-		return fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
-	}
-	owner := segments[0]
-	repo := segments[1]
-	if strings.HasSuffix(repo, ".git") {
-		repo = strings.TrimSuffix(repo, ".git")
-	}
-	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
-	filePath := filepath.Clean(path.Join(segments[2:]...))
-
-	// Load up the auth if set via env var.
-	var auth *githttp.BasicAuth
-	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
-		auth = &githttp.BasicAuth{
-			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
-			Password: token,
-		}
-	}
-
-	r, err := git.PlainCloneContext(ctx, dir, &git.CloneOptions{
-		URL:      gitRepo,
-		Auth:     auth,
-		Progress: io.Discard,
-	})
+	filePath, r, err := gitClone(ctx, url, dir)
 	if err != nil {
 		return err
 	}
@@ -210,24 +182,26 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	}
 
 	// Push repo.
+	var auth *githttp.BasicAuth
+	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
+		auth = &githttp.BasicAuth{
+			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
+			Password: token,
+		}
+	}
+
 	return r.Push(&git.PushOptions{
 		Auth: auth,
 	})
 }
 
-func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
-	dir, err := os.MkdirTemp("", "ktrans")
-	if err != nil {
-		return nil, err
-	}
-	defer os.RemoveAll(dir) // clean up
-
+func gitClone(ctx context.Context, url *url.URL, dir string) (string, *git.Repository, error) {
 	// Derive gitRepo from host and the first two path segments (owner/repo),
 	// trimming an optional ".git" suffix from the repo name.
 	cleanPath := strings.TrimPrefix(url.Path, "/")
 	segments := strings.Split(cleanPath, "/")
 	if len(segments) < 3 {
-		return nil, fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
+		return "", nil, fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
 	}
 	owner := segments[0]
 	repo := segments[1]
@@ -246,12 +220,27 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 		}
 	}
 
-	_, err = git.PlainCloneContext(ctx, dir, &git.CloneOptions{
+	r, err := git.PlainCloneContext(ctx, dir, &git.CloneOptions{
 		URL:      gitRepo,
 		Auth:     auth,
 		Progress: io.Discard,
 		Depth:    1,
 	})
+	if err != nil {
+		return "", nil, err
+	}
+
+	return filePath, r, nil
+}
+
+func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
+	dir, err := os.MkdirTemp("", "ktrans")
+	if err != nil {
+		return nil, err
+	}
+	defer os.RemoveAll(dir) // clean up
+
+	filePath, _, err := gitClone(ctx, url, dir)
 	if err != nil {
 		return nil, err
 	}
