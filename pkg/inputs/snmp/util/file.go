@@ -31,6 +31,8 @@ const (
 	KT_GIT_ACCESS_USERNAME = "KT_GIT_ACCESS_USERNAME"
 	KT_GIT_PULL_BRANCH     = "KT_GIT_PULL_BRANCH"
 	KT_GIT_PUSH_BRANCH     = "KT_GIT_PUSH_BRANCH"
+	KT_GIT_COMMIT_EMAIL    = "KT_GIT_COMMIT_EMAIL"
+	KT_GIT_COMMIT_NAME     = "KT_GIT_COMMIT_NAME"
 )
 
 // Utility to load a config file from various places
@@ -181,10 +183,19 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 		return fmt.Errorf("%s, git add %s", err.Error(), file)
 	}
 
+	name := os.Getenv(KT_GIT_COMMIT_NAME)
+	if name == "" {
+		name = "Ktranslate internal"
+	}
+	email := os.Getenv(KT_GIT_COMMIT_EMAIL)
+	if email == "" {
+		email = "ktranslate@kentik.com"
+	}
+
 	_, err = w.Commit("ktranslate adding new version of config file", &git.CommitOptions{
 		Author: &object.Signature{
-			Name:  "Ktranslate internal",
-			Email: "ktranslate@kentik.com",
+			Name:  name,
+			Email: email,
 			When:  time.Now(),
 		},
 	})
@@ -193,19 +204,28 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	}
 
 	// Push repo.
-	var auth *githttp.BasicAuth
-	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
-		auth = &githttp.BasicAuth{
-			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
-			Password: token,
-		}
-	}
-
 	return r.Push(&git.PushOptions{
-		Auth:     auth,
+		Auth:     GetGitCreds(),
 		Force:    true,
 		RefSpecs: refSpecSet,
 	})
+}
+
+func GetGitCreds() *githttp.BasicAuth {
+	token := os.Getenv(KT_GIT_ACCESS_TOKEN)
+	if token == "" {
+		return nil
+	}
+	username := os.Getenv(KT_GIT_ACCESS_USERNAME)
+	if username == "" {
+		// Many Git hosting services require a non-empty username when using personal access tokens.
+		// Default to a conventional placeholder username if none is provided via environment.
+		username = "git"
+	}
+	return &githttp.BasicAuth{
+		Username: username,
+		Password: token,
+	}
 }
 
 func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.ReferenceName) (string, *git.Repository, error) {
@@ -214,7 +234,7 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	cleanPath := strings.TrimPrefix(url.Path, "/")
 	segments := strings.Split(cleanPath, "/")
 	if len(segments) < 3 {
-		return "", nil, fmt.Errorf("invalid git url path: %s. Expected format: https://host/owner/repo/path/to/file.yaml", url.String())
+		return "", nil, fmt.Errorf("invalid git url path: %s. Expected format: git://host/owner/repo/path/to/file.yaml", url.String())
 	}
 	owner := segments[0]
 	repo := segments[1]
@@ -223,21 +243,10 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	}
 	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
 	filePath := filepath.Clean(path.Join(segments[2:]...))
-
-	// Load up the auth if set via env var.
-	var auth *githttp.BasicAuth
-	if token := os.Getenv(KT_GIT_ACCESS_TOKEN); token != "" {
-		auth = &githttp.BasicAuth{
-			Username: os.Getenv(KT_GIT_ACCESS_USERNAME),
-			Password: token,
-		}
-	}
-
 	r, err := git.PlainCloneContext(ctx, dir, &git.CloneOptions{
 		URL:      gitRepo,
-		Auth:     auth,
+		Auth:     GetGitCreds(),
 		Progress: io.Discard,
-		Depth:    1,
 	})
 	if err != nil {
 		return "", nil, err
