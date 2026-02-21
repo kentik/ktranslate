@@ -139,8 +139,6 @@ func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3Clien
 	return err
 }
 
-// noop, assume that file is not to be changed.
-// @todo, allow a commit after disco?
 func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.FileMode) error {
 	// Get repo cloned
 	dir, err := os.MkdirTemp("", "ktrans")
@@ -281,7 +279,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	defer os.RemoveAll(dir) // clean up
 
 	var branch plumbing.ReferenceName
-	if bb := os.Getenv(KT_GIT_PUSH_BRANCH); bb != "" {
+	if bb := os.Getenv(KT_GIT_PULL_BRANCH); bb != "" {
 		branch = plumbing.NewBranchReferenceName(bb)
 	}
 	filePath, _, err := gitClone(ctx, url, dir, branch)

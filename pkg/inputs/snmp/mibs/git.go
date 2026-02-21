@@ -28,7 +28,13 @@ func cloneFromGit(ctx context.Context, profileDir string, gitUrl string, gitHash
 	if err != nil {
 		return err
 	}
-	if gitHash == "" {
+
+	var branch plumbing.ReferenceName
+	if bb := os.Getenv(snmp_util.KT_GIT_PULL_BRANCH); bb != "" {
+		branch = plumbing.NewBranchReferenceName(bb)
+	}
+
+	if gitHash == "" && branch == "" {
 		return nil
 	}
 
@@ -37,9 +43,28 @@ func cloneFromGit(ctx context.Context, profileDir string, gitUrl string, gitHash
 		return err
 	}
 
-	log.Infof("Checking profile repo out to %s", gitHash)
-	err = w.Checkout(&git.CheckoutOptions{
-		Hash: plumbing.NewHash(gitHash),
-	})
+	var coOpts *git.CheckoutOptions
+	if branch != "" {
+		headRef, err := r.Head()
+		if err != nil {
+			return err
+		}
+		ref := plumbing.NewHashReference(branch, headRef.Hash())
+		err = r.Storer.SetReference(ref)
+		if err != nil {
+			return err
+		}
+		coOpts = &git.CheckoutOptions{
+			Branch: ref.Name(),
+		}
+		log.Infof("Checking profile repo out to branch %s", branch)
+	} else {
+		coOpts = &git.CheckoutOptions{
+			Hash: plumbing.NewHash(gitHash),
+		}
+		log.Infof("Checking profile repo out to hash %s ", gitHash)
+	}
+
+	err = w.Checkout(coOpts)
 	return err
 }
