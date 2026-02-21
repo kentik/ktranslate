@@ -20,6 +20,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/go-git/go-git/v6"
+	"github.com/go-git/go-git/v6/config"
+	"github.com/go-git/go-git/v6/plumbing"
 	"github.com/go-git/go-git/v6/plumbing/object"
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
@@ -27,6 +29,8 @@ import (
 const (
 	KT_GIT_ACCESS_TOKEN    = "KT_GIT_ACCESS_TOKEN"
 	KT_GIT_ACCESS_USERNAME = "KT_GIT_ACCESS_USERNAME"
+	KT_GIT_PULL_BRANCH     = "KT_GIT_PULL_BRANCH"
+	KT_GIT_PUSH_BRANCH     = "KT_GIT_PUSH_BRANCH"
 )
 
 // Utility to load a config file from various places
@@ -145,7 +149,16 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	}
 	defer os.RemoveAll(dir) // clean up
 
-	filePath, r, err := gitClone(ctx, url, dir)
+	// If we are in a branch, use this here.
+	var branch plumbing.ReferenceName
+	var refSpecSet []config.RefSpec
+	if bb := os.Getenv(KT_GIT_PUSH_BRANCH); bb != "" {
+		branch = plumbing.NewBranchReferenceName(bb)
+		refSpecSet = []config.RefSpec{config.RefSpec(fmt.Sprintf("+refs/heads/%s:refs/heads/%s", bb, bb))}
+	}
+
+	// Clone things locally to kick off.
+	filePath, r, err := gitClone(ctx, url, dir, branch)
 	if err != nil {
 		return err
 	}
@@ -155,19 +168,19 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	// Copy new file onto path
 	err = ioutil.WriteFile(file, payload, perms)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s, WriteFile %s", err.Error(), file)
 	}
 
 	// Commit repo
 	w, err := r.Worktree()
 	if err != nil {
-		return err
+		return fmt.Errorf("%s, Worktree %s", err.Error(), file)
 	}
 
 	// Adds the new file to the staging area.
 	_, err = w.Add(filePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s, git add %s", err.Error(), file)
 	}
 
 	_, err = w.Commit("ktranslate adding new version of config file", &git.CommitOptions{
@@ -178,7 +191,7 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 		},
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("%s, git commit %s", err.Error(), file)
 	}
 
 	// Push repo.
@@ -191,11 +204,13 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	}
 
 	return r.Push(&git.PushOptions{
-		Auth: auth,
+		Auth:     auth,
+		Force:    true,
+		RefSpecs: refSpecSet,
 	})
 }
 
-func gitClone(ctx context.Context, url *url.URL, dir string) (string, *git.Repository, error) {
+func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.ReferenceName) (string, *git.Repository, error) {
 	// Derive gitRepo from host and the first two path segments (owner/repo),
 	// trimming an optional ".git" suffix from the repo name.
 	cleanPath := strings.TrimPrefix(url.Path, "/")
@@ -230,7 +245,32 @@ func gitClone(ctx context.Context, url *url.URL, dir string) (string, *git.Repos
 		return "", nil, err
 	}
 
-	return filePath, r, nil
+	if branch == "" {
+		return filePath, r, nil
+	}
+
+	// Now if there's a defined branch to get, check this one out.
+	w, err := r.Worktree()
+	if err != nil {
+		return "", nil, err
+	}
+
+	headRef, err := r.Head()
+	if err != nil {
+		return "", nil, err
+	}
+
+	ref := plumbing.NewHashReference(branch, headRef.Hash())
+	err = r.Storer.SetReference(ref)
+	if err != nil {
+		return "", nil, err
+	}
+
+	err = w.Checkout(&git.CheckoutOptions{
+		Branch: ref.Name(),
+	})
+
+	return filePath, r, err
 }
 
 func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
@@ -240,7 +280,11 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	}
 	defer os.RemoveAll(dir) // clean up
 
-	filePath, _, err := gitClone(ctx, url, dir)
+	var branch plumbing.ReferenceName
+	if bb := os.Getenv(KT_GIT_PUSH_BRANCH); bb != "" {
+		branch = plumbing.NewBranchReferenceName(bb)
+	}
+	filePath, _, err := gitClone(ctx, url, dir, branch)
 	if err != nil {
 		return nil, err
 	}
