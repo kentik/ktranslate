@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -52,7 +51,7 @@ func LoadFile(ctx context.Context, file string) ([]byte, error) {
 	case "git":
 		return loadFromGit(ctx, u)
 	default:
-		return ioutil.ReadFile(file)
+		return os.ReadFile(file)
 	}
 }
 
@@ -73,7 +72,7 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 	case "git":
 		return writeToGit(ctx, u, payload, perms)
 	default:
-		return ioutil.WriteFile(file, payload, perms)
+		return os.WriteFile(file, payload, perms)
 	}
 }
 
@@ -89,7 +88,7 @@ func loadFromHttp(ctx context.Context, file string) ([]byte, error) {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +107,7 @@ func writeToHttp(ctx context.Context, file string, payload []byte) error {
 	}
 
 	defer resp.Body.Close()
-	_, err = ioutil.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -166,7 +165,7 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 	file := path.Join(dir, filePath)
 
 	// Copy new file onto path
-	err = ioutil.WriteFile(file, payload, perms)
+	err = os.WriteFile(file, payload, perms)
 	if err != nil {
 		return fmt.Errorf("%s, WriteFile %s", err.Error(), file)
 	}
@@ -257,7 +256,7 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	}
 	r, err := git.PlainCloneContext(ctx, dir, cloneOpts)
 	if err != nil {
-		return "", nil, err
+		return "", nil, fmt.Errorf("failed to clone git repository %s: %w", gitRepo, err)
 	}
 
 	return filePath, r, err
@@ -280,7 +279,7 @@ func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
 	}
 
 	file := path.Join(dir, filePath)
-	return ioutil.ReadFile(file)
+	return os.ReadFile(file)
 }
 
 type s3ClientDown interface {
