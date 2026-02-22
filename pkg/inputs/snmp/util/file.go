@@ -243,39 +243,22 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	}
 	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
 	filePath := filepath.Clean(path.Join(segments[2:]...))
-	r, err := git.PlainCloneContext(ctx, dir, &git.CloneOptions{
+
+	cloneOpts := &git.CloneOptions{
 		URL:      gitRepo,
 		Auth:     GetGitCreds(),
 		Progress: io.Discard,
-	})
+	}
+	// If a branch is specified, clone that branch directly instead of
+	// cloning the default branch and manually rewriting references.
+	if branch != "" {
+		cloneOpts.ReferenceName = branch
+		cloneOpts.SingleBranch = true
+	}
+	r, err := git.PlainCloneContext(ctx, dir, cloneOpts)
 	if err != nil {
 		return "", nil, err
 	}
-
-	if branch == "" {
-		return filePath, r, nil
-	}
-
-	// Now if there's a defined branch to get, check this one out.
-	w, err := r.Worktree()
-	if err != nil {
-		return "", nil, err
-	}
-
-	headRef, err := r.Head()
-	if err != nil {
-		return "", nil, err
-	}
-
-	ref := plumbing.NewHashReference(branch, headRef.Hash())
-	err = r.Storer.SetReference(ref)
-	if err != nil {
-		return "", nil, err
-	}
-
-	err = w.Checkout(&git.CheckoutOptions{
-		Branch: ref.Name(),
-	})
 
 	return filePath, r, err
 }
