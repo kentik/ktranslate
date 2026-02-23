@@ -1,9 +1,11 @@
 package ktranslate
 
 import (
-	"os"
-
+	"context"
 	yaml "gopkg.in/yaml.v3"
+	"io/fs"
+
+	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 )
 
 const (
@@ -566,15 +568,14 @@ func DefaultConfig() *Config {
 }
 
 // LoadConfig returns a ktranslate configuration from the specified path
-func LoadConfig(configPath string) (*Config, error) {
-	f, err := os.Open(configPath)
+func LoadConfig(ctx context.Context, configPath string) (*Config, error) {
+	confBytes, err := snmp_util.LoadFile(ctx, configPath)
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
 
-	var cfg *Config
-	if err := yaml.NewDecoder(f).Decode(&cfg); err != nil {
+	cfg := Config{}
+	if err := yaml.Unmarshal(confBytes, &cfg); err != nil {
 		return nil, err
 	}
 
@@ -582,20 +583,16 @@ func LoadConfig(configPath string) (*Config, error) {
 		cfg.MaxFlowsPerMessage = MaxNetflowsPerMessage
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }
 
 // SaveConfig saves the ktranslate configuration to the specified path
 func (c *Config) SaveConfig() error {
-	f, err := os.Create(c.Server.CfgPath)
+	t, err := yaml.Marshal(c)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
-	if err := yaml.NewEncoder(f).Encode(c); err != nil {
-		return err
-	}
-
-	return nil
+	permissions := fs.FileMode(0644)
+	return snmp_util.WriteFile(context.Background(), c.Server.CfgPath, t, permissions)
 }

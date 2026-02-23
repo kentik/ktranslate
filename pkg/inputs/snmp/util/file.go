@@ -6,16 +6,32 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+	"path"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/go-git/go-git/v6"
+	"github.com/go-git/go-git/v6/config"
+	"github.com/go-git/go-git/v6/plumbing"
+	"github.com/go-git/go-git/v6/plumbing/object"
+	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
+)
+
+const (
+	KT_GIT_ACCESS_TOKEN    = "KT_GIT_ACCESS_TOKEN"
+	KT_GIT_ACCESS_USERNAME = "KT_GIT_ACCESS_USERNAME"
+	KT_GIT_PULL_BRANCH     = "KT_GIT_PULL_BRANCH"
+	KT_GIT_PUSH_BRANCH     = "KT_GIT_PUSH_BRANCH"
+	KT_GIT_COMMIT_EMAIL    = "KT_GIT_COMMIT_EMAIL"
+	KT_GIT_COMMIT_NAME     = "KT_GIT_COMMIT_NAME"
 )
 
 // Utility to load a config file from various places
@@ -32,8 +48,10 @@ func LoadFile(ctx context.Context, file string) ([]byte, error) {
 		return loadFromS3(ctx, u, getS3Downloader())
 	case "s3m":
 		return loadFromS3(ctx, u, getMockS3Client())
+	case "git":
+		return loadFromGit(ctx, u)
 	default:
-		return ioutil.ReadFile(file)
+		return os.ReadFile(file)
 	}
 }
 
@@ -51,8 +69,10 @@ func WriteFile(ctx context.Context, file string, payload []byte, perms fs.FileMo
 		return writeToS3(ctx, u, payload, getS3Uploader())
 	case "s3m":
 		return writeToS3(ctx, u, payload, getMockS3Client())
+	case "git":
+		return writeToGit(ctx, u, payload, perms)
 	default:
-		return ioutil.WriteFile(file, payload, perms)
+		return os.WriteFile(file, payload, perms)
 	}
 }
 
@@ -68,7 +88,7 @@ func loadFromHttp(ctx context.Context, file string) ([]byte, error) {
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +107,7 @@ func writeToHttp(ctx context.Context, file string, payload []byte) error {
 	}
 
 	defer resp.Body.Close()
-	_, err = ioutil.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -118,6 +138,148 @@ func writeToS3(ctx context.Context, url *url.URL, payload []byte, client s3Clien
 		Key:    aws.String(url.Path),
 	})
 	return err
+}
+
+func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.FileMode) error {
+	// Get repo cloned
+	dir, err := os.MkdirTemp("", "ktrans")
+	if err != nil {
+		return err
+	}
+	defer os.RemoveAll(dir) // clean up
+
+	// If we are in a branch, use this here.
+	var branch plumbing.ReferenceName
+	var refSpecSet []config.RefSpec
+	if bb := os.Getenv(KT_GIT_PUSH_BRANCH); bb != "" {
+		branch = plumbing.NewBranchReferenceName(bb)
+		refSpecSet = []config.RefSpec{config.RefSpec(fmt.Sprintf("+refs/heads/%s:refs/heads/%s", bb, bb))}
+	}
+
+	// Clone things locally to kick off.
+	filePath, r, err := gitClone(ctx, url, dir, branch)
+	if err != nil {
+		return err
+	}
+
+	file := path.Join(dir, filePath)
+
+	// Copy new file onto path
+	err = os.WriteFile(file, payload, perms)
+	if err != nil {
+		return fmt.Errorf("%s, WriteFile %s", err.Error(), file)
+	}
+
+	// Commit repo
+	w, err := r.Worktree()
+	if err != nil {
+		return fmt.Errorf("%s, Worktree %s", err.Error(), file)
+	}
+
+	// Adds the new file to the staging area.
+	_, err = w.Add(filePath)
+	if err != nil {
+		return fmt.Errorf("%s, git add %s", err.Error(), file)
+	}
+
+	name := os.Getenv(KT_GIT_COMMIT_NAME)
+	if name == "" {
+		name = "Ktranslate internal"
+	}
+	email := os.Getenv(KT_GIT_COMMIT_EMAIL)
+	if email == "" {
+		email = "ktranslate@kentik.com"
+	}
+
+	_, err = w.Commit("ktranslate adding new version of config file", &git.CommitOptions{
+		Author: &object.Signature{
+			Name:  name,
+			Email: email,
+			When:  time.Now(),
+		},
+	})
+	if err != nil {
+		return fmt.Errorf("%s, git commit %s", err.Error(), file)
+	}
+
+	// Push repo.
+	return r.Push(&git.PushOptions{
+		Auth:     GetGitCreds(),
+		Force:    true,
+		RefSpecs: refSpecSet,
+	})
+}
+
+func GetGitCreds() *githttp.BasicAuth {
+	token := os.Getenv(KT_GIT_ACCESS_TOKEN)
+	if token == "" {
+		return nil
+	}
+	username := os.Getenv(KT_GIT_ACCESS_USERNAME)
+	if username == "" {
+		// Many Git hosting services require a non-empty username when using personal access tokens.
+		// Default to a conventional placeholder username if none is provided via environment.
+		username = "git"
+	}
+	return &githttp.BasicAuth{
+		Username: username,
+		Password: token,
+	}
+}
+
+func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.ReferenceName) (string, *git.Repository, error) {
+	// Derive gitRepo from host and the first two path segments (owner/repo),
+	// trimming an optional ".git" suffix from the repo name.
+	cleanPath := strings.TrimPrefix(url.Path, "/")
+	segments := strings.Split(cleanPath, "/")
+	if len(segments) < 3 {
+		return "", nil, fmt.Errorf("invalid git url path: %s. Expected format: git://host/owner/repo/path/to/file.yaml", url.String())
+	}
+	owner := segments[0]
+	repo := segments[1]
+	if strings.HasSuffix(repo, ".git") {
+		repo = strings.TrimSuffix(repo, ".git")
+	}
+	gitRepo := "https://" + path.Join(url.Host, owner, repo) + ".git"
+	filePath := filepath.Clean(path.Join(segments[2:]...))
+
+	cloneOpts := &git.CloneOptions{
+		URL:      gitRepo,
+		Auth:     GetGitCreds(),
+		Progress: io.Discard,
+	}
+	// If a branch is specified, clone that branch directly instead of
+	// cloning the default branch and manually rewriting references.
+	if branch != "" {
+		cloneOpts.ReferenceName = branch
+		cloneOpts.SingleBranch = true
+	}
+	r, err := git.PlainCloneContext(ctx, dir, cloneOpts)
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to clone git repository %s: %w", gitRepo, err)
+	}
+
+	return filePath, r, err
+}
+
+func loadFromGit(ctx context.Context, url *url.URL) ([]byte, error) {
+	dir, err := os.MkdirTemp("", "ktrans")
+	if err != nil {
+		return nil, err
+	}
+	defer os.RemoveAll(dir) // clean up
+
+	var branch plumbing.ReferenceName
+	if bb := os.Getenv(KT_GIT_PULL_BRANCH); bb != "" {
+		branch = plumbing.NewBranchReferenceName(bb)
+	}
+	filePath, _, err := gitClone(ctx, url, dir, branch)
+	if err != nil {
+		return nil, err
+	}
+
+	file := path.Join(dir, filePath)
+	return os.ReadFile(file)
 }
 
 type s3ClientDown interface {
@@ -180,6 +342,8 @@ func TouchFile(path string) error {
 	case "s3":
 		return nil
 	case "s3m":
+		return nil
+	case "git":
 		return nil
 	}
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -127,7 +128,7 @@ func main() {
 
 	// if config specified, merge config
 	if v := *configFilePath; v != "" {
-		ktCfg, err := ktranslate.LoadConfig(v)
+		ktCfg, err := ktranslate.LoadConfig(context.Background(), v)
 		if err != nil {
 			panic(err)
 		}
