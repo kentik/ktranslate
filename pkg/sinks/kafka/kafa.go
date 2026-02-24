@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -35,7 +34,6 @@ var (
 	kafkaSSLCAFile               string
 	kafkaSSLCertFile             string
 	kafkaSSLKeyFile              string
-	kafkaSSLKeyPassword          string
 	kafkaSSLInsecure             bool
 	kafkaRequiredAcks            int
 	kafkaCompression             string
@@ -62,7 +60,6 @@ func init() {
 	flag.StringVar(&kafkaSSLCAFile, "kafka_ssl_ca_file", "", "SSL CA certificate file")
 	flag.StringVar(&kafkaSSLCertFile, "kafka_ssl_cert_file", "", "SSL client certificate file")
 	flag.StringVar(&kafkaSSLKeyFile, "kafka_ssl_key_file", "", "SSL client private key file")
-	flag.StringVar(&kafkaSSLKeyPassword, "kafka_ssl_key_password", "", "SSL private key password")
 	flag.BoolVar(&kafkaSSLInsecure, "kafka_ssl_insecure", false, "Skip SSL certificate verification")
 	flag.IntVar(&kafkaRequiredAcks, "kafka_required_acks", 1, "Required acks (0=NoResponse, 1=WaitForLocal, -1=WaitForAll)")
 	flag.StringVar(&kafkaCompression, "kafka_compression", "none", "Compression codec (none, gzip, snappy, lz4, zstd)")
@@ -172,10 +169,14 @@ func (s *KafkaSink) Init(ctx context.Context, format formats.Format, compression
 		return fmt.Errorf("unsupported security protocol: %s", s.config.SecurityProtocol)
 	}
 
-	// Version configuration - use a recent version that supports all features
-	version, err := sarama.ParseKafkaVersion("2.8.0")
+	// Version configuration: allow override via KAFKA_VERSION env var, default to 2.8.0
+	versionStr := os.Getenv("KT_KAFKA_VERSION")
+	if versionStr == "" {
+		versionStr = "2.8.0"
+	}
+	version, err := sarama.ParseKafkaVersion(versionStr)
 	if err != nil {
-		return fmt.Errorf("failed to parse kafka version: %v", err)
+		return fmt.Errorf("failed to parse kafka version %q: %v", versionStr, err)
 	}
 	config.Version = version
 
@@ -213,7 +214,7 @@ func (s *KafkaSink) configureTLS(config *sarama.Config) error {
 
 	// Load CA certificate
 	if s.config.SSLCAFile != "" {
-		caCert, err := ioutil.ReadFile(s.config.SSLCAFile)
+		caCert, err := os.ReadFile(s.config.SSLCAFile)
 		if err != nil {
 			return fmt.Errorf("failed to read CA certificate: %v", err)
 		}

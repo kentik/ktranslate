@@ -149,11 +149,10 @@ type KafkaSinkConfig struct {
 	KerberosPrincipal       string // Kerberos principal
 	KerberosDisablePAFXFAST bool   // Disable PA-FX-FAST
 	// SSL/TLS settings
-	SSLCAFile      string // CA certificate file
-	SSLCertFile    string // Client certificate file
-	SSLKeyFile     string // Client private key file
-	SSLKeyPassword string // Private key password
-	SSLInsecure    bool   // Skip certificate verification
+	SSLCAFile   string // CA certificate file
+	SSLCertFile string // Client certificate file
+	SSLKeyFile  string // Client private key file
+	SSLInsecure bool   // Skip certificate verification
 	// Producer settings
 	RequiredAcks    int    // 0=NoResponse, 1=WaitForLocal, -1=WaitForAll
 	Compression     string // none, gzip, snappy, lz4, zstd
@@ -513,7 +512,6 @@ func DefaultConfig() *Config {
 			SSLCAFile:               "",
 			SSLCertFile:             "",
 			SSLKeyFile:              "",
-			SSLKeyPassword:          "",
 			SSLInsecure:             false,
 			RequiredAcks:            1,
 			Compression:             "none",

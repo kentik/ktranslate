@@ -604,8 +604,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 			// pkg/sinks/kafka
 			case "kafka_topic":
 				cfg.KafkaSink.Topic = val
-			case "kafka_brokers":
-				cfg.KafkaSink.BootstrapServers = val
 			case "bootstrap.servers":
 				cfg.KafkaSink.BootstrapServers = val
 			case "kafka_security_protocol":
@@ -639,8 +637,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.KafkaSink.SSLCertFile = val
 			case "kafka_ssl_key_file":
 				cfg.KafkaSink.SSLKeyFile = val
-			case "kafka_ssl_key_password":
-				cfg.KafkaSink.SSLKeyPassword = val
 			case "kafka_ssl_insecure":
 				v, err := strconv.ParseBool(val)
 				if err != nil {
