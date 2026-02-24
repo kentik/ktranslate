@@ -16,13 +16,15 @@ import (
 	"sync"
 	"time"
 
-	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202202"
+	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -433,6 +435,10 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 		lt := &synthetics.ListTestsRequest{}
 		r, err := api.synClient.ListTests(ctxo, lt)
 		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("Synthetics ListTests endpoint not implemented (deprecated API); skipping.")
+				return nil
+			}
 			return err
 		}
 
