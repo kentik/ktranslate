@@ -403,10 +403,11 @@ func (api *KentikApi) manageCache(ctx context.Context) {
 // enforcement applies between the API Gateway and the actual API.
 //
 // See https://github.com/grpc/grpc-go/blob/v1.62.0/keepalive/keepalive.go#L77
+// Copied from https://github.com/kentik/kagent
 func (api *KentikApi) getClientKeepAlive() keepalive.ClientParameters {
 	return keepalive.ClientParameters{
 		Time:                30 * time.Second, // send pings every 30 seconds if there is no activity
-		Timeout:             api.apiTimeout,   // wait 20 seconds for ping ack before considering the connection dead
+		Timeout:             api.apiTimeout,   // wait KENTIK_API_TIMEOUT or default 60 seconds for ping ack before considering the connection dead
 		PermitWithoutStream: true,             // send pings even without active streams
 	}
 }
@@ -611,5 +612,5 @@ type deviceCreate struct {
 
 func UserAgent(comments ...string) string {
 	comments = append([]string{runtime.GOOS, runtime.GOARCH}, comments...)
-	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version, strings.Join(comments, "; "))
+	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
 }
