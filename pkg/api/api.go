@@ -427,11 +427,6 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 	}
 
 	api.Infof("Connecting to API server at %s", address)
-	//conn, err := grpc.DialContext(ctx, address, grpc.WithBlock(), grpc.WithTransportCredentials(creds))
-	//if err != nil {
-	//	return err
-	//}
-
 	opts := []grpc.DialOption{
 		grpc.WithUserAgent(UserAgent()),
 		grpc.WithKeepaliveParams(api.getClientKeepAlive()),
@@ -439,6 +434,9 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 	}
 
 	conn, err := grpc.NewClient(address, opts...)
+	if err != nil {
+		return err
+	}
 
 	client := synthetics.NewSyntheticsAdminServiceClient(conn)
 	api.Infof("Connected to Synth API server at %s", address)
@@ -613,8 +611,5 @@ type deviceCreate struct {
 
 func UserAgent(comments ...string) string {
 	comments = append([]string{runtime.GOOS, runtime.GOARCH}, comments...)
-	if len(comments) > 0 {
-		return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version, strings.Join(comments, "; "))
-	}
-	return fmt.Sprintf("kentik/ktranslate/%s", version.Version)
+	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version, strings.Join(comments, "; "))
 }
