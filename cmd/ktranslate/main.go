@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/kentik/ktranslate"
-	"github.com/kentik/ktranslate/cmd/version"
 	"github.com/kentik/ktranslate/pkg/cat"
 	"github.com/kentik/ktranslate/pkg/filter"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/version"
 
 	"github.com/imdario/mergo"
 	go_metrics "github.com/kentik/go-metrics"

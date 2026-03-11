@@ -1,6 +1,6 @@
 .PHONY: all
 all:
-	go generate ./cmd/version
+	go generate ./pkg/version
 	go build -tags dynamic -o bin/ktranslate ./cmd/ktranslate
 
 .PHONY: windows

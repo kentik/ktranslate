@@ -19,9 +19,9 @@ import (
 
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
-	"github.com/kentik/ktranslate/cmd/version"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/version"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -122,7 +122,7 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail
 
 	req.Header.Add(API_EMAIL_HEADER, apiEmail)
 	req.Header.Add(API_PASSWORD_HEADER, apiToken)
-	req.Header.Add(HTTP_USER_AGENT, UserAgent())
+	req.Header.Add(HTTP_USER_AGENT, userAgent())
 
 	resp, err := api.client.Do(req)
 	if err != nil {
@@ -429,7 +429,7 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 
 	api.Infof("Connecting to API server at %s", address)
 	opts := []grpc.DialOption{
-		grpc.WithUserAgent(UserAgent()),
+		grpc.WithUserAgent(userAgent()),
 		grpc.WithKeepaliveParams(api.getClientKeepAlive()),
 		grpc.WithTransportCredentials(creds),
 	}
@@ -569,7 +569,7 @@ func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, ur
 
 	req.Header.Add(API_EMAIL_HEADER, api.config.KentikCreds[0].APIEmail)
 	req.Header.Add(API_PASSWORD_HEADER, api.config.KentikCreds[0].APIToken)
-	req.Header.Add(HTTP_USER_AGENT, UserAgent())
+	req.Header.Add(HTTP_USER_AGENT, userAgent())
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := api.client.Do(req)
@@ -610,7 +610,7 @@ type deviceCreate struct {
 	MinSnmp     bool     `json:"minimize_snmp"`
 }
 
-func UserAgent(comments ...string) string {
+func userAgent(comments ...string) string {
 	comments = append([]string{runtime.GOOS, runtime.GOARCH}, comments...)
 	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
 }
