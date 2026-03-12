@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -20,9 +21,11 @@ import (
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/version"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
@@ -30,7 +33,6 @@ import (
 const (
 	CACHE_TIME_DEVICE             = 1 * time.Hour
 	API_TIMEOUT                   = 60 * time.Second
-	USER_AGENT_BASE               = "KentikFirehose"
 	HTTP_USER_AGENT               = "User-Agent"
 	API_EMAIL_HEADER              = "X-CH-Auth-Email"
 	API_PASSWORD_HEADER           = "X-CH-Auth-API-Token"
@@ -118,11 +120,9 @@ func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail
 		return nil, err
 	}
 
-	userAgentString := USER_AGENT_BASE
-
 	req.Header.Add(API_EMAIL_HEADER, apiEmail)
 	req.Header.Add(API_PASSWORD_HEADER, apiToken)
-	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
+	req.Header.Add(HTTP_USER_AGENT, userAgent())
 
 	resp, err := api.client.Do(req)
 	if err != nil {
@@ -390,7 +390,30 @@ func (api *KentikApi) manageCache(ctx context.Context) {
 	}
 }
 
+// clientKeepAlive maintains active gRPC connections with the Kentik API Gateway,
+// even during periods of no application traffic. This is primarily to prevent
+// proxies from terminating idle connections, a common issue for agents deployed
+// behind certain customer network configurations. Configuring this for all agents
+// is harmless and recommended.
+//
+// Note: The API Gateway directly responds to these keep-alive pings and does
+// not forward them to the backend API. Consequently, the gRPC server-side
+// `keepalive.EnforcementPolicy` (e.g., from `grpc-go/keepalive/keepalive.go`)
+// will not function as expected for these client-initiated pings, as its
+// enforcement applies between the API Gateway and the actual API.
+//
+// See https://github.com/grpc/grpc-go/blob/v1.62.0/keepalive/keepalive.go#L77
+// Copied from https://github.com/kentik/kagent
+func (api *KentikApi) getClientKeepAlive() keepalive.ClientParameters {
+	return keepalive.ClientParameters{
+		Time:                30 * time.Second, // send pings every 30 seconds if there is no activity
+		Timeout:             api.apiTimeout,   // wait KENTIK_API_TIMEOUT or default 60 seconds for ping ack before considering the connection dead
+		PermitWithoutStream: true,             // send pings even without active streams
+	}
+}
+
 func (api *KentikApi) connectSynth(ctxIn context.Context) error {
+
 	ctx, cancel := context.WithTimeout(ctxIn, api.apiTimeout)
 	defer cancel()
 
@@ -405,7 +428,13 @@ func (api *KentikApi) connectSynth(ctxIn context.Context) error {
 	}
 
 	api.Infof("Connecting to API server at %s", address)
-	conn, err := grpc.DialContext(ctx, address, grpc.WithBlock(), grpc.WithTransportCredentials(creds))
+	opts := []grpc.DialOption{
+		grpc.WithUserAgent(userAgent()),
+		grpc.WithKeepaliveParams(api.getClientKeepAlive()),
+		grpc.WithTransportCredentials(creds),
+	}
+
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		return err
 	}
@@ -538,10 +567,9 @@ func (api *KentikApi) createDevice(ctx context.Context, create *deviceCreate, ur
 		return err
 	}
 
-	userAgentString := USER_AGENT_BASE
 	req.Header.Add(API_EMAIL_HEADER, api.config.KentikCreds[0].APIEmail)
 	req.Header.Add(API_PASSWORD_HEADER, api.config.KentikCreds[0].APIToken)
-	req.Header.Add(HTTP_USER_AGENT, userAgentString+" AGENT")
+	req.Header.Add(HTTP_USER_AGENT, userAgent())
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := api.client.Do(req)
@@ -580,4 +608,9 @@ type deviceCreate struct {
 	Region      string   `json:"cloud_region,omitempty"`
 	Zone        string   `json:"cloud_zone,omitempty"`
 	MinSnmp     bool     `json:"minimize_snmp"`
+}
+
+func userAgent(comments ...string) string {
+	comments = append([]string{runtime.GOOS, runtime.GOARCH}, comments...)
+	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
 }
