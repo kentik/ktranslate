@@ -61,7 +61,7 @@ require (
 	golang.org/x/net v0.50.0
 	gonum.org/v1/gonum v0.16.0
 	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de
-	google.golang.org/grpc v1.79.1
+	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
