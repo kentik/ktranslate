@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"strconv"
 	"sync"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -23,7 +22,9 @@ type RedisFormat struct {
 	mux          sync.RWMutex
 	config       *ktranslate.RedisFormatConfig
 	ctx          context.Context
+	invalids     map[string]bool
 	metrics      *RedisMetrics
+	rdb          *redis.Client
 }
 
 var (
@@ -46,102 +47,76 @@ type RedisMetrics struct {
 
 func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.RedisFormatConfig, registry go_metrics.Registry) (*RedisFormat, error) {
 	jf := &RedisFormat{
-		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "otel"}, log),
+		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "redis"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
 		invalids:     map[string]bool{},
 		ctx:          ctx,
 		config:       cfg,
-		inputs:       map[string]chan OtelData{},
-		metrics: &OtelMetrics{
-			ExportDrops: go_metrics.GetOrRegisterCounter("otel_export_drops", registry),
+		metrics: &RedisMetrics{
+			ExportDrops: go_metrics.GetOrRegisterCounter("redis_export_drops", registry),
 		},
 	}
 
-	rdb := redis.NewClient(&redis.Options{
+	jf.rdb = redis.NewClient(&redis.Options{
 		Addr:     cfg.RedisAddr,
 		Password: cfg.RedisPassword,
 		DB:       cfg.RedisDB,
 	})
 
-	if err := rdb.Ping(ctx).Err(); err != nil {
+	if err := jf.rdb.Ping(ctx).Err(); err != nil {
 		return nil, fmt.Errorf("cannot connect to Redis", "addr", cfg.RedisAddr, "err", err)
 	}
-	fj.Infof("connected to Redis", "addr", cfg.RedisAddr)
+	jf.Infof("connected to Redis", "addr", cfg.RedisAddr)
 
 	return jf, nil
 }
 
-func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
-	res := make([]OtelData, 0, len(msgs))
+func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
+	res := map[string][]RedisData{}
 	for _, m := range msgs {
-		res = append(res, f.toOtelMetric(m)...)
+		for fqdn, r := range f.toRedisMetric(m) {
+			if _, ok := res[fqdn]; !ok {
+				res[fqdn] = r
+			} else {
+				res[fqdn] = append(res[fqdn], r...)
+			}
+		}
 	}
 
 	if len(res) == 0 {
 		return nil, nil
 	}
 
-	f.mux.RLock()
-	for _, m := range res {
-		if _, ok := f.vecs[m.Name]; !ok {
-			lm := m
-			cv, err := otelm.Float64ObservableGauge(
-				lm.Name,
-				metric.WithFloat64Callback(func(_ context.Context, o metric.Float64Observer) error {
-					f.Debugf("Exporting data from otel for %s", lm.Name)
-					for {
-						select {
-						case mm := <-f.inputs[lm.Name]:
-							o.Observe(mm.Value, metric.WithAttributeSet(mm.GetTagValues()))
-						default:
-							return nil
-						}
-					}
-				}),
-			)
-			if err != nil {
-				f.mux.RUnlock()
-				return nil, err
-			}
-			f.mux.RUnlock()
-			f.mux.Lock()
-			f.vecs[lm.Name] = cv
-			f.inputs[lm.Name] = make(chan OtelData, CHAN_SLACK)
-			f.mux.Unlock()
-			f.mux.RLock()
-			f.Infof("Creating otel export for %s", m.Name)
+	pipe := f.rdb.Pipeline()
+
+	for fqdn, results := range res {
+		key := f.config.KeyPrefix + fqdn
+		members := make([]redis.Z, 0, len(results))
+		for _, r := range results {
+			members = append(members, redis.Z{
+				Score:  r.Latency,
+				Member: r.IP,
+			})
 		}
-		// Save this for later, for the next time the async callback is run.
-		ch := f.inputs[m.Name]
-		queueDepth := len(ch)
-		if queueDepth >= CHAN_SLACK {
-			f.Debugf("Channel queue at CHAN_SLACK limit for %s: %d/%d (100%%)", m.Name, queueDepth, CHAN_SLACK)
-		}
-		if f.config.NoBlockExport {
-			select {
-			case ch <- m:
-			default:
-				f.metrics.ExportDrops.Inc(1)
-			}
-		} else {
-			ch <- m
-		}
+		// ZADD key <score> <member> ... — overwrites existing scores atomically.
+		pipe.ZAdd(f.ctx, key, members...)
+		f.Debugf("queued ZADD", "key", key, "members", len(members))
 	}
 
-	f.mux.RUnlock()
-	return nil, nil
+	_, err := pipe.Exec(f.ctx)
+	return nil, err
 }
 
-func (f *OtelFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
+func (f *RedisFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {
 	values := make([]map[string]interface{}, 0)
 	return values, nil
 }
 
-func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
+func (f *RedisFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	return nil, nil
 }
 
-func (f *OtelFormat) toOtelMetric(in *kt.JCHF) []OtelData {
+func (f *RedisFormat) toRedisMetric(in *kt.JCHF) map[string][]RedisData {
 	switch in.EventType {
 	case kt.KENTIK_EVENT_SYNTH:
 		return f.fromKSynth(in)
@@ -164,28 +139,39 @@ func (f *RedisFormat) fromKSynth(in *kt.JCHF) map[string][]RedisData {
 		return nil // Don't worry about timeouts and errors for now.
 	}
 
-	rawStr := in.CustomStr["error_cause/trace_route"] // Pull this out early.
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
-	ms := make([]OtelData, 0, len(metrics))
+	ms := make([]RedisData, 0, len(metrics))
+	var fqdn, ip string
+
+	if tn, ok := attr["test_name"].(string); ok {
+		fqdn = tn
+	} else {
+		return nil
+	}
+	if da, ok := attr["dst_addr"].(string); ok {
+		ip = da
+	} else {
+		return nil
+	}
 
 	for m, name := range metrics {
 		switch name.Name {
 		case "avg_rtt":
 			ms = append(ms, RedisData{
-				IP:      attr["dst_addr"],
+				IP:      ip,
 				Latency: float64(in.CustomInt[m]),
 			})
 		}
 	}
 
-	return ms
+	return map[string][]RedisData{fqdn: ms}
 }
 
-func (f *OtelFormat) fromSnmpMetadata(in *kt.JCHF) []OtelData {
+func (f *RedisFormat) fromSnmpMetadata(in *kt.JCHF) map[string][]RedisData {
 	if in.DeviceName == "" { // Only run if this is set.
 		return nil
 	}
