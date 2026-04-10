@@ -19,6 +19,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats/otel"
 	"github.com/kentik/ktranslate/pkg/formats/parquet"
 	"github.com/kentik/ktranslate/pkg/formats/prom"
+	"github.com/kentik/ktranslate/pkg/formats/redis"
 	"github.com/kentik/ktranslate/pkg/formats/snmp"
 	"github.com/kentik/ktranslate/pkg/formats/splunk"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -53,6 +54,7 @@ const (
 	FORMAT_OTEL                 = "otel"
 	FORMAT_SNMP                 = "snmp"
 	FORMAT_PARQUET              = "parquet"
+	FORMAT_REDIS                = "redis"
 )
 
 func NewFormat(ctx context.Context, format Format, log logger.Underlying, registry go_metrics.Registry, compression kt.Compression, cfg *ktranslate.Config, logTee chan string) (Formatter, error) {
@@ -89,6 +91,8 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 		return snmp.NewFormat(log, cfg.SnmpFormat)
 	case FORMAT_PARQUET:
 		return parquet.NewFormat(log, compression)
+	case FORMAT_REDIS:
+		return redis.NewFormat(ctx, log, cfg.RedisFormat, registry)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}
