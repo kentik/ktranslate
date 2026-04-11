@@ -64,7 +64,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.Redis
 	})
 
 	if err := jf.rdb.Ping(ctx).Err(); err != nil {
-		return nil, fmt.Errorf("cannot connect to Redis", "addr", cfg.RedisAddr, "err", err)
+		return nil, fmt.Errorf("cannot connect to Redis addr %s err %v", cfg.RedisAddr, err)
 	}
 	jf.Infof("connected to Redis: addr=%s", cfg.RedisAddr)
 
