@@ -66,7 +66,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.Redis
 	if err := jf.rdb.Ping(ctx).Err(); err != nil {
 		return nil, fmt.Errorf("cannot connect to Redis", "addr", cfg.RedisAddr, "err", err)
 	}
-	jf.Infof("connected to Redis", "addr", cfg.RedisAddr)
+	jf.Infof("connected to Redis: addr=%s", cfg.RedisAddr)
 
 	return jf, nil
 }
@@ -100,7 +100,7 @@ func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		}
 		// ZADD key <score> <member> ... — overwrites existing scores atomically.
 		pipe.ZAdd(f.ctx, key, members...)
-		f.Debugf("queued ZADD", "key", key, "members", len(members))
+		f.Debugf("queued ZADD key %s members %d", key, len(members))
 	}
 
 	_, err := pipe.Exec(f.ctx)
