@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net"
 	"sync"
 
 	go_metrics "github.com/kentik/go-metrics"
@@ -102,12 +103,12 @@ func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			if r.Is6 {
 				membersAAAA = append(membersAAAA, redis.Z{
 					Score:  r.Latency,
-					Member: r.IP,
+					Member: r.IP.String(),
 				})
 			} else {
 				membersA = append(membersA, redis.Z{
 					Score:  r.Latency,
-					Member: r.IP,
+					Member: r.IP.String(),
 				})
 			}
 		}
@@ -163,7 +164,8 @@ func (f *RedisFormat) fromKSynth(in *kt.JCHF) map[string][]RedisData {
 	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
 	f.mux.RUnlock()
 	ms := make([]RedisData, 0, len(metrics))
-	var fqdn, ip string
+	var fqdn string
+	var ip net.IP
 
 	if tn, ok := attr["test_name"].(string); ok {
 		fqdn = tn
@@ -171,7 +173,10 @@ func (f *RedisFormat) fromKSynth(in *kt.JCHF) map[string][]RedisData {
 		return nil
 	}
 	if da, ok := attr["dst_addr"].(string); ok {
-		ip = da
+		ip = net.ParseIP(da)
+		if ip == nil {
+			return nil
+		}
 	} else {
 		return nil
 	}
@@ -182,6 +187,7 @@ func (f *RedisFormat) fromKSynth(in *kt.JCHF) map[string][]RedisData {
 			ms = append(ms, RedisData{
 				IP:      ip,
 				Latency: float64(in.CustomInt[m]),
+				Is6:     (ip.To4() == nil),
 			})
 		}
 	}
@@ -210,7 +216,7 @@ func (f *RedisFormat) fromSnmpMetadata(in *kt.JCHF) map[string][]RedisData {
 }
 
 type RedisData struct {
-	IP      string
+	IP      net.IP
 	Latency float64
 	Is6     bool
 }
