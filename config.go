@@ -58,6 +58,7 @@ type RedisFormatConfig struct {
 	RedisPassword string
 	RedisDB       int
 	KeyPrefix     string
+	KeyTTL        int
 }
 
 // SnmpFormatConfig is the config for the snmp format
@@ -447,6 +448,7 @@ func DefaultConfig() *Config {
 			RedisPassword: "",
 			RedisDB:       0,
 			KeyPrefix:     "",
+			KeyTTL:        60,
 		},
 		ElasticFormat: &ElasticFormatConfig{
 			Action: "index",

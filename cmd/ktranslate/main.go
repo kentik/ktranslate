@@ -475,6 +475,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.RedisFormat.RedisDB = v
+			case "redis.ttl.sec":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.RedisFormat.KeyTTL = v
 			case "redis.key_prefix":
 				cfg.RedisFormat.KeyPrefix = val
 			// pkg/formats/elasticsearch

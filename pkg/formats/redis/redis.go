@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 
 	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
@@ -26,6 +27,7 @@ type RedisFormat struct {
 	invalids     map[string]bool
 	metrics      *RedisMetrics
 	rdb          *redis.Client
+	keyTTL       time.Duration
 }
 
 var (
@@ -33,6 +35,7 @@ var (
 	redisPassword string
 	redisDB       int
 	keyPrefix     string
+	keyTTLSec     int
 )
 
 const (
@@ -45,6 +48,7 @@ func init() {
 	flag.StringVar(&redisPassword, "redis.password", "", "Password for redis")
 	flag.IntVar(&redisDB, "redis.db", 0, "Use this redis DB.")
 	flag.StringVar(&keyPrefix, "redis.key_prefix", "", "Use this key prefix.")
+	flag.IntVar(&keyTTLSec, "redis.ttl.sec", 60, "Expire measurements if they are not refreshed within this number of sec.")
 }
 
 type RedisMetrics struct {
@@ -56,6 +60,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.Redis
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "redis"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
 		invalids:     map[string]bool{},
+		keyTTL:       time.Second * time.Duration(cfg.KeyTTL),
 		ctx:          ctx,
 		config:       cfg,
 		metrics: &RedisMetrics{
@@ -72,7 +77,8 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.Redis
 	if err := jf.rdb.Ping(ctx).Err(); err != nil {
 		return nil, fmt.Errorf("cannot connect to Redis addr %s err %v", cfg.RedisAddr, err)
 	}
-	jf.Infof("connected to Redis: addr=%s", cfg.RedisAddr)
+
+	jf.Infof("connected to Redis: addr=%s, ttl: %v", cfg.RedisAddr, jf.keyTTL)
 
 	return jf, nil
 }
@@ -97,29 +103,16 @@ func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for fqdn, results := range res {
 		key := f.config.KeyPrefix + fqdn
-		membersA := make([]redis.Z, 0, len(results))
-		membersAAAA := make([]redis.Z, 0, len(results))
 		for _, r := range results {
 			if r.Is6 {
-				membersAAAA = append(membersAAAA, redis.Z{
-					Score:  r.Latency,
-					Member: r.IP.String(),
-				})
+				pipe.HSet(f.ctx, key+aaaaPrefix, r.IP.String(), r.Latency)
+				pipe.HExpire(f.ctx, key+aaaaPrefix, f.keyTTL, r.IP.String())
 			} else {
-				membersA = append(membersA, redis.Z{
-					Score:  r.Latency,
-					Member: r.IP.String(),
-				})
+				pipe.HSet(f.ctx, key+aPrefix, r.IP.String(), r.Latency)
+				pipe.HExpire(f.ctx, key+aPrefix, f.keyTTL, r.IP.String())
 			}
 		}
-		// ZADD key <score> <member> ... — overwrites existing scores atomically.
-		if len(membersA) > 0 {
-			pipe.ZAdd(f.ctx, key+aPrefix, membersA...)
-		}
-		if len(membersAAAA) > 0 {
-			pipe.ZAdd(f.ctx, key+aaaaPrefix, membersAAAA...)
-		}
-		f.Debugf("queued ZADD key %s members %d", key, len(membersA)+len(membersAAAA))
+		f.Debugf("queued HSet key %s members %d", key, len(results))
 	}
 
 	_, err := pipe.Exec(f.ctx)
