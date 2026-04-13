@@ -34,6 +34,11 @@ var (
 	keyPrefix     string
 )
 
+const (
+	aPrefix    = ":A"
+	aaaaPrefix = ":AAAA"
+)
+
 func init() {
 	flag.StringVar(&redisAddr, "redis.addr", "localhost:6379", "Where to connect to redis.")
 	flag.StringVar(&redisPassword, "redis.password", "", "Password for redis")
@@ -91,16 +96,29 @@ func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for fqdn, results := range res {
 		key := f.config.KeyPrefix + fqdn
-		members := make([]redis.Z, 0, len(results))
+		membersA := make([]redis.Z, 0, len(results))
+		membersAAAA := make([]redis.Z, 0, len(results))
 		for _, r := range results {
-			members = append(members, redis.Z{
-				Score:  r.Latency,
-				Member: r.IP,
-			})
+			if r.Is6 {
+				membersAAAA = append(membersAAAA, redis.Z{
+					Score:  r.Latency,
+					Member: r.IP,
+				})
+			} else {
+				membersA = append(membersA, redis.Z{
+					Score:  r.Latency,
+					Member: r.IP,
+				})
+			}
 		}
 		// ZADD key <score> <member> ... — overwrites existing scores atomically.
-		pipe.ZAdd(f.ctx, key, members...)
-		f.Debugf("queued ZADD key %s members %d", key, len(members))
+		if len(membersA) > 0 {
+			pipe.ZAdd(f.ctx, key+aPrefix, membersA...)
+		}
+		if len(membersAAAA) > 0 {
+			pipe.ZAdd(f.ctx, key+aaaaPrefix, membersAAAA...)
+		}
+		f.Debugf("queued ZADD key %s members %d", key, len(membersA)+len(membersAAAA))
 	}
 
 	_, err := pipe.Exec(f.ctx)
@@ -194,4 +212,5 @@ func (f *RedisFormat) fromSnmpMetadata(in *kt.JCHF) map[string][]RedisData {
 type RedisData struct {
 	IP      string
 	Latency float64
+	Is6     bool
 }
