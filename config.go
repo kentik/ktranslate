@@ -52,6 +52,15 @@ type OtelFormatConfig struct {
 	NoBlockExport bool
 }
 
+// RedisFormatConfig is the config for the redis format
+type RedisFormatConfig struct {
+	RedisAddr     string
+	RedisPassword string
+	RedisDB       int
+	KeyPrefix     string
+	KeyTTLSeconds int
+}
+
 // SnmpFormatConfig is the config for the snmp format
 type SnmpFormatConfig struct {
 	ConfigFile string
@@ -329,6 +338,8 @@ type Config struct {
 	InfluxDBFormat *InfluxDBFormatConfig
 	// pkg/formats/otel
 	OtelFormat *OtelFormatConfig
+	// pkg/formats/redis
+	RedisFormat *RedisFormatConfig
 	// pkg/formats/snmp
 	SnmpFormat *SnmpFormatConfig
 	// pkg/formats/elasticsearch
@@ -431,6 +442,13 @@ func DefaultConfig() *Config {
 			ClientCert:    "",
 			RootCA:        "",
 			NoBlockExport: false,
+		},
+		RedisFormat: &RedisFormatConfig{
+			RedisAddr:     "localhost:6379",
+			RedisPassword: "",
+			RedisDB:       0,
+			KeyPrefix:     "",
+			KeyTTLSeconds: 60,
 		},
 		ElasticFormat: &ElasticFormatConfig{
 			Action: "index",

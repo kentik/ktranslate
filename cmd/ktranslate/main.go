@@ -463,6 +463,27 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.OtelFormat.NoBlockExport = v
+				// pkg/formats/redis
+			case "redis.addr":
+				cfg.RedisFormat.RedisAddr = val
+			case "redis.password":
+				cfg.RedisFormat.RedisPassword = val
+			case "redis.db":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.RedisFormat.RedisDB = v
+			case "redis.ttl.sec":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.RedisFormat.KeyTTLSeconds = v
+			case "redis.key_prefix":
+				cfg.RedisFormat.KeyPrefix = val
 			// pkg/formats/elasticsearch
 			case "elastic.action":
 				cfg.ElasticFormat.Action = val
