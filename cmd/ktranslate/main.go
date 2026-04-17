@@ -481,7 +481,7 @@ func applyFlags(cfg *ktranslate.Config) error {
 					errCh <- err
 					return
 				}
-				cfg.RedisFormat.KeyTTL = v
+				cfg.RedisFormat.KeyTTLSeconds = v
 			case "redis.key_prefix":
 				cfg.RedisFormat.KeyPrefix = val
 			// pkg/formats/elasticsearch

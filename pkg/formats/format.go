@@ -92,7 +92,7 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 	case FORMAT_PARQUET:
 		return parquet.NewFormat(log, compression)
 	case FORMAT_REDIS:
-		return redis.NewFormat(ctx, log, cfg.RedisFormat, registry)
+		return redis.NewFormat(ctx, log, cfg.RedisFormat)
 	default:
 		return nil, fmt.Errorf("You used an unsupported format: %v.", format)
 	}

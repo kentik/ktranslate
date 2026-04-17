@@ -8,7 +8,6 @@ import (
 	"sync"
 	"time"
 
-	go_metrics "github.com/kentik/go-metrics"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/formats/util"
@@ -25,7 +24,6 @@ type RedisFormat struct {
 	config       *ktranslate.RedisFormatConfig
 	ctx          context.Context
 	invalids     map[string]bool
-	metrics      *RedisMetrics
 	rdb          *redis.Client
 	keyTTL       time.Duration
 }
@@ -51,21 +49,14 @@ func init() {
 	flag.IntVar(&keyTTLSec, "redis.ttl.sec", 60, "Expire measurements if they are not refreshed within this number of sec.")
 }
 
-type RedisMetrics struct {
-	ExportDrops go_metrics.Counter
-}
-
-func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.RedisFormatConfig, registry go_metrics.Registry) (*RedisFormat, error) {
+func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.RedisFormatConfig) (*RedisFormat, error) {
 	jf := &RedisFormat{
 		ContextL:     logger.NewContextLFromUnderlying(logger.SContext{S: "redis"}, log),
 		lastMetadata: map[string]*kt.LastMetadata{},
 		invalids:     map[string]bool{},
-		keyTTL:       time.Second * time.Duration(cfg.KeyTTL),
+		keyTTL:       time.Second * time.Duration(cfg.KeyTTLSeconds),
 		ctx:          ctx,
 		config:       cfg,
-		metrics: &RedisMetrics{
-			ExportDrops: go_metrics.GetOrRegisterCounter("redis_export_drops", registry),
-		},
 	}
 
 	jf.rdb = redis.NewClient(&redis.Options{

@@ -448,7 +448,7 @@ func DefaultConfig() *Config {
 			RedisPassword: "",
 			RedisDB:       0,
 			KeyPrefix:     "",
-			KeyTTL:        60,
+			KeyTTLSeconds: 60,
 		},
 		ElasticFormat: &ElasticFormatConfig{
 			Action: "index",
