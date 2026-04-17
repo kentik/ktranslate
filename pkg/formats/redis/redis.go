@@ -103,14 +103,40 @@ func (f *RedisFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 
 	for fqdn, results := range res {
 		key := f.config.KeyPrefix + fqdn
+		aKey := key + aPrefix
+		aaaaKey := key + aaaaPrefix
+
+		aValues := make(map[string]interface{})
+		aaaaValues := make(map[string]interface{})
+		aFields := make([]string, 0, len(results))
+		aaaaFields := make([]string, 0, len(results))
+		aSeen := make(map[string]struct{})
+		aaaaSeen := make(map[string]struct{})
+
 		for _, r := range results {
+			field := r.IP.String()
 			if r.Is6 {
-				pipe.HSet(f.ctx, key+aaaaPrefix, r.IP.String(), r.Latency)
-				pipe.HExpire(f.ctx, key+aaaaPrefix, f.keyTTL, r.IP.String())
+				aaaaValues[field] = r.Latency
+				if _, ok := aaaaSeen[field]; !ok {
+					aaaaSeen[field] = struct{}{}
+					aaaaFields = append(aaaaFields, field)
+				}
 			} else {
-				pipe.HSet(f.ctx, key+aPrefix, r.IP.String(), r.Latency)
-				pipe.HExpire(f.ctx, key+aPrefix, f.keyTTL, r.IP.String())
+				aValues[field] = r.Latency
+				if _, ok := aSeen[field]; !ok {
+					aSeen[field] = struct{}{}
+					aFields = append(aFields, field)
+				}
 			}
+		}
+
+		if len(aValues) > 0 {
+			pipe.HSet(f.ctx, aKey, aValues)
+			pipe.HExpire(f.ctx, aKey, f.keyTTL, aFields...)
+		}
+		if len(aaaaValues) > 0 {
+			pipe.HSet(f.ctx, aaaaKey, aaaaValues)
+			pipe.HExpire(f.ctx, aaaaKey, f.keyTTL, aaaaFields...)
 		}
 		f.Debugf("queued HSet key %s members %d", key, len(results))
 	}
