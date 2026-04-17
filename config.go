@@ -58,7 +58,7 @@ type RedisFormatConfig struct {
 	RedisPassword string
 	RedisDB       int
 	KeyPrefix     string
-	KeyTTL        int
+	KeyTTLSeconds int
 }
 
 // SnmpFormatConfig is the config for the snmp format
