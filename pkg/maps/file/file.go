@@ -3,6 +3,7 @@ package file
 import (
 	"bufio"
 	"compress/gzip"
+	"context"
 	"flag"
 	"os"
 	"strconv"
@@ -167,3 +168,5 @@ func (ftm *FileTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname st
 	}
 	return "", "", false
 }
+
+func (ftm *FileTagMapper) Run(ctx context.Context) {}
