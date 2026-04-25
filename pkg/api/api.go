@@ -314,7 +314,8 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 			var sites kt.SiteList
 			err = json.Unmarshal(res, &sites)
 			if err != nil {
-				return err
+				api.Warnf("Skipping site version %s", version)
+				continue
 			}
 
 			for _, site := range sites.Sites {
