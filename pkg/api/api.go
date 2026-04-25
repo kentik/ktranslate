@@ -302,33 +302,40 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 	num := 0
 	mapped := 0
 	siteMap := map[int]*kt.FullSite{}
+	versions := []string{"v202509", "v202211"}
+
 	for _, info := range api.config.KentikCreds {
-		res, err := api.getDeviceInfo(ctx, api.config.GRPCBaseURL+"/site/v202509/sites", info.APIEmail, info.APIToken)
-		if err != nil {
-			return err
-		}
-		var sites kt.SiteList
-		err = json.Unmarshal(res, &sites)
-		if err != nil {
-			return err
-		}
-
-		for _, site := range sites.Sites {
-			if idInt, err := strconv.Atoi(site.ID); err == nil {
-				ls := site
-				siteMap[idInt] = &ls
-				num++
+		for _, version := range versions {
+			res, err := api.getDeviceInfo(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
+			if err != nil {
+				api.Warnf("Skipping site version %s", version)
+				continue
 			}
-		}
+			var sites kt.SiteList
+			err = json.Unmarshal(res, &sites)
+			if err != nil {
+				api.Warnf("Skipping site version %s", version)
+				continue
+			}
 
-		// Now map sites into devices.
-		for _, cd := range api.devices {
-			for _, d := range cd {
-				if ds, ok := siteMap[d.Site.ID]; ok {
-					d.FullSite = ds
-					mapped++
+			for _, site := range sites.Sites {
+				if idInt, err := strconv.Atoi(site.ID); err == nil {
+					ls := site
+					siteMap[idInt] = &ls
+					num++
 				}
 			}
+
+			// Now map sites into devices.
+			for _, cd := range api.devices {
+				for _, d := range cd {
+					if ds, ok := siteMap[d.Site.ID]; ok {
+						d.FullSite = ds
+						mapped++
+					}
+				}
+			}
+			break // Since we're good, break out of the loop.
 		}
 	}
 
