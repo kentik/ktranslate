@@ -182,12 +182,14 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	}
 	kc.tagMapRegion = mr
 
-	kmr, err := km.LoadMapper(log.GetLogger().GetUnderlyingLogger(), config.KMUdr, kc.apic)
-	if err != nil {
-		kc.log.Errorf("There was an error when opening the kentik metrics service definition: %v.", err)
-		return nil, err
+	if config.KMUdr != "" {
+		kmr, err := km.LoadMapper(log.GetLogger().GetUnderlyingLogger(), config.KMUdr, kc.apic)
+		if err != nil {
+			kc.log.Errorf("There was an error when opening the kentik metrics service definition: %v.", err)
+			return nil, err
+		}
+		kc.tagKM = kmr
 	}
-	kc.tagKM = kmr
 
 	// Load up a geo file if one is passed in.
 	if config.GeoFile != "" {
