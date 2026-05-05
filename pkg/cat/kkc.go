@@ -22,6 +22,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
+	"github.com/kentik/ktranslate/pkg/km"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -180,6 +181,13 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		return nil, err
 	}
 	kc.tagMapRegion = mr
+
+	kmr, err := km.LoadMapper(log.GetLogger().GetUnderlyingLogger(), config.KMUdr, kc.apic)
+	if err != nil {
+		kc.log.Errorf("There was an error when opening the kentik metrics service definition: %v.", err)
+		return nil, err
+	}
+	kc.tagKM = kmr
 
 	// Load up a geo file if one is passed in.
 	if config.GeoFile != "" {

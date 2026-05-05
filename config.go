@@ -291,6 +291,7 @@ type Config struct {
 	ListenAddr          string
 	MappingFile         string
 	UDRSFile            string
+	KMUdr               string
 	GeoFile             string
 	ASNFile             string
 	ApplicationFile     string
@@ -401,6 +402,7 @@ func DefaultConfig() *Config {
 		ListenAddr:          "127.0.0.1:8081",
 		MappingFile:         "",
 		UDRSFile:            "",
+		KMUdr:               "",
 		GeoFile:             "",
 		ASNFile:             "",
 		ApplicationFile:     "",
