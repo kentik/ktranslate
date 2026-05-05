@@ -16,6 +16,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/inputs/http"
 	"github.com/kentik/ktranslate/pkg/inputs/syslog"
 	"github.com/kentik/ktranslate/pkg/inputs/vpc"
+	"github.com/kentik/ktranslate/pkg/km"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
@@ -74,6 +75,7 @@ type KTranslate struct {
 	tagMap       maps.TagMapper
 	tagMapCity   maps.TagMapper
 	tagMapRegion maps.TagMapper
+	tagKM        *km.KMMapper
 	vpc          vpc.VpcImpl
 	nfs          *flow.KentikDriver
 	rule         *rule.RuleSet

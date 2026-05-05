@@ -632,6 +632,11 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 		if kc.stitcher != nil {
 			kc.stitcher.Stitch(msg)
 		}
+
+		// Set up any kentik metric maps if this is a thing for this value.
+		if msg.CustomBigInt["km_measurement_id"] != 0 {
+			kc.tagKM.Enrich(msg.CustomBigInt["km_measurement_id"], msg)
+		}
 	}
 
 	// If there's an outside enrichment service, send over here.
