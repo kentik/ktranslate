@@ -104,10 +104,10 @@ func (km *KMMapper) loadFile(file string) (int, error) {
 
 		if len(k.Def.Metrics) > 0 && len(k.Def.Dimensions) > 0 {
 			for _, dim := range k.Def.Dimensions {
-				dim.Column = strings.ToLower(dim.Column)
+				dim.Column = kt.FixupName(dim.Column)
 			}
 			for _, met := range k.Def.Metrics {
-				met.Column = strings.ToLower(met.Column)
+				met.Column = kt.FixupName(met.Column)
 			}
 			km.metrics[k.Id] = k
 		}
@@ -192,6 +192,10 @@ func (km *KMMapper) Enrich(id int64, msg *kt.JCHF) {
 			msg.CustomInt[met.Label] = mvar
 			msg.CustomStr["unit"] = met.Unit
 			delete(msg.CustomInt, met.Column)
+		} else if mvar, ok := msg.CustomFloat[met.Column]; ok {
+			msg.CustomFloat[met.Label] = mvar
+			msg.CustomStr["unit"] = met.Unit
+			delete(msg.CustomFloat, met.Column)
 		}
 	}
 }
