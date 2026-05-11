@@ -144,6 +144,7 @@ func (ks *KentikHttpListener) getGigaJCHF(event *gigaEvent, remoteIP string) *kt
 	in.CustomBigInt = map[string]int64{
 		"seq_num": int64(event.SeqNum),
 	}
+	in.CustomFloat = map[string]float32{}
 	in.EventType = event.Vendor
 	in.Provider = kt.ProviderHttpDevice
 	in.SrcAddr = event.SrcIP.String()

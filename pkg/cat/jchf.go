@@ -76,6 +76,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	dst.CustomStr = make(map[string]string)
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
+	dst.CustomFloat = make(map[string]float32)
 
 	// dst.Timestamp = src.CHF.Timestamp() This is being strage, use current timestamp for now.
 	dst.Timestamp = currentTS
@@ -311,6 +312,11 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				}
 				dst.CustomStr[name] = addr.String()
 			}
+		case model.Custom_value_Which_float32Val:
+			fv := val.Float32Val()
+			dst.CustomFloat[name] = fv
+		default:
+			kc.log.Warnf("Unexpected type in flow %s -> %v", name, val.Which())
 		}
 	}
 
