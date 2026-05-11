@@ -120,33 +120,78 @@ func (km *KMMapper) loadFile(file string) (int, error) {
 	return len(km.metrics), nil
 }
 
+func readMask(msg *kt.JCHF, key string) (int64, bool) {
+	if msg == nil {
+		return 0, false
+	}
+
+	if mask, ok := msg.CustomBigInt[key]; ok {
+		return mask, true
+	}
+
+	if mask, ok := msg.CustomInt[key]; ok {
+		return int64(mask), true
+	}
+
+	if raw, ok := msg.CustomStr[key]; ok {
+		mask, err := strconv.ParseInt(strings.TrimSpace(raw), 0, 64)
+		if err == nil {
+			return mask, true
+		}
+	}
+
+	return 0, false
+}
+
+func isFieldPresentForMask(fieldMask int, incomingMask int64, hasIncomingMask bool) bool {
+	if !hasIncomingMask {
+		return true
+	}
+
+	if fieldMask == 0 {
+		return true
+	}
+
+	return incomingMask&int64(fieldMask) != 0
+}
+
 func (km *KMMapper) Enrich(id int64, msg *kt.JCHF) {
-	if km == nil {
+	if km == nil || msg == nil {
 		return
 	}
 
-	if _, ok := km.metrics[id]; !ok {
+	definition, ok := km.metrics[id]
+	if !ok {
 		return // Metric not found, just return.
 	}
 
-	for _, dim := range km.metrics[id].Def.Dimensions {
-		if dim.Label != "" {
-			msg.CustomStr[dim.Label] = msg.CustomStr[dim.Column]
+	dimensionMask, hasDimensionMask := readMask(msg, "km_dimension_mask")
+	metricMask, hasMetricMask := readMask(msg, "km_metric_mask")
+
+	for _, dim := range definition.Def.Dimensions {
+		if dim.Label == "" || !isFieldPresentForMask(dim.Mask, dimensionMask, hasDimensionMask) {
+			continue
+		}
+
+		if val, ok := msg.CustomStr[dim.Column]; ok {
+			msg.CustomStr[dim.Label] = val
 			delete(msg.CustomStr, dim.Column)
 		}
 	}
 
-	for _, met := range km.metrics[id].Def.Metrics {
-		if met.Label != "" {
-			if mvar, ok := msg.CustomBigInt[met.Column]; ok {
-				msg.CustomBigInt[met.Label] = mvar
-				msg.CustomStr["unit"] = met.Unit
-				delete(msg.CustomBigInt, met.Column)
-			} else if mvar, ok := msg.CustomInt[met.Column]; ok {
-				msg.CustomInt[met.Label] = mvar
-				msg.CustomStr["unit"] = met.Unit
-				delete(msg.CustomInt, met.Column)
-			}
+	for _, met := range definition.Def.Metrics {
+		if met.Label == "" || !isFieldPresentForMask(met.Mask, metricMask, hasMetricMask) {
+			continue
+		}
+
+		if mvar, ok := msg.CustomBigInt[met.Column]; ok {
+			msg.CustomBigInt[met.Label] = mvar
+			msg.CustomStr["unit"] = met.Unit
+			delete(msg.CustomBigInt, met.Column)
+		} else if mvar, ok := msg.CustomInt[met.Column]; ok {
+			msg.CustomInt[met.Label] = mvar
+			msg.CustomStr["unit"] = met.Unit
+			delete(msg.CustomInt, met.Column)
 		}
 	}
 }
