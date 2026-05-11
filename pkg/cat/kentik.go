@@ -35,6 +35,7 @@ func (kc *KTranslate) handleJson(cid kt.Cid, raw []byte) error {
 			jflow.CustomStr = make(map[string]string)
 			jflow.CustomInt = make(map[string]int32)
 			jflow.CustomBigInt = make(map[string]int64)
+			jflow.CustomFloat = make(map[string]float32)
 			jflow.Provider = kt.ProviderAlert
 			jflow.EventType = kt.KENTIK_EVENT_JSON
 
