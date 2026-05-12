@@ -140,7 +140,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nr_estimate_only
     	If true, record size of inputs to NR but don't actually send anything
   -nr_region string
-       NR Region to use. US|EU|GOV
+       NR Region to use. US|EU|GOV|JP
   -olly_dataset string
     	Olly dataset name
   -olly_write_key string
