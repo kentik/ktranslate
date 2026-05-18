@@ -288,66 +288,67 @@ func (dm *DeviceMetadata) handleTable(idx string, value wrapper, oidName string,
 }
 
 // Super basic loop to get info for discovery.
-func GetBasicDeviceMetadata(log logger.ContextL, server *gosnmp.GoSNMP) (*kt.DeviceMetricsMetadata, error) {
+func GetBasicDeviceMetadata(ctx context.Context, log logger.ContextL, server *gosnmp.GoSNMP, conf *kt.SnmpDeviceConfig) (*kt.DeviceMetricsMetadata, error) {
 	md := kt.DeviceMetricsMetadata{}
+	conf.SetTestWalker(server)
+	defer func() {
+		conf.SetTestWalker(nil)
+	}()
 
-	var oids []string
 	for el := SNMP_device_metadata_oids.Front(); el != nil; el = el.Next() {
-		oids = append(oids, el.Key.(string))
-	}
-
-	result, err := server.Get(oids)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, pdu := range result.Variables {
-		log.Debugf("pdu: %+v", pdu)
-		oidVal, value := pdu.Name, pdu.Value
-
-		// You can get a nil value w/out getting an error.
-		if value == nil || pdu.Type == gosnmp.NoSuchObject {
-			continue
+		oidResults, err := snmp_util.WalkOID(ctx, conf, el.Key.(string), server, log, "GetBasicDeviceMetadata")
+		if err != nil {
+			return nil, err
 		}
 
-		var oidName string
-		thing, ok := SNMP_device_metadata_oids.Get(oidVal)
-		if !ok {
-			if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
-				log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")
-			} else {
-				log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v %v", oidVal, value)
+		for _, pdu := range oidResults {
+			log.Debugf("pdu: %+v", pdu)
+			oidVal, value := pdu.Name, pdu.Value
+
+			// You can get a nil value w/out getting an error.
+			if value == nil || pdu.Type == gosnmp.NoSuchObject {
+				continue
 			}
-			continue
-		}
-		oidName = thing.(string)
 
-		switch oidName {
-		case SNMP_sysDescr:
-			md.SysDescr = string(value.([]byte))
-		case SNMP_sysObjectID:
-			switch sd := value.(type) {
-			case string:
-				md.SysObjectID = sd
-			case []byte:
-				md.SysObjectID = string(sd)
-			default:
-				if pdu.Type == gosnmp.ObjectIdentifier {
-					md.SysObjectID = string(sd.(string))
+			var oidName string
+			thing, ok := SNMP_device_metadata_oids.Get(oidVal)
+			if !ok {
+				if oidVal == ".1.3.6.1.6.3.15.1.1.3.0" { // This is a bad v3 config.
+					log.Errorf("User found who is not known to the SNMP engine. Likely this is an invalid v3 config.")
 				} else {
-					log.Warnf("Unknown type for sysoid: %v %T", value, value)
+					log.Errorf("SNMP Device Metadata: Unknown oid retrieved: %v %v", oidVal, value)
 				}
+				continue
 			}
-		case SNMP_sysContact:
-			md.SysContact = string(value.([]byte))
-		case SNMP_sysName:
-			md.SysName = string(value.([]byte))
-		case SNMP_sysLocation:
-			md.SysLocation = string(value.([]byte))
-		case SNMP_sysServices:
-			md.SysServices = int(snmp_util.ToInt64(value))
-		case SNMP_engineID:
-			_, md.EngineID, _ = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
+			oidName = thing.(string)
+
+			switch oidName {
+			case SNMP_sysDescr:
+				md.SysDescr = string(value.([]byte))
+			case SNMP_sysObjectID:
+				switch sd := value.(type) {
+				case string:
+					md.SysObjectID = sd
+				case []byte:
+					md.SysObjectID = string(sd)
+				default:
+					if pdu.Type == gosnmp.ObjectIdentifier {
+						md.SysObjectID = string(sd.(string))
+					} else {
+						log.Warnf("Unknown type for sysoid: %v %T", value, value)
+					}
+				}
+			case SNMP_sysContact:
+				md.SysContact = string(value.([]byte))
+			case SNMP_sysName:
+				md.SysName = string(value.([]byte))
+			case SNMP_sysLocation:
+				md.SysLocation = string(value.([]byte))
+			case SNMP_sysServices:
+				md.SysServices = int(snmp_util.ToInt64(value))
+			case SNMP_engineID:
+				_, md.EngineID, _ = snmp_util.GetFromConv(pdu, snmp_util.CONV_ENGINE_ID, log)
+			}
 		}
 	}
 
