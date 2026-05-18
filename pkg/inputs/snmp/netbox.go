@@ -324,7 +324,7 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 			}
 			wg.Add(1)
 			posit := fmt.Sprintf("%d/%d)", i+1, len(results))
-			go doubleCheckHost(rr, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
+			go doubleCheckHost(ctx, rr, timeout, ctl, &mux, &wg, foundDevices, mdb, conf, posit, kentikDevices, log)
 		}
 	}
 	wg.Wait()
