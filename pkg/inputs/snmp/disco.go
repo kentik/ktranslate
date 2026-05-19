@@ -46,17 +46,18 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		return nil, err
 	}
 
-	if conf.Disco.Threads == 0 {
-		conf.Disco.Threads = 4
-		log.Warnf("SNMP Discovery, defaulting threads to %d from 0.", conf.Disco.Threads)
-	}
-
 	if conf.Disco == nil {
 		return nil, fmt.Errorf("The discovery configuration is not set: %+v.", conf)
 	}
 
 	if conf.Global == nil || conf.Global.MibProfileDir == "" {
 		return nil, fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
+	}
+
+	// Make sure there's at least one thread to process with.
+	if conf.Disco.Threads == 0 {
+		conf.Disco.Threads = 4
+		log.Warnf("SNMP Discovery, defaulting threads to %d from 0.", conf.Disco.Threads)
 	}
 
 	if v := cfg.OutputFile; v != "" { // If we want to write somewhere else, swap the output file in here.
