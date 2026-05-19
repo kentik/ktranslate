@@ -54,6 +54,12 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		return nil, fmt.Errorf("You need to specify a global section and mib profile directory: %v.", conf)
 	}
 
+	// Make sure there's at least one thread to process with.
+	if conf.Disco.Threads == 0 {
+		conf.Disco.Threads = 4
+		log.Warnf("SNMP Discovery, defaulting threads to %d from 0.", conf.Disco.Threads)
+	}
+
 	if v := cfg.OutputFile; v != "" { // If we want to write somewhere else, swap the output file in here.
 		err := initOutputFile(ctx, log, v, conf, snmpFile)
 		if err != nil {
