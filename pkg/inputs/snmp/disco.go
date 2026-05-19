@@ -46,6 +46,11 @@ func Discover(ctx context.Context, log logger.ContextL, pollDuration time.Durati
 		return nil, err
 	}
 
+	if conf.Disco.Threads == 0 {
+		conf.Disco.Threads = 4
+		log.Warnf("SNMP Discovery, defaulting threads to %d from 0.", conf.Disco.Threads)
+	}
+
 	if conf.Disco == nil {
 		return nil, fmt.Errorf("The discovery configuration is not set: %+v.", conf)
 	}
