@@ -160,21 +160,14 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		kc.log.Infof("Loaded %d udr and %d subtype mappings with %d udrs total", len(m.UDRs), len(m.Subtypes), udrs)
 	}
 
-	m, err := maps.LoadMapper(maps.Mapper(config.TagMapType), log.GetLogger().GetUnderlyingLogger(), config.TagMapFile, kc.apic)
-	if err != nil {
-		kc.log.Errorf("There was an error when opening the tag service: %v.", err)
-		return nil, err
-	}
-	kc.tagMap = m
-
-	mc, err := maps.LoadMapper(maps.Mapper(config.TagMapType), log.GetLogger().GetUnderlyingLogger(), config.TagMapCity, kc.apic)
+	mc, err := maps.LoadMapper(maps.FileMapper, log.GetLogger().GetUnderlyingLogger(), config.TagMapCity, nil)
 	if err != nil {
 		kc.log.Errorf("There was an error when opening the city tag service: %v.", err)
 		return nil, err
 	}
 	kc.tagMapCity = mc
 
-	mr, err := maps.LoadMapper(maps.Mapper(config.TagMapType), log.GetLogger().GetUnderlyingLogger(), config.TagMapRegion, kc.apic)
+	mr, err := maps.LoadMapper(maps.FileMapper, log.GetLogger().GetUnderlyingLogger(), config.TagMapRegion, nil)
 	if err != nil {
 		kc.log.Errorf("There was an error when opening the tag region service: %v.", err)
 		return nil, err
@@ -702,11 +695,6 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		}
 	}
 
-	// Turn on the log lookup service if implemented.
-	if kc.apic != nil {
-		kc.tagMap.Run(ctx)
-	}
-
 	// Set up api auth system if this is set. Allows kproxy|kprobe|kappa|ksynth and others to use this without phoneing home to kentik.
 	if kc.authConfig != nil {
 		authr, err := auth.NewServer(kc.authConfig, kc.config.SNMPInput.SNMPFile, kc.log, snmp.ServiceName)
@@ -728,6 +716,16 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		}
 	} else {
 		kc.apic = api.NewKentikApiFromLocalDevices(kc.auth.GetDeviceMap(), kc.log)
+	}
+
+	// Turn on the log lookup service if implemented.
+	m, err := maps.LoadMapper(maps.Mapper(kc.config.TagMapType), kc.log.GetLogger().GetUnderlyingLogger(), kc.config.TagMapFile, kc.apic)
+	if err != nil {
+		kc.log.Errorf("There was an error when opening the tag service: %v.", err)
+		return err
+	} else {
+		kc.tagMap = m
+		kc.tagMap.Run(ctx)
 	}
 
 	assureInput := func() { // Start up input processing if any is asked of us.

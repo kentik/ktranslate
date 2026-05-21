@@ -31,7 +31,7 @@ require (
 	github.com/influxdata/line-protocol/v2 v2.2.1
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
-	github.com/kentik/api-schema-public v0.0.0-20260218232557-46b4dfdbfba2
+	github.com/kentik/api-schema-public v0.0.0-20260512191743-e5f988e95440
 	github.com/kentik/dashboard-api-golang v0.0.0-20240305065153-1c88e8477770
 	github.com/kentik/go-metrics v0.0.0-20200109025407-4bfd4a9b42c5
 	github.com/kentik/patricia v0.0.0-20210909164817-21603333b70e

@@ -21,7 +21,7 @@ type ApiTagMapper struct {
 const (
 	CHAN_SLACK        = 10000
 	MAX_LOOKUP_SET    = 1000
-	LOOKUP_CHECK_TIME = 30 * time.Second
+	LOOKUP_CHECK_TIME = 1 * time.Second
 )
 
 func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMapper, error) {
@@ -36,7 +36,9 @@ func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMappe
 }
 
 func (atm *ApiTagMapper) Run(ctx context.Context) {
-	go atm.startCheckService(ctx)
+	if atm != nil {
+		go atm.startCheckService(ctx)
+	}
 }
 
 func (atm *ApiTagMapper) LookupKV(k uint32) string {
@@ -47,13 +49,24 @@ func (atm *ApiTagMapper) LookupKV(k uint32) string {
 
 func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (string, string, bool) {
 	atm.RLock()
-	defer atm.RUnlock()
 	if v, ok := atm.tags[tagval]; ok {
+		atm.RUnlock()
 		return colname, v, ok
 	}
+	atm.RUnlock()
+
 	// We don't know about this one. Add to the q to check.
-	atm.check <- tagval
-	return "", "", false
+	select {
+	case atm.check <- tagval:
+	default:
+		atm.Debugf("Lookup channel full %d", len(atm.check))
+	}
+	// Also put a placeholder in here so we don't slam the service.
+	atm.Lock()
+	defer atm.Unlock()
+	atm.tags[tagval] = ""
+
+	return colname, "", false
 }
 
 func (atm *ApiTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname string) (string, string, bool) {
@@ -63,6 +76,7 @@ func (atm *ApiTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname str
 func (atm *ApiTagMapper) startCheckService(ctx context.Context) {
 	lookupCheck := time.NewTicker(LOOKUP_CHECK_TIME)
 	lookups := make([]uint32, 0, MAX_LOOKUP_SET)
+	atm.Infof("Starting lookup loop")
 
 	for {
 		select {
@@ -88,6 +102,7 @@ func (atm *ApiTagMapper) doLookup(ctx context.Context, lookups []uint32) {
 		return
 	}
 
+	atm.Debugf("Doing lookup check with %d lookups", len(lookups))
 	vals, err := atm.apic.LookupEnumerationValues(ctx, lookups)
 	if err != nil {
 		atm.Errorf("Error looking up tag enums: %v", err)
