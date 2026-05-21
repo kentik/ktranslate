@@ -36,7 +36,9 @@ func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMappe
 }
 
 func (atm *ApiTagMapper) Run(ctx context.Context) {
-	go atm.startCheckService(ctx)
+	if atm != nil {
+		go atm.startCheckService(ctx)
+	}
 }
 
 func (atm *ApiTagMapper) LookupKV(k uint32) string {
@@ -47,10 +49,12 @@ func (atm *ApiTagMapper) LookupKV(k uint32) string {
 
 func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (string, string, bool) {
 	atm.RLock()
-	defer atm.RUnlock()
 	if v, ok := atm.tags[tagval]; ok {
+		atm.RUnlock()
 		return colname, v, ok
 	}
+	atm.RUnlock()
+
 	// We don't know about this one. Add to the q to check.
 	select {
 	case atm.check <- tagval:
@@ -58,6 +62,8 @@ func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname strin
 		atm.Debugf("Lookup channel full %d", len(atm.check))
 	}
 	// Also put a placeholder in here so we don't slam the service.
+	atm.Lock()
+	defer atm.Unlock()
 	atm.tags[tagval] = ""
 
 	return colname, "", false
@@ -96,7 +102,7 @@ func (atm *ApiTagMapper) doLookup(ctx context.Context, lookups []uint32) {
 		return
 	}
 
-	atm.Infof("Doing lookup check with %d looups", len(lookups))
+	atm.Debugf("Doing lookup check with %d lookups", len(lookups))
 	vals, err := atm.apic.LookupEnumerationValues(ctx, lookups)
 	if err != nil {
 		atm.Errorf("Error looking up tag enums: %v", err)
