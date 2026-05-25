@@ -1,7 +1,10 @@
 package api
 
 import (
+	"bufio"
 	"context"
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -17,12 +20,15 @@ type ApiTagMapper struct {
 	apic     *kkapi.KentikApi
 	check    chan uint32
 	searched map[uint32]bool
+	colNames map[string]string
 }
 
 const (
 	CHAN_SLACK        = 10000
 	MAX_LOOKUP_SET    = 2000
 	LOOKUP_CHECK_TIME = 30 * time.Second
+
+	KT_COL_NAME_MAP_FILE = "KT_COL_NAME_MAP_FILE"
 )
 
 func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMapper, error) {
@@ -32,6 +38,27 @@ func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMappe
 		apic:     apic,
 		check:    make(chan uint32, CHAN_SLACK),
 		searched: map[uint32]bool{},
+		colNames: map[string]string{},
+	}
+
+	if colNameFile, ok := os.LookupEnv(KT_COL_NAME_MAP_FILE); ok {
+		f, err := os.Open(colNameFile)
+		if err != nil {
+			return nil, err
+		}
+		defer func() {
+			f.Close()
+		}()
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
+			pts := strings.SplitN(scanner.Text(), ",", 2)
+			atm.colNames[kt.FixupName(pts[0])] = kt.FixupName(pts[1])
+		}
+		if err := scanner.Err(); err != nil {
+			return nil, err
+		}
+
+		atm.Infof("Loaded %d tag column names", len(atm.colNames))
 	}
 
 	return &atm, nil
@@ -51,17 +78,24 @@ func (atm *ApiTagMapper) LookupKV(k uint32) string {
 
 func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (string, string, bool) {
 
-	if tagval == 0 { // 0 is a null value here.
+	fullColName := colname
+	if cn, ok := atm.colNames[colname]; ok {
+		fullColName = cn
+	} else { // We don't know about this column so gonna skip for now.
 		return colname, "", false
+	}
+
+	if tagval == 0 { // 0 is a null value here.
+		return fullColName, "", false
 	}
 
 	atm.RLock()
 	defer atm.RUnlock()
 	if v, ok := atm.tags[tagval]; ok {
-		return colname, v, ok
+		return fullColName, v, ok
 	}
 	if atm.searched[tagval] { // Only hit api one time.
-		return colname, "", false
+		return fullColName, "", false
 	}
 
 	// We don't know about this one. Add to the q to check.
@@ -71,7 +105,7 @@ func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname strin
 		atm.Debugf("Lookup channel full %d", len(atm.check))
 	}
 
-	return colname, "", false
+	return fullColName, "", false
 }
 
 func (atm *ApiTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname string) (string, string, bool) {
