@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"strconv"
 	"sync"
 	"time"
 
@@ -55,6 +56,10 @@ func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname strin
 	}
 	atm.RUnlock()
 
+	if tagval == 0 { // 0 is a null value here.
+		return colname, "", false
+	}
+
 	// We don't know about this one. Add to the q to check.
 	select {
 	case atm.check <- tagval:
@@ -64,7 +69,7 @@ func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname strin
 	// Also put a placeholder in here so we don't slam the service.
 	atm.Lock()
 	defer atm.Unlock()
-	atm.tags[tagval] = ""
+	atm.tags[tagval] = strconv.FormatUint(uint64(tagval), 10)
 
 	return colname, "", false
 }
@@ -106,6 +111,7 @@ func (atm *ApiTagMapper) doLookup(ctx context.Context, lookups []uint32) {
 	vals, err := atm.apic.LookupEnumerationValues(ctx, lookups)
 	if err != nil {
 		atm.Errorf("Error looking up tag enums: %v", err)
+		return
 	}
 
 	atm.Lock()
