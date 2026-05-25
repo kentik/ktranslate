@@ -627,7 +627,7 @@ func userAgent(comments ...string) string {
 	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
 }
 
-func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums []uint32) (map[uint32]string, error) {
+func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums map[uint32]bool) (map[uint32]string, error) {
 	if api.tagLookupClient == nil {
 		return nil, nil
 	}
@@ -636,8 +636,10 @@ func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums []uint3
 		Ids: make([]string, len(enums)),
 	}
 
-	for i, e := range enums {
-		lt.Ids[i] = strconv.FormatUint(uint64(e), 10)
+	next := 0
+	for e, _ := range enums {
+		lt.Ids[next] = strconv.FormatUint(uint64(e), 10)
+		next++
 	}
 
 	res := map[uint32]string{}

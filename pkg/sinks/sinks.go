@@ -57,6 +57,7 @@ const (
 	NewRelicMulti      = "new_relic_multi"
 	DDogSink           = "ddog"
 	OtelSink           = "otel"
+	NullSink           = "null"
 )
 
 func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, tooBig chan int, logTee chan string, config *ktranslate.Config) (SinkImpl, error) {
@@ -89,6 +90,26 @@ func NewSink(sink Sink, log logger.Underlying, registry go_metrics.Registry, too
 		return nrmulti.NewSink(log, registry, tooBig, logTee, config.NewRelicSink, config.NewRelicMultiSink)
 	case OtelSink:
 		return otel.NewSink(log, registry, logTee)
+	case NullSink:
+		return newNullSink(log)
 	}
 	return nil, fmt.Errorf("Unknown sink %v", sink)
+}
+
+type nullSink struct{}
+
+func newNullSink(log logger.Underlying) (*nullSink, error) {
+	return &nullSink{}, nil
+}
+func (ns *nullSink) Init(context.Context, formats.Format, kt.Compression, formats.Formatter) error {
+	return nil
+}
+func (ns *nullSink) Send(context.Context, *kt.Output) {
+	return
+}
+func (ns *nullSink) Close() {
+	return
+}
+func (ns *nullSink) HttpInfo() map[string]float64 {
+	return map[string]float64{}
 }

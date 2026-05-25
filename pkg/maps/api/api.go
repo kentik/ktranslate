@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"strconv"
 	"sync"
 	"time"
 
@@ -14,15 +13,16 @@ import (
 type ApiTagMapper struct {
 	sync.RWMutex
 	logger.ContextL
-	tags  map[uint32]string
-	apic  *kkapi.KentikApi
-	check chan uint32
+	tags     map[uint32]string
+	apic     *kkapi.KentikApi
+	check    chan uint32
+	searched map[uint32]bool
 }
 
 const (
 	CHAN_SLACK        = 10000
-	MAX_LOOKUP_SET    = 1000
-	LOOKUP_CHECK_TIME = 1 * time.Second
+	MAX_LOOKUP_SET    = 2000
+	LOOKUP_CHECK_TIME = 30 * time.Second
 )
 
 func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMapper, error) {
@@ -31,6 +31,7 @@ func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMappe
 		tags:     map[uint32]string{},
 		apic:     apic,
 		check:    make(chan uint32, CHAN_SLACK),
+		searched: map[uint32]bool{},
 	}
 
 	return &atm, nil
@@ -49,14 +50,17 @@ func (atm *ApiTagMapper) LookupKV(k uint32) string {
 }
 
 func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname string) (string, string, bool) {
-	atm.RLock()
-	if v, ok := atm.tags[tagval]; ok {
-		atm.RUnlock()
-		return colname, v, ok
-	}
-	atm.RUnlock()
 
 	if tagval == 0 { // 0 is a null value here.
+		return colname, "", false
+	}
+
+	atm.RLock()
+	defer atm.RUnlock()
+	if v, ok := atm.tags[tagval]; ok {
+		return colname, v, ok
+	}
+	if atm.searched[tagval] { // Only hit api one time.
 		return colname, "", false
 	}
 
@@ -66,10 +70,6 @@ func (atm *ApiTagMapper) LookupTagValue(cid kt.Cid, tagval uint32, colname strin
 	default:
 		atm.Debugf("Lookup channel full %d", len(atm.check))
 	}
-	// Also put a placeholder in here so we don't slam the service.
-	atm.Lock()
-	defer atm.Unlock()
-	atm.tags[tagval] = strconv.FormatUint(uint64(tagval), 10)
 
 	return colname, "", false
 }
@@ -80,19 +80,19 @@ func (atm *ApiTagMapper) LookupTagValueBig(cid kt.Cid, tagval int64, colname str
 
 func (atm *ApiTagMapper) startCheckService(ctx context.Context) {
 	lookupCheck := time.NewTicker(LOOKUP_CHECK_TIME)
-	lookups := make([]uint32, 0, MAX_LOOKUP_SET)
+	lookups := map[uint32]bool{}
 	atm.Infof("Starting lookup loop")
 
 	for {
 		select {
 		case _ = <-lookupCheck.C:
 			go atm.doLookup(ctx, lookups)
-			lookups = make([]uint32, 0, MAX_LOOKUP_SET)
+			lookups = map[uint32]bool{}
 		case v := <-atm.check:
-			lookups = append(lookups, v)
+			lookups[v] = true
 			if len(lookups) >= MAX_LOOKUP_SET {
 				go atm.doLookup(ctx, lookups)
-				lookups = make([]uint32, 0, MAX_LOOKUP_SET)
+				lookups = map[uint32]bool{}
 			}
 		case <-ctx.Done():
 			atm.Infof("Lookup loop done")
@@ -102,21 +102,27 @@ func (atm *ApiTagMapper) startCheckService(ctx context.Context) {
 	}
 }
 
-func (atm *ApiTagMapper) doLookup(ctx context.Context, lookups []uint32) {
+func (atm *ApiTagMapper) doLookup(ctx context.Context, lookups map[uint32]bool) {
+
 	if len(lookups) == 0 {
 		return
 	}
 
 	atm.Debugf("Doing lookup check with %d lookups", len(lookups))
 	vals, err := atm.apic.LookupEnumerationValues(ctx, lookups)
-	if err != nil {
+	if err != nil { // Error case, remove the seen marks for ones here since we don't know it yet.
 		atm.Errorf("Error looking up tag enums: %v", err)
 		return
 	}
 
+	// Record everything we searched for and also the actual values.
 	atm.Lock()
-	defer atm.Unlock()
+	for v, _ := range lookups {
+		atm.searched[v] = true
+	}
 	for k, v := range vals {
 		atm.tags[k] = v
 	}
+	atm.Debugf("Finished lookup check with %d lookups, %d searched and %d tags", len(lookups), len(atm.searched), len(atm.tags))
+	atm.Unlock()
 }
