@@ -25,6 +25,14 @@ func loadDefault(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
 					Type:        61,
 					Destination: "flow_direction",
 				},
+				producer.NetFlowMapField{
+					Type:        234,
+					Destination: "ingressVRFID",
+				},
+				producer.NetFlowMapField{
+					Type:        235,
+					Destination: "egressVRFID",
+				},
 			},
 		},
 		NetFlowV9: producer.NetFlowV9ProducerConfig{
