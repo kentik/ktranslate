@@ -17,6 +17,7 @@ import (
 	"sync"
 	"time"
 
+	tagging "github.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1"
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -61,7 +62,7 @@ type KentikApi struct {
 	mux             sync.RWMutex
 	lastSynth       time.Time
 	config          *ktranslate.Config
-	tagLookupClient *int
+	tagLookupClient tagging.EnumerationsAdminServiceClient
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -450,9 +451,9 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	api.Infof("Connected to Synth API server at %s", address)
 	api.synClient = client
 
-	//clientLookup := tagging.NewLookupAdminServiceClient(conn)
-	//api.Infof("Connected to Tag Lookup API server at %s", address)
-	//api.tagLookupClient = clientLookup
+	clientLookup := tagging.NewEnumerationsAdminServiceClient(conn)
+	api.Infof("Connected to Tag Enum Lookup API server at %s", address)
+	api.tagLookupClient = clientLookup
 
 	return api.getSynthInfo(ctx)
 }
@@ -626,16 +627,19 @@ func userAgent(comments ...string) string {
 	return fmt.Sprintf("kentik/ktranslate/%s (%s)", version.Version.Version, strings.Join(comments, "; "))
 }
 
-func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums []uint32) (map[uint32]string, error) {
+func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums map[uint32]bool) (map[uint32]string, error) {
 	if api.tagLookupClient == nil {
 		return nil, nil
 	}
-	return nil, nil
 
-	/**
+	lt := &tagging.FetchValuesByIdsRequest{
+		Ids: make([]string, len(enums)),
+	}
 
-	lt := &tagging.LookupValuesRequest{
-		Enumerations: enums,
+	next := 0
+	for e, _ := range enums {
+		lt.Ids[next] = strconv.FormatUint(uint64(e), 10)
+		next++
 	}
 
 	res := map[uint32]string{}
@@ -647,16 +651,18 @@ func (api *KentikApi) LookupEnumerationValues(ctx context.Context, enums []uint3
 		})
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
-		r, err := api.tagClient.LookupValues(ctxo, lt)
+		r, err := api.tagLookupClient.FetchValuesByIds(ctxo, lt)
 		if err != nil {
 			return nil, err
 		}
 
-		for e, s := range r.GetMappings() {
-			res[e] = s
+		for e, s := range r.GetValues() {
+			ival, err := strconv.ParseUint(e, 10, 32)
+			if err == nil {
+				res[uint32(ival)] = s
+			}
 		}
 	}
 
 	return res, nil
-	*/
 }
