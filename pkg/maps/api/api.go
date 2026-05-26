@@ -51,8 +51,15 @@ func NewApiTagMapper(log logger.Underlying, apic *kkapi.KentikApi) (*ApiTagMappe
 		}()
 		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
-			pts := strings.SplitN(scanner.Text(), ",", 2)
-			atm.colNames[kt.FixupName(pts[0])] = kt.FixupName(pts[1])
+			line := strings.TrimSpace(scanner.Text())
+			if line == "" {
+				continue
+			}
+			pts := strings.SplitN(line, ",", 2)
+			if len(pts) != 2 {
+				continue
+			}
+			atm.colNames[kt.FixupName(strings.TrimSpace(pts[0]))] = kt.FixupName(strings.TrimSpace(pts[1]))
 		}
 		if err := scanner.Err(); err != nil {
 			return nil, err
