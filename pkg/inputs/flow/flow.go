@@ -108,8 +108,12 @@ func NewFlowSource(ctx context.Context, proto FlowSource, maxBatchSize int, log 
 	}
 
 	kt.SetConfig(config)
+	configm, err := config.Compile()
+	if err != nil {
+		return nil, err
+	}
 
-	flowProducer, err := protoproducer.CreateProtoProducer(config, protoproducer.CreateSamplingSystem)
+	flowProducer, err := protoproducer.CreateProtoProducer(configm, protoproducer.CreateSamplingSystem)
 	if err != nil {
 		return nil, err
 	}
