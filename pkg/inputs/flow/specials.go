@@ -17,6 +17,16 @@ func loadDefault(cfg *ktranslate.FlowInputConfig) *producer.ProducerConfig {
 					Index: 99,
 					Type:  "varint",
 				},
+				producer.ProtobufFormatterConfig{
+					Name:  "ingressVRFID",
+					Index: 100,
+					Type:  "varint",
+				},
+				producer.ProtobufFormatterConfig{
+					Name:  "egressVRFID",
+					Index: 101,
+					Type:  "varint",
+				},
 			},
 		},
 		IPFIX: producer.IPFIXProducerConfig{
