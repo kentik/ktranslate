@@ -268,11 +268,11 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		defaultProvider = kt.Provider(dp)
 	}
 
-	stitch, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo)
+	stitcher, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo)
 	if err != nil {
 		return nil, err
 	}
-	kc.stitcher = stitch
+	kc.stitcher = stitcher
 
 	return kc, nil
 }
