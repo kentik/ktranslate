@@ -910,6 +910,20 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.FlowInput.MappingFile = val
 			case "config_provider":
 				cfg.CfgManager.ConfigImpl = val
+			case "stitch.ttl.sec":
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.Lilo.TTLSec = v
+			case "stitch.enable":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.Lilo.Enable = v
 			// configs
 			case "config", "generate-config":
 				// ignore

@@ -27,6 +27,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/s3"
+	"github.com/kentik/ktranslate/pkg/stitch"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -266,6 +267,12 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	if dp != "" {
 		defaultProvider = kt.Provider(dp)
 	}
+
+	stitch, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo)
+	if err != nil {
+		return nil, err
+	}
+	kc.stitcher = stitch
 
 	return kc, nil
 }

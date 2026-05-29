@@ -285,6 +285,12 @@ type ConfigManager struct {
 	PollTimeSec int
 }
 
+// StitchConfig is the config on how to manage stitching flows together
+type StitchConfig struct {
+	Enable bool
+	TTLSec int
+}
+
 // Config is the ktranslate configuration
 type Config struct {
 	// ktranslate
@@ -393,6 +399,8 @@ type Config struct {
 	FlowInput *FlowInputConfig
 	// pkg/config
 	CfgManager *ConfigManager
+	// pkg/stitch
+	Lilo *StitchConfig
 }
 
 // DefaultConfig returns a ktranslate configuration with defaults applied
@@ -617,6 +625,10 @@ func DefaultConfig() *Config {
 		CfgManager: &ConfigManager{
 			ConfigImpl:  "",
 			PollTimeSec: 1200,
+		},
+		Lilo: &StitchConfig{
+			Enable: false,
+			TTLSec: 30,
 		},
 	}
 }
