@@ -343,9 +343,9 @@ func (j *JCHF) SetIFPorts(p IfaceID) *JCHF {
 
 func (j *JCHF) GetKey() string {
 	if j.L4SrcPort < 32768 { // Guess if this is a ingress or egress flow.
-		return strings.Join([]string{j.CustomStr["src_endpoint"], j.CustomStr["dst_endpoint"], j.Protocol}, ":")
+		return strings.Join([]string{j.CustomStr["src_endpoint"], j.CustomStr["dst_endpoint"], j.Protocol}, "|")
 	} else {
-		return strings.Join([]string{j.CustomStr["dst_endpoint"], j.CustomStr["src_endpoint"], j.Protocol}, ":")
+		return strings.Join([]string{j.CustomStr["dst_endpoint"], j.CustomStr["src_endpoint"], j.Protocol}, "|")
 	}
 }
 
