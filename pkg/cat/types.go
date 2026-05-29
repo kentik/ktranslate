@@ -20,6 +20,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
+	"github.com/kentik/ktranslate/pkg/stitch"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -86,6 +87,7 @@ type KTranslate struct {
 	shutdown     func(string)
 	objmgr       sinks.CloudObjectManager
 	tee          sinks.SinkImpl
+	stitcher     *stitch.Stitcher
 }
 
 type CustomMapper struct {

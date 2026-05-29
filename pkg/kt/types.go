@@ -3,6 +3,7 @@ package kt
 import (
 	"regexp"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -189,6 +190,7 @@ type JCHF struct {
 	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
 	ApplySample             bool                           `json:"-"`        // Should this value be subject to sampling?
 	Har                     *HarFile                       `json:"har_file"` // Let you attatch a har file to this object if needed.
+	Pair                    *JCHF
 }
 
 type MetricInfo struct {
@@ -315,6 +317,7 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["custom_bigint"] = j.CustomBigInt
 	j.avroSet["eventType"] = j.EventType
 	j.avroSet["provider"] = j.Provider
+	j.avroSet["pair"] = j.Pair
 	j.hasSetAvro = true
 	return j.avroSet
 }
@@ -333,6 +336,14 @@ func (j *JCHF) SetIFPorts(p IfaceID) *JCHF {
 	j.OutputPort = p
 	j.InputPort = p
 	return j
+}
+
+func (j *JCHF) GetKey() string {
+	if j.L4SrcPort < 32768 { // Guess if this is a ingress or egress flow.
+		return strings.Join([]string{j.CustomStr["src_endpoint"], j.CustomStr["dst_endpoint"], j.Protocol}, ":")
+	} else {
+		return strings.Join([]string{j.CustomStr["dst_endpoint"], j.CustomStr["src_endpoint"], j.Protocol}, ":")
+	}
 }
 
 type AgentId IntId
