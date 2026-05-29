@@ -47,7 +47,7 @@ func NewStitcher(log logger.Underlying, cfg *ktranslate.StitchConfig) (*Stitcher
 }
 
 /*
-If theres a matching ingress / egress flow, record it here.
+If there's a matching ingress / egress flow, record it here.
 */
 func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 	key := msg.GetKey()
