@@ -52,11 +52,10 @@ If theres a matching ingress / egress flow, record it here.
 func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 	key := msg.GetKey()
 
-	s.Infof("%s", key)
-
 	item, retrieved := s.cache.GetOrSet(key, msg, ttlcache.WithTTL[string, *kt.JCHF](ttlcache.DefaultTTL))
 	if retrieved {
 		msg.Pair = item.Value()
+		s.cache.Delete(item.Key())
 		return true
 	}
 
