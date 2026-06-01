@@ -16,8 +16,7 @@ func TestUnify(t *testing.T) {
 	assert := assert.New(t)
 	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
 
-	s, err := NewStitcher(l, &ktranslate.StitchConfig{Enable: true})
-	assert.NoError(err)
+	s, err := NewStitcher(l, &ktranslate.StitchConfig{Enable: true, TTLSec: 30})
 
 	for _, dst := range kt.InputTestingUnify {
 		dst.CustomStr["src_endpoint"] = dst.SrcAddr + ":" + strconv.Itoa(int(dst.L4SrcPort))
