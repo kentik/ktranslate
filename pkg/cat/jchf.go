@@ -628,7 +628,7 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 			}
 		}
 
-		// If there's a flow stitching system eabled. try to stich it together here.
+		// If there's a flow stitching system enabled, try to stitch it together here.
 		if kc.stitcher != nil {
 			kc.stitcher.Stitch(msg)
 		}

@@ -190,7 +190,7 @@ type JCHF struct {
 	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
 	ApplySample             bool                           `json:"-"`        // Should this value be subject to sampling?
 	Har                     *HarFile                       `json:"har_file"` // Let you attatch a har file to this object if needed.
-	Pair                    *JCHF
+	Pair                    *JCHF                          `json:"pair"`
 }
 
 type MetricInfo struct {

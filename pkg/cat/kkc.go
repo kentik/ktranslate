@@ -268,7 +268,7 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		defaultProvider = kt.Provider(dp)
 	}
 
-	stitcher, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo)
+	stitcher, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo, registry)
 	if err != nil {
 		return nil, err
 	}
@@ -304,6 +304,7 @@ func (kc *KTranslate) cleanup() {
 	if kc.confMgr != nil {
 		kc.confMgr.Close()
 	}
+	kc.stitcher.Stop()
 }
 
 // GetStatus implements the baseserver.Service interface.
@@ -342,6 +343,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 		Inputs:         map[string]map[string]float64{},
+		Stitcher:       kc.stitcher.HttpInfo(),
 	}
 
 	// Now, let other sinks do their work
