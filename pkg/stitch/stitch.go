@@ -19,7 +19,7 @@ var (
 )
 
 func init() {
-	flag.IntVar(&ttlSec, "stitch.ttl.sec", 30, "TTL for holding flows to try and stitch together.")
+	flag.IntVar(&ttlSec, "stitch.ttl.sec", 1, "TTL for holding flows to try and stitch together.")
 	flag.BoolVar(&enable, "stitch.enable", false, "Turn on flow stitching.")
 }
 
