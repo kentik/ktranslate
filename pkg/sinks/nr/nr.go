@@ -62,11 +62,11 @@ var (
 		},
 		REGION_US_STAGING: map[string]string{
 			"events":  "https://staging-insights-collector.newrelic.com/v1/accounts/%s/events",
-			"metrics": "https://staging-metric-api.newrelic.com/metric/v1",
-			"logs":    "https://staging-log-api.newrelic.com/log/v1",
+			"metrics": "https://metric-api.jp.nr-data.net/metric/v1",
+			"logs":    "https://log-api.jp.nr-data.net/log/v1",
 		},
 		REGION_JP: map[string]string{
-			"events":  "https://insights-collector.jp01.nr-data.net/v1/accounts/%s/events",
+			"events":  "https://insights-collector.jp.nr-data.net/v1/accounts/%s/events",
 			"metrics": "https://metric-api.jp.newrelic.com/metric/v1",
 			"logs":    "https://log-api.jp.newrelic.com/log/v1",
 		},
