@@ -17,6 +17,8 @@ import (
 const (
 	Sum            Method = "sum"
 	Unique                = "unique"
+	Cache                 = "cache"
+	CacheUnique           = "cache_unique"
 	Min                   = "min"
 	Max                   = "max"
 	Mean                  = "mean"
@@ -149,6 +151,18 @@ func GetRollups(log logger.Underlying, cfg *ktranslate.RollupConfig) ([]Roller, 
 		switch rf.Method {
 		case Unique:
 			ur, err := newUniqueRollup(log, rf, cfg)
+			if err != nil {
+				return nil, err
+			}
+			rolls = append(rolls, ur)
+		case Cache:
+			ur, err := newCacheRollup(log, rf, cfg, false)
+			if err != nil {
+				return nil, err
+			}
+			rolls = append(rolls, ur)
+		case CacheUnique:
+			ur, err := newCacheRollup(log, rf, cfg, true)
 			if err != nil {
 				return nil, err
 			}
