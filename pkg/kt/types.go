@@ -190,7 +190,6 @@ type JCHF struct {
 	MatchAttr               map[string]*regexp.Regexp      `json:"-"`
 	ApplySample             bool                           `json:"-"`        // Should this value be subject to sampling?
 	Har                     *HarFile                       `json:"har_file"` // Let you attatch a har file to this object if needed.
-	Pair                    map[string]interface{}         `json:"pair"`     // The flow stitched pair to this flow.
 }
 
 type MetricInfo struct {
@@ -237,26 +236,6 @@ func (j *JCHF) Flatten() map[string]interface{} {
 		case map[string]int64:
 			for ki, vi := range mv {
 				mapr[ki] = vi
-			}
-			delete(mapr, k)
-		case map[string]interface{}:
-			for ki, vi := range mv {
-				switch mvi := vi.(type) {
-				case map[string]string:
-					for kii, vii := range mvi {
-						mapr["pair_"+kii] = vii
-					}
-				case map[string]int32:
-					for kii, vii := range mvi {
-						mapr["pair_"+kii] = vii
-					}
-				case map[string]int64:
-					for kii, vii := range mvi {
-						mapr["pair_"+kii] = vii
-					}
-				default:
-					mapr["pair_"+ki] = vi
-				}
 			}
 			delete(mapr, k)
 		case string:
@@ -337,7 +316,6 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["custom_bigint"] = j.CustomBigInt
 	j.avroSet["eventType"] = j.EventType
 	j.avroSet["provider"] = j.Provider
-	j.avroSet["pair"] = j.Pair
 	j.hasSetAvro = true
 	return j.avroSet
 }

@@ -23,7 +23,7 @@ func init() {
 
 type Stitcher struct {
 	logger.ContextL
-	cache    *ringbuffer.RingBuffer[map[string]interface{}]
+	cache    *ringbuffer.RingBuffer[*kt.JCHF]
 	registry go_metrics.Registry
 	metrics  *StitchMetric
 }
@@ -40,7 +40,7 @@ func NewStitcher(log logger.Underlying, cfg *ktranslate.StitchConfig, registry g
 
 	s := &Stitcher{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flowStitch"}, log),
-		cache:    ringbuffer.New[map[string]interface{}](cfg.BufLen),
+		cache:    ringbuffer.New[*kt.JCHF](cfg.BufLen),
 		registry: registry,
 		metrics: &StitchMetric{
 			FlowsIn:      go_metrics.GetOrRegisterMeter(fmt.Sprintf("stitch.in^force=true"), registry),
@@ -60,12 +60,16 @@ func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 	key := msg.GetKey()
 	s.metrics.FlowsIn.Mark(1)
 	if nm, ok := s.cache.Get(key); ok {
-		msg.Pair = nm
+		msg.CustomInt["pair_tcp_flags"] = int32(nm.TcpFlags)
+		msg.CustomBigInt["pair_in_bytes"] = int64(nm.InBytes)
+		msg.CustomBigInt["pair_in_pkts"] = int64(nm.InPkts)
+		msg.CustomInt["pair_tcp_rx"] = int32(nm.TcpRetransmit)
+		msg.CustomBigInt["pair_timestamp"] = int64(nm.Timestamp)
 		s.metrics.FlowsMatched.Mark(1)
 		return true
 	}
 
-	s.cache.Put(key, msg.Flatten())
+	s.cache.Put(key, msg)
 	return false
 }
 
