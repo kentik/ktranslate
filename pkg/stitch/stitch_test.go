@@ -26,5 +26,5 @@ func TestUnify(t *testing.T) {
 
 	assert.False(s.Stitch(kt.InputTestingUnify[0]))
 	assert.True(s.Stitch(kt.InputTestingUnify[1]))
-	assert.True(s.Stitch(kt.InputTestingUnify[1]))
+	assert.False(s.Stitch(kt.InputTestingUnify[1]))
 }
