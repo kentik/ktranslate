@@ -291,7 +291,7 @@ type ConfigManager struct {
 // StitchConfig is the config on how to manage stitching flows together
 type StitchConfig struct {
 	Enable bool
-	TTLSec int
+	BufLen int
 }
 
 // Config is the ktranslate configuration
@@ -634,7 +634,7 @@ func DefaultConfig() *Config {
 		},
 		Lilo: &StitchConfig{
 			Enable: false,
-			TTLSec: 30,
+			BufLen: 10000,
 		},
 	}
 }

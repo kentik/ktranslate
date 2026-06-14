@@ -16,7 +16,7 @@ func TestUnify(t *testing.T) {
 	assert := assert.New(t)
 	l := lt.NewTestContextL(logger.NilContext, t).GetLogger().GetUnderlyingLogger()
 
-	s, err := NewStitcher(l, &ktranslate.StitchConfig{Enable: true, TTLSec: 30}, nil)
+	s, err := NewStitcher(l, &ktranslate.StitchConfig{Enable: true, BufLen: 30}, nil)
 	assert.NoError(err)
 
 	for _, dst := range kt.InputTestingUnify {
@@ -26,5 +26,5 @@ func TestUnify(t *testing.T) {
 
 	assert.False(s.Stitch(kt.InputTestingUnify[0]))
 	assert.True(s.Stitch(kt.InputTestingUnify[1]))
-	assert.False(s.Stitch(kt.InputTestingUnify[1]))
+	assert.True(s.Stitch(kt.InputTestingUnify[1]))
 }
