@@ -59,7 +59,7 @@ func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 
 	key := msg.GetKey()
 	s.metrics.FlowsIn.Mark(1)
-	if nm, ok := s.cache.Get(key); ok {
+	if nm, ok := s.cache.GetAndDelete(key); ok {
 		msg.CustomInt["pair_tcp_flags"] = int32(nm.TcpFlags)
 		msg.CustomBigInt["pair_in_bytes"] = int64(nm.InBytes)
 		msg.CustomBigInt["pair_in_pkts"] = int64(nm.InPkts)
@@ -73,11 +73,8 @@ func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 	return false
 }
 
-func (s *Stitcher) Stop() {
-	if s == nil {
-		return
-	}
-}
+// NOOP for now.
+func (s *Stitcher) Stop() {}
 
 func (s *Stitcher) HttpInfo() map[string]float64 {
 	if s == nil {

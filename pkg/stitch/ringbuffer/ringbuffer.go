@@ -77,6 +77,19 @@ func (r *RingBuffer[V]) Get(key string) (value V, found bool) {
 	return r.data[slot].value, true
 }
 
+// Like get but nulls out the value when returning.
+func (r *RingBuffer[V]) GetAndDelete(key string) (value V, found bool) {
+	slot, ok := r.index[key]
+	if !ok {
+		var zero V
+		return zero, false
+	}
+
+	val := r.data[slot].value
+	delete(r.index, key) // ensure we don't overlap again on flows.
+	return val, true
+}
+
 // Contains reports whether key is present. Runs in O(1).
 func (r *RingBuffer[V]) Contains(key string) bool {
 	_, ok := r.index[key]
