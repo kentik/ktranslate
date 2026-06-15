@@ -21,9 +21,17 @@ func init() {
 	flag.BoolVar(&enable, "stitch.enable", false, "Turn on flow stitching.")
 }
 
+type stitchSnapshot struct {
+	TcpFlags      uint32
+	InBytes       uint64
+	InPkts        uint64
+	TcpRetransmit uint32
+	Timestamp     int64
+}
+
 type Stitcher struct {
 	logger.ContextL
-	cache    *ringbuffer.RingBuffer[*kt.JCHF]
+	cache    *ringbuffer.RingBuffer[stitchSnapshot]
 	registry go_metrics.Registry
 	metrics  *StitchMetric
 }
