@@ -182,9 +182,9 @@ func (r *CacheRollup) addUniqueValues(entry *CacheEntry, mapr map[string]interfa
 			case map[string]string:
 				entry.UniqueVals[mm[m[1]]] = true
 			case map[string]int32:
-				entry.UniqueVals[string(rune(mm[m[1]]))] = true
+				entry.UniqueVals[strconv.FormatInt(int64(mm[m[1]]), 10)] = true
 			case map[string]int64:
-				entry.UniqueVals[string(rune(mm[m[1]]))] = true
+				entry.UniqueVals[strconv.FormatInt(mm[m[1]], 10)] = true
 			}
 		}
 	}
