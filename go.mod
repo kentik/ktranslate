@@ -29,7 +29,6 @@ require (
 	github.com/honeycombio/libhoney-go v1.15.6
 	github.com/imdario/mergo v0.3.16
 	github.com/influxdata/line-protocol/v2 v2.2.1
-	github.com/jellydator/ttlcache/v3 v3.4.0
 	github.com/json-iterator/go v1.1.12
 	github.com/judwhite/go-svc v1.2.1
 	github.com/kentik/api-schema-public v0.0.0-20260512191743-e5f988e95440
