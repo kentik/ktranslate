@@ -48,7 +48,7 @@ func NewStitcher(log logger.Underlying, cfg *ktranslate.StitchConfig, registry g
 
 	s := &Stitcher{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "flowStitch"}, log),
-		cache:    ringbuffer.New[*kt.JCHF](cfg.BufLen),
+		cache:    ringbuffer.New[stitchSnapshot](cfg.BufLen),
 		registry: registry,
 		metrics: &StitchMetric{
 			FlowsIn:      go_metrics.GetOrRegisterMeter(fmt.Sprintf("stitch.in^force=true"), registry),
