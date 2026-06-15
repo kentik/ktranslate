@@ -77,7 +77,13 @@ func (s *Stitcher) Stitch(msg *kt.JCHF) bool {
 		return true
 	}
 
-	s.cache.Put(key, msg)
+	s.cache.Put(key, stitchSnapshot{
+		TcpFlags:      msg.TcpFlags,
+		InBytes:       msg.InBytes,
+		InPkts:        msg.InPkts,
+		TcpRetransmit: msg.TcpRetransmit,
+		Timestamp:     msg.Timestamp,
+	})
 	return false
 }
 
