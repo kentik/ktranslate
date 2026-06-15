@@ -171,7 +171,7 @@ func (r *CacheRollup) addUniqueValues(entry *CacheEntry, mapr map[string]interfa
 			case string:
 				entry.UniqueVals[m] = true
 			case int64:
-				entry.UniqueVals[string(rune(m))] = true
+				entry.UniqueVals[strconv.FormatInt(m, 10)] = true
 			}
 		}
 	}
