@@ -304,7 +304,9 @@ func (kc *KTranslate) cleanup() {
 	if kc.confMgr != nil {
 		kc.confMgr.Close()
 	}
-	kc.stitcher.Stop()
+	if kc.stitcher != nil {
+		kc.stitcher.Stop()
+	}
 }
 
 // GetStatus implements the baseserver.Service interface.
