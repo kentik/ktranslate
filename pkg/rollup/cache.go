@@ -341,7 +341,6 @@ func (r *CacheRollup) GetMemoryStats() (int64, int) {
 
 	// Also get actual memory stats
 	var m runtime.MemStats
-	runtime.GC()
 	runtime.ReadMemStats(&m)
 
 	actualMemory := int64(unsafe.Sizeof(r.cache))
