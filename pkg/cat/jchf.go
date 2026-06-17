@@ -627,6 +627,11 @@ func (kc *KTranslate) doEnrichments(ctx context.Context, msgs []*kt.JCHF) []*kt.
 				}
 			}
 		}
+
+		// If there's a flow stitching system enabled, try to stitch it together here.
+		if kc.stitcher != nil {
+			kc.stitcher.Stitch(msg)
+		}
 	}
 
 	// If there's an outside enrichment service, send over here.

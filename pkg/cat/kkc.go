@@ -27,6 +27,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
 	"github.com/kentik/ktranslate/pkg/sinks/s3"
+	"github.com/kentik/ktranslate/pkg/stitch"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -267,6 +268,12 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 		defaultProvider = kt.Provider(dp)
 	}
 
+	stitcher, err := stitch.NewStitcher(log.GetLogger().GetUnderlyingLogger(), config.Lilo, registry)
+	if err != nil {
+		return nil, err
+	}
+	kc.stitcher = stitcher
+
 	return kc, nil
 }
 
@@ -296,6 +303,9 @@ func (kc *KTranslate) cleanup() {
 	}
 	if kc.confMgr != nil {
 		kc.confMgr.Close()
+	}
+	if kc.stitcher != nil {
+		kc.stitcher.Stop()
 	}
 }
 
@@ -335,6 +345,7 @@ func (kc *KTranslate) HttpInfo(w http.ResponseWriter, r *http.Request) {
 		Sinks:          map[ss.Sink]map[string]float64{},
 		SnmpDeviceData: map[string]map[string]float64{},
 		Inputs:         map[string]map[string]float64{},
+		Stitcher:       kc.stitcher.HttpInfo(),
 	}
 
 	// Now, let other sinks do their work

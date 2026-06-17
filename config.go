@@ -184,10 +184,13 @@ type DDogSinkConfig struct {
 
 // RollupConfig is the config for rollups
 type RollupConfig struct {
-	JoinKey       string
-	TopK          int
-	Formats       []string
-	KeepUndefined bool
+	JoinKey          string
+	TopK             int
+	Formats          []string
+	KeepUndefined    bool
+	MaxMemoryMB      int
+	MaxKeys          int
+	EmergencyCleanup bool
 }
 
 // KMuxConfig is the config for the mux server
@@ -283,6 +286,12 @@ type KentikCred struct {
 type ConfigManager struct {
 	ConfigImpl  string
 	PollTimeSec int
+}
+
+// StitchConfig is the config on how to manage stitching flows together
+type StitchConfig struct {
+	Enable bool
+	BufLen int
 }
 
 // Config is the ktranslate configuration
@@ -393,6 +402,8 @@ type Config struct {
 	FlowInput *FlowInputConfig
 	// pkg/config
 	CfgManager *ConfigManager
+	// pkg/stitch
+	Lilo *StitchConfig
 }
 
 // DefaultConfig returns a ktranslate configuration with defaults applied
@@ -543,10 +554,13 @@ func DefaultConfig() *Config {
 			RelayURL: "",
 		},
 		Rollup: &RollupConfig{
-			JoinKey:       "^",
-			TopK:          10,
-			Formats:       []string{},
-			KeepUndefined: false,
+			JoinKey:          "^",
+			TopK:             10,
+			Formats:          []string{},
+			KeepUndefined:    false,
+			MaxMemoryMB:      100,
+			MaxKeys:          5000,
+			EmergencyCleanup: true,
 		},
 		KMux: &KMuxConfig{
 			Dir: ".",
@@ -617,6 +631,10 @@ func DefaultConfig() *Config {
 		CfgManager: &ConfigManager{
 			ConfigImpl:  "",
 			PollTimeSec: 1200,
+		},
+		Lilo: &StitchConfig{
+			Enable: false,
+			BufLen: 10000,
 		},
 	}
 }

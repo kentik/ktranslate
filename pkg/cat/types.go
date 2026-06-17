@@ -20,6 +20,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	"github.com/kentik/ktranslate/pkg/sinks"
+	"github.com/kentik/ktranslate/pkg/stitch"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
 	"github.com/kentik/ktranslate/pkg/util/gopatricia/patricia"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
@@ -86,6 +87,7 @@ type KTranslate struct {
 	shutdown     func(string)
 	objmgr       sinks.CloudObjectManager
 	tee          sinks.SinkImpl
+	stitcher     *stitch.Stitcher
 }
 
 type CustomMapper struct {
@@ -117,6 +119,7 @@ type hc struct {
 	Sinks          map[sinks.Sink]map[string]float64
 	SnmpDeviceData map[string]map[string]float64
 	Inputs         map[string]map[string]float64
+	Stitcher       map[string]float64
 }
 
 type Flow struct {
