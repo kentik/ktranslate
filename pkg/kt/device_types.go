@@ -1,9 +1,12 @@
 package kt
 
 import (
+	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	sfmt "github.com/kentik/the-library-formally-known-as-go-syslog/format"
 
+	"fmt"
 	"net"
+	"strconv"
 )
 
 // Devices is a map of device ids to devices for a company.
@@ -53,10 +56,10 @@ type DeviceSite struct {
 // It corresponds to a row in mn_interface, joined with information
 // from mn_device and mn_site.
 type Interface struct {
-	DeviceID    DeviceID `json:"device_id,string"`
-	Address     string   `json:"interface_ip"`
-	Netmask     string   `json:"interface_ip_netmask"`
-	Description string   `json:"interface_description"`
+	DeviceID DeviceID `json:"device_id,string"`
+	//Address     string   `json:"interface_ip"`
+	Netmask     string `json:"interface_ip_netmask"`
+	Description string `json:"interface_description"`
 
 	NetworkBoundary  string `json:"network_boundary"`
 	ConnectivityType string `json:"connectivity_type"`
@@ -108,9 +111,13 @@ type Plan struct {
 }
 
 type Column struct {
-	ID   uint32 `json:"field_id,string"`
-	Name string `json:"col_name"`
-	Type string `json:"col_type"`
+	ID          uint32 `json:"field_id,string"`
+	Name        string `json:"col_name"`
+	Type        string `json:"col_type"`
+	DeviceID    string
+	FieldID     string
+	Description string
+	DeviceType  string
 }
 
 func (d *Device) InitUserTags(serviceName string, tags map[string]string) {
@@ -158,4 +165,182 @@ type SiteMarket struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 	Desc string `json:"description"`
+}
+
+func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
+	if dd == nil {
+		return nil, fmt.Errorf("DeviceDetailed is nil")
+	}
+
+	deviceID, err := strconv.ParseInt(dd.GetId(), 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("parsing device ID %q: %w", dd.GetId(), err)
+	}
+
+	companyID, err := strconv.ParseInt(dd.GetCompanyId(), 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("parsing company ID %q: %w", dd.GetCompanyId(), err)
+	}
+
+	sampleRate, err := strconv.ParseUint(dd.GetDeviceSampleRate(), 10, 32)
+	if err != nil {
+		// Default to 0 if unparseable rather than failing hard
+		sampleRate = 0
+	}
+
+	ip := net.ParseIP(dd.GetDeviceSnmpIp())
+
+	sendingIPs := make([]net.IP, 0, len(dd.GetSendingIps()))
+	for _, s := range dd.GetSendingIps() {
+		if parsed := net.ParseIP(s); parsed != nil {
+			sendingIPs = append(sendingIPs, parsed)
+		}
+	}
+
+	ifaces, ifaceMap := mapInterfaces(dd.GetId(), dd.GetAllInterfaces())
+
+	labels := make([]DeviceLabel, 0, len(dd.GetLabels()))
+	for _, l := range dd.GetLabels() {
+		labelID, err := strconv.Atoi(l.GetId())
+		if err != nil {
+			labelID = 0
+		}
+		labels = append(labels, DeviceLabel{
+			ID:   labelID,
+			Name: l.GetName(),
+			Desc: l.GetDescription(),
+		})
+	}
+
+	site := DeviceSite{}
+	if s := dd.GetSite(); s != nil {
+		siteID, err := strconv.Atoi(s.GetId())
+		if err != nil {
+			siteID = 0
+		}
+		site = DeviceSite{
+			ID:       siteID,
+			SiteName: s.GetSiteName(),
+		}
+	}
+
+	plan := mapPlan(dd.GetPlan())
+
+	customs := mapCustomColumns(dd.GetCustomColumnData())
+
+	var snmpV3 *V3SNMPConfig
+	if v3 := dd.GetDeviceSnmpV3Conf(); v3 != nil {
+		snmpV3 = &V3SNMPConfig{
+			UserName:                 v3.GetUsername(),
+			AuthenticationProtocol:   v3.GetAuthenticationProtocol(),
+			AuthenticationPassphrase: v3.GetAuthenticationPassphrase(),
+			PrivacyProtocol:          v3.GetPrivacyProtocol(),
+			PrivacyPassphrase:        v3.GetPrivacyPassphrase(),
+		}
+	}
+
+	return &Device{
+		ID:            DeviceID(deviceID),
+		Name:          dd.GetDeviceName(),
+		CompanyID:     Cid(companyID),
+		DeviceType:    dd.GetDeviceType(),
+		DeviceSubtype: dd.GetDeviceSubtype(),
+		Description:   dd.GetDeviceDescription(),
+		IP:            ip,
+		Interfaces:    ifaceMap,
+		AllInterfaces: ifaces,
+		SendingIps:    sendingIPs,
+		SampleRate:    uint32(sampleRate),
+		BgpType:       dd.GetDeviceBgpType(),
+		Plan:          plan,
+		CdnAttr:       dd.GetCdnAttr(),
+		MaxFlowRate:   int(dd.GetMaxFlowRate()),
+		Customs:       customs,
+		CustomStr:     dd.GetCustomColumns(),
+		SnmpCommunity: dd.GetDeviceSnmpCommunity(),
+		SnmpIp:        dd.GetDeviceSnmpIp(),
+		SnmpV3:        snmpV3,
+		Labels:        labels,
+		Site:          site,
+	}, nil
+}
+
+func mapInterfaces(deviceID string, protos []*devicepb.Interface) ([]Interface, map[IfaceID]Interface) {
+	ifaces := make([]Interface, 0, len(protos))
+	ifaceMap := make(map[IfaceID]Interface, len(protos))
+
+	for _, p := range protos {
+		if p == nil {
+			continue
+		}
+
+		snmpID, err := strconv.ParseInt(p.GetSnmpId(), 10, 64)
+		if err != nil {
+			snmpID = 0
+		}
+
+		devID, err := strconv.ParseInt(deviceID, 10, 64)
+		if err != nil {
+			devID = 0
+		}
+
+		snmpSpeed, err := strconv.ParseInt(p.GetSnmpSpeed(), 10, 64)
+		if err != nil {
+			snmpSpeed = 0
+		}
+
+		iface := Interface{
+			DeviceID:         DeviceID(devID),
+			Description:      p.GetInterfaceDescription(),
+			NetworkBoundary:  p.GetNetworkBoundary(),
+			ConnectivityType: p.GetConnectivityType(),
+			Provider:         p.GetProvider(),
+			SnmpID:           IfaceID(snmpID),
+			Alias:            p.GetSnmpAlias(),
+			SnmpSpeedMbps:    snmpSpeed,
+		}
+
+		ifaces = append(ifaces, iface)
+		ifaceMap[IfaceID(snmpID)] = iface
+	}
+
+	return ifaces, ifaceMap
+}
+
+func mapPlan(p *devicepb.Plan) Plan {
+	if p == nil {
+		return Plan{}
+	}
+
+	planID, err := strconv.Atoi(p.GetId())
+	if err != nil {
+		planID = 0
+	}
+
+	return Plan{
+		ID:   uint64(planID),
+		Name: p.GetName(),
+	}
+}
+
+func mapCustomColumns(cols []*devicepb.CustomColumnData) []Column {
+	if len(cols) == 0 {
+		return nil
+	}
+
+	result := make([]Column, 0, len(cols))
+	for _, c := range cols {
+		if c == nil {
+			continue
+		}
+		result = append(result, Column{
+			DeviceID:    c.GetDeviceId(),
+			FieldID:     c.GetFieldId(),
+			Name:        c.GetColName(),
+			Description: c.GetDescription(),
+			Type:        c.GetColType(),
+			DeviceType:  c.GetDeviceType(),
+		})
+	}
+	return result
 }
