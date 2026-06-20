@@ -59,10 +59,10 @@ type DeviceSite struct {
 // It corresponds to a row in mn_interface, joined with information
 // from mn_device and mn_site.
 type Interface struct {
-	DeviceID DeviceID `json:"device_id,string"`
-	//Address     string   `json:"interface_ip"`
-	Netmask     string `json:"interface_ip_netmask"`
-	Description string `json:"interface_description"`
+	DeviceID    DeviceID `json:"device_id,string"`
+	Address     string   `json:"interface_ip"`
+	Netmask     string   `json:"interface_ip_netmask"`
+	Description string   `json:"interface_description"`
 
 	NetworkBoundary  string `json:"network_boundary"`
 	ConnectivityType string `json:"connectivity_type"`
@@ -194,6 +194,7 @@ func (d *Device) AddInterface(p *interfacepb.Interface) {
 		SnmpID:           IfaceID(snmpID),
 		Alias:            p.GetSnmpAlias(),
 		SnmpSpeedMbps:    int64(p.GetSnmpSpeed()),
+		Address:          p.GetInterfaceIp(),
 	}
 
 	d.AllInterfaces = append(d.AllInterfaces, iface)

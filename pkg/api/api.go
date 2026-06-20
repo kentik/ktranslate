@@ -34,13 +34,14 @@ import (
 )
 
 const (
-	CACHE_TIME_DEVICE             = 1 * time.Hour
-	API_TIMEOUT                   = 60 * time.Second
-	HTTP_USER_AGENT               = "User-Agent"
-	API_EMAIL_HEADER              = "X-CH-Auth-Email"
-	API_PASSWORD_HEADER           = "X-CH-Auth-API-Token"
-	MIN_TIME_BETWEEN_SYNTH_CHECKS = 60 * time.Second
-	KT_API_LOAD_INTERFACES        = "KT_API_LOAD_INTERFACES"
+	CACHE_TIME_DEVICE               = 1 * time.Hour
+	API_TIMEOUT                     = 60 * time.Second
+	HTTP_USER_AGENT                 = "User-Agent"
+	API_EMAIL_HEADER                = "X-CH-Auth-Email"
+	API_PASSWORD_HEADER             = "X-CH-Auth-API-Token"
+	MIN_TIME_BETWEEN_SYNTH_CHECKS   = 60 * time.Second
+	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
+	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 )
 
 var (
@@ -607,12 +608,12 @@ func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) err
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
 		lt := &interfacepb.ListInterfaceRequest{
-			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds},
+			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
 		}
 		r, err := api.interfaceClient.ListInterface(ctxo, lt)
 		if err != nil {
 			if status.Code(err) == codes.Unimplemented {
-				api.Warnf("Device ListDevices endpoint not implemented (deprecated API); skipping.")
+				api.Warnf("Interface ListInterfaces endpoint not implemented (deprecated API); skipping.")
 				return nil
 			}
 			return err

@@ -135,14 +135,11 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		}
 		dst.CustomStr["device_site"] = d.Site.SiteName
-
-		fmt.Printf("DD %v %v\n", dst.InputPort, d.Interfaces)
-
 		if i, ok := d.Interfaces[dst.InputPort]; ok {
 			dst.InputIntDesc = i.Description
 			dst.InputIntAlias = i.Alias
 			dst.InputInterfaceCapacity = i.SnmpSpeedMbps
-			//dst.InputInterfaceIP = i.Address
+			dst.InputInterfaceIP = i.Address
 			dst.CustomStr["input_provider"] = i.Provider
 			dst.CustomStr["input_network_boundary"] = i.NetworkBoundary
 			dst.CustomStr["input_connectivity_type"] = i.ConnectivityType
@@ -151,7 +148,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.OutputIntDesc = i.Description
 			dst.OutputIntAlias = i.Alias
 			dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
-			//dst.OutputInterfaceIP = i.Address
+			dst.OutputInterfaceIP = i.Address
 			dst.CustomStr["output_provider"] = i.Provider
 			dst.CustomStr["output_network_boundary"] = i.NetworkBoundary
 			dst.CustomStr["output_connectivity_type"] = i.ConnectivityType
