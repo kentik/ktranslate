@@ -19,6 +19,7 @@ import (
 
 	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	tagging "github.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1"
+	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -39,6 +40,7 @@ const (
 	API_EMAIL_HEADER              = "X-CH-Auth-Email"
 	API_PASSWORD_HEADER           = "X-CH-Auth-API-Token"
 	MIN_TIME_BETWEEN_SYNTH_CHECKS = 60 * time.Second
+	KT_API_LOAD_INTERFACES        = "KT_API_LOAD_INTERFACES"
 )
 
 var (
@@ -61,10 +63,12 @@ type KentikApi struct {
 	apiTimeout      time.Duration
 	synClient       synthetics.SyntheticsAdminServiceClient
 	deviceClient    devicepb.DeviceServiceClient
+	interfaceClient interfacepb.InterfaceServiceClient
 	mux             sync.RWMutex
 	lastSynth       time.Time
 	config          *ktranslate.Config
 	tagLookupClient tagging.EnumerationsAdminServiceClient
+	loadInterfaces  bool
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -87,11 +91,12 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	client := &http.Client{Transport: tr, Timeout: apiTimeout}
 
 	kapi := &KentikApi{
-		ContextL:   log,
-		tr:         tr,
-		client:     client,
-		apiTimeout: apiTimeout,
-		config:     cfg,
+		ContextL:       log,
+		tr:             tr,
+		client:         client,
+		apiTimeout:     apiTimeout,
+		config:         cfg,
+		loadInterfaces: kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
 	}
 
 	// Now, check to see if synthetics API works.
@@ -99,9 +104,6 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	if err != nil {
 		return nil, err
 	}
-
-	// check api works and also pre-populate cache.
-	//err = kapi.getDevices(ctx)
 
 	// Drop cache every hour to keep up to date
 	go kapi.manageCache(ctx)
@@ -436,10 +438,12 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	}
 
 	api.Infof("Connecting to API server at %s", address)
+	maxMsgSize := 50 * 1024 * 1024 // 50 MB
 	opts := []grpc.DialOption{
 		grpc.WithUserAgent(userAgent()),
 		grpc.WithKeepaliveParams(api.getClientKeepAlive()),
 		grpc.WithTransportCredentials(creds),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxMsgSize)),
 	}
 
 	conn, err := grpc.NewClient(address, opts...)
@@ -458,6 +462,12 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	deviceLookup := devicepb.NewDeviceServiceClient(conn)
 	api.Infof("Connected to Device Lookup API server at %s", address)
 	api.deviceClient = deviceLookup
+
+	if api.loadInterfaces {
+		interfaceLookup := interfacepb.NewInterfaceServiceClient(conn)
+		api.Infof("Connected to Interface Lookup API server at %s", address)
+		api.interfaceClient = interfaceLookup
+	}
 
 	return api.getSynthAndDeviceInfo(ctx)
 }
@@ -524,6 +534,7 @@ func (api *KentikApi) getDevceInfoNew(ctx context.Context) error {
 	stime := time.Now()
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
+	deviceIds := []string{}
 
 	for _, info := range api.config.KentikCreds {
 		md := metadata.New(map[string]string{
@@ -533,7 +544,7 @@ func (api *KentikApi) getDevceInfoNew(ctx context.Context) error {
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
 		lt := &devicepb.ListDevicesRequest{
-			Query: &devicepb.DeviceQuery{NoCustomColumns: true},
+			Query: &devicepb.DeviceQuery{NoCustomColumns: false},
 		}
 		r, err := api.deviceClient.ListDevices(ctxo, lt)
 		if err != nil {
@@ -552,6 +563,7 @@ func (api *KentikApi) getDevceInfoNew(ctx context.Context) error {
 			if _, ok := resDev[dev.CompanyID]; !ok {
 				resDev[dev.CompanyID] = map[kt.DeviceID]*kt.Device{}
 			}
+			deviceIds = append(deviceIds, device.Id)
 			resDev[dev.CompanyID][dev.ID] = dev
 			num++
 		}
@@ -567,8 +579,62 @@ func (api *KentikApi) getDevceInfoNew(ctx context.Context) error {
 		return err
 	}
 
+	// If we are loading interfaces, pull in interface data now also.
+	if api.loadInterfaces {
+		const batchSize = 100
+		for i := 0; i < len(deviceIds); i += batchSize {
+			end := min(i+batchSize, len(deviceIds))
+			err := api.getInterfaces(ctx, deviceIds[i:end])
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	api.setTime = time.Now()
 	api.Infof("Loaded %d Kentik Devices total via GRPC in %v", num, api.setTime.Sub(stime))
+	return nil
+}
+
+func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) error {
+	api.Infof("Loading %d device interfaces", len(deviceIds))
+
+	for _, info := range api.config.KentikCreds {
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &interfacepb.ListInterfaceRequest{
+			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds},
+		}
+		r, err := api.interfaceClient.ListInterface(ctxo, lt)
+		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("Device ListDevices endpoint not implemented (deprecated API); skipping.")
+				return nil
+			}
+			return err
+		}
+
+		found := 0
+		for _, intf := range r.GetInterfaces() {
+			for _, clist := range api.devices {
+				deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
+				if err != nil {
+					continue
+				}
+				if dd, ok := clist[kt.DeviceID(deviceID)]; ok {
+					dd.AddInterface(intf)
+					found++
+				}
+			}
+		}
+
+		api.Infof("Loaded %d Kentik Interfaces via GRPC for %s", found, info.APIEmail)
+	}
+
 	return nil
 }
 

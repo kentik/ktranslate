@@ -2,9 +2,11 @@ package kt
 
 import (
 	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
+	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
 	sfmt "github.com/kentik/the-library-formally-known-as-go-syslog/format"
 
 	"fmt"
+	"github.com/kentik/ktranslate/pkg/util/ic"
 	"net"
 	"strconv"
 )
@@ -39,6 +41,7 @@ type Device struct {
 	Site          DeviceSite            `json:"site"`
 	allUserTags   map[string]string
 	FullSite      *FullSite
+	IDStr         string
 }
 
 type DeviceLabel struct {
@@ -167,6 +170,36 @@ type SiteMarket struct {
 	Desc string `json:"description"`
 }
 
+func (d *Device) AddInterface(p *interfacepb.Interface) {
+	if p == nil {
+		return
+	}
+
+	snmpID, err := strconv.ParseInt(p.GetSnmpId(), 10, 64)
+	if err != nil {
+		snmpID = 0
+	}
+
+	devID, err := strconv.ParseInt(p.GetDeviceId(), 10, 64)
+	if err != nil {
+		devID = 0
+	}
+
+	iface := Interface{
+		DeviceID:         DeviceID(devID),
+		Description:      p.GetInterfaceDescription(),
+		NetworkBoundary:  ic.NETWORK_BOUNDARY_INT_TO_NAME[int(p.GetNetworkBoundary())],
+		ConnectivityType: ic.CONNECTIVITY_TYPE_INT_TO_NAME[int(p.GetConnectivityType())],
+		Provider:         p.GetProvider(),
+		SnmpID:           IfaceID(snmpID),
+		Alias:            p.GetSnmpAlias(),
+		SnmpSpeedMbps:    int64(p.GetSnmpSpeed()),
+	}
+
+	d.AllInterfaces = append(d.AllInterfaces, iface)
+	d.Interfaces[IfaceID(snmpID)] = iface
+}
+
 func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 	if dd == nil {
 		return nil, fmt.Errorf("DeviceDetailed is nil")
@@ -241,6 +274,7 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 
 	return &Device{
 		ID:            DeviceID(deviceID),
+		IDStr:         dd.GetId(),
 		Name:          dd.GetDeviceName(),
 		CompanyID:     Cid(companyID),
 		DeviceType:    dd.GetDeviceType(),
