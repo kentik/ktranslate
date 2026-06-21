@@ -112,7 +112,7 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	return kapi, err
 }
 
-func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
+func (api *KentikApi) callRestAPI(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
 	if apiEmail == "" {
 		if v := api.config.API.DeviceFile; v != "" {
 			api.Infof("Reading devices from local file: %s", v)
@@ -243,68 +243,6 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	return nil
 }
 
-/**
-func (api *KentikApi) getInterfaces(ctx context.Context, did kt.DeviceID, info ktranslate.KentikCred) ([]kt.Interface, error) {
-	res, err := api.getDeviceInfo(ctx, fmt.Sprintf(api.config.APIBaseURL+"/api/internal/device/%d/interfaces", did), info.APIEmail, info.APIToken)
-	if err != nil {
-		return nil, err
-	}
-	interfaces := []kt.Interface{}
-	err = json.Unmarshal(res, &interfaces)
-	return interfaces, err
-}
-
-func (api *KentikApi) getDevices(ctx context.Context) error {
-	stime := time.Now()
-	resDev := map[kt.Cid]kt.Devices{}
-	num := 0
-	for _, info := range api.config.KentikCreds {
-		res, err := api.getDeviceInfo(ctx, api.config.APIBaseURL+"/api/internal/devices", info.APIEmail, info.APIToken)
-		if err != nil {
-			return err
-		}
-		var devices kt.DeviceList
-		err = json.Unmarshal(res, &devices)
-		if err != nil {
-			return err
-		}
-
-		for _, device := range devices.Devices {
-			myd := device
-			if _, ok := resDev[device.CompanyID]; !ok {
-				resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
-			}
-			myd.Interfaces = map[kt.IfaceID]kt.Interface{}
-			interfaces, err := api.getInterfaces(ctx, device.ID, info)
-			if err != nil {
-				api.Errorf("Cannot get interfaces for %v: %v", device.Name, err)
-			} else {
-				for _, intf := range interfaces {
-					intfl := intf // Should this be a pointer?
-					myd.Interfaces[intf.SnmpID] = intfl
-				}
-			}
-			resDev[device.CompanyID][device.ID] = &myd
-			num++
-		}
-
-		api.Infof("Loaded %d Kentik devices via API for %s", len(devices.Devices), info.APIEmail)
-	}
-
-	api.setTime = time.Now()
-	api.Infof("Loaded %d Kentik devices via API in %v", num, api.setTime.Sub(stime))
-	api.devices = resDev
-
-	// Now pull in site info for these devices.
-	err := api.getSites(ctx)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-*/
-
 func (api *KentikApi) getSites(ctx context.Context) error {
 	stime := time.Now()
 	num := 0
@@ -314,7 +252,7 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 
 	for _, info := range api.config.KentikCreds {
 		for _, version := range versions {
-			res, err := api.getDeviceInfo(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
+			res, err := api.callRestAPI(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
 			if err != nil {
 				api.Warnf("Skipping site version %s", version)
 				continue
