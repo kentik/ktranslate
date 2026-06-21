@@ -536,9 +536,8 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 }
 
 func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) error {
-	api.Infof("Loading %d device interfaces", len(deviceIds))
-
 	for _, info := range api.config.KentikCreds {
+		api.Infof("Loading %d device interfaces for %s", len(deviceIds), info.APIEmail)
 		md := metadata.New(map[string]string{
 			"X-CH-Auth-Email":     info.APIEmail,
 			"X-CH-Auth-API-Token": info.APIToken,
@@ -549,6 +548,7 @@ func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) err
 			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
 		}
 		r, err := api.interfaceClient.ListInterface(ctxo, lt)
+		if err != nil {
 			if status.Code(err) == codes.Unimplemented {
 				api.Warnf("Interface ListInterface endpoint not implemented (deprecated API); skipping.")
 				return nil
