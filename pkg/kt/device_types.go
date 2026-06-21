@@ -188,8 +188,8 @@ func (d *Device) AddInterface(p *interfacepb.Interface) {
 	iface := Interface{
 		DeviceID:         DeviceID(devID),
 		Description:      p.GetInterfaceDescription(),
-		NetworkBoundary:  ic.NETWORK_BOUNDARY_INT_TO_NAME[int(p.GetNetworkBoundary())],
-		ConnectivityType: ic.CONNECTIVITY_TYPE_INT_TO_NAME[int(p.GetConnectivityType())],
+		NetworkBoundary:  ic.NameFromNBInt(int(p.GetNetworkBoundary())),
+		ConnectivityType: ic.NameFromCTInt(int(p.GetConnectivityType())),
 		Provider:         p.GetProvider(),
 		SnmpID:           IfaceID(snmpID),
 		Alias:            p.GetSnmpAlias(),
@@ -368,7 +368,12 @@ func mapCustomColumns(cols []*devicepb.CustomColumnData) []Column {
 		if c == nil {
 			continue
 		}
+		fieldIDUint, err := strconv.ParseUint(c.GetFieldId(), 10, 32)
+		if err != nil {
+			fieldIDUint = 0
+		}
 		result = append(result, Column{
+			ID:          uint32(fieldIDUint),
 			DeviceID:    c.GetDeviceId(),
 			FieldID:     c.GetFieldId(),
 			Name:        c.GetColName(),

@@ -465,10 +465,10 @@ func (api *KentikApi) getSynthAndDeviceInfo(ctx context.Context) error {
 	api.synTests = synTests
 	api.Infof("Loaded %d Kentik Tests and %d Agents Total via API", len(api.synTests), len(api.synAgents))
 
-	return api.getDevceInfoNew(ctx)
+	return api.getDeviceInfoNew(ctx)
 }
 
-func (api *KentikApi) getDevceInfoNew(ctx context.Context) error {
+func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 
 	stime := time.Now()
 	resDev := map[kt.Cid]kt.Devices{}
@@ -549,25 +549,29 @@ func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) err
 			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
 		}
 		r, err := api.interfaceClient.ListInterface(ctxo, lt)
-		if err != nil {
 			if status.Code(err) == codes.Unimplemented {
-				api.Warnf("Interface ListInterfaces endpoint not implemented (deprecated API); skipping.")
+				api.Warnf("Interface ListInterface endpoint not implemented (deprecated API); skipping.")
 				return nil
 			}
 			return err
 		}
 
+		deviceIndex := make(map[kt.DeviceID]*kt.Device)
+		for _, clist := range api.devices {
+			for did, d := range clist {
+				deviceIndex[did] = d
+			}
+		}
+
 		found := 0
 		for _, intf := range r.GetInterfaces() {
-			for _, clist := range api.devices {
-				deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
-				if err != nil {
-					continue
-				}
-				if dd, ok := clist[kt.DeviceID(deviceID)]; ok {
-					dd.AddInterface(intf)
-					found++
-				}
+			deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
+			if err != nil {
+				continue
+			}
+			if dd, ok := deviceIndex[kt.DeviceID(deviceID)]; ok {
+				dd.AddInterface(intf)
+				found++
 			}
 		}
 
