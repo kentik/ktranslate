@@ -17,7 +17,9 @@ import (
 	"sync"
 	"time"
 
+	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	tagging "github.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1"
+	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -32,12 +34,14 @@ import (
 )
 
 const (
-	CACHE_TIME_DEVICE             = 1 * time.Hour
-	API_TIMEOUT                   = 60 * time.Second
-	HTTP_USER_AGENT               = "User-Agent"
-	API_EMAIL_HEADER              = "X-CH-Auth-Email"
-	API_PASSWORD_HEADER           = "X-CH-Auth-API-Token"
-	MIN_TIME_BETWEEN_SYNTH_CHECKS = 60 * time.Second
+	CACHE_TIME_DEVICE               = 1 * time.Hour
+	API_TIMEOUT                     = 60 * time.Second
+	HTTP_USER_AGENT                 = "User-Agent"
+	API_EMAIL_HEADER                = "X-CH-Auth-Email"
+	API_PASSWORD_HEADER             = "X-CH-Auth-API-Token"
+	MIN_TIME_BETWEEN_SYNTH_CHECKS   = 60 * time.Second
+	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
+	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 )
 
 var (
@@ -59,10 +63,13 @@ type KentikApi struct {
 	setTime         time.Time
 	apiTimeout      time.Duration
 	synClient       synthetics.SyntheticsAdminServiceClient
+	deviceClient    devicepb.DeviceServiceClient
+	interfaceClient interfacepb.InterfaceServiceClient
 	mux             sync.RWMutex
 	lastSynth       time.Time
 	config          *ktranslate.Config
 	tagLookupClient tagging.EnumerationsAdminServiceClient
+	loadInterfaces  bool
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -85,11 +92,12 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	client := &http.Client{Transport: tr, Timeout: apiTimeout}
 
 	kapi := &KentikApi{
-		ContextL:   log,
-		tr:         tr,
-		client:     client,
-		apiTimeout: apiTimeout,
-		config:     cfg,
+		ContextL:       log,
+		tr:             tr,
+		client:         client,
+		apiTimeout:     apiTimeout,
+		config:         cfg,
+		loadInterfaces: kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
 	}
 
 	// Now, check to see if synthetics API works.
@@ -98,16 +106,13 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 		return nil, err
 	}
 
-	// check api works and also pre-populate cache.
-	err = kapi.getDevices(ctx)
-
 	// Drop cache every hour to keep up to date
 	go kapi.manageCache(ctx)
 
 	return kapi, err
 }
 
-func (api *KentikApi) getDeviceInfo(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
+func (api *KentikApi) callRestAPI(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
 	if apiEmail == "" {
 		if v := api.config.API.DeviceFile; v != "" {
 			api.Infof("Reading devices from local file: %s", v)
@@ -176,7 +181,7 @@ func (api *KentikApi) UpdateTests(ctx context.Context) {
 	}
 
 	go func() {
-		err := api.getSynthInfo(ctx)
+		err := api.getSynthAndDeviceInfo(ctx)
 		if err != nil {
 			api.Errorf("Cannot get API synth on demand: %v", err)
 		}
@@ -238,66 +243,6 @@ func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
 	return nil
 }
 
-func (api *KentikApi) getInterfaces(ctx context.Context, did kt.DeviceID, info ktranslate.KentikCred) ([]kt.Interface, error) {
-	res, err := api.getDeviceInfo(ctx, fmt.Sprintf(api.config.APIBaseURL+"/api/internal/device/%d/interfaces", did), info.APIEmail, info.APIToken)
-	if err != nil {
-		return nil, err
-	}
-	interfaces := []kt.Interface{}
-	err = json.Unmarshal(res, &interfaces)
-	return interfaces, err
-}
-
-func (api *KentikApi) getDevices(ctx context.Context) error {
-	stime := time.Now()
-	resDev := map[kt.Cid]kt.Devices{}
-	num := 0
-	for _, info := range api.config.KentikCreds {
-		res, err := api.getDeviceInfo(ctx, api.config.APIBaseURL+"/api/internal/devices", info.APIEmail, info.APIToken)
-		if err != nil {
-			return err
-		}
-		var devices kt.DeviceList
-		err = json.Unmarshal(res, &devices)
-		if err != nil {
-			return err
-		}
-
-		for _, device := range devices.Devices {
-			myd := device
-			if _, ok := resDev[device.CompanyID]; !ok {
-				resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
-			}
-			myd.Interfaces = map[kt.IfaceID]kt.Interface{}
-			interfaces, err := api.getInterfaces(ctx, device.ID, info)
-			if err != nil {
-				api.Errorf("Cannot get interfaces for %v: %v", device.Name, err)
-			} else {
-				for _, intf := range interfaces {
-					intfl := intf // Should this be a pointer?
-					myd.Interfaces[intf.SnmpID] = intfl
-				}
-			}
-			resDev[device.CompanyID][device.ID] = &myd
-			num++
-		}
-
-		api.Infof("Loaded %d Kentik devices via API for %s", len(devices.Devices), info.APIEmail)
-	}
-
-	api.setTime = time.Now()
-	api.Infof("Loaded %d Kentik devices via API in %v", num, api.setTime.Sub(stime))
-	api.devices = resDev
-
-	// Now pull in site info for these devices.
-	err := api.getSites(ctx)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (api *KentikApi) getSites(ctx context.Context) error {
 	stime := time.Now()
 	num := 0
@@ -307,7 +252,7 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 
 	for _, info := range api.config.KentikCreds {
 		for _, version := range versions {
-			res, err := api.getDeviceInfo(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
+			res, err := api.callRestAPI(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
 			if err != nil {
 				api.Warnf("Skipping site version %s", version)
 				continue
@@ -383,11 +328,7 @@ func (api *KentikApi) manageCache(ctx context.Context) {
 	for {
 		select {
 		case _ = <-checkTicker.C:
-			err := api.getDevices(ctx)
-			if err != nil {
-				api.Errorf("Cannot get API devices: %v", err)
-			}
-			err = api.getSynthInfo(ctx)
+			err := api.getSynthAndDeviceInfo(ctx)
 			if err != nil {
 				api.Errorf("Cannot get API synth: %v", err)
 			}
@@ -436,10 +377,12 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	}
 
 	api.Infof("Connecting to API server at %s", address)
+	maxMsgSize := 50 * 1024 * 1024 // 50 MB
 	opts := []grpc.DialOption{
 		grpc.WithUserAgent(userAgent()),
 		grpc.WithKeepaliveParams(api.getClientKeepAlive()),
 		grpc.WithTransportCredentials(creds),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxMsgSize)),
 	}
 
 	conn, err := grpc.NewClient(address, opts...)
@@ -455,10 +398,20 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	api.Infof("Connected to Tag Enum Lookup API server at %s", address)
 	api.tagLookupClient = clientLookup
 
-	return api.getSynthInfo(ctx)
+	deviceLookup := devicepb.NewDeviceServiceClient(conn)
+	api.Infof("Connected to Device Lookup API server at %s", address)
+	api.deviceClient = deviceLookup
+
+	if api.loadInterfaces {
+		interfaceLookup := interfacepb.NewInterfaceServiceClient(conn)
+		api.Infof("Connected to Interface Lookup API server at %s", address)
+		api.interfaceClient = interfaceLookup
+	}
+
+	return api.getSynthAndDeviceInfo(ctx)
 }
 
-func (api *KentikApi) getSynthInfo(ctx context.Context) error {
+func (api *KentikApi) getSynthAndDeviceInfo(ctx context.Context) error {
 	api.mux.Lock() // Guard this function totally.
 	defer api.mux.Unlock()
 	api.lastSynth = time.Now()
@@ -511,6 +464,119 @@ func (api *KentikApi) getSynthInfo(ctx context.Context) error {
 	api.synAgentsByIP = synAgentsByIP
 	api.synTests = synTests
 	api.Infof("Loaded %d Kentik Tests and %d Agents Total via API", len(api.synTests), len(api.synAgents))
+
+	return api.getDeviceInfoNew(ctx)
+}
+
+func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
+
+	stime := time.Now()
+	resDev := map[kt.Cid]kt.Devices{}
+	num := 0
+	deviceIds := []string{}
+
+	for _, info := range api.config.KentikCreds {
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &devicepb.ListDevicesRequest{
+			Query: &devicepb.DeviceQuery{NoCustomColumns: false},
+		}
+		r, err := api.deviceClient.ListDevices(ctxo, lt)
+		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("Device ListDevices endpoint not implemented (deprecated API); skipping.")
+				return nil
+			}
+			return err
+		}
+
+		for _, device := range r.GetDevices() {
+			dev, err := kt.MapDeviceDetailedToDevice(device)
+			if err != nil {
+				continue
+			}
+			if _, ok := resDev[dev.CompanyID]; !ok {
+				resDev[dev.CompanyID] = map[kt.DeviceID]*kt.Device{}
+			}
+			deviceIds = append(deviceIds, device.Id)
+			resDev[dev.CompanyID][dev.ID] = dev
+			num++
+		}
+
+		api.Infof("Loaded %d Kentik Devices via GRPC for %s", len(r.GetDevices()), info.APIEmail)
+	}
+
+	api.devices = resDev
+
+	// Now pull in site info for these devices.
+	err := api.getSites(ctx)
+	if err != nil {
+		return err
+	}
+
+	// If we are loading interfaces, pull in interface data now also.
+	if api.loadInterfaces {
+		const batchSize = 100
+		for i := 0; i < len(deviceIds); i += batchSize {
+			end := min(i+batchSize, len(deviceIds))
+			err := api.getInterfaces(ctx, deviceIds[i:end])
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	api.setTime = time.Now()
+	api.Infof("Loaded %d Kentik Devices total via GRPC in %v", num, api.setTime.Sub(stime))
+	return nil
+}
+
+func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) error {
+	for _, info := range api.config.KentikCreds {
+		api.Infof("Loading %d device interfaces for %s", len(deviceIds), info.APIEmail)
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &interfacepb.ListInterfaceRequest{
+			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
+		}
+		r, err := api.interfaceClient.ListInterface(ctxo, lt)
+		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("Interface ListInterface endpoint not implemented (deprecated API); skipping.")
+				return nil
+			}
+			return err
+		}
+
+		deviceIndex := make(map[kt.DeviceID]*kt.Device)
+		for _, clist := range api.devices {
+			for did, d := range clist {
+				deviceIndex[did] = d
+			}
+		}
+
+		found := 0
+		for _, intf := range r.GetInterfaces() {
+			deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
+			if err != nil {
+				continue
+			}
+			if dd, ok := deviceIndex[kt.DeviceID(deviceID)]; ok {
+				dd.AddInterface(intf)
+				found++
+			}
+		}
+
+		api.Infof("Loaded %d Kentik Interfaces via GRPC for %s", found, info.APIEmail)
+	}
 
 	return nil
 }
