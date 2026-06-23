@@ -42,6 +42,7 @@ const (
 	MIN_TIME_BETWEEN_SYNTH_CHECKS   = 60 * time.Second
 	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
+	KT_NO_CUSTOM_COLUMNS            = "KT_NO_CUSTOM_COLUMNS"
 )
 
 var (
@@ -483,7 +484,7 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
 		lt := &devicepb.ListDevicesRequest{
-			Query: &devicepb.DeviceQuery{NoCustomColumns: false},
+			Query: &devicepb.DeviceQuery{NoCustomColumns: kt.LookupEnvBool(KT_NO_CUSTOM_COLUMNS, false)},
 		}
 		r, err := api.deviceClient.ListDevices(ctxo, lt)
 		if err != nil {
