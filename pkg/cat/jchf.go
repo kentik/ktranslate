@@ -128,7 +128,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 	// Do we have info about this device?
 	custColNames := map[uint32]string{}
-	if d := kc.apic.GetDevice(dst.CompanyId, dst.DeviceId); d != nil {
+	if d := kc.apic.GetDevice(ctx, dst.CompanyId, dst.DeviceId); d != nil {
 		dst.DeviceName = d.Name
 		dst.CustomStr[UDR_TYPE] = d.DeviceSubtype
 		if len(d.SendingIps) > 0 {
@@ -279,7 +279,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				}
 			case "ult_exit_device_id":
 				dst.CustomInt[name] = int32(v)
-				if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(v)); d != nil {
+				if d := kc.apic.GetDevice(ctx, dst.CompanyId, kt.DeviceID(v)); d != nil {
 					dst.CustomStr["ult_exit_device"] = d.Name
 					dst.CustomStr["ult_exit_site"] = d.Site.SiteName
 				}
@@ -408,7 +408,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 
 	// Check if there is ultimate exit data interface and pull this in also.
 	if udid, ok := dst.CustomInt["ult_exit_device_id"]; ok {
-		if d := kc.apic.GetDevice(dst.CompanyId, kt.DeviceID(udid)); d != nil {
+		if d := kc.apic.GetDevice(ctx, dst.CompanyId, kt.DeviceID(udid)); d != nil {
 			if ui, ok := dst.CustomInt["ult_exit_port"]; ok {
 				if i, ok := d.Interfaces[kt.IfaceID(ui)]; ok {
 					dst.CustomStr["ult_exit_port_alias"] = i.Alias

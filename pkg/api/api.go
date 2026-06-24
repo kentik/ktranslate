@@ -44,6 +44,7 @@ const (
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 	KT_NO_CUSTOM_COLUMNS            = "KT_NO_CUSTOM_COLUMNS"
 	KT_LOAD_CUSTOM_COLS_FOR_DEVS    = "KT_LOAD_CUSTOM_COLS_FOR_DEVS"
+	KT_API_LAZY_LOAD_CUSTOMS        = "KT_API_LAZY_LOAD_CUSTOMS"
 )
 
 var (
@@ -72,6 +73,7 @@ type KentikApi struct {
 	config          *ktranslate.Config
 	tagLookupClient tagging.EnumerationsAdminServiceClient
 	loadInterfaces  bool
+	lazyLoadCustoms bool
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -81,7 +83,6 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 		intv, _ := strconv.Atoi(apiTimeoutStr)
 		apiTimeout = time.Duration(intv) * time.Second
 	}
-	log.Infof("Setting API timeout to %v", apiTimeout)
 
 	tr := &http.Transport{
 		DisableCompression: false,
@@ -94,13 +95,16 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	client := &http.Client{Transport: tr, Timeout: apiTimeout}
 
 	kapi := &KentikApi{
-		ContextL:       log,
-		tr:             tr,
-		client:         client,
-		apiTimeout:     apiTimeout,
-		config:         cfg,
-		loadInterfaces: kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
+		ContextL:        log,
+		tr:              tr,
+		client:          client,
+		apiTimeout:      apiTimeout,
+		config:          cfg,
+		loadInterfaces:  kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
+		lazyLoadCustoms: kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
 	}
+
+	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadCustoms=%v", apiTimeout, kapi.loadInterfaces, kapi.lazyLoadCustoms)
 
 	// Now, check to see if synthetics API works.
 	err := kapi.connectSynthAndLookup(ctx)
@@ -235,12 +239,35 @@ func (api *KentikApi) GetDevicesAsMap(cid kt.Cid) map[string]*kt.Device {
 	return res
 }
 
-func (api *KentikApi) GetDevice(cid kt.Cid, did kt.DeviceID) *kt.Device {
+func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID) *kt.Device {
 	if api == nil {
 		return nil
 	}
 	if c, ok := api.devices[cid]; ok {
-		return c[did]
+		dev := c[did]
+		if dev == nil {
+			return dev
+		}
+		if api.lazyLoadCustoms && !dev.LoadedCustoms() {
+			api.mux.Lock()
+			defer api.mux.Unlock()
+			if dev.LoadedCustoms() {
+				return dev
+			}
+			for _, info := range api.config.KentikCreds {
+				md := metadata.New(map[string]string{
+					"X-CH-Auth-Email":     info.APIEmail,
+					"X-CH-Auth-API-Token": info.APIToken,
+				})
+				ctxo := metadata.NewOutgoingContext(ctx, md)
+				err := api.loadCustoms(ctxo, dev.IDStr, dev)
+				if err != nil {
+					api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
+				}
+				break
+			}
+		}
+		return dev
 	}
 	return nil
 }

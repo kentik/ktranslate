@@ -42,6 +42,7 @@ type Device struct {
 	allUserTags   map[string]string
 	FullSite      *FullSite
 	IDStr         string
+	loadedCustoms bool
 }
 
 type DeviceLabel struct {
@@ -174,6 +175,11 @@ func (d *Device) AddCustoms(dd *devicepb.DeviceDetailed) {
 	customs := mapCustomColumns(dd.GetCustomColumnData())
 	d.Customs = customs
 	d.CustomStr = dd.GetCustomColumns()
+	d.loadedCustoms = true
+}
+
+func (d *Device) LoadedCustoms() bool {
+	return d.loadedCustoms
 }
 
 func (d *Device) AddInterface(p *interfacepb.Interface) {
@@ -303,6 +309,7 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		SnmpV3:        snmpV3,
 		Labels:        labels,
 		Site:          site,
+		loadedCustoms: len(customs) > 0,
 	}, nil
 }
 
