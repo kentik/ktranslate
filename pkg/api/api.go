@@ -43,6 +43,7 @@ const (
 	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 	KT_NO_CUSTOM_COLUMNS            = "KT_NO_CUSTOM_COLUMNS"
+	KT_LOAD_CUSTOM_COLS_FOR_DEVS    = "KT_LOAD_CUSTOM_COLS_FOR_DEVS"
 )
 
 var (
@@ -469,12 +470,36 @@ func (api *KentikApi) getSynthAndDeviceInfo(ctx context.Context) error {
 	return api.getDeviceInfoNew(ctx)
 }
 
+func (api *KentikApi) loadCustoms(ctxo context.Context, deviceId string, dev *kt.Device) error {
+	api.Debugf("Loading customs for %s", deviceId)
+	lt := &devicepb.GetDeviceRequest{
+		Query: &devicepb.DeviceQuery{NoCustomColumns: false},
+		Id:    deviceId,
+	}
+	r, err := api.deviceClient.GetDevice(ctxo, lt)
+	if err != nil {
+		if status.Code(err) == codes.Unimplemented {
+			api.Warnf("Device GetDevice endpoint not implemented (deprecated API); skipping.")
+			return nil
+		}
+		return err
+	}
+
+	dev.AddCustoms(r.GetDevice())
+
+	return nil
+}
+
 func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 
 	stime := time.Now()
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
 	deviceIds := []string{}
+	deviceCustomsLoad := map[string]bool{}
+	for _, pts := range strings.Split(kt.LookupEnvString(KT_LOAD_CUSTOM_COLS_FOR_DEVS, ""), ",") {
+		deviceCustomsLoad[pts] = true
+	}
 
 	for _, info := range api.config.KentikCreds {
 		md := metadata.New(map[string]string{
@@ -498,11 +523,21 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 		for _, device := range r.GetDevices() {
 			dev, err := kt.MapDeviceDetailedToDevice(device)
 			if err != nil {
+				api.Debugf("skipping device %s, not valid", device.GetDeviceName())
 				continue
 			}
 			if _, ok := resDev[dev.CompanyID]; !ok {
 				resDev[dev.CompanyID] = map[kt.DeviceID]*kt.Device{}
 			}
+
+			if deviceCustomsLoad[device.Id] {
+				err := api.loadCustoms(ctxo, device.GetId(), dev)
+				if err != nil {
+					api.Warnf("Cannot load custom columns for device %s: %v", dev.Name, err)
+					continue
+				}
+			}
+
 			deviceIds = append(deviceIds, device.Id)
 			resDev[dev.CompanyID][dev.ID] = dev
 			num++

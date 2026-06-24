@@ -170,6 +170,12 @@ type SiteMarket struct {
 	Desc string `json:"description"`
 }
 
+func (d *Device) AddCustoms(dd *devicepb.DeviceDetailed) {
+	customs := mapCustomColumns(dd.GetCustomColumnData())
+	d.Customs = customs
+	d.CustomStr = dd.GetCustomColumns()
+}
+
 func (d *Device) AddInterface(p *interfacepb.Interface) {
 	if p == nil {
 		return
