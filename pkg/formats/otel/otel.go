@@ -232,6 +232,7 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			case ch <- m:
 			default:
 				f.metrics.ExportDrops.Inc(1)
+				f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
 			}
 		} else {
 			ch <- m
