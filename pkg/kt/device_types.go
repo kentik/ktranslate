@@ -179,7 +179,9 @@ func (d *Device) AddCustoms(dd *devicepb.DeviceDetailed) {
 }
 
 func (d *Device) LoadedCustoms() bool {
-	return d.loadedCustoms
+	lc := d.loadedCustoms
+	d.loadedCustoms = true
+	return lc
 }
 
 func (d *Device) AddInterface(p *interfacepb.Interface) {

@@ -249,23 +249,21 @@ func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID
 			return dev
 		}
 		if api.lazyLoadCustoms && !dev.LoadedCustoms() {
-			api.mux.Lock()
-			defer api.mux.Unlock()
-			if dev.LoadedCustoms() {
-				return dev
-			}
-			for _, info := range api.config.KentikCreds {
-				md := metadata.New(map[string]string{
-					"X-CH-Auth-Email":     info.APIEmail,
-					"X-CH-Auth-API-Token": info.APIToken,
-				})
-				ctxo := metadata.NewOutgoingContext(ctx, md)
-				err := api.loadCustoms(ctxo, dev.IDStr, dev)
-				if err != nil {
-					api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
+			go func() {
+				for _, info := range api.config.KentikCreds {
+					md := metadata.New(map[string]string{
+						"X-CH-Auth-Email":     info.APIEmail,
+						"X-CH-Auth-API-Token": info.APIToken,
+					})
+					ctxo := metadata.NewOutgoingContext(ctx, md)
+					err := api.loadCustoms(ctxo, dev.IDStr, dev)
+					if err != nil {
+						api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
+					} else {
+						return
+					}
 				}
-				break
-			}
+			}()
 		}
 		return dev
 	}
