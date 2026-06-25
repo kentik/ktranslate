@@ -42,8 +42,7 @@ const (
 	MIN_TIME_BETWEEN_SYNTH_CHECKS   = 60 * time.Second
 	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
-	KT_NO_CUSTOM_COLUMNS            = "KT_NO_CUSTOM_COLUMNS"
-	KT_LOAD_CUSTOM_COLS_FOR_DEVS    = "KT_LOAD_CUSTOM_COLS_FOR_DEVS"
+	KT_LOAD_CUSTOM_COLUMNS          = "KT_LOAD_CUSTOM_COLUMNS"
 	KT_API_LAZY_LOAD_CUSTOMS        = "KT_API_LAZY_LOAD_CUSTOMS"
 )
 
@@ -74,6 +73,7 @@ type KentikApi struct {
 	tagLookupClient tagging.EnumerationsAdminServiceClient
 	loadInterfaces  bool
 	lazyLoadCustoms bool
+	fullLoadCustoms bool
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -102,9 +102,10 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 		config:          cfg,
 		loadInterfaces:  kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
 		lazyLoadCustoms: kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
+		fullLoadCustoms: kt.LookupEnvBool(KT_LOAD_CUSTOM_COLUMNS, false),
 	}
 
-	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadCustoms=%v", apiTimeout, kapi.loadInterfaces, kapi.lazyLoadCustoms)
+	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v", apiTimeout, kapi.loadInterfaces, kapi.lazyLoadCustoms, kapi.fullLoadCustoms)
 
 	// Now, check to see if synthetics API works.
 	err := kapi.connectSynthAndLookup(ctx)
@@ -521,10 +522,6 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 	resDev := map[kt.Cid]kt.Devices{}
 	num := 0
 	deviceIds := []string{}
-	deviceCustomsLoad := map[string]bool{}
-	for _, pts := range strings.Split(kt.LookupEnvString(KT_LOAD_CUSTOM_COLS_FOR_DEVS, ""), ",") {
-		deviceCustomsLoad[pts] = true
-	}
 
 	for _, info := range api.config.KentikCreds {
 		md := metadata.New(map[string]string{
@@ -534,7 +531,7 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 		ctxo := metadata.NewOutgoingContext(ctx, md)
 
 		lt := &devicepb.ListDevicesRequest{
-			Query: &devicepb.DeviceQuery{NoCustomColumns: kt.LookupEnvBool(KT_NO_CUSTOM_COLUMNS, false)},
+			Query: &devicepb.DeviceQuery{NoCustomColumns: !api.fullLoadCustoms},
 		}
 		r, err := api.deviceClient.ListDevices(ctxo, lt)
 		if err != nil {
@@ -553,14 +550,6 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 			}
 			if _, ok := resDev[dev.CompanyID]; !ok {
 				resDev[dev.CompanyID] = map[kt.DeviceID]*kt.Device{}
-			}
-
-			if deviceCustomsLoad[device.Id] {
-				err := api.loadCustoms(ctxo, device.GetId(), dev)
-				if err != nil {
-					api.Warnf("Cannot load custom columns for device %s: %v", dev.Name, err)
-					continue
-				}
 			}
 
 			deviceIds = append(deviceIds, device.Id)
