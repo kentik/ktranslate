@@ -42,6 +42,7 @@ type OtelFormat struct {
 	trapLog      *OtelLogger
 	logTee       chan string
 	metrics      *OtelMetrics
+	warnFull     map[string]bool
 }
 
 const (
@@ -88,6 +89,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		config:       cfg,
 		inputs:       map[string]chan OtelData{},
 		logTee:       logTee,
+		warnFull:     map[string]bool{},
 		metrics: &OtelMetrics{
 			ExportDrops: go_metrics.GetOrRegisterCounter("otel_export_drops", registry),
 		},
@@ -232,7 +234,12 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			case ch <- m:
 			default:
 				f.metrics.ExportDrops.Inc(1)
-				f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
+				if !f.warnFull[m.Name] {
+					f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
+					f.warnFull[m.Name] = true
+				} else {
+					f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
+				}
 			}
 		} else {
 			ch <- m
