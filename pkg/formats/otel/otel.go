@@ -43,6 +43,7 @@ type OtelFormat struct {
 	logTee       chan string
 	metrics      *OtelMetrics
 	warnFull     map[string]bool
+	registry     go_metrics.Registry
 }
 
 const (
@@ -69,7 +70,7 @@ func init() {
 }
 
 type OtelMetrics struct {
-	ExportDrops go_metrics.Counter
+	ExportDrops map[string]go_metrics.Meter
 }
 
 /*
@@ -90,8 +91,9 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 		inputs:       map[string]chan OtelData{},
 		logTee:       logTee,
 		warnFull:     map[string]bool{},
+		registry:     registry,
 		metrics: &OtelMetrics{
-			ExportDrops: go_metrics.GetOrRegisterCounter("otel_export_drops", registry),
+			ExportDrops: map[string]go_metrics.Meter{},
 		},
 	}
 
@@ -233,13 +235,13 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			select {
 			case ch <- m:
 			default:
-				f.metrics.ExportDrops.Inc(1)
 				if !f.warnFull[m.Name] {
 					f.mux.RUnlock()
 					f.mux.Lock()
 					firstWarn := !f.warnFull[m.Name]
 					if firstWarn {
 						f.warnFull[m.Name] = true
+						f.metrics.ExportDrops[m.Name] = go_metrics.GetOrRegisterMeter(fmt.Sprintf("otel_export_drops^name=%s^force=true", m.Name), f.registry)
 					}
 					f.mux.Unlock()
 					f.mux.RLock()
@@ -248,6 +250,7 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 					} else {
 						f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
 					}
+					f.metrics.ExportDrops[m.Name].Mark(1)
 				} else {
 					f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
 				}
@@ -311,7 +314,25 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 			select {
 			case ch <- m:
 			default:
-				f.metrics.ExportDrops.Inc(1)
+				if !f.warnFull[m.Name] {
+					f.mux.RUnlock()
+					f.mux.Lock()
+					firstWarn := !f.warnFull[m.Name]
+					if firstWarn {
+						f.warnFull[m.Name] = true
+						f.metrics.ExportDrops[m.Name] = go_metrics.GetOrRegisterMeter(fmt.Sprintf("otel_export_drops^name=%s^force=true", m.Name), f.registry)
+					}
+					f.mux.Unlock()
+					f.mux.RLock()
+					if firstWarn {
+						f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
+					} else {
+						f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
+					}
+					f.metrics.ExportDrops[m.Name].Mark(1)
+				} else {
+					f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
+				}
 			}
 		} else {
 			ch <- m
