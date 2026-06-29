@@ -180,7 +180,7 @@ func NewFormat(ctx context.Context, log logger.Underlying, cfg *ktranslate.OtelF
 	jf.trapLog = ol
 
 	otelm = otel.Meter("ktranslate")
-	jf.Infof("Running exporting via %s to %s. Blocking: %v", cfg.Protocol, cfg.Endpoint, cfg.NoBlockExport)
+	jf.Infof("Running exporting via %s to %s. NoBlockExport: %v", cfg.Protocol, cfg.Endpoint, cfg.NoBlockExport)
 
 	return jf, nil
 }
