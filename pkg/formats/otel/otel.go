@@ -235,12 +235,19 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 			default:
 				f.metrics.ExportDrops.Inc(1)
 				if !f.warnFull[m.Name] {
-					f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
 					f.mux.RUnlock()
 					f.mux.Lock()
-					f.warnFull[m.Name] = true
+					firstWarn := !f.warnFull[m.Name]
+					if firstWarn {
+						f.warnFull[m.Name] = true
+					}
 					f.mux.Unlock()
 					f.mux.RLock()
+					if firstWarn {
+						f.Warnf("OTEL channel full, dropping sample for metric=%s", m.Name)
+					} else {
+						f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
+					}
 				} else {
 					f.Debugf("OTEL channel full, dropping sample for metric=%s", m.Name)
 				}
