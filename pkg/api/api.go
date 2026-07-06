@@ -44,6 +44,7 @@ const (
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 	KT_LOAD_CUSTOM_COLUMNS          = "KT_LOAD_CUSTOM_COLUMNS"
 	KT_API_LAZY_LOAD_CUSTOMS        = "KT_API_LAZY_LOAD_CUSTOMS"
+	KT_API_LAZY_LOAD_INTERFACES     = "KT_API_LAZY_LOAD_INTERFACES"
 )
 
 var (
@@ -74,6 +75,7 @@ type KentikApi struct {
 	loadInterfaces  bool
 	lazyLoadCustoms bool
 	fullLoadCustoms bool
+	lazyLoadInts    bool
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -103,9 +105,11 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 		loadInterfaces:  kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
 		lazyLoadCustoms: kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
 		fullLoadCustoms: kt.LookupEnvBool(KT_LOAD_CUSTOM_COLUMNS, false),
+		lazyLoadInts:    kt.LookupEnvBool(KT_API_LAZY_LOAD_INTERFACES, false),
 	}
 
-	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v", apiTimeout, kapi.loadInterfaces, kapi.lazyLoadCustoms, kapi.fullLoadCustoms)
+	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v",
+		apiTimeout, kapi.loadInterfaces, kapi.lazyLoadInts, kapi.lazyLoadCustoms, kapi.fullLoadCustoms)
 
 	// Now, check to see if synthetics API works.
 	err := kapi.connectSynthAndLookup(ctx)
@@ -261,6 +265,12 @@ func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID
 					if err != nil {
 						api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
 					} else {
+						if api.lazyLoadInts {
+							err := api.getInterfaces(ctxo, []string{dev.IDStr})
+							if err != nil {
+								api.Warnf("Cannot load interfaces for %s %s, %v", dev.IDStr, info.APIEmail, err)
+							}
+						}
 						return
 					}
 				}
@@ -430,7 +440,7 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	api.Infof("Connected to Device Lookup API server at %s", address)
 	api.deviceClient = deviceLookup
 
-	if api.loadInterfaces {
+	if api.loadInterfaces || api.lazyLoadInts {
 		interfaceLookup := interfacepb.NewInterfaceServiceClient(conn)
 		api.Infof("Connected to Interface Lookup API server at %s", address)
 		api.interfaceClient = interfaceLookup
@@ -557,6 +567,18 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 			num++
 		}
 
+		// If we are loading interfaces, pull in interface data now also.
+		if api.loadInterfaces {
+			const batchSize = 100
+			for i := 0; i < len(deviceIds); i += batchSize {
+				end := min(i+batchSize, len(deviceIds))
+				err := api.getInterfaces(ctxo, deviceIds[i:end])
+				if err != nil {
+					return err
+				}
+			}
+		}
+
 		api.Infof("Loaded %d Kentik Devices via GRPC for %s", len(r.GetDevices()), info.APIEmail)
 	}
 
@@ -568,65 +590,45 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 		return err
 	}
 
-	// If we are loading interfaces, pull in interface data now also.
-	if api.loadInterfaces {
-		const batchSize = 100
-		for i := 0; i < len(deviceIds); i += batchSize {
-			end := min(i+batchSize, len(deviceIds))
-			err := api.getInterfaces(ctx, deviceIds[i:end])
-			if err != nil {
-				return err
-			}
-		}
-	}
-
 	api.setTime = time.Now()
 	api.Infof("Loaded %d Kentik Devices total via GRPC in %v", num, api.setTime.Sub(stime))
 	return nil
 }
 
 func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) error {
-	for _, info := range api.config.KentikCreds {
-		api.Infof("Loading %d device interfaces for %s", len(deviceIds), info.APIEmail)
-		md := metadata.New(map[string]string{
-			"X-CH-Auth-Email":     info.APIEmail,
-			"X-CH-Auth-API-Token": info.APIToken,
-		})
-		ctxo := metadata.NewOutgoingContext(ctx, md)
 
-		lt := &interfacepb.ListInterfaceRequest{
-			Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
-		}
-		r, err := api.interfaceClient.ListInterface(ctxo, lt)
-		if err != nil {
-			if status.Code(err) == codes.Unimplemented {
-				api.Warnf("Interface ListInterface endpoint not implemented (deprecated API); skipping.")
-				return nil
-			}
-			return err
-		}
-
-		deviceIndex := make(map[kt.DeviceID]*kt.Device)
-		for _, clist := range api.devices {
-			for did, d := range clist {
-				deviceIndex[did] = d
-			}
-		}
-
-		found := 0
-		for _, intf := range r.GetInterfaces() {
-			deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
-			if err != nil {
-				continue
-			}
-			if dd, ok := deviceIndex[kt.DeviceID(deviceID)]; ok {
-				dd.AddInterface(intf)
-				found++
-			}
-		}
-
-		api.Infof("Loaded %d Kentik Interfaces via GRPC for %s", found, info.APIEmail)
+	api.Debugf("Loading interfaces for %v", deviceIds)
+	lt := &interfacepb.ListInterfaceRequest{
+		Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
 	}
+	r, err := api.interfaceClient.ListInterface(ctx, lt)
+	if err != nil {
+		if status.Code(err) == codes.Unimplemented {
+			api.Warnf("Interface ListInterface endpoint not implemented (deprecated API); skipping.")
+			return nil
+		}
+		return err
+	}
+
+	deviceIndex := make(map[kt.DeviceID]*kt.Device)
+	for _, clist := range api.devices {
+		for did, d := range clist {
+			deviceIndex[did] = d
+		}
+	}
+
+	found := 0
+	for _, intf := range r.GetInterfaces() {
+		deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
+		if err != nil {
+			continue
+		}
+		if dd, ok := deviceIndex[kt.DeviceID(deviceID)]; ok {
+			dd.AddInterface(intf)
+			found++
+		}
+	}
+	api.Debugf("Added %d interfaces for %d devices", found, len(deviceIds))
 
 	return nil
 }
