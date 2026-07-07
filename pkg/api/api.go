@@ -72,7 +72,6 @@ type KentikApi struct {
 	lastSynth       time.Time
 	config          *ktranslate.Config
 	tagLookupClient tagging.EnumerationsAdminServiceClient
-	loadInterfaces  bool
 	lazyLoadCustoms bool
 	fullLoadCustoms bool
 	lazyLoadInts    bool
@@ -102,14 +101,13 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 		client:          client,
 		apiTimeout:      apiTimeout,
 		config:          cfg,
-		loadInterfaces:  kt.LookupEnvBool(KT_API_LOAD_INTERFACES, false),
 		lazyLoadCustoms: kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
 		fullLoadCustoms: kt.LookupEnvBool(KT_LOAD_CUSTOM_COLUMNS, false),
 		lazyLoadInts:    kt.LookupEnvBool(KT_API_LAZY_LOAD_INTERFACES, false),
 	}
 
-	log.Infof("Setting API timeout to %v, loadInterfaces=%v, lazyLoadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v",
-		apiTimeout, kapi.loadInterfaces, kapi.lazyLoadInts, kapi.lazyLoadCustoms, kapi.fullLoadCustoms)
+	log.Infof("Setting API timeout to %v, lazyLoadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v",
+		apiTimeout, kapi.lazyLoadInts, kapi.lazyLoadCustoms, kapi.fullLoadCustoms)
 
 	// Now, check to see if synthetics API works.
 	err := kapi.connectSynthAndLookup(ctx)
@@ -266,7 +264,7 @@ func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID
 						api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
 					} else {
 						if api.lazyLoadInts {
-							err := api.getInterfaces(ctxo, []string{dev.IDStr})
+							err := api.getInterfaces(ctxo, dev.IDStr, dev)
 							if err != nil {
 								api.Warnf("Cannot load interfaces for %s %s, %v", dev.IDStr, info.APIEmail, err)
 							}
@@ -440,7 +438,7 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	api.Infof("Connected to Device Lookup API server at %s", address)
 	api.deviceClient = deviceLookup
 
-	if api.loadInterfaces || api.lazyLoadInts {
+	if api.lazyLoadInts {
 		interfaceLookup := interfacepb.NewInterfaceServiceClient(conn)
 		api.Infof("Connected to Interface Lookup API server at %s", address)
 		api.interfaceClient = interfaceLookup
@@ -567,18 +565,6 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 			num++
 		}
 
-		// If we are loading interfaces, pull in interface data now also.
-		if api.loadInterfaces {
-			const batchSize = 100
-			for i := 0; i < len(deviceIds); i += batchSize {
-				end := min(i+batchSize, len(deviceIds))
-				err := api.getInterfaces(ctxo, deviceIds[i:end])
-				if err != nil {
-					return err
-				}
-			}
-		}
-
 		api.Infof("Loaded %d Kentik Devices via GRPC for %s", len(r.GetDevices()), info.APIEmail)
 	}
 
@@ -595,11 +581,11 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 	return nil
 }
 
-func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) error {
+func (api *KentikApi) getInterfaces(ctx context.Context, deviceId string, dev *kt.Device) error {
 
-	api.Debugf("Loading interfaces for %v", deviceIds)
+	api.Debugf("Loading interfaces for %s", deviceId)
 	lt := &interfacepb.ListInterfaceRequest{
-		Filters: &interfacepb.InterfaceFilter{DeviceIds: deviceIds, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
+		Filters: &interfacepb.InterfaceFilter{DeviceIds: []string{deviceId}, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
 	}
 	r, err := api.interfaceClient.ListInterface(ctx, lt)
 	if err != nil {
@@ -610,26 +596,7 @@ func (api *KentikApi) getInterfaces(ctx context.Context, deviceIds []string) err
 		return err
 	}
 
-	deviceIndex := make(map[kt.DeviceID]*kt.Device)
-	for _, clist := range api.devices {
-		for did, d := range clist {
-			deviceIndex[did] = d
-		}
-	}
-
-	found := 0
-	for _, intf := range r.GetInterfaces() {
-		deviceID, err := strconv.ParseInt(intf.GetDeviceId(), 10, 64)
-		if err != nil {
-			continue
-		}
-		if dd, ok := deviceIndex[kt.DeviceID(deviceID)]; ok {
-			dd.AddInterface(intf)
-			found++
-		}
-	}
-	api.Debugf("Added %d interfaces for %d devices", found, len(deviceIds))
-
+	dev.AddInterfaces(r.GetInterfaces())
 	return nil
 }
 

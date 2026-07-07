@@ -184,35 +184,39 @@ func (d *Device) LoadedCustoms() bool {
 	return lc
 }
 
-func (d *Device) AddInterface(p *interfacepb.Interface) {
-	if p == nil {
-		return
+func (d *Device) AddInterfaces(ints []*interfacepb.Interface) {
+
+	ifaces := make([]Interface, len(ints))
+	ifacemap := map[IfaceID]Interface{}
+	for i, p := range ints {
+		snmpID, err := strconv.ParseInt(p.GetSnmpId(), 10, 64)
+		if err != nil {
+			snmpID = 0
+		}
+
+		devID, err := strconv.ParseInt(p.GetDeviceId(), 10, 64)
+		if err != nil {
+			devID = 0
+		}
+
+		iface := Interface{
+			DeviceID:         DeviceID(devID),
+			Description:      p.GetInterfaceDescription(),
+			NetworkBoundary:  ic.NameFromNBInt(int(p.GetNetworkBoundary())),
+			ConnectivityType: ic.NameFromCTInt(int(p.GetConnectivityType())),
+			Provider:         p.GetProvider(),
+			SnmpID:           IfaceID(snmpID),
+			Alias:            p.GetSnmpAlias(),
+			SnmpSpeedMbps:    int64(p.GetSnmpSpeed()),
+			Address:          p.GetInterfaceIp(),
+		}
+
+		ifaces[i] = iface
+		ifacemap[IfaceID(snmpID)] = iface
 	}
 
-	snmpID, err := strconv.ParseInt(p.GetSnmpId(), 10, 64)
-	if err != nil {
-		snmpID = 0
-	}
-
-	devID, err := strconv.ParseInt(p.GetDeviceId(), 10, 64)
-	if err != nil {
-		devID = 0
-	}
-
-	iface := Interface{
-		DeviceID:         DeviceID(devID),
-		Description:      p.GetInterfaceDescription(),
-		NetworkBoundary:  ic.NameFromNBInt(int(p.GetNetworkBoundary())),
-		ConnectivityType: ic.NameFromCTInt(int(p.GetConnectivityType())),
-		Provider:         p.GetProvider(),
-		SnmpID:           IfaceID(snmpID),
-		Alias:            p.GetSnmpAlias(),
-		SnmpSpeedMbps:    int64(p.GetSnmpSpeed()),
-		Address:          p.GetInterfaceIp(),
-	}
-
-	d.AllInterfaces = append(d.AllInterfaces, iface)
-	d.Interfaces[IfaceID(snmpID)] = iface
+	d.AllInterfaces = ifaces
+	d.Interfaces = ifacemap
 }
 
 func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
