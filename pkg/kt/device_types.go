@@ -189,6 +189,10 @@ func (d *Device) AddInterfaces(ints []*interfacepb.Interface) {
 	ifaces := make([]Interface, len(ints))
 	ifacemap := map[IfaceID]Interface{}
 	for i, p := range ints {
+		if p == nil {
+			continue
+		}
+
 		snmpID, err := strconv.ParseInt(p.GetSnmpId(), 10, 64)
 		if err != nil {
 			snmpID = 0

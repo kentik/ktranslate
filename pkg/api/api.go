@@ -40,7 +40,6 @@ const (
 	API_EMAIL_HEADER                = "X-CH-Auth-Email"
 	API_PASSWORD_HEADER             = "X-CH-Auth-API-Token"
 	MIN_TIME_BETWEEN_SYNTH_CHECKS   = 60 * time.Second
-	KT_API_LOAD_INTERFACES          = "KT_API_LOAD_INTERFACES"
 	KT_INTERFACE_LOOKUP_TEXT_FILTER = "KT_INTERFACE_LOOKUP_TEXT_FILTER"
 	KT_LOAD_CUSTOM_COLUMNS          = "KT_LOAD_CUSTOM_COLUMNS"
 	KT_API_LAZY_LOAD_CUSTOMS        = "KT_API_LAZY_LOAD_CUSTOMS"
@@ -57,24 +56,25 @@ func init() {
 
 type KentikApi struct {
 	logger.ContextL
-	tr              *http.Transport
-	client          *http.Client
-	devices         map[kt.Cid]kt.Devices
-	synAgents       map[kt.AgentId]*synthetics.Agent
-	synAgentsByIP   map[string]*synthetics.Agent
-	synTests        map[kt.TestId]*synthetics.Test
-	setTime         time.Time
-	apiTimeout      time.Duration
-	synClient       synthetics.SyntheticsAdminServiceClient
-	deviceClient    devicepb.DeviceServiceClient
-	interfaceClient interfacepb.InterfaceServiceClient
-	mux             sync.RWMutex
-	lastSynth       time.Time
-	config          *ktranslate.Config
-	tagLookupClient tagging.EnumerationsAdminServiceClient
-	lazyLoadCustoms bool
-	fullLoadCustoms bool
-	lazyLoadInts    bool
+	tr                  *http.Transport
+	client              *http.Client
+	devices             map[kt.Cid]kt.Devices
+	synAgents           map[kt.AgentId]*synthetics.Agent
+	synAgentsByIP       map[string]*synthetics.Agent
+	synTests            map[kt.TestId]*synthetics.Test
+	setTime             time.Time
+	apiTimeout          time.Duration
+	synClient           synthetics.SyntheticsAdminServiceClient
+	deviceClient        devicepb.DeviceServiceClient
+	interfaceClient     interfacepb.InterfaceServiceClient
+	mux                 sync.RWMutex
+	lastSynth           time.Time
+	config              *ktranslate.Config
+	tagLookupClient     tagging.EnumerationsAdminServiceClient
+	lazyLoadCustoms     bool
+	fullLoadCustoms     bool
+	lazyLoadInts        bool
+	interfaceFilterText string
 }
 
 func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Config) (*KentikApi, error) {
@@ -96,14 +96,15 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	client := &http.Client{Transport: tr, Timeout: apiTimeout}
 
 	kapi := &KentikApi{
-		ContextL:        log,
-		tr:              tr,
-		client:          client,
-		apiTimeout:      apiTimeout,
-		config:          cfg,
-		lazyLoadCustoms: kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
-		fullLoadCustoms: kt.LookupEnvBool(KT_LOAD_CUSTOM_COLUMNS, false),
-		lazyLoadInts:    kt.LookupEnvBool(KT_API_LAZY_LOAD_INTERFACES, false),
+		ContextL:            log,
+		tr:                  tr,
+		client:              client,
+		apiTimeout:          apiTimeout,
+		config:              cfg,
+		lazyLoadCustoms:     kt.LookupEnvBool(KT_API_LAZY_LOAD_CUSTOMS, false),
+		fullLoadCustoms:     kt.LookupEnvBool(KT_LOAD_CUSTOM_COLUMNS, false),
+		lazyLoadInts:        kt.LookupEnvBool(KT_API_LAZY_LOAD_INTERFACES, false),
+		interfaceFilterText: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, ""),
 	}
 
 	log.Infof("Setting API timeout to %v, lazyLoadInterfaces=%v, lazyLoadCustoms=%v, fullyLoadCustoms=%v",
@@ -585,7 +586,7 @@ func (api *KentikApi) getInterfaces(ctx context.Context, deviceId string, dev *k
 
 	api.Debugf("Loading interfaces for %s", deviceId)
 	lt := &interfacepb.ListInterfaceRequest{
-		Filters: &interfacepb.InterfaceFilter{DeviceIds: []string{deviceId}, Text: kt.LookupEnvString(KT_INTERFACE_LOOKUP_TEXT_FILTER, "")},
+		Filters: &interfacepb.InterfaceFilter{DeviceIds: []string{deviceId}, Text: api.interfaceFilterText},
 	}
 	r, err := api.interfaceClient.ListInterface(ctx, lt)
 	if err != nil {
