@@ -134,7 +134,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 		if len(d.SendingIps) > 0 {
 			dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		}
-		dst.CustomStr["device_site"] = d.Site.SiteName
+		if d.Site != nil {
+			dst.CustomStr["device_site"] = d.Site.GetSiteName()
+		}
 		if i, ok := kc.apic.GetInterface(ctx, d, dst.InputPort); ok {
 			dst.InputIntDesc = i.Description
 			dst.InputIntAlias = i.Alias
@@ -281,7 +283,9 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 				dst.CustomInt[name] = int32(v)
 				if d := kc.apic.GetDevice(ctx, dst.CompanyId, kt.DeviceID(v)); d != nil {
 					dst.CustomStr["ult_exit_device"] = d.Name
-					dst.CustomStr["ult_exit_site"] = d.Site.SiteName
+					if d.Site != nil {
+						dst.CustomStr["ult_exit_site"] = d.Site.GetSiteName()
+					}
 				}
 			default:
 				if tk, tv, ok := kc.tagMap.LookupTagValue(dst.CompanyId, v, name); ok {
