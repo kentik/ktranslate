@@ -270,7 +270,7 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 				return nil
 			}
 
-			// There's a strange case where some sites return an error here reguardless. We log and move on.
+		// There's a strange case where some sites return an error here regardless. We log and move on.
 			api.Warnf("Site ListSites endpoint returned an error, skipping: %v", err)
 			continue
 		}
