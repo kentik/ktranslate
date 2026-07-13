@@ -203,6 +203,10 @@ func (d *Device) AddInterfaces(ints []*interfacepb.Interface) {
 			devID = 0
 		}
 
+		if DeviceID(devID) != d.ID { // Double check that this device id matches the interface's id.
+			continue
+		}
+
 		iface := Interface{
 			DeviceID:         DeviceID(devID),
 			Description:      p.GetInterfaceDescription(),
