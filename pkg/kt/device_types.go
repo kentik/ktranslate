@@ -25,7 +25,6 @@ type Device struct {
 	Description   string                `json:"device_description"`
 	IP            net.IP                `json:"ip"`
 	Interfaces    map[IfaceID]Interface `json:"-"`
-	AllInterfaces []Interface           `json:"all_interfaces"`
 	SendingIps    []net.IP              `json:"sending_ips"`
 	SampleRate    uint32                `json:"device_sample_rate,string"`
 	BgpType       string                `json:"device_bgp_type"`
@@ -43,6 +42,7 @@ type Device struct {
 	FullSite      *FullSite
 	IDStr         string
 	loadedCustoms bool
+	loadedInts    bool
 }
 
 type DeviceLabel struct {
@@ -184,11 +184,16 @@ func (d *Device) LoadedCustoms() bool {
 	return lc
 }
 
+func (d *Device) LoadedInterfaces() bool {
+	li := d.loadedInts
+	d.loadedInts = true
+	return li
+}
+
 func (d *Device) AddInterfaces(ints []*interfacepb.Interface) {
 
-	ifaces := make([]Interface, len(ints))
 	ifacemap := map[IfaceID]Interface{}
-	for i, p := range ints {
+	for _, p := range ints {
 		if p == nil {
 			continue
 		}
@@ -219,11 +224,9 @@ func (d *Device) AddInterfaces(ints []*interfacepb.Interface) {
 			Address:          p.GetInterfaceIp(),
 		}
 
-		ifaces[i] = iface
 		ifacemap[IfaceID(snmpID)] = iface
 	}
 
-	d.AllInterfaces = ifaces
 	d.Interfaces = ifacemap
 }
 
@@ -257,7 +260,7 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		}
 	}
 
-	ifaces, ifaceMap := mapInterfaces(dd.GetId(), dd.GetAllInterfaces())
+	ifaceMap := mapInterfaces(dd.GetId(), dd.GetAllInterfaces())
 
 	labels := make([]DeviceLabel, 0, len(dd.GetLabels()))
 	for _, l := range dd.GetLabels() {
@@ -309,7 +312,6 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		Description:   dd.GetDeviceDescription(),
 		IP:            ip,
 		Interfaces:    ifaceMap,
-		AllInterfaces: ifaces,
 		SendingIps:    sendingIPs,
 		SampleRate:    uint32(sampleRate),
 		BgpType:       dd.GetDeviceBgpType(),
@@ -324,11 +326,11 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		Labels:        labels,
 		Site:          site,
 		loadedCustoms: len(customs) > 0,
+		loadedInts:    len(ifaceMap) > 0,
 	}, nil
 }
 
-func mapInterfaces(deviceID string, protos []*devicepb.Interface) ([]Interface, map[IfaceID]Interface) {
-	ifaces := make([]Interface, 0, len(protos))
+func mapInterfaces(deviceID string, protos []*devicepb.Interface) map[IfaceID]Interface {
 	ifaceMap := make(map[IfaceID]Interface, len(protos))
 
 	for _, p := range protos {
@@ -362,11 +364,10 @@ func mapInterfaces(deviceID string, protos []*devicepb.Interface) ([]Interface, 
 			SnmpSpeedMbps:    snmpSpeed,
 		}
 
-		ifaces = append(ifaces, iface)
 		ifaceMap[IfaceID(snmpID)] = iface
 	}
 
-	return ifaces, ifaceMap
+	return ifaceMap
 }
 
 func mapPlan(p *devicepb.Plan) Plan {

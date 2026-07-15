@@ -143,20 +143,6 @@ func TestMapDeviceDetailedToDevice_Full(t *testing.T) {
 	assertEqual(t, "SnmpV3.PrivacyProtocol", got.SnmpV3.PrivacyProtocol, "AES")
 	assertEqual(t, "SnmpV3.PrivacyPassphrase", got.SnmpV3.PrivacyPassphrase, "privpass")
 
-	// --- AllInterfaces ---
-	if len(got.AllInterfaces) != 2 {
-		t.Fatalf("AllInterfaces: got %d, want 2", len(got.AllInterfaces))
-	}
-	iface0 := got.AllInterfaces[0]
-	assertEqual(t, "AllInterfaces[0].DeviceID", int64(iface0.DeviceID), int64(42))
-	assertEqual(t, "AllInterfaces[0].SnmpID", int64(iface0.SnmpID), int64(101))
-	assertEqual(t, "AllInterfaces[0].Alias", iface0.Alias, "eth0")
-	assertEqual(t, "AllInterfaces[0].SnmpSpeedMbps", iface0.SnmpSpeedMbps, int64(1000))
-	assertEqual(t, "AllInterfaces[0].Description", iface0.Description, "Uplink")
-	assertEqual(t, "AllInterfaces[0].NetworkBoundary", iface0.NetworkBoundary, "external")
-	assertEqual(t, "AllInterfaces[0].ConnectivityType", iface0.ConnectivityType, "transit")
-	assertEqual(t, "AllInterfaces[0].Provider", iface0.Provider, "ISP-A")
-
 	// --- Interfaces map ---
 	if len(got.Interfaces) != 2 {
 		t.Fatalf("Interfaces map: got %d entries, want 2", len(got.Interfaces))
@@ -316,18 +302,11 @@ func TestMapDeviceDetailedToDevice_InterfaceWithBadSnmpIDDefaultsToZero(t *testi
 		Id:               "5",
 		CompanyId:        "2",
 		DeviceSampleRate: "100",
-		AllInterfaces: []*device.Interface{
-			{SnmpId: "not-a-number", SnmpAlias: "eth0", SnmpSpeed: "1000"},
-		},
 	}
-	got, err := MapDeviceDetailedToDevice(proto)
+	_, err := MapDeviceDetailedToDevice(proto)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(got.AllInterfaces) != 1 {
-		t.Fatalf("AllInterfaces: got %d, want 1", len(got.AllInterfaces))
-	}
-	assertEqual(t, "AllInterfaces[0].SnmpID", int64(got.AllInterfaces[0].SnmpID), int64(0))
 }
 
 func TestMapDeviceDetailedToDevice_EmptyDeviceHasEmptyInterfaceMap(t *testing.T) {

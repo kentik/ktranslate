@@ -135,7 +135,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["SamplerAddress"] = d.SendingIps[0].String()
 		}
 		dst.CustomStr["device_site"] = d.Site.SiteName
-		if i, ok := d.Interfaces[dst.InputPort]; ok {
+		if i, ok := kc.apic.GetInterface(ctx, d, dst.InputPort); ok {
 			dst.InputIntDesc = i.Description
 			dst.InputIntAlias = i.Alias
 			dst.InputInterfaceCapacity = i.SnmpSpeedMbps
@@ -144,7 +144,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			dst.CustomStr["input_network_boundary"] = i.NetworkBoundary
 			dst.CustomStr["input_connectivity_type"] = i.ConnectivityType
 		}
-		if i, ok := d.Interfaces[dst.OutputPort]; ok {
+		if i, ok := kc.apic.GetInterface(ctx, d, dst.OutputPort); ok {
 			dst.OutputIntDesc = i.Description
 			dst.OutputIntAlias = i.Alias
 			dst.OutputInterfaceCapacity = i.SnmpSpeedMbps
@@ -410,7 +410,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	if udid, ok := dst.CustomInt["ult_exit_device_id"]; ok {
 		if d := kc.apic.GetDevice(ctx, dst.CompanyId, kt.DeviceID(udid)); d != nil {
 			if ui, ok := dst.CustomInt["ult_exit_port"]; ok {
-				if i, ok := d.Interfaces[kt.IfaceID(ui)]; ok {
+				if i, ok := kc.apic.GetInterface(ctx, d, kt.IfaceID(ui)); ok {
 					dst.CustomStr["ult_exit_port_alias"] = i.Alias
 					dst.CustomStr["ult_exit_port_description"] = i.Description
 					dst.CustomStr["ult_exit_port_provider"] = i.Provider
