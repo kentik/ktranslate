@@ -243,6 +243,37 @@ func (api *KentikApi) GetDevicesAsMap(cid kt.Cid) map[string]*kt.Device {
 	return res
 }
 
+func (api *KentikApi) GetInterface(ctx context.Context, dev *kt.Device, port kt.IfaceID) (*kt.Interface, bool) {
+	if api == nil || dev == nil {
+		return nil, false
+	}
+
+	if api.lazyLoadInts && !dev.LoadedInterfaces() {
+		go func() {
+			ldev := dev
+			for _, info := range api.config.KentikCreds {
+				md := metadata.New(map[string]string{
+					"X-CH-Auth-Email":     info.APIEmail,
+					"X-CH-Auth-API-Token": info.APIToken,
+				})
+				ctxo := metadata.NewOutgoingContext(ctx, md)
+				err := api.getInterfaces(ctxo, ldev.IDStr, ldev)
+				if err != nil {
+					api.Warnf("Cannot load interfaces for %s %s, %v", ldev.IDStr, info.APIEmail, err)
+				} else {
+					return
+				}
+			}
+		}()
+	}
+
+	if i, ok := dev.Interfaces[port]; ok {
+		return &i, true
+	}
+
+	return nil, false
+}
+
 func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID) *kt.Device {
 	if api == nil {
 		return nil
@@ -254,22 +285,17 @@ func (api *KentikApi) GetDevice(ctx context.Context, cid kt.Cid, did kt.DeviceID
 		}
 		if api.lazyLoadCustoms && !dev.LoadedCustoms() {
 			go func() {
+				ldev := dev
 				for _, info := range api.config.KentikCreds {
 					md := metadata.New(map[string]string{
 						"X-CH-Auth-Email":     info.APIEmail,
 						"X-CH-Auth-API-Token": info.APIToken,
 					})
 					ctxo := metadata.NewOutgoingContext(ctx, md)
-					err := api.loadCustoms(ctxo, dev.IDStr, dev)
+					err := api.loadCustoms(ctxo, ldev.IDStr, ldev)
 					if err != nil {
-						api.Warnf("Cannot load customs for %s %s, %v", dev.IDStr, info.APIEmail, err)
+						api.Warnf("Cannot load customs for %s %s, %v", ldev.IDStr, info.APIEmail, err)
 					} else {
-						if api.lazyLoadInts {
-							err := api.getInterfaces(ctxo, dev.IDStr, dev)
-							if err != nil {
-								api.Warnf("Cannot load interfaces for %s %s, %v", dev.IDStr, info.APIEmail, err)
-							}
-						}
 						return
 					}
 				}
@@ -344,7 +370,7 @@ func NewKentikApiFromLocalDevices(localDevices map[string]*kt.Device, log logger
 			resDev[device.CompanyID] = map[kt.DeviceID]*kt.Device{}
 		}
 		device.Interfaces = map[kt.IfaceID]kt.Interface{}
-		for _, intf := range device.AllInterfaces {
+		for _, intf := range device.Interfaces {
 			device.Interfaces[intf.SnmpID] = intf
 		}
 		resDev[device.CompanyID][device.ID] = device
