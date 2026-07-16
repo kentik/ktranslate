@@ -159,8 +159,8 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			custColNames[v.ID] = v.Name
 		}
 		if d.FullSite != nil {
-			dst.CustomStr["device_site_market"] = d.FullSite.SiteMarket.Name
-			dst.CustomStr["device_site_country"] = d.FullSite.PostalAddress.Country
+			dst.CustomStr["device_site_market"] = d.FullSite.SiteMarket.GetName()
+			dst.CustomStr["device_site_country"] = d.FullSite.PostalAddress.GetCountry()
 		}
 	}
 
