@@ -116,7 +116,7 @@ func TestMapDeviceDetailedToDevice_Full(t *testing.T) {
 	assertEqual(t, "SendingIps[1]", got.SendingIps[1].String(), "192.168.1.2")
 
 	// --- Site ---
-	assertEqual(t, "Site.ID", got.Site.ID, 99)
+	assertEqual(t, "Site.ID", got.Site.Id, "99")
 	assertEqual(t, "Site.SiteName", got.Site.SiteName, "HQ")
 
 	// --- Plan ---
@@ -270,8 +270,6 @@ func TestMapDeviceDetailedToDevice_NilSiteAndPlan(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	assertEqual(t, "Site.ID", got.Site.ID, 0)
-	assertEqual(t, "Site.SiteName", got.Site.SiteName, "")
 	assertEqual(t, "Plan.ID", got.Plan.ID, 0)
 	assertEqual(t, "Plan.Name", got.Plan.Name, "")
 }

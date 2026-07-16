@@ -3,6 +3,7 @@ package kt
 import (
 	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
+	sitepb "github.com/kentik/api-schema-public/gen/go/kentik/site/v202509"
 	sfmt "github.com/kentik/the-library-formally-known-as-go-syslog/format"
 
 	"fmt"
@@ -37,9 +38,9 @@ type Device struct {
 	SnmpIp        string                `json:"device_snmp_ip"`
 	SnmpV3        *V3SNMPConfig         `json:"device_snmp_v3_conf"`
 	Labels        []DeviceLabel         `json:"labels"`
-	Site          DeviceSite            `json:"site"`
+	Site          *devicepb.Site
 	allUserTags   map[string]string
-	FullSite      *FullSite
+	FullSite      *sitepb.Site
 	IDStr         string
 	loadedCustoms bool
 	loadedInts    bool
@@ -141,34 +142,6 @@ func (d *Device) SetUserTags(in map[string]string) {
 	for k, v := range d.allUserTags {
 		in[k] = v
 	}
-}
-
-type SiteList struct {
-	Sites []FullSite `json:"sites"`
-}
-
-type FullSite struct {
-	ID            string        `json:"id": "33467"`
-	Title         string        `json:"title"`
-	Lat           float64       `json:"lat"`
-	Lon           float64       `json:"lon"`
-	PostalAddress PostalAddress `json:"postalAddress"`
-	Type          string        `json:"type"`
-	SiteMarket    SiteMarket    `json:"siteMarket"`
-}
-
-type PostalAddress struct {
-	Address    string `json:"address"`
-	City       string `json:"city"`
-	Region     string `json:"region"`
-	PostalCode string `json:"postalCode"`
-	Country    string `json:"country"`
-}
-
-type SiteMarket struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Desc string `json:"description"`
 }
 
 func (d *Device) AddCustoms(dd *devicepb.DeviceDetailed) {
@@ -275,18 +248,6 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		})
 	}
 
-	site := DeviceSite{}
-	if s := dd.GetSite(); s != nil {
-		siteID, err := strconv.Atoi(s.GetId())
-		if err != nil {
-			siteID = 0
-		}
-		site = DeviceSite{
-			ID:       siteID,
-			SiteName: s.GetSiteName(),
-		}
-	}
-
 	plan := mapPlan(dd.GetPlan())
 
 	customs := mapCustomColumns(dd.GetCustomColumnData())
@@ -324,7 +285,7 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 		SnmpIp:        dd.GetDeviceSnmpIp(),
 		SnmpV3:        snmpV3,
 		Labels:        labels,
-		Site:          site,
+		Site:          dd.GetSite(),
 		loadedCustoms: len(customs) > 0,
 		loadedInts:    len(ifaceMap) > 0,
 	}, nil

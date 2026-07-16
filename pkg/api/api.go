@@ -20,6 +20,7 @@ import (
 	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	tagging "github.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1"
 	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
+	sitepb "github.com/kentik/api-schema-public/gen/go/kentik/site/v202509"
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -67,6 +68,7 @@ type KentikApi struct {
 	synClient           synthetics.SyntheticsAdminServiceClient
 	deviceClient        devicepb.DeviceServiceClient
 	interfaceClient     interfacepb.InterfaceServiceClient
+	siteClient          sitepb.SiteServiceClient
 	mux                 sync.RWMutex
 	lastSynth           time.Time
 	config              *ktranslate.Config
@@ -120,65 +122,6 @@ func NewKentikApi(ctx context.Context, log logger.ContextL, cfg *ktranslate.Conf
 	go kapi.manageCache(ctx)
 
 	return kapi, err
-}
-
-func (api *KentikApi) callRestAPI(ctx context.Context, apiUrl string, apiEmail string, apiToken string) ([]byte, error) {
-	if apiEmail == "" {
-		if v := api.config.API.DeviceFile; v != "" {
-			api.Infof("Reading devices from local file: %s", v)
-			return os.ReadFile(v)
-		}
-	}
-
-	// Try to make a request, parse the result as json.
-	req, err := http.NewRequestWithContext(ctx, "GET", apiUrl, nil)
-	if err != nil {
-		api.Errorf("Error with Launcher: %v", err)
-		return nil, err
-	}
-
-	req.Header.Add(API_EMAIL_HEADER, apiEmail)
-	req.Header.Add(API_PASSWORD_HEADER, apiToken)
-	req.Header.Add(HTTP_USER_AGENT, userAgent())
-
-	resp, err := api.client.Do(req)
-	if err != nil {
-		api.Errorf("Error with Launcher: %v", err)
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		api.Errorf("Error with Launcher: %v", err)
-		api.client = &http.Client{Transport: api.tr, Timeout: api.apiTimeout}
-		return nil, err
-	} else if resp.StatusCode == 404 {
-		// This should mean that the device is no longer valid -- it's been deleted,
-		// or the company has expired, or some similar issue.  We'll stop the flow at
-		// chfproxy-relay, anyway, but it's important to bring down the client agent
-		// here so that if the customer deletes a device and then adds a new version
-		// of it with the same sending-ip, we'll re-do the lookup and start treating
-		// the flow as the new device.  So log the error we received, but don't return
-		// an error -- return an empty json block.
-		api.Warnf("Received a %d error from API: %s", resp.StatusCode, body)
-		return []byte("{}"), nil
-	} else if resp.StatusCode == 403 {
-		// This should mean that the credentials that the agent was started with have become
-		// invalid while the agent was running.  If this is true, we've decided to stop sending
-		// flow from all device, in order to attract attention to the issue; otherwise, we
-		// could keep sending flow indefinitely (as long as we keep sending flow, proxy-relay
-		// doesn't have to re-authenticate), but couldn't add new devices, and all flow could be
-		// cut off by a later proxy-relay restart.  Better to fail quickly.
-		api.Warnf("Received a %d error from API: %s", resp.StatusCode, body)
-		return []byte("{}"), nil
-	} else if resp.StatusCode >= 300 {
-		err = fmt.Errorf("HTTP error: status code %d, body %v", resp.StatusCode, string(body))
-		api.Errorf("Lookup failed: %v", err)
-		return nil, err
-	}
-
-	return body, nil
 }
 
 func (api *KentikApi) UpdateTests(ctx context.Context) {
@@ -310,46 +253,49 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 	stime := time.Now()
 	num := 0
 	mapped := 0
-	siteMap := map[int]*kt.FullSite{}
-	versions := []string{"v202509", "v202211"}
+	siteMap := map[string]*sitepb.Site{}
 
 	for _, info := range api.config.KentikCreds {
-		for _, version := range versions {
-			res, err := api.callRestAPI(ctx, fmt.Sprintf("%s/site/%s/sites", api.config.GRPCBaseURL, version), info.APIEmail, info.APIToken)
-			if err != nil {
-				api.Warnf("Skipping site version %s", version)
-				continue
-			}
-			var sites kt.SiteList
-			err = json.Unmarshal(res, &sites)
-			if err != nil {
-				api.Warnf("Skipping site version %s", version)
-				continue
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &sitepb.ListSitesRequest{}
+		r, err := api.siteClient.ListSites(ctxo, lt)
+		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("Site ListSites endpoint not implemented (deprecated API); skipping.")
+				return nil
 			}
 
-			for _, site := range sites.Sites {
-				if idInt, err := strconv.Atoi(site.ID); err == nil {
-					ls := site
-					siteMap[idInt] = &ls
-					num++
-				}
-			}
+		// There's a strange case where some sites return an error here regardless. We log and move on.
+			api.Warnf("Site ListSites endpoint returned an error, skipping: %v", err)
+			continue
+		}
 
-			// Now map sites into devices.
-			for _, cd := range api.devices {
-				for _, d := range cd {
-					if ds, ok := siteMap[d.Site.ID]; ok {
-						d.FullSite = ds
-						mapped++
-					}
+		for _, site := range r.GetSites() {
+			ls := site
+			siteMap[site.GetId()] = ls
+			num++
+		}
+	}
+
+	// Now map sites into devices.
+	for _, cd := range api.devices {
+		for _, d := range cd {
+			if d.Site != nil {
+				if ds, ok := siteMap[d.Site.GetId()]; ok {
+					d.FullSite = ds
+					mapped++
 				}
 			}
-			break // Since we're good, break out of the loop.
 		}
 	}
 
 	api.setTime = time.Now()
-	api.Infof("Loaded %d Kentik sites via API in %v, mapped to %d devices", num, api.setTime.Sub(stime), mapped)
+	api.Infof("Loaded %d Kentik sites via GRPC in %v, mapped to %d devices", num, api.setTime.Sub(stime), mapped)
 	return nil
 }
 
@@ -464,6 +410,10 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 	deviceLookup := devicepb.NewDeviceServiceClient(conn)
 	api.Infof("Connected to Device Lookup API server at %s", address)
 	api.deviceClient = deviceLookup
+
+	siteLookup := sitepb.NewSiteServiceClient(conn)
+	api.Infof("Connected to Site Lookup API server at %s", address)
+	api.siteClient = siteLookup
 
 	if api.lazyLoadInts {
 		interfaceLookup := interfacepb.NewInterfaceServiceClient(conn)
@@ -596,6 +546,8 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 	}
 
 	api.devices = resDev
+	api.setTime = time.Now()
+	api.Infof("Loaded %d Kentik Devices total via GRPC in %v", num, api.setTime.Sub(stime))
 
 	// Now pull in site info for these devices.
 	err := api.getSites(ctx)
@@ -603,8 +555,6 @@ func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {
 		return err
 	}
 
-	api.setTime = time.Now()
-	api.Infof("Loaded %d Kentik Devices total via GRPC in %v", num, api.setTime.Sub(stime))
 	return nil
 }
 
