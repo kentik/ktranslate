@@ -24,7 +24,7 @@ type Device struct {
 	DeviceSubtype string                `json:"device_subtype"`
 	Description   string                `json:"device_description"`
 	IP            net.IP                `json:"ip"`
-	Interfaces    map[IfaceID]Interface `json:"-"`
+	Interfaces    map[IfaceID]Interface `json:"interfaces"`
 	SendingIps    []net.IP              `json:"sending_ips"`
 	SampleRate    uint32                `json:"device_sample_rate,string"`
 	BgpType       string                `json:"device_bgp_type"`
