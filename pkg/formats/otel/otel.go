@@ -195,6 +195,10 @@ func (f *OtelFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		return nil, nil
 	}
 
+	for i := range res {
+		res[i].Name = kt.SanitizeUTF8(res[i].Name)
+	}
+
 	f.mux.RLock()
 	for _, m := range res {
 		if _, ok := f.vecs[m.Name]; !ok {
@@ -273,6 +277,10 @@ func (f *OtelFormat) Rollup(rolls []rollup.Rollup) (*kt.Output, error) {
 	res := f.toOtelDataRollup(rolls)
 	if len(res) == 0 {
 		return nil, nil
+	}
+
+	for i := range res {
+		res[i].Name = kt.SanitizeUTF8(res[i].Name)
 	}
 
 	f.mux.RLock()
@@ -763,22 +771,23 @@ type OtelData struct {
 func (d *OtelData) GetTagValues() attribute.Set {
 	res := make([]attribute.KeyValue, 0, len(d.Tags))
 	for k, v := range d.Tags {
+		key := kt.SanitizeUTF8(k)
 		switch t := v.(type) {
 		case string:
-			res = append(res, attribute.String(k, t))
+			res = append(res, attribute.String(key, kt.SanitizeUTF8(t)))
 		case int64:
-			res = append(res, attribute.Int64(k, t))
+			res = append(res, attribute.Int64(key, t))
 		case int32:
-			res = append(res, attribute.Int64(k, int64(t)))
+			res = append(res, attribute.Int64(key, int64(t)))
 		case float64:
-			res = append(res, attribute.Float64(k, t))
+			res = append(res, attribute.Float64(key, t))
 		case uint32:
-			res = append(res, attribute.Int64(k, int64(t)))
+			res = append(res, attribute.Int64(key, int64(t)))
 		case uint64:
-			res = append(res, attribute.Int64(k, int64(t)))
+			res = append(res, attribute.Int64(key, int64(t)))
 		default:
 			// Convert unknown types to string representation
-			res = append(res, attribute.String(k, fmt.Sprintf("%v", t)))
+			res = append(res, attribute.String(key, kt.SanitizeUTF8(fmt.Sprintf("%v", t))))
 		}
 	}
 	s, _ := attribute.NewSetWithFiltered(res, func(kv attribute.KeyValue) bool { return true })
