@@ -13,11 +13,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache MM DBs
+        id: mm_cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            config/GeoLite2-Country.mmdb
+            config/GeoLite2-ASN.mmdb
+          # bump the date-based key weekly so DBs still refresh periodically
+          key: mmdb-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            mmdb-
+
       - name: Install MM DBs
+        if: steps.mm_cache.outputs.cache-hit != 'true'
         run: |
           YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }} MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }} ./bin/get_mm.sh
 
       - name: 'Upload MM Geo DB'
+        if: steps.mm_cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: GeoLite2-Country.mmdb
@@ -25,6 +39,7 @@ jobs:
           retention-days: 1
 
       - name: 'Upload MM ASN DB'
+        if: steps.mm_cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: GeoLite2-ASN.mmdb
