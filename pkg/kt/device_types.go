@@ -38,7 +38,7 @@ type Device struct {
 	SnmpIp        string                `json:"device_snmp_ip"`
 	SnmpV3        *V3SNMPConfig         `json:"device_snmp_v3_conf"`
 	Labels        []DeviceLabel         `json:"labels"`
-	Site          *devicepb.Site
+	Site          *devicepb.Site        `json:"site"`
 	allUserTags   map[string]string
 	FullSite      *sitepb.Site
 	IDStr         string
