@@ -7,7 +7,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"unicode/utf8"
 
 	"github.com/gosnmp/gosnmp"
 
@@ -274,13 +273,10 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 						dst.CustomStr[res.GetName()] = sval
 					}
 				} else { // No conversion.
-					if !utf8.ValidString(value) { // Print out value as a hex string.
-						value = fmt.Sprintf("%x", v.Value)
-					}
 					if res != nil {
-						dst.CustomStr[res.GetName()] = value
+						dst.CustomStr[res.GetName()] = kt.SanitizeUTF8(value)
 					} else {
-						dst.CustomStr[v.Name] = value
+						dst.CustomStr[v.Name] = kt.SanitizeUTF8(value)
 					}
 				}
 			}
@@ -295,9 +291,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 			if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
 				_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
 			}
-			if !utf8.ValidString(value) { // Print out value as a hex string.
-				value = fmt.Sprintf("%x", v.Value)
-			}
+			value = kt.SanitizeUTF8(value)
 			if res != nil {
 				dst.CustomStr[res.GetName()] = value
 			} else {
