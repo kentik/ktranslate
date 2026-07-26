@@ -575,7 +575,13 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 	for {
 		select {
 		case msgs := <-kc.metricsChan:
-			kc.handleInput(ctx, msgs, serBuf, nil, seri)
+			// Internal jchf health metrics must not pass through rollup accumulation.
+			ser, err := seri(msgs, serBuf)
+			if err != nil {
+				kc.log.Errorf("There was an error when converting metrics: %v.", err)
+			} else if ser != nil {
+				kc.msgsc <- ser
+			}
 		case <-ctx.Done():
 			kc.log.Infof("monitorMetricsInput Done")
 			return
@@ -822,19 +828,27 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.http = sh
 	}
 
-	// If we're sending self metrics via a chan to sinks. This one always get sent via nrm.
+	// If we're sending self metrics via a chan to sinks.
 	if kc.metricsChan != nil {
-		// Set up formatter
-		format := formats.Format(formats.FORMAT_NRM)
+		metricFormat := formats.Format(formats.FORMAT_NRM)
 		if kc.config.FormatMetric != "" {
-			format = formats.Format(kc.config.FormatMetric)
+			metricFormat = formats.Format(kc.config.FormatMetric)
 		}
 
-		fmtr, err := formats.NewFormat(ctx, format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config, kc.logTee)
-		if err != nil {
-			return err
+		var metricsFmtr formats.Formatter
+		if metricFormat == format {
+			// Reuse the main formatter when metric export uses the same encoding.
+			// A second otel formatter would replace the global MeterProvider and
+			// drop internal (jchf) metrics on flow-only receivers.
+			metricsFmtr = kc.format
+		} else {
+			mf, err := formats.NewFormat(ctx, metricFormat, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config, kc.logTee)
+			if err != nil {
+				return err
+			}
+			metricsFmtr = mf
 		}
-		go kc.monitorMetricsInput(ctx, fmtr.To)
+		go kc.monitorMetricsInput(ctx, metricsFmtr.To)
 	}
 
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1 after %d", kc.config.Format, kc.config.Compression, kc.config.MaxFlowsPerMessage, kc.config.SampleRate, kc.config.SampleMin)
