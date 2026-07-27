@@ -606,7 +606,11 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 			// InputQ is not updated here — it tracks user-facing volume through handleInput only.
 			// When format_metric matches format we reuse kc.format.To; OtelFormat serializes
 			// gauge registration under f.mux (see pkg/formats/otel/otel.go).
-			kc.exportJchfBatches(msgs, len(msgs), serBuf, nil, seri, "metrics")
+			logLabel := kc.config.FormatMetric
+			if logLabel == "" {
+				logLabel = string(formats.FORMAT_NRM)
+			}
+			kc.exportJchfBatches(msgs, len(msgs), serBuf, nil, seri, logLabel)
 		case <-ctx.Done():
 			kc.log.Infof("monitorMetricsInput Done")
 			return
