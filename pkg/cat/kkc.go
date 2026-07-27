@@ -577,10 +577,13 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 		case msgs := <-kc.metricsChan:
 			// Internal jchf health metrics must not pass through rollup accumulation.
 			// Still honor MaxFlowsPerMessage batching (same loop as handleInput export).
-			keep := len(msgs)
-			last := 0
-			for next := kc.config.MaxFlowsPerMessage; next < keep+kc.config.MaxFlowsPerMessage; next += kc.config.MaxFlowsPerMessage {
-				batch := next
+keep := len(msgs)
+last := 0
+batchSize := kc.config.MaxFlowsPerMessage
+if batchSize <= 0 {
+	batchSize = 1
+}
+for next := batchSize; next < keep+batchSize; next += batchSize {
 				if batch > keep {
 					batch = keep
 				}
