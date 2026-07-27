@@ -463,6 +463,50 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
+// effectiveMaxFlowsPerMessage returns a positive batch size. Config validation keeps
+// MaxFlowsPerMessage > 0 for most formats, but sendToSinks can shrink it dynamically
+// and a zero/negative value would otherwise stall the export loop.
+func effectiveMaxFlowsPerMessage(n int) int {
+	if n <= 0 {
+		return 1
+	}
+	return n
+}
+
+// jchfExportSliceBounds yields [last:batch) slice pairs for splitting keep messages
+// into MaxFlowsPerMessage chunks (same loop semantics as the legacy handleInput export).
+func jchfExportSliceBounds(batchSize, keep int) [][2]int {
+	batchSize = effectiveMaxFlowsPerMessage(batchSize)
+	var bounds [][2]int
+	last := 0
+	for next := batchSize; next < keep+batchSize; next += batchSize {
+		batch := next
+		if batch > keep {
+			batch = keep
+		}
+		bounds = append(bounds, [2]int{last, batch})
+		last = next
+		if batch == keep {
+			break
+		}
+	}
+	return bounds
+}
+
+// exportJchfBatches serializes msgs and enqueues Outputs, honoring MaxFlowsPerMessage.
+// cb is attached when non-nil (flow path); internal metrics pass nil.
+func (kc *KTranslate) exportJchfBatches(msgs []*kt.JCHF, keep int, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error), logLabel string) {
+	for _, span := range jchfExportSliceBounds(kc.config.MaxFlowsPerMessage, keep) {
+		ser, err := seri(msgs[span[0]:span[1]], serBuf)
+		if err != nil {
+			kc.log.Errorf("There was an error when converting to %s: %v.", logLabel, err)
+		} else if ser != nil {
+			ser.CB = cb
+			kc.msgsc <- ser
+		}
+	}
+}
+
 // This processes data from the non-kentik input sets.
 func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	if kc.geo != nil || kc.asn != nil || kc.enricher != nil {
@@ -504,26 +548,7 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 			kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 		}
 
-		// Ship all the logs out, according to max flows per message.
-		last := 0
-		for next := kc.config.MaxFlowsPerMessage; next < keep+kc.config.MaxFlowsPerMessage; next += kc.config.MaxFlowsPerMessage {
-			batch := next
-			if batch > keep {
-				batch = keep
-			}
-			ser, err := seri(msgs[last:batch], serBuf)
-			if err != nil {
-				kc.log.Errorf("There was an error when converting to native: %v.", err)
-			} else if ser != nil {
-				ser.CB = cb
-				kc.msgsc <- ser
-			}
-			last = next
-
-			if batch == keep { // We're done here, no need to send more.
-				break
-			}
-		}
+		kc.exportJchfBatches(msgs, keep, serBuf, cb, seri, "native")
 	}
 
 	kc.metrics.InputQ.Mark(int64(len(msgs)))
@@ -575,29 +600,13 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 	for {
 		select {
 		case msgs := <-kc.metricsChan:
-			// Internal jchf health metrics must not pass through rollup accumulation.
-			// Still honor MaxFlowsPerMessage batching (same loop as handleInput export).
-keep := len(msgs)
-last := 0
-batchSize := kc.config.MaxFlowsPerMessage
-if batchSize <= 0 {
-	batchSize = 1
-}
-for next := batchSize; next < keep+batchSize; next += batchSize {
-				if batch > keep {
-					batch = keep
-				}
-				ser, err := seri(msgs[last:batch], serBuf)
-				if err != nil {
-					kc.log.Errorf("There was an error when converting metrics: %v.", err)
-				} else if ser != nil {
-					kc.msgsc <- ser
-				}
-				last = next
-				if batch == keep {
-					break
-				}
-			}
+			// Internal jchf health metrics bypass rollup accumulation (rollup.Add never runs).
+			// With RollupAndAlpha=true, user flows still pass through rollups before export;
+			// internal CHF counters intentionally skip that path so health gauges stay raw.
+			// InputQ is not updated here — it tracks user-facing volume through handleInput only.
+			// When format_metric matches format we reuse kc.format.To; OtelFormat serializes
+			// gauge registration under f.mux (see pkg/formats/otel/otel.go).
+			kc.exportJchfBatches(msgs, len(msgs), serBuf, nil, seri, "metrics")
 		case <-ctx.Done():
 			kc.log.Infof("monitorMetricsInput Done")
 			return
