@@ -463,6 +463,50 @@ func (kc *KTranslate) sendToSinks(ctx context.Context) error {
 	}
 }
 
+// effectiveMaxFlowsPerMessage returns a positive batch size. Config validation keeps
+// MaxFlowsPerMessage > 0 for most formats, but sendToSinks can shrink it dynamically
+// and a zero/negative value would otherwise stall the export loop.
+func effectiveMaxFlowsPerMessage(n int) int {
+	if n <= 0 {
+		return 1
+	}
+	return n
+}
+
+// jchfExportSliceBounds yields [last:batch) slice pairs for splitting keep messages
+// into MaxFlowsPerMessage chunks (same loop semantics as the legacy handleInput export).
+func jchfExportSliceBounds(batchSize, keep int) [][2]int {
+	batchSize = effectiveMaxFlowsPerMessage(batchSize)
+	var bounds [][2]int
+	last := 0
+	for next := batchSize; next < keep+batchSize; next += batchSize {
+		batch := next
+		if batch > keep {
+			batch = keep
+		}
+		bounds = append(bounds, [2]int{last, batch})
+		last = next
+		if batch == keep {
+			break
+		}
+	}
+	return bounds
+}
+
+// exportJchfBatches serializes msgs and enqueues Outputs, honoring MaxFlowsPerMessage.
+// cb is attached when non-nil (flow path); internal metrics pass nil.
+func (kc *KTranslate) exportJchfBatches(msgs []*kt.JCHF, keep int, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error), logLabel string) {
+	for _, span := range jchfExportSliceBounds(kc.config.MaxFlowsPerMessage, keep) {
+		ser, err := seri(msgs[span[0]:span[1]], serBuf)
+		if err != nil {
+			kc.log.Errorf("There was an error when converting to %s: %v.", logLabel, err)
+		} else if ser != nil {
+			ser.CB = cb
+			kc.msgsc <- ser
+		}
+	}
+}
+
 // This processes data from the non-kentik input sets.
 func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf []byte, cb func(error), seri func([]*kt.JCHF, []byte) (*kt.Output, error)) {
 	if kc.geo != nil || kc.asn != nil || kc.enricher != nil {
@@ -504,26 +548,7 @@ func (kc *KTranslate) handleInput(ctx context.Context, msgs []*kt.JCHF, serBuf [
 			kc.log.Debugf("Reduced input from %d to %d", len(msgs), keep)
 		}
 
-		// Ship all the logs out, according to max flows per message.
-		last := 0
-		for next := kc.config.MaxFlowsPerMessage; next < keep+kc.config.MaxFlowsPerMessage; next += kc.config.MaxFlowsPerMessage {
-			batch := next
-			if batch > keep {
-				batch = keep
-			}
-			ser, err := seri(msgs[last:batch], serBuf)
-			if err != nil {
-				kc.log.Errorf("There was an error when converting to native: %v.", err)
-			} else if ser != nil {
-				ser.CB = cb
-				kc.msgsc <- ser
-			}
-			last = next
-
-			if batch == keep { // We're done here, no need to send more.
-				break
-			}
-		}
+		kc.exportJchfBatches(msgs, keep, serBuf, cb, seri, "native")
 	}
 
 	kc.metrics.InputQ.Mark(int64(len(msgs)))
@@ -575,7 +600,17 @@ func (kc *KTranslate) monitorMetricsInput(ctx context.Context, seri func([]*kt.J
 	for {
 		select {
 		case msgs := <-kc.metricsChan:
-			kc.handleInput(ctx, msgs, serBuf, nil, seri)
+			// Internal jchf health metrics bypass rollup accumulation (rollup.Add never runs).
+			// With RollupAndAlpha=true, user flows still pass through rollups before export;
+			// internal CHF counters intentionally skip that path so health gauges stay raw.
+			// InputQ is not updated here — it tracks user-facing volume through handleInput only.
+			// When format_metric matches format we reuse kc.format.To; OtelFormat serializes
+			// gauge registration under f.mux (see pkg/formats/otel/otel.go).
+			logLabel := kc.config.FormatMetric
+			if logLabel == "" {
+				logLabel = string(formats.FORMAT_NRM)
+			}
+			kc.exportJchfBatches(msgs, len(msgs), serBuf, nil, seri, logLabel)
 		case <-ctx.Done():
 			kc.log.Infof("monitorMetricsInput Done")
 			return
@@ -822,19 +857,27 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.http = sh
 	}
 
-	// If we're sending self metrics via a chan to sinks. This one always get sent via nrm.
+	// If we're sending self metrics via a chan to sinks.
 	if kc.metricsChan != nil {
-		// Set up formatter
-		format := formats.Format(formats.FORMAT_NRM)
+		metricFormat := formats.Format(formats.FORMAT_NRM)
 		if kc.config.FormatMetric != "" {
-			format = formats.Format(kc.config.FormatMetric)
+			metricFormat = formats.Format(kc.config.FormatMetric)
 		}
 
-		fmtr, err := formats.NewFormat(ctx, format, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config, kc.logTee)
-		if err != nil {
-			return err
+		var metricsFmtr formats.Formatter
+		if metricFormat == format {
+			// Reuse the main formatter when metric export uses the same encoding.
+			// A second otel formatter would replace the global MeterProvider and
+			// drop internal (jchf) metrics on flow-only receivers.
+			metricsFmtr = kc.format
+		} else {
+			mf, err := formats.NewFormat(ctx, metricFormat, kc.log.GetLogger().GetUnderlyingLogger(), kc.registry, compression, kc.config, kc.logTee)
+			if err != nil {
+				return err
+			}
+			metricsFmtr = mf
 		}
-		go kc.monitorMetricsInput(ctx, fmtr.To)
+		go kc.monitorMetricsInput(ctx, metricsFmtr.To)
 	}
 
 	kc.log.Infof("System running with format %s, compression %s, max flows: %d, sample rate %d:1 after %d", kc.config.Format, kc.config.Compression, kc.config.MaxFlowsPerMessage, kc.config.SampleRate, kc.config.SampleMin)
