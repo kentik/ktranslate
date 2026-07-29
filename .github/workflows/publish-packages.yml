@@ -13,6 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set MMDB cache key
+        run: echo "MMDB_CACHE_WEEK=$(date -u +%G-%V)" >> $GITHUB_ENV
+
       - name: Cache MM DBs
         id: mm_cache
         uses: actions/cache@v4
@@ -20,10 +23,10 @@ jobs:
           path: |
             config/GeoLite2-Country.mmdb
             config/GeoLite2-ASN.mmdb
-          # bump the date-based key weekly so DBs still refresh periodically
-          key: mmdb-${{ github.run_id }}-${{ github.run_attempt }}
+          # bump the key weekly so DBs still refresh periodically
+          key: mmdb-${{ runner.os }}-${{ github.ref_name }}-${{ env.MMDB_CACHE_WEEK }}
           restore-keys: |
-            mmdb-
+            mmdb-${{ runner.os }}-${{ github.ref_name }}-
 
       - name: Install MM DBs
         if: steps.mm_cache.outputs.cache-hit != 'true'
