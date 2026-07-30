@@ -75,7 +75,7 @@ func SetAttr(attr map[string]interface{}, in *kt.JCHF, metrics map[string]kt.Met
 				attr[k] = vt
 			}
 		default:
-			panic(fmt.Sprintf("Unknown type: %v", v.(int32)))
+			panic(fmt.Sprintf("Unknown type for key %q: %T", k, v))
 		}
 	}
 
