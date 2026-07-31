@@ -420,6 +420,9 @@ func applyFlags(cfg *ktranslate.Config) error {
 				}
 			case "ddog_url":
 				cfg.DDogSink.URL = val
+			// pkg/km
+			case "km_value_map":
+				cfg.KMUdr = val
 			// pkg/maps/file
 			case "tag_map":
 				cfg.TagMapFile = val

@@ -118,71 +118,72 @@ type IfaceID IntId
 func (id IfaceID) Itoa() string { return strconv.Itoa(int(id)) }
 
 type JCHF struct {
-	Timestamp               int64             `json:"timestamp"`
-	DstAs                   uint32            `json:"dst_as"`
-	DstGeo                  string            `json:"dst_geo"`
-	HeaderLen               uint32            `json:"header_len"`
-	InBytes                 uint64            `json:"in_bytes"`
-	InPkts                  uint64            `json:"in_pkts"`
-	InputPort               IfaceID           `json:"input_port"`
-	IpSize                  uint32            `json:"ip_size"`
-	DstAddr                 string            `json:"dst_addr"`
-	SrcAddr                 string            `json:"src_addr"`
-	L4DstPort               uint32            `json:"l4_dst_port"`
-	L4SrcPort               uint32            `json:"l4_src_port"`
-	OutputPort              IfaceID           `json:"output_port"`
-	Protocol                string            `json:"protocol"`
-	SampledPacketSize       uint32            `json:"sampled_packet_size"`
-	SrcAs                   uint32            `json:"src_as"`
-	SrcGeo                  string            `json:"src_geo"`
-	TcpFlags                uint32            `json:"tcp_flags"`
-	Tos                     uint32            `json:"tos"`
-	VlanIn                  uint32            `json:"vlan_in"`
-	VlanOut                 uint32            `json:"vlan_out"`
-	NextHop                 string            `json:"next_hop"`
-	MplsType                uint32            `json:"mpls_type"`
-	OutBytes                uint64            `json:"out_bytes"`
-	OutPkts                 uint64            `json:"out_pkts"`
-	TcpRetransmit           uint32            `json:"tcp_rx"`
-	SrcFlowTags             string            `json:"src_flow_tags"`
-	DstFlowTags             string            `json:"dst_flow_tags"`
-	SampleRate              uint32            `json:"sample_rate"`
-	DeviceId                DeviceID          `json:"device_id"`
-	DeviceName              string            `json:"device_name"`
-	CompanyId               Cid               `json:"company_id"`
-	DstBgpAsPath            string            `json:"dst_bgp_as_path"`
-	DstBgpCommunity         string            `json:"dst_bgp_comm"`
-	SrcBgpAsPath            string            `json:"src_bpg_as_path"`
-	SrcBgpCommunity         string            `json:"src_bgp_comm"`
-	SrcNextHopAs            uint32            `json:"src_nexthop_as"`
-	DstNextHopAs            uint32            `json:"dst_nexthop_as"`
-	SrcGeoRegion            string            `json:"src_geo_region"`
-	DstGeoRegion            string            `json:"dst_geo_region"`
-	SrcGeoCity              string            `json:"src_geo_city"`
-	DstGeoCity              string            `json:"dst_geo_city"`
-	DstNextHop              string            `json:"dst_nexthop"`
-	SrcNextHop              string            `json:"src_nexthop"`
-	SrcRoutePrefix          string            `json:"src_route_prefix"`
-	DstRoutePrefix          string            `json:"dst_route_prefix"`
-	SrcSecondAsn            uint32            `json:"src_second_asn"`
-	DstSecondAsn            uint32            `json:"dst_second_asn"`
-	SrcThirdAsn             uint32            `json:"src_third_asn"`
-	DstThirdAsn             uint32            `json:"dst_third_asn"`
-	SrcEthMac               string            `json:"src_eth_mac"`
-	DstEthMac               string            `json:"dst_eth_mac"`
-	InputIntDesc            string            `json:"input_int_desc"`
-	OutputIntDesc           string            `json:"output_int_desc"`
-	InputIntAlias           string            `json:"input_int_alias"`
-	OutputIntAlias          string            `json:"output_int_alias"`
-	InputInterfaceCapacity  int64             `json:"input_int_capacity"`
-	OutputInterfaceCapacity int64             `json:"output_int_capacity"`
-	InputInterfaceIP        string            `json:"input_int_ip"`
-	OutputInterfaceIP       string            `json:"output_int_ip"`
-	CustomStr               map[string]string `json:"custom_str,omitempty"`
-	CustomInt               map[string]int32  `json:"custom_int,omitempty"`
-	CustomBigInt            map[string]int64  `json:"custom_bigint,omitempty"`
-	EventType               string            `json:"eventType"`
-	Provider                Provider          `json:"provider"` // Entity type for this data.
+	Timestamp               int64              `json:"timestamp"`
+	DstAs                   uint32             `json:"dst_as"`
+	DstGeo                  string             `json:"dst_geo"`
+	HeaderLen               uint32             `json:"header_len"`
+	InBytes                 uint64             `json:"in_bytes"`
+	InPkts                  uint64             `json:"in_pkts"`
+	InputPort               IfaceID            `json:"input_port"`
+	IpSize                  uint32             `json:"ip_size"`
+	DstAddr                 string             `json:"dst_addr"`
+	SrcAddr                 string             `json:"src_addr"`
+	L4DstPort               uint32             `json:"l4_dst_port"`
+	L4SrcPort               uint32             `json:"l4_src_port"`
+	OutputPort              IfaceID            `json:"output_port"`
+	Protocol                string             `json:"protocol"`
+	SampledPacketSize       uint32             `json:"sampled_packet_size"`
+	SrcAs                   uint32             `json:"src_as"`
+	SrcGeo                  string             `json:"src_geo"`
+	TcpFlags                uint32             `json:"tcp_flags"`
+	Tos                     uint32             `json:"tos"`
+	VlanIn                  uint32             `json:"vlan_in"`
+	VlanOut                 uint32             `json:"vlan_out"`
+	NextHop                 string             `json:"next_hop"`
+	MplsType                uint32             `json:"mpls_type"`
+	OutBytes                uint64             `json:"out_bytes"`
+	OutPkts                 uint64             `json:"out_pkts"`
+	TcpRetransmit           uint32             `json:"tcp_rx"`
+	SrcFlowTags             string             `json:"src_flow_tags"`
+	DstFlowTags             string             `json:"dst_flow_tags"`
+	SampleRate              uint32             `json:"sample_rate"`
+	DeviceId                DeviceID           `json:"device_id"`
+	DeviceName              string             `json:"device_name"`
+	CompanyId               Cid                `json:"company_id"`
+	DstBgpAsPath            string             `json:"dst_bgp_as_path"`
+	DstBgpCommunity         string             `json:"dst_bgp_comm"`
+	SrcBgpAsPath            string             `json:"src_bpg_as_path"`
+	SrcBgpCommunity         string             `json:"src_bgp_comm"`
+	SrcNextHopAs            uint32             `json:"src_nexthop_as"`
+	DstNextHopAs            uint32             `json:"dst_nexthop_as"`
+	SrcGeoRegion            string             `json:"src_geo_region"`
+	DstGeoRegion            string             `json:"dst_geo_region"`
+	SrcGeoCity              string             `json:"src_geo_city"`
+	DstGeoCity              string             `json:"dst_geo_city"`
+	DstNextHop              string             `json:"dst_nexthop"`
+	SrcNextHop              string             `json:"src_nexthop"`
+	SrcRoutePrefix          string             `json:"src_route_prefix"`
+	DstRoutePrefix          string             `json:"dst_route_prefix"`
+	SrcSecondAsn            uint32             `json:"src_second_asn"`
+	DstSecondAsn            uint32             `json:"dst_second_asn"`
+	SrcThirdAsn             uint32             `json:"src_third_asn"`
+	DstThirdAsn             uint32             `json:"dst_third_asn"`
+	SrcEthMac               string             `json:"src_eth_mac"`
+	DstEthMac               string             `json:"dst_eth_mac"`
+	InputIntDesc            string             `json:"input_int_desc"`
+	OutputIntDesc           string             `json:"output_int_desc"`
+	InputIntAlias           string             `json:"input_int_alias"`
+	OutputIntAlias          string             `json:"output_int_alias"`
+	InputInterfaceCapacity  int64              `json:"input_int_capacity"`
+	OutputInterfaceCapacity int64              `json:"output_int_capacity"`
+	InputInterfaceIP        string             `json:"input_int_ip"`
+	OutputInterfaceIP       string             `json:"output_int_ip"`
+	CustomStr               map[string]string  `json:"custom_str,omitempty"`
+	CustomInt               map[string]int32   `json:"custom_int,omitempty"`
+	CustomBigInt            map[string]int64   `json:"custom_bigint,omitempty"`
+	CustomFloat             map[string]float32 `json:"custom_float,omitempty"`
+	EventType               string             `json:"eventType"`
+	Provider                Provider           `json:"provider"` // Entity type for this data.
 	avroSet                 map[string]interface{}
 	hasSetAvro              bool
 	CustomMetrics           map[string]MetricInfo          `json:"-"`
@@ -234,6 +235,11 @@ func (j *JCHF) Flatten() map[string]interface{} {
 			}
 			delete(mapr, k)
 		case map[string]int64:
+			for ki, vi := range mv {
+				mapr[ki] = vi
+			}
+			delete(mapr, k)
+		case map[string]float32:
 			for ki, vi := range mv {
 				mapr[ki] = vi
 			}
@@ -314,6 +320,7 @@ func (j *JCHF) ToMap() map[string]interface{} {
 	j.avroSet["custom_str"] = j.CustomStr
 	j.avroSet["custom_int"] = j.CustomInt
 	j.avroSet["custom_bigint"] = j.CustomBigInt
+	j.avroSet["custom_float"] = j.CustomFloat
 	j.avroSet["eventType"] = j.EventType
 	j.avroSet["provider"] = j.Provider
 	j.hasSetAvro = true
@@ -325,6 +332,7 @@ func (j *JCHF) SetMap() {
 	j.CustomStr = map[string]string{}
 	j.CustomInt = map[string]int32{}
 	j.CustomBigInt = map[string]int64{}
+	j.CustomFloat = map[string]float32{}
 	j.CustomMetrics = map[string]MetricInfo{}
 	j.CustomTables = map[string]DeviceTableMetadata{}
 	j.MatchAttr = map[string]*regexp.Regexp{}
