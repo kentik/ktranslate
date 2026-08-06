@@ -292,6 +292,11 @@ func MapDeviceDetailedToDevice(dd *devicepb.DeviceDetailed) (*Device, error) {
 }
 
 func mapInterfaces(deviceID string, protos []*devicepb.Interface) map[IfaceID]Interface {
+	wantDevID, err := strconv.ParseInt(deviceID, 10, 64)
+	if err != nil {
+		wantDevID = 0
+	}
+
 	ifaceMap := make(map[IfaceID]Interface, len(protos))
 
 	for _, p := range protos {
@@ -304,9 +309,13 @@ func mapInterfaces(deviceID string, protos []*devicepb.Interface) map[IfaceID]In
 			snmpID = 0
 		}
 
-		devID, err := strconv.ParseInt(deviceID, 10, 64)
+		devID, err := strconv.ParseInt(p.GetDeviceId(), 10, 64) // read from the interface itself
 		if err != nil {
 			devID = 0
+		}
+
+		if devID != wantDevID { // skip interfaces that don't belong to this device
+			continue
 		}
 
 		snmpSpeed, err := strconv.ParseInt(p.GetSnmpSpeed(), 10, 64)
