@@ -417,6 +417,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 	}
 
 	// Check if there is ultimate exit data interface and pull this in also.
+	/** Turn this off for now incase its muddying the waters.
 	if udid, ok := dst.CustomInt["ult_exit_device_id"]; ok {
 		if d := kc.apic.GetDevice(ctx, dst.CompanyId, kt.DeviceID(udid)); d != nil {
 			if ui, ok := dst.CustomInt["ult_exit_port"]; ok {
@@ -428,6 +429,7 @@ func (kc *KTranslate) flowToJCHF(ctx context.Context, dst *kt.JCHF, src *Flow, c
 			}
 		}
 	}
+	*/
 
 	// Do we need to remap any of the custom strings?
 	for k, v := range dst.CustomStr {
