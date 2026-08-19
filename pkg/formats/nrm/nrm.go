@@ -125,7 +125,6 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 		}
 	}
 
-
 	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.
 	if err != nil {
 		return nil, err
