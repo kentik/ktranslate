@@ -120,7 +120,7 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 				}
 			}
 		}
-	if strVal, ok := ms.Metrics[i].Value.(string); ok {
+		if strVal, ok := ms.Metrics[i].Value.(string); ok {
 			ms.Metrics[i].Value = kt.SanitizeUTF8(strVal)
 		}
 	}
