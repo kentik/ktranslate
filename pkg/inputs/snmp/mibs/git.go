@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-git/go-git/v6"
 	"github.com/go-git/go-git/v6/plumbing"
+	"github.com/go-git/go-git/v6/plumbing/client"
 )
 
 func cloneFromGit(ctx context.Context, profileDir string, gitUrl string, gitHash string, log logger.ContextL) error {
@@ -19,8 +20,10 @@ func cloneFromGit(ctx context.Context, profileDir string, gitUrl string, gitHash
 	}
 
 	cloneOpts := &git.CloneOptions{
-		URL:      gitUrl,
-		Auth:     snmp_util.GetGitCreds(),
+		URL: gitUrl,
+		ClientOptions: []client.Option{
+			client.WithHTTPAuth(snmp_util.GetGitCreds()),
+		},
 		Progress: io.Discard,
 	}
 	// If a branch is specified, clone that branch directly instead of

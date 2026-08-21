@@ -21,6 +21,7 @@ import (
 	"github.com/go-git/go-git/v6"
 	"github.com/go-git/go-git/v6/config"
 	"github.com/go-git/go-git/v6/plumbing"
+	"github.com/go-git/go-git/v6/plumbing/client"
 	"github.com/go-git/go-git/v6/plumbing/object"
 	githttp "github.com/go-git/go-git/v6/plumbing/transport/http"
 )
@@ -204,7 +205,9 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 
 	// Push repo.
 	return r.Push(&git.PushOptions{
-		Auth:     GetGitCreds(),
+		ClientOptions: []client.Option{
+			client.WithHTTPAuth(GetGitCreds()),
+		},
 		Force:    true,
 		RefSpecs: refSpecSet,
 	})
@@ -244,8 +247,10 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	filePath := filepath.Clean(path.Join(segments[2:]...))
 
 	cloneOpts := &git.CloneOptions{
-		URL:      gitRepo,
-		Auth:     GetGitCreds(),
+		URL: gitRepo,
+		ClientOptions: []client.Option{
+			client.WithHTTPAuth(GetGitCreds()),
+		},
 		Progress: io.Discard,
 	}
 	// If a branch is specified, clone that branch directly instead of
