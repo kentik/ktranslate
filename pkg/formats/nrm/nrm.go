@@ -112,6 +112,18 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	if len(ms.Metrics) == 0 {
 		return nil, nil
 	}
+	for i := range ms.Metrics {
+		if ms.Metrics[i].Attributes != nil {
+			for k, v := range ms.Metrics[i].Attributes {
+				if strVal, ok := v.(string); ok {
+					ms.Metrics[i].Attributes[k] = kt.SanitizeUTF8(strVal)
+				}
+			}
+		}
+		if strVal, ok := ms.Metrics[i].Value.(string); ok {
+			ms.Metrics[i].Value = kt.SanitizeUTF8(strVal)
+		}
+	}
 
 	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.
 	if err != nil {
