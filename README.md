@@ -56,9 +56,9 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -flow_only
     	If true, don't poll snmp devices.
   -format string
-    	Format to convert kflow to: (json|flat_json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow) (default "flat_json")
+    	Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog|otel|snmp|parquet) (default "flat_json")
   -format_rollup string
-    	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow)
+    	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)
   -gcloud_bucket string
     	GCloud Storage Bucket to write flows to
   -gcloud_content_type string
@@ -130,7 +130,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nf.reuserport
     	Enable so_reuseport for Sflow/NetFlow/IPFIX
   -nf.source string
-    	Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow
+    	Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan|auto
   -nf.workers int
     	Number of workers per flow collector (default 1)
   -nr_account_id string
@@ -178,7 +178,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -service_name string
     	Service identifier (default "ktranslate")
   -sinks string
-    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|prometheus|file|s3|gcloud) (default "stdout")
+    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog|otel|null) (default "stdout")
   -snmp string
     	yaml file containing snmp config to use
   -snmp_discovery
@@ -236,7 +236,20 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	Run VPC Flow Ingest
 ```
 
+
+# Further documentation
+
+The flag list above is a snapshot. `ktranslate -h` on a current binary is authoritative for names.
+
+Newer operator guides live on the [wiki](https://github.com/kentik/ktranslate/wiki):
+
+* [Sending data with OTLP](https://github.com/kentik/ktranslate/wiki/Sending-Data-with-OTLP) (`-format=otel`, Grafana Cloud / Alloy)
+* [NetBox discovery](https://github.com/kentik/ktranslate/wiki/NetBox-Discovery)
+* [Sinks, formats, and rollups](https://github.com/kentik/ktranslate/wiki/Sinks-Formats-and-Rollups) (Kafka SASL/TLS, S3 endpoints, parquet, rollup flags)
+* [Advanced Configuration](https://github.com/kentik/ktranslate/wiki/Advanced-Ktranslate-Configuration) (`snmp-base.yaml`, profile git URL)
+
 # pprof
+
 To expose profiling endpoints, use the `-metalisten` flag. This can be used with tools such as
 `go tool pprof` to capture and view the data. For example, if `ktranslate` was started with
 `-metalisten :6060`:
