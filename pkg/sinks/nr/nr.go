@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -71,12 +72,27 @@ var (
 			"logs":    "https://log-api.jp.nr-data.net/log/v1",
 		},
 	}
+
+	// reRegionPrefix matches from the start of a New Relic license key up to
+	// (and including) the first "x", mirroring the prefix scheme the New Relic
+	// Infrastructure Agent uses to auto-detect a region from a license key.
+	reRegionPrefix = regexp.MustCompile(`^.+?x`)
+
+	// licenseKeyRegionCodes maps the region code embedded in a license key
+	// prefix (the matched prefix above with its trailing "x" removed) to the
+	// region constants used by the regions map. US keys have no prefix and
+	// so never match reRegionPrefix; unrecognized codes are treated the same
+	// as "no match".
+	licenseKeyRegionCodes = map[string]string{
+		"eu01": REGION_EU,
+		"jp":   REGION_JP,
+	}
 )
 
 func init() {
 	flag.StringVar(&nrAccount, "nr_account_id", kt.LookupEnvString("NR_ACCOUNT_ID", ""), "If set, sends flow to New Relic")
 	flag.BoolVar(&estimateSize, "nr_estimate_only", false, "If true, record size of inputs to NR but don't actually send anything")
-	flag.StringVar(&nrRegion, "nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU|GOV|JP")
+	flag.StringVar(&nrRegion, "nr_region", kt.LookupEnvString("NR_REGION", ""), "NR Region to use. US|EU|GOV|JP. If not set, this is auto-detected from the NEW_RELIC_API_KEY license key prefix (EU/JP only; unrecognized keys default to US).")
 	flag.BoolVar(&nrCheckJson, "nr_check_json", false, "Verify body is valid json before sending on")
 }
 
@@ -138,20 +154,44 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, tooBig chan in
 	return &nr, nil
 }
 
+// detectRegionFromLicenseKey infers a New Relic region from the prefix of a
+// license key, using the same scheme as the New Relic Infrastructure Agent:
+// the key up to and including its first "x" is the prefix, and the prefix
+// with the trailing "x" removed is the region code. Returns "" if the key
+// doesn't match (e.g. a US key, which has no prefix) or the code isn't one
+// of the regions we know how to map.
+func detectRegionFromLicenseKey(key string) string {
+	m := reRegionPrefix.FindString(key)
+	if m == "" {
+		return ""
+	}
+	code := strings.TrimSuffix(m, "x")
+	return licenseKeyRegionCodes[code] // Zero value "" if not found.
+}
+
 func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt.Compression, fmtr formats.Formatter) error {
-	// set region if this is set.
+	// set region if this is set, either explicitly or auto-detected from the license key.
 	rval := strings.ToLower(s.config.Region)
+	if rval == "" {
+		if detected := detectRegionFromLicenseKey(s.NRApiKey); detected != "" {
+			s.Infof("Auto-detected New Relic region '%s' from license key prefix.", detected)
+			rval = detected
+		}
+	}
+
+	eventsUrl, metricsUrl, logsUrl := NrUrl, NrMetricsUrl, NrLogUrl
 	switch rval {
-	case "": // noop
+	case "": // noop, use the US defaults set above.
 	case REGION_US, REGION_EU, REGION_GOV, REGION_US_STAGING, REGION_JP:
-		NrUrl = regions[rval]["events"]
-		NrMetricsUrl = regions[rval]["metrics"]
-		s.NRUrlLog = regions[rval]["logs"]
+		eventsUrl = regions[rval]["events"]
+		metricsUrl = regions[rval]["metrics"]
+		logsUrl = regions[rval]["logs"]
 	default:
 		return fmt.Errorf("You used an unsupported New Relic One region: %s. The possible values are EU, US, GOV, JP and US_STAGE.", s.config.Region)
 	}
 
-	s.NRUrl = NrUrl
+	s.NRUrl = eventsUrl
+	s.NRUrlLog = logsUrl
 	s.format = format
 	s.compression = compression
 
@@ -191,13 +231,9 @@ func (s *NRSink) Init(ctx context.Context, format formats.Format, compression kt
 		s.NRUrl = fmt.Sprintf(s.NRUrl, s.NRAccount)
 	}
 	s.NRUrlEvent = s.NRUrl
-	s.NRUrlMetric = NrMetricsUrl
+	s.NRUrlMetric = metricsUrl
 	if s.format == formats.FORMAT_NRM {
-		s.NRUrl = NrMetricsUrl
-	}
-
-	if s.NRUrlLog == "" {
-		s.NRUrlLog = NrLogUrl
+		s.NRUrl = metricsUrl
 	}
 
 	// Send logs on to NR if this is set.

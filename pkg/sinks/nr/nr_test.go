@@ -47,3 +47,22 @@ func TestCheckJson(t *testing.T) {
 	err = s.doCheckJson(kt.NewOutput(buf.Bytes()))
 	assert.Error(err)
 }
+
+func TestDetectRegionFromLicenseKey(t *testing.T) {
+	assert := assert.New(t)
+
+	// JP-style prefix: "jpx" followed by arbitrary key material.
+	assert.Equal(REGION_JP, detectRegionFromLicenseKey("jpxSOMEDUMMYKEYMATERIAL"))
+
+	// EU-style prefix: "eu01x" followed by arbitrary key material.
+	assert.Equal(REGION_EU, detectRegionFromLicenseKey("eu01xSOMEDUMMYKEYMATERIAL"))
+
+	// US-style key: no prefix, so no "x" delimiter to match on.
+	assert.Equal("", detectRegionFromLicenseKey("SOMEDUMMYKEYMATERIALNOPREFIX"))
+
+	// Empty key.
+	assert.Equal("", detectRegionFromLicenseKey(""))
+
+	// Unrecognized region code should not error, just fall through to the default.
+	assert.Equal("", detectRegionFromLicenseKey("zz01xSOMEDUMMYKEYMATERIAL"))
+}
