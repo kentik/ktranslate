@@ -140,7 +140,7 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nr_estimate_only
     	If true, record size of inputs to NR but don't actually send anything
   -nr_region string
-       NR Region to use. US|EU|GOV|JP
+       NR Region to use. US|EU|GOV|JP. If not set, this is auto-detected from the NEW_RELIC_API_KEY license key prefix (EU/JP only; unrecognized keys default to US).
   -olly_dataset string
     	Olly dataset name
   -olly_write_key string
