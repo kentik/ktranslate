@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"strconv"
 	"sync"
 
 	"github.com/gogo/protobuf/proto"
@@ -120,6 +121,10 @@ func (f *RemotePromFormat) toMetric(in *kt.JCHF) []prompb.TimeSeries {
 		return f.fromSnmpDeviceMetric(in)
 	case kt.KENTIK_EVENT_SNMP_INT_METRIC:
 		return f.fromSnmpInterfaceMetric(in)
+	case kt.KENTIK_EVENT_SYNTH:
+		return f.fromKSynth(in)
+	case kt.KENTIK_EVENT_SYNTH_GEST:
+		return f.fromKSyngest(in)
 	case kt.KENTIK_EVENT_SNMP_METADATA:
 		return f.fromSnmpMetadata(in)
 	default:
@@ -279,6 +284,119 @@ func (f *RemotePromFormat) fromSnmpMetadata(in *kt.JCHF) []prompb.TimeSeries {
 	}
 
 	return nil
+}
+
+func (f *RemotePromFormat) fromKSynth(in *kt.JCHF) []prompb.TimeSeries {
+	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
+	attr := map[string]interface{}{}
+	f.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.RUnlock()
+
+	for k, v := range attr { // White list only a few attributes here (shared with the prometheus format).
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
+		}
+	}
+
+	baseLabels := make([]prompb.Label, 0, len(attr)+1)
+	for k, v := range attr {
+		var value string
+		switch val := v.(type) {
+		case string:
+			value = val
+		case int64, int32, int:
+			value = fmt.Sprintf("%v", val)
+		}
+		if value == "" {
+			continue
+		}
+		baseLabels = append(baseLabels, prompb.Label{Name: k, Value: value})
+	}
+
+	mkSeries := func(name string, value float64) prompb.TimeSeries {
+		labels := make([]prompb.Label, 0, len(baseLabels)+1)
+		labels = append(labels, prompb.Label{Name: "name", Value: "kentik.synth." + name})
+		labels = append(labels, baseLabels...)
+		return prompb.TimeSeries{
+			Labels: labels,
+			Samples: []prompb.Sample{{
+				Timestamp: ptime.FromFloatSeconds(float64(in.Timestamp)),
+				Value:     value,
+			}},
+		}
+	}
+
+	res := make([]prompb.TimeSeries, 0, len(metrics)+1)
+	for m, name := range metrics {
+		switch name.Name {
+		case "avg_rtt", "jit_rtt", "time", "code", "port", "status", "ttlb", "size", "trx_time", "validation", "lost", "sent":
+			res = append(res, mkSeries(name.Name, float64(in.CustomInt[m])))
+		}
+	}
+
+	// Enumerated outcome (0=ok, 1=timeout, 2=error) so failures are still exported.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	res = append(res, mkSeries("outcome", float64(outcome)))
+
+	return res
+}
+
+func (f *RemotePromFormat) fromKSyngest(in *kt.JCHF) []prompb.TimeSeries {
+	metrics := util.GetSyngestMetricNameSet()
+	attr := map[string]interface{}{}
+	f.RLock()
+	util.SetAttr(attr, in, metrics, f.lastMetadata[in.DeviceName], false)
+	f.RUnlock()
+
+	for k, v := range attr { // White list only a few attributes here (shared with the prometheus format).
+		if !synthWLAttr[k] {
+			delete(attr, k)
+		}
+		if k == "test_id" { // Force this to be a string.
+			if vi, ok := v.(int); ok {
+				attr[k] = strconv.Itoa(vi)
+			}
+		}
+	}
+
+	baseLabels := make([]prompb.Label, 0, len(attr)+1)
+	for k, v := range attr {
+		var value string
+		switch val := v.(type) {
+		case string:
+			value = val
+		case int64, int32, int:
+			value = fmt.Sprintf("%v", val)
+		}
+		if value == "" {
+			continue
+		}
+		baseLabels = append(baseLabels, prompb.Label{Name: k, Value: value})
+	}
+
+	res := make([]prompb.TimeSeries, 0, len(metrics))
+	for m, name := range metrics {
+		if in.CustomInt[m] > 0 {
+			labels := make([]prompb.Label, 0, len(baseLabels)+1)
+			labels = append(labels, prompb.Label{Name: "name", Value: "kentik.syngest." + name.Name})
+			labels = append(labels, baseLabels...)
+			res = append(res, prompb.TimeSeries{
+				Labels: labels,
+				Samples: []prompb.Sample{{
+					Timestamp: ptime.FromFloatSeconds(float64(in.Timestamp)),
+					Value:     float64(in.CustomInt[m]),
+				}},
+			})
+		}
+	}
+
+	return res
 }
 
 func (f *RemotePromFormat) fromKflow(in *kt.JCHF) []prompb.TimeSeries {
