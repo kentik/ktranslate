@@ -470,6 +470,10 @@ func (f *InfluxFormat) fromKSynth(in *kt.JCHF) []InfluxData {
 		}
 	}
 
+	// Enumerated outcome (0=ok, 1=timeout, 2=error) so failures are still exported.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	ms["outcome"] = outcome
+
 	return []InfluxData{{
 		Name:      f.config.MeasurementPrefix + "ksynth",
 		Fields:    ms,

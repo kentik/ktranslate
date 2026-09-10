@@ -358,6 +358,7 @@ var (
 		"test_name":                  true,
 		"test_type":                  true,
 		"test_url":                   true,
+		"result_type_str":            true,
 		"src_host":                   true,
 		"dst_host":                   true,
 		"src_cloud_region":           true,
@@ -437,10 +438,6 @@ func (f *NRMFormat) fromKSyngest(in *kt.JCHF) []NRMetric {
 }
 
 func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
-	if in.CustomInt["result_type"] <= 1 {
-		return nil // Don't worry about timeouts and errors for now.
-	}
-
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
 	f.mux.RLock()
@@ -497,6 +494,15 @@ func (f *NRMFormat) fromKSynth(in *kt.JCHF) []NRMetric {
 			Interval:   60 * 1000000,
 		})
 	}
+
+	// Enumerated outcome (0=ok, 1=timeout, 2=error) so failures are still exported.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	ms = append(ms, NRMetric{
+		Name:       "kentik.synth.outcome",
+		Type:       NR_GAUGE_TYPE,
+		Value:      outcome,
+		Attributes: attr,
+	})
 
 	return ms
 }

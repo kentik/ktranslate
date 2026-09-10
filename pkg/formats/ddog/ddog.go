@@ -145,6 +145,20 @@ func (f *DDogFormat) fromKSynth(in *kt.JCHF, ms *datadogV2.MetricPayload) error 
 		}
 	}
 
+	// Enumerated outcome (0=ok, 1=timeout, 2=error) so failures are still exported.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	ms.Series = append(ms.Series, datadogV2.MetricSeries{
+		Metric: "kentik.synth.outcome",
+		Type:   datadogV2.METRICINTAKETYPE_GAUGE.Ptr(),
+		Points: []datadogV2.MetricPoint{
+			{
+				Timestamp: datadog.PtrInt64(in.Timestamp),
+				Value:     datadog.PtrFloat64(float64(outcome)),
+			},
+		},
+		Tags: tags,
+	})
+
 	return nil
 }
 

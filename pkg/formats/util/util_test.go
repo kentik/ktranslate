@@ -399,3 +399,25 @@ func TestCopyAttrforSNMP(t *testing.T) {
 	res = CopyAttrForSnmp(input, "myTable", name, nil, true, true)
 	assert.Equal(nil, res["src_addr"], res)
 }
+
+func TestGetSynthOutcome(t *testing.T) {
+	assert := assert.New(t)
+
+	tests := []struct {
+		rt    int32
+		value int64
+		str   string
+	}{
+		{0, SynthOutcomeError, "error"},
+		{1, SynthOutcomeTimeout, "timeout"},
+		{2, SynthOutcomeOK, "ok"},
+		{4, SynthOutcomeOK, "ok"},
+		{10, SynthOutcomeOK, "ok"},
+	}
+
+	for _, tt := range tests {
+		value, str := GetSynthOutcome(tt.rt)
+		assert.Equal(tt.value, value, tt.rt)
+		assert.Equal(tt.str, str, tt.rt)
+	}
+}

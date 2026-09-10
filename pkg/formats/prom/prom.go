@@ -234,6 +234,7 @@ var (
 		"test_name":              true,
 		"test_type":              true,
 		"test_url":               true,
+		"result_type_str":        true,
 		"src_host":               true,
 		"dst_host":               true,
 		"src_cloud_region":       true,
@@ -290,10 +291,6 @@ func (f *PromFormat) fromKSyngest(in *kt.JCHF) []PromData {
 }
 
 func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
-	if in.CustomInt["result_type"] <= 1 {
-		return nil // Don't worry about timeouts and errors for now.
-	}
-
 	rawStr := in.CustomStr["error_cause/trace_route"] // Pull this out early.
 	metrics := util.GetSynMetricNameSet(in.CustomInt["result_type"])
 	attr := map[string]interface{}{}
@@ -340,6 +337,14 @@ func (f *PromFormat) fromKSynth(in *kt.JCHF) []PromData {
 			})
 		}
 	}
+
+	// Enumerated outcome (0=ok, 1=timeout, 2=error) so failures are still exported.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	ms = append(ms, PromData{
+		Name:  "kentik:synth:outcome",
+		Value: float64(outcome),
+		Tags:  attr,
+	})
 
 	return ms
 }

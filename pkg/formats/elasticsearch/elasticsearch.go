@@ -177,6 +177,10 @@ func (f *ElasticsearchFormat) handleSynth(in *kt.JCHF) map[string]interface{} {
 
 	strip(attr) // Take out the rest here.
 
+	// Enumerated outcome (0=ok, 1=timeout, 2=error); set after strip so a 0 (ok) value is kept.
+	outcome, _ := util.GetSynthOutcome(in.CustomInt["result_type"])
+	attr["synth_outcome"] = outcome
+
 	return attr
 }
 
