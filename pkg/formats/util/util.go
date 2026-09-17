@@ -354,6 +354,26 @@ func GetSynMetricNameSet(rt int32) map[string]kt.MetricInfo {
 	return synMetrics[rt]
 }
 
+// Synth outcome states for the enumerated `outcome` metric. Higher is worse.
+const (
+	SynthOutcomeOK      int64 = 0
+	SynthOutcomeTimeout int64 = 1
+	SynthOutcomeError   int64 = 2
+)
+
+// GetSynthOutcome normalizes a synth result_type into an outcome value and label,
+// separating the failure state (error/timeout) from the test type (result_type >= 2).
+func GetSynthOutcome(rt int32) (int64, string) {
+	switch rt {
+	case 0:
+		return SynthOutcomeError, "error"
+	case 1:
+		return SynthOutcomeTimeout, "timeout"
+	default:
+		return SynthOutcomeOK, "ok"
+	}
+}
+
 // [aggregate_interval:0 app_protocol:18 avg_jitter:934 avg_latency:27366 avg_weighted_latency:0 configured_task_type:5 health_moment_task_type:5 jitter_health:300 latency_health:300 member_id:21241 packet_loss_health:300 rolling_avg_jitter:1127 rolling_avg_latency:27172 rolling_avg_weighted_latency:0 rolling_stddev_jitter:303 rolling_stddev_latency:452 size:0 status:0
 func GetSyngestMetricNameSet() map[string]kt.MetricInfo {
 	return map[string]kt.MetricInfo{

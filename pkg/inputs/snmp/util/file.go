@@ -205,15 +205,13 @@ func writeToGit(ctx context.Context, url *url.URL, payload []byte, perms fs.File
 
 	// Push repo.
 	return r.Push(&git.PushOptions{
-		ClientOptions: []client.Option{
-			client.WithHTTPAuth(GetGitCreds()),
-		},
-		Force:    true,
-		RefSpecs: refSpecSet,
+		ClientOptions: GetGitClientOptions(),
+		Force:         true,
+		RefSpecs:      refSpecSet,
 	})
 }
 
-func GetGitCreds() *githttp.BasicAuth {
+func getGitCreds() *githttp.BasicAuth {
 	token := os.Getenv(KT_GIT_ACCESS_TOKEN)
 	if token == "" {
 		return nil
@@ -228,6 +226,16 @@ func GetGitCreds() *githttp.BasicAuth {
 		Username: username,
 		Password: token,
 	}
+}
+
+func GetGitClientOptions() []client.Option {
+	res := []client.Option{}
+	auth := getGitCreds()
+	if auth != nil {
+		res = append(res, client.WithHTTPAuth(auth))
+	}
+
+	return res
 }
 
 func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.ReferenceName) (string, *git.Repository, error) {
@@ -247,11 +255,9 @@ func gitClone(ctx context.Context, url *url.URL, dir string, branch plumbing.Ref
 	filePath := filepath.Clean(path.Join(segments[2:]...))
 
 	cloneOpts := &git.CloneOptions{
-		URL: gitRepo,
-		ClientOptions: []client.Option{
-			client.WithHTTPAuth(GetGitCreds()),
-		},
-		Progress: io.Discard,
+		URL:           gitRepo,
+		ClientOptions: GetGitClientOptions(),
+		Progress:      io.Discard,
 	}
 	// If a branch is specified, clone that branch directly instead of
 	// cloning the default branch and manually rewriting references.
