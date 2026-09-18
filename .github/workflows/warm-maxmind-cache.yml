@@ -1,0 +1,38 @@
+name: Warm MaxMind cache
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # once daily, off-peak, avoiding the exact hour mark
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  warm-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache key date
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache MaxMind databases
+        id: maxmind-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: maxmind-dbs
+          key: maxmind-dbs-${{ steps.date.outputs.date }}
+
+      - name: Download MaxMind databases
+        if: steps.maxmind-cache.outputs.cache-hit != 'true'
+        env:
+          MM_ACCOUNT_ID: ${{ secrets.MM_ACCOUNT_ID }}
+          MM_DOWNLOAD_KEY: ${{ secrets.MM_DOWNLOAD_KEY }}
+        run: |
+          set -eu
+          if [ -z "$MM_DOWNLOAD_KEY" ]; then echo "maxmind license key secret (MM_DOWNLOAD_KEY) not provided"; exit 1; fi
+          mkdir -p maxmind-dbs
+          curl -sfL -o /tmp/country.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
+          tar zxf /tmp/country.tar.gz --strip-components 1 -C maxmind-dbs
+          curl -sfL -o /tmp/asn.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
+          tar zxf /tmp/asn.tar.gz --strip-components 1 -C maxmind-dbs
