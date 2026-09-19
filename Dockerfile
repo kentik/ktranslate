@@ -1,35 +1,44 @@
 # build ktranslate
-FROM golang:1.25-alpine as build
+FROM golang:1.25-alpine AS build
 RUN apk add -U libpcap-dev alpine-sdk bash libcap
 COPY . /src
 WORKDIR /src
-ARG KENTIK_KTRANSLATE_VERSION
+ARG NETWORK_AGENT_VERSION
+ARG NETWORK_AGENT_BUILD
 RUN make
 
 # maxmind dbs
-FROM alpine:latest as maxmind
-ARG MAXMIND_LICENSE_KEY
-ARG YOUR_ACCOUNT_ID
-RUN apk add -U curl tar
-ENV GEOLITE2_COUNTRY_FILE=GeoLite2-Country.mmdb
-ENV GEOLITE2_ASN_FILE=GeoLite2-ASN.mmdb
-RUN if [ -z "${MAXMIND_LICENSE_KEY}" ]; then echo "MAXMIND_LICENSE_KEY" not set; exit 1; fi
-RUN curl -L -o /tmp/country.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz" && \
-	tar zxf /tmp/country.tar.gz --strip-components 1 -C /
-RUN curl -L -o /tmp/asn.tar.gz -u ${YOUR_ACCOUNT_ID}:${MAXMIND_LICENSE_KEY} "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz" && \
-	tar zxf /tmp/asn.tar.gz --strip-components 1 -C /
+#
+# Downloaded and cached by the calling workflow (see ci-build.yml / publish-release.yml),
+# via actions/cache -- not inside this build at all, since a BuildKit `--mount=type=cache`
+# doesn't survive across CI runs (each job gets a fresh BuildKit daemon) and isn't included
+# in `--cache-from`/`--cache-to` exports, so it can never actually persist here. This stage
+# just stages the already-downloaded files from the build context for the COPY below.
+# Building locally: run `just maxmind-dbs` first to populate maxmind-dbs/.
+FROM scratch AS maxmind
+COPY maxmind-dbs/GeoLite2-Country.mmdb /GeoLite2-Country.mmdb
+COPY maxmind-dbs/GeoLite2-ASN.mmdb /GeoLite2-ASN.mmdb
 
 # snmp profiles
-FROM alpine:latest as snmp
-ARG KENTIK_SNMP_PROFILE_REPO
+FROM alpine:latest AS snmp
+ARG NR_SNMP_PROFILE_REPO
 RUN apk add -U git
 
+# Opt-in auth: when a `github_token` BuildKit secret is provided (a GitHub token with read
+# access to the repo), transparently authenticate GitHub HTTPS clones. This is a complete
+# no-op when the secret is absent, so the override/clone logic below is unchanged from
+# upstream. The token lives only in this throwaway stage (only /snmp/profiles is copied on).
+RUN --mount=type=secret,id=github_token \
+    if [ -s /run/secrets/github_token ]; then \
+        git config --global url."https://x-access-token:$(cat /run/secrets/github_token)@github.com/".insteadOf "https://github.com/"; \
+    fi
+
 # If there is a branch of snmp-profiles to use, switch over here now.
-RUN if [ -z "${KENTIK_SNMP_PROFILE_REPO}" ]; then \
+RUN if [ -z "${NR_SNMP_PROFILE_REPO}" ]; then \
     git clone https://github.com/kentik/snmp-profiles /snmp; \
 else \
-    echo "picking repo ${KENTIK_SNMP_PROFILE_REPO} for snmp profiles"; \
-    git clone ${KENTIK_SNMP_PROFILE_REPO} /snmp; \
+    echo "picking repo ${NR_SNMP_PROFILE_REPO} for snmp profiles"; \
+    git clone ${NR_SNMP_PROFILE_REPO} /snmp; \
 fi
 
 # main image

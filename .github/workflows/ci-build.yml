@@ -1,0 +1,112 @@
+name: CI Build (no push)
+
+# Validation build for the `develop` branch: builds the Docker image end-to-end
+# (which also compiles the Go binary via `make`) and exports it as a downloadable artifact.
+# It is NEVER pushed to a registry. Download the artifact and `docker load` it locally.
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Target platform for the exported image
+        type: choice
+        options:
+          - linux/amd64
+          - linux/arm64
+        default: linux/amd64
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set build id and platform
+        run: |
+          echo "CI_BUILD=ci-$(date +%Y-%m-%d)-${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
+          PLATFORM="${{ github.event.inputs.platform || 'linux/amd64' }}"
+          echo "PLATFORM=$PLATFORM" >> "$GITHUB_ENV"
+          echo "PLATFORM_TAG=${PLATFORM//\//-}" >> "$GITHUB_ENV"
+
+      - name: Set up QEMU        # enables cross-building (e.g. arm64 on an amd64 runner)
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      # A BuildKit `--mount=type=cache` (what this used to use) doesn't survive across CI
+      # runs -- each job gets a fresh BuildKit daemon, and cache mounts aren't included in
+      # `--cache-from`/`--cache-to` exports either. actions/cache is the thing that actually
+      # persists across runs, so the download happens here, once per calendar day, and the
+      # Dockerfile's maxmind stage just COPYs the result from the build context.
+      #
+      # This cache is scoped to this PR alone -- see warm-maxmind-cache.yml for the daily
+      # job on main that every other branch/PR falls back to instead of hitting MaxMind
+      # independently.
+      - name: Cache key date
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache MaxMind databases
+        id: maxmind-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: maxmind-dbs
+          key: maxmind-dbs-${{ steps.date.outputs.date }}
+
+      - name: Download MaxMind databases
+        if: steps.maxmind-cache.outputs.cache-hit != 'true'
+        env:
+          MM_ACCOUNT_ID: ${{ secrets.MM_ACCOUNT_ID }}
+          MM_DOWNLOAD_KEY: ${{ secrets.MM_DOWNLOAD_KEY }}
+        run: |
+          set -eu
+          if [ -z "$MM_DOWNLOAD_KEY" ]; then echo "maxmind license key secret (MM_DOWNLOAD_KEY) not provided"; exit 1; fi
+          mkdir -p maxmind-dbs
+          curl -sfL -o /tmp/country.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
+          tar zxf /tmp/country.tar.gz --strip-components 1 -C maxmind-dbs
+          curl -sfL -o /tmp/asn.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
+          tar zxf /tmp/asn.tar.gz --strip-components 1 -C maxmind-dbs
+
+      - name: Build image and export as docker tar (no push)
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          platforms: ${{ env.PLATFORM }}
+          tags: network-agent:ci
+          # Export a `docker load`-compatible archive instead of pushing to a registry.
+          # type=docker is single-platform, which is why the platform is fixed per run.
+          outputs: type=docker,dest=/tmp/network-agent-image.tar
+          # No NETWORK_AGENT_VERSION here -- Make's own default (the VERSION file) stands,
+          # same as any other build. NETWORK_AGENT_BUILD identifies this specific CI run.
+          build-args: |
+            NETWORK_AGENT_BUILD=${{ env.CI_BUILD }}
+            NR_SNMP_PROFILE_REPO=https://github.com/newrelic-forks/snmp-profiles
+          # All credentials are BuildKit secrets (never build-args) so they cannot leak
+          # into logs/layers even on a failed step.
+          secrets: |
+            github_token=${{ secrets.SNMP_PROFILES_TOKEN }}
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: network-agent-image-${{ env.PLATFORM_TAG }}-${{ env.CI_BUILD }}
+          path: /tmp/network-agent-image.tar
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: How to load it
+        run: |
+          {
+            echo "## network-agent image artifact"
+            echo "Built \`network-agent:ci\` for **$PLATFORM**. Download the artifact, unzip, then:"
+            echo '```bash'
+            echo "docker load -i network-agent-image.tar"
+            echo "docker image ls | grep network-agent    # now visible"
+            echo "docker run --rm --entrypoint ktranslate network-agent:ci -h    # prints usage"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
