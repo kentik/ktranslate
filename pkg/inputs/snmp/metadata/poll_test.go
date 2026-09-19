@@ -1,6 +1,9 @@
 package metadata
 
 import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -157,4 +160,75 @@ func TestToFlowsCache(t *testing.T) {
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "aaa", res[0].CustomStr["foo"])
 	assert.Equal(t, "bbb", res[0].CustomStr["bar"]) // bbb is picked up from cache.
+}
+
+func TestToFlowsWithRuleSet(t *testing.T) {
+	userRules := `
+spine1:
+  site: hq
+  edge_id: spine1
+  role: parent
+  circuit_id: ""          # parent may participate in several circuits; see notes
+
+leaf-br1:
+  site: branch1
+  edge_id: spine1
+  role: child
+  circuit_id: WAN-HQ-BR1
+
+leaf-br2:
+  site: branch2
+  edge_id: spine1
+  role: child
+  circuit_id: WAN-HQ-BR2
+
+# Optional second index: same bag keyed by management / sampler IP
+192.168.21.2:
+  site: branch1
+  edge_id: spine1
+  role: child
+  circuit_id: WAN-HQ-BR1
+`
+
+	l := lt.NewTestContextL(logger.NilContext, t)
+	conf := &kt.SnmpDeviceConfig{
+		Provider: "foo",
+		UserTags: map[string]string{
+			"foo": "$foo",
+			"aaa": "$SysContact",
+		},
+	}
+
+	// Some test server
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "%s", string(userRules))
+	}))
+	defer svr.Close()
+
+	rule.InitUserDeviceRuleSet(svr.URL, l)
+	conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
+
+	p := &Poller{
+		log:   l,
+		conf:  conf,
+		gconf: &kt.SnmpGlobalConfig{},
+	}
+
+	input := kt.DeviceData{
+		Manufacturer: "man",
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			SysContact: "ddd",
+			Customs: map[string]string{
+				"foo": "",
+				"bar": "",
+			},
+		},
+	}
+	res, err := p.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "ddd", res[0].CustomStr["tags.aaa"])
+	assert.Equal(t, "", res[0].CustomStr["tags.foo"]) // Empty string match for tag here.
+	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
 }

@@ -56,6 +56,7 @@ var (
 	flowSource     string
 	teeLog         bool
 	appMap         string
+	userDeviceMap  string
 	syslog         string
 	httpInput      bool
 	enricher       string
@@ -96,7 +97,8 @@ func init() {
 	flag.StringVar(&vpcSource, "vpc", kt.LookupEnvString("KENTIK_VPC", ""), "Run VPC Flow Ingest")
 	flag.StringVar(&flowSource, "nf.source", "", "Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan|auto")
 	flag.BoolVar(&teeLog, "tee_logs", false, "Tee log messages to sink")
-	flag.StringVar(&appMap, "application_map", "", "File containing custom application mappings")
+	flag.StringVar(&appMap, "application_map", "", "File or ULR containing custom application mappings")
+	flag.StringVar(&userDeviceMap, "user_device_rule_path", "", "File or URL containing per device tap mappings")
 	flag.StringVar(&syslog, "syslog.source", "", "Run Syslog Server at this IP:Port or unix socket.")
 	flag.BoolVar(&httpInput, "http.source", false, "Listen for content sent via http.")
 	flag.StringVar(&enricher, "enricher", "", "Send data to this http url for enrichment.")
@@ -398,6 +400,8 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.EnableTeeLogs = v
 			case "application_map":
 				cfg.ApplicationFile = val
+			case "user_device_rule_path":
+				cfg.UserDeviceRulePath = val
 			case "syslog.source":
 				cfg.SyslogInput.Enable = true
 				cfg.SyslogInput.ListenAddr = val
