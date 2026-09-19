@@ -46,25 +46,34 @@ jobs:
       #
       # This cache is scoped to this PR alone -- see warm-maxmind-cache.yml for the daily
       # job on main that every other branch/PR falls back to instead of hitting MaxMind
-      # independently.
+      # independently. restore-keys is a second fallback layer on top of that: the exact
+      # key rolls over at UTC midnight, but that daily job only fires shortly after --
+      # if a build lands in the few minutes between the two, or that job has a bad day,
+      # this still restores whatever the most recent prior day's cache was rather than
+      # ever falling through to MaxMind. Slightly stale GeoLite2 data is a non-issue;
+      # a build that can't get the data at all is not.
       - name: Cache key date
         id: date
         run: echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
       - name: Cache MaxMind databases
-        id: maxmind-cache
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: maxmind-dbs
           key: maxmind-dbs-${{ steps.date.outputs.date }}
+          restore-keys: |
+            maxmind-dbs-
 
       - name: Download MaxMind databases
-        if: steps.maxmind-cache.outputs.cache-hit != 'true'
         env:
           MM_ACCOUNT_ID: ${{ secrets.MM_ACCOUNT_ID }}
           MM_DOWNLOAD_KEY: ${{ secrets.MM_DOWNLOAD_KEY }}
         run: |
           set -eu
+          if [ -f maxmind-dbs/GeoLite2-Country.mmdb ] && [ -f maxmind-dbs/GeoLite2-ASN.mmdb ]; then
+            echo "Using cached MaxMind databases (exact match or restore-keys fallback)"
+            exit 0
+          fi
           if [ -z "$MM_DOWNLOAD_KEY" ]; then echo "maxmind license key secret (MM_DOWNLOAD_KEY) not provided"; exit 1; fi
           mkdir -p maxmind-dbs
           curl -sfL -o /tmp/country.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
