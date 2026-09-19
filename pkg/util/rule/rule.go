@@ -31,6 +31,9 @@ var (
 		"fc00::/7",  // (ula)
 		"fe80::/10", // (link local)
 	}
+
+	deviceNameUserTags map[string]map[string]string
+	deviceIpUserTags   map[string]map[string]string
 )
 
 // RuleSet holds a list of network classification rules
@@ -141,12 +144,30 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 		return err
 	}
 
-	log.Infof("Loaded %d user device rules.", len(customs))
+	deviceNameUserTags = map[string]map[string]string{}
+	deviceIpUserTags = map[string]map[string]string{}
+
+	for tk, mm := range customs {
+		if net.ParseIP(tk) != nil {
+			deviceIpUserTags[tk] = mm
+		} else {
+			deviceNameUserTags[tk] = mm
+		}
+	}
+
+	log.Infof("Loaded %d user name device rules and %d user ip device rules.", len(deviceNameUserTags), len(deviceIpUserTags))
 
 	return nil
 }
 
 // Global allowing any extra user tags to be pulled in.
 func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
+	if ud, ok := deviceNameUserTags[deviceName]; ok {
+		return ud
+	}
+	if ud, ok := deviceIpUserTags[deviceIP]; ok {
+		return ud
+	}
+
 	return nil
 }

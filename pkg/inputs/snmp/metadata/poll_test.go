@@ -191,12 +191,18 @@ leaf-br2:
 `
 
 	l := lt.NewTestContextL(logger.NilContext, t)
-	conf := &kt.SnmpDeviceConfig{
-		Provider: "foo",
+	dName := &kt.SnmpDeviceConfig{
+		Provider:   "foo",
+		DeviceIP:   "192.168.21.44",
+		DeviceName: "leaf-br1",
 		UserTags: map[string]string{
 			"foo": "$foo",
 			"aaa": "$SysContact",
 		},
+	}
+	ipName := &kt.SnmpDeviceConfig{
+		DeviceIP:   "192.168.21.2",
+		DeviceName: "stranger",
 	}
 
 	// Some test server
@@ -206,11 +212,17 @@ leaf-br2:
 	defer svr.Close()
 
 	rule.InitUserDeviceRuleSet(svr.URL, l)
-	conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
+	dName.InitUserTags("service", rule.GetUserDeviceRuleSet(dName.DeviceName, dName.DeviceIP))
+	ipName.InitUserTags("service", rule.GetUserDeviceRuleSet(ipName.DeviceName, ipName.DeviceIP))
 
-	p := &Poller{
+	pName := &Poller{
 		log:   l,
-		conf:  conf,
+		conf:  dName,
+		gconf: &kt.SnmpGlobalConfig{},
+	}
+	pIp := &Poller{
+		log:   l,
+		conf:  ipName,
 		gconf: &kt.SnmpGlobalConfig{},
 	}
 
@@ -224,11 +236,20 @@ leaf-br2:
 			},
 		},
 	}
-	res, err := p.toFlows(&input)
+
+	// Test lookup based on device name
+	res, err := pName.toFlows(&input)
 	assert.NotNil(t, res)
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "ddd", res[0].CustomStr["tags.aaa"])
 	assert.Equal(t, "", res[0].CustomStr["tags.foo"]) // Empty string match for tag here.
+	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
+
+	// Test based on device ip.
+	res, err = pIp.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
 	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
 }
