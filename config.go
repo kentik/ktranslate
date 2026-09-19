@@ -304,6 +304,7 @@ type Config struct {
 	GeoFile             string
 	ASNFile             string
 	ApplicationFile     string
+	UserDeviceRulePath  string
 	DNS                 string
 	ProcessingThreads   int
 	InputThreads        int
@@ -417,6 +418,7 @@ func DefaultConfig() *Config {
 		GeoFile:             "",
 		ASNFile:             "",
 		ApplicationFile:     "",
+		UserDeviceRulePath:  "",
 		DNS:                 "",
 		ProcessingThreads:   1,
 		InputThreads:        1,

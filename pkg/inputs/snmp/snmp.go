@@ -21,6 +21,7 @@ import (
 	snmp_util "github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/util/resolv"
+	"github.com/kentik/ktranslate/pkg/util/rule"
 
 	"github.com/fsnotify/fsnotify"
 	"gopkg.in/yaml.v3"
@@ -475,7 +476,7 @@ func parseConfig(ctx context.Context, file string, log logger.ContextL) (*kt.Snm
 			continue
 		}
 		setDeviceTagsAndMatch(device) // Tweak any per provider tags and match attributes here now that we have the actual provider.
-		device.InitUserTags(ServiceName)
+		device.InitUserTags(ServiceName, rule.GetUserDeviceRuleSet(device.DeviceName, device.DeviceIP))
 	}
 
 	return &ms, nil

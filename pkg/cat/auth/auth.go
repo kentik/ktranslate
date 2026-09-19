@@ -14,6 +14,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/rule"
 )
 
 type Server struct {
@@ -77,7 +78,7 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL, serviceNa
 				if nd.SampleRate == 0 {
 					nd.SampleRate = 1
 				}
-				nd.InitUserTags(serviceName, d.GetUserTags())
+				nd.InitUserTags(serviceName, d.GetUserTags(), rule.GetUserDeviceRuleSet(d.DeviceName, d.DeviceIP))
 				s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 				nextID += 100
 			}
@@ -88,7 +89,7 @@ func NewServer(auth *AuthConfig, snmpFile string, log logger.ContextL, serviceNa
 				Name:       kt.MissingDeviceName,
 				SendingIps: []net.IP{net.ParseIP(kt.MissingDeviceIP)},
 			}
-			nd.InitUserTags(serviceName, map[string]string{})
+			nd.InitUserTags(serviceName, nil, nil)
 			s.devicesByID[strconv.Itoa(int(nd.ID))] = nd
 		}
 	}

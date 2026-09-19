@@ -125,10 +125,16 @@ type Column struct {
 	DeviceType  string
 }
 
-func (d *Device) InitUserTags(serviceName string, tags map[string]string) {
+func (d *Device) InitUserTags(serviceName string, tags map[string]string, defaults map[string]string) {
 	d.allUserTags = tags
 	if serviceName != "ktranslate" {
 		d.allUserTags["tags.container_service"] = serviceName
+	}
+
+	for k, v := range defaults {
+		if _, ok := d.allUserTags[k]; !ok {
+			d.allUserTags[k] = v
+		}
 	}
 }
 

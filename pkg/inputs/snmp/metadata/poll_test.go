@@ -8,6 +8,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
 	"github.com/kentik/ktranslate/pkg/kt"
+	"github.com/kentik/ktranslate/pkg/util/rule"
 )
 
 func TestGetDeviceManufacturer(t *testing.T) {
@@ -50,7 +51,7 @@ func TestToFlows(t *testing.T) {
 			"aaa": "$SysContact",
 		},
 	}
-	conf.InitUserTags("service")
+	conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
 
 	p := &Poller{
 		log:   l,
@@ -82,7 +83,7 @@ func TestToFlowsCache(t *testing.T) {
 		Provider: "foo",
 		UserTags: map[string]string{},
 	}
-	conf.InitUserTags("service")
+	conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
 
 	p := &Poller{
 		log:   l,

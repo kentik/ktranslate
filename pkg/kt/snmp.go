@@ -805,7 +805,7 @@ func (d *SnmpDeviceConfig) AddUserTag(k string, v string) {
 	d.allUserTags[key] = v
 }
 
-func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
+func (d *SnmpDeviceConfig) InitUserTags(serviceName string, defaults map[string]string) {
 	d.allUserTags = map[string]string{}
 	if d.ExpectedDevTags > 0 && len(d.UserTags) != d.ExpectedDevTags {
 		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, len(d.UserTags), d.ExpectedDevTags))
@@ -816,6 +816,13 @@ func (d *SnmpDeviceConfig) InitUserTags(serviceName string) {
 			d.UserTags = map[string]string{}
 		}
 		d.UserTags["container_service"] = serviceName
+	}
+
+	// Add in any defaults pass into the program externally.
+	for k, v := range defaults {
+		if _, ok := d.UserTags[k]; !ok {
+			d.UserTags[k] = v
+		}
 	}
 
 	for k, v := range d.UserTags {

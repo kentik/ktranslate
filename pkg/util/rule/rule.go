@@ -1,11 +1,12 @@
 package rule
 
 import (
-	"io/ioutil"
+	"context"
 	"net"
 	"strings"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/util/service"
 	"gopkg.in/yaml.v3"
 )
@@ -66,7 +67,7 @@ func NewRuleSet(appMap string, log logger.ContextL) (*RuleSet, error) {
 	// If there's a custom set, get these here.
 	if appMap != "" {
 		customs := CustomRuleSet{}
-		byc, err := ioutil.ReadFile(appMap)
+		byc, err := util.LoadFile(context.Background(), appMap)
 		if err != nil {
 			return nil, err
 		}
@@ -127,4 +128,25 @@ func (r *RuleSet) GetService(ip net.IP, port uint32, protocol uint8) (string, bo
 
 	// We couldn't find anything.
 	return "", false
+}
+
+func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
+	byc, err := util.LoadFile(context.Background(), rulePath)
+	if err != nil {
+		return err
+	}
+	customs := map[string]map[string]string{}
+	err = yaml.Unmarshal(byc, &customs)
+	if err != nil {
+		return err
+	}
+
+	log.Infof("Loaded %d user device rules.", len(customs))
+
+	return nil
+}
+
+// Global allowing any extra user tags to be pulled in.
+func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
+	return nil
 }
