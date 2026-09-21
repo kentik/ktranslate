@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/liamg/furious/scan" // Discovery
 	"gopkg.in/yaml.v3"
 
 	"github.com/kentik/ktranslate"
@@ -154,13 +153,8 @@ func runScanCheckDisco(ctx context.Context, ctl chan bool, foundDevices map[stri
 
 		log.Infof("Discovering SNMP devices on %s.", ipr)
 		stb := time.Now()
-		targetIterator := scan.NewTargetIterator(ipr)
 		timeout := time.Millisecond * time.Duration(conf.Global.TimeoutMS)
-		scanner := scan.NewDeviceScanner(targetIterator, timeout)
-		if err := scanner.Start(); err != nil {
-			return err
-		}
-		results, err := scanner.Scan(ctx, conf.Disco.Ports)
+		results, err := scanCIDR(ctx, ipr, timeout)
 		if err != nil {
 			return err
 		}
@@ -241,7 +235,7 @@ func RunDiscoOnTimer(ctx context.Context, c chan os.Signal, log logger.ContextL,
 	}
 }
 
-func doubleCheckHost(ctx context.Context, result scan.Result, timeout time.Duration, ctl chan bool, mux *sync.RWMutex, wg *sync.WaitGroup,
+func doubleCheckHost(ctx context.Context, result netScanResult, timeout time.Duration, ctl chan bool, mux *sync.RWMutex, wg *sync.WaitGroup,
 	foundDevices map[string]*kt.SnmpDeviceConfig, mdb *mibs.MibDB, conf *kt.SnmpConfig, posit string, kentikDevices map[string]string, log logger.ContextL) {
 
 	// Get the token to allow us to run.

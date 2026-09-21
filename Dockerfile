@@ -1,6 +1,7 @@
 # build ktranslate
 FROM golang:1.25-alpine AS build
-RUN apk add -U libpcap-dev alpine-sdk bash libcap
+RUN apk add -U make bash libcap
+ENV CGO_ENABLED=0
 COPY . /src
 WORKDIR /src
 ARG NETWORK_AGENT_VERSION
@@ -43,7 +44,7 @@ fi
 
 # main image
 FROM alpine:3.23.3
-RUN apk add -U --no-cache ca-certificates libpcap
+RUN apk add -U --no-cache ca-certificates
 RUN addgroup -g 1000 ktranslate && \
 	adduser -D -u 1000 -G ktranslate -H -h /etc/ktranslate ktranslate
 #RUN set -eux; \
@@ -53,7 +54,6 @@ RUN addgroup -g 1000 ktranslate && \
 # Some people want to specify an alternative config dir. This lets them override with --build-arg CONFIG-DIR=my-new-dir
 ARG CONFIG_DIR=config
 COPY --chown=ktranslate:ktranslate ${CONFIG_DIR}/ /etc/ktranslate/
-COPY --chown=ktranslate:ktranslate lib/ /etc/ktranslate/
 
 # maxmind db
 COPY --from=maxmind /GeoLite2-Country.mmdb /etc/ktranslate/

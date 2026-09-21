@@ -22,8 +22,6 @@ import (
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/kt"
-
-	"github.com/liamg/furious/scan"
 )
 
 var (
@@ -250,7 +248,7 @@ func checkCustomFields(conf *kt.SnmpConfig, res NBResult) bool {
 
 type netboxDeviceToCheck struct {
 	Name    string
-	Results []scan.Result
+	Results []netScanResult
 }
 
 func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[string]*kt.SnmpDeviceConfig,
@@ -285,9 +283,9 @@ func getDevicesFromNetbox(ctx context.Context, ctl chan bool, foundDevices map[s
 					if res.DeviceType != nil && res.DeviceType.Model != nil {
 						model = *res.DeviceType.Model
 					}
-					rr := make([]scan.Result, len(ipvs))
+					rr := make([]netScanResult, len(ipvs))
 					for i, ipv := range ipvs {
-						rr[i] = scan.Result{Name: *res.Name, Manufacturer: model, Host: net.ParseIP(ipv.Addr().String())}
+						rr[i] = netScanResult{Name: *res.Name, Manufacturer: model, Host: net.ParseIP(ipv.Addr().String())}
 					}
 					*results = append(*results, netboxDeviceToCheck{Name: *res.Name, Results: rr})
 				} else {
