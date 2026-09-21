@@ -1,0 +1,214 @@
+name: Publish Release
+
+# Pushes a versioned, multi-arch image to Docker Hub (newrelic/network-agent). Three paths in:
+#   - Publishing a pre-release (GitHub's "This is a pre-release" checkbox, e.g. v0.1.0-rc1):
+#     builds from source and pushes that exact version tag plus a content-addressed
+#     sha-<commit> tag. Never touches `latest`.
+#   - Publishing (or promoting to, by unchecking "pre-release" on an existing one) a full
+#     release: never rebuilds. Retags the sha-<commit> image already pushed by a prior
+#     pre-release build of this same commit as the version tag plus `latest`, via `docker
+#     buildx imagetools create` -- so what ships is byte-identical to what was tested as a
+#     release candidate. If no matching pre-release build exists, this fails on purpose: a
+#     full release must be preceded by a tested pre-release of the same commit.
+#   - workflow_dispatch: supply a version explicitly, or omit it to fall back to the
+#     checked-in VERSION file for an ad-hoc build+push. Always takes the build path (never
+#     promotes), and never touches `latest`.
+#
+# ci-build.yml (stack/01) builds the same Dockerfile but only ever exports a local tarball --
+# this is the one workflow in the repo that actually pushes anywhere.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build and push (e.g. 0.0.1). Defaults to the VERSION file if omitted.'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      sha_tag: ${{ steps.version.outputs.sha_tag }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+          VERSION="${VERSION#v}"
+          if [ -z "$VERSION" ]; then
+            VERSION="$(cat VERSION)"
+          fi
+
+          # "latest" is reserved for the promote job -- it must never be pushed as a
+          # regular version tag by the publish job (workflow_dispatch could otherwise
+          # type it in directly as the version input).
+          case "$(printf '%s' "$VERSION" | tr '[:upper:]' '[:lower:]')" in
+            latest)
+              echo "::error::'latest' is not a valid version -- it's reserved for the promote job on a full release."
+              exit 1
+              ;;
+          esac
+
+          IS_PRERELEASE="${{ github.event_name == 'release' && github.event.release.prerelease }}"
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            case "$VERSION" in
+              *-*) ;;
+              *)
+                echo "::error::Pre-release '$VERSION' has no SemVer prerelease suffix (e.g. '$VERSION-rc1') -- a bare version would collide with the eventual full release's tag."
+                exit 1
+                ;;
+            esac
+          fi
+
+          {
+            echo "version=$VERSION"
+            echo "sha_tag=sha-${{ github.sha }}"
+            echo "is_prerelease=$IS_PRERELEASE"
+          } >> "$GITHUB_OUTPUT"
+
+  # Builds from source: workflow_dispatch (always) and a published pre-release. A full
+  # release never lands here -- see the `promote` job.
+  publish:
+    needs: version
+    if: github.event_name == 'workflow_dispatch' || needs.version.outputs.is_prerelease == 'true'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      SHA_TAG: ${{ needs.version.outputs.sha_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up QEMU        # enables cross-building (e.g. arm64 on an amd64 runner)
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
+
+      # An ad-hoc workflow_dispatch build must never clobber a version tag that's
+      # already on Docker Hub -- published versions are immutable. A pre-release
+      # rebuild (github.event_name == 'release') is deliberately NOT checked here:
+      # re-publishing/re-running the same pre-release to retry a flaky build is
+      # expected to succeed, not get blocked by its own prior (possibly partial)
+      # attempt.
+      - name: Refuse to overwrite an existing version tag (workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if docker buildx imagetools inspect "newrelic/network-agent:${{ env.VERSION }}" > /dev/null 2>&1; then
+            echo "::error::newrelic/network-agent:${{ env.VERSION }} already exists on Docker Hub. Published version tags are immutable -- use a different version input (or bump VERSION) for an ad-hoc build."
+            exit 1
+          fi
+
+      # See ci-build.yml for why this downloads MaxMind's databases itself (via
+      # actions/cache) instead of inside the Docker build: a BuildKit `--mount=type=cache`
+      # doesn't survive across CI runs, and isn't included in `--cache-from`/`--cache-to`
+      # exports either. warm-maxmind-cache.yml (on main) is what this actually falls back
+      # to on a cache miss, since a release build's own cache scope is otherwise as cold
+      # as any other branch's. restore-keys is a second fallback layer on top of that --
+      # see ci-build.yml for why.
+      - name: Cache key date
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache MaxMind databases
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: maxmind-dbs
+          key: maxmind-dbs-${{ steps.date.outputs.date }}
+          restore-keys: |
+            maxmind-dbs-
+
+      - name: Download MaxMind databases
+        env:
+          MM_ACCOUNT_ID: ${{ secrets.MM_ACCOUNT_ID }}
+          MM_DOWNLOAD_KEY: ${{ secrets.MM_DOWNLOAD_KEY }}
+        run: |
+          set -eu
+          if [ -f maxmind-dbs/GeoLite2-Country.mmdb ] && [ -f maxmind-dbs/GeoLite2-ASN.mmdb ]; then
+            echo "Using cached MaxMind databases (exact match or restore-keys fallback)"
+            exit 0
+          fi
+          if [ -z "$MM_DOWNLOAD_KEY" ]; then echo "maxmind license key secret (MM_DOWNLOAD_KEY) not provided"; exit 1; fi
+          mkdir -p maxmind-dbs
+          curl -sfL -o /tmp/country.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
+          tar zxf /tmp/country.tar.gz --strip-components 1 -C maxmind-dbs
+          curl -sfL -o /tmp/asn.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
+          tar zxf /tmp/asn.tar.gz --strip-components 1 -C maxmind-dbs
+
+      - name: Build and push
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: newrelic/network-agent:${{ env.VERSION }},newrelic/network-agent:${{ env.SHA_TAG }}
+          build-args: |
+            NETWORK_AGENT_VERSION=${{ env.VERSION }}
+            NETWORK_AGENT_BUILD=${{ github.event_name == 'release' && github.event.release.tag_name || format('manual-{0}', github.run_id) }}
+            NR_SNMP_PROFILE_REPO=https://github.com/newrelic-forks/snmp-profiles
+          # All credentials are BuildKit secrets (never build-args) so they cannot leak
+          # into logs/layers even on a failed step.
+          secrets: |
+            github_token=${{ secrets.SNMP_PROFILES_TOKEN }}
+
+      - name: Summary
+        run: |
+          {
+            echo "## Published to Docker Hub"
+            echo "Tags: \`newrelic/network-agent:${{ env.VERSION }}\`, \`newrelic/network-agent:${{ env.SHA_TAG }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Promotes a full release without rebuilding: retags the sha-<commit> image already
+  # pushed by this same commit's pre-release build. Fails if none exists -- a full release
+  # must be preceded by a tested pre-release of the same commit, on purpose.
+  promote:
+    needs: version
+    if: github.event_name == 'release' && needs.version.outputs.is_prerelease == 'false'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      SHA_TAG: ${{ needs.version.outputs.sha_tag }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v4
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
+
+      - name: Retag pre-release image as the full release
+        run: |
+          if ! docker buildx imagetools inspect "newrelic/network-agent:${{ env.SHA_TAG }}" > /dev/null 2>&1; then
+            echo "::error::No pre-release image found at newrelic/network-agent:${{ env.SHA_TAG }} for this commit. Publish a pre-release for this commit first and let it build -- a full release is never built directly."
+            exit 1
+          fi
+          docker buildx imagetools create \
+            --tag newrelic/network-agent:${{ env.VERSION }} \
+            --tag newrelic/network-agent:latest \
+            newrelic/network-agent:${{ env.SHA_TAG }}
+
+      - name: Summary
+        run: |
+          {
+            echo "## Promoted to Docker Hub"
+            echo "Retagged \`newrelic/network-agent:${{ env.SHA_TAG }}\` as \`newrelic/network-agent:${{ env.VERSION }}\` and \`newrelic/network-agent:latest\` (no rebuild)."
+          } >> "$GITHUB_STEP_SUMMARY"
