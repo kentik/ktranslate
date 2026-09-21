@@ -29,6 +29,7 @@ type Poller struct {
 	metrics          *kt.SnmpDeviceMetric
 	counterTimeSec   int
 	jitterTimeSec    int
+	pollTimeout      time.Duration
 	dropIfOutside    bool
 	pinger           *ping.Pinger
 	extension        extension.Extension
@@ -61,6 +62,8 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		}
 	}
 
+	pollTimeout := util.GetPollTimeout(gconf, conf, counterTimeSec, log)
+
 	poller := Poller{
 		jchfChan:         jchfChan,
 		log:              log,
@@ -70,6 +73,7 @@ func NewPoller(server *gosnmp.GoSNMP, gconf *kt.SnmpGlobalConfig, conf *kt.SnmpD
 		deviceMetrics:    NewDeviceMetrics(gconf, conf, metrics, deviceMetricMibs, profile, log),
 		counterTimeSec:   counterTimeSec,
 		jitterTimeSec:    jitterTimeSec,
+		pollTimeout:      pollTimeout,
 		dropIfOutside:    dropIfOutside,
 		gconf:            gconf,
 	}
@@ -192,7 +196,7 @@ func (p *Poller) StartLoop(ctx context.Context) {
 					continue
 				}
 
-				pollCtx, pollCancel := context.WithTimeout(ctx, STATUS_CHECK_TIME)
+				pollCtx, pollCancel := context.WithTimeout(ctx, p.pollTimeout)
 				flows, err := p.Poll(pollCtx)
 				pollCancel()
 				if err != nil {

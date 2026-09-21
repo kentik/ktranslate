@@ -94,6 +94,22 @@ context_name: ""`)
 	assert.Equal(t, strings.TrimSpace(string(input)), strings.TrimSpace(string(ser)))
 }
 
+func TestUpdateFromPreservesPollTimeoutSec(t *testing.T) {
+	conf := &SnmpConfig{Global: &SnmpGlobalConfig{}}
+
+	// PollTimeoutSec carries over from the old (pre-rediscovery) config when set.
+	d := &SnmpDeviceConfig{}
+	old := &SnmpDeviceConfig{PollTimeoutSec: 60}
+	d.UpdateFrom(old, conf)
+	assert.Equal(t, 60, d.PollTimeoutSec)
+
+	// An unset (zero) old value doesn't clobber whatever the new config already has.
+	d = &SnmpDeviceConfig{PollTimeoutSec: 45}
+	old = &SnmpDeviceConfig{}
+	d.UpdateFrom(old, conf)
+	assert.Equal(t, 45, d.PollTimeoutSec)
+}
+
 func TestEAPI(t *testing.T) {
 	input := []byte(`
 host: mabel

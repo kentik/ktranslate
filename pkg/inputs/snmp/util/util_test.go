@@ -4,12 +4,14 @@ import (
 	"errors"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/gosnmp/gosnmp"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
+	"github.com/kentik/ktranslate/pkg/kt"
 )
 
 type testWalker struct {
@@ -83,6 +85,66 @@ func TestGetIndex(t *testing.T) {
 	assert.Equal("4.5.6", GetIndex("1.2.3.4.5.6", "1.2.3."))
 	assert.Equal(".4.5.6", GetIndex("1.2.3.4.5.6", "1.2.3"))
 	assert.Equal(".4.5.6", GetIndex(".1.2.3.4.5.6", "1.2.3"))
+}
+
+func TestGetPollTimeout(t *testing.T) {
+	assert := assert.New(t)
+	l := lt.NewTestContextL(logger.NilContext, t)
+
+	tests := []struct {
+		name           string
+		gconf          *kt.SnmpGlobalConfig
+		conf           *kt.SnmpDeviceConfig
+		counterTimeSec int
+		expected       time.Duration
+	}{
+		{
+			name:           "defaults to 120s when nothing is set",
+			gconf:          nil,
+			conf:           nil,
+			counterTimeSec: 300,
+			expected:       120 * time.Second,
+		},
+		{
+			name:           "device override wins",
+			gconf:          nil,
+			conf:           &kt.SnmpDeviceConfig{PollTimeoutSec: 60},
+			counterTimeSec: 300,
+			expected:       60 * time.Second,
+		},
+		{
+			name:           "global override applies when device unset",
+			gconf:          &kt.SnmpGlobalConfig{PollTimeoutSec: 90},
+			conf:           nil,
+			counterTimeSec: 300,
+			expected:       90 * time.Second,
+		},
+		{
+			name:           "device override takes priority over global",
+			gconf:          &kt.SnmpGlobalConfig{PollTimeoutSec: 90},
+			conf:           &kt.SnmpDeviceConfig{PollTimeoutSec: 45},
+			counterTimeSec: 300,
+			expected:       45 * time.Second,
+		},
+		{
+			name:           "clamped down to the poll interval when it would exceed it",
+			gconf:          nil,
+			conf:           nil,
+			counterTimeSec: 30,
+			expected:       30 * time.Second,
+		},
+		{
+			name:           "explicit override is also clamped to the poll interval",
+			gconf:          nil,
+			conf:           &kt.SnmpDeviceConfig{PollTimeoutSec: 200},
+			counterTimeSec: 60,
+			expected:       60 * time.Second,
+		},
+	}
+
+	for _, tt := range tests {
+		assert.Equal(tt.expected, GetPollTimeout(tt.gconf, tt.conf, tt.counterTimeSec, l), tt.name)
+	}
 }
 
 func TestHandlePowerset(t *testing.T) {

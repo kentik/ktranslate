@@ -205,6 +205,7 @@ type SnmpDeviceConfig struct {
 	ExpectedDevTags     int               `yaml:"expected_device_tags"`
 	DiscoveredMibs      []string          `yaml:"discovered_mibs,omitempty"`
 	PollTimeSec         int               `yaml:"poll_time_sec,omitempty"`
+	PollTimeoutSec      int               `yaml:"poll_timeout_sec,omitempty"`
 	TimeoutMS           int               `yaml:"timeout_ms,omitempty"`
 	Retries             int               `yaml:"retries,omitempty"`
 	EngineID            string            `yaml:"engine_id,omitempty"`
@@ -287,6 +288,7 @@ type ProviderMap struct {
 
 type SnmpGlobalConfig struct {
 	PollTimeSec           int                    `yaml:"poll_time_sec"`
+	PollTimeoutSec        int                    `yaml:"poll_timeout_sec,omitempty"`
 	DropIfOutside         bool                   `yaml:"drop_if_outside_poll"`
 	MibProfileDir         string                 `yaml:"mib_profile_dir"`
 	MibDB                 string                 `yaml:"mibs_db"`
@@ -750,6 +752,9 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	}
 	if old.PollTimeSec > 0 {
 		d.PollTimeSec = old.PollTimeSec
+	}
+	if old.PollTimeoutSec > 0 {
+		d.PollTimeoutSec = old.PollTimeoutSec
 	}
 	if old.TimeoutMS > 0 {
 		d.TimeoutMS = old.TimeoutMS

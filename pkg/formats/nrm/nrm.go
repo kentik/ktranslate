@@ -112,18 +112,8 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	if len(ms.Metrics) == 0 {
 		return nil, nil
 	}
-	for i := range ms.Metrics {
-		if ms.Metrics[i].Attributes != nil {
-			for k, v := range ms.Metrics[i].Attributes {
-				if strVal, ok := v.(string); ok {
-					ms.Metrics[i].Attributes[k] = kt.SanitizeUTF8(strVal)
-				}
-			}
-		}
-		if strVal, ok := ms.Metrics[i].Value.(string); ok {
-			ms.Metrics[i].Value = kt.SanitizeUTF8(strVal)
-		}
-	}
+
+	sanitizeMetricsUTF8(ms.Metrics)
 
 	target, err := json.Marshal([]NRMetricSet{ms}) // Has to be an array here, no idea why.
 	if err != nil {
@@ -156,6 +146,23 @@ func (f *NRMFormat) To(msgs []*kt.JCHF, serBuf []byte) (*kt.Output, error) {
 	}
 
 	return kt.NewOutputWithProviderAndCompanySender(buf.Bytes(), msgs[0].Provider, msgs[0].CompanyId, kt.MetricOutput, ""), nil
+}
+
+// sanitizeMetricsUTF8 rewrites any invalid UTF-8 string in a metric's Value
+// or Attributes in place, so it survives json.Marshal instead of tripping
+// the utf8.Valid check below and dropping the whole batch.
+func sanitizeMetricsUTF8(metrics []NRMetric) {
+	for i := range metrics {
+		m := &metrics[i]
+		if s, ok := m.Value.(string); ok {
+			m.Value = kt.SanitizeUTF8(s)
+		}
+		for k, v := range m.Attributes {
+			if s, ok := v.(string); ok {
+				m.Attributes[k] = kt.SanitizeUTF8(s)
+			}
+		}
+	}
 }
 
 func (f *NRMFormat) From(raw *kt.Output) ([]map[string]interface{}, error) {

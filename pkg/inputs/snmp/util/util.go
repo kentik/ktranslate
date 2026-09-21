@@ -286,6 +286,29 @@ func GetPollRate(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, log logg
 	return counterTimeSec
 }
 
+// GetPollTimeout returns how long a single counter poll is allowed to run before being
+// canceled. This is deliberately separate from the counter poll interval (counterTimeSec,
+// see GetPollRate) -- it's the budget for one poll attempt, not how often polls happen.
+func GetPollTimeout(gconf *kt.SnmpGlobalConfig, conf *kt.SnmpDeviceConfig, counterTimeSec int, log logger.ContextL) time.Duration {
+	// Default poll timeout. Chosen to give large devices (many interfaces, high RTT) more
+	// headroom than the counter poll interval alone would suggest.
+	pollTimeoutSec := 120
+	if conf != nil && conf.PollTimeoutSec > 0 {
+		pollTimeoutSec = conf.PollTimeoutSec
+	} else if gconf != nil && gconf.PollTimeoutSec > 0 {
+		pollTimeoutSec = gconf.PollTimeoutSec
+	}
+
+	// A poll timeout longer than the poll interval itself can never be hit before the next
+	// poll is scheduled, so it provides no protection at all -- clamp it down.
+	if pollTimeoutSec > counterTimeSec {
+		log.Warnf("%d poll timeout is above the poll interval of %d. Lowering to %d seconds", pollTimeoutSec, counterTimeSec, counterTimeSec)
+		pollTimeoutSec = counterTimeSec
+	}
+
+	return time.Duration(pollTimeoutSec) * time.Second
+}
+
 // Handle the case of wierd ints encoded as byte arrays.
 func GetFromConv(pdu gosnmp.SnmpPDU, conv string, log logger.ContextL) (int64, string, map[string]string) {
 	defer func() {
