@@ -12,7 +12,16 @@ name: Publish Release
 #     full release must be preceded by a tested pre-release of the same commit.
 #   - workflow_dispatch: supply a version explicitly, or omit it to fall back to the
 #     checked-in VERSION file for an ad-hoc build+push. Always takes the build path (never
-#     promotes), and never touches `latest`.
+#     promotes), and never touches `latest`. This path never *adds* the `latest` tag itself
+#     -- but typing `latest` as the version input produces that exact tag anyway, so the
+#     SemVer check below (which rejects `latest`) is what actually stops an accidental
+#     clobber. disable_semver_validation is the deliberate, visible escape hatch for the
+#     rare case that's genuinely wanted.
+#
+# Version format is enforced via nix/semver.nix's regex -- checks.<system>.version-is-semver
+# (see version-format-check.yml) protects the checked-in VERSION file the same way, so
+# there's exactly one place this rule is defined, runnable identically in CI or locally
+# (`nix run .#check-semver -- 0.0.1`).
 #
 # ci-build.yml (stack/01) builds the same Dockerfile but only ever exports a local tarball --
 # this is the one workflow in the repo that actually pushes anywhere.
@@ -25,6 +34,10 @@ on:
       version:
         description: 'Version to build and push (e.g. 0.0.1). Defaults to the VERSION file if omitted.'
         required: false
+      disable_semver_validation:
+        description: 'Disable SemVer validation for this manual push, allowing e.g. "latest" as the version. Off by default -- only check this for a deliberate override.'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -43,7 +56,7 @@ jobs:
           if [ "${{ github.event_name }}" = "release" ]; then
             VERSION="${{ github.event.release.tag_name }}"
           else
-            VERSION="${{ github.event.inputs.version }}"
+            VERSION="${{ inputs.version }}"
           fi
           VERSION="${VERSION#v}"
           if [ -z "$VERSION" ]; then
@@ -76,6 +89,25 @@ jobs:
             echo "sha_tag=sha-${{ github.sha }}"
             echo "is_prerelease=$IS_PRERELEASE"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
+      # Releases are always validated -- if you want a non-SemVer release tag, this isn't
+      # the path for that. workflow_dispatch can opt out via disable_semver_validation,
+      # deliberately.
+      - name: Validate version is SemVer
+        if: github.event_name == 'release' || inputs.disable_semver_validation != true
+        run: |
+          if ! nix run .#check-semver -- "${{ steps.version.outputs.version }}"; then
+            echo "::error::'${{ steps.version.outputs.version }}' is not a valid SemVer version (MAJOR.MINOR.PATCH, optionally -prerelease).${{ github.event_name == 'workflow_dispatch' && ' Re-run with \"Disable SemVer validation\" checked to override deliberately.' || '' }}"
+            exit 1
+          fi
 
   # Builds from source: workflow_dispatch (always) and a published pre-release. A full
   # release never lands here -- see the `promote` job.

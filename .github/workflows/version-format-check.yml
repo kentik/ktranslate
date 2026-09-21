@@ -1,0 +1,43 @@
+name: Version format check
+
+# Validates that the checked-in VERSION file is a valid SemVer string, via
+# checks.<system>.version-is-semver in flake.nix -- the actual rule lives there (and is
+# runnable identically with `nix build .#checks.x86_64-linux.version-is-semver` locally),
+# this workflow is just the CI trigger around it. Same pattern as vendor-hash-check.yml.
+#
+# publish-release.yml's workflow_dispatch path validates its own version input the same
+# way, via `nix run .#check-semver` -- see nix/semver.nix for the one shared regex both
+# of these consume.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ develop ]
+    paths: &version-paths
+      - 'VERSION'
+      - 'nix/semver.nix'
+      - 'flake.nix'
+      - 'flake.lock'
+  pull_request:
+    paths: *version-paths
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
+      - name: Validate VERSION is SemVer
+        run: nix build .#checks.x86_64-linux.version-is-semver -L
