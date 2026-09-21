@@ -1,8 +1,9 @@
 name: CI Build (no push)
 
-# Validation build for the `develop` branch: builds the Docker image end-to-end
-# (which also compiles the Go binary via `make`) and exports it as a downloadable artifact.
-# It is NEVER pushed to a registry. Download the artifact and `docker load` it locally.
+# Validation build: confirms the Docker image builds end-to-end (which also compiles
+# the Go binary via `make`) for the given platform. It is NEVER pushed to a registry,
+# and the resulting image never leaves the runner -- for an actual runnable image, use
+# publish-release.yml's workflow_dispatch instead.
 
 on:
   push:
@@ -11,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        description: Target platform for the exported image
+        description: Target platform to validate the build against
         type: choice
         options:
           - linux/amd64
@@ -28,9 +29,7 @@ jobs:
       - name: Set build id and platform
         run: |
           echo "CI_BUILD=ci-$(date +%Y-%m-%d)-${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
-          PLATFORM="${{ github.event.inputs.platform || 'linux/amd64' }}"
-          echo "PLATFORM=$PLATFORM" >> "$GITHUB_ENV"
-          echo "PLATFORM_TAG=${PLATFORM//\//-}" >> "$GITHUB_ENV"
+          echo "PLATFORM=${{ github.event.inputs.platform || 'linux/amd64' }}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU        # enables cross-building (e.g. arm64 on an amd64 runner)
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
@@ -81,15 +80,17 @@ jobs:
           curl -sfL -o /tmp/asn.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
           tar zxf /tmp/asn.tar.gz --strip-components 1 -C maxmind-dbs
 
-      - name: Build image and export as docker tar (no push)
+      - name: Build image
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           platforms: ${{ env.PLATFORM }}
           tags: network-agent:ci
-          # Export a `docker load`-compatible archive instead of pushing to a registry.
-          # type=docker is single-platform, which is why the platform is fixed per run.
-          outputs: type=docker,dest=/tmp/network-agent-image.tar
+          # Loads the built image into the runner's local Docker daemon (same as
+          # `docker buildx build --load`) so the verification step below can run it --
+          # nothing is exported to a file or pushed anywhere. type=docker is
+          # single-platform, which is why the platform is fixed per run.
+          outputs: type=docker
           # No NETWORK_AGENT_VERSION here -- Make's own default (the VERSION file) stands,
           # same as any other build. NETWORK_AGENT_BUILD identifies this specific CI run.
           build-args: |
@@ -100,29 +101,8 @@ jobs:
           secrets: |
             github_token=${{ secrets.SNMP_PROFILES_TOKEN }}
 
-      # Sanity-checks the built image directly (independent of the artifact upload below,
-      # which is subject to storage quotas), so a missing/misplaced file fails CI loudly.
+      # Sanity-checks the built image runs and has the expected content, so a missing
+      # or misplaced file fails CI loudly instead of only surfacing at release time.
       - name: Verify third-party notices are present in the image
         run: |
-          docker load -i /tmp/network-agent-image.tar
           docker run --rm --entrypoint cat network-agent:ci /usr/share/doc/ktranslate/THIRD_PARTY_NOTICES.md | head -5
-
-      - name: Upload image artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: network-agent-image-${{ env.PLATFORM_TAG }}-${{ env.CI_BUILD }}
-          path: /tmp/network-agent-image.tar
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: How to load it
-        run: |
-          {
-            echo "## network-agent image artifact"
-            echo "Built \`network-agent:ci\` for **$PLATFORM**. Download the artifact, unzip, then:"
-            echo '```bash'
-            echo "docker load -i network-agent-image.tar"
-            echo "docker image ls | grep network-agent    # now visible"
-            echo "docker run --rm --entrypoint ktranslate network-agent:ci -h    # prints usage"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
