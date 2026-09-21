@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"strings"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/inputs/snmp/util"
@@ -134,7 +135,11 @@ func (r *RuleSet) GetService(ip net.IP, port uint32, protocol uint8) (string, bo
 }
 
 func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
-	byc, err := util.LoadFile(context.Background(), rulePath)
+	// @TODO -- alow changeable timeout here?
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	byc, err := util.LoadFile(ctx, rulePath)
 	if err != nil {
 		return err
 	}
