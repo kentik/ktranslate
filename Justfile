@@ -92,3 +92,124 @@ third-party-notices-check:
     trap 'rm -f "$tmp"' EXIT
     just third-party-notices "$tmp"
     diff "$tmp" THIRD_PARTY_NOTICES.md
+
+# --- Release helpers ---------------------------------------------------------
+#
+# Drive publish-release.yml's two entry points from the CLI instead of the GitHub
+# release UI, so the commit a pre-release and its eventual full release point at
+# is pinned explicitly (not "whatever the target branch's HEAD happens to be when
+# I click Publish") and the checks the workflow itself would fail on (tag already
+# exists, no matching pre-release to promote, ...) surface here first. See
+# docs/RELEASING.md for the full walkthrough. Both need `gh` authenticated
+# (`gh auth login`) and `nix` on PATH.
+
+# Cut a pre-release: publishes a GitHub pre-release tagged v<version> at `ref`
+# (default: current HEAD), which triggers publish-release.yml's `publish` job to
+# build and push newrelic/network-agent:<version> and
+# newrelic/network-agent:sha-<commit> to Docker Hub. `version` must carry a
+# SemVer prerelease suffix (e.g. "0.1.0-rc1") -- same rule publish-release.yml
+# itself enforces, checked here first so a typo fails locally instead of via a
+# round trip through a created-then-broken GitHub release.
+release-rc version ref="HEAD":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    command -v gh >/dev/null || { echo "error: gh CLI not found -- see https://cli.github.com" >&2; exit 1; }
+    tag="v{{version}}"
+
+    case "{{version}}" in
+      *-*) ;;
+      *)
+        echo "error: '{{version}}' has no prerelease suffix (e.g. '{{version}}-rc1') -- a bare version is reserved for 'just release-promote'." >&2
+        exit 1
+        ;;
+    esac
+    nix run .#check-semver -- "{{version}}"
+
+    sha="$(git rev-parse "{{ref}}")"
+
+    if git rev-parse -q --verify "refs/tags/$tag" >/dev/null || \
+       git ls-remote --exit-code origin "refs/tags/$tag" >/dev/null 2>&1; then
+      echo "error: tag $tag already exists (locally or on origin)." >&2
+      exit 1
+    fi
+    if gh release view "$tag" >/dev/null 2>&1; then
+      echo "error: a GitHub release already exists for $tag." >&2
+      exit 1
+    fi
+
+    echo "Cutting pre-release $tag at $sha ..."
+    gh release create "$tag" --target "$sha" --prerelease --title "$tag" --generate-notes
+
+    echo
+    echo "Pre-release $tag published. Once publish-release.yml finishes, Docker Hub will have:"
+    echo "  newrelic/network-agent:{{version}}"
+    echo "  newrelic/network-agent:sha-$sha"
+    echo
+    echo "To promote this exact commit to a full release once it's been tested:"
+    echo "  just release-promote <final-version> $tag"
+
+# Promote a tested pre-release to a full release: checks that `from_tag` exists
+# and is a published GitHub pre-release, and that `version` (a bare SemVer, no
+# prerelease suffix -- e.g. "0.1.0") hasn't already been released, then
+# publishes a full GitHub release at the *same commit* as `from_tag`. This
+# triggers publish-release.yml's `promote` job, which retags the pre-release's
+# already-pushed newrelic/network-agent:sha-<commit> image as <version> and
+# `latest` -- no rebuild, so what ships is byte-identical to what the
+# pre-release build tested.
+release-promote version from_tag:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    command -v gh >/dev/null || { echo "error: gh CLI not found -- see https://cli.github.com" >&2; exit 1; }
+    tag="v{{version}}"
+    from="{{from_tag}}"
+    case "$from" in v*) ;; *) from="v$from" ;; esac
+
+    case "{{version}}" in
+      *-*)
+        echo "error: '{{version}}' has a prerelease suffix -- release-promote is for the final version (e.g. '0.1.0'), not the pre-release itself." >&2
+        exit 1
+        ;;
+    esac
+    nix run .#check-semver -- "{{version}}"
+
+    if git rev-parse -q --verify "refs/tags/$tag" >/dev/null || \
+       git ls-remote --exit-code origin "refs/tags/$tag" >/dev/null 2>&1; then
+      echo "error: tag $tag already exists -- this version has already been released." >&2
+      exit 1
+    fi
+    if gh release view "$tag" >/dev/null 2>&1; then
+      echo "error: a GitHub release already exists for $tag." >&2
+      exit 1
+    fi
+
+    git fetch origin --tags --quiet
+    sha="$(git rev-parse -q --verify "refs/tags/$from^{commit}" 2>/dev/null)" || {
+      echo "error: tag $from not found -- cut a pre-release first with 'just release-rc'." >&2
+      exit 1
+    }
+
+    is_prerelease="$(gh release view "$from" --json isPrerelease --jq '.isPrerelease' 2>/dev/null)" || {
+      echo "error: no GitHub release found for $from -- promoting requires a published pre-release, not a bare tag." >&2
+      exit 1
+    }
+    if [ "$is_prerelease" != "true" ]; then
+      echo "error: $from exists but is not marked as a pre-release on GitHub." >&2
+      exit 1
+    fi
+
+    # Best-effort: confirm the pre-release's own build actually succeeded, so a
+    # broken/incomplete Docker Hub push doesn't surprise the promote job below.
+    # Not a hard gate -- gh's run-listing by tag isn't guaranteed exhaustive, and
+    # publish-release.yml's own promote job is the authoritative, unskippable check.
+    if ! gh run list --workflow=publish-release.yml --json event,headBranch,conclusion \
+         --jq ".[] | select(.event == \"release\" and .headBranch == \"$from\" and .conclusion == \"success\")" \
+         | grep -q .; then
+      echo "warning: no successful publish-release.yml run found for $from -- its image may not actually be on Docker Hub yet. The promote step below will fail if it isn't." >&2
+    fi
+
+    echo "Promoting $from (commit $sha) to full release $tag ..."
+    gh release create "$tag" --target "$sha" --title "$tag" --notes "Promoted from $from."
+
+    echo
+    echo "Full release $tag published. publish-release.yml's promote job will retag the"
+    echo "existing newrelic/network-agent:sha-$sha image as {{version}} and latest -- no rebuild."

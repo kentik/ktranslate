@@ -44,6 +44,7 @@
               go # matches go.mod's `go 1.25.0` (nixos-unstable currently ships 1.25.12)
               goperf # provides `benchstat` (and benchsave/benchfilter) -- see BENCHMARKING_PLAN.md
               go-licence-detector # generates THIRD_PARTY_NOTICES.md -- see `just third-party-notices`
+              gh # needed by `just release-rc`/`release-promote` -- see docs/RELEASING.md
               just
               gopls
               delve
