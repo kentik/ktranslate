@@ -245,8 +245,10 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	kc.rule = rrs
 
 	// And load in any user defined per device rules.
-	if err := rule.InitUserDeviceRuleSet(config.UserDeviceRulePath, log); err != nil {
-		return nil, err
+	if config.UserDeviceRulePath != "" {
+		if err := rule.InitUserDeviceRuleSet(config.UserDeviceRulePath, log); err != nil {
+			return nil, err
+		}
 	}
 
 	// External Enrichment.
