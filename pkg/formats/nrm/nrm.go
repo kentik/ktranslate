@@ -41,7 +41,17 @@ const (
 	InstNameNetflowMetric = "netflow-metrics"
 	InstNameSynthetic     = "synthetic"
 	InstNameKtranslate    = "heartbeat"
+
+	AttrInstrumentationProvider = "instrumentation.provider"
+	AttrCollectorName           = "collector.name"
 )
+
+// reservedNRAttributeKeys are the common attributes newNRCommon stamps onto every
+// metric batch itself. A -nr_custom_attributes entry using one of these names is
+// silently dropped in NewFormat (rather than allowed to overwrite it in
+// newNRCommon on every batch), since overwriting either one would misattribute
+// this instance's data.
+var reservedNRAttributeKeys = []string{AttrInstrumentationProvider, AttrCollectorName}
 
 type NRMFormat struct {
 	logger.ContextL
@@ -88,6 +98,13 @@ func NewFormat(log logger.Underlying, compression kt.Compression, cfg *ktranslat
 		lastMetadata: map[string]*kt.LastMetadata{},
 		config:       cfg,
 		EventChan:    make(chan []byte, 100), // Used for sending events to the event API.
+	}
+
+	for _, k := range reservedNRAttributeKeys {
+		if _, ok := cfg.CustomAttributes[k]; ok {
+			jf.Warnf("-nr_custom_attributes cannot override reserved attribute %q, ignoring it", k)
+			delete(cfg.CustomAttributes, k)
+		}
 	}
 
 	dp := os.Getenv(DO_DEMO_PERIOD)
@@ -778,8 +795,8 @@ func toInstName(prov kt.Provider) string {
 
 func (f *NRMFormat) newNRCommon() *NRCommon {
 	attrs := map[string]string{
-		"instrumentation.provider": kt.InstProvider,
-		"collector.name":           kt.CollectorName,
+		AttrInstrumentationProvider: kt.InstProvider,
+		AttrCollectorName:           kt.CollectorName,
 	}
 	// Merged onto every batch this instance sends (SNMP, flow, heartbeat, everything) --
 	// New Relic's Metric API ingest merges these into each metric's own attributes

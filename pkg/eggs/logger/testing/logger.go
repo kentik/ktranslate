@@ -34,6 +34,9 @@ func (l *Test) Warnf(lp string, f string, params ...interface{}) {
 func (l *Test) Errorf(lp string, f string, params ...interface{}) {
 	l.T.Logf("%s ERROR %s", lp, fmt.Sprintf(f, params...))
 }
+func (l *Test) GetLogLevel() string {
+	return "debug"
+}
 
 // testUnderlyingL implements logger.Underlying slightly different way
 type testUnderlyingL struct {
