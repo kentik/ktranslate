@@ -70,7 +70,7 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 	case FORMAT_NR, FORMAT_JSON_FLAT:
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:
-		return nrm.NewFormat(log, compression)
+		return nrm.NewFormat(log, compression, cfg.NRMFormat)
 	case FORMAT_KFLOW:
 		return kflow.NewFormat(log, compression)
 	case FORMAT_PROM_REMOTE:

@@ -66,6 +66,13 @@ type SnmpFormatConfig struct {
 	ConfigFile string
 }
 
+// NRMFormatConfig is the config for the new_relic_metric format
+type NRMFormatConfig struct {
+	// CustomAttributes are stamped into the common attributes block sent with every
+	// metric batch, regardless of device/metric type -- see -nr_custom_attributes.
+	CustomAttributes map[string]string
+}
+
 // S3SinkConfig is the config for the S3-backed object store, used to
 // dereference large out-of-band objects (e.g. HAR files) referenced by path.
 // Not a selectable --sinks destination — see pkg/cat/kkc.go's objmgr wiring.
@@ -286,6 +293,8 @@ type Config struct {
 	SnmpFormat *SnmpFormatConfig
 	// pkg/formats/elasticsearch
 	ElasticFormat *ElasticFormatConfig
+	// pkg/formats/nrm
+	NRMFormat *NRMFormatConfig
 
 	// pkg/sinks/s3 (object store backing for out-of-band object dereferencing, not a --sinks option)
 	S3Sink *S3SinkConfig
@@ -386,6 +395,9 @@ func DefaultConfig() *Config {
 		},
 		SnmpFormat: &SnmpFormatConfig{
 			ConfigFile: "",
+		},
+		NRMFormat: &NRMFormatConfig{
+			CustomAttributes: map[string]string{},
 		},
 		InfluxDBFormat: &InfluxDBFormatConfig{
 			MeasurementPrefix: "",

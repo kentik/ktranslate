@@ -556,6 +556,18 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.NewRelicSink.ValidateJSON = v
+			// pkg/formats/nrm
+			case "nr_custom_attributes":
+				attrs := map[string]string{}
+				for _, pair := range strings.Split(val, ",") {
+					k, v, ok := strings.Cut(pair, "=")
+					if !ok || k == "" {
+						errCh <- fmt.Errorf("invalid -nr_custom_attributes entry %q: expected key=value", pair)
+						return
+					}
+					attrs[k] = v
+				}
+				cfg.NRMFormat.CustomAttributes = attrs
 			// pkg/sinks/http
 			case "http_url":
 				cfg.HTTPSink.Target = val

@@ -75,8 +75,8 @@ const (
 )
 
 const (
-	InstProvider  = "kentik"
-	CollectorName = "ktranslate"
+	InstProvider  = "newrelic"
+	CollectorName = "network-agent"
 	SnmpCollector = "snmp"
 
 	SendBatchDuration     = 1 * time.Second
