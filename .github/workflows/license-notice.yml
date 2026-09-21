@@ -1,0 +1,45 @@
+name: License notices
+
+# Keeps THIRD_PARTY_NOTICES.md honest: fails if `just third-party-notices` (go.elastic.co/
+# go-licence-detector against go.mod's direct + indirect deps, gated by
+# assets/licence/rules.json's allowlist) would produce a different file than what's checked
+# in. Same trigger/execution convention as benchmark.yml -- workflow_dispatch + push to
+# main + pull_request, all path-filtered, running inside the flake.nix devShell (which
+# pins go-licence-detector) rather than a separate install step.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: &license-notice-paths
+      - 'go.mod'
+      - 'go.sum'
+      - 'assets/licence/**'
+      - 'THIRD_PARTY_NOTICES.md'
+      - '.github/workflows/license-notice.yml'
+      - 'flake.nix'
+      - 'flake.lock'
+  pull_request:
+    paths: *license-notice-paths
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      # GitHub Actions cache-backed Nix substituter (see benchmark.yml).
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
+      - name: Verify THIRD_PARTY_NOTICES.md is up to date
+        run: nix develop --command just third-party-notices-check

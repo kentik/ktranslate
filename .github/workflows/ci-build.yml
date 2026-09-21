@@ -100,6 +100,13 @@ jobs:
           secrets: |
             github_token=${{ secrets.SNMP_PROFILES_TOKEN }}
 
+      # Sanity-checks the built image directly (independent of the artifact upload below,
+      # which is subject to storage quotas), so a missing/misplaced file fails CI loudly.
+      - name: Verify third-party notices are present in the image
+        run: |
+          docker load -i /tmp/network-agent-image.tar
+          docker run --rm --entrypoint cat network-agent:ci /usr/share/doc/ktranslate/THIRD_PARTY_NOTICES.md | head -5
+
       - name: Upload image artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

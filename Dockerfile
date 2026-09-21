@@ -70,6 +70,8 @@ COPY --from=build /usr/sbin/setcap /usr/sbin/setcap
 COPY --from=build /usr/lib/libcap.so.2 /usr/lib/libcap.so.2
 RUN setcap cap_net_raw=+ep /usr/local/bin/ktranslate
 
+COPY --from=build /src/THIRD_PARTY_NOTICES.md /usr/share/doc/ktranslate/THIRD_PARTY_NOTICES.md
+
 EXPOSE 8082
 
 USER ktranslate

@@ -1,5 +1,5 @@
 # Dev tooling helpers for this fork. Run inside `nix develop` (flake.nix) to guarantee the
-# tools each recipe needs (benchstat via goperf, ...) are present.
+# tools each recipe needs (benchstat via goperf, go-licence-detector, ...) are present.
 #
 # Benchmarking recipes below -- see BENCHMARKING_PLAN.md #3.
 
@@ -70,3 +70,25 @@ bench-tier-b system=CURRENT_SYSTEM:
 # flake.nix's checks output for why this isn't the local default.
 bench-tier-b-full system=CURRENT_SYSTEM:
     nix build .#checks.{{system}}.snmp-discovery-bench -L --print-out-paths
+
+# Regenerate THIRD_PARTY_NOTICES.md from go.mod (direct + indirect deps).
+third-party-notices out="THIRD_PARTY_NOTICES.md":
+    # go-licence-detector reads LICENSE files out of the local module cache -- it doesn't
+    # fetch them itself, so on a cold cache (e.g. a fresh CI runner) it silently produces
+    # a notices file with zero package entries instead of erroring.
+    go mod download all
+    go list -mod=mod -m -json all | go-licence-detector \
+        -includeIndirect \
+        -rules assets/licence/rules.json \
+        -overrides assets/licence/overrides.json \
+        -noticeTemplate assets/licence/THIRD_PARTY_NOTICES.md.tmpl \
+        -noticeOut {{out}}
+
+# Verify THIRD_PARTY_NOTICES.md is up to date with go.mod.
+third-party-notices-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmp="$(mktemp)"
+    trap 'rm -f "$tmp"' EXIT
+    just third-party-notices "$tmp"
+    diff "$tmp" THIRD_PARTY_NOTICES.md
