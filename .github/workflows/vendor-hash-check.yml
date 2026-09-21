@@ -1,0 +1,60 @@
+name: Vendor hash check
+
+# Fast, targeted check that nix/network-agent.nix's vendorHash still matches go.sum --
+# deliberately separate from benchmark-tier-b.yml (which pays for a ~7+ min NixOS VM
+# boot per run): this only builds the Go module vendor fetch itself, no VM and no Go
+# compile involved, so it's cheap enough to run on every go.mod/go.sum change (e.g.
+# Dependabot bumps). Also covers Tier B's own fixture, since snmp-discovery-bench.nix
+# now builds its collector VM from this same packages.*.network-agent output (see
+# flake.nix) rather than a private copy.
+#
+# Builds packages.*.network-agent.goModules specifically (buildGoModule's own passthru
+# for the vendoring fixed-output derivation) rather than the whole package: this is the
+# one and only derivation vendorHash controls, so building it in isolation is both
+# faster and unambiguous even if the package later grows an unrelated second FOD (e.g.
+# an npmDepsHash for a bundled web UI) -- see vendor-hash-autofix.yml for why that
+# matters more there.
+#
+# vendor-hash-autofix.yml reacts to a failed run of this workflow and pushes a fixup
+# commit when it can.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ develop ]
+    paths: &vendor-hash-paths
+      - 'go.mod'
+      - 'go.sum'
+      - 'nix/network-agent.nix'
+      - 'flake.nix'
+      - 'flake.lock'
+  pull_request:
+    paths: *vendor-hash-paths
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      # GitHub Actions cache-backed Nix substituter: wires a post-build-hook into
+      # nix.conf so this build's outputs (and any dependency not already on
+      # cache.nixos.org) upload here and get pulled by later runs instead of
+      # rebuilt. upstream-cache-filter skips re-caching anything already signed by
+      # cache.nixos.org, since the shared 10GB-per-repo quota is better spent on
+      # this repo's own outputs. See cache-gc.yml for the required cleanup job
+      # (the quota is shared across every workflow that uses this step).
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
+      - name: Build network-agent's go-modules fetch (validates vendorHash)
+        run: nix build .#packages.x86_64-linux.network-agent.goModules -L

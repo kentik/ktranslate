@@ -1,0 +1,108 @@
+name: Vendor hash autofix
+
+# vendorHash is how Nix makes the Go build reproducible: dependencies get downloaded
+# (vendored) up front and checked against this hash, then the actual build runs
+# sandboxed with no network access at all. Any dependency change (e.g. a Dependabot
+# bump) changes that vendored set, so the hash goes stale and the build fails until
+# someone updates it -- this job does that automatically instead of needing a manual
+# fix every time.
+#
+# Follow-up to vendor-hash-check.yml: if that check failed on a pull request from a
+# same-repo branch (true for Dependabot PRs here), recompute vendorHash and push a
+# fixup commit directly to the PR branch.
+#
+# Runs as workflow_run (not inside the pull_request-triggered check itself) so it
+# executes in the base repo's context with normal contents:write, regardless of who or
+# what triggered the check -- avoids depending on the exact permissions/secrets a
+# pull_request-triggered run gets for a bot-authored PR.
+#
+# Does the classic fixed-output-derivation trick by hand rather than using nix-update
+# (Mic92/nix-update): confirmed by direct testing that it crashes evaluating attribute
+# position info ("expected a set but found null: null") -- and, importantly, this isn't
+# specific to this repo. A from-scratch minimal repro (a plain buildGoModule package
+# with a literal fetchFromGitHub src, no self-referential src, no flake even) hits the
+# identical crash on this nix-update/Nix version combo, in both --flake and non-flake
+# mode. So the bot that actually keeps nixpkgs's own Go packages up to date (@r-ryantm)
+# can't be built on this tool -- and it isn't: it runs a separate tool,
+# nix-community/nixpkgs-update (Haskell, not Mic92/nix-update), whose actual hash-update
+# mechanism (src/Nix.hs: fakeHashMatching + getHashFromBuild) is exactly this -- set a
+# placeholder hash, run the build expecting failure, split stderr on "got: " to read the
+# real hash back out. It never touches Nix's attribute-position introspection at all,
+# which is why it works reliably across nixpkgs' huge variety of derivation shapes. What
+# follows is the same technique.
+
+on:
+  workflow_run:
+    workflows: ["Vendor hash check"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  autofix:
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      # GitHub Actions cache-backed Nix substituter (see vendor-hash-check.yml).
+      # Mainly speeds up the full-package confirmation build below, since the
+      # goModules build above is a fixed-output derivation and deliberately
+      # forced to fail on a hash mismatch either way.
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
+      - name: Refresh vendorHash
+        run: |
+          set -euo pipefail
+          file=nix/network-agent.nix
+          old_hash="$(grep -oE 'vendorHash = "[^"]+"' "$file" | sed -E 's/vendorHash = "(.+)"/\1/')"
+          sed -i "s|vendorHash = \"$old_hash\"|vendorHash = \"\"|" "$file"
+
+          # Build ONLY packages.*.network-agent.goModules -- the one derivation
+          # vendorHash controls -- rather than the whole package. That guarantees at
+          # most one "hash mismatch in fixed-output derivation" block in the output, so
+          # grepping "got: " below can't grab the wrong hash if the package ever grows
+          # an unrelated second FOD (e.g. an npmDepsHash for a bundled web UI): building
+          # this one attribute alone cannot realize that other derivation at all.
+          set +e
+          build_out="$(nix build .#packages.x86_64-linux.network-agent.goModules -L 2>&1)"
+          set -e
+          new_hash="$(printf '%s\n' "$build_out" | grep -oP 'got:\s+\K\S+' | tail -1)"
+
+          if [ -z "$new_hash" ]; then
+            echo "::error::Could not recover a vendorHash from the build output -- this is a real break, not just a stale hash. Needs a human."
+            printf '%s\n' "$build_out"
+            exit 1
+          fi
+
+          sed -i "s|vendorHash = \"\"|vendorHash = \"$new_hash\"|" "$file"
+
+          # Full-package build as the pre-commit confirmation: the narrow goModules
+          # build above only proves the hash is right, not that the rest of the
+          # package still builds with it.
+          nix build .#packages.x86_64-linux.network-agent -L
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet; then
+            echo "vendorHash already correct, nothing to fix"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nix/network-agent.nix
+          git commit -m "chore(deps): refresh network-agent vendorHash"
+          git push origin "HEAD:${{ github.event.workflow_run.head_branch }}"

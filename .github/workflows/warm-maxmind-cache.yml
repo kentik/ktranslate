@@ -5,7 +5,10 @@ on:
     # Shortly after 00:00 UTC, not off-peak hours -- the cache key below is a UTC
     # calendar date (`date +%Y-%m-%d` on the runner), so it rolls over at midnight UTC
     # regardless of when this job runs. Firing right after that keeps the daily window
-    # with no warm cache to just a few minutes, instead of hours.
+    # with no warm cache to just a few minutes, instead of hours. Deliberately no
+    # restore-keys fallback here (unlike ci-build.yml/publish-release.yml): this job's
+    # whole purpose is to actually refresh the data once a day, so it should fail
+    # loudly on a bad day rather than silently keep reusing an older cache forever.
     - cron: '7 0 * * *'
   workflow_dispatch:
 
@@ -16,6 +19,17 @@ jobs:
   warm-cache:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+
+      - name: Nix build cache
+        uses: Mic92/hestia@f1f4df2801140a36398ed423533c8460618539df # v3.0.1
+        with:
+          upstream-cache-filter: "true"
+
       - name: Cache key date
         id: date
         run: echo "date=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
@@ -27,16 +41,11 @@ jobs:
           path: maxmind-dbs
           key: maxmind-dbs-${{ steps.date.outputs.date }}
 
+      # Same `just maxmind-dbs` recipe a developer runs locally (Justfile) -- one place
+      # defines the download procedure, this job is just what keeps it warm on a schedule.
       - name: Download MaxMind databases
         if: steps.maxmind-cache.outputs.cache-hit != 'true'
         env:
           MM_ACCOUNT_ID: ${{ secrets.MM_ACCOUNT_ID }}
           MM_DOWNLOAD_KEY: ${{ secrets.MM_DOWNLOAD_KEY }}
-        run: |
-          set -eu
-          if [ -z "$MM_DOWNLOAD_KEY" ]; then echo "maxmind license key secret (MM_DOWNLOAD_KEY) not provided"; exit 1; fi
-          mkdir -p maxmind-dbs
-          curl -sfL -o /tmp/country.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz"
-          tar zxf /tmp/country.tar.gz --strip-components 1 -C maxmind-dbs
-          curl -sfL -o /tmp/asn.tar.gz -u "$MM_ACCOUNT_ID:$MM_DOWNLOAD_KEY" "https://download.maxmind.com/geoip/databases/GeoLite2-ASN/download?suffix=tar.gz"
-          tar zxf /tmp/asn.tar.gz --strip-components 1 -C maxmind-dbs
+        run: nix develop --command just maxmind-dbs
