@@ -132,8 +132,12 @@ func (d *Device) InitUserTags(serviceName string, tags map[string]string, defaul
 	}
 
 	for k, v := range defaults {
-		if _, ok := d.allUserTags[k]; !ok {
-			d.allUserTags[k] = v
+		key := k
+		if len(key) < len(UserTagPrefix) || key[:len(UserTagPrefix)] != UserTagPrefix {
+			key = UserTagPrefix + key
+		}
+		if _, ok := d.allUserTags[key]; !ok {
+			d.allUserTags[key] = v
 		}
 	}
 }
