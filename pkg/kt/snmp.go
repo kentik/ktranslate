@@ -818,9 +818,19 @@ func (d *SnmpDeviceConfig) InitUserTags(serviceName string, defaults map[string]
 		d.UserTags["container_service"] = serviceName
 	}
 
-	// Add in any defaults pass into the program externally.
+	// Add in any defaults passed into the program externally.
+	if d.UserTags == nil {
+		d.UserTags = map[string]string{}
+	}
 	for k, v := range defaults {
-		if _, ok := d.UserTags[k]; !ok {
+		key := k
+		if !strings.HasPrefix(key, UserTagPrefix) {
+			key = UserTagPrefix + key
+		}
+		if _, rawExists := d.UserTags[k]; rawExists {
+			continue
+		}
+		if _, prefixedExists := d.UserTags[key]; !prefixedExists {
 			d.UserTags[k] = v
 		}
 	}
