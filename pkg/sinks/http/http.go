@@ -80,7 +80,7 @@ func (h *HeaderFlag) Set(value string) error {
 	return nil
 }
 
-func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, cfg *ktranslate.HTTPSinkConfig, logTee chan string) (*HttpSink, error) {
+func NewSink(log logger.Underlying, registry go_metrics.Registry, cfg *ktranslate.HTTPSinkConfig, logTee chan string) (*HttpSink, error) {
 	nr := HttpSink{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "httpSink"}, log),
 		registry: registry,
@@ -124,12 +124,6 @@ func NewSink(log logger.Underlying, registry go_metrics.Registry, sink string, c
 		nr.username = username
 		nr.passwd = passwd
 		nr.Infof("Setting username for basic auth: %s", username)
-	}
-
-	if sink == "splunk" {
-		if _, ok := nr.headers["Authorization"]; !ok {
-			return nil, fmt.Errorf("Authorization header required for splunk")
-		}
 	}
 
 	return &nr, nil

@@ -125,9 +125,7 @@ func (s *S3Sink) Init(ctx context.Context, format formats.Format, compression kt
 		s.dl = s3manager.NewDownloader(sess)
 	}
 
-	if format == formats.FORMAT_PARQUET {
-		s.suffix = ".parquet"
-	} else if format == formats.FORMAT_AVRO {
+	if format == formats.FORMAT_AVRO {
 		s.suffix = ".avro"
 	} else {
 		switch compression {

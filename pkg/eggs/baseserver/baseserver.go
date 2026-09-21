@@ -18,10 +18,7 @@ import (
 	"github.com/kentik/ktranslate"
 	"github.com/kentik/ktranslate/pkg/eggs/timing"
 
-	"github.com/google/uuid"
-	libhoney "github.com/honeycombio/libhoney-go"
 	"github.com/judwhite/go-svc"
-	"github.com/kentik/ktranslate/pkg/eggs/olly"
 
 	"github.com/kentik/ktranslate/pkg/eggs/concurrent"
 	"github.com/kentik/ktranslate/pkg/eggs/version"
@@ -41,13 +38,11 @@ const (
 )
 
 var (
-	serviceName  string
-	logLevel     string
-	logToStdout  bool
-	metricsDest  string
-	metaListen   string
-	ollyDataset  string
-	ollyWriteKey string
+	serviceName string
+	logLevel    string
+	logToStdout bool
+	metricsDest string
+	metaListen  string
 )
 
 func init() {
@@ -56,8 +51,6 @@ func init() {
 	flag.BoolVar(&logToStdout, "stdout", false, "Log to stdout")
 	flag.StringVar(&metricsDest, "metrics", "none", "Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003")
 	flag.StringVar(&metaListen, "metalisten", "localhost:0", "HTTP interface and port to bind on")
-	flag.StringVar(&ollyDataset, "olly_dataset", "", "Olly dataset name")
-	flag.StringVar(&ollyWriteKey, "olly_write_key", "", "Olly dataset name")
 }
 
 type BaseServerConfiguration struct {
@@ -76,10 +69,6 @@ type BaseServerConfiguration struct {
 	// metrics
 	MetricsPrefix      string
 	MetricsDestination string
-
-	// olly
-	OllyWriteKey string
-	OllyDataset  string
 
 	// meta server properties
 	MetaListen string
@@ -106,8 +95,6 @@ var BaseServerConfigurationDefaults = BaseServerConfiguration{
 	HealthCheckPeriod:       30 * time.Second,
 	HealthCheckTimeout:      5 * time.Second,
 	PropsRefreshPeriod:      5 * time.Minute,
-	OllyDataset:             "", // olly is disabled by default
-	OllyWriteKey:            "",
 }
 
 type BaseServer struct {
@@ -121,7 +108,6 @@ type BaseServer struct {
 	waitGroup       sync.WaitGroup
 	propertyService properties.PropertyService
 	featureService  features.FeatureService
-	ollyBuilder     *olly.Builder
 	config          *ktranslate.ServerConfig
 }
 
@@ -152,8 +138,6 @@ func NewBaseServer(serviceName string, version version.VersionInfo, metricsPrefi
 	conf.LogToStdout = cfg.LogToStdout
 	conf.MetricsDestination = cfg.MetricsEndpoint
 	conf.MetaListen = cfg.MetaListenAddr
-	conf.OllyDataset = cfg.OllyDataset
-	conf.OllyWriteKey = cfg.OllyWriteKey
 
 	props := properties.NewPropertyService(
 		properties.NewFileSystemPropertyBacking("/props"), // highest prio: dynamic FS props
@@ -194,7 +178,6 @@ func (bs *BaseServer) Init(mextra interface{}) {
 	bs.InitLogger(bs.LogToStdout, bs.LogLevel)
 	bs.Logger.Infof(bs.LogPrefix, "version %s starting", bs.VersionInfo.Version)
 	bs.InitMaxProcs()
-	bs.InitOlly()
 	bs.InitMetrics(mextra)
 }
 
@@ -258,12 +241,10 @@ func (bs *BaseServer) Run(service Service) {
 	signal.Notify(s, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 
 	setReady(bs.ctx) // goes with waitGroup.Add(1) in NewBaseServer
-	olly.QuickC(bs, olly.Op("baseserver.start"))
 
 	for {
 		select {
 		case <-bs.ctx.Done():
-			olly.QuickC(bs, olly.Op("baseserver.stop"))
 			bs.finish()
 			return
 		case sig := <-s:
@@ -284,7 +265,6 @@ func (bs *BaseServer) finish() {
 
 	t := timing.StartChrono()
 	bs.FinishLogger()
-	bs.FinishOlly()
 
 	time.Sleep(bs.ShutdownSettleTime - t.Duration()) // Give everything enough time to settle.
 	bs.Logger.Infof(bs.LogPrefix, "draining logger and exiting main thread")
@@ -348,28 +328,6 @@ func (bs *BaseServer) InitMetrics(extra interface{}) {
 	cmetrics.SetConf(bs.MetricsDestination, bs.Logger, bs.LogPrefix, bs.MetricsPrefix, nil, tags, nil, nil, extra)
 }
 
-// Initialize olly observability.
-func (bs *BaseServer) InitOlly() {
-	if bs.OllyDataset == "" || bs.OllyWriteKey == "" {
-		bs.Logger.Infof(bs.LogPrefix, "olly: disabled")
-		bs.ollyBuilder = olly.NewBuilder()
-		return
-	}
-	bs.Logger.Infof(bs.LogPrefix, "olly: enabled")
-
-	hostname, _ := os.Hostname() // nolint:errcheck
-
-	olly.Init(bs.ServiceName, bs.VersionInfo.Version, libhoney.Config{
-		WriteKey: bs.OllyWriteKey,
-		Dataset:  bs.OllyDataset,
-	}, "svc_process_uuid", uuid.New().String(), "node", hostname)
-	bs.ollyBuilder = olly.NewBuilder()
-}
-
-func (bs *BaseServer) FinishOlly() {
-	olly.Close()
-}
-
 // Initialize our legacy health check.
 func (bs *BaseServer) spawnHealthCheck(ctx context.Context, service Service) {
 	bs.hce = NewHealthCheckExecutor(service, bs.HealthCheckStartupDelay, bs.HealthCheckPeriod, bs.HealthCheckTimeout)
@@ -409,10 +367,6 @@ func (bs *BaseServer) spawnPropsRefresh(ctx context.Context) {
 			}
 		}
 	}()
-}
-
-func (bs *BaseServer) OllyBuilder() *olly.Builder {
-	return bs.ollyBuilder
 }
 
 func (bs *BaseServer) readyAwareSubContext(ctx context.Context, name string) context.Context {

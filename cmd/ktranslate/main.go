@@ -73,11 +73,11 @@ func init() {
 	flag.IntVar(&threads, "threads", 1, "Number of threads to run for processing")
 	flag.IntVar(&threadsInput, "input_threads", 1, "Number of threads to run for input processing")
 	flag.IntVar(&maxThreads, "max_threads", 1, "Dynamically grow threads up to this number")
-	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog|otel|snmp|parquet)")
-	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
-	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)")
+	flag.StringVar(&format, "format", "flat_json", "Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|elasticsearch|kflow|otel|snmp)")
+	flag.StringVar(&formatRollup, "format_rollup", "", "Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow)")
+	flag.StringVar(&formatMetric, "format_metric", "", "Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow)")
 	flag.StringVar(&compression, "compression", "none", "compression algo to use (none|gzip|snappy|deflate|null)")
-	flag.StringVar(&sinks, "sinks", "stdout", "List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog)")
+	flag.StringVar(&sinks, "sinks", "stdout", "List of sinks to send data to. Options: (stdout|new_relic|new_relic_multi|otel|http|net)")
 	flag.IntVar(&maxFlows, "max_flows_per_message", 10000, "Max number of flows to put in each emitted message")
 	flag.IntVar(&dumpRollups, "rollup_interval", 0, "Export timer for rollups in seconds")
 	flag.StringVar(&teeFlow, "tee_flow", "", "If set, tee flow to another ktranslate instance here.")
@@ -418,8 +418,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 				} else {
 					cfg.EnricherURL = val
 				}
-			case "ddog_url":
-				cfg.DDogSink.URL = val
 			// pkg/km
 			case "km_value_map":
 				cfg.KMUdr = val
@@ -498,25 +496,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.InfluxDBFormat.MeasurementPrefix = val
 			case "influxdb_namespace_token":
 				cfg.InfluxDBFormat.NamespaceToken = val
-			// pkg/sinks/prom
-			case "prom_listen":
-				cfg.PrometheusSink.ListenAddr = val
-			case "prom_remote_write":
-				cfg.PrometheusSink.RemoteWriteUrl = val
-			// pkg/sinks/gcloud
-			case "gcloud_bucket":
-				cfg.GCloudSink.Bucket = val
-			case "gcloud_prefix":
-				cfg.GCloudSink.Prefix = val
-			case "gcloud_content_type":
-				cfg.GCloudSink.ContentType = val
-			case "gcloud_flush_sec":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.GCloudSink.FlushIntervalSeconds = v
 			// pkg/sinks/s3
 			case "s3_bucket":
 				cfg.S3Sink.Bucket = val
@@ -558,11 +537,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.S3Sink.CheckDangling = v
-			// pkg/sinks/net
-			case "net_server":
-				cfg.NetSink.Endpoint = val
-			case "net_protocol":
-				cfg.NetSink.Protocol = val
 			// pkg/sinks/nr
 			case "nr_account_id":
 				cfg.NewRelicSink.Account = val
@@ -582,28 +556,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.NewRelicSink.ValidateJSON = v
-			// pkg/sinks/file
-			case "file_out":
-				cfg.FileSink.Path = val
-			case "file_on":
-				v, err := strconv.ParseBool(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.FileSink.EnableImmediateWrite = v
-			case "file_flush_sec":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.FileSink.FlushIntervalSeconds = v
-			// pkg/sinks/gcppubsub
-			case "gcp_pubsub_project_id":
-				cfg.GCloudPubSubSink.ProjectID = val
-			case "gcp_pubsub_topic":
-				cfg.GCloudPubSubSink.Topic = val
 			// pkg/sinks/http
 			case "http_url":
 				cfg.HTTPSink.Target = val
@@ -625,96 +577,11 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.HTTPSink.TimeoutInSeconds = v
 			case "http_header":
 				cfg.HTTPSink.Headers = strings.Split(val, ",")
-			// pkg/sinks/kafka
-			case "kafka_topic":
-				cfg.KafkaSink.Topic = val
-			case "bootstrap.servers":
-				cfg.KafkaSink.BootstrapServers = val
-			case "kafka_security_protocol":
-				cfg.KafkaSink.SecurityProtocol = val
-			case "kafka_sasl_mechanism":
-				cfg.KafkaSink.SASLMechanism = val
-			case "kafka_sasl_username":
-				cfg.KafkaSink.SASLUsername = val
-			case "kafka_sasl_password":
-				cfg.KafkaSink.SASLPassword = val
-			case "kafka_kerberos_service_name":
-				cfg.KafkaSink.KerberosServiceName = val
-			case "kafka_kerberos_realm":
-				cfg.KafkaSink.KerberosRealm = val
-			case "kafka_kerberos_config_path":
-				cfg.KafkaSink.KerberosConfigPath = val
-			case "kafka_kerberos_keytab_path":
-				cfg.KafkaSink.KerberosKeytabPath = val
-			case "kafka_kerberos_principal":
-				cfg.KafkaSink.KerberosPrincipal = val
-			case "kafka_kerberos_disable_pafx_fast":
-				v, err := strconv.ParseBool(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.KerberosDisablePAFXFAST = v
-			case "kafka_ssl_ca_file":
-				cfg.KafkaSink.SSLCAFile = val
-			case "kafka_ssl_cert_file":
-				cfg.KafkaSink.SSLCertFile = val
-			case "kafka_ssl_key_file":
-				cfg.KafkaSink.SSLKeyFile = val
-			case "kafka_ssl_insecure":
-				v, err := strconv.ParseBool(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.SSLInsecure = v
-			case "kafka_required_acks":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.RequiredAcks = v
-			case "kafka_compression":
-				cfg.KafkaSink.Compression = val
-			case "kafka_max_message_bytes":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.MaxMessageBytes = v
-			case "kafka_retry_max":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.RetryMax = v
-			case "kafka_flush_frequency":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.FlushFrequency = v
-			case "kafka_flush_messages":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.FlushMessages = v
-			case "kafka_flush_bytes":
-				v, err := strconv.Atoi(val)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				cfg.KafkaSink.FlushBytes = v
-			// pkg/sinks/kentik
-			case "kentik_relay_url":
-				cfg.KentikSink.RelayURL = val
+			// pkg/sinks/net
+			case "net_server":
+				cfg.NetSink.Endpoint = val
+			case "net_protocol":
+				cfg.NetSink.Protocol = val
 			// pkg/rollup/rollup
 			case "rollup_key_join":
 				cfg.Rollup.JoinKey = val
@@ -753,10 +620,6 @@ func applyFlags(cfg *ktranslate.Config) error {
 				cfg.Server.MetaListenAddr = val
 			case "metrics":
 				cfg.Server.MetricsEndpoint = val
-			case "olly_dataset":
-				cfg.Server.OllyDataset = val
-			case "olly_write_key":
-				cfg.Server.OllyWriteKey = val
 			// pkg/api
 			case "api_device_file":
 				cfg.API.DeviceFile = val

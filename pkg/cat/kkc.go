@@ -27,6 +27,7 @@ import (
 	"github.com/kentik/ktranslate/pkg/maps"
 	"github.com/kentik/ktranslate/pkg/rollup"
 	ss "github.com/kentik/ktranslate/pkg/sinks"
+	"github.com/kentik/ktranslate/pkg/sinks/relay"
 	"github.com/kentik/ktranslate/pkg/sinks/s3"
 	"github.com/kentik/ktranslate/pkg/stitch"
 	"github.com/kentik/ktranslate/pkg/util/enrich"
@@ -228,10 +229,9 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 
 	// Set up a tee if we need to.
 	if config.TeeFlow != "" {
-		sink := ss.Sink("kentik")
-		snk, err := ss.NewSink(sink, log.GetLogger().GetUnderlyingLogger(), registry, kc.tooBig, nil, kc.config)
+		snk, err := relay.NewSink(log.GetLogger().GetUnderlyingLogger(), registry, kc.config)
 		if err != nil {
-			return nil, fmt.Errorf("Invalid tee: %s, %v", sink, err)
+			return nil, fmt.Errorf("Invalid tee: %v", err)
 		}
 		kc.tee = snk
 		kc.log.Infof("Using ktrans tee at %s", config.TeeFlow)

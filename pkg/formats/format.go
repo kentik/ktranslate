@@ -9,7 +9,6 @@ import (
 
 	"github.com/kentik/ktranslate/pkg/formats/avro"
 	"github.com/kentik/ktranslate/pkg/formats/carbon"
-	"github.com/kentik/ktranslate/pkg/formats/ddog"
 	"github.com/kentik/ktranslate/pkg/formats/elasticsearch"
 	"github.com/kentik/ktranslate/pkg/formats/influx"
 	"github.com/kentik/ktranslate/pkg/formats/json"
@@ -17,11 +16,9 @@ import (
 	"github.com/kentik/ktranslate/pkg/formats/netflow"
 	"github.com/kentik/ktranslate/pkg/formats/nrm"
 	"github.com/kentik/ktranslate/pkg/formats/otel"
-	"github.com/kentik/ktranslate/pkg/formats/parquet"
 	"github.com/kentik/ktranslate/pkg/formats/prom"
 	"github.com/kentik/ktranslate/pkg/formats/redis"
 	"github.com/kentik/ktranslate/pkg/formats/snmp"
-	"github.com/kentik/ktranslate/pkg/formats/splunk"
 	"github.com/kentik/ktranslate/pkg/kt"
 	"github.com/kentik/ktranslate/pkg/rollup"
 
@@ -48,12 +45,9 @@ const (
 	FORMAT_PROM_REMOTE          = "prometheus_remote"
 	FORMAT_NR                   = "new_relic"
 	FORMAT_NRM                  = "new_relic_metric"
-	FORMAT_SPLUNK               = "splunk"
-	FORMAT_DDOG                 = "ddog"
 	FORMAT_KFLOW                = "kflow"
 	FORMAT_OTEL                 = "otel"
 	FORMAT_SNMP                 = "snmp"
-	FORMAT_PARQUET              = "parquet"
 	FORMAT_REDIS                = "redis"
 )
 
@@ -77,10 +71,6 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 		return json.NewFormat(log, compression, true)
 	case FORMAT_NRM:
 		return nrm.NewFormat(log, compression)
-	case FORMAT_DDOG:
-		return ddog.NewFormat(log, compression)
-	case FORMAT_SPLUNK:
-		return splunk.NewFormat(log, compression)
 	case FORMAT_KFLOW:
 		return kflow.NewFormat(log, compression)
 	case FORMAT_PROM_REMOTE:
@@ -89,8 +79,6 @@ func NewFormat(ctx context.Context, format Format, log logger.Underlying, regist
 		return otel.NewFormat(ctx, log, cfg.OtelFormat, logTee, registry)
 	case FORMAT_SNMP:
 		return snmp.NewFormat(log, cfg.SnmpFormat)
-	case FORMAT_PARQUET:
-		return parquet.NewFormat(log, compression)
 	case FORMAT_REDIS:
 		return redis.NewFormat(ctx, log, cfg.RedisFormat)
 	default:

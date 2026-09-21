@@ -31,70 +31,80 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	File containing custom application mappings
   -asn string
     	Asn mapping file
+  -assume_role_or_instance_profile_interval_seconds int
+    	Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds (default 900)
   -aws_lambda
     	Run as a AWS Lambda function
   -aws_local_file string
     	If set, process this local file and exit
   -aws_regions string
     	CSV list of region to run in. Will look for metadata in all regions, run SQS in first region. (default "us-east-1")
-  -bootstrap.servers string
-    	bootstrap.servers
   -compression string
     	compression algo to use (none|gzip|snappy|deflate|null) (default "none")
+  -config string
+    	path to ktranslate config
+  -config_provider string
+    	Implementation of which provider controls the config process. Can be one of (new_relic,local)
   -dns string
     	Resolve IPs at this ip:port
+  -ec2_instance_profile
+    	EC2 Instance Profile
+  -elastic.action string
+    	Use this action when sending to elastic. (default "index")
   -enricher string
     	Send data to this http url for enrichment.
-  -file_flush_sec int
-    	Create a new output file every this many seconds (default 60)
-  -file_on
-    	If true, start writting to file sink right away. Otherwise, wait for a USR1 signal
-  -file_out string
-    	Write flows seen to log to this directory if set (default "./")
   -filters value
     	Any filters to use. Format: type dimension operator value
   -flow_only
     	If true, don't poll snmp devices.
   -format string
-    	Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|ddog|otel|snmp|parquet) (default "flat_json")
+    	Format to convert kflow to: (json|flat_json|avro|netflow|influx|carbon|prometheus|new_relic|new_relic_metric|elasticsearch|kflow|otel|snmp) (default "flat_json")
+  -format_metric string
+    	Format to convert metrics to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow)
   -format_rollup string
-    	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|splunk|elasticsearch|kflow|parquet)
-  -gcloud_bucket string
-    	GCloud Storage Bucket to write flows to
-  -gcloud_content_type string
-    	GCloud Storage Content Type (default "application/json")
-  -gcloud_prefix string
-    	GCloud Storage object prefix (default "/kentik")
+    	Format to convert rollups to: (json|avro|netflow|influx|prometheus|new_relic|new_relic_metric|elasticsearch|kflow)
   -gcp.project string
     	Google ProjectID to listen for flows on
+  -gcp.sample float
+    	Sample rate of the vpc export (as defined in the VPC setup) (default 1)
   -gcp.sub string
     	Google Sub to listen for flows on
-  -gcp_pubsub_project_id string
-    	GCP PubSub Project ID to use
-  -gcp_pubsub_topic string
-    	GCP PubSub Topic to publish to
+  -generate-config
+    	generate ktranslate config and exit
   -geo string
     	Geo mapping file
+  -geo_city_map string
+    	CSV file mapping geo city ids to strings
+  -geo_region_map string
+    	CSV file mapping geo region ids to strings
+  -http.remote_ip string
+    	If set, ignore actual remote IP and use this for device mapping.
   -http.source
     	Listen for content sent via http.
   -http_header value
     	Any custom http headers to set on outbound requests
+  -http_insecure
+    	Allow insecure urls.
+  -http_log_url string
+    	URL to post logs to (default "http://localhost:8088/services/collector/event")
+  -http_timeout_sec int
+    	Timeout each request after this long. (default 30)
   -http_url string
     	URL to post to (default "http://localhost:8086/write?db=kentik")
   -iam_role string
     	IAM Role to use for processing flow
+  -influxdb_measurement_prefix string
+    	Prefix metric names with this
+  -influxdb_namespace_token string
+    	Use this token to seperate namespaces (default ":")
   -info_collector
     	Also send stats about this collector
   -input_threads int
-    	Number of threads to run for input processing
-  -kafka_topic string
-    	kafka topic to produce on
+    	Number of threads to run for input processing (default 1)
   -kentik_email string
     	Kentik email to use for API calls
   -kentik_plan int
     	Kentik plan id to use for creating devices
-  -kentik_relay_url string
-    	If set, override the kentik api url to send flow over here.
   -listen string
     	IP:Port to listen on (default "127.0.0.1:8081")
   -log_level string
@@ -106,15 +116,15 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -max_flows_per_message int
     	Max number of flows to put in each emitted message (default 10000)
   -max_threads int
-    	Dynamically grow threads up to this number
+    	Dynamically grow threads up to this number (default 1)
   -metalisten string
-    	HTTP interface and port to bind on
+    	HTTP interface and port to bind on (default "localhost:0")
   -metrics string
     	Metrics Configuration. none|syslog|stderr|graphite:127.0.0.1:2003 (default "none")
   -net_protocol string
     	Use this protocol for writing data (udp|tcp|unix) (default "udp")
   -net_server string
-    	Write flows seen to this address (host and port)
+    	Write flows seen to this address (host and port). Comma seperate to send to multiple servers.
   -netflow_version string
     	Version of netflow to produce: (netflow9|ipfix) (default "ipfix")
   -nf.addr string
@@ -122,17 +132,19 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nf.mapping string
     	Configuration file for custom netflow mappings
   -nf.message.fields string
-    	The list of fields to include in flow messages. Can be any of Type,TimeReceived,SequenceNum,SamplingRate,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IngressVrfID,EgressVrfID,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,BiFlowDirection,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,HasMPLS,MPLSCount,MPLS1TTL,MPLS1Label,MPLS2TTL,MPLS2Label,MPLS3TTL,MPLS3Label,MPLSLastTTL,MPLSLastLabel,CustomInteger1,CustomInteger2,CustomBytes1,CustomBytes2 (default "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress")
+    	The list of fields to include in flow messages. Can be any of Type,TimeReceived,SequenceNum,SamplingRate,FlowDirection,SamplerAddress,TimeFlowStart,TimeFlowEnd,Bytes,Packets,SrcAddr,DstAddr,Etype,Proto,SrcPort,DstPort,InIf,OutIf,SrcMac,DstMac,SrcVlan,DstVlan,VlanId,IPTos,ForwardingStatus,IPTTL,TCPFlags,IcmpType,IcmpCode,IPv6FlowLabel,FragmentId,FragmentOffset,SrcAS,DstAS,NextHop,NextHopAS,SrcNet,DstNet,MPLSCount (default "TimeReceived,SamplingRate,Bytes,Packets,SrcAddr,DstAddr,Proto,SrcPort,DstPort,InIf,OutIf,SrcVlan,DstVlan,TCPFlags,SrcAS,DstAS,Type,SamplerAddress,FlowDirection")
   -nf.port int
     	Sflow/NetFlow/IPFIX listening port (default 9995)
   -nf.prom.listen string
-    	Run a prometheus metrics collector here
+    	Run a promethues metrics collector here
+  -nf.queuesize int
+    	How big of a queue to hold for incomming flow packets. (default 10000)
   -nf.reuserport
     	Enable so_reuseport for Sflow/NetFlow/IPFIX
   -nf.source string
     	Run NetFlow Ingest Directly. Valid values here are netflow5|netflow9|ipfix|sflow|nbar|asa|pan|auto
   -nf.workers int
-    	Number of workers per flow collector (default 1)
+    	Number of workers per flow collector (default 2)
   -nr_account_id string
     	If set, sends flow to New Relic
   -nr_check_json
@@ -140,47 +152,71 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -nr_estimate_only
     	If true, record size of inputs to NR but don't actually send anything
   -nr_region string
-       NR Region to use. US|EU|GOV|JP. If not set, this is auto-detected from the NEW_RELIC_API_KEY license key prefix (EU/JP only; unrecognized keys default to US).
+    	NR Region to use. US|EU|GOV|JP. If not set, this is auto-detected from the NEW_RELIC_API_KEY license key prefix (EU/JP only; unrecognized keys default to US).
   -olly_dataset string
     	Olly dataset name
   -olly_write_key string
     	Olly dataset name
-  -prom_listen string
-    	Bind to listen for prometheus requests on. (default ":8082")
+  -otel.endpoint string
+    	Send data to this endpoint.
+  -otel.no_block
+    	If set, drop metrics when the sending chan is full.
+  -otel.protocol string
+    	Send data using this protocol. (grpc,http,https,stdout) (default "stdout")
+  -otel.root_ca string
+    	Load TLS root CA from file.
+  -otel.tls_cert string
+    	Load TLS client cert from file.
+  -otel.tls_key string
+    	Load TLS client key from file.
   -prom_seen int
-    	Number of flows needed inbound before we start writting to the collector (default 10)
+    	Number of flows needed inbound before we start writting to the collector (default 4)
+  -redis.addr string
+    	Where to connect to redis. (default "localhost:6379")
+  -redis.db int
+    	Use this redis DB.
+  -redis.key_prefix string
+    	Use this key prefix.
+  -redis.password string
+    	Password for redis
+  -redis.ttl.sec int
+    	Expire measurements if they are not refreshed within this number of sec. (default 60)
   -rollup_and_alpha
     	Send both rollups and alpha inputs to sinks
   -rollup_interval int
     	Export timer for rollups in seconds
+  -rollup_keep_undefined
+    	If set, mark undefined values with the string undefined.
   -rollup_key_join string
     	Token to use to join dimension keys together (default "^")
   -rollup_top_k int
     	Export only these top values (default 10)
   -rollups value
     	Any rollups to use. Format: type, name, metric, dimension 1, dimension 2, ..., dimension n: sum,bytes,in_bytes,dst_addr
+  -s3_assume_role_arn string
+    	AWS assume role ARN which has permissions to write to S3 bucket
   -s3_bucket string
     	AWS S3 Bucket to write flows to
-  -s3_assume_role_arn
-      AWS assume role ARN which has permissions to write to S3 bucket
-  -ec2_instance_profile
-      If to use EC2 Instance Profile of the machine (default false)
-  -s3_region
-      S3 Bucket region where S3 bucket is created (default us-east-1)
+  -s3_endpoint string
+    	S3 Endpoint
   -s3_flush_sec int
     	Create a new output file every this many seconds (default 60)
-  -assume_role_or_instance_profile_interval_seconds
-        Refresh credentials of Assume Role or Instance Profile (whichever is earliest) after this many seconds (default 900)
   -s3_prefix string
     	AWS S3 Object prefix (default "/kentik")
+  -s3_region string
+    	S3 Bucket region where S3 bucket is created (default "us-east-1")
+  -s3_signing_region string
+    	S3 endpoint signing region
   -sample_rate int
-    	Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on.
+    	Sampling rate to use. 1 -> 1:1 sampling, 2 -> 1:2 sampling and so on. (default 1)
   -service_name string
-    	Service identifier (default "ktranslate")
+    	Service identifier
   -sinks string
-    	List of sinks to send data to. Options: (kafka|stdout|new_relic|kentik|net|http|splunk|prometheus|file|s3|gcloud|ddog|otel|null) (default "stdout")
+    	List of sinks to send data to. Options: (stdout|new_relic|new_relic_multi|otel|http|net) (default "stdout")
   -snmp string
     	yaml file containing snmp config to use
+  -snmp.format.conf string
+    	Parse this file for the snmp format option. Same format as -snmp flag.
   -snmp_discovery
     	If true, try to discover snmp devices on this network as configured.
   -snmp_discovery_min int
@@ -197,6 +233,10 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	If set, write updated snmp file here.
   -snmp_poll_now string
     	If set, run one snmp poll for the specified device and then exit.
+  -snmp_validate
+    	If true, validate mib profiles and exit.
+  -snmp_walk_file string
+    	If set, use the walk file instead of polling.
   -snmp_walk_format string
     	use this format for walked values if -snmp_do_walk is set.
   -snmp_walk_oid string
@@ -208,9 +248,13 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
   -ssl_key_file string
     	SSL Key file to use for serving HTTPS traffic
   -stdout
-    	Log to stdout (default true)
+    	Log to stdout
+  -stitch.buffer.len int
+    	How large of a buffer of flows to try and stitch together. (default 10000)
+  -stitch.enable
+    	Turn on flow stitching.
   -syslog.format string
-    	Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587. (default "Automatic")
+    	Format to parse syslog messages with. Options are: Automatic|RFC3164|RFC5424|RFC6587|NoFormat. (default "Automatic")
   -syslog.source string
     	Run Syslog Server at this IP:Port or unix socket.
   -syslog.tcp
@@ -225,13 +269,14 @@ To get your own MaxMind key, visit [MaxMind](https://www.maxmind.com).
     	CSV file mapping tag ids to strings
   -tag_map_type string
     	type of mapping to use for tag values. file|null
+  -tee_flow string
+    	If set, tee flow to another ktranslate instance here.
   -tee_logs
     	Tee log messages to sink
   -threads int
-    	Number of threads to run for processing
+    	Number of threads to run for processing (default 1)
   -udrs string
     	UDR mapping file
-  -v	Show version and build information
   -vpc string
     	Run VPC Flow Ingest
 ```
