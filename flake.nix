@@ -3,14 +3,12 @@
 
   # Scope (see docs/BENCHMARKING_PLAN.md "Nix usage" section):
   #   - a devShell with the tools needed to develop and benchmark this repo
-  #   - packages.*.network-agent (nix/network-agent.nix): a real ktranslate binary, built by
-  #     shelling out to `make all` -- Make remains the single source of truth for *how*
-  #     to build; Nix's job here is limited to vendoring Go deps reproducibly and
-  #     dispatching to a configured remote Linux builder when needed. This is an
-  #     additional distribution path and dev convenience, not a replacement: the
-  #     Makefile, Dockerfile, and .github/workflows/ci-build.yml remain the only
-  #     supported way to produce official released artifacts, pending a separate future
-  #     decision to change that.
+  #   - packages.*.network-agent (nix/network-agent.nix): a real ktranslate binary, built
+  #     directly via buildGoModule's own go build (no dependency on the Makefile, which
+  #     is Kentik-era tooling that may go away). This is an additional distribution path
+  #     and dev convenience, not a replacement: the Makefile, Dockerfile, and
+  #     .github/workflows/ci-build.yml remain the only supported way to produce official
+  #     released artifacts, pending a separate future decision to change that.
   #   - a NixOS VM test harness for the Tier B synthetic SNMP farm (checks.*, see
   #     nix/tests/snmp-discovery-bench.nix), which reuses packages.*.network-agent as its
   #     collector VM's binary rather than building its own separate copy. The VM tests
@@ -27,6 +25,13 @@
       forAllSystems = nixpkgs.lib.genAttrs systems;
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ]; # NixOS VM tests only make sense on Linux
       forLinuxSystems = nixpkgs.lib.genAttrs linuxSystems;
+
+      # Env var name the devShell exports below -- `make check-version-env-var`
+      # fails CI if Dockerfile's ARG ever falls out of sync with it.
+      versionEnvVar = "NETWORK_AGENT_VERSION";
+
+      # Same VERSION file network-agent.nix and the Makefile read, so all build paths agree.
+      version = nixpkgs.lib.strings.trim (builtins.readFile ./VERSION);
     in
     {
       devShells = forAllSystems (system:
@@ -43,15 +48,28 @@
               gopls
               delve
             ];
+            # So `docker build --build-arg NETWORK_AGENT_VERSION` (no `=value`
+            # needed -- Docker inherits it from the environment) works too.
+            "${versionEnvVar}" = version;
           };
         });
 
       packages = forLinuxSystems (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          networkAgent = import ./nix/network-agent.nix { inherit pkgs; };
         in
         {
-          network-agent = import ./nix/network-agent.nix { inherit pkgs; src = self; };
+          network-agent = networkAgent;
+
+          # Same package, plus a Build identifier set to this commit (self.rev/
+          # dirtyShortRev -- pure, no --impure needed). Unlike network-agent itself,
+          # rebuilding this on every commit is correct: that's the point of a CI variant.
+          network-agent-ci = networkAgent.overrideAttrs (old: {
+            ldflags = old.ldflags ++ [
+              "-X=github.com/kentik/ktranslate/pkg/version.buildStr=ci-${self.shortRev or self.dirtyShortRev}"
+            ];
+          });
         });
 
       checks = forAllSystems (system:
