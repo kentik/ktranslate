@@ -6,6 +6,8 @@ import (
 
 	"github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	"google.golang.org/protobuf/types/known/durationpb"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // Helper to ptr-ify a bool, since MinimizeSnmp is *bool in the proto.
@@ -358,4 +360,31 @@ func assertEqual[T comparable](t *testing.T, field string, got, want T) {
 	if got != want {
 		t.Errorf("%s: got %v, want %v", field, got, want)
 	}
+}
+
+func TestDeviceTagsDefault(t *testing.T) {
+	d := Device{}
+	testTags := map[string]string{
+		"tags.container_service": "ktranslate",
+	}
+
+	d.InitUserTags("foo", nil, nil)
+	input := map[string]string{}
+	d.SetUserTags(input)
+
+	assert.Equal(t, len(testTags), len(input))
+}
+
+func TestDeviceTagsDefaultNotNil(t *testing.T) {
+	d := Device{}
+	testTags := map[string]string{
+		"tags.container_service": "ktranslate",
+		"foo":                    "bar",
+	}
+
+	d.InitUserTags("foo", nil, testTags)
+	input := map[string]string{}
+	d.SetUserTags(input)
+
+	assert.Equal(t, len(testTags), len(input))
 }

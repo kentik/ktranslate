@@ -188,6 +188,13 @@ leaf-br2:
   edge_id: spine1
   role: child
   circuit_id: WAN-HQ-BR1
+
+# Optional third index: same bag keyed by management / sampler IP cidr
+192.168.21.0/24:
+  site: branch1
+  edge_id: spine1
+  role: child
+  circuit_id: WAN-HQ-BR1
 `
 
 	l := lt.NewTestContextL(logger.NilContext, t)
@@ -204,6 +211,10 @@ leaf-br2:
 		DeviceIP:   "192.168.21.2",
 		DeviceName: "stranger",
 	}
+	ipCidr := &kt.SnmpDeviceConfig{
+		DeviceIP:   "192.168.21.16",
+		DeviceName: "???",
+	}
 
 	// Some test server
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -214,6 +225,7 @@ leaf-br2:
 	rule.InitUserDeviceRuleSet(svr.URL, l)
 	dName.InitUserTags("service", rule.GetUserDeviceRuleSet(dName.DeviceName, dName.DeviceIP))
 	ipName.InitUserTags("service", rule.GetUserDeviceRuleSet(ipName.DeviceName, ipName.DeviceIP))
+	ipCidr.InitUserTags("service", rule.GetUserDeviceRuleSet(ipCidr.DeviceName, ipCidr.DeviceIP))
 
 	pName := &Poller{
 		log:   l,
@@ -223,6 +235,11 @@ leaf-br2:
 	pIp := &Poller{
 		log:   l,
 		conf:  ipName,
+		gconf: &kt.SnmpGlobalConfig{},
+	}
+	pCidr := &Poller{
+		log:   l,
+		conf:  ipCidr,
 		gconf: &kt.SnmpGlobalConfig{},
 	}
 
@@ -248,6 +265,13 @@ leaf-br2:
 
 	// Test based on device ip.
 	res, err = pIp.toFlows(&input)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res))
+	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
+
+	// Test based on device ip in a range.
+	res, err = pCidr.toFlows(&input)
 	assert.NotNil(t, res)
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(res))

@@ -35,6 +35,7 @@ var (
 
 	deviceNameUserTags map[string]map[string]string
 	deviceIpUserTags   map[string]map[string]string
+	deviceCidrUserTags map[*net.IPNet]map[string]string
 )
 
 // RuleSet holds a list of network classification rules
@@ -151,16 +152,19 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 
 	deviceNameUserTags = map[string]map[string]string{}
 	deviceIpUserTags = map[string]map[string]string{}
+	deviceCidrUserTags = map[*net.IPNet]map[string]string{}
 
 	for tk, mm := range customs {
 		if net.ParseIP(tk) != nil {
 			deviceIpUserTags[tk] = mm
+		} else if _, ipNet, _ := net.ParseCIDR(tk); ipNet != nil {
+			deviceCidrUserTags[ipNet] = mm
 		} else {
 			deviceNameUserTags[tk] = mm
 		}
 	}
 
-	log.Infof("Loaded %d user name device rules and %d user ip device rules.", len(deviceNameUserTags), len(deviceIpUserTags))
+	log.Infof("Loaded %d user name rules, %d ip rules and %d cidr rules.", len(deviceNameUserTags), len(deviceIpUserTags), len(deviceCidrUserTags))
 
 	return nil
 }
@@ -172,6 +176,14 @@ func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string 
 	}
 	if ud, ok := deviceIpUserTags[deviceIP]; ok {
 		return ud
+	}
+
+	if nip := net.ParseIP(deviceIP); nip != nil {
+		for k, v := range deviceCidrUserTags {
+			if k.Contains(nip) {
+				return v
+			}
+		}
 	}
 
 	return nil

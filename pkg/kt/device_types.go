@@ -126,6 +126,10 @@ type Column struct {
 }
 
 func (d *Device) InitUserTags(serviceName string, tags map[string]string, defaults map[string]string) {
+	if tags == nil {
+		tags = map[string]string{}
+	}
+
 	d.allUserTags = tags
 	if serviceName != "ktranslate" {
 		d.allUserTags["tags.container_service"] = serviceName
