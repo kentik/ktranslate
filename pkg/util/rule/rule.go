@@ -167,8 +167,8 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 		if dn == "" {
 			continue
 		}
-		if net.ParseIP(dn) != nil {
-			deviceIpUserTags[dn] = mm
+		if nip := net.ParseIP(dn); nip != nil {
+			deviceIpUserTags[nip.String()] = mm
 		} else if _, ipNet, _ := net.ParseCIDR(dn); ipNet != nil {
 			deviceCidrUserTags[dn] = mm
 			deviceRules.AddIPAddress(dn, dn)

@@ -198,6 +198,9 @@ leaf-br2:
 
 192.168.21.0/8:
   circuit_id: large
+
+2001:0db8::0001:
+  circuit_id: ipv6
 `
 
 	l := lt.NewTestContextL(logger.NilContext, t)
@@ -236,10 +239,16 @@ leaf-br2:
 		&kt.SnmpDeviceConfig{
 			DeviceIP: "192.200.200.228",
 		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "2001:0db8::0001",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "2001:db8::1",
+		},
 	}
 
 	answers := []string{
-		"WAN-HQ-BR1", "WAN-HQ-BR1", "middle", "WAN-HQ-BR1", "middle", "", "middle", "small", "large",
+		"WAN-HQ-BR1", "WAN-HQ-BR1", "middle", "WAN-HQ-BR1", "middle", "", "middle", "small", "large", "ipv6", "ipv6",
 	}
 
 	// Some test server
