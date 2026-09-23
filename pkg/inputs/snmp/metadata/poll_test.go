@@ -245,10 +245,13 @@ leaf-br2:
 		&kt.SnmpDeviceConfig{
 			DeviceIP: "2001:db8::1",
 		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "1.1.1.1",
+		},
 	}
 
 	answers := []string{
-		"WAN-HQ-BR1", "WAN-HQ-BR1", "middle", "WAN-HQ-BR1", "middle", "", "middle", "small", "large", "ipv6", "ipv6",
+		"WAN-HQ-BR1", "WAN-HQ-BR1", "middle", "WAN-HQ-BR1", "middle", "", "middle", "small", "large", "ipv6", "ipv6", "",
 	}
 
 	// Some test server
@@ -260,6 +263,50 @@ leaf-br2:
 	rule.InitUserDeviceRuleSet(svr.URL, l)
 	pollers := make([]*Poller, len(confs))
 
+	for i, conf := range confs {
+		conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
+		pollers[i] = &Poller{
+			log:   l,
+			conf:  conf,
+			gconf: &kt.SnmpGlobalConfig{},
+		}
+	}
+
+	input := kt.DeviceData{
+		Manufacturer: "man",
+		DeviceMetricsMetadata: &kt.DeviceMetricsMetadata{
+			SysContact: "ddd",
+			Customs: map[string]string{
+				"foo": "",
+				"bar": "",
+			},
+		},
+	}
+
+	for i, poller := range pollers {
+		res, err := poller.toFlows(&input)
+		assert.NotNil(t, res)
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(res))
+		assert.Equal(t, answers[i], res[0].CustomStr["tags.circuit_id"], "%d", i)
+	}
+}
+
+func TestToFlowsWithNullRule(t *testing.T) {
+	rule.Reset()
+	l := lt.NewTestContextL(logger.NilContext, t)
+	confs := []*kt.SnmpDeviceConfig{
+		&kt.SnmpDeviceConfig{
+			DeviceName: "foo",
+			DeviceIP:   "1.1.1.1",
+		},
+	}
+
+	answers := []string{
+		"",
+	}
+
+	pollers := make([]*Poller, len(confs))
 	for i, conf := range confs {
 		conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
 		pollers[i] = &Poller{

@@ -187,6 +187,11 @@ func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string 
 	mux.RLock()
 	defer mux.RUnlock()
 
+	// Guard for if we are un initialized.
+	if deviceNameUserTags == nil || deviceIpUserTags == nil || deviceRules == nil {
+		return nil
+	}
+
 	dn := strings.TrimSpace(deviceName)
 	if dn != "" {
 		if ud, ok := deviceNameUserTags[dn]; ok {
@@ -208,4 +213,12 @@ func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string 
 	}
 
 	return nil
+}
+
+// Helper function for tests.
+func Reset() {
+	deviceNameUserTags = nil
+	deviceIpUserTags = nil
+	deviceCidrUserTags = nil
+	deviceRules = nil
 }
