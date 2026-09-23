@@ -158,13 +158,17 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 	deviceIpUserTags = map[string]map[string]string{}
 	deviceCidrUserTags = map[*net.IPNet]map[string]string{}
 
-	for tk, mm := range customs {
-		if net.ParseIP(tk) != nil {
-			deviceIpUserTags[tk] = mm
-		} else if _, ipNet, _ := net.ParseCIDR(tk); ipNet != nil {
+	for tkb, mm := range customs {
+		dn := strings.TrimSpace(tkb)
+		if dn == "" {
+			continue
+		}
+		if net.ParseIP(dn) != nil {
+			deviceIpUserTags[dn] = mm
+		} else if _, ipNet, _ := net.ParseCIDR(dn); ipNet != nil {
 			deviceCidrUserTags[ipNet] = mm
 		} else {
-			deviceNameUserTags[tk] = mm
+			deviceNameUserTags[dn] = mm
 		}
 	}
 
@@ -175,8 +179,11 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 
 // Global allowing any extra user tags to be pulled in.
 func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
-	if ud, ok := deviceNameUserTags[strings.TrimSpace(deviceName)]; ok {
-		return ud
+	dn := strings.TrimSpace(deviceName)
+	if dn != "" {
+		if ud, ok := deviceNameUserTags[dn]; ok {
+			return ud
+		}
 	}
 
 	if nip := net.ParseIP(strings.TrimSpace(deviceIP)); nip != nil {

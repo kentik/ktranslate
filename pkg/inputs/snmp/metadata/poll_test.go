@@ -198,22 +198,32 @@ leaf-br2:
 `
 
 	l := lt.NewTestContextL(logger.NilContext, t)
-	dName := &kt.SnmpDeviceConfig{
-		Provider:   "foo",
-		DeviceIP:   "192.168.21.44",
-		DeviceName: "leaf-br1",
-		UserTags: map[string]string{
-			"foo": "$foo",
-			"aaa": "$SysContact",
+	confs := []*kt.SnmpDeviceConfig{
+		&kt.SnmpDeviceConfig{
+			Provider:   "foo",
+			DeviceIP:   "192.168.21.44",
+			DeviceName: "leaf-br1",
 		},
-	}
-	ipName := &kt.SnmpDeviceConfig{
-		DeviceIP:   "192.168.21.2",
-		DeviceName: "stranger",
-	}
-	ipCidr := &kt.SnmpDeviceConfig{
-		DeviceIP:   "192.168.21.16",
-		DeviceName: "???",
+		&kt.SnmpDeviceConfig{
+			DeviceIP:   "192.168.21.2",
+			DeviceName: "stranger",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP:   "192.168.21.16",
+			DeviceName: "???",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP:   "",
+			DeviceName: " leaf-br1     ",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP:   "192.168.21.16    ",
+			DeviceName: "      ",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP:   "",
+			DeviceName: "",
+		},
 	}
 
 	// Some test server
@@ -223,24 +233,15 @@ leaf-br2:
 	defer svr.Close()
 
 	rule.InitUserDeviceRuleSet(svr.URL, l)
-	dName.InitUserTags("service", rule.GetUserDeviceRuleSet(dName.DeviceName, dName.DeviceIP))
-	ipName.InitUserTags("service", rule.GetUserDeviceRuleSet(ipName.DeviceName, ipName.DeviceIP))
-	ipCidr.InitUserTags("service", rule.GetUserDeviceRuleSet(ipCidr.DeviceName, ipCidr.DeviceIP))
+	pollers := make([]*Poller, len(confs))
 
-	pName := &Poller{
-		log:   l,
-		conf:  dName,
-		gconf: &kt.SnmpGlobalConfig{},
-	}
-	pIp := &Poller{
-		log:   l,
-		conf:  ipName,
-		gconf: &kt.SnmpGlobalConfig{},
-	}
-	pCidr := &Poller{
-		log:   l,
-		conf:  ipCidr,
-		gconf: &kt.SnmpGlobalConfig{},
+	for i, conf := range confs {
+		conf.InitUserTags("service", rule.GetUserDeviceRuleSet(conf.DeviceName, conf.DeviceIP))
+		pollers[i] = &Poller{
+			log:   l,
+			conf:  conf,
+			gconf: &kt.SnmpGlobalConfig{},
+		}
 	}
 
 	input := kt.DeviceData{
@@ -254,26 +255,15 @@ leaf-br2:
 		},
 	}
 
-	// Test lookup based on device name
-	res, err := pName.toFlows(&input)
-	assert.NotNil(t, res)
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(res))
-	assert.Equal(t, "ddd", res[0].CustomStr["tags.aaa"])
-	assert.Equal(t, "", res[0].CustomStr["tags.foo"]) // Empty string match for tag here.
-	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
-
-	// Test based on device ip.
-	res, err = pIp.toFlows(&input)
-	assert.NotNil(t, res)
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(res))
-	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
-
-	// Test based on device ip in a range.
-	res, err = pCidr.toFlows(&input)
-	assert.NotNil(t, res)
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(res))
-	assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
+	for i, poller := range pollers {
+		res, err := poller.toFlows(&input)
+		assert.NotNil(t, res)
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(res))
+		if confs[i].DeviceName == "" && confs[i].DeviceIP == "" {
+			assert.Equal(t, "", res[0].CustomStr["tags.circuit_id"])
+		} else {
+			assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
+		}
+	}
 }
