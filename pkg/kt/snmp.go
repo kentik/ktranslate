@@ -811,17 +811,13 @@ func (d *SnmpDeviceConfig) InitUserTags(serviceName string, defaults map[string]
 		panic(fmt.Sprintf("Wrong number of user tags for device %s found: %d (expected %d)", d.DeviceName, len(d.UserTags), d.ExpectedDevTags))
 	}
 
+	if d.UserTags == nil { // Prevent nil map assignment.
+		d.UserTags = map[string]string{}
+	}
 	if serviceName != "ktranslate" {
-		if d.UserTags == nil { // Prevent nil map assignment.
-			d.UserTags = map[string]string{}
-		}
 		d.UserTags["container_service"] = serviceName
 	}
 
-	// Add in any defaults passed into the program externally.
-	if d.UserTags == nil {
-		d.UserTags = map[string]string{}
-	}
 	for k, v := range defaults {
 		key := k
 		if !strings.HasPrefix(key, UserTagPrefix) {

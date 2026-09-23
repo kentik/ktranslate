@@ -136,6 +136,10 @@ func (r *RuleSet) GetService(ip net.IP, port uint32, protocol uint8) (string, bo
 }
 
 func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
+	if strings.TrimSpace(rulePath) == "" {
+		return nil
+	}
+
 	// @TODO -- alow changeable timeout here?
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -171,14 +175,15 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 
 // Global allowing any extra user tags to be pulled in.
 func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
-	if ud, ok := deviceNameUserTags[deviceName]; ok {
-		return ud
-	}
-	if ud, ok := deviceIpUserTags[deviceIP]; ok {
+	if ud, ok := deviceNameUserTags[strings.TrimSpace(deviceName)]; ok {
 		return ud
 	}
 
-	if nip := net.ParseIP(deviceIP); nip != nil {
+	if nip := net.ParseIP(strings.TrimSpace(deviceIP)); nip != nil {
+		if ud, ok := deviceIpUserTags[nip.String()]; ok {
+			return ud
+		}
+
 		for k, v := range deviceCidrUserTags {
 			if k.Contains(nip) {
 				return v
