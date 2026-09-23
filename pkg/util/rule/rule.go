@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
@@ -35,7 +36,9 @@ var (
 
 	deviceNameUserTags map[string]map[string]string
 	deviceIpUserTags   map[string]map[string]string
-	deviceCidrUserTags map[*net.IPNet]map[string]string
+	deviceCidrUserTags map[string]map[string]string
+	deviceRules        *StringAddressRule
+	mux                sync.RWMutex
 )
 
 // RuleSet holds a list of network classification rules
@@ -156,7 +159,8 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 
 	deviceNameUserTags = map[string]map[string]string{}
 	deviceIpUserTags = map[string]map[string]string{}
-	deviceCidrUserTags = map[*net.IPNet]map[string]string{}
+	deviceCidrUserTags = map[string]map[string]string{}
+	deviceRules = NewStringAddressRule()
 
 	for tkb, mm := range customs {
 		dn := strings.TrimSpace(tkb)
@@ -166,7 +170,8 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 		if net.ParseIP(dn) != nil {
 			deviceIpUserTags[dn] = mm
 		} else if _, ipNet, _ := net.ParseCIDR(dn); ipNet != nil {
-			deviceCidrUserTags[ipNet] = mm
+			deviceCidrUserTags[dn] = mm
+			deviceRules.AddIPAddress(dn, dn)
 		} else {
 			deviceNameUserTags[dn] = mm
 		}
@@ -179,6 +184,9 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 
 // Global allowing any extra user tags to be pulled in.
 func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
+	mux.RLock()
+	defer mux.RUnlock()
+
 	dn := strings.TrimSpace(deviceName)
 	if dn != "" {
 		if ud, ok := deviceNameUserTags[dn]; ok {
@@ -191,9 +199,10 @@ func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string 
 			return ud
 		}
 
-		for k, v := range deviceCidrUserTags {
-			if k.Contains(nip) {
-				return v
+		match := deviceRules.Check(nip)
+		if match != "" {
+			if ud := deviceCidrUserTags[match]; ud != nil {
+				return ud
 			}
 		}
 	}

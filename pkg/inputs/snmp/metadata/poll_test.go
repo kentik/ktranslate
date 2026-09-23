@@ -191,10 +191,13 @@ leaf-br2:
 
 # Optional third index: same bag keyed by management / sampler IP cidr
 192.168.21.0/24:
-  site: branch1
-  edge_id: spine1
-  role: child
-  circuit_id: WAN-HQ-BR1
+  circuit_id: middle
+
+192.168.21.0/31:
+  circuit_id: small
+
+192.168.21.0/8:
+  circuit_id: large
 `
 
 	l := lt.NewTestContextL(logger.NilContext, t)
@@ -224,6 +227,19 @@ leaf-br2:
 			DeviceIP:   "",
 			DeviceName: "",
 		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "192.168.21.16",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "192.168.21.1",
+		},
+		&kt.SnmpDeviceConfig{
+			DeviceIP: "192.200.200.228",
+		},
+	}
+
+	answers := []string{
+		"WAN-HQ-BR1", "WAN-HQ-BR1", "middle", "WAN-HQ-BR1", "middle", "", "middle", "small", "large",
 	}
 
 	// Some test server
@@ -260,10 +276,6 @@ leaf-br2:
 		assert.NotNil(t, res)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, len(res))
-		if confs[i].DeviceName == "" && confs[i].DeviceIP == "" {
-			assert.Equal(t, "", res[0].CustomStr["tags.circuit_id"])
-		} else {
-			assert.Equal(t, "WAN-HQ-BR1", res[0].CustomStr["tags.circuit_id"])
-		}
+		assert.Equal(t, answers[i], res[0].CustomStr["tags.circuit_id"], "%d", i)
 	}
 }
