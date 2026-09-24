@@ -1,11 +1,14 @@
 package rule
 
 import (
-	"io/ioutil"
+	"context"
 	"net"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/util"
 	"github.com/kentik/ktranslate/pkg/util/service"
 	"gopkg.in/yaml.v3"
 )
@@ -30,6 +33,12 @@ var (
 		"fc00::/7",  // (ula)
 		"fe80::/10", // (link local)
 	}
+
+	deviceNameUserTags map[string]map[string]string
+	deviceIpUserTags   map[string]map[string]string
+	deviceCidrUserTags map[string]map[string]string
+	deviceRules        *StringAddressRule
+	mux                sync.RWMutex
 )
 
 // RuleSet holds a list of network classification rules
@@ -66,7 +75,7 @@ func NewRuleSet(appMap string, log logger.ContextL) (*RuleSet, error) {
 	// If there's a custom set, get these here.
 	if appMap != "" {
 		customs := CustomRuleSet{}
-		byc, err := ioutil.ReadFile(appMap)
+		byc, err := util.LoadFile(context.Background(), appMap)
 		if err != nil {
 			return nil, err
 		}
@@ -127,4 +136,89 @@ func (r *RuleSet) GetService(ip net.IP, port uint32, protocol uint8) (string, bo
 
 	// We couldn't find anything.
 	return "", false
+}
+
+func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
+	if strings.TrimSpace(rulePath) == "" {
+		return nil
+	}
+
+	// @TODO -- alow changeable timeout here?
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	byc, err := util.LoadFile(ctx, rulePath)
+	if err != nil {
+		return err
+	}
+	customs := map[string]map[string]string{}
+	err = yaml.Unmarshal(byc, &customs)
+	if err != nil {
+		return err
+	}
+
+	deviceNameUserTags = map[string]map[string]string{}
+	deviceIpUserTags = map[string]map[string]string{}
+	deviceCidrUserTags = map[string]map[string]string{}
+	deviceRules = NewStringAddressRule()
+
+	for tkb, mm := range customs {
+		dn := strings.TrimSpace(tkb)
+		if dn == "" {
+			continue
+		}
+		if nip := net.ParseIP(dn); nip != nil {
+			deviceIpUserTags[nip.String()] = mm
+		} else if _, ipNet, _ := net.ParseCIDR(dn); ipNet != nil {
+			deviceCidrUserTags[dn] = mm
+			deviceRules.AddIPAddress(dn, dn)
+		} else {
+			deviceNameUserTags[dn] = mm
+		}
+	}
+
+	log.Infof("Loaded %d user name rules, %d ip rules and %d cidr rules.", len(deviceNameUserTags), len(deviceIpUserTags), len(deviceCidrUserTags))
+
+	return nil
+}
+
+// Global allowing any extra user tags to be pulled in.
+func GetUserDeviceRuleSet(deviceName string, deviceIP string) map[string]string {
+	mux.RLock()
+	defer mux.RUnlock()
+
+	// Guard for if we are un initialized.
+	if deviceNameUserTags == nil || deviceIpUserTags == nil || deviceRules == nil {
+		return nil
+	}
+
+	dn := strings.TrimSpace(deviceName)
+	if dn != "" {
+		if ud, ok := deviceNameUserTags[dn]; ok {
+			return ud
+		}
+	}
+
+	if nip := net.ParseIP(strings.TrimSpace(deviceIP)); nip != nil {
+		if ud, ok := deviceIpUserTags[nip.String()]; ok {
+			return ud
+		}
+
+		match := deviceRules.Check(nip)
+		if match != "" {
+			if ud := deviceCidrUserTags[match]; ud != nil {
+				return ud
+			}
+		}
+	}
+
+	return nil
+}
+
+// Helper function for tests.
+func Reset() {
+	deviceNameUserTags = nil
+	deviceIpUserTags = nil
+	deviceCidrUserTags = nil
+	deviceRules = nil
 }
