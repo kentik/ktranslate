@@ -17,7 +17,12 @@ jobs:
           submodules: recursive
           fetch-depth: 0         # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Set Version
+      - uses: nowsprinting/check-version-format-action@v3
+        id: version
+        with:
+          prefix: 'v'
+
+      - name: Set NonRelease Version
         run: |
            echo KENTIK_KTRANSLATE_VERSION=`date +"kt-%Y-%m-%d-${GITHUB_RUN_ID}"` >> $GITHUB_ENV
 
@@ -70,25 +75,13 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}, kentik/ktranslate:next, quay.io/kentik/ktranslate:next, quay.io/kentik/ktranslate:${{ env.KENTIK_KTRANSLATE_VERSION }}
+          tags: kentik/ktranslate:next
           build-args: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
             YOUR_ACCOUNT_ID=${{ secrets.MM_ACCOUNT_ID }}
             KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
           secrets: |
             MAXMIND_LICENSE_KEY=${{ secrets.MM_DOWNLOAD_KEY }}
-
-      - name: Build and Publish Nopriv
-        uses: docker/build-push-action@v6
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          context: .
-          file: Dockerfile-nopriv-next
-          platforms: linux/amd64, linux/arm64
-          push: true
-          tags: kentik/ktranslate:next-nopriv, quay.io/kentik/ktranslate:next-nopriv
-          build-args: |
-            KENTIK_KTRANSLATE_VERSION=${{ env.KENTIK_KTRANSLATE_VERSION }}
 
       - name: Publish binary
         uses: actions/upload-artifact@v4
