@@ -75,7 +75,12 @@ func NewRuleSet(appMap string, log logger.ContextL) (*RuleSet, error) {
 	// If there's a custom set, get these here.
 	if appMap != "" {
 		customs := CustomRuleSet{}
-		byc, err := util.LoadFile(context.Background(), appMap)
+
+		// @TODO -- alow timeout here?
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		byc, err := util.LoadFile(ctx, appMap)
 		if err != nil {
 			return nil, err
 		}
@@ -143,7 +148,7 @@ func InitUserDeviceRuleSet(rulePath string, log logger.ContextL) error {
 		return nil
 	}
 
-	// @TODO -- alow changeable timeout here?
+	// @TODO -- alow timeout here?
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
