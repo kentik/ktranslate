@@ -41,6 +41,13 @@ on:
       - 'VERSION'
       - 'Justfile'
   pull_request:
+    # Explicit types, not the default (opened/synchronize/reopened): a PR's base branch can
+    # change without a new commit -- e.g. GitHub auto-retargeting a stacked PR onto main once
+    # its original base branch merges and gets deleted -- and that's an `edited` event, which
+    # the default types don't cover. Without it, the isolation/increment checks below can be
+    # left showing a stale "pass" from before the retarget, against a diff that no longer
+    # reflects what the PR would actually merge as.
+    types: [opened, synchronize, reopened, edited]
     paths: *version-paths
 
 permissions:
