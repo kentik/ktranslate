@@ -231,6 +231,9 @@ type SnmpTrapConfig struct {
 	DropUndefined bool          `yaml:"drop_undefined"`
 	Endpoint      string        `yaml:"endpoint"`
 	EndpointPort  uint16        `yaml:"endpoint_port"`
+	SenderVarOids []string      `yaml:"sender_var_oids,omitempty"` // VarBind OIDs carrying the original source device (IP or hostname); tried in order.
+	UseStdSender  bool          `yaml:"use_std_sender,omitempty"`  // Also try the standard sender locations: snmpTrapAddress (v2c/v3), AgentAddress (v1).
+	TrustedRelays []string      `yaml:"trusted_relays,omitempty"`  // UDP source addrs allowed to have their declared sender trusted. Empty means any source.
 }
 
 type KentikMatch struct {
