@@ -181,10 +181,17 @@ func (s *SnmpTrap) Listen() {
 
 // varValueAsString pulls a string out of a varbind value, for the types that can
 // plausibly carry an IP address or hostname (OctetString, IPAddress, ObjectIdentifier).
+// An empty value is reported as absent, so resolveSender keeps looking rather than
+// settling on a varbind that names nothing.
 func varValueAsString(v gosnmp.SnmpPDU) (string, bool) {
 	switch v.Type {
 	case gosnmp.OctetString:
-		return snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE)
+		// ReadOctetString reports ok for a value that trims down to "", hence the recheck.
+		// Sanitize as the trap variable loop below does: a device returning binary here
+		// should not reach the output as invalid UTF-8.
+		if s, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok && s != "" {
+			return kt.SanitizeUTF8(s), true
+		}
 	case gosnmp.IPAddress, gosnmp.ObjectIdentifier:
 		if s, ok := v.Value.(string); ok && s != "" {
 			return s, true
@@ -219,11 +226,15 @@ func resolveSender(packet *gosnmp.SnmpPacket, udpAddr string, cfg *kt.SnmpTrapCo
 	}
 
 	if cfg.UseStdSender {
-		if v, ok := findVarValue(packet.Variables, snmpTrapAddressOID); ok {
+		// A v1 trap names its originator in the PDU's own AgentAddress field, so that
+		// wins there. snmpTrapAddress is what RFC 3584 has a proxy add when it translates
+		// such a trap to v2c/v3, so it only applies to those versions.
+		if packet.Version == gosnmp.Version1 {
+			if packet.AgentAddress != "" {
+				return packet.AgentAddress, senderSourceAgent
+			}
+		} else if v, ok := findVarValue(packet.Variables, snmpTrapAddressOID); ok {
 			return v, senderSourceStdAddr
-		}
-		if packet.Version == gosnmp.Version1 && packet.AgentAddress != "" {
-			return packet.AgentAddress, senderSourceAgent
 		}
 	}
 
@@ -277,7 +288,11 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	dst.EventType = kt.KENTIK_EVENT_SNMP_TRAP
 	dst.SrcAddr = udpAddr
 	if senderResolved { // Only report the override when it actually resolved a device.
-		dst.SrcAddr = sender
+		// Formats parse SrcAddr as an IP (see pkg/formats/kflow), so a sender matched by
+		// DeviceName contributes its configured address here and its declared name below.
+		if dev.DeviceIP != "" {
+			dst.SrcAddr = dev.DeviceIP
+		}
 		dst.CustomStr["SenderAddr"] = sender
 		dst.CustomStr["SenderSource"] = senderSource
 		dst.CustomStr["RelayAddr"] = udpAddr

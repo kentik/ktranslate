@@ -1,11 +1,17 @@
 package traps
 
 import (
+	"context"
+	"net"
 	"testing"
 
 	"github.com/gosnmp/gosnmp"
+	go_metrics "github.com/kentik/go-metrics"
 	"github.com/stretchr/testify/assert"
 
+	"github.com/kentik/ktranslate/pkg/eggs/logger"
+	lt "github.com/kentik/ktranslate/pkg/eggs/logger/testing"
+	"github.com/kentik/ktranslate/pkg/inputs/snmp/mibs"
 	"github.com/kentik/ktranslate/pkg/kt"
 )
 
@@ -56,6 +62,62 @@ func TestResolveSenderVarOidPriority(t *testing.T) {
 	sender, source := resolveSender(packet, "10.0.0.5", cfg, nil)
 	assert.Equal("10.1.1.10", sender)
 	assert.Equal("varoid:.1.2.3.5.0", source)
+}
+
+func TestResolveSenderSkipsEmptyVarOidValue(t *testing.T) {
+	assert := assert.New(t)
+
+	// The first configured OID is present but decodes to "", so it names nothing and
+	// resolution has to keep going rather than settle on it.
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version2c,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(".1.2.3.4.0", gosnmp.OctetString, []byte{}),
+			pdu(".1.2.3.5.0", gosnmp.OctetString, []byte("10.1.1.10")),
+		},
+	}
+	cfg := &kt.SnmpTrapConfig{SenderVarOids: []string{".1.2.3.4.0", ".1.2.3.5.0"}}
+
+	sender, source := resolveSender(packet, "10.0.0.5", cfg, nil)
+	assert.Equal("10.1.1.10", sender)
+	assert.Equal("varoid:.1.2.3.5.0", source)
+}
+
+func TestResolveSenderSkipsNulOnlyVarOidValueForStdSender(t *testing.T) {
+	assert := assert.New(t)
+
+	// A NUL-only value trims to "" in ReadOctetString; the standard sender still applies.
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version2c,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(".1.2.3.4.0", gosnmp.OctetString, []byte{0x00, 0x00}),
+			pdu(snmpTrapAddressOID, gosnmp.IPAddress, "10.1.1.10"),
+		},
+	}
+	cfg := &kt.SnmpTrapConfig{SenderVarOids: []string{".1.2.3.4.0"}, UseStdSender: true}
+
+	sender, source := resolveSender(packet, "10.0.0.5", cfg, nil)
+	assert.Equal("10.1.1.10", sender)
+	assert.Equal(senderSourceStdAddr, source)
+}
+
+func TestResolveSenderV1PrefersAgentAddressOverStdAddr(t *testing.T) {
+	assert := assert.New(t)
+
+	// snmpTrapAddress is what RFC 3584 has a proxy add when translating a v1 trap to
+	// v2c/v3. A v1 trap carrying both must still trust its own AgentAddress field.
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version1,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(snmpTrapAddressOID, gosnmp.IPAddress, "10.1.1.99"),
+		},
+		SnmpTrap: gosnmp.SnmpTrap{AgentAddress: "10.1.1.10"},
+	}
+	cfg := &kt.SnmpTrapConfig{UseStdSender: true}
+
+	sender, source := resolveSender(packet, "10.0.0.5", cfg, nil)
+	assert.Equal("10.1.1.10", sender)
+	assert.Equal(senderSourceAgent, source)
 }
 
 func TestResolveSenderStdSenderSnmpTrapAddress(t *testing.T) {
@@ -181,4 +243,128 @@ func TestLookupDeviceByIPThenName(t *testing.T) {
 	assert.Equal(byName, st.lookupDevice("router-b.example.com"))
 	assert.Nil(st.lookupDevice("10.1.1.12"))
 	assert.Nil(st.lookupDevice(""))
+}
+
+// newTestTrapListener builds a listener wired for handle() without binding a socket.
+// A zero-value MibDB resolves nothing, which is what an unprofiled trap sees anyway.
+func newTestTrapListener(t *testing.T, cfg *kt.SnmpTrapConfig, devices ...*kt.SnmpDeviceConfig) (*SnmpTrap, chan []*kt.JCHF) {
+	jchfChan := make(chan []*kt.JCHF, 1)
+	st := &SnmpTrap{
+		log:           lt.NewTestContextL(logger.NilContext, t),
+		jchfChan:      jchfChan,
+		metrics:       kt.NewSnmpMetricSet(go_metrics.NewRegistry()),
+		conf:          &kt.SnmpConfig{Trap: cfg},
+		mibdb:         &mibs.MibDB{},
+		ctx:           context.Background(),
+		deviceMap:     map[string]*kt.SnmpDeviceConfig{},
+		deviceMapName: map[string]*kt.SnmpDeviceConfig{},
+		baseTags:      map[string]string{},
+	}
+	for _, dev := range devices {
+		st.deviceMap[dev.DeviceIP] = dev
+		if dev.DeviceName != "" {
+			st.deviceMapName[dev.DeviceName] = dev
+		}
+	}
+	if len(cfg.TrustedRelays) > 0 {
+		st.trustedRelays = map[string]bool{}
+		for _, relay := range cfg.TrustedRelays {
+			st.trustedRelays[relay] = true
+		}
+	}
+	return st, jchfChan
+}
+
+func TestHandleSenderMatchedByNameReportsDeviceIP(t *testing.T) {
+	assert := assert.New(t)
+
+	dev := &kt.SnmpDeviceConfig{DeviceName: "router-b.example.com", DeviceIP: "10.1.1.11"}
+	cfg := &kt.SnmpTrapConfig{SenderVarOids: []string{".1.2.3.4.0"}}
+	st, jchfChan := newTestTrapListener(t, cfg, dev)
+
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version2c,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(".1.2.3.4.0", gosnmp.OctetString, []byte("router-b.example.com")),
+		},
+	}
+	st.handle(packet, &net.UDPAddr{IP: net.ParseIP("10.0.0.5")})
+
+	out := <-jchfChan
+	assert.Len(out, 1)
+	dst := out[0]
+	// SrcAddr has to stay parseable as an IP, so the hostname only appears in SenderAddr.
+	assert.Equal("10.1.1.11", dst.SrcAddr)
+	assert.NotNil(net.ParseIP(dst.SrcAddr))
+	assert.Equal("router-b.example.com", dst.CustomStr["SenderAddr"])
+	assert.Equal("10.0.0.5", dst.CustomStr["RelayAddr"])
+	assert.Equal("router-b.example.com", dst.DeviceName)
+}
+
+func TestHandleSenderMatchedByIPKeepsSenderAddr(t *testing.T) {
+	assert := assert.New(t)
+
+	dev := &kt.SnmpDeviceConfig{DeviceName: "router-a", DeviceIP: "10.1.1.10"}
+	cfg := &kt.SnmpTrapConfig{SenderVarOids: []string{".1.2.3.4.0"}}
+	st, jchfChan := newTestTrapListener(t, cfg, dev)
+
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version2c,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(".1.2.3.4.0", gosnmp.OctetString, []byte("10.1.1.10")),
+		},
+	}
+	st.handle(packet, &net.UDPAddr{IP: net.ParseIP("10.0.0.5")})
+
+	out := <-jchfChan
+	dst := out[0]
+	assert.Equal("10.1.1.10", dst.SrcAddr)
+	assert.Equal("10.1.1.10", dst.CustomStr["SenderAddr"])
+	assert.Equal("varoid:.1.2.3.4.0", dst.CustomStr["SenderSource"])
+	assert.Equal("10.0.0.5", dst.CustomStr["RelayAddr"])
+	assert.Equal("router-a", dst.DeviceName)
+}
+
+func TestHandleUnresolvedSenderKeepsUdpSource(t *testing.T) {
+	assert := assert.New(t)
+
+	dev := &kt.SnmpDeviceConfig{DeviceName: "router-a", DeviceIP: "10.1.1.10"}
+	cfg := &kt.SnmpTrapConfig{SenderVarOids: []string{".1.2.3.4.0"}}
+	st, jchfChan := newTestTrapListener(t, cfg, dev)
+
+	// The varbind names a device that isn't configured, so none of the sender fields
+	// are reported and the UDP source stands.
+	packet := &gosnmp.SnmpPacket{
+		Version: gosnmp.Version2c,
+		Variables: []gosnmp.SnmpPDU{
+			pdu(".1.2.3.4.0", gosnmp.OctetString, []byte("10.9.9.9")),
+		},
+	}
+	st.handle(packet, &net.UDPAddr{IP: net.ParseIP("10.0.0.5")})
+
+	out := <-jchfChan
+	dst := out[0]
+	assert.Equal("10.0.0.5", dst.SrcAddr)
+	assert.NotContains(dst.CustomStr, "SenderAddr")
+	assert.NotContains(dst.CustomStr, "RelayAddr")
+}
+
+func TestHandleNoSenderConfigIsUnchanged(t *testing.T) {
+	assert := assert.New(t)
+
+	dev := &kt.SnmpDeviceConfig{DeviceName: "router-a", DeviceIP: "10.1.1.10"}
+	st, jchfChan := newTestTrapListener(t, &kt.SnmpTrapConfig{}, dev)
+
+	// A trap straight from the device, with no sender config at all: the existing
+	// UDP-source lookup still identifies it and no sender fields are added.
+	packet := &gosnmp.SnmpPacket{Version: gosnmp.Version2c}
+	st.handle(packet, &net.UDPAddr{IP: net.ParseIP("10.1.1.10")})
+
+	out := <-jchfChan
+	dst := out[0]
+	assert.Equal("10.1.1.10", dst.SrcAddr)
+	assert.Equal("router-a", dst.DeviceName)
+	assert.NotContains(dst.CustomStr, "SenderAddr")
+	assert.NotContains(dst.CustomStr, "SenderSource")
+	assert.NotContains(dst.CustomStr, "RelayAddr")
 }
