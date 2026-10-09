@@ -94,7 +94,7 @@ const (
 )
 
 const (
-	InstProvider  = "newrelic"
+	InstProvider  = "kentik"
 	CollectorName = "network-agent"
 	SnmpCollector = "snmp"
 
