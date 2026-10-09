@@ -20,6 +20,14 @@ import (
 const (
 	snmpTrapOID   = ".1.3.6.1.6.3.1.1.4.1"
 	snmpTrapOID_0 = ".1.3.6.1.6.3.1.1.4.1.0"
+
+	// snmpTrapAddress (RFC 3584) carries the original Agent Address when a
+	// proxy translates a v1 trap to v2c/v3. Checked as part of UseStdSender.
+	snmpTrapAddressOID = ".1.3.6.1.6.3.18.1.3.0"
+
+	senderSourceStdAddr = "snmpTrapAddress"
+	senderSourceAgent   = "agentAddr"
+	senderSourceUDP     = "udp"
 )
 
 var (
@@ -35,18 +43,20 @@ var (
 )
 
 type SnmpTrap struct {
-	log       logger.ContextL
-	jchfChan  chan []*kt.JCHF
-	listen    string
-	tl        *gosnmp.TrapListener
-	metrics   *kt.SnmpMetricSet
-	conf      *kt.SnmpConfig
-	mux       sync.RWMutex
-	mibdb     *mibs.MibDB
-	resolv    *resolv.Resolver
-	ctx       context.Context
-	deviceMap map[string]*kt.SnmpDeviceConfig
-	baseTags  map[string]string
+	log           logger.ContextL
+	jchfChan      chan []*kt.JCHF
+	listen        string
+	tl            *gosnmp.TrapListener
+	metrics       *kt.SnmpMetricSet
+	conf          *kt.SnmpConfig
+	mux           sync.RWMutex
+	mibdb         *mibs.MibDB
+	resolv        *resolv.Resolver
+	ctx           context.Context
+	deviceMap     map[string]*kt.SnmpDeviceConfig
+	deviceMapName map[string]*kt.SnmpDeviceConfig
+	trustedRelays map[string]bool // Empty/nil means any UDP source may have its sender overridden.
+	baseTags      map[string]string
 }
 
 // Move to util?
@@ -66,15 +76,16 @@ func (l logWrapper) Printf(format string, v ...interface{}) {
 func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan []*kt.JCHF, metrics *kt.SnmpMetricSet, mibdb *mibs.MibDB,
 	log logger.ContextL, resolv *resolv.Resolver, serviceName string, globalTags map[string]string) (*SnmpTrap, error) {
 	st := &SnmpTrap{
-		jchfChan:  jchfChan,
-		log:       log,
-		mibdb:     mibdb,
-		listen:    conf.Trap.Listen,
-		metrics:   metrics,
-		deviceMap: map[string]*kt.SnmpDeviceConfig{},
-		resolv:    resolv,
-		ctx:       ctx,
-		conf:      conf,
+		jchfChan:      jchfChan,
+		log:           log,
+		mibdb:         mibdb,
+		listen:        conf.Trap.Listen,
+		metrics:       metrics,
+		deviceMap:     map[string]*kt.SnmpDeviceConfig{},
+		deviceMapName: map[string]*kt.SnmpDeviceConfig{},
+		resolv:        resolv,
+		ctx:           ctx,
+		conf:          conf,
 	}
 
 	// Some quick defaults.
@@ -132,6 +143,16 @@ func NewSnmpTrapListener(ctx context.Context, conf *kt.SnmpConfig, jchfChan chan
 
 	for _, device := range conf.Devices {
 		st.deviceMap[device.DeviceIP] = device
+		if device.DeviceName != "" {
+			st.deviceMapName[device.DeviceName] = device
+		}
+	}
+
+	if len(conf.Trap.TrustedRelays) > 0 {
+		st.trustedRelays = map[string]bool{}
+		for _, relay := range conf.Trap.TrustedRelays {
+			st.trustedRelays[relay] = true
+		}
 	}
 
 	// Set up some default tags if the device sending isn't found.
@@ -158,6 +179,80 @@ func (s *SnmpTrap) Listen() {
 	}
 }
 
+// varValueAsString pulls a string out of a varbind value, for the types that can
+// plausibly carry an IP address or hostname (OctetString, IPAddress, ObjectIdentifier).
+// An empty value is reported as absent, so resolveSender keeps looking rather than
+// settling on a varbind that names nothing.
+func varValueAsString(v gosnmp.SnmpPDU) (string, bool) {
+	switch v.Type {
+	case gosnmp.OctetString:
+		// ReadOctetString reports ok for a value that trims down to "", hence the recheck.
+		// Sanitize as the trap variable loop below does: a device returning binary here
+		// should not reach the output as invalid UTF-8.
+		if s, ok := snmp_util.ReadOctetString(v, snmp_util.NO_TRUNCATE); ok && s != "" {
+			return kt.SanitizeUTF8(s), true
+		}
+	case gosnmp.IPAddress, gosnmp.ObjectIdentifier:
+		if s, ok := v.Value.(string); ok && s != "" {
+			return s, true
+		}
+	}
+	return "", false
+}
+
+// findVarValue returns the value of the first varbind matching oid, if any.
+func findVarValue(vars []gosnmp.SnmpPDU, oid string) (string, bool) {
+	for _, v := range vars {
+		if v.Name == oid {
+			return varValueAsString(v)
+		}
+	}
+	return "", false
+}
+
+// resolveSender looks for the trap's original source device inside the packet itself,
+// so traps relayed through a proxy or NAT can still be mapped to the right device. See
+// SnmpTrapConfig.SenderVarOids / UseStdSender. Returns ("", senderSourceUDP) when nothing
+// in the packet should override the UDP source address.
+func resolveSender(packet *gosnmp.SnmpPacket, udpAddr string, cfg *kt.SnmpTrapConfig, trustedRelays map[string]bool) (string, string) {
+	if len(trustedRelays) > 0 && !trustedRelays[udpAddr] { // Only trust the payload from a known relay, when configured.
+		return "", senderSourceUDP
+	}
+
+	for _, oid := range cfg.SenderVarOids {
+		if v, ok := findVarValue(packet.Variables, oid); ok {
+			return v, "varoid:" + oid
+		}
+	}
+
+	if cfg.UseStdSender {
+		// A v1 trap names its originator in the PDU's own AgentAddress field, so that
+		// wins there. snmpTrapAddress is what RFC 3584 has a proxy add when it translates
+		// such a trap to v2c/v3, so it only applies to those versions.
+		if packet.Version == gosnmp.Version1 {
+			if packet.AgentAddress != "" {
+				return packet.AgentAddress, senderSourceAgent
+			}
+		} else if v, ok := findVarValue(packet.Variables, snmpTrapAddressOID); ok {
+			return v, senderSourceStdAddr
+		}
+	}
+
+	return "", senderSourceUDP
+}
+
+// lookupDevice finds a configured device by the resolved sender value, trying it as an
+// IP address first and then as a device name.
+func (s *SnmpTrap) lookupDevice(sender string) *kt.SnmpDeviceConfig {
+	if sender == "" {
+		return nil
+	}
+	if dev, ok := s.deviceMap[sender]; ok {
+		return dev
+	}
+	return s.deviceMapName[sender]
+}
+
 func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	engineID := "" // Decode the context engine id if sent here.
 	if packet.Version == gosnmp.Version3 && packet.ContextEngineID != "" {
@@ -170,8 +265,15 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	s.mux.RLock()
 	defer s.mux.RUnlock()
 
-	dev := s.deviceMap[addr.IP.String()] // See if we know which device this is coming from.
-	if dev == nil && engineID != "" {    // If the device is still nil, try looking up via the ContextEngineID.
+	udpAddr := addr.IP.String()
+	sender, senderSource := resolveSender(packet, udpAddr, s.conf.Trap, s.trustedRelays)
+
+	dev := s.lookupDevice(sender) // See if the trap itself tells us who really sent this.
+	senderResolved := dev != nil
+	if dev == nil { // Fall back to the UDP source address.
+		dev = s.deviceMap[udpAddr]
+	}
+	if dev == nil && engineID != "" { // If the device is still nil, try looking up via the ContextEngineID.
 		for _, d := range s.deviceMap {
 			if d.EngineID == engineID {
 				dev = d
@@ -184,7 +286,17 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 	dst.CustomInt = make(map[string]int32)
 	dst.CustomBigInt = make(map[string]int64)
 	dst.EventType = kt.KENTIK_EVENT_SNMP_TRAP
-	dst.SrcAddr = addr.IP.String()
+	dst.SrcAddr = udpAddr
+	if senderResolved { // Only report the override when it actually resolved a device.
+		// Formats parse SrcAddr as an IP (see pkg/formats/kflow), so a sender matched by
+		// DeviceName contributes its configured address here and its declared name below.
+		if dev.DeviceIP != "" {
+			dst.SrcAddr = dev.DeviceIP
+		}
+		dst.CustomStr["SenderAddr"] = sender
+		dst.CustomStr["SenderSource"] = senderSource
+		dst.CustomStr["RelayAddr"] = udpAddr
+	}
 	if dev != nil {
 		dst.DeviceName = dev.DeviceName
 		if s.conf.Trap.TrapOnly {
@@ -286,7 +398,7 @@ func (s *SnmpTrap) handle(packet *gosnmp.SnmpPacket, addr *net.UDPAddr) {
 			} else {
 				dst.CustomBigInt[v.Name] = gosnmp.ToBigInt(v.Value).Int64()
 			}
-		case gosnmp.ObjectIdentifier:
+		case gosnmp.ObjectIdentifier, gosnmp.IPAddress: // Both decode to a plain string value in gosnmp.
 			value := v.Value.(string)
 			if res != nil && res.Conversion != "" { // Adjust for any hard coded values here.
 				_, value, _ = snmp_util.GetFromConv(v, res.Conversion, s.log)
