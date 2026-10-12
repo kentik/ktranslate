@@ -20,6 +20,7 @@ import (
 	devicepb "github.com/kentik/api-schema-public/gen/go/kentik/device/v202504beta2"
 	tagging "github.com/kentik/api-schema-public/gen/go/kentik/enrichments/enumerations/v202601alpha1"
 	interfacepb "github.com/kentik/api-schema-public/gen/go/kentik/interface/v202108alpha1"
+	nmspb "github.com/kentik/api-schema-public/gen/go/kentik/nms/v202505"
 	sitepb "github.com/kentik/api-schema-public/gen/go/kentik/site/v202509"
 	synthetics "github.com/kentik/api-schema-public/gen/go/kentik/synthetics/v202309"
 	"github.com/kentik/ktranslate"
@@ -69,6 +70,7 @@ type KentikApi struct {
 	deviceClient        devicepb.DeviceServiceClient
 	interfaceClient     interfacepb.InterfaceServiceClient
 	siteClient          sitepb.SiteServiceClient
+	nmsClient           nmspb.MetricsSchemaServiceClient
 	mux                 sync.RWMutex
 	lastSynth           time.Time
 	config              *ktranslate.Config
@@ -270,7 +272,7 @@ func (api *KentikApi) getSites(ctx context.Context) error {
 				return nil
 			}
 
-		// There's a strange case where some sites return an error here regardless. We log and move on.
+			// There's a strange case where some sites return an error here regardless. We log and move on.
 			api.Warnf("Site ListSites endpoint returned an error, skipping: %v", err)
 			continue
 		}
@@ -421,6 +423,10 @@ func (api *KentikApi) connectSynthAndLookup(ctxIn context.Context) error {
 		api.interfaceClient = interfaceLookup
 	}
 
+	nmsClient := nmspb.NewMetricsSchemaServiceClient(conn)
+	api.Infof("Connected to NMS Lookup API server at %s", address)
+	api.nmsClient = nmsClient
+
 	return api.getSynthAndDeviceInfo(ctx)
 }
 
@@ -499,6 +505,31 @@ func (api *KentikApi) loadCustoms(ctxo context.Context, deviceId string, dev *kt
 	dev.AddCustoms(r.GetDevice())
 
 	return nil
+}
+
+func (api *KentikApi) GetKMetricsSchema(ctx context.Context) (map[string]*nmspb.MeasurementSchema, error) {
+
+	for _, info := range api.config.KentikCreds {
+		md := metadata.New(map[string]string{
+			"X-CH-Auth-Email":     info.APIEmail,
+			"X-CH-Auth-API-Token": info.APIToken,
+		})
+		ctxo := metadata.NewOutgoingContext(ctx, md)
+
+		lt := &nmspb.GetMetricsSchemaRequest{}
+		r, err := api.nmsClient.GetMetricsSchema(ctxo, lt)
+		if err != nil {
+			if status.Code(err) == codes.Unimplemented {
+				api.Warnf("NMS endpoint not implemented; skipping.")
+				return nil, nil
+			}
+			return nil, err
+		}
+
+		return r.GetSchema().GetMeasurements(), nil
+	}
+
+	return nil, nil
 }
 
 func (api *KentikApi) getDeviceInfoNew(ctx context.Context) error {

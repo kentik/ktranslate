@@ -1,13 +1,11 @@
 package km
 
 import (
-	"bufio"
-	"encoding/json"
-	"flag"
-	"os"
+	"context"
 	"strconv"
 	"strings"
 
+	nmspb "github.com/kentik/api-schema-public/gen/go/kentik/nms/v202505"
 	kkapi "github.com/kentik/ktranslate/pkg/api"
 	"github.com/kentik/ktranslate/pkg/eggs/logger"
 	"github.com/kentik/ktranslate/pkg/kt"
@@ -23,22 +21,14 @@ type KMMapper struct {
 	metrics map[int64]KentikMetric
 }
 
-var (
-	tags string
-)
-
-func init() {
-	flag.StringVar(&tags, "km_value_map", "", "CSV file mapping kentik metric values.")
-}
-
-func LoadMapper(log logger.Underlying, tagMapFilePath string, apic *kkapi.KentikApi) (*KMMapper, error) {
+func LoadMapper(ctx context.Context, log logger.Underlying, apic *kkapi.KentikApi) (*KMMapper, error) {
 	ftm := KMMapper{
 		ContextL: logger.NewContextLFromUnderlying(logger.SContext{S: "kmMapper"}, log),
 		apic:     apic,
 		metrics:  map[int64]KentikMetric{},
 	}
 
-	num, err := ftm.loadFile(tagMapFilePath)
+	num, err := ftm.loadMetrics(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -56,50 +46,26 @@ type KentikMetric struct {
 
 type KMDef struct {
 	Imports     []string
-	Metrics     map[string]*KMMetric
-	Dimensions  map[string]*KMDimension
+	Metrics     map[string]*nmspb.FieldSchema
+	Dimensions  map[string]*nmspb.FieldSchema
 	Description string
 }
 
-type KMMetric struct {
-	Mask   int
-	Type   string
-	Unit   string
-	Label  string
-	Column string
-}
-
-type KMDimension struct {
-	Mask   int
-	Type   string
-	Label  string
-	Column string
-}
-
-func (km *KMMapper) loadFile(file string) (int, error) {
-	f, err := os.Open(file)
+func (km *KMMapper) loadMetrics(ctx context.Context) (int, error) {
+	mets, err := km.apic.GetKMetricsSchema(ctx)
 	if err != nil {
 		return 0, err
 	}
-	defer f.Close()
-	scanner := bufio.NewScanner(f)
 
-	for scanner.Scan() {
-		pts := strings.SplitN(scanner.Text(), "|", 3)
-		if len(pts) != 3 {
-			km.Warnf("Bad line, skipping %s", scanner.Text())
-			continue
-		}
-		id, err := strconv.ParseInt(pts[0], 10, 64)
-		if err != nil {
-			km.Warnf("Bad id value, skipping: %s", pts[0])
-			continue
-		}
-		k := KentikMetric{Id: id, Name: pts[1], Def: KMDef{}}
-		err = json.Unmarshal([]byte(pts[2]), &k.Def)
-		if err != nil {
-			km.Warnf("Bad km definition, skipping: %s %v", pts[2], err)
-			continue
+	for _, met := range mets {
+		k := KentikMetric{
+			Id:   int64(met.GetId()),
+			Name: met.GetEntityType(),
+			Def: KMDef{
+				Metrics:     met.GetMetrics(),
+				Dimensions:  met.GetDimensions(),
+				Description: met.GetDescription(),
+			},
 		}
 
 		if len(k.Def.Metrics) > 0 && len(k.Def.Dimensions) > 0 {
@@ -111,10 +77,6 @@ func (km *KMMapper) loadFile(file string) (int, error) {
 			}
 			km.metrics[k.Id] = k
 		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return 0, err
 	}
 
 	return len(km.metrics), nil
@@ -143,7 +105,7 @@ func readMask(msg *kt.JCHF, key string) (int64, bool) {
 	return 0, false
 }
 
-func isFieldPresentForMask(fieldMask int, incomingMask int64, hasIncomingMask bool) bool {
+func isFieldPresentForMask(fieldMask int64, incomingMask int64, hasIncomingMask bool) bool {
 	if !hasIncomingMask {
 		return true
 	}
@@ -169,32 +131,32 @@ func (km *KMMapper) Enrich(id int64, msg *kt.JCHF) {
 	metricMask, hasMetricMask := readMask(msg, "km_metric_mask")
 
 	for _, dim := range definition.Def.Dimensions {
-		if dim.Label == "" || !isFieldPresentForMask(dim.Mask, dimensionMask, hasDimensionMask) {
+		if dim.GetLabel() == "" || !isFieldPresentForMask(dim.Mask, dimensionMask, hasDimensionMask) {
 			continue
 		}
 
 		if val, ok := msg.CustomStr[dim.Column]; ok {
-			msg.CustomStr[dim.Label] = val
+			msg.CustomStr[dim.GetLabel()] = val
 			delete(msg.CustomStr, dim.Column)
 		}
 	}
 
 	for _, met := range definition.Def.Metrics {
-		if met.Label == "" || !isFieldPresentForMask(met.Mask, metricMask, hasMetricMask) {
+		if met.GetLabel() == "" || !isFieldPresentForMask(met.Mask, metricMask, hasMetricMask) {
 			continue
 		}
 
 		if mvar, ok := msg.CustomBigInt[met.Column]; ok {
-			msg.CustomBigInt[met.Label] = mvar
-			msg.CustomStr["unit"] = met.Unit
+			msg.CustomBigInt[met.GetLabel()] = mvar
+			msg.CustomStr["unit"] = met.GetUnit()
 			delete(msg.CustomBigInt, met.Column)
 		} else if mvar, ok := msg.CustomInt[met.Column]; ok {
-			msg.CustomInt[met.Label] = mvar
-			msg.CustomStr["unit"] = met.Unit
+			msg.CustomInt[met.GetLabel()] = mvar
+			msg.CustomStr["unit"] = met.GetUnit()
 			delete(msg.CustomInt, met.Column)
 		} else if mvar, ok := msg.CustomFloat[met.Column]; ok {
-			msg.CustomFloat[met.Label] = mvar
-			msg.CustomStr["unit"] = met.Unit
+			msg.CustomFloat[met.GetLabel()] = mvar
+			msg.CustomStr["unit"] = met.GetUnit()
 			delete(msg.CustomFloat, met.Column)
 		}
 	}
