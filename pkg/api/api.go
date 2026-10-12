@@ -517,10 +517,11 @@ func (api *KentikApi) GetKMetricsSchema(ctx context.Context) (map[string]*nmspb.
 			"X-CH-Auth-Email":     info.APIEmail,
 			"X-CH-Auth-API-Token": info.APIToken,
 		})
-		ctxo := metadata.NewOutgoingContext(ctx, md)
+		ctxo, cancel := context.WithTimeout(metadata.NewOutgoingContext(ctx, md), api.apiTimeout)
 
 		lt := &nmspb.GetMetricsSchemaRequest{}
 		r, err := api.nmsClient.GetMetricsSchema(ctxo, lt)
+		cancel()
 		if err != nil {
 			if status.Code(err) == codes.Unimplemented {
 				api.Warnf("NMS endpoint not implemented; skipping.")
