@@ -39,13 +39,12 @@ func LoadMapper(ctx context.Context, log logger.Underlying, apic *kkapi.KentikAp
 }
 
 type KentikMetric struct {
-	Id   int64
-	Name string
-	Def  KMDef
+	Id         int64
+	EntityType string
+	Def        KMDef
 }
 
 type KMDef struct {
-	Imports     []string
 	Metrics     map[string]*nmspb.FieldSchema
 	Dimensions  map[string]*nmspb.FieldSchema
 	Description string
@@ -59,8 +58,8 @@ func (km *KMMapper) loadMetrics(ctx context.Context) (int, error) {
 
 	for _, met := range mets {
 		k := KentikMetric{
-			Id:   int64(met.GetId()),
-			Name: met.GetEntityType(),
+			Id:         int64(met.GetId()),
+			EntityType: met.GetEntityType(),
 			Def: KMDef{
 				Metrics:     met.GetMetrics(),
 				Dimensions:  met.GetDimensions(),
