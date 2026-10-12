@@ -508,6 +508,9 @@ func (api *KentikApi) loadCustoms(ctxo context.Context, deviceId string, dev *kt
 }
 
 func (api *KentikApi) GetKMetricsSchema(ctx context.Context) (map[string]*nmspb.MeasurementSchema, error) {
+	if api == nil || api.config == nil || api.nmsClient == nil {
+		return nil, nil
+	}
 
 	for _, info := range api.config.KentikCreds {
 		md := metadata.New(map[string]string{
