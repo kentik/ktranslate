@@ -215,6 +215,11 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 					cl.Infof("Turning off BulkWalkAll for device via profile.")
 				}
 
+				if profile.MaxRepetitions > 0 {
+					device.MaxRepetitions = profile.MaxRepetitions
+					cl.Infof("Setting MaxRepetitions for device via profile to %d.", profile.MaxRepetitions)
+				}
+
 				// Use the profile's provider if it is set.
 				if profile.Provider != "" {
 					device.Provider = profile.Provider
