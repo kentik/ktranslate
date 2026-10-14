@@ -176,15 +176,6 @@ func NewKTranslate(config *ktranslate.Config, log logger.ContextL, registry go_m
 	}
 	kc.tagMapRegion = mr
 
-	if config.KMUdr != "" {
-		kmr, err := km.LoadMapper(log.GetLogger().GetUnderlyingLogger(), config.KMUdr, kc.apic)
-		if err != nil {
-			kc.log.Errorf("There was an error when opening the kentik metrics service definition: %v.", err)
-			return nil, err
-		}
-		kc.tagKM = kmr
-	}
-
 	// Load up a geo file if one is passed in.
 	if config.GeoFile != "" {
 		geo, err := patricia.NewMapFromMM(config.GeoFile, log)
@@ -790,6 +781,14 @@ func (kc *KTranslate) Run(ctx context.Context) error {
 		kc.tagMap = m
 		kc.tagMap.Run(ctx)
 	}
+
+	// Load up the NMS mapper
+	kmr, err := km.LoadMapper(ctx, kc.log.GetLogger().GetUnderlyingLogger(), kc.apic)
+	if err != nil {
+		kc.log.Errorf("There was an error when opening the kentik metrics service definition: %v.", err)
+		return err
+	}
+	kc.tagKM = kmr
 
 	assureInput := func() { // Start up input processing if any is asked of us.
 		if kc.inputChan == nil {
