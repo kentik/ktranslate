@@ -72,6 +72,7 @@ type Profile struct {
 	From             string            `yaml:"from,omitempty"`
 	Provider         kt.Provider       `yaml:"provider,omitempty"`
 	NoUseBulkWalkAll bool              `yaml:"no_use_bulkwalkall"`
+	MaxRepetitions   uint32            `yaml:"max_repetitions"`
 	Matches          map[string]string `yaml:"matches"`
 	MatchesList      []Match           `yaml:"matches_list"`
 	SysMap           map[string]string

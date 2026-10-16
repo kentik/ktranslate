@@ -126,6 +126,11 @@ func InitSNMP(device *kt.SnmpDeviceConfig, connectTimeout time.Duration, retries
 		Context:            context.Background(),
 	}
 
+	if device.MaxRepetitions > 0 {
+		server.MaxRepetitions = device.MaxRepetitions
+		log.Infof("Device MaxRepetitions set to %d", server.MaxRepetitions)
+	}
+
 	if device.V3 == nil {
 		server.Community = device.Community
 		if device.UseV1 {

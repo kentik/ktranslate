@@ -33,6 +33,7 @@ func pollOnce(ctx context.Context, tdevice string, conf *kt.SnmpConfig, connectT
 	if profile == nil {
 		return fmt.Errorf("No profile found for %s", tdevice)
 	}
+	fixupProfile(profile, device, log, false) // Pull any profile specific overrides into the device config.
 
 	// We need two of these, to avoid concurrent access by the two pollers.
 	// gosnmp isn't real clear on its approach to concurrency, but it seems

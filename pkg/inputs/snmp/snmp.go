@@ -204,23 +204,7 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 		var profile *mibs.Profile
 		if mibdb != nil {
 			profile = mibdb.FindProfile(device.OID, device.Description, device.MibProfile)
-			if profile != nil {
-				cl.Infof("Found profile for %s: %v %s", device.OID, profile.From, device.MibProfile)
-				if cfg.DumpMIBs {
-					profile.DumpOids(cl)
-				}
-
-				if profile.NoUseBulkWalkAll {
-					device.NoUseBulkWalkAll = true
-					cl.Infof("Turning off BulkWalkAll for device via profile.")
-				}
-
-				// Use the profile's provider if it is set.
-				if profile.Provider != "" {
-					device.Provider = profile.Provider
-					cl.Infof("Setting profile of %s for device %s.", device.Provider, device.DeviceName)
-				}
-			}
+			fixupProfile(profile, device, cl, cfg.DumpMIBs)
 		}
 
 		// Create this device in Kentik if the option is set.
@@ -236,6 +220,31 @@ func runSnmpPolling(ctx context.Context, snmpFile string, jchfChan chan []*kt.JC
 	}
 
 	return nil
+}
+
+func fixupProfile(profile *mibs.Profile, device *kt.SnmpDeviceConfig, cl logger.ContextL, dumpMibs bool) {
+	if profile != nil {
+		cl.Infof("Found profile for %s: %v %s", device.OID, profile.From, device.MibProfile)
+		if dumpMibs {
+			profile.DumpOids(cl)
+		}
+
+		if profile.NoUseBulkWalkAll {
+			device.NoUseBulkWalkAll = true
+			cl.Infof("Turning off BulkWalkAll for device via profile.")
+		}
+
+		if device.MaxRepetitions == 0 && profile.MaxRepetitions > 0 {
+			device.MaxRepetitions = profile.MaxRepetitions
+			cl.Infof("Setting MaxRepetitions for device via profile to %d.", profile.MaxRepetitions)
+		}
+
+		// Use the profile's provider if it is set.
+		if profile.Provider != "" {
+			device.Provider = profile.Provider
+			cl.Infof("Setting profile of %s for device %s.", device.Provider, device.DeviceName)
+		}
+	}
 }
 
 func watchProfileChange(ctx context.Context, conf *kt.SnmpConfig, log logger.ContextL, changeSig chan os.Signal) error {

@@ -211,6 +211,7 @@ type SnmpDeviceConfig struct {
 	MatchAttr           map[string]string `yaml:"match_attributes"`
 	MonitorAdminShut    bool              `yaml:"monitor_admin_shut"`
 	NoUseBulkWalkAll    bool              `yaml:"no_use_bulkwalkall"`
+	MaxRepetitions      uint32            `yaml:"max_repetitions"`
 	InstrumentationName string            `yaml:"instrumentationName,omitempty"`
 	RunPing             bool              `yaml:"response_time,omitempty"`
 	Ext                 *ExtensionSet     `yaml:"ext,omitempty"`
@@ -765,6 +766,9 @@ func (d *SnmpDeviceConfig) UpdateFrom(old *SnmpDeviceConfig, conf *SnmpConfig) {
 	}
 	if old.NoUseBulkWalkAll {
 		d.NoUseBulkWalkAll = old.NoUseBulkWalkAll
+	}
+	if old.MaxRepetitions > 0 {
+		d.MaxRepetitions = old.MaxRepetitions
 	}
 	if old.RunPing {
 		d.RunPing = old.RunPing
