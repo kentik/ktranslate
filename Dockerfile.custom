@@ -1,0 +1,8 @@
+# Custom ktranslate: adds -otel.metrics_from_kflow so Firehose NMS measurements
+# reach the OTLP *metrics* exporter instead of being recorded as OTLP logs.
+# Layered over the official image to inherit GeoLite DBs, SNMP profiles and caps.
+FROM kentik/ktranslate:v2
+COPY bin/ktranslate /usr/local/bin/ktranslate
+USER root
+RUN setcap cap_net_raw=+ep /usr/local/bin/ktranslate || true
+USER ktranslate
