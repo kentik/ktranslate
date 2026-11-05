@@ -50,6 +50,11 @@ type OtelFormatConfig struct {
 	ClientKey     string
 	RootCA        string
 	NoBlockExport bool
+	// MetricsFromKflow emits OTLP metrics for kflow records that carry an NMS
+	// measurement (km_measurement_name), instead of recording them as OTLP logs.
+	// Kentik Firehose delivers every NMS measurement as KENTIK_EVENT_TYPE, so
+	// without this they never reach the metrics exporter.
+	MetricsFromKflow bool
 }
 
 // RedisFormatConfig is the config for the redis format
@@ -449,12 +454,13 @@ func DefaultConfig() *Config {
 			FlowsNeeded:          10,
 		},
 		OtelFormat: &OtelFormatConfig{
-			Endpoint:      "",
-			Protocol:      "stdout",
-			ClientKey:     "",
-			ClientCert:    "",
-			RootCA:        "",
-			NoBlockExport: false,
+			Endpoint:         "",
+			Protocol:         "stdout",
+			ClientKey:        "",
+			ClientCert:       "",
+			RootCA:           "",
+			NoBlockExport:    false,
+			MetricsFromKflow: false,
 		},
 		RedisFormat: &RedisFormatConfig{
 			RedisAddr:     "localhost:6379",

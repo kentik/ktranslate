@@ -467,6 +467,13 @@ func applyFlags(cfg *ktranslate.Config) error {
 					return
 				}
 				cfg.OtelFormat.NoBlockExport = v
+			case "otel.metrics_from_kflow":
+				v, err := strconv.ParseBool(val)
+				if err != nil {
+					errCh <- err
+					return
+				}
+				cfg.OtelFormat.MetricsFromKflow = v
 				// pkg/formats/redis
 			case "redis.addr":
 				cfg.RedisFormat.RedisAddr = val

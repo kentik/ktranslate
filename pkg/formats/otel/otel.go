@@ -51,13 +51,14 @@ const (
 )
 
 var (
-	endpoint      string
-	protocol      string
-	otelm         metric.Meter
-	clientCert    string
-	clientKey     string
-	rootCA        string
-	noBlockExport bool
+	endpoint         string
+	protocol         string
+	otelm            metric.Meter
+	clientCert       string
+	clientKey        string
+	rootCA           string
+	noBlockExport    bool
+	metricsFromKflow bool
 )
 
 func init() {
@@ -67,6 +68,7 @@ func init() {
 	flag.StringVar(&clientKey, "otel.tls_key", "", "Load TLS client key from file.")
 	flag.StringVar(&rootCA, "otel.root_ca", "", "Load TLS root CA from file.")
 	flag.BoolVar(&noBlockExport, "otel.no_block", false, "If set, drop metrics when the sending chan is full.")
+	flag.BoolVar(&metricsFromKflow, "otel.metrics_from_kflow", false, "Emit OTLP metrics for kflow records carrying an NMS measurement, instead of OTLP logs.")
 }
 
 type OtelMetrics struct {
@@ -570,11 +572,169 @@ func (f *OtelFormat) fromKSynth(in *kt.JCHF) []OtelData {
 
 // There's too much data to send as metrics here. Send on as a log instead.
 func (f *OtelFormat) fromKflow(in *kt.JCHF) []OtelData {
+	// Kentik Firehose delivers NMS measurements wrapped as KENTIK_EVENT_TYPE, so
+	// they land here rather than in the fromSnmp* branches that already emit
+	// metrics. When -otel.metrics_from_kflow is set, convert those to OtelData so
+	// they reach the metrics exporter; anything without a measurement name is a
+	// plain flow record and keeps the existing log behaviour.
+	if f.config.MetricsFromKflow {
+		if ms := f.kflowToMetrics(in); len(ms) > 0 {
+			return ms
+		}
+	}
+
 	err := f.trapLog.RecordLog(in, "KFlow")
 	if err != nil {
 		f.Errorf("There was an error when sending an event: %v.", err)
 	}
 	return nil
+}
+
+// isSlotName reports whether a key is one of Kentik's generic positional slots
+// (str07, int02, int64_11, km_float000). These only appear when ktranslate is
+// NOT API-connected; their meaning varies per measurement, so they can never be
+// safely turned into a named metric.
+func isSlotName(k string) bool {
+	for _, p := range []string{"str", "int64_", "int", "km_float"} {
+		if strings.HasPrefix(k, p) {
+			rest := strings.TrimPrefix(k, p)
+			if rest == "" {
+				continue
+			}
+			if _, err := strconv.Atoi(rest); err == nil {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// kflowMetricSkip holds numeric fields that are envelope or timestamp data
+// rather than measurements. Emitting these produces series that chart the
+// passage of time or restate record identity.
+var kflowMetricSkip = map[string]bool{
+	"timestamp": true, "company_id": true, "device_id": true,
+	"site_market_id": true, "kagent_id": true, "app_protocol": true,
+	"input_port": true, "output_port": true, "sample_rate": true,
+	"Boot Time": true, "Last change": true,
+}
+
+// sanitizeMetricPart lowercases and strips characters that are not valid in a
+// metric or label name. "In bit rate" -> "in_bit_rate".
+func sanitizeMetricPart(k string) string {
+	k = strings.ToLower(strings.TrimSpace(k))
+	var b strings.Builder
+	prevUnderscore := false
+	for _, r := range k {
+		switch {
+		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
+			b.WriteRune(r)
+			prevUnderscore = false
+		case r == '.' || r == '_':
+			b.WriteRune('_')
+			prevUnderscore = true
+		default:
+			if !prevUnderscore {
+				b.WriteRune('_')
+				prevUnderscore = true
+			}
+		}
+	}
+	return strings.Trim(b.String(), "_")
+}
+
+// skipKflowMetric filters out slots, envelope fields and timestamp-shaped values.
+func skipKflowMetric(k string) bool {
+	if k == "" || kflowMetricSkip[k] || isSlotName(k) {
+		return true
+	}
+	if strings.HasPrefix(k, "km_") {
+		return true
+	}
+	// "In Octets Raw Counter Collection Time" and friends are epoch millis.
+	// Deliberately narrow: a blanket " Time" suffix rule would also discard real
+	// duration metrics such as "Hold Time" and "Response Time".
+	if strings.Contains(k, "Collection Time") {
+		return true
+	}
+	return false
+}
+
+// kflowToMetrics turns one NMS-bearing kflow record into OtelData entries: one
+// per numeric field, all sharing the record's dimensions. Returns nil for plain
+// flow records so the caller falls back to logging.
+func (f *OtelFormat) kflowToMetrics(in *kt.JCHF) []OtelData {
+	meas := in.CustomStr["km_measurement_name"]
+	if meas == "" {
+		return nil
+	}
+	ns := "kentik." + sanitizeMetricPart(strings.Trim(meas, "/"))
+
+	// Dimensions: every non-empty string custom that is not a slot or envelope
+	// field. Shared by every metric from this record -- read-only downstream.
+	tags := make(map[string]interface{}, len(in.CustomStr)+2)
+	for k, v := range in.CustomStr {
+		if v == "" || v == "-" || v == "--" || v == "<nil>" {
+			continue
+		}
+		if isSlotName(k) || strings.HasPrefix(k, "km_") {
+			continue
+		}
+		if k == "unit" {
+			continue // handled below: only meaningful when the record has one metric
+		}
+		tags[sanitizeMetricPart(k)] = v
+	}
+	if in.DeviceName != "" {
+		tags["device_name"] = in.DeviceName
+	}
+
+	// Count the metrics this record will emit before tagging anything. "unit" is a
+	// RECORD-level attribute, so it is only unambiguous when the record carries a
+	// single reading: /system/memory ships unit=bytes alongside Used, Free,
+	// Physical AND Utilization, and tagging all four "bytes" mislabels the
+	// percentage.
+	numerics := 0
+	for k := range in.CustomFloat {
+		if !skipKflowMetric(k) {
+			numerics++
+		}
+	}
+	for k := range in.CustomInt {
+		if !skipKflowMetric(k) {
+			numerics++
+		}
+	}
+	for k := range in.CustomBigInt {
+		if !skipKflowMetric(k) {
+			numerics++
+		}
+	}
+	if unit := in.CustomStr["unit"]; unit != "" && numerics == 1 {
+		tags["unit"] = unit
+	}
+
+	ms := make([]OtelData, 0, numerics)
+	add := func(k string, v float64) {
+		if skipKflowMetric(k) {
+			return
+		}
+		ms = append(ms, OtelData{
+			Name:  ns + "." + sanitizeMetricPart(k),
+			Value: v,
+			Tags:  tags,
+		})
+	}
+	for k, v := range in.CustomFloat {
+		add(k, float64(v))
+	}
+	for k, v := range in.CustomInt {
+		add(k, float64(v))
+	}
+	for k, v := range in.CustomBigInt {
+		add(k, float64(v))
+	}
+	return ms
 }
 
 func (f *OtelFormat) fromSnmpDeviceMetric(in *kt.JCHF) []OtelData {
